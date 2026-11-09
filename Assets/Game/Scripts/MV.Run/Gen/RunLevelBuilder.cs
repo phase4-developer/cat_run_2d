@@ -8,7 +8,7 @@ namespace MV.Run
     /// 정본 레벨 생성(`buildLevel`·`newRun`, 04 §4.14.4~4.14.5)의 <see cref="IRunLevelBuilder"/> 구현. 표만 보고 채운다.
     /// <see cref="FieldSpec"/>은 마지막 <see cref="NewRun"/>의 표·프리셋·부활 특성을 쓴다(런마다 하나씩 쓰는 것을 전제로 한다).
     /// </summary>
-    public sealed class RunLevelBuilder : IRunLevelBuilder
+    public sealed class RunLevelBuilder : IRunLevelBuilder, IRunStateFactory
     {
         /// <summary>313_fieldGen 행 key(모드는 402_modeRule.fieldGenKey로 바꾼다).</summary>
         public string FieldGenKey = "default";
@@ -18,6 +18,14 @@ namespace MV.Run
         // ---------------- newRun (§4.14.5) ----------------
 
         public RunState NewRun(RunSetup setup, MvTables tables, IRng rng)
+        {
+            var s = NewState(setup, tables, rng);
+            BuildLevel(s, 0, setup.Level, setup.KeepBars ? setup.Bars : null);
+            return s;
+        }
+
+        /// <summary>newRun 1~5단계(BuildLevel 앞까지). 6단계는 SIM이 BuildCourse 훅으로 부른다(04 §4.20.2).</summary>
+        public RunState NewState(RunSetup setup, MvTables tables, IRng rng)
         {
             if (setup == null) throw new ArgumentNullException(nameof(setup));
             if (tables == null) throw new ArgumentNullException(nameof(tables));
@@ -63,7 +71,6 @@ namespace MV.Run
             s.P.X = s.P.Z = s.P.Tx = 0;
 
             _state = s;
-            BuildLevel(s, 0, setup.Level, setup.KeepBars ? setup.Bars : null);
             return s;
         }
 
