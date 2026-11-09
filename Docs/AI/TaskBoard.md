@@ -12,10 +12,10 @@
 | MV-RUN-SIM 런 시뮬레이션 | 진행 | 하위 에이전트 | `ai/MV-RUN-SIM-core` @ `.wt/f`, `moonvillage-f` | dev `05b42af` + 총괄 asmdef `3155544`(MV.Run.Tests) | | | 쓰기: `S/MV.Run/`, `S/MV.Run.Tests/`(Gen 제외). 공용 상태 Commit 뒤 MV-RUN-GEN 시작 |
 | MV-RUN-GEN 레벨 생성 | 대기 | — | — | | | | MV-RUN-SIM 공용 상태(RunObject) Commit 위에서 시작 |
 | MV-META 메타 규칙 | 대기 | — | — | | | | 선행: MV-SAVE가 dev에 들어간 뒤(MV-G1-INT) |
-| MV-TOOL-ART 그림 추출 | 진행 | 하위 에이전트 2번째(1번째 닫힘: 입력 한도, `b9eb8b6` — PNG 1339, V1 결정성 PASS, `.meta`·compile NOT_RUN) | `ai/MV-TOOL-ART-extract` @ `.wt/c`, `moonvillage-c` | `43637e7` | | | 쓰기: `Tools/MvExtract/`(sound 제외), `A/Art/Source/`, `A/Art/Temp/`. D-50 승인(2026-11-09 사용자 「전부 승인」) |
+| MV-TOOL-ART 그림 추출 | 1차 병합, 3차 진행 | 1·2번째 닫힘 → 3번째 진행 | 1차 `ai/MV-TOOL-ART-extract`(병합 뒤 지움), 3차 `ai/MV-TOOL-ART-remaining` @ `.wt/c` | `43637e7`, 3차 dev `688ecaf` | `e7b58c8` → dev `688ecaf` | compile `630d4553c1d9` PASS, V1 결정성 PASS, V2 PASS(ΔE 최대 ≤ 3 — 총괄 결정, 03 §3.11 동기화), V4 PASS, V3 NOT_RUN | 정식 1699·임시 275. 남은 것: 표가 쓰는 미추출 14이름, 로비·이펙트·UI 스킨. MV-DATA 요청: 113 portrait 대소문자(2차 담당에 전달) |
 | MV-QA-HARNESS 캡처 도구(프로토 쪽) | 진행 | 하위 에이전트 | `ai/MV-QA-HARNESS-proto` @ `.wt/d`, `moonvillage-d` | `43637e7` | | | 쓰기: `Tools/MvCapture/`, `QA/Scenes/`, `QA/Dumps/`, `QA/Captures/Proto/`. Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도 계약 |
 | MV-TOOL-SND 소리 굽기 | 진행 | 하위 에이전트 | `ai/MV-TOOL-SND-bake` @ `.wt/e`, `moonvillage-e` | `e4e492d`(MV-TOOL-ART 공용 기반, dev `43637e7` 위) | | | 쓰기: `Tools/MvExtract/sound/`, `A/Addressables/Remote/Audio/`. 공용 파일 변경은 요청으로 |
-| MV-ART-ATLAS 아틀라스·임포트 | 대기 | — | — | | | | 선행: MV-TOOL-ART 출력, MV-DATA 표 클래스 |
+| MV-ART-ATLAS 아틀라스·임포트 | 진행 | 하위 에이전트 | `ai/MV-ART-ATLAS-import` @ `.wt/g`, `moonvillage-g` | dev `688ecaf` + 총괄 asmdef `474ad46`(MV.Editor 참조, MV.Editor.Tests) | | | 쓰기: UIAtlas·WorldAtlas·Texture, `S/MV.Editor/Import/`, `S/MV.Editor.Tests/`, Art `.meta` 임포트 설정. Addressables 그룹 자산을 이 계약에 위임(전역 설정·Default 그룹·Managed Config 제외) |
 
 ## 담당표 (2026-11-09)
 
@@ -23,10 +23,11 @@
 |---|---|---|---|---|
 | a | `C:/Project/MoonVillage.wt/a` | `moonvillage-a` | MV-DATA 2차 | 완료·체크포인트·입력 약 15만 토큰 |
 | b | `C:/Project/MoonVillage.wt/b` | `moonvillage-b` | MV-G1-INT(MV-SAVE 끝) | 같음 |
-| c | `C:/Project/MoonVillage.wt/c` | `moonvillage-c` | MV-TOOL-ART | 같음 |
+| c | `C:/Project/MoonVillage.wt/c` | `moonvillage-c` | MV-TOOL-ART 3차 | 같음 |
 | d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | MV-QA-HARNESS(프로토) | 같음 |
 | e | `C:/Project/MoonVillage.wt/e` | `moonvillage-e` | MV-TOOL-SND | 같음 |
 | f | `C:/Project/MoonVillage.wt/f` | `moonvillage-f` | MV-RUN-SIM | 같음 |
+| g | `C:/Project/MoonVillage.wt/g` | `moonvillage-g` | MV-ART-ATLAS | 같음 |
 
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`다. 작업 폴더는 칸을 재사용하고 브랜치만 바꾼다(Unity Library 재생성 절약).
 - 실행기 하위 호스트 위임: `moonvillage --hosts`, compile·EditMode·PlayMode, 근거 「작업 폴더를 실행기에 등록해」, 만료 2026-11-19.
