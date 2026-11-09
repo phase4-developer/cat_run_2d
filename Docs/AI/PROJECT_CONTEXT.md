@@ -71,4 +71,6 @@
 
 연결 보류(고정본 없음, 범위에는 있음): `economy.drop`, `effects.ui`, `platform.ads`·`.admob`, `platform.analytics`·`.firebase`, `platform.localnotifications`·`.unity`, `platform.login`·`.firebase`, `platform.network`·`.data`·`.firebase`, `platform.purchase`·`.network`·`.unityiap`, `platform.push`·`.firebase`, `platform.tracking`·`.apple` (20개, 모두 `com.jjevol.`). 고정본이 나오면 같은 방식으로 더한다.
 
-검증: tgz SHA-256 대조 PASS, manifest JSON·`file:` 경로 확인 PASS. Unity 패키지 해석·컴파일은 NOT_RUN(실행기 미등록).
+검증: tgz SHA-256 대조 PASS, manifest JSON·`file:` 경로 확인 PASS. 사용자가 Unity 6000.3.9f1로 한 번 열어 `packages-lock.json` 생성(Editor.log 컴파일 오류 0). 실행기 compile 잡 `8d04cd506014` PASS(후보 `873e204`, 2026-11-09). EditMode·PlayMode·Boot 실행은 NOT_RUN(MV-00의 씬·asmdef 작업 뒤).
+
+실행기: 2026-11-09 등록(`moonvillage`, compile·EditMode·PlayMode, 원문 「실행기에 등록해」), 위임 10일(원문 「10일 위임해」, 2026-11-19 만료).
