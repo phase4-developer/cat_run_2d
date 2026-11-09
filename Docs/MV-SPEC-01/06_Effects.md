@@ -433,7 +433,7 @@
 |---|---|---|
 | 0 | 전체 알파 | `a = min(1, C.t/0.35)`(들어올 때 0.35 s 페이드) |
 | 1 | 속도 | `sp = 1 + st·0.35 + min(1.5, T·0.08)`, 소실점 `VX = W/2`, `VY = H·0.2` |
-| 2 | 하늘 | 세로 그라데이션 `sky1`(0) → `sky2`(0.5) → `sky3`(1), 높이 `H·0.6`, 그 아래는 `sky3` |
+| 2 | 하늘 | 세로 그라데이션 `sky1`(0) → `sky2`(0.6) → `sky3`(1), 높이 `H·0.6`, 그 아래는 `sky3`(정본 L3167 `addColorStop(0.6, …)`) |
 | 3 | 별 | `night > 0.5`일 때 50개 2 px, 알파 `0.5 + 0.5·sin(now·3 + i)`, 위치 해시, `y < 0.45H` |
 | 4 | 해·달 | 정본 식(L3170~3174): `night < 0.5` 해(accent 원 + 빛), 아니면 달(원 + 그늘 원) |
 | 5 | 지붕 | 양쪽 9채, `raw = i/9 + T·sp·0.22 + (sd > 0 ? 0.05 : 0)`, `k = frac(raw)`, `kk = k²`. `y = VY + (H·1.1 − VY)·kk`, `hw = W·0.07 + W·0.62·kk`, `x = VX + sd·(hw + W·0.04 + W·0.25·kk)`, `bw = W·(0.06 + 0.3kk)`, `bh = H·(0.03 + 0.2kk)`. 색은 지붕·벽 기본색을 `night`만큼 남색으로 섞음. 지붕 평행사변형 + 창 |
@@ -510,6 +510,20 @@ Unity: `WarpOverlay` = 하늘 그라데이션 쿼드 + 별·지붕·계단·집�
 | 300006004 | fx.trailInterval | 0.03 | s | L2113 |
 | 300006005 | fx.brickFlushInterval | 0.22 | s | L1471 |
 | 300006006 | fx.towerHitChance | 0.3 | 확률 | L1912 |
+
+## 6.15 구현 메모 (MV-FX 1차, 구현과 다르게 정한 점)
+
+| 항목 | 이 절의 가정 | 구현 |
+|---|---|---|
+| D-45 점 입자 | 렌더 전용 `ParticleSystem` + C# 적분 | 같은 C# 적분이지만 그림은 이펙트마다 절차 메쉬 1개(`MvFxDriver`, 셰이더 `MV/FxShape`: 빛·사각형+OLC·타원 선·원, 머티리얼 일반/가산 2종). 모양 이펙트와 같은 경로라 재질 2종으로 묶인다 |
+| 프리팹 | 종류별 ParticleSystem·SpriteRenderer 묶음 | `Remote/Effect/<이름>.prefab` = `MvFxDriver` 1개(종류·04 기본값·고정 색·sortBias). 메쉬·`DepthSortable`(rank 3, 안개 끔)은 실행 때 붙인다. `fx.frost`는 D-46대로 프리팹 없음 |
+| `EffectRequest` | `effectType = 04_effect.key` | `effectType = 04_effect.prefab`(Addressables 주소 `Fx/…`). 호출 값(색·수·속도…)은 `skinIndex`에 토큰을 실어 드라이버가 받는다(Framework 요청에 사용자 값 칸이 없음) |
+| 그룹 자식 값 | 자식 행마다 열 | 표에 자식별 열이 없어 자식 1개 그룹은 표 행 값, 여러 개 그룹은 정본 호출 인자를 `MvFxRouter` 코드에 둔다(MV-DATA 변경 요청 후보) |
+| `shake`·`hitStop` 열 | FxDirector가 적용 | MV.Run이 Shake·Hitstop 이벤트로 이미 내므로 Fx는 Shake 이벤트만 `CameraRig.Shake`로 넘기고 열 값으로 다시 내지 않는다(중복 방지). 히트스톱은 상태를 읽어 simDt 배율만 맞춘다 |
+| `run.wallHit` | 확률 없음 | 정본 L1933 `Math.random() < 0.3` → 표 `chance` 0.3 |
+| 숫자 팝업·비행·플래시·단계 이름 그림 | UGUI·TMP | 풀·곡선·시간은 MV.Fx(`MvPopPool` 동시 최대 61, `MvFlyLayer` 베지어·560 ms 도착), 그림은 인터페이스(`IMvPopView`·`IMvFlyView`·`IMvHudAnchors`·`IMvFlashView`, 우다다 `StageNameChanged`)로 UI가 꽂는다(MV.Fx asmdef에 TMP·uGUI 참조 없음) |
+| 우다다 화면 | `ScreenRig` 아래 `WarpOverlay` | `MvWarpOverlay`가 카메라 앞 1 m, 로컬 단위 px로 직접 붙고 정렬 레이어 `Warp`·`WarpOut`·`SpeedLine` 메쉬 3개. 고양이 다시 그리기는 MV.View 몫 |
+| 캡처 대조·입자 예산 실측 | 12 §12.2 | NOT_RUN(D-87: 1차 완료 조건 아님) |
 
 ## 6.x 의문점·결정 필요
 

@@ -16,7 +16,7 @@ id	key	type	prefab	poolSize	blend	sortBias	color	count	speed	size	life	grav	radi
 4002001	run.transform	group					#fff3a0	22	4.5	0.5	0.8				fx.sparks	1.2				
 4002002	run.towerHit	group					#ffc27a	3	3	0.25	0.3				fx.sparks	1.2	obj	0.3		
 4002003	run.enemyKill	group													fx.debris/fx.sparks/fx.dust					hitstop.enemyKill
-4002004	run.wallHit	group					$rew	1		0.16					fx.debris	1.4				
+4002004	run.wallHit	group					$rew	1		0.16					fx.debris	1.4		0.3		
 4002005	run.wallBreak	group													fx.debris/fx.debris/fx.dust/fx.boom				shake.wallBreak	hitstop.wallBreak
 4002006	run.wallRewardSoul	group					#5fd6c9	16	4	0.5	0.9				fx.sparks	2				
 4002007	run.wallRewardDia	group					#7feaff	12	4	0.45	0.8				fx.sparks	2				

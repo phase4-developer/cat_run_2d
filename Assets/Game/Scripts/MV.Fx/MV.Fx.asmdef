@@ -6,7 +6,10 @@
         "MV.View",
         "JJEvol.Effects.Runtime",
         "JJEvol.Effects.Addressables",
-        "UniTask"
+        "UniTask",
+        "MV.Data",
+        "MV.Run",
+        "JJEvol.Tables.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
