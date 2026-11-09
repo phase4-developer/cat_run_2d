@@ -28,7 +28,7 @@
 | MV-UI-META | 1차 완료 | `fa7bac4` | 화면·PlayMode NOT_RUN. 총괄: Addressables `UIPopup_GodSelect`·`AreaUpgrade`·`Rebirth`·`Map`·`FeatureUnlock`(Remote_UI), `UIPopup_Debug`(개발 전용 그룹) — PLAY-INT 병합 뒤. 요청 MV-META: 로컬 `debug.*` 처리기 8개, `MvMeta.DisarmRebirth()`. 결정 후보: 지도 필터(`05_contentOpen.showOnMap` 빈칸 → conditionType 1 전부), 지도 체크포인트 문구, 05 §5.1.14 클래스 표 소유(테스트 패널·공통 틀을 META가 만듦) |
 | MV-UI-LOBBY | 1차 완료 | `2367b4c` | 화면 NOT_RUN. PLAY-INT 2차로: `MvGameLoop.EnterLobbyAsync`에 `OnFacilityBump`·`ApplyFacilities()`(1초마다 권장). 요청 MV-META: `settings.muted` 저장, `MvLobbyBuyResult` 화면 입구. MV-UI-META: `WatchAdForReward`도 가짜 광고 팝업 경유. MV-DATA 후보: 아지트 시설 단계 문턱(정본 azStages L3469~3471) 표로. 결정 후보: 가짜 광고 3초 자동(05 §5.12) vs 버튼(지금), 컨텐츠 버튼 「준비 중」 임시. 남음: 시작 무기 덱 표시(§5.5.2), 구역 클리어 문구, 배너 |
 | MV-UI-CONTENT | 1차 진행(칸 a) | — | D-92 겉 더미 |
-| MV-PLAY-INT 2차 | 진행(칸 b) | — | 시설 단계·소리 설정 저장·구매 결과·보상 광고 경유·Fx 머티리얼 주소·디버그 상수 정리 |
+| MV-PLAY-INT 2차 | 완료 | `ac38d4d` | 시설 단계·`meta.setMuted`·구매 결과(`MetaResult.LvBefore/After·Tier`)·보상 광고 관문(`WatchAdForReward(key,done,gate)`, 사용 수 1번)·Fx 머티리얼 주소·디버그 상수. 결정 후보 D-PI2-1 가짜 광고 여는 코드 2곳 합치기, D-PI2-2 TMP Essential Resources(`TMP Settings`) 없음 — 배치 PlayMode에서 로비 1초 넘으면 No graphic device 오류, 한글 글꼴 결정과 함께 |
 | MV-CONTENT-* (G7) | 대기 | — | — |
 | MV-QA-ACCEPT (G8) | 대기 | — | D-87 기준 |
 
@@ -37,7 +37,7 @@
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
 | a | `moonvillage-a` | MV-UI-CONTENT 1차 | `ai/MV-UI-CONTENT-menu` | `S/MV.UI/Content/`·Tests, MvUiIds·MvUiNav 줄, LobbyPresenter 컨텐츠 버튼 줄, `A/Addressables/Remote/UI/Content/` |
-| b | `moonvillage-b` | MV-PLAY-INT 2차 | `ai/MV-PLAY-INT-polish` | `S/MV.Boot/`, `S/MV.Meta/`·Tests, `S/MV.Fx/` 머티리얼 로드, `S/MV.UI/Meta/Common`·`Debug`, Lobby 소리·강화 결과 줄, `A/Tests/PlayMode/` |
+| b | `moonvillage-b` | (비어 있음) | — | — |
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
