@@ -36,7 +36,7 @@
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
 | a | `moonvillage-a` | MV-UI-LOBBY 1차 | `ai/MV-UI-LOBBY-main` | `S/MV.UI/Lobby/`·`Result/`·Common 줄 추가, 각 Tests, `A/Addressables/Remote/UI/Lobby/`·`Result/` |
-| b | `moonvillage-b` | (비어 있음) | — | — |
+| b | `moonvillage-b` | MV-META 3차(디버그 처리기·DisarmRebirth·VIEW bumpH 1줄) | `ai/MV-META-debug` | `S/MV.Meta/`·Tests, `S/MV.UI/Meta/Rebirth/` 1줄, `WorldViewSource.cs`·`ViewConfig.cs` |
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
