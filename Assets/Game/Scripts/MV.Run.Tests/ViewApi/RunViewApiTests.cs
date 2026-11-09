@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MV.Data;
 using NUnit.Framework;
+using UnityEngine.TestTools.Constraints; // AllocatingGCMemory 확장 메서드
 using AllocIs = UnityEngine.TestTools.Constraints.Is;
 
 namespace MV.Run.Tests
