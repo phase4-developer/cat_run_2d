@@ -17,7 +17,7 @@
 | MV-RUN-RULE 확장 지점 | 완료 | `cfe1f46` | 402 표 연결, G7 `IModeRule` |
 | MV-RUN-VIEWAPI WY·옹벽 읽기 | 진행(칸 b) | — | — |
 | MV-META 메타 규칙 | 완료 | `d120b2e` | `modePlays` 한도(400_content) 교체 지점 |
-| MV-G3-INT Boot 연결 | 진행(칸 a) | — | — |
+| MV-G3-INT Boot 연결 | 완료(G3 끝) | `8de2dc7` | Meta 저장→`RunContext` 도우미 없음 → MV-PLAY-INT. dev 전체 `448a6fc73f04` PASS(compile, EditMode 335/335, PlayMode 2/2) |
 | MV-VIEW 월드 렌더 | 1차 완료, 2차 진행(칸 d) | 1차 `64aa5b4` | 2차: 오브젝트 뷰·WorldRoot 프리팹 먼저(D-91) |
 | MV-SND 소리 재생 | 완료 | `b148dc5` | Boot 연결(G4 통합) |
 | MV-FX 이펙트 | 진행(칸 e) | — | — |
@@ -33,14 +33,15 @@
 
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
-| a | `moonvillage-a` | MV-G3-INT | `ai/MV-G3-INT-boot` | `S/MV.Boot/`, `A/Tests/PlayMode/` Boot 시험 |
+| a | `moonvillage-a` | (비어 있음, dev `8de2dc7` 분리 HEAD) | — | — |
 | b | `moonvillage-b` | MV-RUN-VIEWAPI | `ai/MV-RUN-VIEWAPI-read` | `S/MV.Run/`, `S/MV.Run.Tests/ViewApi/` |
 | c | `moonvillage-c` | MV-UI-HUD 1차 | `ai/MV-UI-HUD-min` | `S/MV.UI/`, `S/MV.UI.Tests/`, `A/Addressables/Remote/UI/` |
 | d | `moonvillage-d` | MV-VIEW 2차 | `ai/MV-VIEW-world2` | `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders|Materials/`, `A/Addressables/Remote/World/` |
 | e | `moonvillage-e` | MV-FX | `ai/MV-FX-effects` | `S/MV.Fx/`, `S/MV.Fx.Tests/`, `A/Addressables/Remote/Effect/`, `04_effect` 행 |
-| f | `moonvillage-f` | (IAP 마감 중) → 총괄 패키지 연결 | — | 총괄 통합 Writer |
+| f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
 | g | `moonvillage-g` | MV-TOOL-SND 2차 | `ai/MV-TOOL-SND-tierup0` | `Tools/MvExtract/sound/`, 오디오, `03_sound` 행 1개 |
 
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 335, PlayMode 2, `8de2dc7` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
@@ -59,6 +60,7 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 - D-93 시험 적당히·패키지 설정 우선: 「AI한테 작업 맡기면 너무 테스트가 많아.. 확인 하고 하는건 맡긴한데 그게 너무 세분화 되어있어」, 「저거 프로젝트 설정을 우선하도록 규칙 바꿔줘」 → 위 순서 3·5, `AGENTS.md` Framework·Unity 절, 중앙 규칙 반영.
 - D-87 인수: 규칙·손맛·표 구조로 판정, 완전 일치·캡처 수치는 완료 조건 아님(기존 PASS 시험 유지). 기획서 12 §12.0.
 - D-88 G6: 결제·통계·알림은 패키지만 넣는다. → Framework 3차 묶음 고정본(`Snapshots/20261109-bundle3`)이 나와 있어 `Packages/Frozen/` 연결(총괄).
+- 패키지(2026-11-10 중계 경유 사용자 원문 「총괄한테 프레임워크는 보류하지말고 프로젝트 설정에 맞추어서 설치하라해」): 설정 범위 20개 전체(`network.firebase` 포함) + Firebase·AdMob SDK. 총괄 세션 권한 검사에 막혀 사용자 직접 허용 대기, SDK 내려받기는 사용자 확인 뒤.
 - D-89 NET 구조 유지. D-90 LOGIN 더 연결 안 함. D-91 플레이 가능 빌드 우선. D-92 UI 1차 「구조는 실제, 겉은 더미」(05 머리·11 §G5).
 - 사용자 원문은 기획서 13 §13.3.8과 보관 파일에 있다.
 
