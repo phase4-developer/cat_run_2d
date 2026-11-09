@@ -64,5 +64,34 @@ namespace MV.View
 
         /// <summary>가랜드 전구 k 켜짐: ((k + floor(t·2.5)) % 3) != 0, t = 로비 누적 초.</summary>
         public static bool BulbOn(int k, double tSec) => (k + (long)Math.Floor(tSec * 2.5)) % 3 != 0;
+
+        /// <summary>시설 그림을 구운 기준 크기(px/단위, 03 §3.5.6 「s = 160·sc」).</summary>
+        public const double BakedUnitPx = 160;
+
+        /// <summary>
+        /// 시설 스프라이트 이름(03 §3.5.6). 단계 0은 난로만 그림이 있고 나머지는 null(잠김 표시는 UI 이름표) [추정].
+        /// 애니메이션: 캣타워 2·3단계 12프레임 4.2 fps, 난로 1~3단계 8프레임 10.2 fps. <paramref name="extra"/> = 건조대 생선 수.
+        /// </summary>
+        public static string FacSprite(string key, int st, double tSec, int extra = 0)
+        {
+            switch (key)
+            {
+                case "tower":
+                    if (st <= 0) return null;
+                    return st == 1 ? "Lobby_Fac_Tower_1" : "Lobby_Fac_Tower_" + Math.Min(3, st) + "_" + Frame(tSec, 4.2, 12).ToString("00");
+                case "stove":
+                    if (st <= 0) return "Lobby_Fac_Stove_0";
+                    return "Lobby_Fac_Stove_" + Math.Min(3, st) + "_" + Frame(tSec, 10.2, 8).ToString("00");
+                case "scratch": return st <= 0 ? null : "Lobby_Fac_Scratch_" + Math.Min(3, st);
+                case "basket": return st <= 0 ? null : "Lobby_Fac_Basket_" + Math.Min(3, st);
+                case "rack":
+                    if (st <= 0) return null;
+                    int s3 = Math.Min(3, st), max = s3 * 2;   // 생선 수 1~2 / 1~4 / 1~6
+                    return "Lobby_Fac_Rack_" + s3 + "_F" + Math.Max(1, Math.Min(max, extra));
+                default: return null;
+            }
+        }
+
+        static int Frame(double tSec, double fps, int n) => (int)(Math.Floor(Math.Max(0, tSec) * fps) % n);
     }
 }

@@ -743,7 +743,7 @@ public sealed class WorldSpriteCache : IDisposable {
 
 | 규칙 | 내용 |
 |---|---|
-| 월드 스프라이트 머티리얼 2개 | `MV_WorldSprite`(알파 블렌드, 안개 알파를 셰이더가 뷰 깊이로 계산 — 오브젝트별 속성 없음), `MV_WorldAdditive`(빛). 모든 월드 `SpriteRenderer`가 둘 중 하나의 **공유 머티리얼**을 쓴다 |
+| 월드 스프라이트 머티리얼 2개 | `MV_WorldSprite`(알파 블렌드. 안개 알파는 CPU `DepthSorter`가 그림 단위 앵커 깊이로 계산해 `SpriteRenderer.color` 알파에 곱한다 — 셰이더 계산·오브젝트별 속성 없음, MV-VIEW 1차 구현), `MV_WorldAdditive`(빛). 모든 월드 `SpriteRenderer`가 둘 중 하나의 **공유 머티리얼**을 쓴다 |
 | 색·알파 | `SpriteRenderer.color`(정점색)로만 바꾼다. **`MaterialPropertyBlock`·머티리얼 복제 금지**(배칭이 깨짐) |
 | 같은 텍스처 연속 | 깊이 정렬 순서에서 아틀라스가 바뀌는 지점마다 배치가 끊긴다 → 런 월드 그림을 **테마 아틀라스 하나**에 모은 이유(D-58). 고양이·이펙트만 다른 아틀라스 |
 | 메쉬(지면·집·담장·게이트 배경) | `MV_WorldVertexColor` 머티리얼 1개 공유, 정점색. 집·담장은 구간(청크)별로 하나의 메쉬로 합쳐 다시 만든다([02](02_Visual.md)) |

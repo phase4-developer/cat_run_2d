@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using UnityEditor;
+using UnityEngine;
 
 namespace MV.View.Tests
 {
@@ -104,6 +106,32 @@ namespace MV.View.Tests
             Assert.That(LobbyIso.Bump(1), Is.EqualTo(1).Within(1e-9));
             Assert.That(LobbyIso.Bump(0.97), Is.EqualTo(1.016431312).Within(1e-8));
             Assert.That(LobbyIso.SortingOrder(1), Is.LessThan(LobbyIso.SortingOrder(-1)), "화면 위(뒤)가 먼저");
+        }
+
+        [Test]
+        public void LobbyFacSprite_NamesFollowStageAndFrames()
+        {
+            Assert.That(LobbyIso.FacSprite("tower", 0, 0), Is.Null);
+            Assert.That(LobbyIso.FacSprite("tower", 1, 5), Is.EqualTo("Lobby_Fac_Tower_1"));
+            Assert.That(LobbyIso.FacSprite("tower", 2, 1.0), Is.EqualTo("Lobby_Fac_Tower_2_04"), "4.2 fps");
+            Assert.That(LobbyIso.FacSprite("stove", 0, 0), Is.EqualTo("Lobby_Fac_Stove_0"));
+            Assert.That(LobbyIso.FacSprite("stove", 3, 1.0), Is.EqualTo("Lobby_Fac_Stove_3_02"), "10.2 fps, 8프레임");
+            Assert.That(LobbyIso.FacSprite("rack", 2, 0, 9), Is.EqualTo("Lobby_Fac_Rack_2_F4"));
+            Assert.That(LobbyIso.FacSprite("scratch", 3, 0), Is.EqualTo("Lobby_Fac_Scratch_3"));
+            Assert.That(LobbyIso.FacSprite("basket", 1, 0), Is.EqualTo("Lobby_Fac_Basket_1"));
+        }
+
+        [Test]
+        public void LobbyStagePrefab_HasOrthoCameraAndMaterial()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Addressables/Remote/World/LobbyStage.prefab");
+            Assert.That(prefab, Is.Not.Null);
+            var so = new SerializedObject(prefab.GetComponent<LobbyStage>());
+            var cam = so.FindProperty("_camera").objectReferenceValue as Camera;
+            Assert.That(cam, Is.Not.Null);
+            Assert.That(cam.orthographic, Is.True);
+            Assert.That(cam.orthographicSize, Is.EqualTo(LobbyIso.OrthoSize));
+            Assert.That(so.FindProperty("_spriteMaterial").objectReferenceValue, Is.Not.Null);
         }
     }
 }
