@@ -11,7 +11,7 @@ namespace MV.Data.Tests
     {
         static readonly Dictionary<string, int> s_rowCounts = new Dictionary<string, int>
         {
-            ["00_config"] = 1, ["01_wealth"] = 17, ["02_playResource"] = 5, ["03_sound"] = 33, ["04_effect"] = 47,
+            ["00_config"] = 1, ["01_wealth"] = 17, ["02_playResource"] = 5, ["03_sound"] = 33, ["04_effect"] = 75,
             ["05_contentOpen"] = 18, ["06_balancePreset"] = 3, ["07_consumeType"] = 26, ["08_adPlacement"] = 7, ["09_uiResource"] = 12,
             ["10_lobbyUpgrade"] = 3, ["11_stairLevel"] = 4, ["12_weaponLevel"] = 8, ["13_areaUpgrade"] = 5, ["14_rebirthPerk"] = 4,
             ["16_levelPrice"] = 655,
@@ -95,6 +95,40 @@ namespace MV.Data.Tests
             var gen = MvLevelPriceGenerator.Generate(t);
             var first = gen.First(g => g.Group == stair.levelPriceGroup && g.TargetLevel == 1);
             Assert.That(t.LevelPrice.Get(first.Group, 1).price[0].Value, Is.EqualTo(first.Price));
+        }
+
+        /// <summary>3차 요청 열·행(MV-VIEW·MV-FX·MV-META): 표 구조와 정본 근거 값.</summary>
+        [Test]
+        public void Requests3_ColumnsAndRows_MatchSpec()
+        {
+            var t = TsvFixture.LoadTables();
+            // 02 §2.7.3 지면 끝, 330 출렁임(정본 L2758).
+            Assert.That(t.RunConfig.D(RunConfigKeys.View_GroundFar), Is.EqualTo(120));
+            Assert.That(t.Climb.Config()["bumpH"], Is.EqualTo(0.12).Within(1e-9));
+            // 304: 길가 소품·줄 종류는 deco 규칙(정본 drawMoonProp L3572, drawClothes L3547) — 15행 모두.
+            foreach (var th in t.Theme.Datas)
+            {
+                Assert.That(th.roadsideProps, Is.Not.Empty, th.key);
+                Assert.That(th.lineKind, Is.EqualTo(th.deco == "snow" || th.deco == "roof" ? "Bulbs" : "Clothes"), th.key);
+                Assert.That(th.roadsideProps, Is.EqualTo(t.Theme.ByKey(th.deco).roadsideProps), th.key);
+            }
+            // 105 viewShape = ObjectViewFactory.ShapeOf 분기.
+            Assert.That(t.ObjectKind.ByKey("tower").viewShape, Is.EqualTo(ObjectViewShape.Well));
+            Assert.That(t.ObjectKind.ByKey("enemy").viewShape, Is.EqualTo(ObjectViewShape.Mouse));
+            Assert.That(t.ObjectKind.ByKey("wall").viewShape, Is.EqualTo(ObjectViewShape.Junk));
+            Assert.That(t.ObjectKind.ByKey("archGoal").viewShape, Is.EqualTo(ObjectViewShape.WarpGate));
+            Assert.That(t.ObjectKind.ByKey("cardbox").viewShape, Is.EqualTo(ObjectViewShape.Single));
+            // 04: 자식이 여럿인 묶음은 part 행만 자식으로 갖고, part는 기본 종류 1개.
+            foreach (var g in t.Effect.Datas.Where(e => e.type == EffectData.GroupType && e.children.Count > 1))
+                Assert.That(g.children.All(c => t.Effect.ByKey(c).type == EffectData.PartType), Is.True, g.key);
+            var crit = t.Effect.ByKey("run.projHit.sparksCrit");
+            Assert.That(crit.children, Is.EqualTo(new[] { "fx.sparks" }));
+            Assert.That(crit.when, Is.EqualTo(new[] { "crit" }));
+            Assert.That(crit.hasGrav && crit.grav == 0, Is.True, "중력 0은 빈칸과 다르다");
+            Assert.That(t.Effect.ByKey("god.blast").children.Count(c => c == "god.blast.fireball"), Is.EqualTo(3));
+            Assert.That(t.Effect.ByKey("run.brickFlush.sparks").dz, Is.EqualTo(-0.8).Within(1e-9));
+            // 400 하루 입장 한도(MV-META modePlays): 0 = 한도 없음.
+            Assert.That(t.Content.Datas.Select(c => c.dailyLimit), Is.All.EqualTo(0));
         }
 
         [Test]

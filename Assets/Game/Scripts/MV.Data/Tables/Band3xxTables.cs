@@ -540,7 +540,7 @@ namespace MV.Data
 
         static readonly string[] s_configColumns =
         {
-            "lap", "maxCards", "lapTier", "kDirectMax", "kCompress", "kMax", "stepH", "stepD", "stepW", "z0Gap", "shiftFrom",
+            "lap", "maxCards", "lapTier", "kDirectMax", "kCompress", "kMax", "stepH", "stepD", "stepW", "bumpH", "z0Gap", "shiftFrom",
             "shiftExtra", "landGap", "tBase", "tPerStep", "tMax", "accelP", "riseMin", "risePerK", "riseAhead", "dropSec",
             "dropH", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay", "rlFlyMs",
             "rlEndPad",

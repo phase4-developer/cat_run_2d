@@ -497,6 +497,7 @@ MV.View 소유. 열 정의와 값은 [02 §2.2.2](02_Visual.md)를 그대로 옮
 | lapTier | 4 | [프로토] L2276 | 랩 카드 등급(LEGENDARY) |
 | kDirectMax / kCompress / kMax | 60 / 3 / 150 | [프로토] L2246 | 칸 압축 |
 | stepH / stepD / stepW | 0.42 / 0.72 / 8.6 | [프로토] L2246 | 칸 높이·깊이·폭(m) |
+| bumpH | 0.12 | [프로토] L2758 | 오르는 중 칸 사이 출렁임 높이(m): `py = (floor(sp)+1)·stepH + sin(frac(sp)·π)·bumpH` |
 | z0Gap | 1.4 | [프로토] L2246 | 첫 칸 z = 계단 z + 1.4 |
 | shiftFrom / shiftExtra | 0.5 / 8 | [프로토] L2226, L2247 | 오브젝트 제거 기준, 밀어내기 여분 |
 | landGap | 0.2 | [프로토] L2290 | 착지 z = zEnd + 0.2 |
@@ -662,6 +663,32 @@ zoneIndex(0기반, 보상 `ValuePerZone` 계산) = Zone을 sort 순으로 늘어
 
 테마 6~15는 [08 §8.2.5](08_Content.md)(결정 대기 D-72). 새 테마는 행 추가 + 아틀라스 굽기(03 §3.6.4).
 
+**`roadsideProps`·`lineKind` 규칙(1~5행에서 읽은 것)** — 정본은 테마 행에 이 값이 없고 `deco`로 그림을 고른다: 소품 `drawMoonProp` L3572, 줄 `drawClothes` L3547. 그래서 두 열은 `deco`가 같은 1~5행 값을 그대로 쓴다.
+
+| deco | roadsideProps | lineKind |
+|---|---|---|
+| market | `World_Prop_Crate_Blue_A/…_Blue_B/…_Red_A/…_Red_B/World_Prop_Pot` | Clothes |
+| harbor | `World_Prop_Buoy/World_Prop_Crate_Blue_Fish/World_Prop_Crate_Red_Fish/World_Prop_Jar` | Clothes |
+| snow | `World_Prop_Snowman/World_Prop_Jar` | Bulbs |
+| stairs, roof | `World_Prop_Pot/World_Prop_Jar/World_Prop_Bag` | stairs Clothes / roof Bulbs |
+
+**6~15행 값 [추정: deco 규칙]** — 08 §8.2.5 「소품 묶음은 정본 5종 재사용」에 따라 위 규칙으로 채웠다.
+
+| id | key | deco | roadsideProps | lineKind |
+|---|---|---|---|---|
+| 304001006 | snowday | snow | snow 묶음 | Bulbs |
+| 304001007 | stallnight | market | market 묶음 | Clothes |
+| 304001008 | park | stairs | stairs 묶음 | Clothes |
+| 304001009 | subway | roof | roof 묶음 | Bulbs |
+| 304001010 | skyline | roof | roof 묶음 | Bulbs |
+| 304001011 | blossom | stairs | stairs 묶음 | Clothes |
+| 304001012 | cafe | market | market 묶음 | Clothes |
+| 304001013 | onsen | harbor | harbor 묶음 | Clothes |
+| 304001014 | lighthouse | harbor | harbor 묶음 | Clothes |
+| 304001015 | moonstair | stairs | stairs 묶음 | Clothes |
+
+결정 후보(D-72 안): 낮 테마(`snowday` night 0)에도 전구줄(Bulbs)을 쓸지, 밤 테마(`stallnight` 0.6·`lighthouse` 0.9·`moonstair` 1)를 빨랫줄 대신 전구줄로 바꿀지. 정본 규칙(deco)대로 두면 위 표, 밤 기준으로 바꾸면 `lineKind` 값만 고친다(코드 수정 없음).
+
 ---
 
 ## 7.5 오브젝트 종류 — 컴포넌트 조합(핵심)
@@ -735,6 +762,7 @@ public interface IRunRewardSink    { void Grant(IReadOnlyList<ConsumeData> rewar
 | rewardValuePerZone / rewardValueRule | §7.1.7 | 0 / Flat | |
 | hitRewardType / hitRewardId / hitRewardValue | consume | 빈칸 | **맞을 때마다** 보상(상자 타격당 츄르 1) |
 | sprite | res(`/` 변형) | | 본체 스프라이트. 기본 아틀라스 `@theme` |
+| viewShape | enum | Single | 그림 모양(MV.View 뷰 조립 방식): `Single`(스프라이트 1장) / `Junk`(잡동사니 칸) / `RollGate`(두루마리 관문) / `WarpGate`(아치) / `Well`(우물) / `Stair`(계단) / `CoinPile`(츄르 더미) / `CatnipPot`(캣닢 화분) / `Mouse`(쥐). 값 목록은 MV.View `ObjectShape`와 1:1 |
 | spritePick | enum | Single | `Single` / `JunkCycle`(wall: `v = (lane + row×2 + bar) % 3`로 목록에서 고르고 색 2종은 `idx % 2`, [03 §3.5.3](03_ResourcePipeline.md)) / `Anim`(프레임 접두 + 번호) |
 | spriteSoul | res | 빈칸 | 보상이 생선(603)인 칸이면 이 스프라이트(`World_Obj_Junk_FishBox`) |
 | tint | strList(color) | 빈칸 | 메쉬로 그리는 부분 색(게이트 배경, 관문 발판). [03 제안 열] |
@@ -778,6 +806,7 @@ public interface IRunRewardSink    { void Grant(IReadOnlyList<ConsumeData> rewar
 | arch | — | — | `World_Obj_Arch_Post` / Single, tint 발판색 03 | Arch / `ui.run.floorN` | — | — | L1791 |
 | archGoal | — | — | `World_Obj_Arch_Post_Gold` / Single | Arch / `ui.run.areaGate` | — | — | L1801 |
 
+- `viewShape` 값: tower `Well`, enemy `Mouse`, sgate·cgate `RollGate`, stair `Stair`, coin·coinBonus `CoinPile`, gem·gemBonus `CatnipPot`, wall `Junk`, arch·archGoal `WarpGate`, cardbox `Single`. 지금 MV.View `ObjectViewFactory.ShapeOf`가 key·컴포넌트로 고르는 분기를 그대로 옮긴 것이다(새 종류는 코드 없이 이 열로 모양을 고른다).
 - 파괴 보상 소리: wall은 보상 종류에 따라 `soul`/`gem`/`coin` 소리를 더 낸다(L1937~1941). 이것은 `07_consumeType.gainSound`(§7.8.12)로 정한다 — 종류별 「얻음」 소리는 consumeType 행이 가진다.
 - `gem` 행의 `rewardValue = 10`은 `DiaCap` 규칙이라 무시되지만 `14_rebirthPerk[dcap].base`와 같게 적는다(다르면 검증 경고).
 - 츄르(602)는 지급 때 `goldMul()`이 곱해진다(타격당 1 포함, [04 §4.3.3](04_GameRules.md)).
@@ -1752,9 +1781,11 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 
 | 표 | id | 핵심 열 | 관계 |
 |---|---|---|---|
-| `400_content` | `400000001`(본편), `400001001`~`004` | id, key, contentType(0 본편 / 1~4 모드 종류, [08 §8.4.2](08_Content.md)), active, sort, icon, bg, bgm, banner, hudId(모드 HUD, 비면 `Run` — [05](05_Screens.md) 제안), modeRuleId, stageGroup, openId, spendResourceType/Id/Value(입장 비용) | → 402, 401.group, 05, 02, 08_adPlacement[modeTicket] |
+| `400_content` | `400000001`(본편), `400001001`~`004` | id, key, contentType(0 본편 / 1~4 모드 종류, [08 §8.4.2](08_Content.md)), active, sort, icon, bg, bgm, banner, hudId(모드 HUD, 비면 `Run` — [05](05_Screens.md) 제안), modeRuleId, stageGroup, openId, spendResourceType/Id/Value(입장 비용), dailyLimit(하루 입장 한도, 0 = 없음 — `mvDaily.modePlays[key]`와 비교) | → 402, 401.group, 05, 02, 08_adPlacement[modeTicket] |
 | `401_modeStage` | `401{모드 3}{단계+1 3}` | 단계별 templateId·floorGroup·enemyHp·배율, clearReward…, firstClearReward… | → 310, 303(묶음 901~), 102 |
 | `402_modeRule` | `402001001`~`004` | IModeRule 키, cardPoolId(→111 key), cycleGroup(→312), fieldGenKey(→313), climbKey(→330), layout, themeId | → 111, 312, 313, 330, 304 |
+
+`400_content.dailyLimit`은 MV-META `RecordModePlay`의 한도 비교 자리다. 08은 모드 입장을 입장권(하루 3장)·광고 충전으로만 막고 모드별 하루 한도를 정하지 않았으므로 모든 행 0이다. 결정 후보: 입장권과 별도로 모드별 하루 한도를 둘지(두면 이 열 값만 넣는다).
 
 모드 전용 오브젝트(08 요청, 이 문서 표에 행 추가): `102_enemy` `mouseDefence`·`bossMouse`, `105_objectKind` `cardbox`, `109_moveAI` `Advance`, `114_hpRule` `ModeStage` — §7.9.5.
 
@@ -1949,23 +1980,43 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 
 | 열 | 타입 | 뜻 |
 |---|---|---|
-| id | int | `400{그룹 1}{순번 3}` 형식 7자리: 4001xxx 기본 종류(14), 4002xxx 런 사건(23), 4003xxx 신 연출, 4004xxx 우다다, 4005xxx 룰렛·UI |
+| id | int | `400{그룹 1}{순번 3}` 형식 7자리: 4001xxx 기본 종류(14), 4002xxx 런 사건(23), 4003xxx 신 연출, 4004xxx 우다다, 4005xxx 룰렛·UI, 4006xxx 묶음 자식(part, 28) |
 | key | string | `fx.sparks`, `run.wallBreak` … (다른 표의 이펙트 열 값) |
-| type | enum | `particle` / `shape` / `group`(children 묶음) 등 06 정의 |
+| type | enum | `particle` / `shape` / `group`(children 묶음) / `part`(묶음 안 자식 1개의 인자 행) 등 06 정의 |
 | prefab | res | 프리팹 Addressables 주소(`Fx/Sparks`) |
 | poolSize | int | |
 | blend | enum | `add` / `normal` |
 | sortBias | float | 깊이 정렬 편향 |
 | color | string | `#rrggbb` 또는 토큰 `$tier`(115 색) / `$elem`(원소색) / `$rew`(보상별 분기) |
-| count, speed, size, life, grav, radius | float | 기본 파라미터 |
-| flag | string | 자식 행 조건(`$rew` 분기 등) |
-| children | strList | 함께 재생할 04 key 목록 |
+| count, speed, size, life, grav, radius | float | 기본 파라미터. 빈칸 = 종류 기본값. **grav는 `0`(중력 없음)과 빈칸이 다르다** |
+| flag | string | 그리기 옵션(`noRing` = 링 없는 boom) |
+| children | strList | 함께 재생할 04 key 목록(같은 key를 여러 번 적으면 그 수만큼 재생). part 행은 기본 종류 정확히 1개 |
 | y | float | 높이 |
+| when | strList | part 행 재생 조건. `/` 목록이고 모두 성립해야 재생, 빈칸 = 늘. 이름: `normal`·`crit`(치명), `coin`·`gem`(상자 종류), `fire`·`bolt`(원소). 성립 여부는 호출부(MV.Fx)가 사건에서 정한다 |
+| dz | float | z 오프셋(m) |
+| jx / jz | float | x·z 무작위 흔들기 반폭(m, 균등 ±) |
 | anchor | enum | `hit` / `obj` / `player` / `climbTop` |
 | chance | float | 재생 확률 |
 | shake | string | `shake.*` 키 앞부분 |
 | hitStop | string | `hitstop.*` 키 |
 | #근거 | | |
+
+**묶음 자식(part) 행** — 자식이 여럿인 묶음은 자식마다 part 행을 두고 묶음의 `children`에 part key를 적는다(자식 1개 묶음은 지금처럼 묶음 행 자신이 인자를 가진다). 값은 [06 §6.4.2~6.4.4](06_Effects.md)와 정본 호출 인자다. key는 `<묶음>.<이름>`.
+
+| id | key | 자식 | when | 색 | count·speed·size·life·grav / radius·flag | y·dz·jx·jz |
+|---|---|---|---|---|---|---|
+| 4006001~003 | run.enemyKill.debris / .sparks / .dust | debris / sparks / dust | | `#5a8a3a` / `#ffd65a` / — | 8·–·0.2 / 12·5·0.4·0.6 / 4 | 0.8 / 1 / 0.8 |
+| 4006004~007 | run.wallBreak.debris / .stone / .dust / .boom | debris / debris / dust / boom | | `$rew` / `#5b606c` / — / `#ffd6a0` | 14·–·0.32 / 4·–·0.22 / 7 / 1.5 noRing | 1.3 / 1.6 / 1 / 1.2 |
+| 4006008~010 | run.coinBreak.dust / .sparks / .sparksGem | dust / sparks / sparks | – / coin / gem | — / `#ffd65a` / `#7feaff` | 4 / 18·6·0.4·0.8 / 20·6·0.45·0.9 | 0.6 / 1 / 1.2 |
+| 4006011~013 | run.projHit.impact / .sparks / .sparksCrit | impact / sparks / sparks | – / normal / crit | — / `#ffffff` / `#ff6a3d` | — / 4·3.4·0.3·0.3·0 / 8·3.4·0.5·0.3·0 | 1 |
+| 4006014~015 | run.brickFlush.chunk / .sparks | brickChunk / sparks | | — / `#ffb04a` | 개수 = 사건 벽돌 수 / 4·3·0.3·0.35 | 1.2 jx 0.3 / 1.4 dz −0.8 |
+| 4006016~019 | god.storm.paw / .dust / .fireball / .boom | paw / dust / fireball / boom | bolt / bolt / fire / – | — / — / — / `$elem` | — / 5 / size 1.4 / 1.5 | 0.1 / 0.5 / 0.6 / 0.6 |
+| 4006020~024 | god.blast.hiss / .fireball(×3) / .boomFire / .boomBolt / .flash | hiss / fireball / boom / boom / boom | bolt / fire / fire / bolt / – | — / — / `#ff5a1f` / `#9fe0ff` / `#ffffff` | — / size 2.4 / 4.4 / 4.4 / 2.2 noRing | 0.6 / 0.6 jx·jz 1 / 1 / 1 / 1.6 |
+| 4006025~026 | climb.lap.boom / .sparks | boom / sparks | | `$tier` | 3 noRing / 24·7·0.55·1.1 | 꼭대기 칸 위 2 / 3 |
+| 4006027~028 | climb.tier.boom / .sparks | boom / sparks | | `$tier` | 2.2 / 16·5·0.5·0.9 | 오른 칸 위 0.6 / 1 |
+
+- 표에 두지 않는 것(호출부 계산): 위치 기준점(사건·오브젝트·계단 칸), `$rew`·`$tier`·`$elem` 색 풀이, projHit impact의 치명 표시, brickFlush 벽돌 수, chainFire 반지름 `1.6 + 0.3·연쇄수`, god.storm 불구름(크기 `rnd(2.6, 3.8)`·수명 = 사건 값인 절차 연출, L2157~2162)과 낙하 횟수.
+- 검증(§7.13): part 행은 자식이 기본 종류 1개, `when` 이름은 위 목록, `when`은 part 행에만(오류). 어느 묶음도 쓰지 않는 part는 경고.
 
 이 문서가 참조하는 key: `run.towerHit`, `run.enemyKill`, `run.wallHit`, `run.wallBreak`, `run.wallRewardSoul`, `run.wallRewardDia`, `run.coinHit`, `run.coinBreak`, `run.statGatePass`(sgate), `run.cloneGatePass`(cgate), `run.steal`, `run.brickFlush`, `climb.stage`.
 

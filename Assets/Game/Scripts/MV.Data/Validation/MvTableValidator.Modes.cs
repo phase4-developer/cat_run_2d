@@ -41,6 +41,7 @@ namespace MV.Data
                     r.Error(name, c.id, "contentType", $"contentType {(int)c.contentType}는 0~4가 아닙니다");
                     continue;
                 }
+                if (c.dailyLimit < 0) r.Error(name, c.id, "dailyLimit", "dailyLimit은 0(한도 없음) 이상이어야 합니다");
                 if (c.contentType == ContentType.Main) continue;
                 var rule = t.ModeRule.Get(c.modeRuleId);
                 if (rule == null) r.Error(name, c.id, "modeRuleId", "모드 행은 modeRuleId가 있어야 합니다");

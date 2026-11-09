@@ -118,10 +118,14 @@ namespace MV.Data
     public sealed class EffectData : MvRow
     {
         public const string Table = "04_effect";
+        /// <summary>`type` 값: 묶음(children을 함께 재생) / 묶음 안 자식 1개의 인자 행(07 §7.11.2).</summary>
+        public const string GroupType = "group", PartType = "part";
+        /// <summary>`when` 조건 이름(호출부가 지금 성립하는 이름을 넘긴다. 행의 이름이 모두 성립해야 재생).</summary>
+        public static readonly IReadOnlyList<string> WhenTokens = new[] { "normal", "crit", "coin", "gem", "fire", "bolt" };
         // 열 정의 정본은 06 §6.4. type·blend 값 목록이 06에서 자라므로 문자열로 둔다. anchor는 07 §7.11.2 enum.
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Str("type").Res("prefab", MvAtlas.Address)
             .Int("poolSize").Str("blend").Float("sortBias").Str("color").Float("count").Float("speed").Float("size")
-            .Float("life").Float("grav").Float("radius").Str("flag").Strs("children").Float("y").Enum<EffectAnchor>("anchor")
+            .Float("life").Float("grav").Float("radius").Str("flag").Strs("children").Float("y").Strs("when").Float("dz").Float("jx").Float("jz").Enum<EffectAnchor>("anchor")
             .Float("chance").ConfigKey("shake", prefix: true).ConfigKey("hitStop");
 
         public string type { get; private set; }
@@ -135,10 +139,19 @@ namespace MV.Data
         public double size { get; private set; }
         public double life { get; private set; }
         public double grav { get; private set; }
+        /// <summary>grav 칸이 채워져 있는지(0 = 중력 없음과 빈칸 = 종류 기본값을 가른다).</summary>
+        public bool hasGrav { get; private set; }
         public double radius { get; private set; }
         public string flag { get; private set; }
         public IReadOnlyList<string> children { get; private set; }
         public double y { get; private set; }
+        /// <summary>part 행 재생 조건(`/` 목록, 모두 성립해야 재생). 빈칸 = 늘 재생.</summary>
+        public IReadOnlyList<string> when { get; private set; }
+        /// <summary>z 오프셋(m).</summary>
+        public double dz { get; private set; }
+        /// <summary>x·z 무작위 흔들기 반폭(m, 균등 ±).</summary>
+        public double jx { get; private set; }
+        public double jz { get; private set; }
         /// <summary>null = 빈칸(함수 기본값, 06 §6.4).</summary>
         public EffectAnchor? anchor { get; private set; }
         public double chance { get; private set; }
@@ -161,10 +174,15 @@ namespace MV.Data
             size = D(r, "size");
             life = D(r, "life");
             grav = D(r, "grav");
+            hasGrav = S(r, "grav").Trim().Length > 0;
             radius = D(r, "radius");
             flag = S(r, "flag");
             children = Strs(r, "children");
             y = D(r, "y");
+            when = Strs(r, "when");
+            dz = D(r, "dz");
+            jx = D(r, "jx");
+            jz = D(r, "jz");
             anchor = ConsumeData.TryParseEnum(r.Get("anchor"), out EffectAnchor a) ? a : (EffectAnchor?)null;
             chance = D(r, "chance", 1);
             shake = S(r, "shake");
