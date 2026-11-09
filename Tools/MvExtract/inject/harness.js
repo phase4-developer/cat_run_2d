@@ -129,7 +129,8 @@
             const A0 = S('pj')(an[0], an[1], an[2]); const P5 = S('camera.projectionMatrix.elements[5]');
             const H2 = (2 * scale * A0.d) / (P5 * nrm); S(`W = ${(H2 * 9) / 16}; H = ${H2};`);
             const A1 = S('pj')(an[0], an[1], an[2]);
-            CTX.setTransform(1, 0, 0, 1, X + sh[0] - A1.x, Y + sh[1] - A1.y);
+            const TX = X + sh[0] - A1.x, TY = Y + sh[1] - A1.y; CTX.setTransform(1, 0, 0, 1, TX, TY);
+            window.__mvPX = X - TX; window.__mvPY = Y - TY; // test 식은 변환 전 좌표를 본다
           } else proj = wrapPj([an[0], an[1], an[2]], X + sh[0], Y + sh[1], scale, nrm);
         } else if (job.wh) {
           S(`W = ${job.wh[0]}; H = ${job.wh[1]};`);

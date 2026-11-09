@@ -1,11 +1,11 @@
-// 표 TSV 읽기. 작업 트리에 표가 있으면 그것을, 없으면 MV_TABLE_REF(기본 ai/MV-DATA-tables-loader)의 커밋에서 읽는다(읽기 전용).
+// 표 TSV 읽기. 작업 트리에 표가 있으면 그것을, 없으면 MV_TABLE_REF(기본 dev)의 커밋에서 읽는다(읽기 전용).
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { REPO } from './canon.mjs';
 
 const TSV_DIR = 'Assets/Game/GameData/Table/TSV';
-const REF = process.env.MV_TABLE_REF || 'ai/MV-DATA-tables-loader';
+const REF = process.env.MV_TABLE_REF || 'dev'; // ai/MV-DATA-tables-loader는 dev에 병합(05b42af)되어 지워졌다
 
 export function tableSource() {
   return existsSync(join(REPO, TSV_DIR, '304_theme.txt')) ? `worktree:${TSV_DIR}` : `git:${REF}:${TSV_DIR}`;

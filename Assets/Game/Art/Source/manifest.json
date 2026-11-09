@@ -914,7 +914,7 @@
     "kind": "rack",
     "st": 1
    },
-   "sha256": "167d69959c932fc65f2e18c281942929279f5cfbcdc35ed7ac94a201d4f5a02b"
+   "sha256": "19502f89bedbdf5371186df407f90d006598e702dbf76078e72eb114cc9e5206"
   },
   {
    "name": "UI_Icon_Fac_Rack_2",
@@ -935,7 +935,7 @@
     "kind": "rack",
     "st": 2
    },
-   "sha256": "d74a898c1756fd161fcb11c71c20e9628857ef701242335e3b919c2c212199ea"
+   "sha256": "49075f7534e192061e3af262e7ffbb70d61b7f9c8613bcd0619092a4ab026d5b"
   },
   {
    "name": "UI_Icon_Fac_Rack_3",
@@ -956,7 +956,7 @@
     "kind": "rack",
     "st": 3
    },
-   "sha256": "2ccf3799fbfffd8a30119ab522c2f9956b804bd08f7ee2371287f3476d1130e3"
+   "sha256": "0032ad568ef59721de7805f20c1f2aca071d0bddad18dc1523621350a8c075ef"
   },
   {
    "name": "UI_Icon_Fac_Tower_1",
@@ -977,7 +977,7 @@
     "kind": "tower",
     "st": 1
    },
-   "sha256": "cb2d00d44d41d0b82a6c524eb006b85fe56c63b67e4705cee17f4dfd0e3ae287"
+   "sha256": "aeaad762f8daa0155192e96bed0ed7755851c0e286e22fa4cb8692c0672734c9"
   },
   {
    "name": "UI_Icon_Fac_Tower_2",
@@ -998,7 +998,7 @@
     "kind": "tower",
     "st": 2
    },
-   "sha256": "4b9c85d5c7bb605ecd7c3d5304c3f340aff8bc789094ba8535342c6c3acad080"
+   "sha256": "e4a1d9bf48ddb10a96735bfd6bdaf112189bc41e37f75e8952ad110baa47a0a8"
   },
   {
    "name": "UI_Icon_Fac_Tower_3",
@@ -1019,7 +1019,7 @@
     "kind": "tower",
     "st": 3
    },
-   "sha256": "861682b1245c055dfd765775e26ff62128b02f40a6f10c19f87e0ad7a8a00550"
+   "sha256": "d13923054e9adc17772d75f7a8bdb0f4161d9480649e784608a0a80451d36125"
   },
   {
    "name": "UI_Icon_Gold",
@@ -9533,6 +9533,484 @@
    "args": {}
   },
   {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
+  },
+  {
    "name": "World_Proj_1",
    "atlas": "Atlas_World_Theme_blossom",
    "theme": "blossom",
@@ -9808,6 +10286,484 @@
    "drive": "time",
    "src": "L3652",
    "args": {}
+  },
+  {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
   },
   {
    "name": "World_Proj_1",
@@ -10087,6 +11043,484 @@
    "args": {}
   },
   {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
+  },
+  {
    "name": "World_Proj_1",
    "atlas": "Atlas_World_Theme_harbor",
    "theme": "harbor",
@@ -10362,6 +11796,484 @@
    "drive": "time",
    "src": "L3652",
    "args": {}
+  },
+  {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
   },
   {
    "name": "World_Proj_1",
@@ -10641,6 +12553,484 @@
    "args": {}
   },
   {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
+  },
+  {
    "name": "World_Proj_1",
    "atlas": "Atlas_World_Theme_market",
    "theme": "market",
@@ -10916,6 +13306,484 @@
    "drive": "time",
    "src": "L3652",
    "args": {}
+  },
+  {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
   },
   {
    "name": "World_Proj_1",
@@ -11195,6 +14063,484 @@
    "args": {}
   },
   {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
+  },
+  {
    "name": "World_Proj_1",
    "atlas": "Atlas_World_Theme_onsen",
    "theme": "onsen",
@@ -11470,6 +14816,484 @@
    "drive": "time",
    "src": "L3652",
    "args": {}
+  },
+  {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
   },
   {
    "name": "World_Proj_1",
@@ -11749,6 +15573,484 @@
    "args": {}
   },
   {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
+  },
+  {
    "name": "World_Proj_1",
    "atlas": "Atlas_World_Theme_roof",
    "theme": "roof",
@@ -12024,6 +16326,484 @@
    "drive": "time",
    "src": "L3652",
    "args": {}
+  },
+  {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
   },
   {
    "name": "World_Proj_1",
@@ -12303,6 +17083,484 @@
    "args": {}
   },
   {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
+  },
+  {
    "name": "World_Proj_1",
    "atlas": "Atlas_World_Theme_snowday",
    "theme": "snowday",
@@ -12578,6 +17836,484 @@
    "drive": "time",
    "src": "L3652",
    "args": {}
+  },
+  {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
   },
   {
    "name": "World_Proj_1",
@@ -12857,6 +18593,484 @@
    "args": {}
   },
   {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
+  },
+  {
    "name": "World_Proj_1",
    "atlas": "Atlas_World_Theme_stairs",
    "theme": "stairs",
@@ -13134,6 +19348,484 @@
    "args": {}
   },
   {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
+  },
+  {
    "name": "World_Proj_1",
    "atlas": "Atlas_World_Theme_stallnight",
    "theme": "stallnight",
@@ -13409,6 +20101,484 @@
    "drive": "time",
    "src": "L3652",
    "args": {}
+  },
+  {
+   "name": "World_Item_Badge_Dia",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Item_Badge_Dia.png",
+   "w": 48,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 0.3은 런타임)",
+   "args": null,
+   "sha256": "9d37a4bb4338cf44f91b231d77fd567861aef6d4dfc61f56b159dfa96f783c40"
+  },
+  {
+   "name": "World_Item_Badge_Gold",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Item_Badge_Gold.png",
+   "w": 80,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3626(회전 -0.5는 런타임)",
+   "args": null,
+   "sha256": "ece40776b5d9db32ba39e1abfd84a84d875dae8654047f862389f5df40a9909e"
+  },
+  {
+   "name": "World_Item_CatnipPot",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Item_CatnipPot.png",
+   "w": 192,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.03774
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3112~3116(반짝이는 Fx_Star4 런타임)",
+   "args": null,
+   "sha256": "ccd5ef21eb0e3fe275eb91601d1828cd3c74b6ee4db63c6387f574686660af76"
+  },
+  {
+   "name": "World_Item_Churu_0",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Item_Churu_0.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 0
+   },
+   "sha256": "2a135b65c91d8d7bff4e7d9d80163b60a852f57cfc30fb506ece8a2776e17240"
+  },
+  {
+   "name": "World_Item_Churu_1",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Item_Churu_1.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c160ea8084fc0b9cc0a982436b4334488efe4f9db04a6279adce89178a358f72"
+  },
+  {
+   "name": "World_Item_Churu_2",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Item_Churu_2.png",
+   "w": 96,
+   "h": 40,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3108(더미 조립·출렁은 런타임)",
+   "args": {
+    "i": 2
+   },
+   "sha256": "2a200c85cc823820cd0bc2f18e87301605028fc810b226f6db39bd582938012f"
+  },
+  {
+   "name": "World_Obj_Arch_Post",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Arch_Post.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Arch_Post_Gold",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Arch_Post_Gold.png",
+   "w": 280,
+   "h": 444,
+   "pivot": [
+    0.21429,
+    0.01802
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3216",
+   "args": null,
+   "sha256": "390fe81bf16a62f549bda8de49a0fda26e8dedad6c2bccc3dfbde04298730775"
+  },
+  {
+   "name": "World_Obj_Gate_RollPaper",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Gate_RollPaper.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3638",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "11151dc07207042a511747a8c0f8e20ec1f20d4aa757a64330b123cfe463e222"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_0",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Gate_RollYarn_0.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 0
+   },
+   "sha256": "1b3ae789d97a3acde6afc0536f53080066ef03ebcf9ab948d69b64ced540c030"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_1",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Gate_RollYarn_1.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 1
+   },
+   "sha256": "c51d378d5cdbd0d76f83de086752f5c4c211568fbb5d8accb7d2f6259012342c"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_2",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Gate_RollYarn_2.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 2
+   },
+   "sha256": "3814be265de97cab3b7372d6bc65c31c38b6b86576cb33251c9286b107554588"
+  },
+  {
+   "name": "World_Obj_Gate_RollYarn_3",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Gate_RollYarn_3.png",
+   "w": 76,
+   "h": 76,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3639",
+   "args": {
+    "hw": 1,
+    "i": 3
+   },
+   "sha256": "6c3ab934752a4d7f55adb8dbc3293b3d72199a0767725d0aba707da9575d60e8"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Blue",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Junk_Bag_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 1
+   },
+   "sha256": "b1ca80fbee92e09301eb35d777956ecd87603e82d39e6a8feae5b0a015b970b1"
+  },
+  {
+   "name": "World_Obj_Junk_Bag_Dark",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Junk_Bag_Dark.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 1
+   },
+   "sha256": "16bbea62e43727a189278ed778d98ab4e7388397a79a7b4c1c860930266544e0"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Blue",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Junk_Crate_Blue.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 2
+   },
+   "sha256": "8cf7468efcfd36ed0ebf15d22c5980caadbf9609fbd79c4d2cffc8a139e4d51d"
+  },
+  {
+   "name": "World_Obj_Junk_Crate_Red",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Junk_Crate_Red.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 1,
+    "lane": 2
+   },
+   "sha256": "75e4180bb140c28ef16bc7f91c120d5c55c91cdaaab3535617059fd1de4a3284"
+  },
+  {
+   "name": "World_Obj_Junk_FishBox",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Junk_FishBox.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0,
+    "rew": "soul"
+   },
+   "sha256": "d14993afd176d0746bd87cd5a7060f2590882dc6fe8fa057bae8c75d16087506"
+  },
+  {
+   "name": "World_Obj_Junk_Parcel",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Junk_Parcel.png",
+   "w": 296,
+   "h": 264,
+   "pivot": [
+    0.47297,
+    0.12121
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3607~3630",
+   "args": {
+    "idx": 0,
+    "lane": 0
+   },
+   "sha256": "42d14aa2c094a089f7e9b289b393230c5f0c8af3dad2fe9e1edca4a9e422c107"
+  },
+  {
+   "name": "World_Obj_Stair_Arrow",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Stair_Arrow.png",
+   "w": 168,
+   "h": 176,
+   "pivot": [
+    0.5,
+    0.45455
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3208(출렁은 런타임)",
+   "args": null,
+   "sha256": "1e48af3e70c09856cbb33ef55d5ac4cf6ca1b29b6d5f1e3e87980010fb94ca24"
+  },
+  {
+   "name": "World_Obj_Stair_Step_0",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Stair_Step_0.png",
+   "w": 1076,
+   "h": 104,
+   "pivot": [
+    0.48141,
+    0.5
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 0
+   },
+   "sha256": "de76cc7891d615470ea52cb91a668224e933ff3ade86b81694795188be3d42cc"
+  },
+  {
+   "name": "World_Obj_Stair_Step_1",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Stair_Step_1.png",
+   "w": 1048,
+   "h": 160,
+   "pivot": [
+    0.48092,
+    0.29375
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 1
+   },
+   "sha256": "c64f7dbf2bef6345ca120ef825970a6df3e3135a20df2ca895cafaa9b8c30f1c"
+  },
+  {
+   "name": "World_Obj_Stair_Step_2",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Stair_Step_2.png",
+   "w": 1020,
+   "h": 220,
+   "pivot": [
+    0.48039,
+    0.21364
+   ],
+   "pivotName": "FrontBottom",
+   "ppu": 128,
+   "border": null,
+   "src": "L3204~3206",
+   "args": {
+    "i": 2
+   },
+   "sha256": "9a0b1885e242db51ffada617a404cbe05e6d4ce2224f1362704e52f01469c1c0"
+  },
+  {
+   "name": "World_Obj_Well_Mouth",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Obj_Well_Mouth.png",
+   "w": 248,
+   "h": 128,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "WellMouth",
+   "ppu": 128,
+   "border": null,
+   "src": "L3645(벽돌 고리는 따로)",
+   "args": null,
+   "sha256": "5ae1d21ec4974009ee347ace962dc3d4cf644bb0e00296389b730852e922adda"
   },
   {
    "name": "World_Proj_1",

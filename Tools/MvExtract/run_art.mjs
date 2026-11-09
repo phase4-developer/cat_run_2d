@@ -96,7 +96,11 @@ if (partial && existsSync(mPath)) { // 일부 실행이면 기존 항목과 합�
 }
 writeFileSync(mPath, JSON.stringify({ canon: 'fe573cf2f8ed9b90030c993e8127ecd479f4f2d47195d3fbfa19962694926dfa', tool: 'Tools/MvExtract run_art.mjs', items: merged }, null, 1) + '\n');
 const cat = merged.flatMap((m) => (m.frames ? m.frames.map((f) => [m.atlas, f.name, 0]) : [[m.atlas, m.name, 0]])).sort((a, b) => (a[0] + '\t' + a[1]).localeCompare(b[0] + '\t' + b[1]));
-writeFileSync(join(OUT, 'sprite_catalog.tsv'), 'atlas\tname\ttemp\n' + cat.map((r) => r.join('\t')).join('\n') + '\n');
+// temp_art.mjs가 넣은 임시 행(temp 1)은 정식 이름이 생기지 않은 것만 남긴다(03 §3.13.4)
+const cPath = join(OUT, 'sprite_catalog.tsv'), have = new Set(cat.map((r) => r[1]));
+const tmpRows = existsSync(cPath) ? readFileSync(cPath, 'utf8').split('\n').slice(1).filter(Boolean).map((l) => l.split('\t')).filter((r) => r[2] === '1' && !have.has(r[1])) : [];
+const catAll = cat.concat(tmpRows).sort((a, b) => (a[0] + '\t' + a[1]).localeCompare(b[0] + '\t' + b[1]));
+writeFileSync(cPath, 'atlas\tname\ttemp\n' + catAll.map((r) => r.join('\t')).join('\n') + '\n');
 
 const pngCount = cat.length;
 const rep = [`# MvExtract 그림 추출 보고`, ``, `- job ${pick.length}, 카탈로그 행 ${pngCount}, 실패 ${failures.length}, 차단된 외부 요청 ${blocked.length}`, ``, ...failures.map((f) => `- 실패: ${f}`)].join('\n');
