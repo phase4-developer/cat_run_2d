@@ -15,29 +15,38 @@ namespace MV.Editor.Tests
     public sealed class MvAtlasSetupTests
     {
         // 기획서 03 §3.8.1 표(최대 크기, Android·iOS 형식, Mipmap, 타이트, 패딩)와 §3.8.5 라벨을 코드와 따로 적어 대조한다.
-        [TestCase("Atlas_UI_Common", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.core")]
-        [TestCase("Atlas_UI_Hud", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.core")]
-        [TestCase("Atlas_UI_Icon", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.core")]
-        [TestCase("Atlas_UI_Lobby", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.lobby")]
-        [TestCase("Atlas_UI_Card", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.card")]
-        [TestCase("Atlas_World_Theme_market", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "theme.market")]
-        [TestCase("Atlas_World_Theme_snowday", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "theme.snowday")]
-        [TestCase("Atlas_World_Cat_T8", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "cat")]
-        [TestCase("Atlas_World_Friend_T1", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "cat")]
-        [TestCase("Atlas_World_Lobby", false, 2048, TextureImporterFormat.ASTC_6x6, false, true, 4, "lobby")]
-        [TestCase("Atlas_Fx_Common", false, 1024, TextureImporterFormat.ASTC_4x4, true, false, 8, "fx")]
-        public void AtlasSpec_FollowsSpecTable(string atlas, bool ui, int max, TextureImporterFormat format, bool mip, bool tight, int padding, string label)
+        static readonly (string atlas, bool ui, int max, TextureImporterFormat format, bool mip, bool tight, int padding, string label)[] s_specTable =
         {
-            var s = MvArtRules.SpecFor(atlas);
-            Assert.That(s.IsUi, Is.EqualTo(ui));
-            Assert.That(s.MaxSize, Is.EqualTo(max));
-            Assert.That(s.Format, Is.EqualTo(format));
-            Assert.That(s.Mipmap, Is.EqualTo(mip));
-            Assert.That(s.Tight, Is.EqualTo(tight));
-            Assert.That(s.Padding, Is.EqualTo(padding));
-            Assert.That(s.Label, Is.EqualTo(label));
-            Assert.That(s.AssetPath, Is.EqualTo((ui ? "Assets/Game/Addressables/Remote/UIAtlas/" : "Assets/Game/Addressables/Remote/WorldAtlas/") + atlas + ".spriteatlasv2"));
-            Assert.That(s.Group, Is.EqualTo(ui ? "Remote_UIAtlas" : "Remote_WorldAtlas"));
+            ("Atlas_UI_Common", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.core"),
+            ("Atlas_UI_Hud", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.core"),
+            ("Atlas_UI_Icon", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.core"),
+            ("Atlas_UI_Lobby", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.lobby"),
+            ("Atlas_UI_Card", true, 2048, TextureImporterFormat.ASTC_4x4, false, false, 4, "ui.card"),
+            ("Atlas_World_Theme_market", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "theme.market"),
+            ("Atlas_World_Theme_snowday", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "theme.snowday"),
+            ("Atlas_World_Cat_T8", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "cat"),
+            ("Atlas_World_Friend_T1", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "cat"),
+            ("Atlas_World_Lobby", false, 2048, TextureImporterFormat.ASTC_6x6, false, true, 4, "lobby"),
+            ("Atlas_Fx_Common", false, 1024, TextureImporterFormat.ASTC_4x4, true, false, 8, "fx"),
+        };
+
+        [Test]
+        public void AtlasSpec_FollowsSpecTable()
+        {
+            foreach (var row in s_specTable)
+            {
+                var s = MvArtRules.SpecFor(row.atlas);
+                var at = row.atlas;
+                Assert.That(s.IsUi, Is.EqualTo(row.ui), at);
+                Assert.That(s.MaxSize, Is.EqualTo(row.max), at);
+                Assert.That(s.Format, Is.EqualTo(row.format), at);
+                Assert.That(s.Mipmap, Is.EqualTo(row.mip), at);
+                Assert.That(s.Tight, Is.EqualTo(row.tight), at);
+                Assert.That(s.Padding, Is.EqualTo(row.padding), at);
+                Assert.That(s.Label, Is.EqualTo(row.label), at);
+                Assert.That(s.AssetPath, Is.EqualTo((row.ui ? "Assets/Game/Addressables/Remote/UIAtlas/" : "Assets/Game/Addressables/Remote/WorldAtlas/") + at + ".spriteatlasv2"));
+                Assert.That(s.Group, Is.EqualTo(row.ui ? "Remote_UIAtlas" : "Remote_WorldAtlas"), at);
+            }
         }
 
         [Test]
