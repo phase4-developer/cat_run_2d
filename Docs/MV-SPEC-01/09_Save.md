@@ -24,7 +24,7 @@
 
 | dataKey | 클래스 | 담는 것 | 부활 때 | 진행 초기화 때 |
 |---|---|---|---|---|
-| `wealthInfos` | Framework `WealthContainer` | 재화(`01_wealth` key별 quantity: `gold`·`dia`·`souls`·`rbToken` + 08의 5~17) | gold·souls 0, dia·rbToken 유지 | 전부 0 |
+| `wealthInfos` | Framework `WealthContainer` | 재화. Framework 형식 그대로 `01_wealth.type` 이름별 `{type, quantity}` 행 배열(`gold`·`dia`·`souls`·`rbToken` + 08의 5~17). 게임 코드는 재화 id로 묻고 `MvWealthIds`가 type으로 바꾼다(Boot가 표와 대조) | gold·souls 0, dia·rbToken 유지 | 전부 0 |
 | `mvProgress` | `MvProgressContainer` | Level, Area, 체크포인트, 벽 기록, 런 수, 최고 Area, 정산 순번 | level·runs·bestArea 유지, 나머지 기본 | 기본 |
 | `mvLobby` | `MvLobbyContainer` | 로비 강화 3종, 시작 덱 | 기본 | 기본 |
 | `mvAreaUp` | `MvAreaUpContainer` | Area 강화 5종 | 기본 | 기본 |
@@ -180,6 +180,9 @@
 ```text
 1. repo = new LocalSaveRepository("p0", codec, "moonvillage.progress.v1")
 2. loaded = repo.Load()
+   if loaded.Status == Corrupt:                // 한 칸만 깨져도 Framework Load()는 Corrupt를 준다
+       if repo.LoadRecovery().Status == RecoveredBackup:   // 읽기 전용으로 남은 칸 확인
+           깨진 칸을 지우고(원문은 결과에 보관) loaded = repo.Load()  → 게임 상태 RecoveredBackup
 3. if loaded.Status ∈ {Loaded, RecoveredBackup}:
        payload = loaded.Document.Snapshot.Payload
        schema = payload["_containerSchema"]
@@ -209,6 +212,7 @@ namespace MV.Save
 ```
 
 - `MvSaveMigrator`가 from → … → `mv:local:vN`까지 순서대로 적용한다. 빠진 고리가 있으면 실패(§9.7 「이관 실패」).
+- 첫 고리: `mv:local:v0` = 정본 프로토 저장(`catescape_moon_v1` 평면 JSON)에 스키마 칸 `mv:local:v0`을 붙인 문서. v0 → v1은 D-67 변환 함수 `MvProtoSave`(§9.9와 같은 함수)다.
 - 규칙: **필드 추가만 하는 변경은 스키마를 올리지 않는다**(ParseState 기본값으로 충분). 필드 이름 변경·형식 변경·컨테이너 합치기/나누기만 새 스키마 + 이관 1개.
 - 컨테이너 추가는 원칙 6(미리 등록)으로 피한다. 그래도 추가하면 이관에서 빈 객체를 넣는다.
 - 봉투 버전 이관(`ILocalSaveMigration`)은 Framework 몫이고 게임은 쓰지 않는다.
@@ -245,8 +249,8 @@ namespace MV.Save
 |---|---|---|
 | `Missing` | 첫 실행 | `Open`이 `MvSaveDefaults.Create`로 새 저장 |
 | `Loaded` | 정상 | 계속 |
-| `RecoveredBackup` | 최신 칸이 깨져 이전 칸을 읽음 | 계속 + 토스트 `toastMessage.saveRecovered` 「이전 저장을 불러왔습니다」 1회 |
-| `Corrupt` · `ProtectionFailed` | 두 칸 다 읽을 수 없음 / 무결성·복호화 실패 | **자동으로 새로 만들지 않는다.** 복구 팝업: 「다시 시도」(`LoadRecovery()`) / 「새로 시작」(두 번 확인 후 새 저장, 이전 원문은 개발 빌드면 파일로 내보냄) |
+| `RecoveredBackup` | 한 칸이 깨지고 남은 칸을 읽음. Framework `Load()`는 이때도 `Corrupt`를 주므로 게임이 `LoadRecovery()`로 남은 칸을 확인하고, 깨진 칸을 지운 뒤 다시 연다(§9.5.2) | 계속 + 토스트 `toastMessage.saveRecovered` 「이전 저장을 불러왔습니다」 1회 |
+| `Corrupt` · `ProtectionFailed` | 두 칸 다 읽을 수 없음 / 무결성·복호화 실패 | **자동으로 새로 만들지 않는다.** 복구 팝업: 「다시 시도」(`MvSave.Retry()`, §9.5.2 순서로 다시 열기) / 「새로 시작」(`MvSave.StartFresh()`, 두 번 확인 후 새 저장, 이전 원문은 개발 빌드면 파일로 내보냄) |
 | `UnsupportedVersion` | 더 새 앱이 쓴 저장 | 팝업 「앱을 업데이트해 주세요」, 저장 건드리지 않음 |
 | `MigrationFailed` | 봉투 이관 실패 | `Corrupt`와 같은 팝업 |
 | `StorageUnavailable` | PlayerPrefs 접근 불가 | 팝업 「저장소를 사용할 수 없습니다」 + 다시 시도 |
@@ -261,6 +265,7 @@ namespace MV.Save
 ## 9.8 암호화·변조
 
 - Framework `LocalSaveEncryption(keyId, byte[32])`(AES-256-CBC + HMAC)을 쓸 수 있으나 **기본 키가 없다** — 키를 어디서 줄지 결정 필요(D-68).
+- 고정본 `com.jjevol.save` 0.1.0-pre.3은 평문 저장을 지원하지 않는다(키 필수). 그래서 **개발 빌드**는 공개 고정 키(`MvDevSaveKeyProvider`, keyId `mv-dev-1`)로 저장한다 — 누구나 열어 볼 수 있어 「암호화를 끈 것과 같은 상태」다. **출시 빌드**는 `MvSaveKeySource.ReleaseProvider` 교체 지점에서 키를 받는다. 키 위치(D-68)가 정해지기 전에는 비어 있어 출시 빌드는 저장을 열지 못한다(`ProtectionFailed` → 복구 팝업).
 - 암호화를 켜도 로컬 단일 플레이어 게임이라 변조를 완전히 막지는 못한다. 목표는 「평문 편집 방지」 수준.
 - 암호화 키를 바꾸면 이전 저장을 못 읽는다(`ProtectionFailed`). 키 교체는 `keyId`를 바꾸고 이전 키를 읽기용으로 남기는 방식만 허용.
 

@@ -156,7 +156,7 @@ Framework `NewGame.md` 6단계 순서를 따르고 게임 단계를 끼운다.
 2. `AddressablesManager.Instance.InitAsync()`.
 3. `AudioManager.Instance.SetProvider(ProviderKind.Addressables)`, `EffectManager.Instance.SetPrefabProvider(new AddressablesEffectPrefabProvider())`.
 4. `GameTableSource.Configure(new PackagedTableSource(useEncrypt: false))` → `MvTables.RegisterAll()`(모든 표 `TableRepository.Register`) → `TableRepository.LoadAllAsync()` → **게임 검증기 실행**(`MvTableValidator.ValidateRuntime`, 실패 시 개발 빌드는 오류 화면, 출시 빌드는 로그+안전 기본값 없음=시작 중단).
-5. `ResourceService` 생성(표를 읽은 뒤, `WealthTable` 복사 때문).
+5. `ResourceService` 생성(표를 읽은 뒤, `WealthTable` 복사 때문). 고정본 Framework는 `ResourceService`가 `WealthContainer`를 요구하므로, 실제로는 6단계에서 저장을 연 **뒤에** 붙이고 저장을 다시 열면(`MvSave.CurrentChanged`) 다시 붙인다(MV-G1-INT).
 6. 저장: `LocalSaveRepository(profileId, codec, "moonvillage.progress.v1")` → **게임 스키마 이관(`MvSaveMigrator`)** → `DataRepository`에 컨테이너 등록 → `RepositoryStorageAdapter.Open(..., LocalAuthority, InitialJson)` → 참조 정리(`MvSaveReferenceFix`). 이관은 반드시 Open **앞**이다. Adapter는 스키마 id가 다르면 예외를 던지고 스스로 이관하지 않는다([09 §9.5.2](09_Save.md)).
 7. `LocalizationRuntimeOptions.ReadLanguage/SaveLanguage` → `InitLocalization()`.
 8. `UIRuntimeOptions.Localize`, `UINavigationOptions.ConfirmExitAsync` → `ui.StartInitAsync()`.

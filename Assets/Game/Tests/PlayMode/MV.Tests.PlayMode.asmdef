@@ -5,6 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "MV.Boot",
+        "MV.Data",
+        "MV.Save",
         "JJEvol.Scene.Runtime",
         "UniTask"
     ],

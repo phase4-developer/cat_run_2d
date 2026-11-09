@@ -19,8 +19,7 @@ namespace MV.Boot
 
     /// <summary>
     /// Boot 씬의 시작 순서(기획서 10 §10.7).
-    /// MV-00은 1~3단계와 10단계만 돈다. 4단계(표)·5단계(재화)·6단계(저장)·7단계(다국어)·8단계(UI)·9단계(플랫폼)는
-    /// MV-DATA, MV-SAVE, MV-UI-*, MV-PLAT-* 계약이 표시한 자리에 끼운다.
+    /// 지금은 1~6단계와 10단계를 돈다. 7단계(다국어)·8단계(UI)·9단계(플랫폼)는 MV-UI-*, MV-PLAT-* 계약이 표시한 자리에 끼운다.
     /// </summary>
     public sealed class GameBootstrap : MonoBehaviour
     {
@@ -72,7 +71,13 @@ namespace MV.Boot
                 // 4. 표(MV-DATA). 원본 지정 → RegisterAll → LoadAllAsync → 게임 검증기. 검증 오류면 예외로 시작을 멈춘다.
                 await MV.Data.MvTableLoader.LoadAsync(MV.Data.MvTableLoader.DefaultSource());
 
-                // 5~9. (MV-SAVE, MV-UI-*, MV-PLAT-*에서 추가)
+                // 5·6. 저장(MV-SAVE): 표 값으로 설정·참조 목록 → 저장소 → 이관 → 컨테이너 등록 → Open → 참조 정리(09 §9.5.2).
+                //    재화 서비스(5단계)는 저장소의 WealthContainer가 있어야 해서 저장이 열릴 때 MvBootSave가 묶는다.
+                //    열지 못해도(복구·업데이트·저장소 팝업) 시작은 계속한다. 화면이 MvBootSave.PendingNotice를 읽는다.
+                MvBootSave.Open(MV.Data.MvTables.Current);
+                MvSaveLifecycle.Ensure();
+
+                // 7~9. (MV-UI-*, MV-PLAT-*에서 추가)
 
                 // 10. 게임 씬. Boot 오브젝트는 이 전환에서 사라지므로 여기 뒤에서는 정적 상태만 쓴다.
                 var result = await CustomSceneManager.Instance.LoadSceneAsync(GameSceneName);
