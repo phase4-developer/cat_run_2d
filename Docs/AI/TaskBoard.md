@@ -16,6 +16,7 @@
 | MV-QA-HARNESS 캡처 도구(프로토 쪽) | 프로토 쪽 병합 | 하위 에이전트 닫힘 | `ai/MV-QA-HARNESS-proto`(병합 뒤 지움) | `43637e7` | `b66c41f` → dev `63c76dc` | 37/38장면(U-14 protoNA) 118장 2회 픽셀 해시 동일, GEN·FIELD·SIM 덤프 재생성 SHA 동일. 사람 확인 NOT_RUN: U-04·U-12·U-13 연출 포착 | Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도. `mask[]` 실측은 MV-QA-ACCEPT. 기획서 12 §12.1 동기화. 결정 D-41+D-30·D-71·D-27 |
 | MV-TOOL-SND 소리 굽기 | 완료(dev 병합) | 하위 에이전트 닫힘 | `ai/MV-TOOL-SND-bake`(병합 뒤 지움) | `e4e492d` | `cb96a78` → dev `25ae2cb` | 형식 32/32, 재실행 해시 32/32, V6 실시간 녹음 대조 32/32 PASS(상관 최저 0.9954), compile `78fc269bf094` PASS. 청취 확인 NOT_RUN | 03 §3.9.1과 다르게 한 4가지는 총괄 결정으로 03 동기화(앞 무음 1.0014 s, BGM 두 번째 루프, 뒤 무음 정리 끔, GainNode 사슬). D-55 잔재 5종 정의만, D-56 WAV→Vorbis 임포트, D-57 BGM 2파일. `package.json` snd 스크립트 총괄이 추가 |
 | MV-ART-ATLAS 아틀라스·임포트 | 부분 완료(dev 병합 `12f354d`) | 하위 에이전트 닫힘 | `ai/MV-ART-ATLAS-import`(병합 뒤 지움) | dev `688ecaf` + 총괄 asmdef `474ad46` | 담당 `64ee754` + 총괄 Sprite Atlas V2 켜기 `7867fb3` | `64ee754`: 잡 `3a020e6a3455` compile + EditMode 20/20 PASS, 생성 산출물 재실행 변화 없음. `7867fb3`: 잡 `5bc1deca8c67` compile + EditMode 20/20 PASS. NOT_RUN: 아틀라스 실제 패킹 크기·Memory Profiler(§3.8.12), ΔE 압축 품질(§3.11.2) | 아틀라스 35개, 런 텍스처 31.9 MB(목표 48). 검사기 오류 11건 = MV-DATA 요청(07 605 iconAtlas→Atlas_UI_Icon, 09 atlas 열 9001001~4·9002001·9002003·9003001·9003002 → Atlas_UI_Icon, 113 portrait 대소문자(2차에서 고침), `MvTableAuthoring.Validate`에 `MvResourceColumnChecker` 합치기). 미추출 20건은 TOOL-ART 3차. 위험: Friend_T1~T6 실제 패킹이 2페이지면 `_2` 분할+101 atlasPattern(MV-DATA). Cat 아틀라스 2048². `Tex_God_*`는 `Art/Source/Texture`에 둔 채 주소만(§3.4.2와 다름, 이동은 TOOL-ART/총괄 결정). Fx 패딩 8(§3.8.1 규칙 우선) |
+| MV-VIEW 월드 렌더 | 진행(G4) | 2번째 총괄의 하위 에이전트 | `ai/MV-VIEW-world` @ `.wt/d`, `moonvillage-d` | dev `3ad7e78` + 총괄 asmdef `b3ac078`(`MV.View.Tests`, `MV.View` 참조 TMP·Addressables·ResourceManager·Tables) | | | 쓰기 `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders/`, `A/Art/Materials/`, `A/Addressables/Remote/World/`, 그룹 자산은 World 프리팹 항목만(별도 Commit). 씬 안 고침 → Boot 호출은 G4 통합. 캡처 대조 1차 NOT_RUN(QA-HARNESS Unity 쪽 뒤). 티켓 01~06 |
 
 ## 담당표 (2026-11-09)
 
@@ -24,7 +25,7 @@
 | a | `C:/Project/MoonVillage.wt/a` | `moonvillage-a` | MV-DATA 2차 검증(2번째 총괄의 하위 에이전트, `ai/MV-DATA-content-tables`, 기준 `6cc292d`) | 완료·체크포인트·입력 약 15만 토큰 |
 | b | `C:/Project/MoonVillage.wt/b` | `moonvillage-b` | MV-META(2번째 총괄의 하위 에이전트, `ai/MV-META-rules`, 기준 `82cf886`) | 완료·체크포인트·입력 약 15만 토큰 |
 | c | `C:/Project/MoonVillage.wt/c` | `moonvillage-c` | MV-TOOL-ART 3차 FAIL 수정(2번째 총괄의 하위 에이전트, `ai/MV-TOOL-ART-remaining`, 기준 `4763430`) | 같음 |
-| d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | 비어 있음(detached) | — |
+| d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | MV-VIEW(2번째 총괄의 하위 에이전트, `ai/MV-VIEW-world`, 기준 `b3ac078`) | 완료·체크포인트·입력 약 15만 토큰 |
 | e | `C:/Project/MoonVillage.wt/e` | `moonvillage-e` | 비어 있음(detached, MV-TOOL-SND 닫힘) | — |
 | f | `C:/Project/MoonVillage.wt/f` | `moonvillage-f` | 비어 있음(detached) | — |
 | g | `C:/Project/MoonVillage.wt/g` | `moonvillage-g` | 비어 있음(detached) | — |
