@@ -1015,10 +1015,12 @@ C# 구현 규칙:
 static double Hash(double n) {            // double 필수. float Mathf.Sin 금지
     double a = n * 127.1;                 // 곱·합을 나눠 써서 FMA 융합을 막는다(IL2CPP ARM64)
     double b = a + 311.7;
-    double x = Math.Sin(b) * 43758.5453;
+    double x = JsMath.Sin(b) * 43758.5453; // Math.Sin 아님(아래)
     return x - Math.Floor(x);
 }
 ```
+
+`Math.Sin`은 쓰지 않는다. 정본 V8의 sin은 올바르게 반올림된 값인데, Windows CRT sin은 골든 4619개 중 118개가 마지막 비트에서 달랐다(칸 결과 변화 0). 그래서 `MV.Run/Gen/JsMath.Sin`(FMA 없는 double-double, 올바른 반올림)을 쓴다. 실기(IL2CPP ARM64)에서 FIELD 시험이 어긋나면 303 `cellMode`를 Baked로 바꿔 대응한다(D-27, MV-RUN-GEN 실측·총괄 결정).
 
 | 원문 상수 | 값 | → `313_fieldGen[default]` 열 |
 |---|---|---|
