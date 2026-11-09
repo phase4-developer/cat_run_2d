@@ -188,7 +188,10 @@ namespace MV.Editor.Import
 
             if (defaultAtlas == MvAtlas.Address)
             {
-                foreach (var part in Parts(raw)) CheckAddress(ctx, column, part);
+                // 이펙트 프리팹 주소(`Fx/Sparks`)처럼 `/`가 주소의 일부인 값은 나누지 않는다.
+                var whole = raw.Trim();
+                if (ctx.Table == EffectTable || ctx.Catalog.HasAddress(whole)) CheckAddress(ctx, column, whole);
+                else foreach (var part in Parts(raw)) CheckAddress(ctx, column, part);
                 return;
             }
 

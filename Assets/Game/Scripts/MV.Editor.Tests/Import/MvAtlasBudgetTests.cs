@@ -21,11 +21,12 @@ namespace MV.Editor.Tests
         public void EveryAtlas_FitsOnePageOfMaxSize()
         {
             foreach (var e in Estimates) TestContext.WriteLine(e);
-            var over = Estimates.Where(e => e.AreaRatio > 1.0).Select(e => e.ToString()).ToList();
-            Assert.That(over, Is.Empty, "면적 하한이 최대 크기 1페이지를 넘는 아틀라스(03 §3.8.1: `_2`로 나눠야 함)");
-            var rectOver = Estimates.Where(e => !e.RectFit).Select(e => e.Spec.Name).ToList();
-            if (rectOver.Count > 0)
-                TestContext.WriteLine("사각 추정으로는 1페이지 초과 — Unity 타이트 패킹 실측 필요: " + string.Join(", ", rectOver));
+            var over = Estimates.Where(e => e.LowerBoundRatio > 1.0).Select(e => e.ToString()).ToList();
+            Assert.That(over, Is.Empty, "확실한 하한이 최대 크기 1페이지를 넘는 아틀라스(03 §3.8.1: `_2`로 나눠야 함)");
+            Assert.That(Estimates.Where(e => !e.Spec.Tight && !e.RectFit).Select(e => e.Spec.Name), Is.Empty, "Full Rect 아틀라스는 사각 추정이 곧 실제");
+            // 타이트 아틀라스가 사각(알파 경계) 추정으로 1페이지에 안 들어가면 Unity 타이트 패킹 실측이 판정한다(Sprite Packer 모드 요청, 보고).
+            var risk = Estimates.Where(e => !e.RectFit).Select(e => $"{e.Spec.Name} 하한 {e.LowerBoundRatio:P0} 사각 {e.AreaRatio:P0}").ToList();
+            if (risk.Count > 0) TestContext.WriteLine("실측 필요 위험(사각 추정 1페이지 초과): " + string.Join(", ", risk));
         }
 
         [Test]

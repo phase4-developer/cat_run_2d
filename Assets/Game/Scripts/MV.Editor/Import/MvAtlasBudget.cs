@@ -16,8 +16,13 @@ namespace MV.Editor.Import
         public int SpriteCount;
         /// <summary>스프라이트(타이트면 알파 경계로 자른 사각) + 패딩 면적 합.</summary>
         public long PaddedArea;
-        /// <summary>PaddedArea / 최대 크기² — 1.0 이하이면 한 페이지에 들어갈 수 있다(하한 추정).</summary>
+        /// <summary>PaddedArea / 최대 크기². 사각(알파 경계) 기준이라 타이트 패킹은 이보다 덜 쓸 수 있다 — 1.0 초과는 「실측 필요 위험」.</summary>
         public double AreaRatio;
+        /// <summary>
+        /// 확실한 하한 / 최대 크기². 타이트면 불투명 화소 수(패딩 제외), 아니면 사각+패딩(Full Rect는 사각 그대로 쓴다).
+        /// 1.0을 넘으면 어떤 패킹으로도 1페이지에 안 들어간다(`_2` 분할 필요).
+        /// </summary>
+        public double LowerBoundRatio;
         /// <summary>사각 MaxRects로 들어간 가장 작은 2의 거듭제곱 페이지. 못 넣으면 0.</summary>
         public int PageWidth, PageHeight;
         public bool RectFit => PageWidth > 0;
@@ -25,7 +30,7 @@ namespace MV.Editor.Import
         public long Bytes;
 
         public override string ToString() =>
-            $"{Spec.Name}\t{SpriteCount}장\t면적 {AreaRatio:P1}\t추정 {(RectFit ? PageWidth + "x" + PageHeight : "사각추정 초과(타이트 실측 필요)")}" +
+            $"{Spec.Name}\t{SpriteCount}장\t하한 {LowerBoundRatio:P1}\t사각 {AreaRatio:P1}\t추정 {(RectFit ? PageWidth + "x" + PageHeight : "사각추정 초과(타이트 실측 필요)")}" +
             $"\t예상 {Spec.ExpectedWidth}x{Spec.ExpectedHeight}\t{Spec.Format}{(Spec.Mipmap ? "+mip" : "")}\t{Bytes / 1048576.0:F2} MB";
     }
 
@@ -55,12 +60,21 @@ namespace MV.Editor.Import
         public static MvAtlasEstimate Estimate(MvAtlasSpec spec, IReadOnlyList<string> pngFiles)
         {
             var rects = new List<Vector2Int>(pngFiles.Count);
+            long opaque = 0;
             foreach (var file in pngFiles)
             {
-                var size = spec.Tight ? TrimmedSize(file) : PngSize(file);
+                Vector2Int size;
+                if (spec.Tight)
+                {
+                    size = TrimmedSize(file, out var count);
+                    opaque += count;
+                }
+                else size = PngSize(file);
                 rects.Add(new Vector2Int(size.x + spec.Padding, size.y + spec.Padding));
             }
-            return Estimate(spec, rects);
+            var e = Estimate(spec, rects);
+            if (spec.Tight) e.LowerBoundRatio = opaque / ((double)spec.MaxSize * spec.MaxSize);
+            return e;
         }
 
         public static MvAtlasEstimate Estimate(MvAtlasSpec spec, List<Vector2Int> paddedRects)
@@ -68,6 +82,7 @@ namespace MV.Editor.Import
             var e = new MvAtlasEstimate { Spec = spec, SpriteCount = paddedRects.Count };
             e.PaddedArea = paddedRects.Sum(r => (long)r.x * r.y);
             e.AreaRatio = e.PaddedArea / ((double)spec.MaxSize * spec.MaxSize);
+            e.LowerBoundRatio = e.AreaRatio;
 
             foreach (var (w, h) in PageSizes(spec.MaxSize))
             {
@@ -160,12 +175,21 @@ namespace MV.Editor.Import
         }
 
         /// <summary>알파 &gt; 0 화소의 경계 사각 크기(타이트 패킹의 사각 근사). 완전 투명이면 1x1.</summary>
-        public static Vector2Int TrimmedSize(string file)
+        public static Vector2Int TrimmedSize(string file) => TrimmedSize(file, out _);
+
+        /// <param name="opaque">알파 &gt; 0 화소 수.</param>
+        public static Vector2Int TrimmedSize(string file, out long opaque)
         {
+            opaque = 0;
             var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             try
             {
-                if (!tex.LoadImage(File.ReadAllBytes(file), false)) return PngSize(file);
+                if (!tex.LoadImage(File.ReadAllBytes(file), false))
+                {
+                    var full = PngSize(file);
+                    opaque = (long)full.x * full.y;
+                    return full;
+                }
                 var px = tex.GetPixels32();
                 int w = tex.width, h = tex.height, minX = w, minY = h, maxX = -1, maxY = -1;
                 for (int y = 0; y < h; y++)
@@ -174,6 +198,7 @@ namespace MV.Editor.Import
                     for (int x = 0; x < w; x++)
                     {
                         if (px[row + x].a == 0) continue;
+                        opaque++;
                         if (x < minX) minX = x;
                         if (x > maxX) maxX = x;
                         if (y < minY) minY = y;
