@@ -1,0 +1,434 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Atk",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "atk",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Rate",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "rate",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Gold",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "gold",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Storm",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "storm",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Blast",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "blast",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Clone1",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "clone1",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Orb_Bolt",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "orb",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Orb_Fire",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "orb",
+   "el": "fire"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Spear_Bolt",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "spear",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Spear_Fire",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "spear",
+   "el": "fire"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Proc_Bolt",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "proc",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Proc_Fire",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "proc",
+   "el": "fire"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Chain_Bolt",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "chain",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Chain_Fire",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "chain",
+   "el": "fire"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Frate_Bolt",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "frate",
+   "el": "bolt"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Card_Frate_Fire",
+  "atlas": "Atlas_UI_Card",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "args": {
+   "id": "frate",
+   "el": "fire"
+  },
+  "expr": "paintCard(g, A.id, 192, A.el)",
+  "allowEdge": true,
+  "src": "L873~912, L3758"
+ }
+]

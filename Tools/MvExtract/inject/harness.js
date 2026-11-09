@@ -139,11 +139,19 @@
   };
 
   // svg data URI 그림(이미지 로드가 비동기라 따로)
+  // 이모지 글꼴(D-52). 정본 CSS에는 없으므로 실행기가 따로 등록한다
+  MvH.loadEmoji = async function () { if (MvH._emoji) return true; const f = new FontFace('MvEmoji', 'url(https://fonts.gstatic.com/mv/NotoColorEmoji-Regular.ttf)'); await f.load(); document.fonts.add(f); MvH._emoji = true; return document.fonts.check('76px MvEmoji', '🐾'); };
+
   MvH.renderSvg = async function (job) {
     const w = job.canvas.w, h = job.canvas.h; const out = newCanvas(w, h);
-    const img = new Image(); img.src = job.src; await img.decode();
-    const [bx, by, bw, bh] = job.box || [0, 0, w, h];
+    let src = job.src;
+    if (job.srcExpr) src = S(job.srcExpr);
+    if (job.selector) { for (const sh of document.styleSheets) { let rs; try { rs = sh.cssRules; } catch (_) { continue; } for (const r of rs) if (r.selectorText && r.selectorText.split(',').map((x) => x.trim()).includes(job.selector) && r.style.backgroundImage) src = r.style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, ''); } }
+    if (!src) throw new Error('SVG 원본 없음: ' + job.selector);
+    const img = new Image(); img.src = src; await img.decode();
+    const m = job.margin ?? 4, sc = Math.min((w - 2 * m) / img.width, (h - 2 * m) / img.height);
+    const [bx, by, bw, bh] = job.box || [(w - img.width * sc) / 2, (h - img.height * sc) / 2, img.width * sc, img.height * sc];
     out.getContext('2d').drawImage(img, bx, by, bw, bh);
-    return { dataURL: out.toDataURL('image/png'), w, h, hits: [], zeroRules: [], alpha: checkAlpha(out) };
+    return { dataURL: out.toDataURL('image/png'), w, h, hits: [], zeroRules: [], alpha: checkAlpha(out), natural: [img.width, img.height] };
   };
 })();

@@ -1,0 +1,32 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Enemy_Mouse",
+  "atlas": "Atlas_World_Theme",
+  "mode": "ctx",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 160,
+   "h": 148,
+   "pivotPx": [
+    64,
+    128
+   ]
+  },
+  "frames": {
+   "var": "t",
+   "from": 0,
+   "period": 1.2566370614359172,
+   "count": 16,
+   "fps": 12.7324
+  },
+  "args": {},
+  "expr": "drawMouse({}, X, Y, S)",
+  "src": "L3652"
+ }
+]
