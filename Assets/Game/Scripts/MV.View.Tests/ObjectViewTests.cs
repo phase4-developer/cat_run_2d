@@ -24,11 +24,17 @@ namespace MV.View.Tests
             _made.Clear();
         }
 
-        [TestCase(0, 0, 0, 0, 0, 0.111759106, 1.013346391)]
-        [TestCase(2, 1, 0, 3, 1, 0.050974881, 0.965285031)]
-        [TestCase(1, 2, 2, 5, 1, -0.150897754, 0.908919907)]
-        public void Junk_VariantAndJitter_MatchProto(int lane, int row, int bar, int idx, int sprite, double jx, double scale)
+        // (lane, row, bar, idx) → 스프라이트 번호, x 편차, 크기. 시험 이름은 정수만(실행기 기대 목록).
+        static readonly int[,] s_junkIn = { { 0, 0, 0, 0, 0 }, { 2, 1, 0, 3, 1 }, { 1, 2, 2, 5, 1 } };
+        static readonly double[,] s_junkOut = { { 0.111759106, 1.013346391 }, { 0.050974881, 0.965285031 }, { -0.150897754, 0.908919907 } };
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        public void Junk_VariantAndJitter_MatchProto(int c)
         {
+            int lane = s_junkIn[c, 0], row = s_junkIn[c, 1], bar = s_junkIn[c, 2], idx = s_junkIn[c, 3], sprite = s_junkIn[c, 4];
+            double jx = s_junkOut[c, 0], scale = s_junkOut[c, 1];
             Assert.That(ObjectLayout.JunkSpriteIndex(lane, row, bar, idx), Is.EqualTo(sprite));
             ObjectLayout.JunkJitter(idx, bar, out double gx, out double gs);
             Assert.That(gx, Is.EqualTo(jx).Within(1e-8));
@@ -55,13 +61,17 @@ namespace MV.View.Tests
             Check(43, 0.959492974, 1.13, 0.281732557, 1);
         }
 
-        [TestCase(-5.0, true, 1.0)]
-        [TestCase(-0.6, true, 1.0)]
-        [TestCase(-0.1, true, 0.3)]
-        [TestCase(2.9, true, 0.0)]
-        [TestCase(3.1, false, 0.0)]
-        public void WarpGate_AlphaNearPlayer_MatchesProto(double pz, bool shown, double alpha)
+        static readonly double[] s_warpPz = { -5, -0.6, -0.1, 2.9, 3.1 }, s_warpAlpha = { 1, 1, 0.3, 0, 0 };
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public void WarpGate_AlphaNearPlayer_MatchesProto(int c)
         {
+            double pz = s_warpPz[c], alpha = s_warpAlpha[c];
+            bool shown = c != 4;
             Assert.That(WarpGateLayout.Alpha(pz, out double a), Is.EqualTo(shown));
             Assert.That(a, Is.EqualTo(alpha).Within(1e-9));
         }
