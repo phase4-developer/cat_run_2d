@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Remote_Audio_Music
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Remote_Audio_Music
+  m_GUID: 9b4e084de1bb4d7395bcddc4978d462f
+  m_SerializeEntries:
+  - m_GUID: 9170934c2deca40479aff1be37a57814
+    m_Address: Bgm_Lobby
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bgm
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c61e8d52bd1eba8409937b93da234eda
+    m_Address: Bgm_Run
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - bgm
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9d81a6cfc7c443b5a0d8b6eda9b65597, type: 2}
+    - {fileID: 11400000, guid: 8d2360f383034677831cd1667cc51e97, type: 2}
+    m_SchemaDisplayOrder:
+    - Remote_Audio_Music_BundledAssetGroupSchema
+    - Remote_Audio_Music_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1
