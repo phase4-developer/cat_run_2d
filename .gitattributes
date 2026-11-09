@@ -1,5 +1,8 @@
 * text=auto
 
+# Fixed reference files (SHA256 pinned): keep bytes exactly
+Docs/Reference/** -text
+
 # Unity YAML
 *.unity text eol=lf
 *.prefab text eol=lf

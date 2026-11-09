@@ -37,3 +37,40 @@
 - 담당 수·설치·수정 횟수: 대화가 따름 — 「AI가 따를 규칙」으로 대화가 따른다
 
 <!-- jjevol-project-settings:end -->
+
+## Framework 기준선
+
+연결: 2026-11-09, 계약 MV-00(작업 브랜치 `ai/MV-00-project-framework`), 사용자 지시 「만들고 연결해」·「넣어」. 방식은 「외부」라 Framework `Docs/Guide/Delivery.md`(2026-11-09, master `48868b1`) 「고정」 tgz만 `Packages/Frozen/`에 넣고 `file:Frozen/...`으로 연결했다. 복사본 SHA-256은 모두 목록과 같다. `audio`·`ui.urp`는 `scene.ui`·`audio.addressables`가 요구하는 2차 묶음 버전을 쓴다.
+
+| 패키지 | 버전 | 저장소 안 tgz | Framework 스냅샷 | SHA-256 |
+|---|---|---|---|---|
+| `com.artress.managed-addressables` | 1.3.12-pre.10 | `Packages/Frozen/com.artress.managed-addressables-1.3.12-pre.10.tgz` | `20261107-managed-addressables-pre10` | `4190EDE4CAA6670CD42CE5F84E69226F5A738DF0EE3EA21D1E00460DE88B56A4` |
+| `com.jjevol.audio` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.audio-0.1.0-pre.3.tgz` | `20261109-bundle2` | `D68F43F9712A2C5FB19D4C929B3BEE6D33163C8555B2275AC79A6B18E87FB65A` |
+| `com.jjevol.audio.addressables` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.audio.addressables-0.1.0-pre.2.tgz` | `20261109-bundle2` | `CD9AE59072985A68029D11CA5A25E3C94292C24CA34E484AE32049B5309CC090` |
+| `com.jjevol.data` | 0.1.0-pre.1 | `Packages/Frozen/com.jjevol.data-0.1.0-pre.1.tgz` | `20261108-bundle1` | `8D584655A65D77F290ABAB59AA3231A30AD0F0BE48EF891A90261192C06D20DC` |
+| `com.jjevol.economy` | 0.1.0-pre.4 | `Packages/Frozen/com.jjevol.economy-0.1.0-pre.4.tgz` | `20261108-bundle1` | `EAC0A90BFE46E2751431BE41B5E006EE6FA63BFFDDA850628317FD55C7FEFE28` |
+| `com.jjevol.effects` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.effects-0.1.0-pre.2.tgz` | `20261108-bundle1` | `94975F2E324034262508D431267AB15B7DCB3ACCC5F46AF5521DD5C6CBA1AD05` |
+| `com.jjevol.effects.addressables` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.effects.addressables-0.1.0-pre.2.tgz` | `20261109-bundle2` | `540FB07D38E8CF8BB0A64B5F3331103E3D3796D9EDFE8C2EE80A8A2AD3155570` |
+| `com.jjevol.localization` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.localization-0.1.0-pre.3.tgz` | `20261108-bundle1` | `FFC2EB16164B7FB937663C32DFC210DCAC2ABCCE79CDD5EC401D5DE5B7CACC06` |
+| `com.jjevol.localization.authoring` | 0.1.0-pre.9 | `Packages/Frozen/com.jjevol.localization.authoring-0.1.0-pre.9.tgz` | `20261109-bundle2` | `A6540FDBA86B1D3BA79B7B56B7CD531068076E7D1F417DDBBA6DF645A4AD2D36` |
+| `com.jjevol.platform.core` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.platform.core-0.1.0-pre.2.tgz` | `20261108-bundle1` | `E6D79CF622F137FA623C9BEACB5E9149EC2747F941041BFE0D0112D7837B971B` |
+| `com.jjevol.platform.unity` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.platform.unity-0.1.0-pre.2.tgz` | `20261108-bundle1` | `A690C195CAC783DD55EA9C8DBF7C98C590708E7E7F79A55AE193139744A044AD` |
+| `com.jjevol.resources.addressables` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.resources.addressables-0.1.0-pre.3.tgz` | `20261108-bundle1` | `8FB6D140F0E1D7EF987F1AD369BC9C9436ED4F9BF869EB01E718D06EA0708540` |
+| `com.jjevol.save` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.save-0.1.0-pre.3.tgz` | `20261104-ae2-tables-candidate1` | `5BAEC760A19A6EEB3DF54E9E98840E7395454CB07084BAEDFF808C66A77478B0` |
+| `com.jjevol.scene` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.scene-0.1.0-pre.2.tgz` | `20261109-bundle2` | `8D98B251CF3DF979D81B5C563B7D3A762682F133DC29DA20FF6D6DD31DBC0AA5` |
+| `com.jjevol.scene.addressables` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.scene.addressables-0.1.0-pre.2.tgz` | `20261109-bundle2` | `B9FC0C1E73AD831D8F20204C1E615F79918111D69DFDA97B1B3533CC35A32738` |
+| `com.jjevol.scene.ui` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.scene.ui-0.1.0-pre.3.tgz` | `20261109-bundle2` | `7FDED5CC767F98FF31CE0BDD8C83FDEC0C3499FCFBD318556B1CD5118A213094` |
+| `com.jjevol.tables` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.tables-0.1.0-pre.2.tgz` | `20261108-bundle1` | `76F156FDE1BF8F85B5CE07907AE42FB35BD0869EC5EE3252EA95F515ABCC3A49` |
+| `com.jjevol.tables.authoring` | 0.1.0-pre.7 | `Packages/Frozen/com.jjevol.tables.authoring-0.1.0-pre.7.tgz` | `20261109-bundle2` | `A5C050317A92772562E74BC9DE676052A7C24A864B5CE96F4A87BCDB54BDA8B3` |
+| `com.jjevol.ui` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.ui-0.1.0-pre.2.tgz` | `20261108-bundle1` | `18C30EA3731A47A1AB374546ABE9D9BB4C0AFD02F26E994A0DC5F8E84F3D8270` |
+| `com.jjevol.ui.addressables` | 0.1.0-pre.4 | `Packages/Frozen/com.jjevol.ui.addressables-0.1.0-pre.4.tgz` | `20261108-bundle1` | `169B5421A5CA0CF883DA133D71041B14F85E799CA82C4306C822AEC9BD31BFAF` |
+| `com.jjevol.ui.economy` | 0.1.0-pre.5 | `Packages/Frozen/com.jjevol.ui.economy-0.1.0-pre.5.tgz` | `20261108-bundle1` | `93B39DEB04C7251B77525BFE5F0AA54EF22CB86B3BA5B79B8F9D9479F9A23E89` |
+| `com.jjevol.ui.urp` | 0.1.0-pre.6 | `Packages/Frozen/com.jjevol.ui.urp-0.1.0-pre.6.tgz` | `20261109-bundle2` | `888168B6FDEACE1113DD3BD9D03E6D10EDA8B273E93B07B3BA8546ED675B3E40` |
+
+외부 의존(2026-11-09 사용자 확인 「넣어」): `com.cysharp.unitask` Git `2e993ff18f28c931602a07292df0b0804eebef99`(2.5.11, Framework 검증 Host와 같음), `com.unity.addressables` 4.0.1, `com.unity.localization` 1.5.12, `com.unity.inputsystem` 1.18.0, `com.unity.nuget.newtonsoft-json` 3.2.2, `com.unity.render-pipelines.universal` 17.3.0, `com.unity.ugui` 2.0.0, `com.unity.test-framework` 1.6.0, IDE 연동 2개, 기본 모듈.
+
+연결 보류(고정본 없음, 범위에는 있음): `economy.drop`, `effects.ui`, `platform.ads`·`.admob`, `platform.analytics`·`.firebase`, `platform.localnotifications`·`.unity`, `platform.login`·`.firebase`, `platform.network`·`.data`·`.firebase`, `platform.purchase`·`.network`·`.unityiap`, `platform.push`·`.firebase`, `platform.tracking`·`.apple` (20개, 모두 `com.jjevol.`). 고정본이 나오면 같은 방식으로 더한다.
+
+검증: tgz SHA-256 대조 PASS, manifest JSON·`file:` 경로 확인 PASS. 사용자가 Unity 6000.3.9f1로 한 번 열어 `packages-lock.json` 생성(Editor.log 컴파일 오류 0). 실행기 compile 잡 `8d04cd506014` PASS(후보 `873e204`, 2026-11-09). EditMode·PlayMode·Boot 실행은 NOT_RUN(MV-00의 씬·asmdef 작업 뒤).
+
+실행기: 2026-11-09 등록(`moonvillage`, compile·EditMode·PlayMode, 원문 「실행기에 등록해」), 위임 10일(원문 「10일 위임해」, 2026-11-19 만료).
