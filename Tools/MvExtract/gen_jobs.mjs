@@ -189,6 +189,48 @@ const WB = (name, c) => add('world_obj.json', { name, atlas: 'Atlas_World_Theme'
 for (const [el, c] of [['Fire', '#ffb03a'], ['Bolt', '#ff3a4a']]) add('world_proj.json', { name: `World_Proj_SpearHead_${el}`, atlas: 'Atlas_Fx_Common', mode: 'direct', pivot: 'Center', canvas: { w: 96, h: 96, pivotPx: [48, 48] }, args: { c },
   expr: "(E(g, X, Y, S*0.34, S*0.34, ha(A.c, 0.5)), E(g, X, Y, S*0.17, S*0.17, A.c), E(g, X, Y, S*0.07, S*0.07, '#ffffff'))", src: 'L3802~3803' });
 
+// ── 3.5.8 UI 스킨(skin 방식): 정본 CSS 연쇄(뒤쪽 덮어쓰기 규칙 L279~602 포함)를 그대로 입힌 빈 요소를 찍는다. u = 10.8 px ──
+// 선형 그라데이션 판은 9-slice 최소 크기 2·(모서리) + 10, 원형 그라데이션·무늬 판은 정본 표시 크기 그대로(경계는 같이 적는다)
+const U = 10.8, WGRADE = ['#9ea4ae', '#46c35a', '#3a8ff0', '#a65be8', '#f08a24', '#e8443a', '#1fc8c8', '#ffd23a'], TIER_C = ['#c9c2b4', '#6fd27a', '#58a6f0', '#c07af0', '#f2b33d'];
+const ZONE_COL = [['#a85a4a', '#e0a070'], ['#4a6aa8', '#8ab0e0'], ['#8a5aa8', '#c08ad8']];
+const S9 = (r, b = 0) => 2 * Math.ceil(Math.max(r, b)) + 10;
+const SK = (name, atlas, html, size, src, o = {}) => { const m = o.margin ?? 64, hw = o.host ? o.host[0] : Math.min(1080, Math.ceil((size[0] + 2 * m) / 4) * 4), hh = o.host ? o.host[1] : Math.ceil((size[1] + 2 * m) / 4) * 4;
+  add('ui_skin.json', { name, atlas, mode: 'skin', pivot: 'Center', canvas: { w: hw, h: hh, pivotPx: [hw / 2, hh / 2] }, html, size, src, ...o }); };
+SK('UI_Skin_Panel', 'Atlas_UI_Common', '<div id="hud" data-w><div class="floor" data-t></div></div>', [S9(2 * U), S9(2 * U)], 'CSS --panel L13·L582, #hud .floor L50·L283');
+SK('UI_Skin_Chip', 'Atlas_UI_Common', '<div class="chip" data-t></div>', [70, 60], 'CSS .chip L38·L280(높이 = 아이콘 4.2u + 위아래 .6u + 테두리, 반지름 5u는 높이 반으로 줄어듦)');
+SK('UI_Skin_StairBox', 'Atlas_UI_Hud', '<div id="stairBox" data-t></div>', [S9(3 * U), S9(3 * U)], 'CSS #stairBox L53·L284');
+SK('UI_Skin_StairBox_Fly', 'Atlas_UI_Hud', '<div id="stairBox" class="fly" data-t></div>', [S9(3 * U), S9(3 * U)], 'CSS #stairBox.fly L74', { margin: 72 });
+WGRADE.forEach((c, i) => {
+  SK(`UI_Skin_WCard_G${i + 1}`, 'Atlas_UI_Hud', `<div class="wcard2" data-t style="--gc:${c}"></div>`, [114, 114], 'CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)');
+  SK(`UI_Skin_WpnCard_G${i + 1}`, 'Atlas_UI_Hud', `<div id="wpnCard" data-t style="--gc:${c}"></div>`, [206, 206], 'CSS #wpnCard L96·L291·L506·L576(19u)');
+});
+TIER_C.forEach((c, i) => {
+  SK(`UI_Skin_HCard_T${i}`, 'Atlas_UI_Card', `<div class="hcard" data-t style="--tc:${c}"></div>`, [226, 162], 'CSS .hcard L411~413(21u×15u)');
+  SK(`UI_Skin_HCardCenter_T${i}`, 'Atlas_UI_Card', `<div id="hc" class="center" data-w><div class="hcard" data-t style="--tc:${c}"></div></div>`, [270, 356], 'CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)');
+  SK(`UI_Skin_CardBig_T${i}`, 'Atlas_UI_Card', `<div id="card" data-t style="--tc:${c};--tg:transparent"></div>`, null, 'CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)', { clone: '#card', host: [544, 660] });
+  SK(`UI_Skin_MsCard_T${i}`, 'Atlas_UI_Hud', `<div class="ms-card" data-t style="--tc:${c}"></div>`, [S9(2 * U, 0.6 * U), S9(2 * U, 0.6 * U)], 'CSS .ms-card L429·L542·L602', { margin: 96 });
+});
+SK('UI_Skin_UpButton', 'Atlas_UI_Lobby', '<button class="up" data-t></button>', [S9(2.4 * U), S9(2.4 * U)], 'CSS .up L164~165·L316·L590');
+SK('UI_Skin_PopupBox', 'Atlas_UI_Common', '<div class="pnl" data-w style="--pc:transparent"><div class="box" data-t></div></div>', [S9(3 * U), S9(3 * U)], 'CSS .pnl .box L348·L595(테두리색 --pc는 UI_Skin_PopupEdge 틴트)');
+SK('UI_Skin_PopupEdge', 'Atlas_UI_Common', '<div class="pnl" data-w style="--pc:#ffffff"><div class="box" data-t></div></div>', [S9(3 * U), S9(3 * U)], 'CSS .pnl .box 테두리 L348(흰색, --pc 틴트)', { targetCss: 'background:none;box-shadow:none' });
+SK('UI_Skin_ResultCell', 'Atlas_UI_Common', '<div id="result" data-w><div class="rw" data-w><div data-t></div></div></div>', [S9(2 * U), S9(2 * U)], 'CSS #result .rw div L262·L329');
+ZONE_COL.forEach(([c1, c2], i) => SK(`UI_Skin_MapZone_Z${i + 1}`, 'Atlas_UI_Lobby', `<div class="mp-zone" data-t style="--z1:${c1};--z2:${c2}"></div>`, [972, 184], 'CSS .mp-zone L453~454, ZONE_COL L2580(폭 90u [추정]: 135° 그라데이션이라 늘이지 않는 크기)', { margin: 24 }));
+SK('UI_Skin_MapCp', 'Atlas_UI_Lobby', '<div class="mp-cp" data-w><div data-t></div></div>', [S9(1.6 * U), S9(1.6 * U)], 'CSS .mp-cp div L469');
+SK('UI_Skin_MapFt', 'Atlas_UI_Lobby', '<div class="mp-ft" data-w><div data-t></div></div>', [S9(1.6 * U), S9(1.6 * U)], 'CSS .mp-ft div L475');
+SK('UI_Skin_MapFt_On', 'Atlas_UI_Lobby', '<div class="mp-ft" data-w><div class="on" data-t></div></div>', [S9(1.6 * U), S9(1.6 * U)], 'CSS .mp-ft div.on L479');
+SK('UI_Skin_UnlockBox', 'Atlas_UI_Common', '<div class="ul-box" data-t></div>', null, 'CSS .ul-box L482(크기 = 정본 .ul-box 내용으로 잰 값, 원형 그라데이션이라 늘이지 않는 크기)', { clone: '.ul-box', host: [1076, 1000] });
+// 막대 채움: Simple 늘림(9-slice 없음). 폭 방향 그라데이션은 128 px로 굽는다
+SK('UI_Skin_Bar_Stair', 'Atlas_UI_Hud', '<div id="gFill" data-t></div>', [44, 256], 'CSS #gFill L518~519·L587(세로 채움, 칸 4.4u−테두리 × 24u. 바깥 빛 box-shadow는 칸 overflow로 잘려 뺌)', { slice: false, margin: 8, targetCss: 'box-shadow:none' });
+SK('UI_Skin_Bar_Ms', 'Atlas_UI_Hud', '<div class="ms-bar" data-w><i data-t></i></div>', [128, 28], 'CSS .ms-bar i L436(JS가 등급색으로 바꾸는 경우는 런타임 틴트)', { slice: false, margin: 8 });
+SK('UI_Skin_Bar_Soul', 'Atlas_UI_Hud', '<div id="lSoulFill" data-t></div>', [128, 24], 'CSS #lSoulFill L158', { slice: false, margin: 8 });
+SK('UI_Skin_Bar_Result', 'Atlas_UI_Hud', '<div id="rBar" data-t></div>', [128, 24], 'CSS #rBar L260', { slice: false, margin: 8 });
+SK('UI_Skin_Bar_Up', 'Atlas_UI_Hud', '<div class="up" data-w><div class="g" data-w><b data-t></b></div></div>', [128, 24], 'CSS .up .g b L223', { slice: false, margin: 8 });
+// 화면 비네트 #vig(L45): 화면 전체 비례 그라데이션이라 540×960으로 굽고 늘려 쓴다
+SK('Tex_UI_Vignette', null, '<div id="vig" data-t></div>', [540, 960], 'CSS #vig L45(1080×1920의 절반, 늘려 씀)', { texture: true, noCrop: true, slice: false, margin: 0, allowEdge: true });
+// 알약 이름표(L3519): RR 높이 W*0.04, 반지름 W*0.02, 색 rgba(40,24,36,.72). 1080 폭 기준
+add('ui_skin.json', { name: 'UI_Skin_Pill', atlas: 'Atlas_UI_Common', mode: 'direct', pivot: 'Center', canvas: { w: 56, h: 48, pivotPx: [28, 24] }, border: [25, 24, 25, 24], src: 'L3519(W = 1080)',
+  expr: "RR(g, 2, 2.4, 52, 43.2, 21.6, 'rgba(40,24,36,.72)')" });
+
 mkdirSync(join(ROOT, 'jobs'), { recursive: true });
 let n = 0;
 for (const [f, list] of Object.entries(out)) { writeFileSync(join(ROOT, 'jobs', f), JSON.stringify(list, null, 1) + '\n'); n += list.length; }

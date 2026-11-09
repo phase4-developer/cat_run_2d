@@ -693,6 +693,602 @@
    "sha256": "a590c88e8b03595590b116d08bf9ad88f73a016cb178254f99447975f9521a8d"
   },
   {
+   "name": "UI_Skin_CardBig_T0",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_CardBig_T0.png",
+   "w": 416,
+   "h": 372,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    29,
+    29,
+    29,
+    29
+   ],
+   "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+   "args": null,
+   "sha256": "519ececd1e5698e08cbdd2e3c88d3954be93604ef9f8b9af57134a6726147e79"
+  },
+  {
+   "name": "UI_Skin_CardBig_T1",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_CardBig_T1.png",
+   "w": 416,
+   "h": 372,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    29,
+    29,
+    29,
+    29
+   ],
+   "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+   "args": null,
+   "sha256": "93181dfaaafa055208ee4099c589d9d4065b8419daeeae91e66973c33360c832"
+  },
+  {
+   "name": "UI_Skin_CardBig_T2",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_CardBig_T2.png",
+   "w": 416,
+   "h": 372,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    29,
+    29,
+    29,
+    29
+   ],
+   "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+   "args": null,
+   "sha256": "13a5799f441f3ab78e16f0e727173ba732bf09d9f22601c12d7b79fcaf36fa3b"
+  },
+  {
+   "name": "UI_Skin_CardBig_T3",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_CardBig_T3.png",
+   "w": 416,
+   "h": 372,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    29,
+    29,
+    29,
+    29
+   ],
+   "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+   "args": null,
+   "sha256": "df6f4d51fe5669263183ab515f32f7d6756631669f761603ee6c76578b6e1434"
+  },
+  {
+   "name": "UI_Skin_CardBig_T4",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_CardBig_T4.png",
+   "w": 416,
+   "h": 372,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    29,
+    29,
+    29,
+    29
+   ],
+   "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+   "args": null,
+   "sha256": "7aa4f55978cd3e51ca2bebb45e7819fb07e3d82c68526882af1e735de5b6ce76"
+  },
+  {
+   "name": "UI_Skin_HCard_T0",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCard_T0.png",
+   "w": 336,
+   "h": 272,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    76,
+    76,
+    76,
+    76
+   ],
+   "src": "CSS .hcard L411~413(21u×15u)",
+   "args": null,
+   "sha256": "c45c9517c653a298bc7a4fdf9d8413d29f54d8ad4107bea6a9a6e1e55bc6ea59"
+  },
+  {
+   "name": "UI_Skin_HCard_T1",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCard_T1.png",
+   "w": 336,
+   "h": 272,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    76,
+    76,
+    76,
+    76
+   ],
+   "src": "CSS .hcard L411~413(21u×15u)",
+   "args": null,
+   "sha256": "fc79cf0399e514e44756367d4f879138c8dd488db51718c9a07744dac3dcef7c"
+  },
+  {
+   "name": "UI_Skin_HCard_T2",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCard_T2.png",
+   "w": 336,
+   "h": 272,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    76,
+    76,
+    76,
+    76
+   ],
+   "src": "CSS .hcard L411~413(21u×15u)",
+   "args": null,
+   "sha256": "0e261762f6a1d1dfbac806427203c605a6d838dd468a632a21338bbaf7d26675"
+  },
+  {
+   "name": "UI_Skin_HCard_T3",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCard_T3.png",
+   "w": 336,
+   "h": 272,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    76,
+    76,
+    76,
+    76
+   ],
+   "src": "CSS .hcard L411~413(21u×15u)",
+   "args": null,
+   "sha256": "c9f36d444d72e5698bef2cd799a063fd462fdd753ff354c259f984cb47522030"
+  },
+  {
+   "name": "UI_Skin_HCard_T4",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCard_T4.png",
+   "w": 336,
+   "h": 272,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    76,
+    76,
+    76,
+    76
+   ],
+   "src": "CSS .hcard L411~413(21u×15u)",
+   "args": null,
+   "sha256": "249717d22dd9cc997071cdddbd1ec55e2726ad5bbfa9736431d8464084a48a84"
+  },
+  {
+   "name": "UI_Skin_HCardCenter_T0",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCardCenter_T0.png",
+   "w": 380,
+   "h": 464,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    82,
+    81,
+    82,
+    81
+   ],
+   "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)",
+   "args": null,
+   "sha256": "ce9ce24ac268e529db727f578d5fb07a25d871ea77feb82a0358bd9bca529e75"
+  },
+  {
+   "name": "UI_Skin_HCardCenter_T1",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCardCenter_T1.png",
+   "w": 380,
+   "h": 464,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    82,
+    81,
+    82,
+    81
+   ],
+   "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)",
+   "args": null,
+   "sha256": "4caf00a862af385b6c7a8dbc6b24da6a640ef1cc5dc7b3578a507b00ff60f1b1"
+  },
+  {
+   "name": "UI_Skin_HCardCenter_T2",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCardCenter_T2.png",
+   "w": 380,
+   "h": 464,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    82,
+    81,
+    82,
+    81
+   ],
+   "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)",
+   "args": null,
+   "sha256": "0a51764d3c920ae1e66fc965c9e57573a1508126116820297b2757c3e87ce9b2"
+  },
+  {
+   "name": "UI_Skin_HCardCenter_T3",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCardCenter_T3.png",
+   "w": 380,
+   "h": 464,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    82,
+    81,
+    82,
+    81
+   ],
+   "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)",
+   "args": null,
+   "sha256": "a1932d54f5a89158ee41c37ff33c964e0907f9eb83a8dc91d72a8f674bde83eb"
+  },
+  {
+   "name": "UI_Skin_HCardCenter_T4",
+   "atlas": "Atlas_UI_Card",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Card/UI_Skin_HCardCenter_T4.png",
+   "w": 380,
+   "h": 464,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    82,
+    81,
+    82,
+    81
+   ],
+   "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)",
+   "args": null,
+   "sha256": "d92e61ee412028fd17c58ce9155b35dd54fb8e3b23a0f4009cabb75c5a132424"
+  },
+  {
+   "name": "UI_Skin_Chip",
+   "atlas": "Atlas_UI_Common",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Common/UI_Skin_Chip.png",
+   "w": 76,
+   "h": 64,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    34,
+    32,
+    34,
+    32
+   ],
+   "src": "CSS .chip L38·L280(높이 = 아이콘 4.2u + 위아래 .6u + 테두리, 반지름 5u는 높이 반으로 줄어듦)",
+   "args": null,
+   "sha256": "314bb5b129c703950f51a3d76e2c21e1c76137a858a5a7b53e40dbb8f624f375"
+  },
+  {
+   "name": "UI_Skin_Panel",
+   "atlas": "Atlas_UI_Common",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Common/UI_Skin_Panel.png",
+   "w": 60,
+   "h": 60,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    26,
+    26,
+    26,
+    26
+   ],
+   "src": "CSS --panel L13·L582, #hud .floor L50·L283",
+   "args": null,
+   "sha256": "f87d916d50dad76910f0496353c13173f3806bc65b43bea7e18282ad1ab91b9e"
+  },
+  {
+   "name": "UI_Skin_Pill",
+   "atlas": "Atlas_UI_Common",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Common/UI_Skin_Pill.png",
+   "w": 56,
+   "h": 48,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    25,
+    24,
+    25,
+    24
+   ],
+   "src": "L3519(W = 1080)",
+   "args": null,
+   "sha256": "e27e79298734aa7e720a38064f96b41283fbc9273e06e4106d4c90a63f63cb2d"
+  },
+  {
+   "name": "UI_Skin_PopupBox",
+   "atlas": "Atlas_UI_Common",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Common/UI_Skin_PopupBox.png",
+   "w": 80,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    36,
+    36,
+    36,
+    36
+   ],
+   "src": "CSS .pnl .box L348·L595(테두리색 --pc는 UI_Skin_PopupEdge 틴트)",
+   "args": null,
+   "sha256": "623a3be7e6d7d8e50956c884a095df24cb25f96319dd55e24ea9def4c294a0c6"
+  },
+  {
+   "name": "UI_Skin_PopupEdge",
+   "atlas": "Atlas_UI_Common",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Common/UI_Skin_PopupEdge.png",
+   "w": 80,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    36,
+    36,
+    36,
+    36
+   ],
+   "src": "CSS .pnl .box 테두리 L348(흰색, --pc 틴트)",
+   "args": null,
+   "sha256": "ee04223faada01c4f60fb9ee3dbb24eb704e3ca03f42faf57b06e8027c6977f4"
+  },
+  {
+   "name": "UI_Skin_ResultCell",
+   "atlas": "Atlas_UI_Common",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Common/UI_Skin_ResultCell.png",
+   "w": 60,
+   "h": 60,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    26,
+    26,
+    26,
+    26
+   ],
+   "src": "CSS #result .rw div L262·L329",
+   "args": null,
+   "sha256": "5e2c47873f3ba600ca46a5be2649f94c1b1ed66e78069fd6dc57f6d495f58740"
+  },
+  {
+   "name": "UI_Skin_UnlockBox",
+   "atlas": "Atlas_UI_Common",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Common/UI_Skin_UnlockBox.png",
+   "w": 872,
+   "h": 652,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    36,
+    36,
+    36,
+    36
+   ],
+   "src": "CSS .ul-box L482(크기 = 정본 .ul-box 내용으로 잰 값, 원형 그라데이션이라 늘이지 않는 크기)",
+   "args": null,
+   "sha256": "74d623f533c6f7cd512538753ae7829952c9d29081f9b52715201eff36ff42d7"
+  },
+  {
+   "name": "UI_Skin_Bar_Ms",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_Bar_Ms.png",
+   "w": 132,
+   "h": 32,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "CSS .ms-bar i L436(JS가 등급색으로 바꾸는 경우는 런타임 틴트)",
+   "args": null,
+   "sha256": "ba4f717fe1c359d0be885233f57974376591b718388e5a29a8d8647e5f16867e"
+  },
+  {
+   "name": "UI_Skin_Bar_Result",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_Bar_Result.png",
+   "w": 132,
+   "h": 28,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "CSS #rBar L260",
+   "args": null,
+   "sha256": "bd05695084c01563063d8da367c5bba24beba06f8cbef6ae74ccbf50a0138a33"
+  },
+  {
+   "name": "UI_Skin_Bar_Soul",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_Bar_Soul.png",
+   "w": 132,
+   "h": 28,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "CSS #lSoulFill L158",
+   "args": null,
+   "sha256": "83ac317052a879b70e5567017affcc2ead0251ab17919fb55931afed3a73159d"
+  },
+  {
+   "name": "UI_Skin_Bar_Stair",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_Bar_Stair.png",
+   "w": 52,
+   "h": 264,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "CSS #gFill L518~519·L587(세로 채움, 칸 4.4u−테두리 × 24u. 바깥 빛 box-shadow는 칸 overflow로 잘려 뺌)",
+   "args": null,
+   "sha256": "fff1fd9ba3d32c6ebc517eecc3ba9cf71170838c54a0ce4b1b19ae883ff5aa57"
+  },
+  {
+   "name": "UI_Skin_Bar_Up",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_Bar_Up.png",
+   "w": 132,
+   "h": 28,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "CSS .up .g b L223",
+   "args": null,
+   "sha256": "676abeaec6b8043a385b57614270eaadc82ace9fd4150cf204bfcbeeef3cce8f"
+  },
+  {
    "name": "UI_Skin_HatchTile",
    "atlas": "Atlas_UI_Hud",
    "theme": null,
@@ -709,6 +1305,535 @@
    "src": "CSS #fgMask L530(x 주기 17 px로 맞춤)",
    "args": null,
    "sha256": "7f81ba879539634d0e7cd171df431dbbb6775dc4283b418fd9070bd7f2abe7b5"
+  },
+  {
+   "name": "UI_Skin_MsCard_T0",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_MsCard_T0.png",
+   "w": 200,
+   "h": 204,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    96,
+    98,
+    96,
+    98
+   ],
+   "src": "CSS .ms-card L429·L542·L602",
+   "args": null,
+   "sha256": "9bb24a802511f5a23ab4d9a192943ac93ed57bf125b3b9027f656c1114f9dc20"
+  },
+  {
+   "name": "UI_Skin_MsCard_T1",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_MsCard_T1.png",
+   "w": 200,
+   "h": 204,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    96,
+    98,
+    96,
+    98
+   ],
+   "src": "CSS .ms-card L429·L542·L602",
+   "args": null,
+   "sha256": "828fcdc94b24adc9f8f243d97d36538386ad7901cf97e9309ad15cbf7db514e7"
+  },
+  {
+   "name": "UI_Skin_MsCard_T2",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_MsCard_T2.png",
+   "w": 200,
+   "h": 204,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    96,
+    98,
+    96,
+    98
+   ],
+   "src": "CSS .ms-card L429·L542·L602",
+   "args": null,
+   "sha256": "ee330d3954eb57e95bb17d9f4f3f99e7f3b2fe5bb69cd425203c2d45b4c9230d"
+  },
+  {
+   "name": "UI_Skin_MsCard_T3",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_MsCard_T3.png",
+   "w": 200,
+   "h": 204,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    96,
+    98,
+    96,
+    98
+   ],
+   "src": "CSS .ms-card L429·L542·L602",
+   "args": null,
+   "sha256": "2a8620760bf7e2945af482be9597882b9d3af0e36678ea926b33d9bbc3bbd9b2"
+  },
+  {
+   "name": "UI_Skin_MsCard_T4",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_MsCard_T4.png",
+   "w": 200,
+   "h": 204,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    96,
+    98,
+    96,
+    98
+   ],
+   "src": "CSS .ms-card L429·L542·L602",
+   "args": null,
+   "sha256": "546ef533fb0908175ca223eafea0b671eadfb732e8174c689618613d51480ee0"
+  },
+  {
+   "name": "UI_Skin_StairBox",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_StairBox.png",
+   "w": 80,
+   "h": 80,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    36,
+    36,
+    36,
+    36
+   ],
+   "src": "CSS #stairBox L53·L284",
+   "args": null,
+   "sha256": "68a22c4e5e831e932656dec01600e91cedf9ac30aab2ddaf125b27e2d712d925"
+  },
+  {
+   "name": "UI_Skin_StairBox_Fly",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_StairBox_Fly.png",
+   "w": 184,
+   "h": 180,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    88,
+    86,
+    88,
+    86
+   ],
+   "src": "CSS #stairBox.fly L74",
+   "args": null,
+   "sha256": "34199b890261e456bd7076a7e5e2cf5a5c229c310f422f94da22459da4955c7d"
+  },
+  {
+   "name": "UI_Skin_WCard_G1",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WCard_G1.png",
+   "w": 120,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    17,
+    19,
+    17,
+    19
+   ],
+   "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)",
+   "args": null,
+   "sha256": "52fbd1d444abd2a2775a52cabf9bde788e0984df34accde3ffaa3a2b230a32c8"
+  },
+  {
+   "name": "UI_Skin_WCard_G2",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WCard_G2.png",
+   "w": 120,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    17,
+    19,
+    17,
+    19
+   ],
+   "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)",
+   "args": null,
+   "sha256": "531e8a869cb86f1636a14697808dafb11b3bb92e155100f264bd25595aad243f"
+  },
+  {
+   "name": "UI_Skin_WCard_G3",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WCard_G3.png",
+   "w": 120,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    17,
+    19,
+    17,
+    19
+   ],
+   "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)",
+   "args": null,
+   "sha256": "a3fcf81b4230b6a0a2fc88a2953cabb68e29f4e840a5f332b73e3e6f354b75c3"
+  },
+  {
+   "name": "UI_Skin_WCard_G4",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WCard_G4.png",
+   "w": 120,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    17,
+    19,
+    17,
+    19
+   ],
+   "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)",
+   "args": null,
+   "sha256": "a86fee9e1030116e8b0e333955c75b9dd2a71d26e65c3d52b00f4804c66a1a47"
+  },
+  {
+   "name": "UI_Skin_WCard_G5",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WCard_G5.png",
+   "w": 120,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    17,
+    19,
+    17,
+    19
+   ],
+   "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)",
+   "args": null,
+   "sha256": "7ec06768492b58b01ac9810562749f793f8eb9f0d315088bc5223255d841b9c3"
+  },
+  {
+   "name": "UI_Skin_WCard_G6",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WCard_G6.png",
+   "w": 120,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    17,
+    19,
+    17,
+    19
+   ],
+   "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)",
+   "args": null,
+   "sha256": "213bea31975bddfec35a1eb5872cd8ce95c6a9e2d2e894808d225099b75eb8a5"
+  },
+  {
+   "name": "UI_Skin_WCard_G7",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WCard_G7.png",
+   "w": 120,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    17,
+    19,
+    17,
+    19
+   ],
+   "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)",
+   "args": null,
+   "sha256": "f316182cdcd335659be486da16b0b67aa0efe26da8f4a0b253ca534be48cf2f2"
+  },
+  {
+   "name": "UI_Skin_WCard_G8",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WCard_G8.png",
+   "w": 120,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    17,
+    19,
+    17,
+    19
+   ],
+   "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)",
+   "args": null,
+   "sha256": "e0331c95b6397a81731670a96aa0e255d0eb3a041ad053e93bc928457b693c20"
+  },
+  {
+   "name": "UI_Skin_WpnCard_G1",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WpnCard_G1.png",
+   "w": 212,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS #wpnCard L96·L291·L506·L576(19u)",
+   "args": null,
+   "sha256": "0dde460a96ef50d321a48ca89cb7affb77afdf63d28e6cbc2e30ffe1ab34f7e3"
+  },
+  {
+   "name": "UI_Skin_WpnCard_G2",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WpnCard_G2.png",
+   "w": 212,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS #wpnCard L96·L291·L506·L576(19u)",
+   "args": null,
+   "sha256": "5c85f9f848833084bbc4b78461429aa9f692bb600365eb5b69657a98ea5f84ce"
+  },
+  {
+   "name": "UI_Skin_WpnCard_G3",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WpnCard_G3.png",
+   "w": 212,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS #wpnCard L96·L291·L506·L576(19u)",
+   "args": null,
+   "sha256": "5212d5792b37edb7b8830963fab6c00b2e8279af16b5d1587c8ba78361a86ff6"
+  },
+  {
+   "name": "UI_Skin_WpnCard_G4",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WpnCard_G4.png",
+   "w": 212,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS #wpnCard L96·L291·L506·L576(19u)",
+   "args": null,
+   "sha256": "a88710110bcd51caaf19a6e0b166bbe6f032143ba48dc82391ae9e43b5d8fa71"
+  },
+  {
+   "name": "UI_Skin_WpnCard_G5",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WpnCard_G5.png",
+   "w": 212,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS #wpnCard L96·L291·L506·L576(19u)",
+   "args": null,
+   "sha256": "e03d69c40d0f9e3a7b83bad8003abf417a4c23c9a5e29d663cd43039d81ed94c"
+  },
+  {
+   "name": "UI_Skin_WpnCard_G6",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WpnCard_G6.png",
+   "w": 212,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS #wpnCard L96·L291·L506·L576(19u)",
+   "args": null,
+   "sha256": "0887137ae90a075faa05c52cb6e32b950b917f81a424f7489a9028e7672aa4ea"
+  },
+  {
+   "name": "UI_Skin_WpnCard_G7",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WpnCard_G7.png",
+   "w": 212,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS #wpnCard L96·L291·L506·L576(19u)",
+   "args": null,
+   "sha256": "8afd9886fa1bfa02d66c689e9b80c1d5b9f37456fcb2e776247102d93fca0c89"
+  },
+  {
+   "name": "UI_Skin_WpnCard_G8",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_WpnCard_G8.png",
+   "w": 212,
+   "h": 212,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS #wpnCard L96·L291·L506·L576(19u)",
+   "args": null,
+   "sha256": "8932cc333a0f525805d429ac3556c1baa24f57cf3cae60d5d281ef477ab7464e"
   },
   {
    "name": "UI_Emoji_Basket",
@@ -1508,6 +2633,167 @@
     "t": 8
    },
    "sha256": "b30c1a4a9a6eebfd6c6fd0371dcc19c6945554ffd56122e4e3ef2f47b7c6facc"
+  },
+  {
+   "name": "UI_Skin_MapCp",
+   "atlas": "Atlas_UI_Lobby",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Lobby/UI_Skin_MapCp.png",
+   "w": 52,
+   "h": 68,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    22,
+    30,
+    22,
+    30
+   ],
+   "src": "CSS .mp-cp div L469",
+   "args": null,
+   "sha256": "8c5c94bc4de54ff2754dd71e6bd80e390b3edb6fc7c113cf171ae2167406a181"
+  },
+  {
+   "name": "UI_Skin_MapFt",
+   "atlas": "Atlas_UI_Lobby",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Lobby/UI_Skin_MapFt.png",
+   "w": 52,
+   "h": 68,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    22,
+    30,
+    22,
+    30
+   ],
+   "src": "CSS .mp-ft div L475",
+   "args": null,
+   "sha256": "c200cf7118a5921634bcb8dad4a843c2e4750969e69ccf728dd276aa682557f3"
+  },
+  {
+   "name": "UI_Skin_MapFt_On",
+   "atlas": "Atlas_UI_Lobby",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Lobby/UI_Skin_MapFt_On.png",
+   "w": 52,
+   "h": 68,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    22,
+    30,
+    22,
+    30
+   ],
+   "src": "CSS .mp-ft div.on L479",
+   "args": null,
+   "sha256": "dfcadf6d4dc6b40d42f5d437b95eec3a760c1d14d90612abd336f454505bf324"
+  },
+  {
+   "name": "UI_Skin_MapZone_Z1",
+   "atlas": "Atlas_UI_Lobby",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Lobby/UI_Skin_MapZone_Z1.png",
+   "w": 980,
+   "h": 208,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    27,
+    35,
+    27,
+    35
+   ],
+   "src": "CSS .mp-zone L453~454, ZONE_COL L2580(폭 90u [추정]: 135° 그라데이션이라 늘이지 않는 크기)",
+   "args": null,
+   "sha256": "23d5b410f31c3af65f28e4e1841012fa15640aa2fa2715d3b60b5817aca6b580"
+  },
+  {
+   "name": "UI_Skin_MapZone_Z2",
+   "atlas": "Atlas_UI_Lobby",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Lobby/UI_Skin_MapZone_Z2.png",
+   "w": 980,
+   "h": 208,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    27,
+    35,
+    27,
+    35
+   ],
+   "src": "CSS .mp-zone L453~454, ZONE_COL L2580(폭 90u [추정]: 135° 그라데이션이라 늘이지 않는 크기)",
+   "args": null,
+   "sha256": "94158c99d293e48b3b31c7b99d390b87b4d0c4f1a2b5e2f0f0a82fe95fbbd101"
+  },
+  {
+   "name": "UI_Skin_MapZone_Z3",
+   "atlas": "Atlas_UI_Lobby",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Lobby/UI_Skin_MapZone_Z3.png",
+   "w": 980,
+   "h": 208,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    27,
+    35,
+    27,
+    35
+   ],
+   "src": "CSS .mp-zone L453~454, ZONE_COL L2580(폭 90u [추정]: 135° 그라데이션이라 늘이지 않는 크기)",
+   "args": null,
+   "sha256": "f95c334c7ae38a7b1e632506e0970d3a9eba78345dcd647668cbcf764dc688f2"
+  },
+  {
+   "name": "UI_Skin_UpButton",
+   "atlas": "Atlas_UI_Lobby",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Lobby/UI_Skin_UpButton.png",
+   "w": 68,
+   "h": 68,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": [
+    30,
+    30,
+    30,
+    30
+   ],
+   "src": "CSS .up L164~165·L316·L590",
+   "args": null,
+   "sha256": "95fc5d0c17cc8baee89e3ce9edfc9746b93a445ac62810ed3ab8a434614aed97"
   },
   {
    "name": "World_Cat_P0_T1_Climb",
@@ -29227,6 +30513,24 @@
    "src": "L3475(cx, cy), L3537",
    "args": null,
    "sha256": "8b1e8cbc9fa210ae86ef94334ab434a59e985728b87ee1c16130d8a542fdd08b"
+  },
+  {
+   "name": "Tex_UI_Vignette",
+   "atlas": "Texture",
+   "theme": null,
+   "file": "Texture/Tex_UI_Vignette.png",
+   "w": 540,
+   "h": 960,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "CSS #vig L45(1080×1920의 절반, 늘려 씀)",
+   "args": null,
+   "sha256": "fea734ba353058ebb4c26c32694ab30a9ce52886d86e96bb2f216eb42822eb8a"
   }
  ]
 }

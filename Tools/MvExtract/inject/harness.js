@@ -160,6 +160,58 @@
     host.innerHTML = job.html;
     return u;
   };
+  // ── skin(03 §3.5.8): UI 스킨 1장. job.html 안 [data-t] = 찍을 요소, [data-w] = 선택자용 조상(상자 없이 display:contents).
+  // 정본 CSS 연쇄를 그대로 받고, 배치·크기만 인라인 !important로 덮는다. job.size [W, H](바깥 테두리 상자 px) 또는 job.clone(정본 요소의
+  // 내용을 잠시 복제해 정본 크기를 잰다). --u는 UI 기준 1080 폭 = 10.8 px(03 §3.3.2). 잘라내기·9-slice 경계는 skinCrop.
+  MvH.skinPrep = function (job) {
+    MvH.domPrep({ ...job, hostCss: `--u:${job.u || 10.8}px;${job.hostCss || ''}` });
+    const host = document.getElementById('mvDomHost');
+    for (const w of host.querySelectorAll('[data-w]')) w.setAttribute('style', (w.getAttribute('style') || '') + ';all:unset!important;display:contents!important');
+    const t = host.querySelector('[data-t]');
+    if (!t) throw new Error('skin: [data-t] 없음');
+    const imp = (k, v) => t.style.setProperty(k, v, 'important');
+    for (const [k, v] of Object.entries({ position: 'relative', inset: 'auto', transform: 'none', animation: 'none', transition: 'none', margin: '0', flex: 'none', 'min-width': '0', 'min-height': '0', 'max-width': 'none', 'max-height': 'none', 'pointer-events': 'none', 'align-self': 'center' })) imp(k, v);
+    let W, H;
+    if (job.clone) {
+      const src = document.querySelector(job.clone);
+      if (!src) throw new Error('skin: 복제 원본 없음 ' + job.clone);
+      t.innerHTML = src.innerHTML;
+      for (const el of t.querySelectorAll('*')) el.removeAttribute('hidden');
+      const r = t.getBoundingClientRect(); W = r.width; H = r.height; t.innerHTML = '';
+      if (job.size) W = job.size[0] || W;
+    } else [W, H] = job.size;
+    W = 2 * Math.round(W / 2); H = 2 * Math.round(H / 2); // 짝수: 호스트 가운데 정수 화소에 놓인다
+    imp('box-sizing', 'border-box'); imp('width', W + 'px'); imp('height', H + 'px'); imp('padding', '0');
+    if (job.targetCss) for (const d of job.targetCss.split(';').filter((x) => x.trim())) { const i = d.indexOf(':'); imp(d.slice(0, i).trim(), d.slice(i + 1).trim()); }
+    const cs = getComputedStyle(t), px = (s) => parseFloat(s) || 0;
+    const rad = (k) => { const p = cs[k].split(' '); return [px(p[0]), px(p[1] ?? p[0])]; };
+    const R = { tl: rad('borderTopLeftRadius'), tr: rad('borderTopRightRadius'), br: rad('borderBottomRightRadius'), bl: rad('borderBottomLeftRadius') };
+    const f = Math.min(1, W / (R.tl[0] + R.tr[0] || 1e9), W / (R.bl[0] + R.br[0] || 1e9), H / (R.tl[1] + R.bl[1] || 1e9), H / (R.tr[1] + R.br[1] || 1e9));
+    const b = { l: px(cs.borderLeftWidth), r: px(cs.borderRightWidth), t: px(cs.borderTopWidth), b: px(cs.borderBottomWidth) };
+    const corner = { l: Math.max(f * R.tl[0], f * R.bl[0], b.l), r: Math.max(f * R.tr[0], f * R.br[0], b.r), t: Math.max(f * R.tl[1], f * R.tr[1], b.t, 1), b: Math.max(f * R.bl[1], f * R.br[1], b.b) };
+    const rc = t.getBoundingClientRect();
+    return { x: Math.round(rc.left), y: Math.round(rc.top), W, H, corner };
+  };
+  // 찍은 호스트 PNG → 요소 가운데 기준 좌우·위아래 대칭으로 자른다(그림자 끝 + 2 px, 4의 배수). 9-slice [L, B, R, T] = 여백 + 모서리 + 1
+  MvH.skinCrop = async function (u, info, job) {
+    const im = new Image(); im.src = u; await im.decode();
+    const c0 = newCanvas(im.width, im.height), g0 = c0.getContext('2d'); g0.drawImage(im, 0, 0);
+    if (job.noCrop) return { dataURL: u, w: im.width, h: im.height, border: null, pivotPx: [im.width / 2, im.height / 2], hits: [], zeroRules: [], alpha: checkAlpha(c0) };
+    const d = g0.getImageData(0, 0, im.width, im.height).data;
+    let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+    for (let y = 0; y < im.height; y++) for (let x = 0; x < im.width; x++) if (d[(y * im.width + x) * 4 + 3]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < 0) throw new Error('skin: 빈 그림');
+    const { x, y, W, H, corner } = info;
+    const mx = Math.max(0, x - x0, x1 + 1 - (x + W)) + 2, my = Math.max(0, y - y0, y1 + 1 - (y + H)) + 2;
+    const r4 = (n) => Math.ceil(n / 4) * 4;
+    const w = r4(W + 2 * mx), h = r4(H + 2 * my), cx = x - (w - W) / 2, cy = y - (h - H) / 2;
+    if (cx < 0 || cy < 0 || cx + w > im.width || cy + h > im.height) throw new Error(`skin: 호스트가 작다(${w}x${h} @ ${cx},${cy} / ${im.width}x${im.height})`);
+    const out = newCanvas(w, h); out.getContext('2d').drawImage(im, -cx, -cy);
+    const px = (w - W) / 2, py = (h - H) / 2, k = (v) => Math.ceil(v) + 1;
+    const border = job.slice === false ? null : [px + k(corner.l), py + k(corner.b), px + k(corner.r), py + k(corner.t)];
+    if (border) { if (border[0] + border[2] > w) border[0] = border[2] = Math.floor(w / 2); if (border[1] + border[3] > h) border[1] = border[3] = Math.floor(h / 2); }
+    return { dataURL: out.toDataURL('image/png'), w, h, border, pivotPx: [w / 2, h / 2], hits: [], zeroRules: [], alpha: checkAlpha(out) };
+  };
   MvH.domClear = function () { const h = document.getElementById('mvDomHost'); if (h) h.remove(); const s = document.getElementById('mvDomStyle'); if (s) s.remove(); };
   MvH.alphaOf = async function (u) { const im = new Image(); im.src = u; await im.decode(); const c = newCanvas(im.width, im.height); c.getContext('2d').drawImage(im, 0, 0); return checkAlpha(c); };
 

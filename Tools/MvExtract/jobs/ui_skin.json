@@ -21,5 +21,1553 @@
   "allowEdge": true,
   "src": "CSS #fgMask L530(x 주기 17 px로 맞춤)",
   "expr": "(() => { const N = 68, P = 17, im = g.createImageData(N, N), A = [8, 6, 14], B = [24, 20, 36]; for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { let a = 0; for (let sy = 0; sy < 4; sy++) for (let sx = 0; sx < 4; sx++) { const u = (((x + (sx + 0.5)/4) + (y + (sy + 0.5)/4)) % P + P) % P; if (u < P/2) a++; } const k = a/16, o = (y*N + x)*4; for (let c = 0; c < 3; c++) im.data[o + c] = Math.round(A[c]*k + B[c]*(1 - k)); im.data[o + 3] = 230; } g.putImageData(im, 0, 0); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_Panel",
+  "atlas": "Atlas_UI_Common",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 184,
+   "h": 184,
+   "pivotPx": [
+    92,
+    92
+   ]
+  },
+  "html": "<div id=\"hud\" data-w><div class=\"floor\" data-t></div></div>",
+  "size": [
+   54,
+   54
+  ],
+  "src": "CSS --panel L13·L582, #hud .floor L50·L283"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_Chip",
+  "atlas": "Atlas_UI_Common",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 200,
+   "h": 188,
+   "pivotPx": [
+    100,
+    94
+   ]
+  },
+  "html": "<div class=\"chip\" data-t></div>",
+  "size": [
+   70,
+   60
+  ],
+  "src": "CSS .chip L38·L280(높이 = 아이콘 4.2u + 위아래 .6u + 테두리, 반지름 5u는 높이 반으로 줄어듦)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_StairBox",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 204,
+   "h": 204,
+   "pivotPx": [
+    102,
+    102
+   ]
+  },
+  "html": "<div id=\"stairBox\" data-t></div>",
+  "size": [
+   76,
+   76
+  ],
+  "src": "CSS #stairBox L53·L284"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_StairBox_Fly",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 220,
+   "h": 220,
+   "pivotPx": [
+    110,
+    110
+   ]
+  },
+  "html": "<div id=\"stairBox\" class=\"fly\" data-t></div>",
+  "size": [
+   76,
+   76
+  ],
+  "src": "CSS #stairBox.fly L74",
+  "margin": 72
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WCard_G1",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 244,
+   "h": 244,
+   "pivotPx": [
+    122,
+    122
+   ]
+  },
+  "html": "<div class=\"wcard2\" data-t style=\"--gc:#9ea4ae\"></div>",
+  "size": [
+   114,
+   114
+  ],
+  "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WpnCard_G1",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 336,
+   "h": 336,
+   "pivotPx": [
+    168,
+    168
+   ]
+  },
+  "html": "<div id=\"wpnCard\" data-t style=\"--gc:#9ea4ae\"></div>",
+  "size": [
+   206,
+   206
+  ],
+  "src": "CSS #wpnCard L96·L291·L506·L576(19u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WCard_G2",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 244,
+   "h": 244,
+   "pivotPx": [
+    122,
+    122
+   ]
+  },
+  "html": "<div class=\"wcard2\" data-t style=\"--gc:#46c35a\"></div>",
+  "size": [
+   114,
+   114
+  ],
+  "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WpnCard_G2",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 336,
+   "h": 336,
+   "pivotPx": [
+    168,
+    168
+   ]
+  },
+  "html": "<div id=\"wpnCard\" data-t style=\"--gc:#46c35a\"></div>",
+  "size": [
+   206,
+   206
+  ],
+  "src": "CSS #wpnCard L96·L291·L506·L576(19u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WCard_G3",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 244,
+   "h": 244,
+   "pivotPx": [
+    122,
+    122
+   ]
+  },
+  "html": "<div class=\"wcard2\" data-t style=\"--gc:#3a8ff0\"></div>",
+  "size": [
+   114,
+   114
+  ],
+  "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WpnCard_G3",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 336,
+   "h": 336,
+   "pivotPx": [
+    168,
+    168
+   ]
+  },
+  "html": "<div id=\"wpnCard\" data-t style=\"--gc:#3a8ff0\"></div>",
+  "size": [
+   206,
+   206
+  ],
+  "src": "CSS #wpnCard L96·L291·L506·L576(19u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WCard_G4",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 244,
+   "h": 244,
+   "pivotPx": [
+    122,
+    122
+   ]
+  },
+  "html": "<div class=\"wcard2\" data-t style=\"--gc:#a65be8\"></div>",
+  "size": [
+   114,
+   114
+  ],
+  "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WpnCard_G4",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 336,
+   "h": 336,
+   "pivotPx": [
+    168,
+    168
+   ]
+  },
+  "html": "<div id=\"wpnCard\" data-t style=\"--gc:#a65be8\"></div>",
+  "size": [
+   206,
+   206
+  ],
+  "src": "CSS #wpnCard L96·L291·L506·L576(19u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WCard_G5",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 244,
+   "h": 244,
+   "pivotPx": [
+    122,
+    122
+   ]
+  },
+  "html": "<div class=\"wcard2\" data-t style=\"--gc:#f08a24\"></div>",
+  "size": [
+   114,
+   114
+  ],
+  "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WpnCard_G5",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 336,
+   "h": 336,
+   "pivotPx": [
+    168,
+    168
+   ]
+  },
+  "html": "<div id=\"wpnCard\" data-t style=\"--gc:#f08a24\"></div>",
+  "size": [
+   206,
+   206
+  ],
+  "src": "CSS #wpnCard L96·L291·L506·L576(19u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WCard_G6",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 244,
+   "h": 244,
+   "pivotPx": [
+    122,
+    122
+   ]
+  },
+  "html": "<div class=\"wcard2\" data-t style=\"--gc:#e8443a\"></div>",
+  "size": [
+   114,
+   114
+  ],
+  "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WpnCard_G6",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 336,
+   "h": 336,
+   "pivotPx": [
+    168,
+    168
+   ]
+  },
+  "html": "<div id=\"wpnCard\" data-t style=\"--gc:#e8443a\"></div>",
+  "size": [
+   206,
+   206
+  ],
+  "src": "CSS #wpnCard L96·L291·L506·L576(19u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WCard_G7",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 244,
+   "h": 244,
+   "pivotPx": [
+    122,
+    122
+   ]
+  },
+  "html": "<div class=\"wcard2\" data-t style=\"--gc:#1fc8c8\"></div>",
+  "size": [
+   114,
+   114
+  ],
+  "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WpnCard_G7",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 336,
+   "h": 336,
+   "pivotPx": [
+    168,
+    168
+   ]
+  },
+  "html": "<div id=\"wpnCard\" data-t style=\"--gc:#1fc8c8\"></div>",
+  "size": [
+   206,
+   206
+  ],
+  "src": "CSS #wpnCard L96·L291·L506·L576(19u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WCard_G8",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 244,
+   "h": 244,
+   "pivotPx": [
+    122,
+    122
+   ]
+  },
+  "html": "<div class=\"wcard2\" data-t style=\"--gc:#ffd23a\"></div>",
+  "size": [
+   114,
+   114
+  ],
+  "src": "CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_WpnCard_G8",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 336,
+   "h": 336,
+   "pivotPx": [
+    168,
+    168
+   ]
+  },
+  "html": "<div id=\"wpnCard\" data-t style=\"--gc:#ffd23a\"></div>",
+  "size": [
+   206,
+   206
+  ],
+  "src": "CSS #wpnCard L96·L291·L506·L576(19u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCard_T0",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 356,
+   "h": 292,
+   "pivotPx": [
+    178,
+    146
+   ]
+  },
+  "html": "<div class=\"hcard\" data-t style=\"--tc:#c9c2b4\"></div>",
+  "size": [
+   226,
+   162
+  ],
+  "src": "CSS .hcard L411~413(21u×15u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCardCenter_T0",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 400,
+   "h": 484,
+   "pivotPx": [
+    200,
+    242
+   ]
+  },
+  "html": "<div id=\"hc\" class=\"center\" data-w><div class=\"hcard\" data-t style=\"--tc:#c9c2b4\"></div></div>",
+  "size": [
+   270,
+   356
+  ],
+  "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_CardBig_T0",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 544,
+   "h": 660,
+   "pivotPx": [
+    272,
+    330
+   ]
+  },
+  "html": "<div id=\"card\" data-t style=\"--tc:#c9c2b4;--tg:transparent\"></div>",
+  "size": null,
+  "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+  "clone": "#card",
+  "host": [
+   544,
+   660
+  ]
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MsCard_T0",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 248,
+   "h": 248,
+   "pivotPx": [
+    124,
+    124
+   ]
+  },
+  "html": "<div class=\"ms-card\" data-t style=\"--tc:#c9c2b4\"></div>",
+  "size": [
+   54,
+   54
+  ],
+  "src": "CSS .ms-card L429·L542·L602",
+  "margin": 96
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCard_T1",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 356,
+   "h": 292,
+   "pivotPx": [
+    178,
+    146
+   ]
+  },
+  "html": "<div class=\"hcard\" data-t style=\"--tc:#6fd27a\"></div>",
+  "size": [
+   226,
+   162
+  ],
+  "src": "CSS .hcard L411~413(21u×15u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCardCenter_T1",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 400,
+   "h": 484,
+   "pivotPx": [
+    200,
+    242
+   ]
+  },
+  "html": "<div id=\"hc\" class=\"center\" data-w><div class=\"hcard\" data-t style=\"--tc:#6fd27a\"></div></div>",
+  "size": [
+   270,
+   356
+  ],
+  "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_CardBig_T1",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 544,
+   "h": 660,
+   "pivotPx": [
+    272,
+    330
+   ]
+  },
+  "html": "<div id=\"card\" data-t style=\"--tc:#6fd27a;--tg:transparent\"></div>",
+  "size": null,
+  "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+  "clone": "#card",
+  "host": [
+   544,
+   660
+  ]
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MsCard_T1",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 248,
+   "h": 248,
+   "pivotPx": [
+    124,
+    124
+   ]
+  },
+  "html": "<div class=\"ms-card\" data-t style=\"--tc:#6fd27a\"></div>",
+  "size": [
+   54,
+   54
+  ],
+  "src": "CSS .ms-card L429·L542·L602",
+  "margin": 96
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCard_T2",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 356,
+   "h": 292,
+   "pivotPx": [
+    178,
+    146
+   ]
+  },
+  "html": "<div class=\"hcard\" data-t style=\"--tc:#58a6f0\"></div>",
+  "size": [
+   226,
+   162
+  ],
+  "src": "CSS .hcard L411~413(21u×15u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCardCenter_T2",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 400,
+   "h": 484,
+   "pivotPx": [
+    200,
+    242
+   ]
+  },
+  "html": "<div id=\"hc\" class=\"center\" data-w><div class=\"hcard\" data-t style=\"--tc:#58a6f0\"></div></div>",
+  "size": [
+   270,
+   356
+  ],
+  "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_CardBig_T2",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 544,
+   "h": 660,
+   "pivotPx": [
+    272,
+    330
+   ]
+  },
+  "html": "<div id=\"card\" data-t style=\"--tc:#58a6f0;--tg:transparent\"></div>",
+  "size": null,
+  "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+  "clone": "#card",
+  "host": [
+   544,
+   660
+  ]
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MsCard_T2",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 248,
+   "h": 248,
+   "pivotPx": [
+    124,
+    124
+   ]
+  },
+  "html": "<div class=\"ms-card\" data-t style=\"--tc:#58a6f0\"></div>",
+  "size": [
+   54,
+   54
+  ],
+  "src": "CSS .ms-card L429·L542·L602",
+  "margin": 96
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCard_T3",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 356,
+   "h": 292,
+   "pivotPx": [
+    178,
+    146
+   ]
+  },
+  "html": "<div class=\"hcard\" data-t style=\"--tc:#c07af0\"></div>",
+  "size": [
+   226,
+   162
+  ],
+  "src": "CSS .hcard L411~413(21u×15u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCardCenter_T3",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 400,
+   "h": 484,
+   "pivotPx": [
+    200,
+    242
+   ]
+  },
+  "html": "<div id=\"hc\" class=\"center\" data-w><div class=\"hcard\" data-t style=\"--tc:#c07af0\"></div></div>",
+  "size": [
+   270,
+   356
+  ],
+  "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_CardBig_T3",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 544,
+   "h": 660,
+   "pivotPx": [
+    272,
+    330
+   ]
+  },
+  "html": "<div id=\"card\" data-t style=\"--tc:#c07af0;--tg:transparent\"></div>",
+  "size": null,
+  "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+  "clone": "#card",
+  "host": [
+   544,
+   660
+  ]
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MsCard_T3",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 248,
+   "h": 248,
+   "pivotPx": [
+    124,
+    124
+   ]
+  },
+  "html": "<div class=\"ms-card\" data-t style=\"--tc:#c07af0\"></div>",
+  "size": [
+   54,
+   54
+  ],
+  "src": "CSS .ms-card L429·L542·L602",
+  "margin": 96
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCard_T4",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 356,
+   "h": 292,
+   "pivotPx": [
+    178,
+    146
+   ]
+  },
+  "html": "<div class=\"hcard\" data-t style=\"--tc:#f2b33d\"></div>",
+  "size": [
+   226,
+   162
+  ],
+  "src": "CSS .hcard L411~413(21u×15u)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HCardCenter_T4",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 400,
+   "h": 484,
+   "pivotPx": [
+    200,
+    242
+   ]
+  },
+  "html": "<div id=\"hc\" class=\"center\" data-w><div class=\"hcard\" data-t style=\"--tc:#f2b33d\"></div></div>",
+  "size": [
+   270,
+   356
+  ],
+  "src": "CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_CardBig_T4",
+  "atlas": "Atlas_UI_Card",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 544,
+   "h": 660,
+   "pivotPx": [
+    272,
+    330
+   ]
+  },
+  "html": "<div id=\"card\" data-t style=\"--tc:#f2b33d;--tg:transparent\"></div>",
+  "size": null,
+  "src": "CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)",
+  "clone": "#card",
+  "host": [
+   544,
+   660
+  ]
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MsCard_T4",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 248,
+   "h": 248,
+   "pivotPx": [
+    124,
+    124
+   ]
+  },
+  "html": "<div class=\"ms-card\" data-t style=\"--tc:#f2b33d\"></div>",
+  "size": [
+   54,
+   54
+  ],
+  "src": "CSS .ms-card L429·L542·L602",
+  "margin": 96
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_UpButton",
+  "atlas": "Atlas_UI_Lobby",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 192,
+   "pivotPx": [
+    96,
+    96
+   ]
+  },
+  "html": "<button class=\"up\" data-t></button>",
+  "size": [
+   62,
+   62
+  ],
+  "src": "CSS .up L164~165·L316·L590"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_PopupBox",
+  "atlas": "Atlas_UI_Common",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 204,
+   "h": 204,
+   "pivotPx": [
+    102,
+    102
+   ]
+  },
+  "html": "<div class=\"pnl\" data-w style=\"--pc:transparent\"><div class=\"box\" data-t></div></div>",
+  "size": [
+   76,
+   76
+  ],
+  "src": "CSS .pnl .box L348·L595(테두리색 --pc는 UI_Skin_PopupEdge 틴트)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_PopupEdge",
+  "atlas": "Atlas_UI_Common",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 204,
+   "h": 204,
+   "pivotPx": [
+    102,
+    102
+   ]
+  },
+  "html": "<div class=\"pnl\" data-w style=\"--pc:#ffffff\"><div class=\"box\" data-t></div></div>",
+  "size": [
+   76,
+   76
+  ],
+  "src": "CSS .pnl .box 테두리 L348(흰색, --pc 틴트)",
+  "targetCss": "background:none;box-shadow:none"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_ResultCell",
+  "atlas": "Atlas_UI_Common",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 184,
+   "h": 184,
+   "pivotPx": [
+    92,
+    92
+   ]
+  },
+  "html": "<div id=\"result\" data-w><div class=\"rw\" data-w><div data-t></div></div></div>",
+  "size": [
+   54,
+   54
+  ],
+  "src": "CSS #result .rw div L262·L329"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MapZone_Z1",
+  "atlas": "Atlas_UI_Lobby",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 1020,
+   "h": 232,
+   "pivotPx": [
+    510,
+    116
+   ]
+  },
+  "html": "<div class=\"mp-zone\" data-t style=\"--z1:#a85a4a;--z2:#e0a070\"></div>",
+  "size": [
+   972,
+   184
+  ],
+  "src": "CSS .mp-zone L453~454, ZONE_COL L2580(폭 90u [추정]: 135° 그라데이션이라 늘이지 않는 크기)",
+  "margin": 24
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MapZone_Z2",
+  "atlas": "Atlas_UI_Lobby",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 1020,
+   "h": 232,
+   "pivotPx": [
+    510,
+    116
+   ]
+  },
+  "html": "<div class=\"mp-zone\" data-t style=\"--z1:#4a6aa8;--z2:#8ab0e0\"></div>",
+  "size": [
+   972,
+   184
+  ],
+  "src": "CSS .mp-zone L453~454, ZONE_COL L2580(폭 90u [추정]: 135° 그라데이션이라 늘이지 않는 크기)",
+  "margin": 24
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MapZone_Z3",
+  "atlas": "Atlas_UI_Lobby",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 1020,
+   "h": 232,
+   "pivotPx": [
+    510,
+    116
+   ]
+  },
+  "html": "<div class=\"mp-zone\" data-t style=\"--z1:#8a5aa8;--z2:#c08ad8\"></div>",
+  "size": [
+   972,
+   184
+  ],
+  "src": "CSS .mp-zone L453~454, ZONE_COL L2580(폭 90u [추정]: 135° 그라데이션이라 늘이지 않는 크기)",
+  "margin": 24
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MapCp",
+  "atlas": "Atlas_UI_Lobby",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 176,
+   "h": 176,
+   "pivotPx": [
+    88,
+    88
+   ]
+  },
+  "html": "<div class=\"mp-cp\" data-w><div data-t></div></div>",
+  "size": [
+   46,
+   46
+  ],
+  "src": "CSS .mp-cp div L469"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MapFt",
+  "atlas": "Atlas_UI_Lobby",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 176,
+   "h": 176,
+   "pivotPx": [
+    88,
+    88
+   ]
+  },
+  "html": "<div class=\"mp-ft\" data-w><div data-t></div></div>",
+  "size": [
+   46,
+   46
+  ],
+  "src": "CSS .mp-ft div L475"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_MapFt_On",
+  "atlas": "Atlas_UI_Lobby",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 176,
+   "h": 176,
+   "pivotPx": [
+    88,
+    88
+   ]
+  },
+  "html": "<div class=\"mp-ft\" data-w><div class=\"on\" data-t></div></div>",
+  "size": [
+   46,
+   46
+  ],
+  "src": "CSS .mp-ft div.on L479"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_UnlockBox",
+  "atlas": "Atlas_UI_Common",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 1076,
+   "h": 1000,
+   "pivotPx": [
+    538,
+    500
+   ]
+  },
+  "html": "<div class=\"ul-box\" data-t></div>",
+  "size": null,
+  "src": "CSS .ul-box L482(크기 = 정본 .ul-box 내용으로 잰 값, 원형 그라데이션이라 늘이지 않는 크기)",
+  "clone": ".ul-box",
+  "host": [
+   1076,
+   1000
+  ]
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_Bar_Stair",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 60,
+   "h": 272,
+   "pivotPx": [
+    30,
+    136
+   ]
+  },
+  "html": "<div id=\"gFill\" data-t></div>",
+  "size": [
+   44,
+   256
+  ],
+  "src": "CSS #gFill L518~519·L587(세로 채움, 칸 4.4u−테두리 × 24u. 바깥 빛 box-shadow는 칸 overflow로 잘려 뺌)",
+  "slice": false,
+  "margin": 8,
+  "targetCss": "box-shadow:none"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_Bar_Ms",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 144,
+   "h": 44,
+   "pivotPx": [
+    72,
+    22
+   ]
+  },
+  "html": "<div class=\"ms-bar\" data-w><i data-t></i></div>",
+  "size": [
+   128,
+   28
+  ],
+  "src": "CSS .ms-bar i L436(JS가 등급색으로 바꾸는 경우는 런타임 틴트)",
+  "slice": false,
+  "margin": 8
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_Bar_Soul",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 144,
+   "h": 40,
+   "pivotPx": [
+    72,
+    20
+   ]
+  },
+  "html": "<div id=\"lSoulFill\" data-t></div>",
+  "size": [
+   128,
+   24
+  ],
+  "src": "CSS #lSoulFill L158",
+  "slice": false,
+  "margin": 8
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_Bar_Result",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 144,
+   "h": 40,
+   "pivotPx": [
+    72,
+    20
+   ]
+  },
+  "html": "<div id=\"rBar\" data-t></div>",
+  "size": [
+   128,
+   24
+  ],
+  "src": "CSS #rBar L260",
+  "slice": false,
+  "margin": 8
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_Bar_Up",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 144,
+   "h": 40,
+   "pivotPx": [
+    72,
+    20
+   ]
+  },
+  "html": "<div class=\"up\" data-w><div class=\"g\" data-w><b data-t></b></div></div>",
+  "size": [
+   128,
+   24
+  ],
+  "src": "CSS .up .g b L223",
+  "slice": false,
+  "margin": 8
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Tex_UI_Vignette",
+  "atlas": null,
+  "mode": "skin",
+  "pivot": "Center",
+  "canvas": {
+   "w": 540,
+   "h": 960,
+   "pivotPx": [
+    270,
+    480
+   ]
+  },
+  "html": "<div id=\"vig\" data-t></div>",
+  "size": [
+   540,
+   960
+  ],
+  "src": "CSS #vig L45(1080×1920의 절반, 늘려 씀)",
+  "texture": true,
+  "noCrop": true,
+  "slice": false,
+  "margin": 0,
+  "allowEdge": true
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_Pill",
+  "atlas": "Atlas_UI_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 56,
+   "h": 48,
+   "pivotPx": [
+    28,
+    24
+   ]
+  },
+  "border": [
+   25,
+   24,
+   25,
+   24
+  ],
+  "src": "L3519(W = 1080)",
+  "expr": "RR(g, 2, 2.4, 52, 43.2, 21.6, 'rgba(40,24,36,.72)')"
  }
 ]
