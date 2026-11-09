@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Remote_World
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Remote_World
+  m_GUID: eda7fe64af8b434dbf915665fec9eedb
+  m_SerializeEntries:
+  - m_GUID: 1bfde3064ddc4481bd35dba885ab668c
+    m_Address: LobbyStage
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da22386e643849e6879104c9b629d283
+    m_Address: WorldRoot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - world
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 0144b93be29e4b4d8aa07cc65f043215, type: 2}
+    - {fileID: 11400000, guid: 23e002e1bb304acd99dc5c3664ac28bd, type: 2}
+    m_SchemaDisplayOrder:
+    - Remote_World_BundledAssetGroupSchema
+    - Remote_World_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

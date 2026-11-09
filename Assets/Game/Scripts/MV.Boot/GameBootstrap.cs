@@ -3,6 +3,9 @@ using Cysharp.Threading.Tasks;
 using jjevol;
 using jjevol.Audio;
 using jjevol.Effect;
+using MV.Platform.Net;
+using MV.Save;
+using MV.Sound;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -19,11 +22,13 @@ namespace MV.Boot
 
     /// <summary>
     /// Boot 씬의 시작 순서(기획서 10 §10.7).
-    /// 지금은 1~6단계(+ 런 코어 연결 MvBootMeta)와 10단계를 돈다. 7단계(다국어)·8단계(UI)·9단계(플랫폼)는 MV-UI-*, MV-PLAT-* 계약이 표시한 자리에 끼운다.
+    /// 1~6단계(+ 런 코어 연결 MvBootMeta), 8단계(UI)·9단계(소리·로컬 서버), 10단계를 돈다(MV-PLAY-INT).
+    /// 7단계(다국어)는 아직 없어 문구는 키 그대로다(MvUiBoot.ConfigureOptions). 광고·로그인은 2차(D-90).
     /// </summary>
     public sealed class GameBootstrap : MonoBehaviour
     {
         public const string GameSceneName = "Game";
+        public const string BootSceneName = "Boot";
 
         [SerializeField] UIManagerCreater ui;
 
@@ -32,11 +37,19 @@ namespace MV.Boot
 
         public static Exception LastError { get; private set; }
 
+        /// <summary>8단계에서 시작한 UI 부트스트랩(씬이 바뀌어도 남는다). Game 씬 루프가 카메라를 바꿔 끼운다.</summary>
+        public static UIManagerCreater Ui { get; private set; }
+
+        /// <summary>1~9단계를 마쳤다(Game 씬이 쓸 서비스가 준비됐다). 10단계 전에 참이 된다.</summary>
+        public static bool ServicesReady { get; private set; }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics()
         {
             State = BootState.NotStarted;
             LastError = null;
+            Ui = null;
+            ServicesReady = false;
         }
 
         void Start()
@@ -48,8 +61,15 @@ namespace MV.Boot
         {
             State = BootState.Running;
             LastError = null;
+            ServicesReady = false;
             try
             {
+                // 같은 실행에서 Boot를 다시 열면(시험·타이틀 복귀) 앞서 시작한 UI 부트스트랩을 그대로 쓴다. 둘이 켜져 있으면 Framework가 거절한다.
+                if (Ui && Ui != ui && Ui.isActiveAndEnabled)
+                {
+                    if (ui) Destroy(ui.gameObject);
+                    ui = Ui;
+                }
                 if (ui) DontDestroyOnLoad(ui.gameObject);
 
                 // 1. Addressables. Managed Addressables 고정본 1.3.12-pre.10에는 앱 포함 A 로더(ManagedPackagedRevisionLoader)가 없다
@@ -81,10 +101,22 @@ namespace MV.Boot
                 // 6 뒤. 영속 변경 진입점(MV-META). 저장을 못 열었으면 MvMeta.Current는 null로 두고 저장이 열릴 때 만든다.
                 MvBootMeta.Attach(MV.Data.MvTables.Current);
 
-                // 7~9. (MV-UI-*, MV-PLAT-*에서 추가)
+                // 7. 다국어: 아직 없다(문구 키 그대로). 연결되면 8단계 앞에서 InitLocalization.
+
+                // 8. UI 정적 옵션 → ui.StartInitAsync(). 화면은 Game 씬 루프가 연다.
+                Ui = ui;
+                await MV.UI.MvUiBoot.InitAsync(ui);
+
+                // 9. 소리(설정의 음소거)·로컬 서버. 광고·로그인은 연결하지 않는다(D-90).
+                MvSound.InstallDefault();
+                var store = MvSave.Current;
+                MvSound.Muted = store != null && !store.IsDisposed && store.Settings.Muted;
+                NetworkManager.SetLocalService(MvPingRequest.RegisterLocal(new MvLocalNetworkService(), new MvLocalServerClock()));
+                ServicesReady = true;
 
                 // 10. 게임 씬. Boot 오브젝트는 이 전환에서 사라지므로 여기 뒤에서는 정적 상태만 쓴다.
-                var result = await CustomSceneManager.Instance.LoadSceneAsync(GameSceneName);
+                //    로딩 화면(LoadingSceneScreen)은 아직 없어 덮개 없이 바로 넘어간다(교체 지점: 로딩 프리팹이 생기면 SceneLoadOption.Loading()).
+                var result = await CustomSceneManager.Instance.LoadSceneAsync(GameSceneName, SceneLoadOption.Direct());
                 if (!result.IsSuccess)
                     throw new InvalidOperationException($"Game scene load {result.Status} at {result.Stage}.", result.Exception);
 

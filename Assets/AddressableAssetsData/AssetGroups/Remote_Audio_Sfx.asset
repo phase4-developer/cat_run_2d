@@ -1,0 +1,214 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Remote_Audio_Sfx
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Remote_Audio_Sfx
+  m_GUID: 1d4063d309e34e0c885ed11179440468
+  m_SerializeEntries:
+  - m_GUID: 03f6a970f15648e88418615b017c72c5
+    m_Address: Sfx_Tierup_0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 064167cbb6aaf6a4d920b5b0edcf86bd
+    m_Address: Sfx_Click
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0a745b8f5ea76a741a75b483eb0fe514
+    m_Address: Sfx_Coin
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0f86e8d92e1219a44a3bb847003b084e
+    m_Address: Sfx_Fail
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2106224b4179e454d944d232c2607038
+    m_Address: Sfx_Merge
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2c62f6c6fbfd5b84c8d9a264025f27b4
+    m_Address: Sfx_Card_0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e093639d2b78274286164f6fa871b82
+    m_Address: Sfx_Win
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4a91c4e2d8fa75e409ede06fb3c1b761
+    m_Address: Sfx_Hit
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4f1fca2a117b2664e9ee8815233e3127
+    m_Address: Sfx_Crit
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5928b483017e3f34f8a6c6bd559e37dc
+    m_Address: Sfx_Warn
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 624b5b776c79d3c41b02fe0e3f4993d9
+    m_Address: Sfx_Card_1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 624cac38d5f1c134fa8f1b572b2dbb71
+    m_Address: Sfx_Card_4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6641bc69ed3b635449cf2eaf96560953
+    m_Address: Sfx_Tierup_2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 696faf98f81d930468fd8c3b12c365bb
+    m_Address: Sfx_Soul
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7330ea3d45b22ba4ca64be23e2819318
+    m_Address: Sfx_Steal
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 74299ccdd3d1683458b2a16fea189fc1
+    m_Address: Sfx_Card_3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 75b0ff00f976aa745ae27d5ec228afaa
+    m_Address: Sfx_Wood
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b9e66962b7739e4789b9cf9660e1d2c
+    m_Address: Sfx_Gate
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 805c42822db824345a469b235f448bd6
+    m_Address: Sfx_Card_2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 844736c03ffec82498f58e740235efdd
+    m_Address: Sfx_Forge
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91b8f0e55b730664a8e3a8f836d03421
+    m_Address: Sfx_Gem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9241e31afc31ea04fa2d081686043475
+    m_Address: Sfx_Tierup_4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ff22273bcd7b9c47a420bdd092c9b7e
+    m_Address: Sfx_Tierup_1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a20258f16aebc7943885f57540bcf940
+    m_Address: Sfx_Clank
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aae5e6a0f61235141957d301c4dc5ca1
+    m_Address: Sfx_Throw
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b33617006be7166469f558dcac294409
+    m_Address: Sfx_Land
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb794c29771d4c34d91681406cf56c8e
+    m_Address: Sfx_Tick
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c1af56b4169f1694391ee0dd79e3a128
+    m_Address: Sfx_Tierup_3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d383d5bbc95f371429af545f13eefeb7
+    m_Address: Sfx_Floor
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de2c7d4b6aea67d469934d2e788199cd
+    m_Address: Sfx_Lvup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f68d701ec23470941a22c82cc9341388
+    m_Address: Sfx_Buy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - sfx
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 359153bb29b041d6bf2746b7b726e18c, type: 2}
+    - {fileID: 11400000, guid: e1f15ee1e5524a6c96e1ef651f447743, type: 2}
+    m_SchemaDisplayOrder:
+    - Remote_Audio_Sfx_BundledAssetGroupSchema
+    - Remote_Audio_Sfx_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1
