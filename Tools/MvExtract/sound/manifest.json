@@ -5,7 +5,7 @@
     "channels": 1,
     "bitsPerSample": 16
   },
-  "count": 32,
+  "count": 33,
   "sounds": [
     {
       "id": 3001001,
@@ -546,6 +546,24 @@
       "sha256": "d191a4ea484690d28e3b048963c6da600e52d2d110a5ce4dcc20eff98e0353d4",
       "src": "L1676 · L2028",
       "stopL": 0.67
+    },
+    {
+      "id": 3001031,
+      "key": "tierup_0",
+      "soundType": "Sfx",
+      "soundName": "Sfx_Tierup_0",
+      "file": "Assets/Game/Addressables/Remote/Audio/Sfx/Sfx_Tierup_0.wav",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitsPerSample": 16,
+      "frames": 14112,
+      "seconds": 0.32,
+      "tableL": 0.32,
+      "tableFrames": 14112,
+      "peakDbfs": -19.73,
+      "sha256": "f5af9f2f36dd35e656fb0b6cc8ea3c3fe9c5819c28754ebec692748f3257945f",
+      "src": "L1665 · L2281(C.tier = −1 시작, COMMON)",
+      "stopL": 0.32
     },
     {
       "id": 3002001,

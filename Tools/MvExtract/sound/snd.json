@@ -18,6 +18,7 @@
     { "id": 3001009, "key": "forge", "soundName": "Sfx_Forge", "lib": "forge", "arg": null, "L": 0.26, "src": "L1657 · L2051" },
     { "id": 3001010, "key": "clank", "soundName": "Sfx_Clank", "lib": "clank", "arg": null, "L": 0.13, "src": "L1658 · L1912, L1919" },
     { "id": 3001011, "key": "lvup", "soundName": "Sfx_Lvup", "lib": "lvup", "arg": null, "L": 0.37, "src": "L1659 · L1221, L1890, L2553, L2613" },
+    { "id": 3001031, "key": "tierup_0", "soundName": "Sfx_Tierup_0", "lib": "tierup", "arg": 0, "L": 0.32, "src": "L1665 · L2281(C.tier = −1 시작, COMMON)" },
     { "id": 3001012, "key": "tierup_1", "soundName": "Sfx_Tierup_1", "lib": "tierup", "arg": 1, "L": 0.32, "src": "L1665 · L2281, L3165" },
     { "id": 3001013, "key": "tierup_2", "soundName": "Sfx_Tierup_2", "lib": "tierup", "arg": 2, "L": 0.32, "src": "L1665 · L2281, L3165" },
     { "id": 3001014, "key": "tierup_3", "soundName": "Sfx_Tierup_3", "lib": "tierup", "arg": 3, "L": 0.32, "src": "L1665 · L2281, L3165" },
