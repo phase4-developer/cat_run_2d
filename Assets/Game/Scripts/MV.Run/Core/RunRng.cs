@@ -77,6 +77,18 @@ namespace MV.Run
         }
     }
 
+    /// <summary>
+    /// RunSetup.Seed에서 파생한 별도 줄기(04 §4.20.1). 같은 시드의 PCG32를 줄기(stream) 번호만 달리 만든다.
+    /// 정본 경로는 이 둘을 한 번도 뽑지 않는다. 번호는 고정이다(바꾸면 모드·동행 재현이 바뀐다).
+    /// </summary>
+    public static class RunRngStreams
+    {
+        /// <summary>ModeRng 줄기("mode").</summary>
+        public const ulong Mode = 0x6d6f6465UL;
+        /// <summary>CompanionRng 줄기("comp").</summary>
+        public const ulong Companion = 0x636f6d70UL;
+    }
+
     /// <summary>항상 같은 값 c. 프로토 대조(04 §4.17.2-5 `Math.random = () => c`).</summary>
     public sealed class ConstRng : IRng
     {

@@ -122,9 +122,12 @@ namespace MV.Run
                 if (s.Setup.FailOnWall) { Finish(FinishReason.Wall); return; }
             }
             // 10 사격
+            int vol0 = s.Vol;
             Shoot(dt);
             // 11·12 투사체
             MoveProjectiles(dt);
+            // 동행 자동 사격(§4.20.5, 12와 13 사이). 동행 없으면 돌지 않는다.
+            if (s.Companions.Count > 0) StepCompanions(dt, vol0);
             // 13 빛·유성(휴면 카드, D-20)
             StepBeamMeteor(dt);
             // 14 쿨다운·화상
@@ -132,6 +135,12 @@ namespace MV.Run
             StepBurn(dt);
             // 15 위성·칼날
             StepOrbSpin(dt);
+            // 16 확장 지점: 모드 진행 → 종료 판정(§4.20.2). 정본 종료(2·9단계)가 먼저다.
+            Rule.Tick(s, dt);
+            if (s.Fin || s.Phase != RunPhase.Run) return;
+            var end = Rule.CheckEnd(s);
+            if (end == RunEnd.Clear) Finish(FinishReason.ModeClear);
+            else if (end == RunEnd.Fail) Finish(FinishReason.ModeFail);
         }
 
         // ================= 판정 (§4.3.1) =================
@@ -292,6 +301,7 @@ namespace MV.Run
                 {
                     s.Emit(new RunEvent(RunEventType.ProjImpact, objId: b.Id, x: b.X, z: best.Z - best.Hd, flag: b.Crit));
                     Hit(best, b.D, b.Crit, true, false, b.Crit ? HitColor.Crit : HitColor.Normal, b.Spear ? HitSource.Spear : HitSource.Projectile);
+                    if (s.Companions.Count > 0) CompanionOnProjectileHit();
                     (b.HitIds ??= new List<int>()).Add(best.Id);
                     if (--b.Pierce < 0) { b.Dead = true; continue; }
                 }
@@ -307,6 +317,7 @@ namespace MV.Run
         void Hit(RunObject o, double dmg, bool crit, bool proc, bool quiet, HitColor color, HitSource source)
         {
             var s = S;
+            bool wasDead = o.Dead;
             if (o.Chill > 0) { var (fe, fn) = CardOf(s, CardEffectType.ProcChill); if (fe != null) dmg *= 1 + fe.p3 * fn; }
             dmg = Math.Min(_p.DmgMax, Math.Max(_p.DmgMin, JsRound(dmg)));
             double gm = GoldMul(s), hx = o.X, hz = o.Z - o.Hd;
@@ -346,7 +357,10 @@ namespace MV.Run
                     break;
                 }
             }
+            bool killed = !wasDead && o.Dead;
             if (proc) GodOnHit(o, dmg, hx, hz);
+            // ③ 피격 훅: 가호까지 끝난 뒤(중첩 hit은 안쪽이 먼저 불린다).
+            Rule.OnHit(s, new HitInfo(o.Id, o.Kind.id, (int)dmg, crit, killed, source));
         }
 
         void Break(RunObject o, double gm)
@@ -563,9 +577,9 @@ namespace MV.Run
                     j.Done++;
                     var cands = s.Objs.FindAll(t => Breakable(t) && Math.Abs(t.Z - j.Cz) < _p.StormPickDz && t.Z > s.P.Z);
                     RunObject t0 = cands.Count > 0 ? cands[(int)Math.Floor(s.Draw(RngUse.StormPick) * cands.Count)] : null;
-                    // 흔들림 ±0.3(대상)·±2(빈 곳)는 정본 코드 상수(표 열 없음)
-                    double x = t0 != null ? t0.X + (-0.3 + s.Draw(RngUse.StormJitter) * 0.6) : j.Cx + (-2 + s.Draw(RngUse.StormJitter) * 4);
-                    double z = t0 != null ? t0.Z - t0.Hd : j.Cz + (-2 + s.Draw(RngUse.StormJitter) * 4);
+                    // 흔들림 ±STORM_JIT_TARGET(대상)·±STORM_JIT_FREE(빈 곳), 300_runConfig(정본 ±0.3·±2)
+                    double x = t0 != null ? t0.X + (-_p.StormJitTarget + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitTarget)) : j.Cx + (-_p.StormJitFree + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitFree));
+                    double z = t0 != null ? t0.Z - t0.Hd : j.Cz + (-_p.StormJitFree + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitFree));
                     s.Emit(new RunEvent(RunEventType.GodStormStrike, x: x, z: z, key: s.El));
                     double mul = st != null ? st.p3 : 1.5;
                     foreach (var u in s.Objs)
@@ -857,48 +871,15 @@ namespace MV.Run
 
         // ================= finish (§4.11.1, §4.7.4) =================
 
+        /// <summary>finish(reason)(§4.11.1): 상태를 닫고 ⑤ Settle(정본 = <see cref="RunSettlement.Main"/>)로 결과를 만든다.</summary>
         void Finish(FinishReason reason)
         {
             var s = S;
             if (s.Fin) return;
             s.Fin = true; s.Phase = RunPhase.Result; s.Reason = reason;
-            var rec = s.SavedBars != null ? s.SavedBars.Clone() : new BarRecord();
-            foreach (var o in s.Objs) if (o.IsField && o.Lvl == s.Level) rec.Set(o.Bar, o.Idx, Math.Max(0, o.Hp));
-            int cpN = 0;
-            while (cpN < _p.CpMax)
-            {
-                var (have, tot) = FloorSouls(rec, cpN);
-                if (have < tot) break;
-                cpN++;
-            }
-            s.CpRun = Math.Max(s.Cp, cpN);
-            int need = 0;
-            foreach (var a in T.Area.Datas) if (a.areaNo == s.Area + 1) need = a.needSouls;
-            bool gate = reason == FinishReason.Gate, last = s.Area >= _p.PlayableAreas - 1, enough = s.Setup.Souls + s.Souls >= need;
-            var r = new RunResult
-            {
-                Reason = reason, Gold = s.Gold, Souls = s.Souls, Dia = s.Dia,
-                ZoneEnd = gate && enough && last, Pass = gate && enough && !last,
-                CpRun = s.Setup.UseCheckpoint ? s.CpRun : 0, BarRec = s.Setup.KeepBars ? rec : null,
-                Climbed = s.Climbed, Walls = s.Walls, GaugeLv = s.GaugeLv, EqTier = s.EqTier(), Clones = s.Clones,
-                CardCount = s.CardOrder.Count, HitWallBar = s.HitWall?.Bar ?? -1,
-            };
-            r.Tok = Tokens(T, s.Souls, gate, r.Pass || r.ZoneEnd);
-            r.PendingSettle.AddRange(s.PendingSettle);
+            var r = Rule.Settle(s, reason) ?? throw new InvalidOperationException($"{Rule.GetType().Name}.Settle이 RunResult를 내지 않았습니다");
             s.Result = r;
             s.Emit(new RunEvent(RunEventType.RunFinished, a: (int)reason, flag: r.Pass || r.ZoneEnd));
-        }
-
-        (int have, int tot) FloorSouls(BarRecord rec, int f)
-        {
-            int have = 0, tot = 0;
-            foreach (var c in _builder.FieldSpec(S.Area, f))
-            {
-                if (c.Rew != FieldReward.Soul) continue;
-                tot += c.Amt;
-                if (rec.TryGet(f, c.Idx, out var hp) && hp <= 0) have += c.Amt;
-            }
-            return (have, tot);
         }
     }
 }

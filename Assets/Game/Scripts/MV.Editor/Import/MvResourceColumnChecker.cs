@@ -1,18 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using MV.Data;
+using UnityEditor;
+using UnityEngine;
 
 namespace MV.Editor.Import
 {
     public enum MvResIssueKind
     {
-        /// <summary>표 값이 실제 스프라이트·주소로 풀리지 않는다(이름·아틀라스 오류, 아틀라스 자산 없음).</summary>
+        /// <summary>
+        /// 표 값이 틀렸다: 그림·주소는 프로젝트에 있는데 아틀라스·대소문자·주소가 맞지 않거나, 규칙에 없는 아틀라스, 아틀라스 자산·주소 없음.
+        /// 표 반영을 막는다(07 §7.10.5).
+        /// </summary>
         Error,
         /// <summary>03 §3.5 대응표 이름인데 아직 추출 전(MV-TOOL-ART 진행 중, temp_art_list 갈래 A).</summary>
         Pending,
+        /// <summary>그 이름의 그림이 프로젝트 어디에도 없다(미추출, D-MVDATA-RES). 경고 — 미추출 보고 목록(<see cref="MvResourceColumnChecker.UnextractedListPath"/>)에 남긴다.</summary>
+        Unextracted,
         /// <summary>다른 계약이 만들 주소(소리 MV-TOOL-SND, 이펙트 프리팹 MV-FX)가 아직 없다.</summary>
         OtherOwner,
         /// <summary>정보: 스키마에 Res로 선언되지 않은 리소스 이름 열 등.</summary>
@@ -45,6 +54,7 @@ namespace MV.Editor.Import
         {
             var sb = new StringBuilder();
             sb.Append($"리소스 열 확인 {Checked}: 오류 {Count(MvResIssueKind.Error)}, 미추출(TOOL-ART 진행 중) {Count(MvResIssueKind.Pending)}, ")
+              .Append($"미추출(그림 없음) {Count(MvResIssueKind.Unextracted)}, ")
               .Append($"다른 계약 주소 미생성 {Count(MvResIssueKind.OtherOwner)}, 경고 {Count(MvResIssueKind.Warning)}");
             int n = 0;
             foreach (var issue in Issues.OrderBy(i => i.Kind).ThenBy(i => i.Table, StringComparer.Ordinal))
@@ -60,9 +70,24 @@ namespace MV.Editor.Import
     /// 모든 표의 리소스 열(기획서 07 §7.10, 03 §3.8.6)이 실제 스프라이트·주소로 풀리는지 확인한다.
     /// 아틀라스 결정: 행 `atlas`(`iconAtlas`) → 표 정의 기본(`MvSchema.Res`의 Atlas) → `@theme` = 모든 304_theme.worldAtlas.
     /// 표가 늘면(4xx·7xx) 스키마의 Res 열을 그대로 따라간다. 표 값은 고치지 않는다(오류는 MV-DATA 변경 요청).
+    /// 분류(D-MVDATA-RES): 이름이 프로젝트 어디에도 없으면 <see cref="MvResIssueKind.Unextracted"/>(경고),
+    /// 이름은 있는데 아틀라스·대소문자·주소가 틀리면 <see cref="MvResIssueKind.Error"/>.
     /// </summary>
     public static class MvResourceColumnChecker
     {
+        /// <summary>미추출 보고 목록(MV-TOOL-ART가 읽는다). 열: kind, table, rowId, column, value, atlas. 메뉴 「MV/Tables/Write Unextracted Resource List」로 다시 쓴다.</summary>
+        public const string UnextractedListPath = "Assets/Game/GameData/Table/TSV/Report/res_unextracted.tsv";
+        const string UnextractedListHeader = "kind\ttable\trowId\tcolumn\tvalue\tatlas";
+
+        /// <summary>그림 파일을 찾는 폴더(추출 원본·임시 아트·Addressables 단독 텍스처).</summary>
+        static readonly string[] s_artFileRoots = { MvArtRules.ArtRoot, MvArtRules.AddressablesRemote };
+
+        /// <summary>03 §3.8.1 아틀라스(+ `_2` 나눔) 와 D-MVDATA-PET `Atlas_World_Pet`. 이 밖의 아틀라스 이름은 오류.</summary>
+        static readonly Regex s_ruleAtlas = new Regex(
+            @"^Atlas_(UI_(Common|Hud|Lobby|Icon|Card)|World_(Theme_[A-Za-z0-9]+|Cat_T\d+|Friend_T\d+|Lobby|Pet)|Fx_Common)(_\d+)?$",
+            RegexOptions.CultureInvariant);
+
+        public static bool IsRuleAtlas(string atlas) => atlas != null && s_ruleAtlas.IsMatch(atlas);
         /// <summary>07 §7.10.1의 리소스 열 이름과 기본 아틀라스. 스키마에 Res로 없을 때의 대체 규칙.</summary>
         public static readonly IReadOnlyDictionary<string, string> NameDefaults = new Dictionary<string, string>(StringComparer.Ordinal)
         {
@@ -94,16 +119,34 @@ namespace MV.Editor.Import
             var source = new MvTsvDirectorySource(MvTableLoader.TsvDirectory);
             var tables = new MvTables();
             tables.LoadAll(source);
-            return Check(tables, MvArtCatalog.FromProject(), MvArtManifest.ReadTempList(), source.ReadHeaders);
+            return Check(tables, MvArtCatalog.FromProject(), MvArtManifest.ReadTempList(), source.ReadHeaders, ProjectArtFileNames());
+        }
+
+        /// <summary>프로젝트의 모든 그림 파일 이름(확장자 없음). 「이름이 어디에도 없음」 판정에 쓴다.</summary>
+        public static HashSet<string> ProjectArtFileNames()
+        {
+            var names = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var root in s_artFileRoots)
+            {
+                if (!Directory.Exists(root)) continue;
+                foreach (var file in Directory.GetFiles(root, "*.png", SearchOption.AllDirectories))
+                    names.Add(Path.GetFileNameWithoutExtension(file));
+            }
+            return names;
         }
 
         /// <param name="tempList">temp_art_list.tsv 이름 → 갈래. 갈래 `A`는 미추출로 센다.</param>
         /// <param name="headers">표 원문 열 이름(스키마 밖 리소스 열 찾기). 없으면 스키마만 본다.</param>
+        /// <param name="artFiles">프로젝트의 그림 파일 이름(<see cref="ProjectArtFileNames"/>). 없으면 카탈로그(아틀라스 그림·주소)만 본다.</param>
         public static MvResourceCheckReport Check(MvTables tables, MvArtCatalog catalog, IReadOnlyDictionary<string, string> tempList,
-            Func<string, IReadOnlyList<string>> headers = null)
+            Func<string, IReadOnlyList<string>> headers = null, ISet<string> artFiles = null)
         {
             var report = new MvResourceCheckReport();
-            var ctx = new Ctx { Catalog = catalog, TempList = tempList ?? new Dictionary<string, string>(), Report = report };
+            var ctx = new Ctx
+            {
+                Catalog = catalog, TempList = tempList ?? new Dictionary<string, string>(), Report = report,
+                ArtFiles = artFiles ?? new HashSet<string>(StringComparer.Ordinal),
+            };
 
             var theme = tables.Find(ThemeTable);
             var themeAtlases = theme == null
@@ -150,6 +193,7 @@ namespace MV.Editor.Import
             public IReadOnlyDictionary<string, string> TempList;
             public MvResourceCheckReport Report;
             public List<string> ThemeAtlases;
+            public ISet<string> ArtFiles;
             public string Table;
             public string RowId;
             public TSVRow Row;
@@ -169,6 +213,18 @@ namespace MV.Editor.Import
                     Add(MvResIssueKind.Error, column, value, atlas,
                         Catalog.HasAtlasAsset(atlas) ? "아틀라스 주소가 Addressables에 없음" : "SpriteAtlas 자산 없음");
                 return false;
+            }
+
+            /// <summary>규칙에 있는 아틀라스인가: 그림 폴더가 있거나, 304_theme 값이거나, 03 §3.8.1 이름 규칙.</summary>
+            public bool KnownAtlas(string atlas) => Catalog.HasAtlasFolder(atlas) || ThemeAtlases.Contains(atlas) || IsRuleAtlas(atlas);
+
+            /// <summary>그림 파일 이름(대소문자 무시). 정확히 같으면 그 이름, 대소문자만 다르면 실제 이름, 없으면 null.</summary>
+            public string ArtFileNamed(string name)
+            {
+                if (ArtFiles.Contains(name)) return name;
+                foreach (var f in ArtFiles)
+                    if (string.Equals(f, name, StringComparison.OrdinalIgnoreCase)) return f;
+                return null;
             }
         }
 
@@ -237,19 +293,31 @@ namespace MV.Editor.Import
             ctx.AtlasUsable(column, name, atlas);
             if (ctx.Catalog.HasSprite(atlas, name)) return;
 
+            if (!ctx.KnownAtlas(atlas))
+            {
+                ctx.Add(MvResIssueKind.Error, column, name, atlas, "규칙(03 §3.8.1)에 없는 아틀라스 이름");
+                return;
+            }
+
             if (ctx.TempList.TryGetValue(name, out var kind) && kind == "A")
             {
                 ctx.Add(MvResIssueKind.Pending, column, name, atlas, "미추출(TOOL-ART 진행 중)");
                 return;
             }
 
-            string hint;
             var elsewhere = ctx.Catalog.AtlasesContaining(name).Take(3).ToList();
             var cased = ctx.Catalog.FindCaseInsensitive(name);
+            var file = ctx.ArtFileNamed(name);
+            string hint;
             if (elsewhere.Count > 0) hint = $"{atlas}에 없음 — 실제 아틀라스: {string.Join(", ", elsewhere)}(행 atlas 열 또는 기본 아틀라스 확인)";
             else if (cased != null && cased != name) hint = $"대소문자 다름 — 실제 이름 `{cased}`";
-            else if (!ctx.Catalog.HasAtlasFolder(atlas)) hint = $"아틀라스 {atlas} 그림 폴더 없음";
-            else hint = $"{atlas}에 없음";
+            else if (file != null && file != name) hint = $"대소문자 다름 — 실제 그림 파일 `{file}`";
+            else if (file != null) hint = $"그림 파일은 있으나 {atlas} 그림 폴더 밖(아틀라스에 묶이지 않음)";
+            else
+            {
+                ctx.Add(MvResIssueKind.Unextracted, column, name, atlas, "그림이 프로젝트 어디에도 없음(미추출, MV-TOOL-ART)");
+                return;
+            }
             ctx.Add(MvResIssueKind.Error, column, name, atlas, hint);
         }
 
@@ -274,8 +342,18 @@ namespace MV.Editor.Import
                 return;
             }
             var cased = ctx.Catalog.FindCaseInsensitive(address);
-            ctx.Add(MvResIssueKind.Error, column, address, MvAtlas.Address,
-                cased != null && cased != address ? $"대소문자 다름 — 실제 주소 `{cased}`" : "Addressables 주소 없음");
+            var file = ctx.ArtFileNamed(address);
+            string hint;
+            if (cased != null && cased != address) hint = $"대소문자 다름 — 실제 이름 `{cased}`";
+            else if (cased != null) hint = $"아틀라스 스프라이트 이름({string.Join(", ", ctx.Catalog.AtlasesContaining(address).Take(3))}) — 주소 열에는 단독 텍스처 주소를 쓴다";
+            else if (file != null && file != address) hint = $"대소문자 다름 — 실제 그림 파일 `{file}`";
+            else if (file != null) hint = "그림 파일은 있으나 Addressables 주소 없음";
+            else
+            {
+                ctx.Add(MvResIssueKind.Unextracted, column, address, MvAtlas.Address, "그림이 프로젝트 어디에도 없음(미추출, MV-TOOL-ART)");
+                return;
+            }
+            ctx.Add(MvResIssueKind.Error, column, address, MvAtlas.Address, hint);
         }
 
         /// <summary>101_cat: 접두 + atlasPattern(`{t}` = 1..tierCount), 접두의 `{p}` = 1..patternCount.</summary>
@@ -320,6 +398,53 @@ namespace MV.Editor.Import
             var atlas = (ctx.Row.Get("iconAtlas") ?? "").Trim();
             if (atlas.Length == 0) atlas = MvAtlas.UiIcon;
             CheckSprite(ctx, "iconColumn", raw.Substring(1).Trim(), atlas);
+        }
+
+        // ---------------- 미추출 보고 목록 ----------------
+
+        /// <summary>미추출 보고 목록에 들어가는 항목: 갈래 A 미추출(Pending)과 그림 없음(Unextracted).</summary>
+        public static IEnumerable<MvResIssue> UnextractedIssues(MvResourceCheckReport report) =>
+            report.Issues.Where(i => i.Kind == MvResIssueKind.Pending || i.Kind == MvResIssueKind.Unextracted);
+
+        /// <summary>목록 한 줄의 비교 키(kind 제외): table, rowId, column, value, atlas.</summary>
+        public static string ListKey(MvResIssue i) => string.Join("\t", i.Table, i.RowId, i.Column, i.Value, i.Atlas);
+
+        /// <summary>목록 원문(LF, 머리 줄 + 표·행·열·값·아틀라스 순 정렬, 중복 없음).</summary>
+        public static string FormatUnextractedList(MvResourceCheckReport report)
+        {
+            var lines = UnextractedIssues(report)
+                .OrderBy(i => i.Table, StringComparer.Ordinal).ThenBy(i => i.RowId, StringComparer.Ordinal)
+                .ThenBy(i => i.Column, StringComparer.Ordinal).ThenBy(i => i.Value, StringComparer.Ordinal).ThenBy(i => i.Atlas, StringComparer.Ordinal)
+                .Select(i => i.Kind + "\t" + ListKey(i)).Distinct();
+            var sb = new StringBuilder(UnextractedListHeader).Append('\n');
+            foreach (var line in lines) sb.Append(line).Append('\n');
+            return sb.ToString();
+        }
+
+        /// <summary>목록 파일의 키 집합. 파일이 없으면 빈 집합.</summary>
+        public static HashSet<string> ReadUnextractedListKeys(string path)
+        {
+            var keys = new HashSet<string>(StringComparer.Ordinal);
+            if (!File.Exists(path)) return keys;
+            foreach (var line in File.ReadAllText(path, new UTF8Encoding(false)).Split('\n'))
+            {
+                var l = line.TrimEnd('\r');
+                if (l.Length == 0 || l == UnextractedListHeader) continue;
+                int tab = l.IndexOf('\t');
+                if (tab > 0) keys.Add(l.Substring(tab + 1));
+            }
+            return keys;
+        }
+
+        [MenuItem("MV/Tables/Write Unextracted Resource List")]
+        static void WriteUnextractedListMenu()
+        {
+            var report = CheckProject();
+            var path = Path.GetFullPath(UnextractedListPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            File.WriteAllText(path, FormatUnextractedList(report), new UTF8Encoding(false));
+            AssetDatabase.ImportAsset(UnextractedListPath);
+            Debug.Log($"[MvResourceColumnChecker] {UnextractedListPath} — {UnextractedIssues(report).Count()}줄\n" + report.Summary(50));
         }
     }
 }

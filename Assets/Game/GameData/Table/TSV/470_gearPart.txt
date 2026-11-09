@@ -1,0 +1,8 @@
+id	key	statKey	icon	sort
+470001001	claw	Dmg		
+470001002	vest	Range		
+470001003	hat	CritChance		
+470001004	mitten	FireRate		
+470001005	boots	Gold		
+470001006	collar	CritDmg		
+470001007	cape	DoubleChance		

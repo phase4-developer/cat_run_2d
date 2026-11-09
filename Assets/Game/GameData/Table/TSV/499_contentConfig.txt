@@ -1,0 +1,42 @@
+id	key	value	unit
+499001000	mode		
+499001001	mode.adTicketDaily	3	회
+499001002	mode.sweepChuruRatio	0.8	배
+499002000	box		
+499002001	box.fallbackDia.paper	20	캣닢
+499002002	box.fallbackDia.wood	60	캣닢
+499002003	box.fallbackDia.gold	150	캣닢
+499003000	pet		
+499003001	pet.summonPrice	1/1001002/100	consume
+499003002	pet.summonFood	10	사료
+499003003	pet.foodPerClear	30	사료
+499003004	pet.cardsToUnlock	2	장
+499003005	pet.slots	2	칸
+499003006	pet.levelPct	20	%
+499003007	pet.buildSlotsMax	3	칸
+499003008	pet.buildSlotEvery	10	레벨
+499003009	pet.buildCost0	10	털실
+499003010	pet.buildCost1	20	털실
+499003011	pet.buildCost2	40	털실
+499004000	friend		
+499004001	friend.slotsMax	3	칸
+499004002	friend.slotPriceDia	200	캣닢
+499004003	friend.coinPerClear	2	개
+499005000	god		
+499005001	god.shardPerClear	1	개
+499006000	gear		
+499006001	gear.setPieces	4	개
+499006002	gear.setDmg	10	%
+499006003	gear.maxUpgrade	30	레벨
+499007000	blessing		
+499007001	blessing.shopRuns	30	런
+499008000	event		
+499008001	event.cycleDays	14	일
+499008002	event.activeDays	7	일
+499009000	rebirth		
+499009001	rebirth.fastTravelPerRebirth	1	회
+499009002	rebirth.skipDiaPer10Min	5	캣닢
+499010000	energy		
+499010001	energy.enabled	0	0/1
+499011000	horde		
+499011001	horde.enabled	0	0/1

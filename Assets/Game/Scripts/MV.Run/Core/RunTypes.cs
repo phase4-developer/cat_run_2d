@@ -58,6 +58,21 @@ namespace MV.Run
     {
         public double Dmg, FireRate, Range, CritDmg, Gold, CritChance, DoubleChance;
         public static RunModifiers Zero => default;
+
+        /// <summary>검증기(§4.20.4): FireRate > −100, 나머지 ≥ 0(NaN 금지). 문제가 없으면 null, 있으면 첫 문제.</summary>
+        public string Validate()
+        {
+            if (!(FireRate > -100)) return $"RunModifiers.FireRate {FireRate}: −100보다 커야 합니다";
+            if (!(Dmg >= 0)) return Bad(nameof(Dmg), Dmg);
+            if (!(Range >= 0)) return Bad(nameof(Range), Range);
+            if (!(CritDmg >= 0)) return Bad(nameof(CritDmg), CritDmg);
+            if (!(Gold >= 0)) return Bad(nameof(Gold), Gold);
+            if (!(CritChance >= 0)) return Bad(nameof(CritChance), CritChance);
+            if (!(DoubleChance >= 0)) return Bad(nameof(DoubleChance), DoubleChance);
+            return null;
+        }
+
+        static string Bad(string name, double v) => $"RunModifiers.{name} {v}: 0 이상이어야 합니다(감소 효과는 아직 없다)";
     }
 
     /// <summary>
@@ -152,5 +167,37 @@ namespace MV.Run
         public int Layout;
         public RunModifiers Modifiers;
         public List<CompanionSpec> Companions = new List<CompanionSpec>();
+
+        /// <summary>동행 최대 수(펫 2 + 친구 3, §4.20.5).</summary>
+        public const int MaxCompanions = 5;
+
+        /// <summary>모디파이어·동행 검증. 문제가 없으면 null(<see cref="RunSim.Create(RunSetup, MV.Data.MvTables, IRng, IRunLevelBuilder, IRunRule)"/>가 부른다).</summary>
+        public string Validate()
+        {
+            var err = Modifiers.Validate();
+            if (err != null) return err;
+            if (Companions == null) return null;
+            if (Companions.Count > MaxCompanions) return $"동행 {Companions.Count}개: 최대 {MaxCompanions}개";
+            for (int i = 0; i < Companions.Count; i++)
+            {
+                var c = Companions[i];
+                if (c.Trigger != CompanionTrigger.Hits && c.Trigger != CompanionTrigger.Chance && c.Trigger != CompanionTrigger.Seconds)
+                    return $"동행 {i}({c.SourceId}): Trigger {(int)c.Trigger}";
+                if (!(c.Every > 0)) return $"동행 {i}({c.SourceId}): Every {c.Every}는 0보다 커야 합니다";
+                if (!(c.DmgPct >= 0)) return $"동행 {i}({c.SourceId}): DmgPct {c.DmgPct}";
+                if (c.Targets < 1) return $"동행 {i}({c.SourceId}): Targets {c.Targets}는 1 이상";
+            }
+            return null;
+        }
+
+        /// <summary>얕은 복사 + 덱·장애물 기록·동행 목록 복사(Build 훅이 스냅숏을 바꾸지 않게).</summary>
+        public RunSetup Clone()
+        {
+            var c = (RunSetup)MemberwiseClone();
+            c.Deck = Deck != null ? (int[])Deck.Clone() : null;
+            c.Bars = Bars?.Clone();
+            c.Companions = Companions != null ? new List<CompanionSpec>(Companions) : new List<CompanionSpec>();
+            return c;
+        }
     }
 }

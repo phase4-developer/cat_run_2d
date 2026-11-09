@@ -12,16 +12,22 @@ namespace MV.Data.Tests
         static readonly Dictionary<string, int> s_rowCounts = new Dictionary<string, int>
         {
             ["00_config"] = 1, ["01_wealth"] = 17, ["02_playResource"] = 5, ["03_sound"] = 32, ["04_effect"] = 47,
-            ["05_contentOpen"] = 18, ["06_balancePreset"] = 3, ["07_consumeType"] = 25, ["08_adPlacement"] = 7, ["09_uiResource"] = 12,
+            ["05_contentOpen"] = 18, ["06_balancePreset"] = 3, ["07_consumeType"] = 26, ["08_adPlacement"] = 7, ["09_uiResource"] = 12,
             ["10_lobbyUpgrade"] = 3, ["11_stairLevel"] = 4, ["12_weaponLevel"] = 8, ["13_areaUpgrade"] = 5, ["14_rebirthPerk"] = 4,
-            ["16_levelPrice"] = 343,
+            ["16_levelPrice"] = 655,
             ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 8, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,
-            ["107_chargeGate"] = 3, ["108_receiveCondition"] = 7, ["109_moveAI"] = 3, ["110_card"] = 22, ["111_cardPool"] = 11,
-            ["112_cardEffect"] = 21, ["113_god"] = 2, ["114_hpRule"] = 7, ["115_cardTier"] = 5,
-            ["300_runConfig"] = 166, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 90, ["304_theme"] = 15,
-            ["310_template"] = 8, ["311_templateObject"] = 84, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
+            ["107_chargeGate"] = 3, ["108_receiveCondition"] = 7, ["109_moveAI"] = 3, ["110_card"] = 92, ["111_cardPool"] = 11,
+            ["112_cardEffect"] = 26, ["113_god"] = 12, ["114_hpRule"] = 7, ["115_cardTier"] = 5,
+            ["300_runConfig"] = 168, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15,
+            ["310_template"] = 10, ["311_templateObject"] = 123, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
             ["314_spawnGroup"] = 9, ["320_camera"] = 3, ["330_climb"] = 5,
-            ["801_drop"] = 2, ["802_randomBox"] = 0, ["803_randomGuaranteeLink"] = 0, ["804_randomGuarantee"] = 0,
+            ["400_content"] = 5, ["401_modeStage"] = 53, ["402_modeRule"] = 4, ["410_questGroup"] = 14, ["413_repeatQuest"] = 16,
+            ["414_passQuest"] = 60, ["420_achievement"] = 19, ["499_contentConfig"] = 41,
+            ["700_productTab"] = 6, ["701_product"] = 29, ["702_shopSection"] = 4,
+            ["430_pet"] = 16, ["431_petBuild"] = 16, ["440_research"] = 25, ["450_friend"] = 10, ["451_friendPower"] = 3,
+            ["460_rune"] = 4, ["470_gearPart"] = 7, ["471_gearRarity"] = 8, ["480_blessing"] = 4, ["485_attendance"] = 7,
+            ["490_roadMap"] = 6, ["495_godLevel"] = 5,
+            ["801_drop"] = 2, ["802_randomBox"] = 34, ["803_randomGuaranteeLink"] = 0, ["804_randomGuarantee"] = 0,
         };
 
         [TearDown]

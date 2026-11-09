@@ -54,6 +54,15 @@ namespace MV.Run
     }
 
     /// <summary>
+    /// newRun(§4.14.5)의 1~5단계(6단계 BuildLevel 앞까지)만 하는 생성기. SIM은 이것으로 상태를 만들고
+    /// 6단계 자리에서 <see cref="IRunRule.BuildCourse"/>를 부른다(04 §4.20.2 ②). 규칙 난수를 뽑지 않는다.
+    /// </summary>
+    public interface IRunStateFactory
+    {
+        RunState NewState(RunSetup setup, MvTables tables, IRng rng);
+    }
+
+    /// <summary>
     /// 런 쪽 컴포넌트 구현 등록(105 검증 「컴포넌트 구현 등록됨」). MV.Boot가
     /// <c>options.IsComponentImplemented = RunComponents.IsImplemented</c>로 연결한다(MV.Data는 MV.Run을 모른다).
     /// 새 type을 구현하면 여기 한 줄을 더한다.

@@ -19,11 +19,11 @@ namespace MV.Data
         static readonly CultureInfo C = CultureInfo.InvariantCulture;
 
         /// <summary>id 0을 「지금 고른 것」으로 쓰는 type(07 §7.8.12 valueMeaning).</summary>
-        static readonly HashSet<int> s_zeroIdAllowed = new HashSet<int> { 3, 601, 621, 622 };
+        static readonly HashSet<int> s_zeroIdAllowed = new HashSet<int> { 3, 500, 601, 621, 622, 630 };
 
         /// <summary>런 표 밖에서도 쓸 수 있는 600번대(07 §7.13.2).</summary>
-        /// 630(Blessing)은 07 §7.8.12가 08 광고 보상에 쓰므로 함께 둔다(§7.13.2 문구와 다름, 보고에 남김).
-        static readonly HashSet<int> s_metaRunTypes = new HashSet<int> { 608, 609, 630 };
+        /// 610·620·621·622·630은 메타 보관 재화(장비·펫 카드·친구 코인·신 조각·축복)라 상점·16·광고 보상에도 쓴다(07 §7.13.2 동기화).
+        static readonly HashSet<int> s_metaRunTypes = new HashSet<int> { 608, 609, 610, 620, 621, 622, 630 };
 
         /// <summary>
         /// 작성 검증. 표 원문 묶음으로 새 <see cref="MvTables"/>를 채우고 검사한다. 원문 첫 줄로 중복 열도 본다.
@@ -281,7 +281,7 @@ namespace MV.Data
                             break;
                         }
                         case MvColKind.Sound:
-                            if (!t.Sound.HasKey(raw)) r.Error(name, id, c.Name, $"03_sound에 key `{raw}`가 없습니다");
+                            CheckSoundKey(t, name, id, c.Name, raw, r);
                             break;
                         case MvColKind.Effect:
                             if (!t.Effect.HasKey(raw)) r.Error(name, id, c.Name, $"04_effect에 key `{raw}`가 없습니다");
@@ -314,6 +314,33 @@ namespace MV.Data
                 foreach (var e in t.Effect.Datas)
                     foreach (var child in e.children)
                         if (!t.Effect.HasKey(child)) r.Error(name, e.id, "children", $"04_effect에 key `{child}`가 없습니다");
+        }
+
+        /// <summary>
+        /// 소리 열 값(07 §7.13.2). `card_n`처럼 `_n`으로 끝나면 변형 소리라 코드가 `key_0`·`key_1`…을 만든다:
+        /// 번호 key가 1개 이상 있어야 하고(없으면 오류), 번호가 가장 작은 것부터 빈틈이 없어야 한다(빈틈은 오류).
+        /// </summary>
+        static void CheckSoundKey(MvTables t, string table, string id, string column, string raw, MvValidationReport r)
+        {
+            if (t.Sound.HasKey(raw)) return;
+            if (!raw.EndsWith("_n", StringComparison.Ordinal))
+            {
+                r.Error(table, id, column, $"03_sound에 key `{raw}`가 없습니다");
+                return;
+            }
+            var stem = raw.Substring(0, raw.Length - 1);
+            var numbers = new List<int>();
+            foreach (var s in t.Sound.Datas)
+                if (s.key != null && s.key.StartsWith(stem, StringComparison.Ordinal)
+                    && int.TryParse(s.key.Substring(stem.Length), NumberStyles.None, C, out int n)) numbers.Add(n);
+            if (numbers.Count == 0) { r.Error(table, id, column, $"변형 소리 `{raw}`의 번호 key(`{stem}0`…)가 03_sound에 없습니다"); return; }
+            numbers.Sort();
+            for (int i = 1; i < numbers.Count; i++)
+                if (numbers[i] != numbers[i - 1] + 1)
+                {
+                    r.Error(table, id, column, $"변형 소리 `{raw}`의 번호가 이어지지 않습니다(`{stem}{numbers[i - 1]}` 다음 `{stem}{numbers[i]}`)");
+                    break;
+                }
         }
 
         static void CheckResource(MvTables t, string table, string id, MvColumn c, string raw, MvValidationReport r, IMvResourceCatalog catalog)
