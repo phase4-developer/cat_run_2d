@@ -45,7 +45,7 @@ namespace MV.Data
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("contentType", true).Bool("active").Int("sort")
             .Res("icon", MvAtlas.UiIcon).Res("bg", MvAtlas.Address).Str("banner").Sound("bgm")
             .Fk("modeRuleId", ModeRuleData.Table).FkGroup("stageGroup", ModeStageData.Table).Fk("openId", ContentOpenData.Table)
-            .Consume("spendResource").Bool("sweepActive").Str("hudId");
+            .Consume("spendResource").Bool("sweepActive").Int("dailyLimit").Str("hudId");
 
         public ContentType contentType { get; private set; }
         public string icon { get; private set; }
@@ -58,6 +58,8 @@ namespace MV.Data
         /// <summary>입장 비용(보통 `3 / 입장권 id / 1`). 비면 없음.</summary>
         public IReadOnlyList<ConsumeData> spendResource { get; private set; }
         public bool sweepActive { get; private set; }
+        /// <summary>하루 입장 한도(<c>mvDaily.modePlays[key]</c>와 비교). 0 = 한도 없음(입장권만 막는다).</summary>
+        public int dailyLimit { get; private set; }
         /// <summary>런 HUD 이름. 빈칸 = <see cref="DefaultHud"/>.</summary>
         public string hudId { get; private set; }
 
@@ -76,6 +78,7 @@ namespace MV.Data
             openId = I(r, "openId");
             spendResource = Consume(r, "spendResource");
             sweepActive = Bool(r, "sweepActive");
+            dailyLimit = I(r, "dailyLimit");
             var hud = S(r, "hudId");
             hudId = hud.Length > 0 ? hud : DefaultHud;
         }

@@ -11,6 +11,18 @@ namespace MV.UI
         public const string Run = "Run";
         /// <summary><c>UIPopup_Result</c>.</summary>
         public const string Result = "Result";
+        /// <summary><c>UIPopup_GodSelect</c>(MV-UI-META).</summary>
+        public const string GodSelect = "GodSelect";
+        /// <summary><c>UIPopup_AreaUpgrade</c>(MV-UI-META).</summary>
+        public const string AreaUpgrade = "AreaUpgrade";
+        /// <summary><c>UIPopup_Rebirth</c>(MV-UI-META).</summary>
+        public const string Rebirth = "Rebirth";
+        /// <summary><c>UIPopup_Map</c>(MV-UI-META).</summary>
+        public const string Map = "Map";
+        /// <summary><c>UIPopup_FeatureUnlock</c>(MV-UI-META).</summary>
+        public const string FeatureUnlock = "FeatureUnlock";
+        /// <summary><c>UIPopup_Debug</c>(MV-UI-META, 개발 빌드 전용).</summary>
+        public const string Debug = "Debug";
     }
 
     /// <summary>층 sortingOrder(05 §5.1.5). 각 화면 프리팹 루트의 Canvas(overrideSorting)에 넣는다.</summary>

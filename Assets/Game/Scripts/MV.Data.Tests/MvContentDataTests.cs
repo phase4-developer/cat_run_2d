@@ -239,6 +239,13 @@ namespace MV.Data.Tests
             Assert.That(report.Contains(MvIssueLevel.Error, "16_levelPrice", "16313030"), Is.False, report.Summary(60));
         }
 
+        [TestCase("4006001", "children", "fx.debris/fx.dust", "기본 종류 1개만")]
+        [TestCase("4006001", "children", "run.wallHit", "기본 종류여야")]
+        [TestCase("4006009", "when", "shiny", "when `shiny`")]
+        [TestCase("4002001", "when", "crit", "part 행에만")]
+        public void EffectPart_BadChildOrWhen_IsError(string id, string column, string value, string fragment) =>
+            AssertError(TsvFixture.Validate(("04_effect", TsvFixture.Set(TsvFixture.Read("04_effect"), id, column, value))), "04_effect", fragment);
+
         [Test]
         public void Effect_UnknownAnchor_IsError() =>
             AssertError(TsvFixture.Validate(("04_effect", TsvFixture.Set(TsvFixture.Read("04_effect"), "4003001", "anchor", "top"))),

@@ -311,9 +311,41 @@ namespace MV.Data
 
             // 04_effect children은 같은 표 key 목록.
             if (table == t.Effect)
+            {
                 foreach (var e in t.Effect.Datas)
                     foreach (var child in e.children)
                         if (!t.Effect.HasKey(child)) r.Error(name, e.id, "children", $"04_effect에 key `{child}`가 없습니다");
+                CheckEffectParts(t, name, r);
+            }
+        }
+
+        /// <summary>
+        /// 04 part 행(07 §7.11.2): 자식은 기본 종류(묶음·part 아님) 정확히 1개, when 이름은 <see cref="EffectData.WhenTokens"/>,
+        /// when은 part 행에만. 어느 묶음도 children에 넣지 않은 part는 경고.
+        /// </summary>
+        static void CheckEffectParts(MvTables t, string name, MvValidationReport r)
+        {
+            var used = new HashSet<string>(t.Effect.Datas.Where(e => e.type == EffectData.GroupType).SelectMany(e => e.children), StringComparer.Ordinal);
+            foreach (var e in t.Effect.Datas)
+            {
+                bool part = e.type == EffectData.PartType;
+                if (!part)
+                {
+                    if (e.when.Count > 0) r.Error(name, e.id, "when", "when은 part 행에만 씁니다");
+                    continue;
+                }
+                if (e.children.Count != 1) r.Error(name, e.id, "children", $"part 행은 기본 종류 1개만 가집니다(지금 {e.children.Count}개)");
+                else
+                {
+                    var child = t.Effect.ByKey(e.children[0]);
+                    if (child != null && (child.type == EffectData.GroupType || child.type == EffectData.PartType))
+                        r.Error(name, e.id, "children", $"part 행의 자식 `{child.key}`는 기본 종류여야 합니다(지금 {child.type})");
+                }
+                foreach (var w in e.when)
+                    if (!EffectData.WhenTokens.Contains(w))
+                        r.Error(name, e.id, "when", $"when `{w}`는 {string.Join("/", EffectData.WhenTokens)}가 아닙니다");
+                if (!used.Contains(e.key)) r.Warn(name, e.id, "key", "어느 group 행도 children에 넣지 않은 part 행입니다");
+            }
         }
 
         /// <summary>

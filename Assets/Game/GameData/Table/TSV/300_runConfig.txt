@@ -12,7 +12,7 @@ id	key	value	unit
 300002008	view.propDrawBack	-4	m
 300002009	view.propDrawFront	90	m
 300002010	view.groundNear	0.8	m
-300002011	view.groundFar	92	m
+300002011	view.groundFar	120	m
 300002012	view.groundStep	2	m
 300002013	view.mixQuant	20	단계
 300002014	view.clothFrom	2	m

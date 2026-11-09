@@ -7,6 +7,11 @@ namespace MV.Data
     public enum Hittable { Always, BeforePass, Never }
     public enum RewardSource { Row, FieldCell, Enemy }
     public enum SpritePick { Single, JunkCycle, Anim }
+    /// <summary>
+    /// 오브젝트 그림 모양(07 §7.5.2 `viewShape`). 이름은 MV.View `ObjectShape`와 1:1 —
+    /// MV.View가 `ObjectViewFactory.ShapeOf`의 key·컴포넌트 분기 대신 이 값을 읽는다(교체는 MV-VIEW).
+    /// </summary>
+    public enum ObjectViewShape { Single, Junk, RollGate, WarpGate, Well, Stair, CoinPile, CatnipPot, Mouse }
     public enum LabelKind { None, WellText, StairText, StairGate, CraftGate, Arch, WallCell, EnemyHp, BoxHp }
     public enum HitReactionType { None, Damage, ChargeStairGate, ChargeCraftGate, ChargeWell }
     public enum BreakStat { None, Walls, Kills, Boxes }
@@ -150,7 +155,7 @@ namespace MV.Data
             .Fk("hpRuleId", HpRuleData.Table).Fk("hitReactionId", HitReactionData.Table).Fk("chargeGateId", ChargeGateData.Table)
             .Fk("receiveId", ReceiveConditionData.Table).Fk("moveAiId", MoveAiData.Table).Fk("enemyId", EnemyData.Table)
             .Enum<RewardSource>("rewardSource").Consume("reward", runExtension: true).Consume("hitReward")
-            .Res("sprite", MvAtlas.Theme).Enum<SpritePick>("spritePick").Res("spriteSoul", MvAtlas.Theme).Colors("tint")
+            .Res("sprite", MvAtlas.Theme).Enum<SpritePick>("spritePick").Enum<ObjectViewShape>("viewShape").Res("spriteSoul", MvAtlas.Theme).Colors("tint")
             .Enum<LabelKind>("labelKind").Str("labelKey").Float("sortBias")
             .Sound("hitSound").Sound("breakSound").Effect("hitEffect").Effect("breakEffect");
 
@@ -172,6 +177,8 @@ namespace MV.Data
         /// <summary>변형은 `/` 목록.</summary>
         public IReadOnlyList<string> sprite { get; private set; }
         public SpritePick spritePick { get; private set; }
+        /// <summary>그림 모양. 빈칸 = Single.</summary>
+        public ObjectViewShape viewShape { get; private set; }
         public string spriteSoul { get; private set; }
         public IReadOnlyList<string> tint { get; private set; }
         public LabelKind labelKind { get; private set; }
@@ -204,6 +211,7 @@ namespace MV.Data
             hitReward = Consume(r, "hitReward");
             sprite = Strs(r, "sprite");
             spritePick = E(r, "spritePick", SpritePick.Single);
+            viewShape = E(r, "viewShape", ObjectViewShape.Single);
             spriteSoul = S(r, "spriteSoul");
             tint = Strs(r, "tint");
             labelKind = E(r, "labelKind", LabelKind.None);

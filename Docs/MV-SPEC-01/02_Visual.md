@@ -174,7 +174,7 @@ QA 하네스(MV-QA-HARNESS)는 같은 상태에서 플레이어 발 화면 좌�
 | 오브젝트 그리기(카메라 기준) | 게임 z ∈ `[PZ−2, PZ+90]` L3791 | `view.objDrawBack` −2, `view.objDrawFront` 90 |
 | 길가 소품 | 그리기 `[PZ−4, PZ+90]` L3785 ∩ 표시 `(PZ−6, PZ+92)` L2781 → 실효 `[PZ−4, PZ+90]` | `view.propDrawBack` −4, `view.propDrawFront` 90 |
 | 빨랫줄 | z = `ceil((PZ+2)/13)·13`부터 `PZ+75` 미만, 13 간격, `hash(z·0.37) < 0.25`면 생략 L3788 | `view.clothFrom` 2, `view.clothTo` 75, `view.clothStep` 13, `view.clothSkip` 0.25 |
-| 지면 | `PZ+0.8` ~ `PZ+92`, 2 m 띠 L2875 | `view.groundNear` 0.8, `view.groundFar` 92, `view.groundStep` 2 |
+| 지면 | `PZ+0.8` ~ `PZ+92`, 2 m 띠 L2875 | `view.groundNear` 0.8, `view.groundFar` 120(§2.7.3에서 늘림, 정본 92), `view.groundStep` 2 |
 | 근평면 | 앵커 d < 0.3 | `view.nearCut` 0.3 |
 
 주의: 오브젝트 갱신 범위(−18~78)는 우물 벽돌 배출 시점(`flushBricks`는 `updObjMesh` 안에서만 돈다, L2771)에도 영향을 준다. 이 조건은 `MV.Run`이 같은 범위로 판정해야 한다([04](04_GameRules.md)).
@@ -195,7 +195,7 @@ id 형식 `300{그룹3}{순번3}`. 그룹 001 시간, 002 뷰, 003 정렬(§2.3)
 | 300002008 | view.propDrawBack | −4 | m | L3785 |
 | 300002009 | view.propDrawFront | 90 | m | L3785 |
 | 300002010 | view.groundNear | 0.8 | m | L2875 |
-| 300002011 | view.groundFar | 92 | m | L2875 (§2.7.3에서 늘림) |
+| 300002011 | view.groundFar | 120 | m | L2875 (§2.7.3에서 늘림) |
 | 300002012 | view.groundStep | 2 | m | L2875 |
 | 300002013 | view.mixQuant | 20 | 단계 | L2802 |
 | 300002014 | view.clothFrom | 2 | m | L3788 |
