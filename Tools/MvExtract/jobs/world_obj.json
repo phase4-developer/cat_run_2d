@@ -900,5 +900,305 @@
   ],
   "expr": "drawWarpGate({gate: true, z: 1e4}, {x: 0, y: 0, z: 0})",
   "src": "L3216"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Arch_Toy_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 80,
+   "pivotPx": [
+    40,
+    40
+   ]
+  },
+  "args": {
+   "c": "#ff8fb0"
+  },
+  "expr": "E(g, X, Y, 0.26*S, 0.26*S, A.c, OLC, Math.max(1.5, S*0.05))",
+  "src": "L3213(lw), L3221(끈·흔들림은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Arch_Toy_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 80,
+   "pivotPx": [
+    40,
+    40
+   ]
+  },
+  "args": {
+   "c": "#7ad0f0"
+  },
+  "expr": "E(g, X, Y, 0.26*S, 0.26*S, A.c, OLC, Math.max(1.5, S*0.05))",
+  "src": "L3213(lw), L3221(끈·흔들림은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Arch_Toy_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 80,
+   "pivotPx": [
+    40,
+    40
+   ]
+  },
+  "args": {
+   "c": "#ffd84a"
+  },
+  "expr": "E(g, X, Y, 0.26*S, 0.26*S, A.c, OLC, Math.max(1.5, S*0.05))",
+  "src": "L3213(lw), L3221(끈·흔들림은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Brick_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#c8643c"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Brick_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#d9874a"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Brick_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#b8543a"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Brick_3",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#e0a060"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Junk_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#6fd27a"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Junk_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#f2c14e"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Junk_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#58a6f0"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Junk_3",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#e05a4a"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Junk_4",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 48,
+   "pivotPx": [
+    40,
+    24
+   ]
+  },
+  "args": {
+   "c": "#c9c2b4"
+  },
+  "src": "L3646~3649, L1340·L1346(색)",
+  "expr": "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()"
  }
 ]

@@ -148,6 +148,21 @@
     return { dataURL: out.toDataURL('image/png'), w, h, hits: rules.hits, zeroRules: zero, alpha: checkAlpha(out), k: proj ? proj.k : null };
   };
 
+  // ── dom(03 §3.2.4): 빈 요소에 정본 CSS를 입혀 실행기가 locator.screenshot({omitBackground:true})으로 찍는다 ──
+  // job.html: 넣을 마크업. job.hostCss(선택): 호스트에 더할 CSS(부모 선택자 대신 변수 등). --u는 #stage 값(1080 폭 = 10.8px)
+  MvH.domPrep = function (job) {
+    let st = document.getElementById('mvDomStyle');
+    if (!st) { st = document.createElement('style'); st.id = 'mvDomStyle'; st.textContent = 'html,body{background:transparent!important}body>*:not(#mvDomHost),body>*:not(#mvDomHost) *{visibility:hidden!important}'; document.head.appendChild(st); }
+    let host = document.getElementById('mvDomHost');
+    if (!host) { host = document.createElement('div'); host.id = 'mvDomHost'; document.body.appendChild(host); }
+    const u = getComputedStyle(document.getElementById('stage')).getPropertyValue('--u').trim();
+    host.style.cssText = `position:fixed;left:0;top:0;width:${job.canvas.w}px;height:${job.canvas.h}px;z-index:2147483647;display:flex;align-items:center;justify-content:center;--u:${u};background:transparent;margin:0;padding:0;border:0;${job.hostCss || ''}`;
+    host.innerHTML = job.html;
+    return u;
+  };
+  MvH.domClear = function () { const h = document.getElementById('mvDomHost'); if (h) h.remove(); const s = document.getElementById('mvDomStyle'); if (s) s.remove(); };
+  MvH.alphaOf = async function (u) { const im = new Image(); im.src = u; await im.decode(); const c = newCanvas(im.width, im.height); c.getContext('2d').drawImage(im, 0, 0); return checkAlpha(c); };
+
   // svg data URI 그림(이미지 로드가 비동기라 따로)
   // 이모지 글꼴(D-52). 정본 CSS에는 없으므로 실행기가 따로 등록한다
   MvH.loadEmoji = async function () { if (MvH._emoji) return true; const f = new FontFace('MvEmoji', 'url(https://fonts.gstatic.com/mv/NotoColorEmoji-Regular.ttf)'); await f.load(); document.fonts.add(f); MvH._emoji = true; return document.fonts.check('76px MvEmoji', '🐾'); };

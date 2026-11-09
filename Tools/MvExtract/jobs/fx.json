@@ -6,6 +6,30 @@
   "suppress": [],
   "only": [],
   "clock": 0,
+  "name": "Tex_Lobby_Vignette",
+  "texture": true,
+  "atlas": null,
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 540,
+   "h": 960,
+   "pivotPx": [
+    270,
+    480
+   ]
+  },
+  "allowEdge": true,
+  "src": "L3475(cx, cy), L3537",
+  "expr": "(() => { const W = 540, H = 960, cx = W/2, cy = H*0.548; const vg = g.createRadialGradient(cx, cy, H*0.2, cx, cy, H*0.75); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(20,8,20,.45)'); g.fillStyle = vg; g.fillRect(0, 0, W, H); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
   "name": "Fx_Star4",
   "atlas": "Atlas_Fx_Common",
   "mode": "direct",
@@ -146,5 +170,252 @@
   "pre": "g.translate(X, Y), g.rotate(-(X + Y)*0.05), g.translate(-X, -Y)",
   "expr": "brickBit(X, Y, 0.06*S, ENERGY_C[A.i])",
   "src": "L3605, L3096"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Glow_Fx",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 64,
+   "h": 64,
+   "pivotPx": [
+    32,
+    32
+   ]
+  },
+  "expr": "(() => { const gr = g.createRadialGradient(X, Y, 0, X, Y, 32); gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.45, '#ffffff99'); gr.addColorStop(1, '#ffffff00'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); })()",
+  "src": "L3142",
+  "allowEdge": true
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Glow_Lin",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 64,
+   "h": 64,
+   "pivotPx": [
+    32,
+    32
+   ]
+  },
+  "expr": "(() => { const gr = g.createRadialGradient(X, Y, 0, X, Y, 32); gr.addColorStop(0, '#ffffff77'); gr.addColorStop(1, '#ffffff00'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); })()",
+  "src": "L3603, L3131",
+  "allowEdge": true
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Disc",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 128,
+   "h": 128,
+   "pivotPx": [
+    64,
+    64
+   ]
+  },
+  "expr": "E(g, X, Y, 62, 62, '#ffffff')",
+  "src": "L3176~3179"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Ring",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 256,
+   "h": 256,
+   "pivotPx": [
+    128,
+    128
+   ]
+  },
+  "expr": "E(g, X, Y, 118, 118, null, '#ffffff', 16)",
+  "src": "L3199(굵기 14·(1−wo)+2의 wo = 0 값 16 px, 반지름·굵기는 런타임 스케일)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_RingEllipse",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 192,
+   "h": 80,
+   "pivotPx": [
+    96,
+    40
+   ]
+  },
+  "expr": "E(g, X, Y, 84, 84*0.33, null, '#ffffff', 84*0.2/0.9)",
+  "src": "L3146(rx = 0.9·sc·s, ry = rx·0.33, 굵기 0.2·sc·s)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Square",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 8,
+   "h": 8,
+   "pivotPx": [
+    4,
+    4
+   ]
+  },
+  "expr": "(g.fillStyle = '#ffffff', g.fillRect(0, 0, 8, 8))",
+  "src": "L3148(외곽선 1px 생략)",
+  "allowEdge": true
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Dot",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 8,
+   "h": 8,
+   "pivotPx": [
+    4,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y, 3, 3, '#ffffff')",
+  "src": "L3604",
+  "allowEdge": true
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_SpeedLine",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 8,
+   "h": 128,
+   "pivotPx": [
+    4,
+    128
+   ]
+  },
+  "expr": "(g.fillStyle = '#ffffff', g.fillRect(2, 0, 4, 128))",
+  "src": "L3814(알파 .6·굵기 1~4·길이 H*0.2는 런타임)",
+  "allowEdge": true
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Warp_RollBody",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 48,
+   "h": 48,
+   "pivotPx": [
+    24,
+    24
+   ]
+  },
+  "expr": "E(g, X, Y, 20, 20, '#ffffff')",
+  "src": "L3185"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Warp_RollHole",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 48,
+   "h": 48,
+   "pivotPx": [
+    24,
+    24
+   ]
+  },
+  "expr": "E(g, X, Y, 20*0.35, 20*0.35, '#ffffff')",
+  "src": "L3185"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Warp_RollLine",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 48,
+   "h": 48,
+   "pivotPx": [
+    24,
+    24
+   ]
+  },
+  "expr": "E(g, X, Y, 20, 20, null, OLC, 20*0.12)",
+  "src": "L3185"
  }
 ]

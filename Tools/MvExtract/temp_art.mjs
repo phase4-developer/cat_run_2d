@@ -89,7 +89,6 @@ const themes = loadThemes();
 const C = list.filter((x) => x.kind === 'C');
 const outItems = [];
 if (C.length) {
-  rmSync(TMP, { recursive: true, force: true }); // 이전 임시 PNG는 다시 만든다(정식이 생긴 이름은 사라진다)
   const { browser, page } = await openCanon({});
   await page.addScriptTag({ path: join(ROOT, 'inject/harness.js') });
   if (!(await page.evaluate(() => MvH.loadEmoji()))) throw new Error('이모지 글꼴 확인 실패');
@@ -139,6 +138,12 @@ if (C.length) {
 }
 
 // ── 6. 기록 ──
+// 이번에 만들지 않은 임시 PNG(정식이 생긴 이름)는 .meta와 함께 지운다. 남는 PNG의 .meta(임포트 설정)는 건드리지 않는다
+const made = new Set(outItems.map((m) => m.file));
+const walkT = (d, rel = '') => (existsSync(d) ? readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walkT(join(d, e.name), rel + e.name + '/') : e.name.endsWith('.png') ? [rel + e.name] : [])) : []);
+let gone = 0;
+for (const f of walkT(join(TMP, 'Sprite'), 'Sprite/').concat(walkT(join(TMP, 'Texture'), 'Texture/'))) if (!made.has(f)) { rmSync(join(TMP, f), { force: true }); rmSync(join(TMP, f + '.meta'), { force: true }); gone++; }
+if (gone) console.log(`temp: 정식이 생겨 지운 임시 PNG ${gone}`);
 mkdirSync(TMP, { recursive: true });
 const tsv = ['name\tuses\tkind\tsize\tmethod\tatlas\tnote', ...list.map((x) => [x.name, x.uses, x.kind, x.size || '', x.method || '', x.atlas || '', x.note || ''].join('\t'))];
 writeFileSync(join(TMP, 'temp_art_list.tsv'), tsv.join('\n') + '\n');

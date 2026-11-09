@@ -6,6 +6,28 @@
   "suppress": [],
   "only": [],
   "clock": 0,
+  "name": "UI_Icon_Brick",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "dom",
+  "pivot": "Center",
+  "canvas": {
+   "w": 104,
+   "h": 84,
+   "pivotPx": [
+    52,
+    42
+   ]
+  },
+  "html": "<i class=\"ic-brick\"></i>",
+  "src": "CSS .ic-brick L42"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
   "name": "UI_Icon_Weapon_1",
   "atlas": "Atlas_UI_Icon",
   "mode": "direct",

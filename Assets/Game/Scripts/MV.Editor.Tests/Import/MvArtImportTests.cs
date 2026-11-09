@@ -24,6 +24,10 @@ namespace MV.Editor.Tests
             Assert.That(world.Kind, Is.EqualTo(MvArtKind.World));
             Assert.That(world.IsTemp, Is.True);
 
+            // 로비 `_2` 나눔(03 §3.8.1)도 로비 PPU 160
+            Assert.That(MvArtRules.TryParse("Assets/Game/Art/Source/Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_1.png", out var lobby2), Is.True);
+            Assert.That(MvArtRules.DefaultPpu(lobby2), Is.EqualTo(MvArtRules.LobbyPpu));
+
             Assert.That(MvArtRules.TryParse("Assets/Game/Art/Source/Texture/Tex_God_Flame.png", out var tex), Is.True);
             Assert.That(tex.Kind, Is.EqualTo(MvArtKind.Texture));
             Assert.That(tex.Atlas, Is.Null);
@@ -82,6 +86,8 @@ namespace MV.Editor.Tests
             // 로비: PPU 160(03 §3.3.2)
             var lobby = Importer("Assets/Game/Art/Source/Sprite/Atlas_World_Lobby", out _);
             Assert.That(lobby.spritePixelsPerUnit, Is.EqualTo(160f));
+            var lobby2 = Importer("Assets/Game/Art/Source/Sprite/Atlas_World_Lobby_2", out _);
+            Assert.That(lobby2.spritePixelsPerUnit, Is.EqualTo(160f), "`_2` 나눔도 로비 PPU");
 
             // 단독 텍스처: Full Rect, Android·iOS ASTC 4x4(신 초상), Mipmap 끔
             var tex = (TextureImporter)AssetImporter.GetAtPath("Assets/Game/Art/Source/Texture/Tex_God_Flame.png");

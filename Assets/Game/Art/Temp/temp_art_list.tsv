@@ -1,12 +1,10 @@
 name	uses	kind	size	method	atlas	note
 Tex_God_flame	113_god.portrait[flame]	NAME_CASE				카탈로그 이름 Tex_God_Flame
 Tex_God_thunder	113_god.portrait[thunder]	NAME_CASE				카탈로그 이름 Tex_God_Thunder
-Tex_Lobby_Vignette	09_uiResource.address[stage.vignette]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
 UI_Icon_Ad	07_consumeType.iconColumn	C	96x96	2 이모지 📺	Atlas_UI_Icon	
 UI_Icon_BoxGold	01_wealth.icon[1001016]	C	96x96	2 이모지 🎁	Atlas_UI_Icon	
 UI_Icon_BoxPaper	01_wealth.icon[1001014]	C	96x96	2 이모지 📦	Atlas_UI_Icon	
 UI_Icon_BoxWood	01_wealth.icon[1001015]	C	96x96	2 이모지 📦	Atlas_UI_Icon	
-UI_Icon_Brick	09_uiResource.sprite[hud.brick]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
 UI_Icon_Clock	07_consumeType.iconColumn	C	96x96	2 이모지 ⏰	Atlas_UI_Icon	
 UI_Icon_Content	09_uiResource.sprite[lobby.side.content]	C	96x96	2 이모지 📜	Atlas_UI_Lobby	
 UI_Icon_Drop	07_consumeType.iconColumn	C	96x96	2 이모지 🎲	Atlas_UI_Icon	
@@ -38,16 +36,4 @@ UI_Icon_Ticket_BigMouse	02_playResource.icon[ticket.bigMouse]	C	96x96	2 이모�
 UI_Icon_Ticket_ChuruRush	02_playResource.icon[ticket.churuRush]	C	96x96	2 이모지 🎟️	Atlas_UI_Icon	
 UI_Icon_Ticket_RapidRush	02_playResource.icon[ticket.rapidRush]	C	96x96	2 이모지 🎟️	Atlas_UI_Icon	
 UI_Icon_Yarn	01_wealth.icon[1001007]	C	96x96	2 이모지 🧶	Atlas_UI_Icon	
-UI_Skin_HatchTile	09_uiResource.sprite[hud.hatch]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
 World_Enemy_BigMouse	102_enemy.sprite[bossMouse]	C	160x148	1 정본 조합(쥐 프레임 색 바꿈)	@theme	
-World_Prop_Bag	304_theme.roadsideProps[roof], 304_theme.roadsideProps[stairs]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Buoy	304_theme.roadsideProps[harbor]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Crate_Blue_A	304_theme.roadsideProps[market]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Crate_Blue_B	304_theme.roadsideProps[market]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Crate_Blue_Fish	304_theme.roadsideProps[harbor]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Crate_Red_A	304_theme.roadsideProps[market]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Crate_Red_B	304_theme.roadsideProps[market]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Crate_Red_Fish	304_theme.roadsideProps[harbor]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Jar	304_theme.roadsideProps[harbor], 304_theme.roadsideProps[roof], 304_theme.roadsideProps[snow], 304_theme.roadsideProps[stairs]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Pot	304_theme.roadsideProps[market], 304_theme.roadsideProps[roof], 304_theme.roadsideProps[stairs]	A				03 §3.5 대응표에 있음, 아직 추출 안 함
-World_Prop_Snowman	304_theme.roadsideProps[snow]	A				03 §3.5 대응표에 있음, 아직 추출 안 함

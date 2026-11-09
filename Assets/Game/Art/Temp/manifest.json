@@ -1,6 +1,6 @@
 {
  "tool": "Tools/MvExtract temp_art.mjs",
- "tables": "git:dev",
+ "tables": "worktree:Assets/Game/GameData/Table/TSV",
  "items": [
   {
    "name": "UI_Icon_Gauge",

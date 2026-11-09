@@ -150,6 +150,9 @@ namespace MV.Editor.Import
 
         public static bool IsUiAtlas(string atlas) => atlas != null && atlas.StartsWith("Atlas_UI_", StringComparison.Ordinal);
 
+        /// <summary>로비 아틀라스와 그 `_2` 나눔(03 §3.8.1). 나눔은 `Tools/MvExtract/jobs`의 job별 `atlas`가 정한다(시설 Tower·Rack = `_2`).</summary>
+        public static bool IsLobbyAtlas(string atlas) => atlas != null && s_split.Replace(atlas, "") == LobbyAtlas;
+
         /// <summary>테마 아틀라스면 테마 key(`_2` 나눔 접미 제외), 아니면 null.</summary>
         public static string ThemeKeyOf(string atlas)
         {
@@ -248,7 +251,7 @@ namespace MV.Editor.Import
         public static int DefaultPpu(MvArtAsset asset)
         {
             if (asset.Kind == MvArtKind.Ui) return UiPpu;
-            if (asset.Atlas == LobbyAtlas) return LobbyPpu;
+            if (IsLobbyAtlas(asset.Atlas)) return LobbyPpu;
             return WorldPpu;
         }
     }

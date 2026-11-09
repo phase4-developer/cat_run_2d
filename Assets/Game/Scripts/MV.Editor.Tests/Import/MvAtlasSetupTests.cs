@@ -27,6 +27,7 @@ namespace MV.Editor.Tests
             ("Atlas_World_Cat_T8", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "cat"),
             ("Atlas_World_Friend_T1", false, 2048, TextureImporterFormat.ASTC_6x6, true, true, 8, "cat"),
             ("Atlas_World_Lobby", false, 2048, TextureImporterFormat.ASTC_6x6, false, true, 4, "lobby"),
+            ("Atlas_World_Lobby_2", false, 2048, TextureImporterFormat.ASTC_6x6, false, true, 4, "lobby"),
             ("Atlas_Fx_Common", false, 1024, TextureImporterFormat.ASTC_4x4, true, false, 8, "fx"),
         };
 

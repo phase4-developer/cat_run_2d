@@ -93,6 +93,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - cat
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 60e4d7307b53453993cd77ff6179a87c
+    m_Address: Atlas_World_Lobby_2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 633989764a288e14fbeb9c604e2cca17
     m_Address: Atlas_World_Cat_T3
     m_ReadOnly: 0
