@@ -10,7 +10,7 @@
 | MV-SAVE 저장·이관 | 진행 | 하위 에이전트 | `ai/MV-SAVE-save-migration` @ `.wt/b`, `moonvillage-b` | `43637e7` | | | 쓰기: `S/MV.Save/`, `S/MV.Save.Tests/`. Boot 6단계 연결은 G1 통합 때 총괄. D-68 대기(키 위치) → 교체 지점. 총괄 asmdef `f0214ef` |
 | MV-TOOL-ART 그림 추출 | 진행 | 하위 에이전트 | `ai/MV-TOOL-ART-extract` @ `.wt/c`, `moonvillage-c` | `43637e7` | | | 쓰기: `Tools/MvExtract/`(sound 제외), `A/Art/Source/`, `A/Art/Temp/`. D-50 승인(2026-11-09 사용자 「전부 승인」) |
 | MV-QA-HARNESS 캡처 도구(프로토 쪽) | 진행 | 하위 에이전트 | `ai/MV-QA-HARNESS-proto` @ `.wt/d`, `moonvillage-d` | `43637e7` | | | 쓰기: `Tools/MvCapture/`, `QA/Scenes/`, `QA/Dumps/`, `QA/Captures/Proto/`. Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도 계약 |
-| MV-TOOL-SND 소리 굽기 | 대기 | — | — | | | | MV-TOOL-ART 공용 기반 Commit 위에서 시작(같은 `Tools/MvExtract/` 기반) |
+| MV-TOOL-SND 소리 굽기 | 진행 | 하위 에이전트 | `ai/MV-TOOL-SND-bake` @ `.wt/e`, `moonvillage-e` | `e4e492d`(MV-TOOL-ART 공용 기반, dev `43637e7` 위) | | | 쓰기: `Tools/MvExtract/sound/`, `A/Addressables/Remote/Audio/`. 공용 파일 변경은 요청으로 |
 | MV-ART-ATLAS 아틀라스·임포트 | 대기 | — | — | | | | 선행: MV-TOOL-ART 출력, MV-DATA 표 클래스 |
 
 ## 담당표 (2026-11-09)
@@ -21,6 +21,7 @@
 | b | `C:/Project/MoonVillage.wt/b` | `moonvillage-b` | MV-SAVE | 같음 |
 | c | `C:/Project/MoonVillage.wt/c` | `moonvillage-c` | MV-TOOL-ART | 같음 |
 | d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | MV-QA-HARNESS(프로토) | 같음 |
+| e | `C:/Project/MoonVillage.wt/e` | `moonvillage-e` | MV-TOOL-SND | 같음 |
 
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`다. 작업 폴더는 칸을 재사용하고 브랜치만 바꾼다(Unity Library 재생성 절약).
 - 실행기 하위 호스트 위임: `moonvillage --hosts`, compile·EditMode·PlayMode, 근거 「작업 폴더를 실행기에 등록해」, 만료 2026-11-19.
