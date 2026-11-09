@@ -6,7 +6,10 @@
         "MV.Data",
         "MV.Save",
         "JJEvol.Data.Runtime",
-        "JJEvol.Economy.Runtime"
+        "JJEvol.Economy.Runtime",
+        "JJEvol.Tables.Runtime",
+        "JJEvol.Save.Runtime",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
