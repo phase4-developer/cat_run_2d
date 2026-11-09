@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "saved_at": "2026-11-09T19:36:04+09:00",
+  "saved_by": "사용자(설정 화면)",
+  "values": {
+    "project_kind": "new",
+    "ownership": "company",
+    "dimension": "25d",
+    "render_pipeline": "urp",
+    "unity_version": "6000.3.9f1",
+    "platforms": [
+      "android",
+      "ios"
+    ],
+    "orientation": "portrait",
+    "input": [
+      "touch"
+    ],
+    "ui_system": "ugui",
+    "brief_status": "ready",
+    "data_source": "tables",
+    "languages": [
+      "ko",
+      "en"
+    ],
+    "save_kind": "server",
+    "monetization": [
+      "ads",
+      "iap"
+    ],
+    "table_rules": "jjevol",
+    "folder_rules": "jjevol",
+    "table_reward": [
+      "drop",
+      "randombox"
+    ],
+    "fw_use": "yes",
+    "fw_link": "external",
+    "fw_area_content": "base",
+    "fw_area_scene": "base",
+    "fw_area_ui": "base",
+    "fw_area_fx": "base",
+    "fw_area_save": "base",
+    "fw_area_tables": "base",
+    "fw_area_loc": "base",
+    "fw_area_economy": "base",
+    "fw_area_platform": "base",
+    "fw_update": "delegate",
+    "fw_ads": [
+      "admob"
+    ],
+    "fw_purchase": [
+      "unityiap"
+    ],
+    "fw_login": [
+      "firebase"
+    ],
+    "fw_analytics": [
+      "firebase"
+    ],
+    "fw_push": [
+      "remote",
+      "local"
+    ],
+    "fw_store": [
+      "tracking"
+    ],
+    "fw_network": "firebase",
+    "fw_genre": "none",
+    "git_commit": "auto",
+    "git_merge": "test",
+    "unity_modes": [
+      "editmode",
+      "compile",
+      "playmode"
+    ],
+    "qa_targets": [
+      "android_emu"
+    ],
+    "subagents": "auto",
+    "package_install": "ask",
+    "repair_attempts": "2",
+    "art_source": [
+      "placeholder"
+    ],
+    "brief_path": "Docs/MV-SPEC-01/README.md",
+    "rules_doc": "Docs/MV-SPEC-01/04_GameRules.md",
+    "fps_target": "60",
+    "git_test_branch": "dev"
+  },
+  "framework_packages": [
+    "com.artress.managed-addressables",
+    "com.jjevol.audio",
+    "com.jjevol.audio.addressables",
+    "com.jjevol.data",
+    "com.jjevol.economy",
+    "com.jjevol.economy.drop",
+    "com.jjevol.effects",
+    "com.jjevol.effects.addressables",
+    "com.jjevol.effects.ui",
+    "com.jjevol.localization",
+    "com.jjevol.localization.authoring",
+    "com.jjevol.platform.ads",
+    "com.jjevol.platform.ads.admob",
+    "com.jjevol.platform.analytics",
+    "com.jjevol.platform.analytics.firebase",
+    "com.jjevol.platform.core",
+    "com.jjevol.platform.localnotifications",
+    "com.jjevol.platform.localnotifications.unity",
+    "com.jjevol.platform.login",
+    "com.jjevol.platform.login.firebase",
+    "com.jjevol.platform.network",
+    "com.jjevol.platform.network.data",
+    "com.jjevol.platform.network.firebase",
+    "com.jjevol.platform.purchase",
+    "com.jjevol.platform.purchase.network",
+    "com.jjevol.platform.purchase.unityiap",
+    "com.jjevol.platform.push",
+    "com.jjevol.platform.push.firebase",
+    "com.jjevol.platform.tracking",
+    "com.jjevol.platform.tracking.apple",
+    "com.jjevol.platform.unity",
+    "com.jjevol.resources.addressables",
+    "com.jjevol.save",
+    "com.jjevol.scene",
+    "com.jjevol.scene.addressables",
+    "com.jjevol.scene.ui",
+    "com.jjevol.tables",
+    "com.jjevol.tables.authoring",
+    "com.jjevol.ui",
+    "com.jjevol.ui.addressables",
+    "com.jjevol.ui.economy",
+    "com.jjevol.ui.urp"
+  ],
+  "missing": [],
+  "later": [
+    "fw_skip_reason",
+    "headless",
+    "art_style",
+    "min_device"
+  ],
+  "problems": [
+    {
+      "level": "warn",
+      "text": "외부 연결은 고정본만 넣는다. 고정본이 없어 연결을 보류할 패키지: com.jjevol.economy.drop, com.jjevol.effects.ui, com.jjevol.platform.ads, com.jjevol.platform.ads.admob, com.jjevol.platform.analytics, com.jjevol.platform.analytics.firebase, com.jjevol.platform.localnotifications, com.jjevol.platform.localnotifications.unity, com.jjevol.platform.login, com.jjevol.platform.login.firebase, com.jjevol.platform.network, com.jjevol.platform.network.data, com.jjevol.platform.network.firebase, com.jjevol.platform.purchase, com.jjevol.platform.purchase.network, com.jjevol.platform.purchase.unityiap, com.jjevol.platform.push, com.jjevol.platform.push.firebase, com.jjevol.platform.tracking, com.jjevol.platform.tracking.apple"
+    },
+    {
+      "level": "info",
+      "text": "이 폴더는 실행기에 Unity 실행 등록이 없다. 등록은 이 저장 뒤 따로 요청한다"
+    },
+    {
+      "level": "info",
+      "text": "iOS 출시인데 iOS QA 대상이 없다"
+    }
+  ]
+}
