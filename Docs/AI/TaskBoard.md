@@ -7,7 +7,7 @@
 | 계약 | 상태 | 결과(dev) | 남은 것 |
 |---|---|---|---|
 | MV-00 기반 | 완료 | — | 보관 「MV-00 남김」 |
-| MV-DATA 표 | 2차 완료(G1), 3차 진행(칸 b) | `6d946c8` | 자료 빈칸(정본 값 없음, 보관 참조). VIEW 요청: `view.groundFar` 92→120, `330_climb` 출렁임 열, `304_theme` 6~15행 |
+| MV-DATA 표 | 3차 완료 | 2차 `6d946c8`, 3차 `a2be0d6` | 자료 빈칸(정본 값 없음, 보관 참조). VIEW 요청: `view.groundFar` 92→120, `330_climb` 출렁임 열, `304_theme` 6~15행 |
 | MV-SAVE 저장 | 완료(G1) | `bf2921c` | D-68 출시 저장 키 |
 | MV-TOOL-ART 그림 | 완료(G2) | 3차 `72ba086`, 4차 `ce87826` | `UI_Skin_MapZone_Z4~Z6` 임시 아트, D-ART-01~06 |
 | MV-TOOL-SND 소리 굽기 | 완료(2차 tierup_0) | `922cad9` | 효과음 31·`03_sound` 33행, 청취 NOT_RUN. 오디오 Addressables 그룹 없음(33개 미등록) → PLAY-INT 통합 |
@@ -35,14 +35,14 @@
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
 | a | `moonvillage-a` | MV-PLAY-INT | `ai/MV-PLAY-INT-loop` | `S/MV.Boot/`, `A/Tests/PlayMode/`, `S/MV.View/Runtime/RunStateViewSource.cs` |
-| b | `moonvillage-b` | MV-DATA 3차 | `ai/MV-DATA-requests3` | 표 TSV(요청 표만), `S/MV.Data/`, `S/MV.Data.Tests/`, 07 해당 절 |
+| b | `moonvillage-b` | (비어 있음) | — | — |
 | c | `moonvillage-c` | MV-UI-META 1차 | `ai/MV-UI-META-panels` | `S/MV.UI/Meta/`, `MvUiIds`·`MvUiNav` 줄 추가, `S/MV.UI.Tests/Meta/`, `A/Addressables/Remote/UI/Meta/` |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
 | f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
 | g | `moonvillage-g` | (비어 있음) | — | — |
 
-- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 398, PlayMode 2, `bd7bb3b` 기준).
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 403, PlayMode 2, `a2be0d6` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
@@ -67,5 +67,5 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 ## 열린 결정 (권장안으로 진행, 교체 가능)
 
-D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
+D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 반영 교체 대기: MV-VIEW(`ClimbBump`→`bumpH`, `ShapeOf`→`viewShape`, 길가 소품·줄 304 읽기), MV-FX(여러 자식 그룹 → 04 part 행·`when`·`dz`·`jx`·`jz`·`hasGrav`), MV-META(`RecordModePlay` dailyLimit). 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
 - 미해결(사용자): 없음.
