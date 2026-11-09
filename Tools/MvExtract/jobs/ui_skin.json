@@ -1,0 +1,25 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Skin_HatchTile",
+  "atlas": "Atlas_UI_Hud",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 68,
+   "h": 68,
+   "pivotPx": [
+    34,
+    34
+   ]
+  },
+  "allowEdge": true,
+  "src": "CSS #fgMask L530(x 주기 17 px로 맞춤)",
+  "expr": "(() => { const N = 68, P = 17, im = g.createImageData(N, N), A = [8, 6, 14], B = [24, 20, 36]; for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { let a = 0; for (let sy = 0; sy < 4; sy++) for (let sx = 0; sx < 4; sx++) { const u = (((x + (sx + 0.5)/4) + (y + (sy + 0.5)/4)) % P + P) % P; if (u < P/2) a++; } const k = a/16, o = (y*N + x)*4; for (let c = 0; c < 3; c++) im.data[o + c] = Math.round(A[c]*k + B[c]*(1 - k)); im.data[o + 3] = 230; } g.putImageData(im, 0, 0); })()"
+ }
+]

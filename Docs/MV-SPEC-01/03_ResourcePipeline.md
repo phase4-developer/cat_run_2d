@@ -336,13 +336,13 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 
 | 함수(줄) | 스프라이트 이름 | 종류 | 캔버스 | 피벗 | 프레임 | 테마 | 아틀라스 | 표·열 |
 |---|---|---|---|---|---|---|---|---|
-| bush/stone → 화분 L3573 | `World_Prop_Pot` | World | 96×136 | BottomCenter | 1 | all | `Atlas_World_Theme_<key>` | `304_theme.roadsideProps`[제안 열] |
-| 장독 L3574 | `World_Prop_Jar` / 눈 뚜껑 `World_Prop_Jar` (snow 테마 아틀라스에서만 눈 그림) | World | 96×120 | BottomCenter | 1 | each(snow만 다름) | 〃 | 〃 |
-| 봉투 L3575 | `World_Prop_Bag` | World | 96×112 | BottomCenter | 1 | all | 〃 | 〃 |
-| 상자 L3576 (색 `hh<0.25` 파랑/빨강 × 과일 2색) | `World_Prop_Crate_{Blue,Red}_{A,B}` | World | 112×96 | BottomCenter | 1 | all | 〃 | 〃 |
-| 상자 항구(생선 `fishShapeW`) | `World_Prop_Crate_{Blue,Red}_Fish` | World | 112×96 | BottomCenter | 1 | all | 〃 | 〃 |
-| 부표 L3577 | `World_Prop_Buoy` | World | 88×96 | BottomCenter | 1 | all | 〃 | 〃 |
-| 눈사람 L3578 | `World_Prop_Snowman` | World | 88×128 | BottomCenter | 1 | all | 〃 | 〃 |
+| bush/stone → 화분 L3573 | `World_Prop_Pot` | World | 100×152(피벗 화소 50,136. 바닥 그림자 포함) | BottomCenter | 1 | all | `Atlas_World_Theme_<key>` | `304_theme.roadsideProps`[제안 열] |
+| 장독 L3574 | `World_Prop_Jar` / 눈 뚜껑 `World_Prop_Jar` (snow 테마 아틀라스에서만 눈 그림) | World | 100×132(피벗 화소 50,116) | BottomCenter | 1 | each(snow만 다름) | 〃 | 〃 |
+| 봉투 L3575 | `World_Prop_Bag` | World | 100×124(피벗 화소 50,108) | BottomCenter | 1 | all | 〃 | 〃 |
+| 상자 L3576 (색 `hh<0.25` 파랑/빨강 × 과일 2색) | `World_Prop_Crate_{Blue,Red}_{A,B}`(A 과일 `#f0a070`, B `#ffd84a`) | World | 108×100(피벗 화소 54,84) | BottomCenter | 1 | all | 〃 | 〃 |
+| 상자 항구(생선 `fishShapeW`) | `World_Prop_Crate_{Blue,Red}_Fish`(정본 항구 상자는 늘 빨강. `_Blue_Fish`는 파랑 몸 + 생선 조합) | World | 108×112(피벗 화소 54,96) | BottomCenter | 1 | all | 〃 | 〃 |
+| 부표 L3577 | `World_Prop_Buoy` | World | 96×104(피벗 화소 48,88) | BottomCenter | 1 | all | 〃 | 〃 |
+| 눈사람 L3578 | `World_Prop_Snowman` | World | 96×136(피벗 화소 48,120) | BottomCenter | 1 | all | 〃 | 〃 |
 | 전봇대+가로등 L3584~3590 | `World_Prop_Pole` (오른쪽 기준, 왼쪽은 flipX) | World | 200×696 | PoleBase | 1 | all | 〃 | `304_theme.night`가 0보다 크면 빛 `Fx_Glow_Lin` 색 `#ffd890` r = 3.0 m |
 | 집 문 L3594 (`th.door`) | `World_House_Door` | World | 128×176 | BottomCenter | 1 | **each** | 〃 | 집 배치 규칙([02](02_Visual.md)) |
 | 집 창 L3595~3596 (불 켬 `#ffd878` / 끔 `#a8d0f0`) | `World_House_Win_On`, `World_House_Win_Off` | World | 104×88 | Center | 1 | all | 〃 | 불 켬 판정 L3596, 빛 `Fx_Glow_Lin` r = S·1.4 |
@@ -454,7 +454,7 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 | SVG `.ic-dia` 캣닢 L600 | `UI_Icon_Dia` | UI | 96×96 | Center | 〃 | `01_wealth.icon`(2) |
 | SVG `.ic-soul` 생선 L46 | `UI_Icon_Soul` | UI | 96×68 | Center | 〃 | `01_wealth.icon`(3) |
 | SVG `.ic-stair` 휴지 롤(계단) L589 | `UI_Icon_Stair` | UI | 96×96 | Center | 〃 | `07_consumeType.iconColumn`(600 StairLv) |
-| CSS `.ic-brick` L42(날아가는 벽돌) | `UI_Icon_Brick` | UI | 56×40 | Center | 〃 | `04_effect`(fly) |
+| CSS `.ic-brick` L42(날아가는 벽돌) | `UI_Icon_Brick` | UI | 104×84(`dom`, `--u` 10.8 px, drop-shadow 번짐 포함) | Center | 〃 | `04_effect`(fly) |
 | `paintCard2` atk·rate·gold·storm·blast L3758 (원소 무관) | `Card_Atk`, `Card_Rate`, `Card_Gold`, `Card_Storm`, `Card_Blast` | UI | 192×192 | Center | `Atlas_UI_Card` | `110_card.icon` |
 | `paintCard` clone1 L901 | `Card_Clone1` | UI | 192×192 | Center | 〃 | 〃 |
 | `paintCard2` orb·spear (원소별 색) | `Card_Orb_Bolt`, `Card_Orb_Fire`, `Card_Spear_Bolt`, `Card_Spear_Fire` | UI | 192×192 | Center | 〃 | 〃 |
@@ -483,7 +483,7 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 | `.mp-zone`·`.mp-cp`·`.mp-ft`(L453~479) | `UI_Skin_MapZone_Z{1..6}`, `UI_Skin_MapCp`, `UI_Skin_MapFt`, `UI_Skin_MapFt_On` | | `Atlas_UI_Lobby` |
 | `.ul-box`(L482) | `UI_Skin_UnlockBox` | 1 | `Atlas_UI_Common` |
 | 막대 채움 `#gFill`, `.ms-bar i`, `#lSoulFill`, `#rBar`, `.up .g b`(L587, L548, L158, L260, L223) | `UI_Skin_Bar_Stair`, `_Ms`, `_Soul`, `_Result`, `_Up` | 1(Simple 늘림 — CSS처럼 막대 폭에 맞춰 그라데이션이 줄어듦) | `Atlas_UI_Hud` |
-| `#fgMask` 사선 무늬(L530) | `UI_Skin_HatchTile` | 1(Tiled) | `Atlas_UI_Hud` |
+| `#fgMask` 사선 무늬(L530) | `UI_Skin_HatchTile` | 1(Tiled, 68×68. 45° 주기 16.97 px가 정수가 아니라 x 주기 17 px로 맞춤 [추정]) | `Atlas_UI_Hud` |
 | `#vig` 화면 비네트(L45) | `Tex_UI_Vignette` | Texture | 단독 |
 | 알약 이름표(L3519 `rgba(40,24,36,.72)`) | `UI_Skin_Pill` | 1 | `Atlas_UI_Common` |
 | `color-mix()` 등급색 변형 | 등급별로 굽는다(색이 정해진 5·8종). UI에 틴트 셰이더를 쓰지 않는다(§3.8.9) | | |

@@ -1,0 +1,298 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Pot",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 100,
+   "h": 152,
+   "pivotPx": [
+    50,
+    136
+   ]
+  },
+  "args": {
+   "deco": "roof",
+   "hh": 0.2
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Bag",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 100,
+   "h": 124,
+   "pivotPx": [
+    50,
+    108
+   ]
+  },
+  "args": {
+   "deco": "roof",
+   "hh": 0.8
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Crate_Blue_A",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 108,
+   "h": 100,
+   "pivotPx": [
+    54,
+    84
+   ]
+  },
+  "args": {
+   "deco": "market",
+   "hh": 0.05
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Crate_Blue_B",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 108,
+   "h": 100,
+   "pivotPx": [
+    54,
+    84
+   ]
+  },
+  "args": {
+   "deco": "market",
+   "hh": 0.15
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Crate_Red_A",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 108,
+   "h": 100,
+   "pivotPx": [
+    54,
+    84
+   ]
+  },
+  "args": {
+   "deco": "market",
+   "hh": 0.45
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Crate_Red_B",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 108,
+   "h": 100,
+   "pivotPx": [
+    54,
+    84
+   ]
+  },
+  "args": {
+   "deco": "market",
+   "hh": 0.35
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Crate_Red_Fish",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 108,
+   "h": 112,
+   "pivotPx": [
+    54,
+    96
+   ]
+  },
+  "args": {
+   "deco": "harbor",
+   "hh": 0.5
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Crate_Blue_Fish",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 108,
+   "h": 112,
+   "pivotPx": [
+    54,
+    96
+   ]
+  },
+  "args": {
+   "deco": "harbor",
+   "hh": 0.05
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "(() => { let n = 0; const th = { get deco() { return n++ ? 'harbor' : 'market'; }, night: 0 }; drawMoonProp(null, th, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh); })()",
+  "src": "L3576(파랑 hh·항구 생선 조합)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Buoy",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 96,
+   "h": 104,
+   "pivotPx": [
+    48,
+    88
+   ]
+  },
+  "args": {
+   "deco": "harbor",
+   "hh": 0.2
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Snowman",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 96,
+   "h": 136,
+   "pivotPx": [
+    48,
+    120
+   ]
+  },
+  "args": {
+   "deco": "snow",
+   "hh": 0.2
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: A.deco, night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "each",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Jar",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 100,
+   "h": 132,
+   "pivotPx": [
+    50,
+    116
+   ]
+  },
+  "args": {
+   "hh": 0.5
+  },
+  "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
+  "expr": "drawMoonProp(null, {deco: TH && TH.deco === 'snow' ? 'snow' : 'roof', night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
+  "src": "L3570~3578"
+ }
+]

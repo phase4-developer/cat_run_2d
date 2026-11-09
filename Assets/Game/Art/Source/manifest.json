@@ -455,6 +455,24 @@
    "sha256": "a590c88e8b03595590b116d08bf9ad88f73a016cb178254f99447975f9521a8d"
   },
   {
+   "name": "UI_Skin_HatchTile",
+   "atlas": "Atlas_UI_Hud",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Hud/UI_Skin_HatchTile.png",
+   "w": 68,
+   "h": 68,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "CSS #fgMask L530(x 주기 17 px로 맞춤)",
+   "args": null,
+   "sha256": "7f81ba879539634d0e7cd171df431dbbb6775dc4283b418fd9070bd7f2abe7b5"
+  },
+  {
    "name": "UI_Emoji_Basket",
    "atlas": "Atlas_UI_Icon",
    "theme": null,
@@ -876,6 +894,24 @@
     "ch": "🎯"
    },
    "sha256": "03ed25f8261e973206d043ca9eb239d6050d81044643985a7f7972f77fa1cfb3"
+  },
+  {
+   "name": "UI_Icon_Brick",
+   "atlas": "Atlas_UI_Icon",
+   "theme": null,
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Brick.png",
+   "w": 104,
+   "h": 84,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "CSS .ic-brick L42",
+   "args": null,
+   "sha256": "cf95bde55674b9f4e57e042516991700870de946096231e3375f1d0912ef1483"
   },
   {
    "name": "UI_Icon_Dia",
@@ -10171,6 +10207,236 @@
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
   },
   {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_blossom",
+   "theme": "blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
+  },
+  {
    "name": "World_Enemy_Mouse",
    "atlas": "Atlas_World_Theme_cafe",
    "theme": null,
@@ -10924,6 +11190,236 @@
     "t": 8
    },
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
+  },
+  {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_cafe",
+   "theme": "cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
   },
   {
    "name": "World_Enemy_Mouse",
@@ -11681,6 +12177,236 @@
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
   },
   {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_harbor",
+   "theme": "harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
+  },
+  {
    "name": "World_Enemy_Mouse",
    "atlas": "Atlas_World_Theme_lighthouse",
    "theme": null,
@@ -12434,6 +13160,236 @@
     "t": 8
    },
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
+  },
+  {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "theme": "lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
   },
   {
    "name": "World_Enemy_Mouse",
@@ -13191,6 +14147,236 @@
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
   },
   {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_market",
+   "theme": "market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
+  },
+  {
    "name": "World_Enemy_Mouse",
    "atlas": "Atlas_World_Theme_moonstair",
    "theme": null,
@@ -13944,6 +15130,236 @@
     "t": 8
    },
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
+  },
+  {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "theme": "moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
   },
   {
    "name": "World_Enemy_Mouse",
@@ -14701,6 +16117,236 @@
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
   },
   {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_onsen",
+   "theme": "onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
+  },
+  {
    "name": "World_Enemy_Mouse",
    "atlas": "Atlas_World_Theme_park",
    "theme": null,
@@ -15454,6 +17100,236 @@
     "t": 8
    },
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
+  },
+  {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_park",
+   "theme": "park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
   },
   {
    "name": "World_Enemy_Mouse",
@@ -16211,6 +18087,236 @@
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
   },
   {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_roof",
+   "theme": "roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
+  },
+  {
    "name": "World_Enemy_Mouse",
    "atlas": "Atlas_World_Theme_skyline",
    "theme": null,
@@ -16964,6 +19070,236 @@
     "t": 8
    },
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
+  },
+  {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_skyline",
+   "theme": "skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
   },
   {
    "name": "World_Enemy_Mouse",
@@ -17721,6 +20057,236 @@
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
   },
   {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "5d22972e141217e41afba391927dfa1907854d5f0344e31008ca907176013795"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_snowday",
+   "theme": "snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
+  },
+  {
    "name": "World_Enemy_Mouse",
    "atlas": "Atlas_World_Theme_snow",
    "theme": null,
@@ -18474,6 +21040,236 @@
     "t": 8
    },
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
+  },
+  {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "5d22972e141217e41afba391927dfa1907854d5f0344e31008ca907176013795"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_snow",
+   "theme": "snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
   },
   {
    "name": "World_Enemy_Mouse",
@@ -19231,6 +22027,236 @@
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
   },
   {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_stairs",
+   "theme": "stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
+  },
+  {
    "name": "World_Enemy_Mouse",
    "atlas": "Atlas_World_Theme_stallnight",
    "theme": null,
@@ -19984,6 +23010,236 @@
     "t": 8
    },
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
+  },
+  {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "theme": "stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
   },
   {
    "name": "World_Enemy_Mouse",
@@ -20741,6 +23997,236 @@
    "sha256": "9c623e503a7b373bbe02db39f263e2a726505f794e8cda89a2bb1bec3db4c20d"
   },
   {
+   "name": "World_Prop_Bag",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Bag.png",
+   "w": 100,
+   "h": 124,
+   "pivot": [
+    0.5,
+    0.12903
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.8
+   },
+   "sha256": "53b40fb156fddb7b4da5ea8a05d718a87377ac0ea42cdf0d51e3e829044fc5d1"
+  },
+  {
+   "name": "World_Prop_Buoy",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Buoy.png",
+   "w": 96,
+   "h": 104,
+   "pivot": [
+    0.5,
+    0.15385
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.2
+   },
+   "sha256": "0d9de397b4cce1bea22508a77fd1dd99ad256fe1d0afeeee5f6dd47f9ffb86e3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_A",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Crate_Blue_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.05
+   },
+   "sha256": "f0a756ed1c5bd15b83396caa3d09e04fc7fd9424b58acfd4db19a27bdd9efad3"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_B",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Crate_Blue_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.15
+   },
+   "sha256": "a135d85f906aaa50ce42aab52a55e69829eca26a74e428af12f97f6b54b14f7d"
+  },
+  {
+   "name": "World_Prop_Crate_Blue_Fish",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Crate_Blue_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3576(파랑 hh·항구 생선 조합)",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.05
+   },
+   "sha256": "56752471acc55bcc19c539c3c33583774d9cac9cd87425dc47206622b2aca5e4"
+  },
+  {
+   "name": "World_Prop_Crate_Red_A",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Crate_Red_A.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.45
+   },
+   "sha256": "f1769109a6546f04a840843e5f25243990a939993afc533685497cf8e25b25ef"
+  },
+  {
+   "name": "World_Prop_Crate_Red_B",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Crate_Red_B.png",
+   "w": 108,
+   "h": 100,
+   "pivot": [
+    0.5,
+    0.16
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "market",
+    "hh": 0.35
+   },
+   "sha256": "4101ae9ec09908e01dec07d2cad54cae9b766b60bbe2b32450436a4426d19613"
+  },
+  {
+   "name": "World_Prop_Crate_Red_Fish",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Crate_Red_Fish.png",
+   "w": 108,
+   "h": 112,
+   "pivot": [
+    0.5,
+    0.14286
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "harbor",
+    "hh": 0.5
+   },
+   "sha256": "8d6809c3669dfd897e742459d8f834487243ecc2a8853300852733925bd57c2d"
+  },
+  {
+   "name": "World_Prop_Jar",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Jar.png",
+   "w": 100,
+   "h": 132,
+   "pivot": [
+    0.5,
+    0.12121
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "hh": 0.5
+   },
+   "sha256": "88e7ad9004085e33cb72b2c3f98d53d890551666490838035473db52d6e68607"
+  },
+  {
+   "name": "World_Prop_Pot",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Pot.png",
+   "w": 100,
+   "h": 152,
+   "pivot": [
+    0.5,
+    0.10526
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "roof",
+    "hh": 0.2
+   },
+   "sha256": "0ecc1bc1aa65a9da3b163213e70346a77271d8e6637b0a6748eb287253fd5c83"
+  },
+  {
+   "name": "World_Prop_Snowman",
+   "atlas": "Atlas_World_Theme_subway",
+   "theme": "subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Prop_Snowman.png",
+   "w": 96,
+   "h": 136,
+   "pivot": [
+    0.5,
+    0.11765
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 128,
+   "border": null,
+   "src": "L3570~3578",
+   "args": {
+    "deco": "snow",
+    "hh": 0.2
+   },
+   "sha256": "ac2d6a28f1a695d16475447744883e8c244e266ccfd8b05e150ee2f6dca5fcb7"
+  },
+  {
    "name": "Tex_God_Flame",
    "atlas": "Texture",
    "theme": null,
@@ -20779,6 +24265,24 @@
     "gid": "thunder"
    },
    "sha256": "912c7105b383f2dda184750418b53083bcf141426dd777a8c7f8bcb74d8ad4dc"
+  },
+  {
+   "name": "Tex_Lobby_Vignette",
+   "atlas": "Texture",
+   "theme": null,
+   "file": "Texture/Tex_Lobby_Vignette.png",
+   "w": 540,
+   "h": 960,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "pivotName": "Center",
+   "ppu": 128,
+   "border": null,
+   "src": "L3475(cx, cy), L3537",
+   "args": null,
+   "sha256": "8b1e8cbc9fa210ae86ef94334ab434a59e985728b87ee1c16130d8a542fdd08b"
   }
  ]
 }

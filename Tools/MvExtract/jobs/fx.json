@@ -6,6 +6,30 @@
   "suppress": [],
   "only": [],
   "clock": 0,
+  "name": "Tex_Lobby_Vignette",
+  "texture": true,
+  "atlas": null,
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 540,
+   "h": 960,
+   "pivotPx": [
+    270,
+    480
+   ]
+  },
+  "allowEdge": true,
+  "src": "L3475(cx, cy), L3537",
+  "expr": "(() => { const W = 540, H = 960, cx = W/2, cy = H*0.548; const vg = g.createRadialGradient(cx, cy, H*0.2, cx, cy, H*0.75); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(20,8,20,.45)'); g.fillStyle = vg; g.fillRect(0, 0, W, H); })()"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
   "name": "Fx_Star4",
   "atlas": "Atlas_Fx_Common",
   "mode": "direct",
