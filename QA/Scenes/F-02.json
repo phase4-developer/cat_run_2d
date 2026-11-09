@@ -1,0 +1,22 @@
+{
+  "id": "F-02",
+  "title": "벽 파괴 순간(첫 벽 파괴 3100)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 3112,
+  "captureAt": [
+    3100,
+    3104,
+    3112
+  ],
+  "mask": []
+}

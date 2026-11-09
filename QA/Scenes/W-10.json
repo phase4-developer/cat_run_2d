@@ -1,0 +1,22 @@
+{
+  "id": "W-10",
+  "title": "끝 상자 줄(상자 8m 앞, 2983)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 2993,
+  "captureAt": [
+    2973,
+    2983,
+    2993
+  ],
+  "mask": []
+}

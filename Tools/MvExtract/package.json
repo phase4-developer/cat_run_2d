@@ -1,0 +1,19 @@
+{
+  "name": "mv-extract",
+  "private": true,
+  "version": "0.1.0",
+  "description": "MoonVillage canon HTML -> PNG/WAV extractor (MV-TOOL-ART / MV-TOOL-SND)",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "art": "node run_art.mjs",
+    "verify": "node verify.mjs",
+    "temp": "node temp_art.mjs",
+    "selftest": "node selftest.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.65.0"
+  }
+}

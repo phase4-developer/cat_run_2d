@@ -3,7 +3,8 @@
     "rootNamespace": "MV.Run",
     "references": [
         "MV.Core",
-        "MV.Data"
+        "MV.Data",
+        "JJEvol.Tables.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

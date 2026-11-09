@@ -1,0 +1,56 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Tex_God_Thunder",
+  "texture": true,
+  "atlas": null,
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 400,
+   "h": 468,
+   "pivotPx": [
+    200,
+    234
+   ]
+  },
+  "args": {
+   "gid": "thunder"
+  },
+  "expr": "paintGod(g, A.gid, 400, 468)",
+  "allowEdge": true,
+  "src": "L2481"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Tex_God_Flame",
+  "texture": true,
+  "atlas": null,
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 400,
+   "h": 468,
+   "pivotPx": [
+    200,
+    234
+   ]
+  },
+  "args": {
+   "gid": "flame"
+  },
+  "expr": "paintGod(g, A.gid, 400, 468)",
+  "allowEdge": true,
+  "src": "L2481"
+ }
+]

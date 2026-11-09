@@ -1,0 +1,22 @@
+{
+  "id": "W-04",
+  "title": "계단 게이트(z 52.16) 충전 중(n=3 첫 프레임 588)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 598,
+  "captureAt": [
+    578,
+    588,
+    598
+  ],
+  "mask": []
+}

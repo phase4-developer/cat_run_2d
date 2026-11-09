@@ -1,0 +1,904 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Junk_FishBox",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 296,
+   "h": 264,
+   "pivotPx": [
+    140,
+    232
+   ]
+  },
+  "args": {
+   "idx": 0,
+   "lane": 0,
+   "rew": "soul"
+  },
+  "anchorExpr": "[(hash(A.idx*7.13) - 0.5)*0.35, 0.05, 0.45]",
+  "norm": "0.9 + hash(A.idx*7.13 + 3)*0.18",
+  "expr": "drawJunk({...A, bar: 0, row: 0, shake: 0}, {x: 0, y: 0, z: 0})",
+  "v4": null,
+  "src": "L3607~3630"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "churu"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Junk_Parcel",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 296,
+   "h": 264,
+   "pivotPx": [
+    140,
+    232
+   ]
+  },
+  "args": {
+   "idx": 0,
+   "lane": 0
+  },
+  "anchorExpr": "[(hash(A.idx*7.13) - 0.5)*0.35, 0.05, 0.45]",
+  "norm": "0.9 + hash(A.idx*7.13 + 3)*0.18",
+  "expr": "drawJunk({...A, bar: 0, row: 0, shake: 0}, {x: 0, y: 0, z: 0})",
+  "v4": [
+   {
+    "part": "World_Item_Badge_Gold",
+    "at": [
+     0.7,
+     -0.25
+    ],
+    "rot": -0.5
+   }
+  ],
+  "src": "L3607~3630"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "churu"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Junk_Bag_Blue",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 296,
+   "h": 264,
+   "pivotPx": [
+    140,
+    232
+   ]
+  },
+  "args": {
+   "idx": 0,
+   "lane": 1
+  },
+  "anchorExpr": "[(hash(A.idx*7.13) - 0.5)*0.35, 0.05, 0.45]",
+  "norm": "0.9 + hash(A.idx*7.13 + 3)*0.18",
+  "expr": "drawJunk({...A, bar: 0, row: 0, shake: 0}, {x: 0, y: 0, z: 0})",
+  "v4": [
+   {
+    "part": "World_Item_Badge_Gold",
+    "at": [
+     0.7,
+     -0.25
+    ],
+    "rot": -0.5
+   }
+  ],
+  "src": "L3607~3630"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "churu"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Junk_Bag_Dark",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 296,
+   "h": 264,
+   "pivotPx": [
+    140,
+    232
+   ]
+  },
+  "args": {
+   "idx": 1,
+   "lane": 1
+  },
+  "anchorExpr": "[(hash(A.idx*7.13) - 0.5)*0.35, 0.05, 0.45]",
+  "norm": "0.9 + hash(A.idx*7.13 + 3)*0.18",
+  "expr": "drawJunk({...A, bar: 0, row: 0, shake: 0}, {x: 0, y: 0, z: 0})",
+  "v4": [
+   {
+    "part": "World_Item_Badge_Gold",
+    "at": [
+     0.7,
+     -0.25
+    ],
+    "rot": -0.5
+   }
+  ],
+  "src": "L3607~3630"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "churu"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Junk_Crate_Blue",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 296,
+   "h": 264,
+   "pivotPx": [
+    140,
+    232
+   ]
+  },
+  "args": {
+   "idx": 0,
+   "lane": 2
+  },
+  "anchorExpr": "[(hash(A.idx*7.13) - 0.5)*0.35, 0.05, 0.45]",
+  "norm": "0.9 + hash(A.idx*7.13 + 3)*0.18",
+  "expr": "drawJunk({...A, bar: 0, row: 0, shake: 0}, {x: 0, y: 0, z: 0})",
+  "v4": [
+   {
+    "part": "World_Item_Badge_Gold",
+    "at": [
+     0.7,
+     -0.25
+    ],
+    "rot": -0.5
+   }
+  ],
+  "src": "L3607~3630"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "churu"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Junk_Crate_Red",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 296,
+   "h": 264,
+   "pivotPx": [
+    140,
+    232
+   ]
+  },
+  "args": {
+   "idx": 1,
+   "lane": 2
+  },
+  "anchorExpr": "[(hash(A.idx*7.13) - 0.5)*0.35, 0.05, 0.45]",
+  "norm": "0.9 + hash(A.idx*7.13 + 3)*0.18",
+  "expr": "drawJunk({...A, bar: 0, row: 0, shake: 0}, {x: 0, y: 0, z: 0})",
+  "v4": [
+   {
+    "part": "World_Item_Badge_Gold",
+    "at": [
+     0.7,
+     -0.25
+    ],
+    "rot": -0.5
+   }
+  ],
+  "src": "L3607~3630"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Item_Badge_Gold",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 80,
+   "h": 40,
+   "pivotPx": [
+    40,
+    20
+   ]
+  },
+  "expr": "churu(g, X, Y, 0.55*S, 0, 1)",
+  "src": "L3626(회전 -0.5는 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Item_Badge_Dia",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 48,
+   "h": 80,
+   "pivotPx": [
+    24,
+    40
+   ]
+  },
+  "expr": "catnipLeaf(g, X, Y, 0.26*S, 0)",
+  "src": "L3626(회전 0.3은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Item_Churu_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 40,
+   "pivotPx": [
+    48,
+    20
+   ]
+  },
+  "args": {
+   "i": 0
+  },
+  "expr": "churu(g, X, Y, 0.62*S, 0, A.i)",
+  "src": "L3108(더미 조립·출렁은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Item_Churu_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 40,
+   "pivotPx": [
+    48,
+    20
+   ]
+  },
+  "args": {
+   "i": 1
+  },
+  "expr": "churu(g, X, Y, 0.62*S, 0, A.i)",
+  "src": "L3108(더미 조립·출렁은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Item_Churu_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 40,
+   "pivotPx": [
+    48,
+    20
+   ]
+  },
+  "args": {
+   "i": 2
+  },
+  "expr": "churu(g, X, Y, 0.62*S, 0, A.i)",
+  "src": "L3108(더미 조립·출렁은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "star4"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Item_CatnipPot",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 192,
+   "h": 212,
+   "pivotPx": [
+    96,
+    204
+   ]
+  },
+  "anchor": [
+   0,
+   0,
+   0
+  ],
+  "expr": "drawObj({k: 'gem', dead: false, body: null, mesh: Object.assign(new THREE.Object3D(), {visible: true})})",
+  "src": "L3112~3116(반짝이는 Fx_Star4 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "RR"
+   },
+   {
+    "fn": "LN"
+   }
+  ],
+  "only": [
+   {
+    "fn": "E",
+    "test": "Math.hypot(a[1] - window.__mvPX, a[2] - window.__mvPY) < 24"
+   }
+  ],
+  "clock": 0,
+  "name": "World_Obj_Gate_RollPaper",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "Center",
+  "canvas": {
+   "w": 76,
+   "h": 76,
+   "pivotPx": [
+    38,
+    38
+   ]
+  },
+  "anchor": [
+   0,
+   1.4,
+   0
+  ],
+  "args": {
+   "hw": 1,
+   "i": 0
+  },
+  "shiftExpr": "[A.hw*1.02*S, -1.4*S]",
+  "expr": "drawRollGate({hw: A.hw, flash: 0}, {x: 0, y: 0, z: 0}, true)",
+  "src": "L3638"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "RR"
+   },
+   {
+    "fn": "LN"
+   }
+  ],
+  "only": [
+   {
+    "fn": "E",
+    "test": "Math.hypot(a[1] - window.__mvPX, a[2] - window.__mvPY) < 24"
+   },
+   {
+    "ctx": "arc",
+    "test": "Math.hypot(a[0] - window.__mvPX, a[1] - window.__mvPY) < 24"
+   }
+  ],
+  "clock": 0,
+  "name": "World_Obj_Gate_RollYarn_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "Center",
+  "canvas": {
+   "w": 76,
+   "h": 76,
+   "pivotPx": [
+    38,
+    38
+   ]
+  },
+  "anchor": [
+   0,
+   1.4,
+   0
+  ],
+  "args": {
+   "hw": 1,
+   "i": 0
+  },
+  "shiftExpr": "[(A.i % 2 ? -1 : 1)*A.hw*1.02*S, -1.4*S + (A.i >> 1)*(2.8*S/6)]",
+  "expr": "drawRollGate({hw: A.hw, flash: 0}, {x: 0, y: 0, z: 0}, false)",
+  "src": "L3639"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "RR"
+   },
+   {
+    "fn": "LN"
+   }
+  ],
+  "only": [
+   {
+    "fn": "E",
+    "test": "Math.hypot(a[1] - window.__mvPX, a[2] - window.__mvPY) < 24"
+   },
+   {
+    "ctx": "arc",
+    "test": "Math.hypot(a[0] - window.__mvPX, a[1] - window.__mvPY) < 24"
+   }
+  ],
+  "clock": 0,
+  "name": "World_Obj_Gate_RollYarn_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "Center",
+  "canvas": {
+   "w": 76,
+   "h": 76,
+   "pivotPx": [
+    38,
+    38
+   ]
+  },
+  "anchor": [
+   0,
+   1.4,
+   0
+  ],
+  "args": {
+   "hw": 1,
+   "i": 1
+  },
+  "shiftExpr": "[(A.i % 2 ? -1 : 1)*A.hw*1.02*S, -1.4*S + (A.i >> 1)*(2.8*S/6)]",
+  "expr": "drawRollGate({hw: A.hw, flash: 0}, {x: 0, y: 0, z: 0}, false)",
+  "src": "L3639"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "RR"
+   },
+   {
+    "fn": "LN"
+   }
+  ],
+  "only": [
+   {
+    "fn": "E",
+    "test": "Math.hypot(a[1] - window.__mvPX, a[2] - window.__mvPY) < 24"
+   },
+   {
+    "ctx": "arc",
+    "test": "Math.hypot(a[0] - window.__mvPX, a[1] - window.__mvPY) < 24"
+   }
+  ],
+  "clock": 0,
+  "name": "World_Obj_Gate_RollYarn_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "Center",
+  "canvas": {
+   "w": 76,
+   "h": 76,
+   "pivotPx": [
+    38,
+    38
+   ]
+  },
+  "anchor": [
+   0,
+   1.4,
+   0
+  ],
+  "args": {
+   "hw": 1,
+   "i": 2
+  },
+  "shiftExpr": "[(A.i % 2 ? -1 : 1)*A.hw*1.02*S, -1.4*S + (A.i >> 1)*(2.8*S/6)]",
+  "expr": "drawRollGate({hw: A.hw, flash: 0}, {x: 0, y: 0, z: 0}, false)",
+  "src": "L3639"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "RR"
+   },
+   {
+    "fn": "LN"
+   }
+  ],
+  "only": [
+   {
+    "fn": "E",
+    "test": "Math.hypot(a[1] - window.__mvPX, a[2] - window.__mvPY) < 24"
+   },
+   {
+    "ctx": "arc",
+    "test": "Math.hypot(a[0] - window.__mvPX, a[1] - window.__mvPY) < 24"
+   }
+  ],
+  "clock": 0,
+  "name": "World_Obj_Gate_RollYarn_3",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "Center",
+  "canvas": {
+   "w": 76,
+   "h": 76,
+   "pivotPx": [
+    38,
+    38
+   ]
+  },
+  "anchor": [
+   0,
+   1.4,
+   0
+  ],
+  "args": {
+   "hw": 1,
+   "i": 3
+  },
+  "shiftExpr": "[(A.i % 2 ? -1 : 1)*A.hw*1.02*S, -1.4*S + (A.i >> 1)*(2.8*S/6)]",
+  "expr": "drawRollGate({hw: A.hw, flash: 0}, {x: 0, y: 0, z: 0}, false)",
+  "src": "L3639"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Well_Mouth",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "WellMouth",
+  "canvas": {
+   "w": 248,
+   "h": 128,
+   "pivotPx": [
+    124,
+    64
+   ]
+  },
+  "anchor": [
+   0,
+   1.25,
+   0
+  ],
+  "expr": "drawWell({bricks: []}, {x: 0, y: 0, z: 0})",
+  "src": "L3645(벽돌 고리는 따로)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "PL"
+   }
+  ],
+  "only": [
+   {
+    "fn": "drawBox",
+    "test": "a[2] === 0.3 + window.__mvJ.args.i*0.8"
+   }
+  ],
+  "clock": 0,
+  "name": "World_Obj_Stair_Step_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 1076,
+   "h": 104,
+   "pivotPx": [
+    518,
+    52
+   ]
+  },
+  "args": {
+   "i": 0
+  },
+  "anchor": [
+   0,
+   0,
+   -0.3
+  ],
+  "expr": "drawBlackHole({x: 0, y: 0, z: 0})",
+  "src": "L3204~3206"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "PL"
+   }
+  ],
+  "only": [
+   {
+    "fn": "drawBox",
+    "test": "a[2] === 0.3 + window.__mvJ.args.i*0.8"
+   }
+  ],
+  "clock": 0,
+  "name": "World_Obj_Stair_Step_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 1048,
+   "h": 160,
+   "pivotPx": [
+    504,
+    113
+   ]
+  },
+  "args": {
+   "i": 1
+  },
+  "anchor": [
+   0,
+   0,
+   -1.1
+  ],
+  "expr": "drawBlackHole({x: 0, y: 0, z: 0})",
+  "src": "L3204~3206"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "PL"
+   }
+  ],
+  "only": [
+   {
+    "fn": "drawBox",
+    "test": "a[2] === 0.3 + window.__mvJ.args.i*0.8"
+   }
+  ],
+  "clock": 0,
+  "name": "World_Obj_Stair_Step_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "FrontBottom",
+  "canvas": {
+   "w": 1020,
+   "h": 220,
+   "pivotPx": [
+    490,
+    173
+   ]
+  },
+  "args": {
+   "i": 2
+  },
+  "anchor": [
+   0,
+   0,
+   -1.9000000000000001
+  ],
+  "expr": "drawBlackHole({x: 0, y: 0, z: 0})",
+  "src": "L3204~3206"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "drawBox"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Stair_Arrow",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "Center",
+  "canvas": {
+   "w": 168,
+   "h": 176,
+   "pivotPx": [
+    84,
+    96
+   ]
+  },
+  "anchor": [
+   0,
+   2.4,
+   -0.6
+  ],
+  "expr": "drawBlackHole({x: 0, y: 0, z: 0})",
+  "src": "L3208(출렁은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "drawBox"
+   },
+   {
+    "fn": "E",
+    "argIndex": 5,
+    "in": [
+     "#ff8fb0",
+     "#7ad0f0",
+     "#ffd84a"
+    ]
+   },
+   {
+    "fn": "LN",
+    "argIndex": 2,
+    "in": [
+     "#4a3446"
+    ]
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Arch_Post",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 280,
+   "h": 444,
+   "pivotPx": [
+    60,
+    436
+   ]
+  },
+  "anchor": [
+   4.6,
+   0,
+   0
+  ],
+  "expr": "drawWarpGate({gate: false, z: 1e4}, {x: 0, y: 0, z: 0})",
+  "src": "L3216"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [
+   {
+    "fn": "drawBox"
+   },
+   {
+    "fn": "E",
+    "argIndex": 5,
+    "in": [
+     "#ff8fb0",
+     "#7ad0f0",
+     "#ffd84a"
+    ]
+   },
+   {
+    "fn": "LN",
+    "argIndex": 2,
+    "in": [
+     "#4a3446"
+    ]
+   },
+   {
+    "ctx": "fillRect",
+    "fillIsGradient": true
+   },
+   {
+    "fn": "star4"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "World_Obj_Arch_Post_Gold",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 280,
+   "h": 444,
+   "pivotPx": [
+    60,
+    436
+   ]
+  },
+  "anchor": [
+   4.6,
+   0,
+   0
+  ],
+  "expr": "drawWarpGate({gate: true, z: 1e4}, {x: 0, y: 0, z: 0})",
+  "src": "L3216"
+ }
+]
