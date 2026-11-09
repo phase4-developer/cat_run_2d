@@ -168,8 +168,7 @@ namespace MV.UI
                     break;
                 case LobbySideIds.Content:
                     MvSound.PlayUi(MvUiSound.ButtonClick);
-                    // 교체 지점: MV-UI-CONTENT가 컨텐츠 메뉴(UIPopup_ContentMenu, 05 §5.15)를 여는 MvUiNav 함수로 바꾼다.
-                    MvUiToast.Show("컨텐츠 메뉴 준비 중");
+                    MvUiNav.OpenContentMenuAsync(new ContentMenuData { Port = Data?.Port, OnClosed = Redraw }).Forget(Debug.LogException);
                     break;
                 case LobbySideIds.Sound:
                     // 설정 자리(05 §5.14 소리 버튼). 저장은 메타 요청 settings.muted(실패해도 이번 실행의 소리는 바뀐 대로 둔다).
