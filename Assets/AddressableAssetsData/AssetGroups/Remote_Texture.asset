@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - ui.god
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a80e5553ab7cf96499b18430f76b8d28
+    m_Address: Tex_Lobby_Vignette
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c8c8607f50b1e054996ffdff3ff85073
     m_Address: Tex_God_Thunder
     m_ReadOnly: 0
