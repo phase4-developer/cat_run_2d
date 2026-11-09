@@ -57,6 +57,7 @@
 | b | MV-RUN-VIEWAPI 표시용 런 읽기(WY·옹벽) | 1번째(`MV-RUN-VIEWAPI-1.md`) | `ai/MV-RUN-VIEWAPI-read` dev `9c354a6` | `S/MV.Run/`, `S/MV.Run.Tests/ViewApi/` |
 | d | MV-VIEW 2차(티켓 03 나머지~06, 월드 프리팹) | 3번째(`MV-VIEW-3.md`) | `ai/MV-VIEW-world2` dev `64aa5b4` | `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders|Materials/`, `A/Addressables/Remote/World/`, 기획서 02·03 VIEW 문장 |
 | f | MV-PLAT-IAP 결제 스텁 | 1번째(`MV-PLAT-IAP-1.md`) | `ai/MV-PLAT-IAP-stub` dev `28cb489` | `S/MV.Platform/Iap/`, `S/MV.Platform.Tests/Iap/` |
+| g | MV-PLAT-ANALYTICS 통계 스텁 | 1번째(`MV-PLAT-ANALYTICS-1.md`) | `ai/MV-PLAT-ANALYTICS-stub` dev `b58bc00` | `S/MV.Platform/Analytics/`, `S/MV.Platform.Tests/Analytics/`, 이벤트 표(기획서) |
 
 - MV-PLAT-LOGIN 완료(담당 닫힘): `87de855` → dev. compile `924b6cc40db9` PASS, EditMode `f2ca73df8e6b` 6/6 PASS. 연결(G6 통합): Boot `var login = new MvLogin(new MvPlayerPrefsLoginStore()); if (login.HasLoginHistory) login.RestoreSession(cb); else login.SignIn(MvLoginMethod.Guest, cb);`. 결정 D-LOGIN-1 로그아웃 때 기기 게스트 id 유지(권장: 유지), D-LOGIN-2 게스트 id 저장 위치(권장: 지금 PlayerPrefs, 서버 붙일 때 재검토).
 - MV-PLAT-ADS 완료(담당 닫힘): `aeef26e` → dev. compile `5386f7d19dc0` PASS, EditMode `d69c4dad96af` 9/9 PASS. 연결(G6 통합): Boot `var ads = MvAds.CreateDefault();` → MV.Meta `IMvAdService` 어댑터(`ShowReward(p,d)=>ads.ShowReward(p,r=>d(r.IsCompleted))`, `ShowInterstitial(p,d)=>ads.ShowInterstitial(p,_=>d())`)를 `new MvMeta(..., ads: 어댑터)`, UI는 `ads.FakeAdStarted` 구독(가짜 광고 팝업은 MV-UI-LOBBY). 결정 D-ADS-1 출시 빌드 Unsupported 때 Meta 처리(권장: 안 봄=false), D-ADS-2 가짜 광고 닫기 버튼(권장: 정본처럼 없음).
