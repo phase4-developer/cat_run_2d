@@ -1,0 +1,75 @@
+{
+  "id": "U-08",
+  "title": "지도",
+  "seed": 1,
+  "preset": "easy",
+  "save": {
+    "level": 1,
+    "area": 0,
+    "zone": 0,
+    "gold": 99999,
+    "souls": 0,
+    "dia": 0,
+    "bars": {},
+    "cp": 0,
+    "up": {
+      "stair": 0,
+      "weapon": 0,
+      "income": 0
+    },
+    "deck": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "god": "thunder",
+    "escaped": false,
+    "runs": 0,
+    "aup": {
+      "rate": 0,
+      "range": 0,
+      "clone": 0,
+      "crit": 0,
+      "dbl": 0
+    },
+    "rb": {
+      "lv": 0,
+      "tokens": 0,
+      "pending": 0,
+      "perks": {
+        "power": 0,
+        "crit": 0,
+        "obst": 0,
+        "dcap": 0
+      },
+      "cdUntil": 0
+    },
+    "ads": {
+      "day": "",
+      "dia": 3,
+      "skip": 4
+    },
+    "zoneClear": false
+  },
+  "inputs": [
+    {
+      "frame": 1,
+      "type": "tap",
+      "x": 540,
+      "y": 116
+    }
+  ],
+  "frames": 60,
+  "captureAt": [
+    5,
+    30,
+    60
+  ],
+  "mask": []
+}

@@ -1,0 +1,68 @@
+{
+  "id": "U-03-P5",
+  "title": "로비 강화 버튼 3종 P=5",
+  "seed": 1,
+  "preset": "easy",
+  "save": {
+    "level": 1,
+    "area": 0,
+    "zone": 0,
+    "gold": 99999,
+    "souls": 0,
+    "dia": 0,
+    "bars": {},
+    "cp": 0,
+    "up": {
+      "stair": 5,
+      "weapon": 5,
+      "income": 5
+    },
+    "deck": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "god": "thunder",
+    "escaped": false,
+    "runs": 0,
+    "aup": {
+      "rate": 0,
+      "range": 0,
+      "clone": 0,
+      "crit": 0,
+      "dbl": 0
+    },
+    "rb": {
+      "lv": 0,
+      "tokens": 0,
+      "pending": 0,
+      "perks": {
+        "power": 0,
+        "crit": 0,
+        "obst": 0,
+        "dcap": 0
+      },
+      "cdUntil": 0
+    },
+    "ads": {
+      "day": "",
+      "dia": 3,
+      "skip": 4
+    },
+    "zoneClear": false
+  },
+  "inputs": [],
+  "frames": 60,
+  "captureAt": [
+    1,
+    30,
+    60
+  ],
+  "mask": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "W-03",
+  "title": "템플릿 1 우물(z 24.82) 앞 5m (z≥19.82 첫 프레임 299)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 309,
+  "captureAt": [
+    289,
+    299,
+    309
+  ],
+  "mask": []
+}

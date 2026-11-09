@@ -1,0 +1,22 @@
+{
+  "id": "W-17",
+  "title": "화면 흔들림 최대 프레임(shakeA 0.35, 3520)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 3521,
+  "captureAt": [
+    3519,
+    3520,
+    3521
+  ],
+  "mask": []
+}

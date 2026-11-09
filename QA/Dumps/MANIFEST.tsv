@@ -1,0 +1,12 @@
+# MV-QA-HARNESS 덤프 목록. 정본 SHA256 fe573cf2f8ed9b90030c993e8127ecd479f4f2d47195d3fbfa19962694926dfa. 재생성 시 같은 SHA256이어야 한다.
+file	sha256	bytes	command
+QA/Dumps/sim/SIM_BASE.json	76c2ecd62725f41f894f1649d45561e2f5e9e46b3b2e3591be946e845ca477e3	558890	node src/cli.js sim
+QA/Dumps/sim/SIM_RUN-01.json	ab9f5d81c19daa733daf31dc7e03b2bfc79df18beba91a3c6693c17d751d301a	614104	node src/cli.js sim
+QA/Dumps/sim/SIM_RUN-02.json	633da2e46026f21756af372542dfdcae9b338faf1b547b864aed9c685d6d8e55	1104624	node src/cli.js sim
+QA/Dumps/sim/SIM_RUN-03.json	895ea7b889692aa9275c6911bf09b3538b9ad5ef0acea924b85d3a4bf5c95a06	796503	node src/cli.js sim
+QA/Dumps/gen/FIELD_easy.json	2dc80213c19ab6b28833268b9581beca697c1066f04126d8e71ba4fb2a3015a8	370788	node src/cli.js gen
+QA/Dumps/gen/FIELD_mid.json	424a155dcbec1eb749025b36dea7247fab8cde010407824dbc4cb26c45b1727f	371936	node src/cli.js gen
+QA/Dumps/gen/FIELD_orig.json	50813f2674cd3c5e379e38331694dc3a1382ba8f6ef7b1805f9987738a3ed78b	373054	node src/cli.js gen
+QA/Dumps/gen/GEN_easy.json	73767d897bb749838037102d80a597b57d30a9c9a5f24a80804295593827a8ef	6220774	node src/cli.js gen
+QA/Dumps/gen/GEN_mid.json	0b4eda866eeb5a6bbe266fec98b20a2967ba89d6a6c683596335af480e8f3bb6	6260136	node src/cli.js gen
+QA/Dumps/gen/GEN_orig.json	0046eaf2f997e9121daf0bd2185bcb4bcbec709034d01f5d504331d3896be9f4	6308375	node src/cli.js gen

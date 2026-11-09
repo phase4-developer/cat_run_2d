@@ -1,0 +1,22 @@
+{
+  "id": "F-05",
+  "title": "보상 HUD 비행(상자 보상 2988~)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 3010,
+  "captureAt": [
+    2988,
+    2998,
+    3010
+  ],
+  "mask": []
+}

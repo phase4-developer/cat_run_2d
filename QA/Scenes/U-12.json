@@ -1,0 +1,29 @@
+{
+  "id": "U-12",
+  "title": "HAND 3장 머지(시작 1장 + 2장 배달)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "ops": [
+    {
+      "frame": 30,
+      "op": "deliver",
+      "n": 2
+    }
+  ],
+  "frames": 60,
+  "captureAt": [
+    32,
+    45,
+    60
+  ],
+  "mask": []
+}
