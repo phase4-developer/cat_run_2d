@@ -109,24 +109,27 @@ namespace MV.Tests
             Assert.Greater(_prefs.Count, 0, "정산이 시험 메모리 저장소에 써지지 않았다");
         }
 
-        /// <summary>저장의 벽 기록 JSON → Floor별 칸 HP. 빈 칸(null)·없는 Floor·다른 Area는 비운다.</summary>
-        [TestCase(0, 3, new[] { 2, 0, 1 })]
-        [TestCase(1, 3, new[] { 0, 0, 0 })]
-        [TestCase(0, 2, new[] { 2, 0 })]
-        public void ParseBars_ReadsAreaFloors(int area, int floorCount, int[] counts)
+        /// <summary>저장의 벽 기록 JSON → Floor별 칸 HP. 빈 칸(null)·없는 Floor·다른 Area는 비운다. cells = 읽은 칸 합(−1 = 기록 없음).</summary>
+        [TestCase(0, 3, 3)]
+        [TestCase(1, 3, -1)]
+        [TestCase(0, 2, 2)]
+        public void ParseBars_ReadsAreaFloors(int area, int floorCount, int cells)
         {
             const string json = "{\"level\":1,\"area\":0,\"bars\":{\"A0\":[[120,null,0],[],[7.5]],\"A2\":[[1]]}}";
             var bars = MvRunSnapshot.ParseBars(json, area, floorCount);
-            if (area == 1)
+            if (cells < 0)
             {
                 Assert.IsNull(bars, "기록이 없는 Area는 null(정본 save.bars[barKey()] 없음)");
                 return;
             }
             Assert.AreEqual(floorCount, bars.Length);
-            for (int f = 0; f < floorCount; f++) Assert.AreEqual(counts[f], bars[f].Count, "Floor " + f);
+            int total = 0;
+            foreach (var floor in bars) total += floor.Count;
+            Assert.AreEqual(cells, total);
             Assert.AreEqual(120, bars[0][0]);
             Assert.IsFalse(bars[0].ContainsKey(1), "빈 칸은 기록이 없다");
             Assert.AreEqual(0, bars[0][2]);
+            Assert.AreEqual(0, bars[1].Count);
             if (floorCount > 2) Assert.AreEqual(7.5, bars[2][0]);
         }
 
