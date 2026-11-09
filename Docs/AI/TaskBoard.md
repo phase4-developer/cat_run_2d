@@ -49,6 +49,12 @@
 - 남은 결정(총괄 권장안으로 진행 중, 교체 가능): D-27(실기 FIELD), D-68(출시 저장 키), 802401001 행, 480 statKey, 413 step, 701 2차 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지 여부(Sprite Atlas V2 켠 뒤 실측), `Tex_God_*` 위치, ConsumeType 생성(고정본 Framework 0.1.0-pre.7 Collision — Framework 요청).
 - 실행기: `RESOURCE_BUSY: OTHER_OWNER_DEVICE_WORK`는 다시 낸다. Unity가 실행 중 만든 `.meta`·아틀라스·그룹 변경은 `PROJECT_EXECUTION_CANDIDATE_CHANGED`/FAIL로 나오니 범위 확인 뒤 Commit하고 다시 낸다. 덤프 대조 시험은 Mono `double.Parse` 1ulp 오차 때문에 GEN의 직접 파서(`MiniJson`)를 쓴다.
 - 승인 경계: 하위 호스트 위임 만료 2026-11-19. D-50 승인됨. 그 밖 승인은 새 총괄이 현행 문서로 다시 확인한다.
+## 총괄 진행 (2026-11-09, 2번째 총괄 대화)
+
+- 사용자 지시(다른 세션 경유, 원문 「아니 자야해서 그냥 연계되게 하고 싶은데」): 사용자가 다시 말할 때까지 「압축 2회·그룹 끝이면 새 총괄 세션」 규칙을 멈춘다. 체크포인트마다 이 절만 갱신하고 같은 세션에서 다음 계약을 잇는다. 사용자 결정 대상은 아래 「미해결(사용자)」에 모은다.
+- 진행 중: a MV-DATA 2차 검증, b MV-META, c MV-TOOL-ART 3차 ①, d MV-VIEW. 대기: MV-SND(MV-DATA 뒤, 03_sound 겹침), G6(MV-META 뒤), G3 통합(MV-DATA·MV-META 뒤).
+- 미해결(사용자): 없음.
+
 ## MV-00 남김
 
 - Managed Addressables Project Config는 만들지 않았다. 만들면 모든 Player 빌드가 BootstrapSplit 경로를 타므로(Framework `NewGame.md` 3단계) 첫 Addressable 콘텐츠가 들어오는 계약(MV-TOOL-ART·MV-UI-*)에서 만든다. 기본 `AddressableAssetSettings`만 있다.
