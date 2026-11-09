@@ -93,6 +93,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad9f9cb996e64639b51df21bddbb6867
+    m_Address: Fx/Mat_Normal
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f001e692dd034c2c9d79a07d4ba1b09f
+    m_Address: Fx/Mat_Add
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - fx
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
   m_SchemaSet:

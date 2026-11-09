@@ -33,6 +33,36 @@ MonoBehaviour:
     m_SerializedLabels:
     - ui.core
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed83909a75354b9080e6885da6189cdf
+    m_Address: UIPopup_GodSelect
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a55d1029a3634806a1d8868fb07bce11
+    m_Address: UIPopup_AreaUpgrade
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80759d7e13e24fb68de84ec27cbb373d
+    m_Address: UIPopup_Rebirth
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5270b4af45784c259107a63e79e96c86
+    m_Address: UIPopup_Map
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 870ad349b2c74273b4583e90f7dabd48
+    m_Address: UIPopup_FeatureUnlock
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
   m_SchemaSet:
