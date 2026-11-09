@@ -27,6 +27,19 @@ namespace MV.Meta
     }
 
     /// <summary>
+    /// 기준 시계 + 보정(개발 빌드 <c>debug.addTime</c>). 보정은 메모리에만 있다(저장하지 않음, 앱을 다시 켜면 0).
+    /// 로컬 백엔드 = 서버 자리이므로 서버 시간 보정도 백엔드가 한다. <see cref="MvMeta.Clock"/>도 이 시계다.
+    /// </summary>
+    public sealed class MvOffsetClock : IMvClock
+    {
+        public IMvClock Base { get; }
+        public long OffsetMs { get; private set; }
+        public MvOffsetClock(IMvClock baseClock) { Base = baseClock ?? MvSystemClock.Instance; }
+        public long NowMs => Base.NowMs + OffsetMs;
+        public void Add(long ms) => OffsetMs = checked(OffsetMs + ms);
+    }
+
+    /// <summary>
     /// 광고 공급자(04 §4.12.4, 08_adPlacement). 자리 이름은 <c>08_adPlacement.placement</c>.
     /// Framework 대체: platform.ads 고정본 없음. MV-PLAT-ADS가 <c>AdManager.ShowRewardAd(new AdRequest(placement), cb)</c>를 이 인터페이스로 감싼다.
     /// </summary>

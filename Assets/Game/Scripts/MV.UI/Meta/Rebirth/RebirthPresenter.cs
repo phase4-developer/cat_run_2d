@@ -19,7 +19,7 @@ namespace MV.UI
 
         float _tick;
 
-        protected override void OnOpen() => _tick = 0;
+        protected override void OnOpen() { _tick = 0; MvMeta.Current?.DisarmRebirth(); } // 05 §5.9 열기: 확인 대기 끔(IMetaUiPort에 자리가 생기면 그쪽으로)
 
         protected override void Build(MetaPanelModel m, MvTables tables)
         {

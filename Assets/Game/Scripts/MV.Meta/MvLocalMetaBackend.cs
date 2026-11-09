@@ -18,15 +18,27 @@ namespace MV.Meta
         private readonly Func<MvSaveStore> _store;
         private readonly Func<ResourceService> _resources;
         private readonly MvTables _t;
-        private readonly IMvClock _clock;
+        private readonly MvOffsetClock _clock;
+        private readonly Dictionary<string, Func<JObject, MvMetaResponse>> _debug = new Dictionary<string, Func<JObject, MvMetaResponse>>();
 
-        public MvLocalMetaBackend(Func<MvSaveStore> store, Func<ResourceService> resources, MvTables tables, IMvClock clock)
+        /// <param name="debugRequests">
+        /// 테스트 패널 요청(<see cref="MvMetaRequestNames.DebugAll"/>) 처리기를 등록할지. null이면 개발 빌드(<see cref="IsDevelopmentBuild"/>)일 때만.
+        /// 등록하지 않으면 그 요청은 <see cref="MvMetaErrors.UnknownRequest"/>.
+        /// </param>
+        public MvLocalMetaBackend(Func<MvSaveStore> store, Func<ResourceService> resources, MvTables tables, IMvClock clock, bool? debugRequests = null)
         {
             _store = store ?? throw new ArgumentNullException(nameof(store));
             _resources = resources ?? throw new ArgumentNullException(nameof(resources));
             _t = tables ?? throw new ArgumentNullException(nameof(tables));
-            _clock = clock ?? MvSystemClock.Instance;
+            _clock = clock as MvOffsetClock ?? new MvOffsetClock(clock ?? MvSystemClock.Instance);
+            if (debugRequests ?? IsDevelopmentBuild) RegisterDebugHandlers();
         }
+
+        /// <summary>UNITY_EDITOR·DEVELOPMENT_BUILD(= <c>Debug.isDebugBuild</c>).</summary>
+        public static bool IsDevelopmentBuild => UnityEngine.Debug.isDebugBuild;
+
+        /// <summary>테스트 패널 처리기가 등록됐는지.</summary>
+        public bool DebugRequestsEnabled => _debug.Count > 0;
 
         private MvSaveStore S => _store();
         private ResourceService Res => _resources();
@@ -50,7 +62,10 @@ namespace MV.Meta
                 case MvMetaRequestNames.UseAd: return UseAd(Str(p, "key"));
                 case MvMetaRequestNames.RecordModePlay: return RecordModePlay(Str(p, "key"));
                 case MvMetaRequestNames.MarkSeen: return MarkSeen(p);
-                default: return MvMetaResponse.Reject(MvMetaErrors.UnknownRequest, request.Name);
+                default:
+                    return _debug.TryGetValue(request.Name, out var debug)
+                        ? debug(p)
+                        : MvMetaResponse.Reject(MvMetaErrors.UnknownRequest, request.Name);
             }
         }
 
@@ -424,6 +439,110 @@ namespace MV.Meta
                 if (!string.IsNullOrEmpty(key) && !list.Contains(key)) list.Add(key);
             }
             return new JArray(list.Cast<object>().ToArray());
+        }
+
+        // ───────── 테스트 패널(05 §5.14, 개발 빌드 전용) ─────────
+        // 처리기도 상태를 바꾸지 않고 새 값만 돌려준다(시계 보정만 예외: 서버 시간 자리라 백엔드가 가진다).
+
+        /// <summary>정본 rbOpen이 더하는 쌓인 조각.</summary>
+        internal const int DebugRebirthPending = 10;
+
+        private void RegisterDebugHandlers()
+        {
+            _debug[MvMetaRequestNames.DebugGrant] = DebugGrant;
+            _debug[MvMetaRequestNames.DebugLevelUp] = _ => DebugLevelUp();
+            _debug[MvMetaRequestNames.DebugReset] = _ => MvMetaResponse.Reset(new JObject { ["reset"] = true });
+            _debug[MvMetaRequestNames.DebugOpenRebirth] = _ => DebugOpenRebirth();
+            _debug[MvMetaRequestNames.DebugClearCooldown] = _ => DebugClearCooldown();
+            _debug[MvMetaRequestNames.DebugUnlockAll] = _ => DebugUnlockAll();
+            _debug[MvMetaRequestNames.DebugResetDaily] = _ => DebugResetDaily();
+            _debug[MvMetaRequestNames.DebugAddTime] = DebugAddTime;
+        }
+
+        /// <summary>재화 +amount(정본 addGold·addSoul·addDia·addTok L3863~3869). key = 재화 id.</summary>
+        private MvMetaResponse DebugGrant(JObject p)
+        {
+            string key = Str(p, "key");
+            if (!int.TryParse(key, out int id) || MvWealthIds.TypeOf(id) == null) return MvMetaResponse.Reject(MvMetaErrors.UnknownKey, key);
+            long amount = p.Value<long?>("amount") ?? 0;
+            if (amount <= 0) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "amount " + amount);
+            var wealth = new WealthDelta();
+            wealth.Gain(id, amount);
+            var data = new JObject();
+            if (!wealth.TryWrite(Res, data, out string fail)) return MvMetaResponse.Reject(MvMetaErrors.BadParams, fail);
+            return MvMetaResponse.Success(data, new JObject { ["wealthId"] = id, ["amount"] = amount });
+        }
+
+        /// <summary>Level +1(정본 lvUp L3865).</summary>
+        private MvMetaResponse DebugLevelUp()
+        {
+            int level = S.Progress.Level + 1;
+            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Progress] = new JObject { ["level"] = level } }, new JObject { ["level"] = level });
+        }
+
+        /// <summary>부활 바로 열기(정본 rbOpen L3866: 열림 + 쌓인 조각 +10). 열림은 sticky 기록(<c>mvUnlock.opened</c>)으로 남긴다.</summary>
+        private MvMetaResponse DebugOpenRebirth()
+        {
+            var row = _t.ContentOpen.ByKey(MvMetaRules.RebirthKey);
+            if (row == null || !row.active) return MvMetaResponse.Reject(MvMetaErrors.UnknownKey, MvMetaRules.RebirthKey);
+            MvSaveStore s = S;
+            var data = new JObject { [MvSaveKeys.Rebirth] = new JObject { ["pending"] = s.Rebirth.Pending + DebugRebirthPending } };
+            bool wasOpen = RebirthOpen();
+            if (!s.Unlock.Opened.Contains(row.key))
+                data[MvSaveKeys.Unlock] = new JObject { ["opened"] = new JArray(s.Unlock.Opened.Append(row.key).Cast<object>().ToArray()) };
+            return MvMetaResponse.Success(data, new JObject { ["pending"] = DebugRebirthPending, ["newlyOpened"] = !wasOpen });
+        }
+
+        /// <summary>부활 쿨타임 해제(정본 rbCdClear L3867: cdUntil = 0).</summary>
+        private MvMetaResponse DebugClearCooldown()
+        {
+            var data = new JObject();
+            if (S.Rebirth.CdUntil != 0) data[MvSaveKeys.Rebirth] = new JObject { ["cdUntil"] = 0 };
+            return MvMetaResponse.Success(data);
+        }
+
+        /// <summary>
+        /// 전부 해금([창작]): 열림 조건(07 §7.8.9)은 그대로 두고, active 행이 모두 열리도록 Area(마지막 Area까지)·런 정산 수를 올린다.
+        /// sticky 기록·새로 열린 key는 정산과 같은 <see cref="WriteUnlocks"/>로 계산한다. Area가 바뀌면 cp는 새 Area 기준 0.
+        /// </summary>
+        private MvMetaResponse DebugUnlockAll()
+        {
+            MvSaveStore s = S;
+            int area = s.Progress.Area, runs = s.Progress.Runs;
+            int lastArea = Math.Max(0, _t.RunConfig.I(RunConfigKeys.PLAYABLE_AREAS) - 1);
+            int areaAfter = area, runsAfter = runs;
+            foreach (var row in _t.ContentOpen.Sorted)
+            {
+                if (row == null || !row.active) continue;
+                if (row.conditionType == 1) areaAfter = Math.Max(areaAfter, Math.Min(lastArea, row.conditionValue - 1));
+                else if (row.conditionType == 2) runsAfter = Math.Max(runsAfter, row.conditionValue);
+            }
+            var data = new JObject();
+            var progress = new JObject();
+            if (areaAfter != area) { progress["area"] = areaAfter; progress["cp"] = null; }
+            if (runsAfter != runs) progress["runs"] = runsAfter;
+            if (progress.HasValues) data[MvSaveKeys.Progress] = progress;
+            IReadOnlyList<string> newly = WriteUnlocks(data, area, runs, areaAfter, runsAfter);
+            return MvMetaResponse.Success(data, new JObject
+            {
+                ["areaAfter"] = areaAfter, ["runsAfter"] = runsAfter, ["newlyOpened"] = new JArray(newly.Cast<object>().ToArray()),
+            });
+        }
+
+        /// <summary>하루 횟수 초기화([창작]): 광고·모드 입장·무료 횟수를 비운 오늘 값(날짜 넘김과 같은 모양).</summary>
+        private MvMetaResponse DebugResetDaily()
+            => MvMetaResponse.Success(new JObject
+            {
+                [MvSaveKeys.Daily] = new JObject { ["day"] = Today(), ["ads"] = new JObject(), ["modePlays"] = new JObject(), ["free"] = new JObject() },
+            });
+
+        /// <summary>시간 +amount초([창작], 쿨타임·하루 초기화 시험). 백엔드 시계 보정만 바꾸고 저장하지 않는다.</summary>
+        private MvMetaResponse DebugAddTime(JObject p)
+        {
+            long sec = p.Value<long?>("amount") ?? 0;
+            if (sec <= 0) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "amount " + sec);
+            _clock.Add(checked(sec * 1000L));
+            return MvMetaResponse.Success(new JObject(), new JObject { ["offsetMs"] = _clock.OffsetMs });
         }
 
         // ───────── 도우미 ─────────

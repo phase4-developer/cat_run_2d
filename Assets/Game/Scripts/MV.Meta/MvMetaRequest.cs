@@ -20,6 +20,15 @@ namespace MV.Meta
             Params = parameters ?? new JObject();
         }
 
+        /// <summary>테스트 패널 요청(<see cref="MvMetaRequestNames.DebugAll"/>). key·amount는 있을 때만 넣는다.</summary>
+        public static MvMetaRequest ForDebug(string name, string key = null, long amount = 0)
+        {
+            var p = new JObject();
+            if (key != null) p["key"] = key;
+            if (amount != 0) p["amount"] = amount;
+            return new MvMetaRequest(name, p);
+        }
+
         public override string ToString() => Name + " " + Params.ToString(Newtonsoft.Json.Formatting.None);
     }
 
@@ -36,6 +45,24 @@ namespace MV.Meta
         public const string UseAd = "meta.useAd";
         public const string RecordModePlay = "meta.recordModePlay";
         public const string MarkSeen = "meta.markSeen";
+
+        // 개발 빌드 테스트 패널(05 §5.14). 이름은 MV.UI <c>MvDebugRequests</c>와 같다. 출시 빌드 로컬 백엔드는 처리기를 등록하지 않는다.
+        /// <summary>key = 재화 id 문자열, amount = 더할 양.</summary>
+        public const string DebugGrant = "debug.grant";
+        public const string DebugLevelUp = "debug.levelUp";
+        public const string DebugReset = "debug.reset";
+        public const string DebugOpenRebirth = "debug.openRebirth";
+        public const string DebugClearCooldown = "debug.clearCooldown";
+        public const string DebugUnlockAll = "debug.unlockAll";
+        public const string DebugResetDaily = "debug.resetDaily";
+        /// <summary>amount = 더할 초(로컬 백엔드 시계 보정, 저장하지 않음).</summary>
+        public const string DebugAddTime = "debug.addTime";
+
+        /// <summary>테스트 패널 요청 8개.</summary>
+        public static readonly string[] DebugAll =
+        {
+            DebugGrant, DebugLevelUp, DebugReset, DebugOpenRebirth, DebugClearCooldown, DebugUnlockAll, DebugResetDaily, DebugAddTime,
+        };
     }
 
     /// <summary>거절 코드(<c>NetworkRejection.Code</c> 자리).</summary>
@@ -69,14 +96,21 @@ namespace MV.Meta
         public string Message { get; }
         public JObject Data { get; }
         public JObject Result { get; }
+        /// <summary>
+        /// 진행 초기화(D-69, <c>debug.reset</c>): <see cref="MvMeta"/>가 <see cref="Data"/> 대신 <c>MvSaveStore.DevResetProgress</c>로 반영한다
+        /// (서버라면 사용자 문서를 기본값으로 바꾸고 돌려줄 자리).
+        /// </summary>
+        public bool ResetProgress { get; }
 
-        private MvMetaResponse(string code, string message, JObject data, JObject result)
+        private MvMetaResponse(string code, string message, JObject data, JObject result, bool resetProgress = false)
         {
-            Code = code; Message = message; Data = data ?? new JObject(); Result = result ?? new JObject();
+            Code = code; Message = message; Data = data ?? new JObject(); Result = result ?? new JObject(); ResetProgress = resetProgress;
         }
 
         public static MvMetaResponse Success(JObject data, JObject result = null) => new MvMetaResponse(null, null, data, result);
         public static MvMetaResponse Reject(string code, string message = null) => new MvMetaResponse(code ?? MvMetaErrors.BadParams, message, null, null);
+        /// <summary>진행 초기화 승인(<see cref="ResetProgress"/>).</summary>
+        public static MvMetaResponse Reset(JObject result = null) => new MvMetaResponse(null, null, null, result, true);
 
         public override string ToString() => Ok ? "OK " + Result.ToString(Newtonsoft.Json.Formatting.None) : Code + " " + Message;
     }
