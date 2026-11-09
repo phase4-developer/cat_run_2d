@@ -300,12 +300,8 @@ namespace MV.Meta
         /// <summary>오늘 남은 횟수. 한도 없음이면 −1. 날이 바뀌었으면 한도 전체(읽기만, 저장은 다음 사용 때).</summary>
         public int AdsLeft(string key) => IsReady ? _local.AdsLeft(key) : 0;
 
-        /// <summary>모드 오늘 입장 수(<c>mvDaily.modePlays</c>). 한도는 <c>400_content</c>(MV-DATA 2차) 몫.</summary>
-        public int ModePlaysToday(string contentKey)
-        {
-            if (!IsReady) return 0;
-            return _local.RolledDaily(out _)["modePlays"]?.Value<int?>(contentKey) ?? 0;
-        }
+        /// <summary>모드 오늘 입장 수(<c>mvDaily.modePlays</c>). 한도는 <c>400_content.dailyLimit</c>(0 = 없음).</summary>
+        public int ModePlaysToday(string contentKey) => IsReady ? _local.ModePlaysToday(contentKey) : 0;
 
         public MvMetaResponse RecordModePlay(string contentKey) =>
             Send(new MvMetaRequest(MvMetaRequestNames.RecordModePlay, new JObject { ["key"] = contentKey }));

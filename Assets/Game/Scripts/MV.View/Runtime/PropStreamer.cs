@@ -140,7 +140,7 @@ namespace MV.View
             {
                 case PropKind.Roadside:
                     root.position = new Vector3((float)p.DrawX, (float)_groundY, (float)p.Z);
-                    BillboardSprite(root, "Body", PropLayout.RoadsideSprite(_theme.deco, p.Hh), Vector3.zero, 0, false);
+                    BillboardSprite(root, "Body", PropLayout.RoadsideSprite(_theme.roadsideProps, _theme.deco, p.Hh), Vector3.zero, 0, false);
                     break;
                 case PropKind.Pole:
                     root.position = new Vector3((float)p.DrawX, (float)_groundY, (float)p.Z);
@@ -415,7 +415,7 @@ namespace MV.View
 
             for (int i = 0; i < cv.Items.Count; i++) cv.Items[i].gameObject.SetActive(false);
             cv.ItemPoint.Clear();
-            cv.Bulbs = ClothLineLayout.UsesBulbs(_theme.deco);
+            cv.Bulbs = ClothLineLayout.IsBulbs(_theme.lineKind);
             cv.Phase = long.MinValue;
             int n = 0;
             if (cv.Bulbs)

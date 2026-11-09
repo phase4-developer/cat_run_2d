@@ -26,7 +26,8 @@
 | MV-PLAT-NET / ADS / LOGIN | 완료 | `9c354a6` / `1d3bb2a` / `979b171` | 연결은 G6 통합(LOGIN은 D-90으로 연결 안 함) |
 | MV-PLAT-IAP / ANALYTICS / NOTI | 스텁 취소(D-88) → 고정 tgz 연결로 | — | `ai/MV-PLAT-IAP-stub`·`ai/MV-PLAT-ANALYTICS-stub` 병합 안 함 |
 | MV-UI-META | 1차 완료 | `fa7bac4` | 화면·PlayMode NOT_RUN. 총괄: Addressables `UIPopup_GodSelect`·`AreaUpgrade`·`Rebirth`·`Map`·`FeatureUnlock`(Remote_UI), `UIPopup_Debug`(개발 전용 그룹) — PLAY-INT 병합 뒤. 요청 MV-META: 로컬 `debug.*` 처리기 8개, `MvMeta.DisarmRebirth()`. 결정 후보: 지도 필터(`05_contentOpen.showOnMap` 빈칸 → conditionType 1 전부), 지도 체크포인트 문구, 05 §5.1.14 클래스 표 소유(테스트 패널·공통 틀을 META가 만듦) |
-| MV-UI-LOBBY / CONTENT | 대기(PLAY-INT 뒤, 로비 API 겹침) | — | D-92 겉 더미 |
+| MV-UI-LOBBY | 1차 진행(칸 a) | — | D-92 겉 더미 |
+| MV-UI-CONTENT | 대기(LOBBY 뒤) | — | D-92 겉 더미 |
 | MV-CONTENT-* (G7) | 대기 | — | — |
 | MV-QA-ACCEPT (G8) | 대기 | — | D-87 기준 |
 
@@ -34,15 +35,15 @@
 
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
-| a | `moonvillage-a` | (비어 있음) | — | — |
-| b | `moonvillage-b` | MV-TABLE-SWAP(3차 표 열 → View·Fx·Meta 코드) | `ai/MV-TABLE-SWAP-data3` | `S/MV.View/`(RunStateViewSource 제외)·`S/MV.Fx/`·`S/MV.Meta/`와 각 Tests |
+| a | `moonvillage-a` | MV-UI-LOBBY 1차 | `ai/MV-UI-LOBBY-main` | `S/MV.UI/Lobby/`·`Result/`·Common 줄 추가, 각 Tests, `A/Addressables/Remote/UI/Lobby/`·`Result/` |
+| b | `moonvillage-b` | MV-META 3차(디버그 처리기·DisarmRebirth·VIEW bumpH 1줄) | `ai/MV-META-debug` | `S/MV.Meta/`·Tests, `S/MV.UI/Meta/Rebirth/` 1줄, `WorldViewSource.cs`·`ViewConfig.cs` |
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
 | f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
 | g | `moonvillage-g` | (비어 있음) | — | — |
 
-- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 419, PlayMode 7, PLAY-INT 병합 기준).
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 426, PlayMode 7, `b9182cb` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
@@ -67,5 +68,5 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 ## 열린 결정 (권장안으로 진행, 교체 가능)
 
-D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 반영 교체 대기: MV-VIEW(`ClimbBump`→`bumpH`, `ShapeOf`→`viewShape`, 길가 소품·줄 304 읽기), MV-FX(여러 자식 그룹 → 04 part 행·`when`·`dz`·`jx`·`jz`·`hasGrav`), MV-META(`RecordModePlay` dailyLimit). 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
+D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 교체 MV-TABLE-SWAP 병합, dev `b9182cb` 전체 확인 `c0fcbf8e461f` PASS(EditMode 426, PlayMode 7)(viewShape·304 소품·줄·04 part·dailyLimit). 남음: `WorldViewSource.cs`의 `RunStateViewSource` `_bump = ViewConfig.ClimbBumpOf(tables.Climb)` 1줄(다음 VIEW 담당). 결정 후보(SWAP): 길가 소품은 정본 deco 문턱 우선·목록만으로 고르려면 가중치 열, 원소 when은 bolt 아니면 fire(god.blast key null만 옛 색과 다름), 400에 없는 key는 한도 없음. 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
 - 미해결(사용자): 없음.

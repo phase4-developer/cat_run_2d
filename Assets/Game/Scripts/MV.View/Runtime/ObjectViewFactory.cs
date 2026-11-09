@@ -81,24 +81,32 @@ namespace MV.View
             _views.Clear();
         }
 
+        static readonly ObjectShape?[] s_shapeOfData = BuildShapeMap();
+        static readonly HashSet<ObjectViewShape> s_warnedShapes = new HashSet<ObjectViewShape>();
+
+        /// <summary>MV.Data `ObjectViewShape` → `ObjectShape`(이름 1:1). 이름이 없는 값은 null.</summary>
+        static ObjectShape?[] BuildShapeMap()
+        {
+            var values = (ObjectViewShape[])Enum.GetValues(typeof(ObjectViewShape));
+            int max = 0;
+            foreach (var v in values) max = Math.Max(max, (int)v);
+            var map = new ObjectShape?[max + 1];
+            foreach (var v in values)
+                if (Enum.TryParse(v.ToString(), out ObjectShape shape)) map[(int)v] = shape;
+            return map;
+        }
+
         /// <summary>
-        /// 모양 선택. 교체 지점: 105에 그림 모양 열이 생기면 그 열을 읽는다(MV-DATA 변경 요청 `viewShape`). 지금은 key·컴포넌트로 정한다.
+        /// 모양 선택: `105_objectKind.viewShape`(07 §7.5.2)만 읽는다. 표 값에 맞는 모양이 없으면 기본 모양(Single) + 경고 1번.
         /// </summary>
         public static ObjectShape ShapeOf(ObjectKindData k)
         {
             if (k == null) return ObjectShape.Single;
-            if (k.enemyId != 0) return ObjectShape.Mouse;
-            if (k.spritePick == SpritePick.JunkCycle) return ObjectShape.Junk;
-            switch (k.key)
-            {
-                case "sgate": case "cgate": return ObjectShape.RollGate;
-                case "arch": case "archGoal": return ObjectShape.WarpGate;
-                case "tower": return ObjectShape.Well;
-                case "stair": return ObjectShape.Stair;
-                case "coin": case "coinBonus": return ObjectShape.CoinPile;
-                case "gem": case "gemBonus": return ObjectShape.CatnipPot;
-                default: return ObjectShape.Single;
-            }
+            int i = (int)k.viewShape;
+            if (i >= 0 && i < s_shapeOfData.Length && s_shapeOfData[i].HasValue) return s_shapeOfData[i].Value;
+            if (s_warnedShapes.Add(k.viewShape))
+                Debug.LogWarning($"[ObjectViewFactory] 105 {k.key}: viewShape {k.viewShape}에 맞는 ObjectShape가 없어 Single로 그린다");
+            return ObjectShape.Single;
         }
 
         /// <summary>기본 글자판: 체력 라벨은 남은 체력 올림, 그 외는 105.labelKey(Localization 연결 전 키 그대로).</summary>

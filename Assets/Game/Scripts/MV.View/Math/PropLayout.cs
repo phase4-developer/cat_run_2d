@@ -91,7 +91,21 @@ namespace MV.View
         }
 
         /// <summary>
-        /// 길가 소품 스프라이트 이름(정본 kind 선택 L3572 + 상자 색·과일 L3576). deco별 hh 문턱은 정본 그대로.
+        /// 길가 소품 스프라이트 이름: `304_theme.roadsideProps` 목록에서 고른다. 정본 deco 문턱(<see cref="RoadsideSprite(string, double)"/>)이
+        /// 고른 그림이 목록에 있으면 그것(정본 테마와 같은 화면), 없으면 목록에서 hh로 균등하게 고른다. 목록이 비면 null(소품 그림 없음).
+        /// </summary>
+        public static string RoadsideSprite(IReadOnlyList<string> props, string deco, double hh)
+        {
+            if (props == null || props.Count == 0) return null;
+            string canon = RoadsideSprite(deco, hh);
+            for (int i = 0; i < props.Count; i++)
+                if (props[i] == canon) return canon;
+            int pick = (int)Math.Floor(hh * props.Count);
+            return props[pick < 0 ? 0 : pick >= props.Count ? props.Count - 1 : pick];
+        }
+
+        /// <summary>
+        /// 정본 deco 문턱 규칙(kind 선택 L3572 + 상자 색·과일 L3576). 목록 선택이 이 결과를 먼저 찾는다.
         /// </summary>
         public static string RoadsideSprite(string deco, double hh)
         {
