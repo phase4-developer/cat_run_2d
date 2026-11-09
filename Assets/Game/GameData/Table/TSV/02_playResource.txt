@@ -1,0 +1,6 @@
+id	key	type	chargeType	chargeSec	chargeAmount	chargeMax	sort	active	icon
+101	ticket.alleyWar	modeTicket	2	0	3	3	1	1	UI_Icon_Ticket_AlleyWar
+102	ticket.rapidRush	modeTicket	2	0	3	3	2	1	UI_Icon_Ticket_RapidRush
+103	ticket.churuRush	modeTicket	2	0	3	3	3	1	UI_Icon_Ticket_ChuruRush
+104	ticket.bigMouse	modeTicket	2	0	3	3	4	0	UI_Icon_Ticket_BigMouse
+105	energy	stamina	1	600	1	30	5	0	UI_Icon_Energy

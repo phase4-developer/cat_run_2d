@@ -1,0 +1,107 @@
+using System.Collections.Generic;
+using System.Linq;
+using jjevol;
+using jjevol.Data;
+using NUnit.Framework;
+
+namespace MV.Data.Tests
+{
+    /// <summary>모든 표가 읽히고 행 수·대표 값(07·08 예시 행)이 맞는지(기획서 11 MV-DATA 검증).</summary>
+    public sealed class MvTablesLoadTests
+    {
+        static readonly Dictionary<string, int> s_rowCounts = new Dictionary<string, int>
+        {
+            ["00_config"] = 1, ["01_wealth"] = 17, ["02_playResource"] = 5, ["03_sound"] = 32, ["04_effect"] = 47,
+            ["05_contentOpen"] = 18, ["06_balancePreset"] = 3, ["07_consumeType"] = 25, ["08_adPlacement"] = 7, ["09_uiResource"] = 12,
+            ["10_lobbyUpgrade"] = 3, ["11_stairLevel"] = 4, ["12_weaponLevel"] = 8, ["13_areaUpgrade"] = 5, ["14_rebirthPerk"] = 4,
+            ["16_levelPrice"] = 343,
+            ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 8, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,
+            ["107_chargeGate"] = 3, ["108_receiveCondition"] = 7, ["109_moveAI"] = 3, ["110_card"] = 22, ["111_cardPool"] = 11,
+            ["112_cardEffect"] = 21, ["113_god"] = 2, ["114_hpRule"] = 7, ["115_cardTier"] = 5,
+            ["300_runConfig"] = 166, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 90, ["304_theme"] = 15,
+            ["310_template"] = 8, ["311_templateObject"] = 84, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
+            ["314_spawnGroup"] = 9, ["320_camera"] = 3, ["330_climb"] = 5,
+            ["801_drop"] = 2, ["802_randomBox"] = 0, ["803_randomGuaranteeLink"] = 0, ["804_randomGuarantee"] = 0,
+        };
+
+        [TearDown]
+        public void TearDown()
+        {
+            TableRepository.Clear();
+            GameTableSource.Configure(new PackagedTableSource(false));
+            MvTables.Current = null;
+        }
+
+        [Test]
+        public void AllTables_LoadFromTsv_WithExpectedRowCounts()
+        {
+            var tables = TsvFixture.LoadTables();
+            Assert.That(tables.All.Select(t => t.TableName), Is.EquivalentTo(s_rowCounts.Keys), "등록 표 목록");
+            foreach (var t in tables.All)
+                Assert.That(t.RawRows.Count, Is.EqualTo(s_rowCounts[t.TableName]), t.TableName);
+        }
+
+        [Test]
+        public void LoadAsync_ThroughRepository_ValidatesAndSetsCurrent()
+        {
+            var task = MvTableLoader.LoadAsync(TsvFixture.Source());
+            var tables = task.GetAwaiter().GetResult(); // TSV 원본은 동기 완료 Task라 여기서 막히지 않는다.
+            Assert.That(TableRepository.loaded, Is.True);
+            Assert.That(MvTables.Current, Is.SameAs(tables));
+            Assert.That(MvTableLoader.LastReport.HasError, Is.False, MvTableLoader.LastReport.Summary());
+            Assert.That(tables.Drops, Is.Not.Null);
+            Assert.That(tables.Config.Datas.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void RepresentativeValues_MatchSpecExampleRows()
+        {
+            var t = TsvFixture.LoadTables();
+            // D-80: 재화 id는 1001001 식.
+            Assert.That(t.Wealth.Get(MvLevelPriceGenerator.Gold), Is.Not.Null);
+            // 07 §7.8.1 로비 강화.
+            var stair = t.LobbyUpgrade.ByKey("stair");
+            Assert.That(stair.max, Is.EqualTo(30));
+            Assert.That(stair.costBase, Is.EqualTo(25));
+            Assert.That(t.LobbyUpgrade.ByKey("weapon").max, Is.EqualTo(149));
+            // 07 §7.8.4·7.8.5.
+            Assert.That(t.AreaUpgrade.ByKey("rate").valueFormat, Is.EqualTo("{0}%"));
+            Assert.That(t.RebirthPerk.ByKey("dcap").@base, Is.EqualTo(10));
+            // 07 §7.9.3 적 캣닢 8%.
+            var enemyDrop = t.Drop.GetGroup(801001001);
+            Assert.That(enemyDrop.Select(d => d.weight), Is.EqualTo(new[] { 800, 9200 }));
+            Assert.That(enemyDrop[0].rewardType, Is.EqualTo((int)ConsumeType.RunDia));
+            Assert.That(enemyDrop[0].rewardValueRule, Is.EqualTo(RewardValueRule.HalfDiaCapCeil));
+            // 07 §7.6.5 무리·분신.
+            Assert.That(t.SpawnGroup.GetGroup(2).Count, Is.EqualTo(4));
+            Assert.That(t.SpawnGroup.Get(314001002).dz, Is.EqualTo(6.9).Within(1e-9));
+            // 07 §7.7.2 가호 카드 등급, 330 lap.
+            Assert.That(t.CardTier.Datas.OrderBy(x => x.tierIndex).Select(x => x.need), Is.EqualTo(new[] { 5, 10, 20, 40, 75 }));
+            Assert.That(t.Climb.Config()["lap"], Is.EqualTo(75));
+            // 300 키 = 코드 상수.
+            Assert.That(t.RunConfig.Datas.Count, Is.EqualTo(RunConfigKeys.All.Length));
+            Assert.That(t.RunConfig.I(RunConfigKeys.MAX_CLONES), Is.EqualTo(4));
+            // 312 Level → 템플릿(정본 tplFor).
+            Assert.That(t.TemplateCycle.TemplateFor(0, 1), Is.EqualTo(310000001));
+            Assert.That(t.TemplateCycle.TemplateFor(0, 9), Is.EqualTo(310000003));
+            Assert.That(t.TemplateCycle.TemplateFor(0, 15), Is.EqualTo(310000003));
+            // 16 비용 = 생성 도구.
+            var gen = MvLevelPriceGenerator.Generate(t);
+            var first = gen.First(g => g.Group == stair.levelPriceGroup && g.TargetLevel == 1);
+            Assert.That(t.LevelPrice.Get(first.Group, 1).price[0].Value, Is.EqualTo(first.Price));
+        }
+
+        [Test]
+        public void ConsumeTypeTable_MatchesEnumOneToOne()
+        {
+            var t = TsvFixture.LoadTables();
+            foreach (ConsumeType v in System.Enum.GetValues(typeof(ConsumeType)))
+            {
+                if (v == ConsumeType.None) continue;
+                var row = t.ConsumeType.Get(v);
+                Assert.That(row, Is.Not.Null, v.ToString());
+                Assert.That(row.codeName, Is.EqualTo(v.ToString()));
+            }
+        }
+    }
+}

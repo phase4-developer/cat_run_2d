@@ -1,0 +1,31 @@
+{
+    "name": "MV.Data.Tests",
+    "rootNamespace": "MV.Data.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "MV.Core",
+        "MV.Data",
+        "MV.Editor",
+        "JJEvol.Tables.Runtime",
+        "JJEvol.Tables.Authoring.Editor",
+        "JJEvol.Data.Runtime",
+        "JJEvol.Economy.Runtime",
+        "UniTask"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

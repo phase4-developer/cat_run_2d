@@ -1,0 +1,4 @@
+id	key	type	aggro	speedMin	speedMax	xFollow	touchX	touchZ	touchAction	stealBase	stealPerZone	stealShake	stealSound	stealEffect	despawnBehind
+109001001	static	Static							None						0
+109001002	mouse	Chase	24	1.1	1.6	0.5	0.8	0.7	Steal	5	4	shake.steal	steal	run.steal	4
+109001003	advance	Advance							None						0

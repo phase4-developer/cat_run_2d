@@ -4,7 +4,9 @@
     "references": [
         "MV.Core",
         "JJEvol.Tables.Runtime",
-        "JJEvol.Data.Runtime"
+        "JJEvol.Data.Runtime",
+        "JJEvol.Economy.Runtime",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

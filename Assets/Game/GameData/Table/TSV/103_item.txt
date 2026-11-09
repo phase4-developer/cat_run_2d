@@ -1,0 +1,9 @@
+id	key	tier	sort	active	dmg	col	gradeCol	spin	icon	projSprite	lookName
+103001001	w1	1	1	1	10	#c08a52	#9ea4ae	1	UI_Icon_Weapon_1	World_Proj_1	ui.item.look1
+103001002	w2	2	2	1	18	#d6a56a	#46c35a	1	UI_Icon_Weapon_2	World_Proj_2	ui.item.look2
+103001003	w3	3	3	1	32	#d9dde3	#3a8ff0	1	UI_Icon_Weapon_3	World_Proj_3	ui.item.look3
+103001004	w4	4	4	1	58	#a9bfd6	#a65be8	0	UI_Icon_Weapon_4	World_Proj_4	ui.item.look4
+103001005	w5	5	5	1	105	#b4bac4	#f08a24	1	UI_Icon_Weapon_5	World_Proj_5	ui.item.look5
+103001006	w6	6	6	1	189	#ece6d6	#e8443a	1	UI_Icon_Weapon_6	World_Proj_6	ui.item.look6
+103001007	w7	7	7	1	340	#cfe0ff	#1fc8c8	0	UI_Icon_Weapon_7	World_Proj_7	ui.item.look7
+103001008	w8	8	8	1	612	#ffe08a	#ffd23a	1	UI_Icon_Weapon_8	World_Proj_8	ui.item.look8

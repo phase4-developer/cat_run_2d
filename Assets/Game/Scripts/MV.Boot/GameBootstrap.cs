@@ -69,7 +69,10 @@ namespace MV.Boot
                 AudioManager.Instance.SetProvider(ProviderKind.Addressables);
                 EffectManager.Instance.SetPrefabProvider(new AddressablesEffectPrefabProvider());
 
-                // 4~9. (MV-DATA, MV-SAVE, MV-UI-*, MV-PLAT-*에서 추가)
+                // 4. 표(MV-DATA). 원본 지정 → RegisterAll → LoadAllAsync → 게임 검증기. 검증 오류면 예외로 시작을 멈춘다.
+                await MV.Data.MvTableLoader.LoadAsync(MV.Data.MvTableLoader.DefaultSource());
+
+                // 5~9. (MV-SAVE, MV-UI-*, MV-PLAT-*에서 추가)
 
                 // 10. 게임 씬. Boot 오브젝트는 이 전환에서 사라지므로 여기 뒤에서는 정적 상태만 쓴다.
                 var result = await CustomSceneManager.Instance.LoadSceneAsync(GameSceneName);
