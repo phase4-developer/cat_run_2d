@@ -23,6 +23,8 @@ namespace MV.Save
         public Func<long> NowMs { get; set; }
         /// <summary>null이면 <see cref="MvSaveMigrator.CreateDefault"/>.</summary>
         public IEnumerable<IMvSaveMigration> Migrations { get; set; }
+        /// <summary>참조 정리(09 §9.6)에 쓸 표 값. null이면 정리하지 않는다(표 없는 시험). Boot가 <c>MvTables.Current</c>로 채운다.</summary>
+        public MvSaveReferenceCatalog References { get; set; }
     }
 
     /// <summary>열기 결과(09 §9.7 상태표).</summary>
@@ -74,6 +76,8 @@ namespace MV.Save
         public string LoadedSchema { get; }
         /// <summary>복구로 지운 손상 칸, 또는 새로 시작으로 지운 이전 칸의 원문(Base64). 개발 빌드 내보내기용.</summary>
         public IReadOnlyList<string> RemovedSlotValues { get; }
+        /// <summary>참조 정리(09 §9.6)로 바뀐 필드(<c>컨테이너.필드</c>). 없으면 빈 목록.</summary>
+        public IReadOnlyList<string> ReferenceFixes { get; internal set; } = Array.AsReadOnly(Array.Empty<string>());
         public bool IsOpen => Store != null;
 
         public MvSaveNotice Notice
@@ -292,10 +296,23 @@ namespace MV.Save
                 return Fail(status, exception.Message, removed, loadedSchema);
             }
 
+            // 참조 정리(09 §9.5.2 6, §9.6). 바뀐 것이 있으면 한 번 저장한다. 쓰기 실패면 저장소를 닫고 다시 시도 팝업.
+            IReadOnlyList<string> fixes = Array.AsReadOnly(Array.Empty<string>());
+            if (options.References != null)
+            {
+                try { fixes = MvSaveReferenceFix.Run(store, options.References, config); }
+                catch (Exception exception) when (exception is LocalSaveWriteException || exception is RepositoryRecoveryRequiredException
+                                                  || exception is LocalSaveConflictException)
+                {
+                    store.Dispose();
+                    return Fail(MvSaveOpenStatus.StorageUnavailable, exception.Message, removed, loadedSchema);
+                }
+            }
+
             MvSaveOpenStatus opened = loaded.Status == LocalSaveLoadStatus.Missing ? MvSaveOpenStatus.Created
                 : recovered ? MvSaveOpenStatus.RecoveredBackup : MvSaveOpenStatus.Opened;
             if (recovered) Debug.LogWarning("[MvSave] 손상된 저장 칸을 지우고 남은 칸으로 열었습니다.");
-            return new MvSaveOpenResult(opened, store, null, migrated, loadedSchema, removed);
+            return new MvSaveOpenResult(opened, store, null, migrated, loadedSchema, removed) { ReferenceFixes = fixes };
         }
 
         private static MvSaveOpenResult Fail(MvSaveOpenStatus status, string error, IReadOnlyList<string> removed, string schema = null)

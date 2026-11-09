@@ -6,7 +6,8 @@ namespace MV.Save
 {
     /// <summary>
     /// 저장 기본값이 읽는 게임 설정. 값은 정본(프로토)과 07의 기본값이다.
-    /// 표가 들어오면(MV-DATA <c>00_config</c>·<c>08_adPlacement</c>) Boot가 그 값으로 채워 넘긴다 — 바꿀 자리.
+    /// 게임은 Boot 6단계(<c>MV.Boot.MvBootSave</c>)가 표(<c>00_config</c>·<c>300_runConfig</c>·<c>08_adPlacement</c>) 값으로 채워 넘긴다.
+    /// 아래 기본값은 표 없이 도는 EditMode 시험용이다.
     /// </summary>
     public sealed class MvSaveConfig
     {

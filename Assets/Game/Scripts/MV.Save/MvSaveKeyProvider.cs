@@ -76,4 +76,18 @@ namespace MV.Save
         public void Save() => PlayerPrefs.Save();
         public void DeleteKey(string key) => PlayerPrefs.DeleteKey(key);
     }
+
+    /// <summary>메모리 저장소. 시험(<see cref="MvSave.PreferencesOverride"/>)이 실제 PlayerPrefs 대신 끼운다.</summary>
+    public sealed class MvMemorySavePrefs : IMvSavePrefs
+    {
+        private readonly System.Collections.Generic.Dictionary<string, string> _values =
+            new System.Collections.Generic.Dictionary<string, string>(StringComparer.Ordinal);
+
+        public int Count => _values.Count;
+        public bool HasKey(string key) => _values.ContainsKey(key);
+        public string GetString(string key) => _values.TryGetValue(key, out string value) ? value : string.Empty;
+        public void SetString(string key, string value) => _values[key] = value;
+        public void Save() { }
+        public void DeleteKey(string key) => _values.Remove(key);
+    }
 }

@@ -7,7 +7,8 @@ namespace MV.Save
     /// <summary>
     /// 재화 id(D-80, <c>01_wealth</c> <c>1001001</c> 식)와 Framework <c>WealthContainer</c> 행 키(type)의 대응.
     /// 저장은 Framework 규격대로 type별 quantity 행으로 둔다. 게임 코드는 id로 묻는다.
-    /// 표(MV-DATA <c>01_wealth</c>)가 들어오면 <c>WealthTable.GetId/Get(type)</c>으로 바꿀 자리.
+    /// 상수는 <c>01_wealth</c>와 같아야 한다: Boot 6단계가 <see cref="Mismatches"/>로 표와 대조하고(어긋나면 시작 중단),
+    /// EditMode 시험이 TSV 원문과 대조한다. 행이 더해지면 이 목록도 함께 고친다.
     /// </summary>
     public static class MvWealthIds
     {
@@ -46,5 +47,23 @@ namespace MV.Save
 
         /// <summary>id. 모르는 type은 0.</summary>
         public static int IdOf(string type) => type != null && IdByType.TryGetValue(type, out int id) ? id : 0;
+
+        /// <summary>표 행(id, type)과 이 목록의 차이. 같으면 빈 목록.</summary>
+        public static IReadOnlyList<string> Mismatches(IEnumerable<KeyValuePair<int, string>> rows)
+        {
+            if (rows == null) throw new ArgumentNullException(nameof(rows));
+            var problems = new List<string>();
+            var seen = new HashSet<int>();
+            foreach (KeyValuePair<int, string> row in rows)
+            {
+                seen.Add(row.Key);
+                string type = TypeOf(row.Key);
+                if (type == null) problems.Add("표에만 있는 재화 " + row.Key + "(" + row.Value + ")");
+                else if (!string.Equals(type, row.Value, StringComparison.Ordinal)) problems.Add("재화 " + row.Key + " type 다름: 표 " + row.Value + ", 코드 " + type);
+            }
+            foreach (int id in AllIds)
+                if (!seen.Contains(id)) problems.Add("코드에만 있는 재화 " + id + "(" + TypeOf(id) + ")");
+            return problems.AsReadOnly();
+        }
     }
 }
