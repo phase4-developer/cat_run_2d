@@ -1029,5 +1029,85 @@
   },
   "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
   "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [
+   {
+    "fn": "E",
+    "test": "a[3] === 3 && a[4] === 4"
+   },
+   {
+    "ctx": "fillRect",
+    "test": "a[2] === 24 && a[3] === 24"
+   },
+   {
+    "ctx": "arc",
+    "test": "a[2] < 3"
+   },
+   {
+    "ctx": "fillRect",
+    "fillIsGradient": true,
+    "full": true
+   },
+   {
+    "fn": "drawFac"
+   },
+   {
+    "fn": "mochi"
+   },
+   {
+    "fn": "facCushion"
+   },
+   {
+    "fn": "RR",
+    "argIndex": 6,
+    "in": [
+     "rgba(40,24,36,.72)"
+    ]
+   },
+   {
+    "ctx": "fillText",
+    "test": "a[0] !== '12월'"
+   },
+   {
+    "fn": "E",
+    "argIndex": 5,
+    "in": [
+     "#ffffff"
+    ]
+   },
+   {
+    "fn": "PL",
+    "argIndex": 2,
+    "in": [
+     "#ffffff"
+    ]
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "Tex_Lobby_Room",
+  "texture": true,
+  "atlas": null,
+  "mode": "ctx",
+  "pivot": "Center",
+  "wh": [
+   1080,
+   1920
+  ],
+  "canvas": {
+   "w": 1080,
+   "h": 1920,
+   "pivotPx": [
+    540,
+    960
+   ]
+  },
+  "allowEdge": true,
+  "expr": "drawAzit()",
+  "src": "L3474~3505(시설·고양이·전구·눈·빛·비네트·이름표는 따로)"
  }
 ]
