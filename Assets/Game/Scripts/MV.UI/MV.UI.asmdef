@@ -1,0 +1,26 @@
+{
+    "name": "MV.UI",
+    "rootNamespace": "MV.UI",
+    "references": [
+        "MV.Core",
+        "MV.Data",
+        "MV.Run",
+        "MV.Meta",
+        "JJEvol.UI.Runtime",
+        "JJEvol.UI.Addressables.Runtime",
+        "JJEvol.UI.URP.Runtime",
+        "JJEvol.UI.Economy.Runtime",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

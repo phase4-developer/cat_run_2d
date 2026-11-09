@@ -1,0 +1,33 @@
+{
+    "name": "MV.Editor",
+    "rootNamespace": "MV.Editor",
+    "references": [
+        "MV.Core",
+        "MV.Data",
+        "MV.Boot",
+        "JJEvol.Scene.Runtime",
+        "JJEvol.Tables.Authoring.Editor",
+        "JJEvol.UI.Runtime",
+        "JJEvol.UI.Addressables.Runtime",
+        "JJEvol.UI.URP.Runtime",
+        "JJEvol.Audio.Runtime",
+        "JJEvol.Effects.Runtime",
+        "Unity.Addressables",
+        "Unity.Addressables.Editor",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.InputSystem",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
