@@ -35,6 +35,18 @@
 - 담당 공통 규칙: `C:/Project/MoonVillage.wt/_notes/CONTRACT_COMMON.md`(저장소 밖, 이 PC).
 - 시험 어셈블리는 계약마다 `S/MV.<모듈>.Tests/`(기획서 11의 `MV.Run.Tests` 방식)로 둬서 브랜치끼리 asmdef가 겹치지 않게 했다.
 
+## 3번째 총괄 진행 (2026-11-10 시작)
+
+- 2번째 총괄 인계를 이어 받음(dev `28e66ea`). 계약서 `C:/Project/MoonVillage.wt/_notes/contracts/`(저장소 밖).
+- 배정(하위 에이전트, 계약마다 새 담당, 입력 약 15만 토큰 또는 완료에 닫음):
+
+| 칸 | 계약 | 담당 | 브랜치·기준 SHA | 쓰기 범위 |
+|---|---|---|---|---|
+| a | MV-DATA 2차 마감 | 5번째(`MV-DATA-2-5.md`) | `ai/MV-DATA-content-tables` `72442b4` | `S/MV.Data/`, `A/GameData/Table/TSV/`, `S/MV.Editor/Tables/`, 이번만 리소스 열 검사기·시험(`MV.Editor/Import`·`MV.Editor.Tests/Import`), 기획서 07 |
+| b | MV-META | 2번째(`MV-META-2.md`) | `ai/MV-META-rules` `8a3a6bc` | `S/MV.Meta/`, `S/MV.Meta.Tests/`, `QA/Dumps/meta/` |
+| c | MV-TOOL-ART 3차 검증 | 5번째(`MV-TOOL-ART-3-5.md`) | `ai/MV-TOOL-ART-remaining` `99c7614` | `Tools/MvExtract/`, `A/Art/Source/`, 아틀라스, `MvArtRules`, 그룹 로비 항목만 |
+| d | MV-VIEW 1차 | 2번째(`MV-VIEW-2.md`) | `ai/MV-VIEW-world` `b28b038`(총괄 정렬 레이어 10개) | `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders/`, `A/Art/Materials/`, `A/Addressables/Remote/World/`(그룹 등록 없음) |
+
 ## 총괄 인계 (2026-11-09, 1번째 총괄 대화 마감 — 압축 2회)
 
 - dev `086c1f9` 기준. dev에 들어온 계약: MV-00, MV-DATA 1차, MV-SAVE, MV-G1-INT, MV-TOOL-ART 1차, MV-QA-HARNESS(프로토), MV-TOOL-SND, MV-RUN-SIM, MV-RUN-GEN, MV-ART-ATLAS(부분). G1은 MV-DATA 2차, G2는 끝.
