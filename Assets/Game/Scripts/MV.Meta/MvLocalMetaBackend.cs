@@ -235,6 +235,8 @@ namespace MV.Meta
             if (bought >= row.max) return MvMetaResponse.Reject(MvMetaErrors.Max, row.key);
             var price = MvMetaRules.NextPrice(_t, row.levelPriceGroup, bought);
             if (price == null) return MvMetaResponse.Reject(MvMetaErrors.Max, row.key);
+            // Framework 대체: 07 §7.8.7의 LocalRewardService.PrepareMutation/Commit 대신 ResourceService.Get 확인 + 단계와 같은
+            // ApplyAndSave 한 번(D-META-03). Commit은 재화 컨테이너만 저장해 단계 +1과 원자로 묶지 못한다. 묶음 저장이 생기면 여기서 바꾼다.
             var wealth = new WealthDelta();
             foreach (var cost in price)
             {
@@ -385,6 +387,7 @@ namespace MV.Meta
         private MvMetaResponse RecordModePlay(string key)
         {
             if (string.IsNullOrWhiteSpace(key)) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "key");
+            // 교체 지점: 400_content의 하루 한도가 dev에 들어오면 여기서 modePlays[key] ≥ 한도를 DailyLimit으로 거절한다.
             return MvMetaResponse.Success(new JObject { [MvSaveKeys.Daily] = CountDaily("modePlays", key) }, new JObject { ["key"] = key });
         }
 
