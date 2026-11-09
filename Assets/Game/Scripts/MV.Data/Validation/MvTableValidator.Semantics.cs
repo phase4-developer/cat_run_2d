@@ -26,6 +26,9 @@ namespace MV.Data
             CheckUiResource(t, r);
             CheckValueFormats(t, r);
             CheckPairValues(t, r);
+            CheckContentData(t, r);
+            CheckMetaSystems(t, r);
+            CheckModesAndShop(t, r);
         }
 
         // ---------------- 06 ----------------
@@ -91,10 +94,13 @@ namespace MV.Data
             var field = t.FieldGen.ByKey("default") ?? t.FieldGen.Datas.FirstOrDefault();
             int soulMinIdx = field?.soulMinIdx ?? 0;
 
+            // Area가 쓰는 묶음은 floor 1~FLOOR_COUNT, 모드 전용 묶음(401만 씀, 901~)은 1부터 마지막 floor까지 빈틈 없이(08 §8.4.6).
+            var areaGroups = new HashSet<int>(t.Area.Datas.Select(a => a.floorGroup));
             foreach (var g in t.AreaFloor.Groups)
             {
                 var rows = t.AreaFloor.GetGroup(g);
-                for (int f = 1; f <= floorCount; f++)
+                int last = areaGroups.Contains(g) ? floorCount : rows.Max(x => x.floor);
+                for (int f = 1; f <= last; f++)
                     if (!rows.Any(x => x.floor == f)) r.Error(name, null, "floor", $"floorGroup {g}에 floor {f}가 없습니다");
             }
 

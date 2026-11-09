@@ -65,6 +65,35 @@ namespace MV.Data
         public MvTable<CameraData> Camera { get; } = new MvTable<CameraData>(CameraData.Schema, r => new CameraData(r));
         public ClimbTable Climb { get; } = new ClimbTable();
 
+        // 4xx 모드·퀘스트·콘텐츠 상수(08 §8.4, §8.5.1, §8.5.6, §8.5.13)
+        public MvTable<ContentData> Content { get; } = new MvTable<ContentData>(ContentData.Schema, r => new ContentData(r));
+        public ModeStageTable ModeStage { get; } = new ModeStageTable();
+        public MvTable<ModeRuleData> ModeRule { get; } = new MvTable<ModeRuleData>(ModeRuleData.Schema, r => new ModeRuleData(r));
+        public MvTable<QuestGroupData> QuestGroup { get; } = new MvTable<QuestGroupData>(QuestGroupData.Schema, r => new QuestGroupData(r), d => d.group);
+        public MvTable<RepeatQuestData> RepeatQuest { get; } = new MvTable<RepeatQuestData>(RepeatQuestData.Schema, r => new RepeatQuestData(r), d => d.questGroup);
+        public MvTable<PassQuestData> PassQuest { get; } = new MvTable<PassQuestData>(PassQuestData.Schema, r => new PassQuestData(r), d => d.questGroup);
+        public MvTable<AchievementData> Achievement { get; } = new MvTable<AchievementData>(AchievementData.Schema, r => new AchievementData(r), d => d.questGroup);
+        public ContentConfigTable ContentConfig { get; } = new ContentConfigTable();
+
+        // 4xx 메타 시스템(08 §8.3.5, §8.5)
+        public MvTable<PetData> Pet { get; } = new MvTable<PetData>(PetData.Schema, r => new PetData(r));
+        public MvTable<PetBuildData> PetBuild { get; } = new MvTable<PetBuildData>(PetBuildData.Schema, r => new PetBuildData(r), d => d.tier);
+        public ResearchTable Research { get; } = new ResearchTable();
+        public MvTable<FriendData> Friend { get; } = new MvTable<FriendData>(FriendData.Schema, r => new FriendData(r));
+        public MvTable<FriendPowerData> FriendPower { get; } = new MvTable<FriendPowerData>(FriendPowerData.Schema, r => new FriendPowerData(r));
+        public MvTable<RuneData> Rune { get; } = new MvTable<RuneData>(RuneData.Schema, r => new RuneData(r));
+        public MvTable<GearPartData> GearPart { get; } = new MvTable<GearPartData>(GearPartData.Schema, r => new GearPartData(r));
+        public MvTable<GearRarityData> GearRarity { get; } = new MvTable<GearRarityData>(GearRarityData.Schema, r => new GearRarityData(r));
+        public MvTable<BlessingData> Blessing { get; } = new MvTable<BlessingData>(BlessingData.Schema, r => new BlessingData(r));
+        public MvTable<AttendanceData> Attendance { get; } = new MvTable<AttendanceData>(AttendanceData.Schema, r => new AttendanceData(r));
+        public MvTable<RoadMapData> RoadMap { get; } = new MvTable<RoadMapData>(RoadMapData.Schema, r => new RoadMapData(r));
+        public MvTable<GodLevelData> GodLevel { get; } = new MvTable<GodLevelData>(GodLevelData.Schema, r => new GodLevelData(r));
+
+        // 7xx 상점(08 §8.5.7, 결제 연결은 MV-PLAT-IAP)
+        public MvTable<ProductTabData> ProductTab { get; } = new MvTable<ProductTabData>(ProductTabData.Schema, r => new ProductTabData(r));
+        public MvTable<ProductData> Product { get; } = new MvTable<ProductData>(ProductData.Schema, r => new ProductData(r), d => d.tabId);
+        public MvTable<ShopSectionData> ShopSection { get; } = new MvTable<ShopSectionData>(ShopSectionData.Schema, r => new ShopSectionData(r));
+
         // 8xx
         public MvTable<DropData> Drop { get; } = new MvTable<DropData>(DropData.Schema, r => new DropData(r), d => d.dropGroup);
         public MvTable<RandomBoxData> RandomBox { get; } = new MvTable<RandomBoxData>(RandomBoxData.Schema, r => new RandomBoxData(r), d => d.group);
@@ -84,6 +113,9 @@ namespace MV.Data
                 God, HpRule, CardTier,
                 RunConfig, Zone, Area, AreaFloor, Theme, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup, Camera,
                 Climb,
+                Content, ModeStage, ModeRule, QuestGroup, RepeatQuest, PassQuest, Achievement, ContentConfig,
+                Pet, PetBuild, Research, Friend, FriendPower, Rune, GearPart, GearRarity, Blessing, Attendance, RoadMap, GodLevel,
+                ProductTab, Product, ShopSection,
                 Drop, RandomBox, GuaranteeLink, Guarantee,
             };
             _byName = new Dictionary<string, IMvTable>(StringComparer.Ordinal);
