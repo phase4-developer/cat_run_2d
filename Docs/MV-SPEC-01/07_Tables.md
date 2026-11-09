@@ -413,6 +413,8 @@ MvTables.Current = tables;
 | METEOR_FALL | 0.6 | s | [프로토] L2210 |
 | METEOR_BOX | 3.2 | m | [프로토] L2212 |
 | BLADE_ANG_SPEED | 5 | rad/s | [프로토] L2146 |
+| STORM_JIT_TARGET | 0.3 | m | [프로토] L2168 폭풍 착탄 x 흔들림 반폭(대상 있을 때) |
+| STORM_JIT_FREE | 2 | m | [프로토] L2168 폭풍 착탄 x·z 흔들림 반폭(대상 없을 때) |
 
 **그룹 106 손패 연출 시간** (`300106xxx`) — 키 이름은 [05 §5.3](05_Screens.md) `ui.hand.*`
 
@@ -1692,7 +1694,7 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | 602 | RunGold | - | 런 츄르 | Double | Atlas_UI_Icon | =UI_Icon_Gold | applyMul GoldMul, settleTo `1/1`, collectMul 1, gainSound coin, worldBadge `World_Item_Badge_Gold` |
 | 603 | RunSouls | - | 런 생선 | Int | Atlas_UI_Icon | =UI_Icon_Soul | settleTo `1/3`, collectMul 0, gainSound soul, gainEffect run.wallRewardSoul |
 | 604 | RunDia | - | 런 캣닢 | Int | Atlas_UI_Icon | =UI_Icon_Dia | settleTo `1/2`, collectMul 1, gainSound gem, gainEffect run.wallRewardDia, worldBadge `World_Item_Badge_Dia` |
-| 605 | RunStairs | - | 모은 계단 수 | Int | Atlas_UI_Hud | =UI_Icon_Stair | 런 전용 |
+| 605 | RunStairs | - | 모은 계단 수 | Int | Atlas_UI_Icon | =UI_Icon_Stair | 런 전용 |
 | 606 | RunWeapon | 103_item | 런 손패 카드 장수 | Int | Atlas_UI_Icon | icon | 런 전용(공방 수령 경로) |
 | 607 | GaugeFill | - | 우물 게이지 양 | Double | Atlas_UI_Hud | =UI_Icon_Gauge | 런 전용 |
 | 608 | RbPending | - | 목숨 조각 적립 대기 | Int | Atlas_UI_Icon | =UI_Icon_RbToken | settleTo `rbPending`, collectMul 0 |
@@ -1723,16 +1725,16 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 
 | id | key | atlas | sprite | address | 근거 |
 |---|---|---|---|---|---|
-| 9001001 | common.close | Atlas_UI_Common | UI_Emoji_Close | | ✕ L351 |
-| 9001002 | common.play | Atlas_UI_Common | UI_Emoji_Play | | ▶ 광고 버튼 |
-| 9001003 | common.sound | Atlas_UI_Common | UI_Emoji_Sound | | ♪ L713 |
-| 9001004 | common.lock | Atlas_UI_Common | UI_Emoji_Lock | | 🔒 |
-| 9002001 | hud.stairCan | Atlas_UI_Hud | UI_Icon_Stair | | L589 |
-| 9002002 | hud.brick | Atlas_UI_Hud | UI_Icon_Brick | | L42 |
-| 9002003 | hud.gaugeIcon | Atlas_UI_Hud | UI_Icon_Fac_Tower_2 | | L869 `cannonURL` |
+| 9001001 | common.close | Atlas_UI_Icon | UI_Emoji_Close | | ✕ L351 |
+| 9001002 | common.play | Atlas_UI_Icon | UI_Emoji_Play | | ▶ 광고 버튼 |
+| 9001003 | common.sound | Atlas_UI_Icon | UI_Emoji_Sound | | ♪ L713 |
+| 9001004 | common.lock | Atlas_UI_Icon | UI_Emoji_Lock | | 🔒 |
+| 9002001 | hud.stairCan | Atlas_UI_Icon | UI_Icon_Stair | | L589 |
+| 9002002 | hud.brick | Atlas_UI_Icon | UI_Icon_Brick | | L42 |
+| 9002003 | hud.gaugeIcon | Atlas_UI_Icon | UI_Icon_Fac_Tower_2 | | L869 `cannonURL` |
 | 9002004 | hud.hatch | Atlas_UI_Hud | UI_Skin_HatchTile | | L530 소모 가림 무늬 |
-| 9003001 | lobby.side.basket | Atlas_UI_Lobby | UI_Emoji_Basket | | 🧺 L658 |
-| 9003002 | lobby.side.map | Atlas_UI_Lobby | UI_Emoji_Map | | 🗺️ L659 |
+| 9003001 | lobby.side.basket | Atlas_UI_Icon | UI_Emoji_Basket | | 🧺 L658 |
+| 9003002 | lobby.side.map | Atlas_UI_Icon | UI_Emoji_Map | | 🗺️ L659 |
 | 9003003 | lobby.side.content | Atlas_UI_Lobby | UI_Icon_Content | | `05_contentOpen[contentMenu].icon`이 비었을 때 |
 | 9004001 | stage.vignette | | | Tex_Lobby_Vignette | L45 `#vig` 540×960 |
 

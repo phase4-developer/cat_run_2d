@@ -563,9 +563,9 @@ namespace MV.Run
                     j.Done++;
                     var cands = s.Objs.FindAll(t => Breakable(t) && Math.Abs(t.Z - j.Cz) < _p.StormPickDz && t.Z > s.P.Z);
                     RunObject t0 = cands.Count > 0 ? cands[(int)Math.Floor(s.Draw(RngUse.StormPick) * cands.Count)] : null;
-                    // 흔들림 ±0.3(대상)·±2(빈 곳)는 정본 코드 상수(표 열 없음)
-                    double x = t0 != null ? t0.X + (-0.3 + s.Draw(RngUse.StormJitter) * 0.6) : j.Cx + (-2 + s.Draw(RngUse.StormJitter) * 4);
-                    double z = t0 != null ? t0.Z - t0.Hd : j.Cz + (-2 + s.Draw(RngUse.StormJitter) * 4);
+                    // 흔들림 ±STORM_JIT_TARGET(대상)·±STORM_JIT_FREE(빈 곳), 300_runConfig(정본 ±0.3·±2)
+                    double x = t0 != null ? t0.X + (-_p.StormJitTarget + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitTarget)) : j.Cx + (-_p.StormJitFree + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitFree));
+                    double z = t0 != null ? t0.Z - t0.Hd : j.Cz + (-_p.StormJitFree + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitFree));
                     s.Emit(new RunEvent(RunEventType.GodStormStrike, x: x, z: z, key: s.El));
                     double mul = st != null ? st.p3 : 1.5;
                     foreach (var u in s.Objs)

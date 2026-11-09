@@ -1,13 +1,13 @@
 id	key	group	sort	active	atlas	sprite	address
-9001001	common.close	1	1	1	Atlas_UI_Common	UI_Emoji_Close	
-9001002	common.play	1	2	1	Atlas_UI_Common	UI_Emoji_Play	
-9001003	common.sound	1	3	1	Atlas_UI_Common	UI_Emoji_Sound	
-9001004	common.lock	1	4	1	Atlas_UI_Common	UI_Emoji_Lock	
-9002001	hud.stairCan	2	1	1	Atlas_UI_Hud	UI_Icon_Stair	
-9002002	hud.brick	2	2	1	Atlas_UI_Hud	UI_Icon_Brick	
-9002003	hud.gaugeIcon	2	3	1	Atlas_UI_Hud	UI_Icon_Fac_Tower_2	
+9001001	common.close	1	1	1	Atlas_UI_Icon	UI_Emoji_Close	
+9001002	common.play	1	2	1	Atlas_UI_Icon	UI_Emoji_Play	
+9001003	common.sound	1	3	1	Atlas_UI_Icon	UI_Emoji_Sound	
+9001004	common.lock	1	4	1	Atlas_UI_Icon	UI_Emoji_Lock	
+9002001	hud.stairCan	2	1	1	Atlas_UI_Icon	UI_Icon_Stair	
+9002002	hud.brick	2	2	1	Atlas_UI_Icon	UI_Icon_Brick	
+9002003	hud.gaugeIcon	2	3	1	Atlas_UI_Icon	UI_Icon_Fac_Tower_2	
 9002004	hud.hatch	2	4	1	Atlas_UI_Hud	UI_Skin_HatchTile	
-9003001	lobby.side.basket	3	1	1	Atlas_UI_Lobby	UI_Emoji_Basket	
-9003002	lobby.side.map	3	2	1	Atlas_UI_Lobby	UI_Emoji_Map	
+9003001	lobby.side.basket	3	1	1	Atlas_UI_Icon	UI_Emoji_Basket	
+9003002	lobby.side.map	3	2	1	Atlas_UI_Icon	UI_Emoji_Map	
 9003003	lobby.side.content	3	3	1	Atlas_UI_Lobby	UI_Icon_Content	
 9004001	stage.vignette	4	1	1			Tex_Lobby_Vignette
