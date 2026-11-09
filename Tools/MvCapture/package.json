@@ -1,0 +1,16 @@
+{
+  "name": "mv-capture",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MV-QA-HARNESS 프로토 쪽: 정본 MoonVillage.html 같은 상태 캡처·생성/시뮬 덤프",
+  "type": "commonjs",
+  "scripts": {
+    "verify": "node src/cli.js verify",
+    "capture": "node src/cli.js capture",
+    "gen": "node src/cli.js gen",
+    "sim": "node src/cli.js sim"
+  },
+  "dependencies": {
+    "playwright": "1.65.0"
+  }
+}

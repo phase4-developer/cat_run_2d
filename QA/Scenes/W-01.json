@@ -1,0 +1,11 @@
+{
+  "id": "W-01",
+  "title": "첫 실행 로비(DEF())",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [],
+  "frames": 120,
+  "captureAt": [1, 60, 120],
+  "mask": []
+}
