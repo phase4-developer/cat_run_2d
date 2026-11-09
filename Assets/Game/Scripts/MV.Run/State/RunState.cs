@@ -58,6 +58,8 @@ namespace MV.Run
         public double Left;
         public ConsumeType Type;
         public double Amount;
+        /// <summary>게이지 수령(GaugeFill)이 쓰는 107 행.</summary>
+        public ChargeGateData Charge;
         public int ObjId;
         public bool Done;
     }
