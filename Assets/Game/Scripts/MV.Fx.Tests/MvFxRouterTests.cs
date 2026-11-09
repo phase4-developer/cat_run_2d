@@ -216,6 +216,88 @@ namespace MV.Fx.Tests
             Assert.AreEqual(39.5f, land.Pos.z, 1e-4f);
         }
 
+        /// <summary>정본 호출 인자로 만든 기대 재생(옛 하드코딩 값 그대로). NaN = 종류 기본값.</summary>
+        static FxSpawn Sp(string key, double x, double y, double z, string hex = null, float n = float.NaN, float spd = float.NaN, float size = float.NaN,
+            float life = float.NaN, float grav = float.NaN, float r = float.NaN, bool noRing = false, bool crit = false)
+        {
+            var s = FxSpawn.Of(key, new Vector3((float)x, (float)y, (float)z));
+            if (hex != null) s = s.WithColor(MvFxRouter.C(hex));
+            s.Count = n; s.Speed = spd; s.Size = size; s.Life = life; s.Grav = grav; s.Radius = r; s.NoRing = noRing; s.Crit = crit;
+            return s;
+        }
+
+        static void AssertSpawns(MvFxOutput o, string what, params FxSpawn[] expected) =>
+            CollectionAssert.AreEqual(expected.Select(s => s.ToString()).ToArray(), o.Spawns.Select(s => s.ToString()).ToArray(), what);
+
+        static string TierHex(MvTables t, int tier) => t.CardTier.Datas.First(r => r.tierIndex == tier && !string.IsNullOrEmpty(r.color)).color;
+
+        [Test]
+        public void PartGroups_ReproduceCanonCallArgs()
+        {
+            var t = FxTestTables.Load();
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.ProjImpact, 1, x: 0.5, z: 7)), "L2107 projHit 보통",
+                Sp("fx.impact", 0.5, 1, 7), Sp("fx.sparks", 0.5, 1, 7, "#ffffff", 4, 3.4f, 0.3f, 0.3f, 0));
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.Break, 4, K(t, "coin"), x: 2, z: 16, a: -1)), "L1963 coinBreak coin",
+                Sp("fx.dust", 2, 0.6, 16, n: 4), Sp("fx.sparks", 2, 1, 16, "#ffd65a", 18, 6, 0.4f, 0.8f));
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.Break, 5, K(t, "gem"), x: 2, z: 18, a: -1)), "L1964 coinBreak gem",
+                Sp("fx.dust", 2, 0.6, 18, n: 4), Sp("fx.sparks", 2, 1.2, 18, "#7feaff", 20, 6, 0.45f, 0.9f));
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.Break, 3, K(t, "wall"), x: -1, z: 14, a: (int)FieldReward.Gold)), "L1935 wallBreak 츄르",
+                Sp("fx.debris", -1, 1.3, 14, "#93673f", 14, size: 0.32f), Sp("fx.debris", -1, 1.6, 14, "#5b606c", 4, size: 0.22f),
+                Sp("fx.dust", -1, 1, 14, n: 7), Sp("fx.boom", -1, 1.2, 14, "#ffd6a0", r: 1.5f, noRing: true));
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.Break, 2, K(t, "enemy"), x: 1, z: 12, a: -1)), "L1925 enemyKill",
+                Sp("fx.debris", 1, 0.8, 12, "#5a8a3a", 8, size: 0.2f), Sp("fx.sparks", 1, 1, 12, "#ffd65a", 12, 5, 0.4f, 0.6f), Sp("fx.dust", 1, 0.8, 12, n: 4));
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.GodStormStrike, x: 0, z: 5, key: "bolt")), "L2163 storm bolt",
+                Sp("fx.paw", 0, 0.1, 5), Sp("fx.dust", 0, 0.5, 5, n: 5), Sp("fx.boom", 0, 0.6, 5, "#9fe0ff", r: 1.5f));
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.GodStormStrike, x: 0, z: 5, key: "fire")), "L2163 storm fire",
+                Sp("fx.fireball", 0, 0.6, 5, size: 1.4f), Sp("fx.boom", 0, 0.6, 5, "#ff7a2a", r: 1.5f));
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.GodBlast, x: 0, z: 5, key: "bolt")), "L2175 blast bolt",
+                Sp("fx.hiss", 0, 0.6, 5), Sp("fx.boom", 0, 1, 5, "#9fe0ff", r: 4.4f), Sp("fx.boom", 0, 1.6, 5, "#ffffff", r: 2.2f, noRing: true));
+            AssertSpawns(Route(t, World(), 0f, Ev(RunEventType.GodBlast, x: 0, z: 5, key: "fire")), "L2175 blast fire(rnd 0 → −1)",
+                Sp("fx.fireball", -1, 0.6, 4, size: 2.4f), Sp("fx.fireball", -1, 0.6, 4, size: 2.4f), Sp("fx.fireball", -1, 0.6, 4, size: 2.4f),
+                Sp("fx.boom", 0, 1, 5, "#ff5a1f", r: 4.4f), Sp("fx.boom", 0, 1.6, 5, "#ffffff", r: 2.2f, noRing: true));
+
+            var flush = Route(t, World(), 0f, Ev(RunEventType.WellFlush, 8, a: 3, amount: 10));
+            AssertSpawns(flush, "L1861 brickFlush 벽돌 3",
+                Sp("fx.brickChunk", 2.7, 1.2, 24), Sp("fx.brickChunk", 2.7, 1.2, 24), Sp("fx.brickChunk", 2.7, 1.2, 24),
+                Sp("fx.sparks", 3, 1.4, 23.2, "#ffb04a", 4, 3, 0.3f, 0.35f));
+            CollectionAssert.AreEqual(new[] { 0, 1, 2 }, flush.Spawns.Take(3).Select(s => s.Variant).ToArray());
+            CollectionAssert.AreEqual(new[] { 1f, -1f, 1f }, flush.Spawns.Take(3).Select(s => s.Dir).ToArray());
+            Assert.AreEqual(3, flush.Flies.Count); Assert.AreEqual(10, flush.Flies[2].Amount);
+
+            var cfg = t.Climb.Config();
+            var start = Ev(RunEventType.ClimbStart, a: 100, b: 40, amount: 2.5, x: 10, z: 39);
+            int si = Math.Max(0, Math.Min(39, (int)Math.Floor(30 / 2.5)));
+            double y = (si + 1) * cfg["stepH"], z = 10 + si * cfg["stepD"];
+            AssertSpawns(Route(t, World(), 0f, start, Ev(RunEventType.ClimbTierUp, a: 2, b: 30)), "L2282 climb.tier",
+                Sp("fx.boom", 0, y + 0.6, z, TierHex(t, 2), r: 2.2f), Sp("fx.sparks", 0, y + 1, z, TierHex(t, 2), 16, 5, 0.5f, 0.9f));
+            si = Math.Min(39, (int)Math.Ceiling(1 * cfg["lap"] / 2.5) - 1);
+            y = (si + 1) * cfg["stepH"]; z = 10 + si * cfg["stepD"];
+            string lapHex = TierHex(t, (int)Math.Round(cfg["lapTier"]));
+            AssertSpawns(Route(t, World(), 0f, start, Ev(RunEventType.ClimbLap, a: 1, b: 75)), "L2276 climb.lap",
+                Sp("fx.boom", 0, y + 2, z, lapHex, r: 3, noRing: true), Sp("fx.sparks", 0, y + 3, z, lapHex, 24, 7, 0.55f, 1.1f));
+        }
+
+        [Test]
+        public void PartGroups_FollowEffectTable()
+        {
+            var t = FxTestTables.WithCells(EffectData.Table,
+                ("run.enemyKill", "children", "run.enemyKill.dust/run.enemyKill.sparks/run.enemyKill.dust"),
+                ("run.enemyKill.sparks", "count", "30"),
+                ("run.projHit.impact", "when", "crit"),
+                ("run.brickFlush.sparks", "dz", "0.5"),
+                ("god.blast.fireball", "jx", "0"));
+            var kill = Route(t, World(), 0f, Ev(RunEventType.Break, 2, K(t, "enemy"), x: 1, z: 12, a: -1));
+            CollectionAssert.AreEqual(new[] { "fx.dust", "fx.sparks", "fx.dust" }, kill.Spawns.Select(s => s.Key).ToArray(), "children 순서·반복");
+            Assert.AreEqual(30f, kill.Spawns[1].Count, "part 인자");
+            CollectionAssert.AreEqual(new[] { "fx.sparks" }, Route(t, World(), 0f, Ev(RunEventType.ProjImpact, 1, z: 5)).Spawns.Select(s => s.Key).ToArray(), "when crit");
+            CollectionAssert.AreEqual(new[] { "fx.impact", "fx.sparks" }, Route(t, World(), 0f, Ev(RunEventType.ProjImpact, 1, z: 5, flag: true)).Spawns.Select(s => s.Key).ToArray());
+            var flush = Route(t, World(), 0f, Ev(RunEventType.WellFlush, 8, a: 1));
+            Assert.AreEqual(24.5f, flush.Spawns[1].Pos.z, 1e-4f, "dz");
+            var blast = Route(t, World(), 0f, Ev(RunEventType.GodBlast, x: 0, z: 5, key: "fire"));
+            Assert.AreEqual(0f, blast.Spawns[0].Pos.x, 1e-5f, "jx 0이면 x 흔들기 없음");
+            Assert.AreEqual(4f, blast.Spawns[0].Pos.z, 1e-5f, "jz는 그대로");
+        }
+
         [Test]
         public void ProjectileElementsTrackedForTrails()
         {

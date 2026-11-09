@@ -325,6 +325,8 @@ namespace MV.Meta
                 : new JObject { ["day"] = today, ["ads"] = ToJObject(d.Ads), ["modePlays"] = ToJObject(d.ModePlays), ["free"] = ToJObject(d.Free) };
         }
 
+        internal int ModePlaysToday(string key) => RolledDaily(out _)["modePlays"]?.Value<int?>(key) ?? 0;
+
         internal int AdUsedToday(string key) => RolledDaily(out _)["ads"]?.Value<int?>(key) ?? 0;
 
         /// <summary>남은 횟수. 한도 없음(0)이면 −1, 모르는 자리면 0.</summary>
@@ -382,12 +384,13 @@ namespace MV.Meta
         }
 
         /// <summary>
-        /// 모드 하루 입장 수 +1. 일일 한도 비교는 <c>400_content</c>(MV-DATA 2차)가 들어오면 MV-CONTENT가 그 값으로 먼저 한다.
+        /// 모드 하루 입장 수 +1. <c>400_content.dailyLimit</c> &gt; 0이고 오늘 <c>modePlays[key]</c> ≥ 한도면 DailyLimit으로 거절한다(0 = 한도 없음).
         /// </summary>
         private MvMetaResponse RecordModePlay(string key)
         {
             if (string.IsNullOrWhiteSpace(key)) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "key");
-            // 교체 지점: 400_content의 하루 한도가 dev에 들어오면 여기서 modePlays[key] ≥ 한도를 DailyLimit으로 거절한다.
+            int limit = _t.Content.ByKey(key)?.dailyLimit ?? 0;
+            if (limit > 0 && ModePlaysToday(key) >= limit) return MvMetaResponse.Reject(MvMetaErrors.DailyLimit, key);
             return MvMetaResponse.Success(new JObject { [MvSaveKeys.Daily] = CountDaily("modePlays", key) }, new JObject { ["key"] = key });
         }
 

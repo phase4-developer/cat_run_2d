@@ -33,8 +33,11 @@ namespace MV.View
         public static readonly string[] BulbColors = { "#ff6a5a", "#ffd84a", "#6ad0ff", "#8af06a" };
         public static readonly string[] ClothColors = { "#f2a8b8", "#8ac0e8", "#f6e08a", "#ffffff", "#a8d8a0", "#c8a8e8", "#f0a070" };
 
-        /// <summary>전구줄 테마(정본 `deco === 'snow' || 'roof'`). 아니면 빨래.</summary>
-        public static bool UsesBulbs(string deco) => deco == "snow" || deco == "roof";
+        /// <summary>`304_theme.lineKind`의 전구줄 값. 정본 `deco === 'snow' || 'roof'`를 표로 옮긴 것.</summary>
+        public const string LineBulbs = "Bulbs";
+
+        /// <summary>줄 종류(`304_theme.lineKind`)가 전구줄인지. 그 밖의 값(`Clothes`, 빈칸)은 빨래.</summary>
+        public static bool IsBulbs(string lineKind) => lineKind == LineBulbs;
 
         public static double PointX(int i) => -HalfSpan + i * PointStep;
 

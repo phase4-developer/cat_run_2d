@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using System.Text;
+using MV.Data;
 using MV.Save;
 using NUnit.Framework;
 
@@ -189,6 +192,52 @@ namespace MV.Meta.Tests
             Assert.That(Meta.GodUnlocked("flame"), Is.True, "god.flame: areaNo 4");
             Assert.That(Meta.SelectGod("flame").Ok, Is.True);
             Assert.That(Store.God.Selected, Is.EqualTo("flame"));
+        }
+
+        /// <summary>400_content 원문에서 한 행의 dailyLimit만 바꾼 표(나머지 표는 저장소 TSV).</summary>
+        static MvTables TablesWithModeLimit(string contentKey, int limit)
+        {
+            string text = File.ReadAllText(Path.Combine(MvTableLoader.TsvDirectory, ContentData.Table + ".txt"), new UTF8Encoding(false));
+            string[] lines = text.Replace("\r\n", "\n").Split('\n');
+            string[] header = lines[0].Split('\t');
+            int keyCol = Array.IndexOf(header, "key"), col = Array.IndexOf(header, "dailyLimit");
+            Assert.That(keyCol >= 0 && col >= 0, Is.True, "400_content key·dailyLimit 열");
+            bool found = false;
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] cells = lines[i].Split('\t');
+                if (cells.Length <= Math.Max(keyCol, col) || cells[keyCol] != contentKey) continue;
+                cells[col] = limit.ToString();
+                lines[i] = string.Join("\t", cells);
+                found = true;
+            }
+            Assert.That(found, Is.True, contentKey);
+            var tables = new MvTables();
+            tables.LoadAll(new MvMemoryTableSource(new MvTsvDirectorySource(MvTableLoader.TsvDirectory))
+                .Set(ContentData.Table, string.Join("\n", lines)));
+            return tables;
+        }
+
+        [TestCase(1)]
+        [TestCase(0)]
+        public void RecordModePlay_RejectsAtContentDailyLimit(int limit)
+        {
+            var meta = new MvMeta(() => Store, () => Res, TablesWithModeLimit("alleyWar", limit), Clock, Ads);
+            Assert.That(meta.RecordModePlay("alleyWar").Ok, Is.True);
+            MvMetaResponse second = meta.RecordModePlay("alleyWar");
+            if (limit == 1)
+            {
+                Assert.That(second.Code, Is.EqualTo(MvMetaErrors.DailyLimit), "modePlays ≥ dailyLimit");
+                Assert.That(meta.ModePlaysToday("alleyWar"), Is.EqualTo(1), "거절은 횟수를 쓰지 않는다");
+                Assert.That(meta.RecordModePlay("rapidRush").Ok, Is.True, "한도는 행마다");
+                Clock.Advance(TimeSpan.FromDays(1));
+                Assert.That(meta.RecordModePlay("alleyWar").Ok, Is.True, "날이 바뀌면 한도 회복");
+            }
+            else
+            {
+                Assert.That(second.Ok, Is.True, "0 = 한도 없음");
+                Assert.That(meta.ModePlaysToday("alleyWar"), Is.EqualTo(2));
+            }
         }
     }
 }

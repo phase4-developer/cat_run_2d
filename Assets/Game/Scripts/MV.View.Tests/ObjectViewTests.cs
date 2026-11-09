@@ -90,6 +90,18 @@ namespace MV.View.Tests
             Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("enemy")), Is.EqualTo(ObjectShape.Mouse));
         }
 
+        [Test]
+        public void ShapeOf_ReadsViewShapeColumn()
+        {
+            foreach (ObjectViewShape v in System.Enum.GetValues(typeof(ObjectViewShape)))
+                Assert.That(System.Enum.TryParse(v.ToString(), out ObjectShape _), Is.True, "ObjectViewShape ↔ ObjectShape 1:1: " + v);
+            foreach (var k in ViewTestTables.Load().ObjectKind.Sorted)
+                Assert.That(ObjectViewFactory.ShapeOf(k).ToString(), Is.EqualTo(k.viewShape.ToString()), k.key);
+
+            var edited = ViewTestTables.WithCell(ObjectKindData.Table, "cardbox", "viewShape", "Well");
+            Assert.That(ObjectViewFactory.ShapeOf(edited.ObjectKind.ByKey("cardbox")), Is.EqualTo(ObjectShape.Well), "표만 바꿔도 모양이 바뀐다");
+        }
+
         ObjectViewFactory MakeFactory(out Camera cam)
         {
             var camGo = new GameObject("TestCam");
