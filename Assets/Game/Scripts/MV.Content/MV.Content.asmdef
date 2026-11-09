@@ -5,7 +5,13 @@
         "MV.Core",
         "MV.Data",
         "MV.Run",
-        "MV.Meta"
+        "MV.Meta",
+        "MV.Save",
+        "JJEvol.Tables.Runtime",
+        "JJEvol.Data.Runtime",
+        "JJEvol.Economy.Runtime",
+        "JJEvol.Save.Runtime",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
