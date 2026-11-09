@@ -51,9 +51,11 @@ namespace MV.View
         }
 
         /// <summary>mixC(a, b, k): k를 1/quant 단위로 내림한 뒤 a→b 선형(정본 quant = 20, `view.mixQuant`).</summary>
-        public static string Mix(string a, string b, double k, int quant = 20)
+        public static string Mix(string a, string b, double k, int quant = 20) => MixStep(a, b, (int)(k * quant), quant);   // JS `|0`
+
+        /// <summary>양자화 단계 q(0~quant)를 직접 받는 mixC. q/quant를 다시 곱해 내리면 부동소수 오차로 한 단계 낮아질 수 있어 분리했다.</summary>
+        public static string MixStep(string a, string b, int q, int quant = 20)
         {
-            int q = (int)(k * quant);   // JS `|0`
             string key = a + ">" + b + "|" + q + "/" + quant;
             if (s_cache.TryGetValue(key, out var v)) return v;
             double t = q / (double)quant;

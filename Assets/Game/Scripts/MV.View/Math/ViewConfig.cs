@@ -20,6 +20,12 @@ namespace MV.View
         public double PlayerCatScale, CloneCatScale;
         public double SortQuant, ObjProbeY, CatProbeY, SortCloth, SortLabel, SortBlade, SortProj;
 
+        /// <summary>
+        /// 계단 오르기 출렁임(정본 L2758 `sin(frac·π)·0.12`). `330_climb`에 열이 없어 상수로 둔다.
+        /// 교체 지점: MV-DATA가 330_climb 출렁임 열을 넣으면 표에서 읽는다(요청됨).
+        /// </summary>
+        public const double ClimbBump = 0.12;
+
         public static ViewConfig From(RunConfigTable t)
         {
             return new ViewConfig
