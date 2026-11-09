@@ -8,7 +8,7 @@
 
 | MV-DATA 표·검증기·로더 | 진행 | 하위 에이전트(이 총괄 대화) — 2번째 담당. 1번째 담당(앱 세션)은 사용자 지시로 멈추고 「작업 중」 Commit `d397e9d`로 넘김 | `ai/MV-DATA-tables-loader` @ `C:/Project/MoonVillage.wt/a`, 실행기 `moonvillage-a` | `b210aab`(작업 중 Commit 기준), dev `43637e7` | | | 쓰기: `S/MV.Data/`, `S/MV.Data.Tests/`, TSV·Resources, `S/MV.Editor/Tables/`, `GameBootstrap.cs` 4단계. 총괄 asmdef `464f8b8` |
 | MV-SAVE 저장·이관 | 진행 | 하위 에이전트 | `ai/MV-SAVE-save-migration` @ `.wt/b`, `moonvillage-b` | `43637e7` | | | 쓰기: `S/MV.Save/`, `S/MV.Save.Tests/`. Boot 6단계 연결은 G1 통합 때 총괄. D-68 대기(키 위치) → 교체 지점. 총괄 asmdef `f0214ef` |
-| MV-TOOL-ART 그림 추출 | 진행 | 하위 에이전트 | `ai/MV-TOOL-ART-extract` @ `.wt/c`, `moonvillage-c` | `43637e7` | | | 쓰기: `Tools/MvExtract/`(sound 제외), `A/Art/Source/`, `A/Art/Temp/`. D-50 승인(2026-11-09 사용자 「전부 승인」) |
+| MV-TOOL-ART 그림 추출 | 진행 | 하위 에이전트 2번째(1번째 닫힘: 입력 한도, `b9eb8b6` — PNG 1339, V1 결정성 PASS, `.meta`·compile NOT_RUN) | `ai/MV-TOOL-ART-extract` @ `.wt/c`, `moonvillage-c` | `43637e7` | | | 쓰기: `Tools/MvExtract/`(sound 제외), `A/Art/Source/`, `A/Art/Temp/`. D-50 승인(2026-11-09 사용자 「전부 승인」) |
 | MV-QA-HARNESS 캡처 도구(프로토 쪽) | 진행 | 하위 에이전트 | `ai/MV-QA-HARNESS-proto` @ `.wt/d`, `moonvillage-d` | `43637e7` | | | 쓰기: `Tools/MvCapture/`, `QA/Scenes/`, `QA/Dumps/`, `QA/Captures/Proto/`. Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도 계약 |
 | MV-TOOL-SND 소리 굽기 | 진행 | 하위 에이전트 | `ai/MV-TOOL-SND-bake` @ `.wt/e`, `moonvillage-e` | `e4e492d`(MV-TOOL-ART 공용 기반, dev `43637e7` 위) | | | 쓰기: `Tools/MvExtract/sound/`, `A/Addressables/Remote/Audio/`. 공용 파일 변경은 요청으로 |
 | MV-ART-ATLAS 아틀라스·임포트 | 대기 | — | — | | | | 선행: MV-TOOL-ART 출력, MV-DATA 표 클래스 |
