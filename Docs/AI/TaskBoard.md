@@ -13,7 +13,7 @@
 | MV-RUN-GEN 레벨 생성 | 대기 | — | — | | | | MV-RUN-SIM 공용 상태(RunObject) Commit 위에서 시작 |
 | MV-META 메타 규칙 | 대기 | — | — | | | | 선행: MV-SAVE가 dev에 들어간 뒤(MV-G1-INT) |
 | MV-TOOL-ART 그림 추출 | 1차 병합, 3차 진행 | 1·2번째 닫힘 → 3번째 진행 | 1차 `ai/MV-TOOL-ART-extract`(병합 뒤 지움), 3차 `ai/MV-TOOL-ART-remaining` @ `.wt/c` | `43637e7`, 3차 dev `688ecaf` | `e7b58c8` → dev `688ecaf` | compile `630d4553c1d9` PASS, V1 결정성 PASS, V2 PASS(ΔE 최대 ≤ 3 — 총괄 결정, 03 §3.11 동기화), V4 PASS, V3 NOT_RUN | 정식 1699·임시 275. 남은 것: 표가 쓰는 미추출 14이름, 로비·이펙트·UI 스킨. MV-DATA 요청: 113 portrait 대소문자(2차 담당에 전달) |
-| MV-QA-HARNESS 캡처 도구(프로토 쪽) | 진행 | 하위 에이전트 | `ai/MV-QA-HARNESS-proto` @ `.wt/d`, `moonvillage-d` | `43637e7` | | | 쓰기: `Tools/MvCapture/`, `QA/Scenes/`, `QA/Dumps/`, `QA/Captures/Proto/`. Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도 계약 |
+| MV-QA-HARNESS 캡처 도구(프로토 쪽) | 프로토 쪽 병합 | 하위 에이전트 닫힘 | `ai/MV-QA-HARNESS-proto`(병합 뒤 지움) | `43637e7` | `b66c41f` → dev `63c76dc` | 37/38장면(U-14 protoNA) 118장 2회 픽셀 해시 동일, GEN·FIELD·SIM 덤프 재생성 SHA 동일. 사람 확인 NOT_RUN: U-04·U-12·U-13 연출 포착 | Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도. `mask[]` 실측은 MV-QA-ACCEPT. 기획서 12 §12.1 동기화. 결정 D-41+D-30·D-71·D-27 |
 | MV-TOOL-SND 소리 굽기 | 진행 | 하위 에이전트 | `ai/MV-TOOL-SND-bake` @ `.wt/e`, `moonvillage-e` | `e4e492d`(MV-TOOL-ART 공용 기반, dev `43637e7` 위) | | | 쓰기: `Tools/MvExtract/sound/`, `A/Addressables/Remote/Audio/`. 공용 파일 변경은 요청으로 |
 | MV-ART-ATLAS 아틀라스·임포트 | 진행 | 하위 에이전트 | `ai/MV-ART-ATLAS-import` @ `.wt/g`, `moonvillage-g` | dev `688ecaf` + 총괄 asmdef `474ad46`(MV.Editor 참조, MV.Editor.Tests) | | | 쓰기: UIAtlas·WorldAtlas·Texture, `S/MV.Editor/Import/`, `S/MV.Editor.Tests/`, Art `.meta` 임포트 설정. Addressables 그룹 자산을 이 계약에 위임(전역 설정·Default 그룹·Managed Config 제외) |
 
@@ -24,7 +24,7 @@
 | a | `C:/Project/MoonVillage.wt/a` | `moonvillage-a` | MV-DATA 2차 | 완료·체크포인트·입력 약 15만 토큰 |
 | b | `C:/Project/MoonVillage.wt/b` | `moonvillage-b` | MV-G1-INT(MV-SAVE 끝) | 같음 |
 | c | `C:/Project/MoonVillage.wt/c` | `moonvillage-c` | MV-TOOL-ART 3차 | 같음 |
-| d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | MV-QA-HARNESS(프로토) | 같음 |
+| d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | 비어 있음(dev 분리 HEAD, 다음 계약에 재사용) | — |
 | e | `C:/Project/MoonVillage.wt/e` | `moonvillage-e` | MV-TOOL-SND | 같음 |
 | f | `C:/Project/MoonVillage.wt/f` | `moonvillage-f` | MV-RUN-SIM | 같음 |
 | g | `C:/Project/MoonVillage.wt/g` | `moonvillage-g` | MV-ART-ATLAS | 같음 |
