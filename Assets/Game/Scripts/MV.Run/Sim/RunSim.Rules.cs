@@ -140,8 +140,8 @@ namespace MV.Run
             if (o.Dead) return false;
             switch (o.Kind.hittable)
             {
-                case Hittable.Never: return false;
-                case Hittable.BeforePass: return !o.Done && !(o.Z < S.P.Z);
+                case MV.Data.Hittable.Never: return false;
+                case MV.Data.Hittable.BeforePass: return !o.Done && !(o.Z < S.P.Z);
                 default: return true;
             }
         }
