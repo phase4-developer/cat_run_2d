@@ -115,6 +115,9 @@ namespace MV.Data
 
         public MvSchema FreeIdRule() { FreeIds = true; return this; }
         public MvSchema OneRow() { SingleRow = true; return this; }
+        /// <summary>key 유일 범위가 group 안(110_card 슬롯 키, 07 §7.7.3).</summary>
+        public bool KeyPerGroup { get; private set; }
+        public MvSchema KeyUniqueInGroup() { KeyPerGroup = true; return this; }
         public MvSchema RunConsume() { AllowRunConsume = true; return this; }
         public MvSchema Group(string column = "group") { GroupColumn = column; return Add(column, MvColKind.Int, true); }
 

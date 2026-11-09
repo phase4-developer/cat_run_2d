@@ -378,7 +378,7 @@ namespace MV.Data
         public const string Table = "110_card";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Group().Key().Int("tier", true)
             .Fk("effectId", CardEffectData.Table, true).Int("sort").Bool("active").Res("icon", MvAtlas.UiCard)
-            .Res("projSprite", MvAtlas.Theme);
+            .Res("projSprite", MvAtlas.Theme).KeyUniqueInGroup();
 
         /// <summary>0 = 공용, n = 113_god.cardGroup.</summary>
         public int group { get; private set; }

@@ -72,9 +72,8 @@ namespace MV.Data.Tests
             floor = TsvFixture.Append(floor, floorHeader, R("303031002", "31", "2", "1200000", "12000000", "16", "23", "Hash"));
             floor = TsvFixture.Append(floor, floorHeader, R("303031003", "31", "3", "12000000", "24000000", "18", "29", "Hash"));
             var zone = TsvFixture.Set(TsvFixture.Read("301_zone"), "301001006", "areaTo", "31");
-            var config = TsvFixture.SetByKey(TsvFixture.Read("300_runConfig"), RunConfigKeys.PLAYABLE_AREAS, "value", "31");
-
-            AssertNoErrors(TsvFixture.Validate(("302_area", area), ("303_areaFloor", floor), ("301_zone", zone), ("300_runConfig", config)));
+            // PLAYABLE_AREAS는 그대로 둔다: Area 17~30이 active 0(D-71 대기)이라 31로 올리면 `≤ active Area 수` 규칙에 걸린다.
+            AssertNoErrors(TsvFixture.Validate(("302_area", area), ("303_areaFloor", floor), ("301_zone", zone)));
         }
 
         [Test]
@@ -85,7 +84,7 @@ namespace MV.Data.Tests
                 R("302001031", "31", "301001006", "31", "1", "304001015", "69000", "1755", "1"));
             var report = TsvFixture.Validate(("302_area", area));
             AssertError(report, "301_zone", "Zone 범위 끝");
-            AssertError(report, "302_area", "범위 밖");
+            AssertError(report, "302_area", "밖입니다");
         }
 
         // ---------------- 형식·참조 ----------------

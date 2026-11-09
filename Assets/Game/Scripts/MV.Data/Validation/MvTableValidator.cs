@@ -22,7 +22,8 @@ namespace MV.Data
         static readonly HashSet<int> s_zeroIdAllowed = new HashSet<int> { 3, 601, 621, 622 };
 
         /// <summary>런 표 밖에서도 쓸 수 있는 600번대(07 §7.13.2).</summary>
-        static readonly HashSet<int> s_metaRunTypes = new HashSet<int> { 608, 609 };
+        /// 630(Blessing)은 07 §7.8.12가 08 광고 보상에 쓰므로 함께 둔다(§7.13.2 문구와 다름, 보고에 남김).
+        static readonly HashSet<int> s_metaRunTypes = new HashSet<int> { 608, 609, 630 };
 
         /// <summary>
         /// 작성 검증. 표 원문 묶음으로 새 <see cref="MvTables"/>를 채우고 검사한다. 원문 첫 줄로 중복 열도 본다.
@@ -153,7 +154,8 @@ namespace MV.Data
                     if (err != null) r.Error(name, id, c.Name, err);
                     if (c.Kind == MvColKind.Key)
                     {
-                        if (!keys.TryGetValue(c.Name, out var set)) keys.Add(c.Name, set = new HashSet<string>(StringComparer.Ordinal));
+                        var scope = s.KeyPerGroup && s.GroupColumn != null ? c.Name + "@" + row.Get(s.GroupColumn) : c.Name;
+                        if (!keys.TryGetValue(scope, out var set)) keys.Add(scope, set = new HashSet<string>(StringComparer.Ordinal));
                         if (!set.Add(raw)) r.Error(name, id, c.Name, $"key `{raw}`가 중복됩니다");
                     }
                 }

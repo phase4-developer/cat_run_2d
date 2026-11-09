@@ -57,10 +57,12 @@ namespace MV.Data.Tests
             int c = Array.IndexOf(header, column);
             int k = Array.IndexOf(header, idColumn);
             if (c < 0) throw new ArgumentException($"열 {column}가 없습니다");
-            var row = rows.FirstOrDefault(r => r[k] == id) ?? throw new ArgumentException($"id {id}가 없습니다");
+            int index = rows.FindIndex(r => r[k] == id);
+            if (index < 0) throw new ArgumentException($"id {id}가 없습니다");
+            var row = rows[index];
             if (row.Length <= c) Array.Resize(ref row, header.Length);
             row[c] = value;
-            rows[rows.FindIndex(r => r[k] == id)] = row;
+            rows[index] = row;
             return Join(header, rows);
         }
 
