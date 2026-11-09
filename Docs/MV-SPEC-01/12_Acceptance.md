@@ -15,7 +15,7 @@
 
 | 대상 | 방법 |
 |---|---|
-| 화면 크기 | 뷰포트 1080×1920, `deviceScaleFactor` 1 → `PR2 = min(2, 1) = 1`, 스테이지 1080×1920(9:16, L943~948) |
+| 화면 크기 | 뷰포트 1112×1920(정본 body 좌우 여백 16px씩), `deviceScaleFactor` 1 → `PR2 = min(2, 1) = 1`, 스테이지 1080×1920(9:16, L943~948). 캡처는 `#stage`만 잘라 1080×1920 PNG로 찍는다 |
 | 난수 | `Math.random`을 감싼다. 기본은 시드 PRNG(mulberry32, 시드는 장면 정의). 호출마다 `(값, 호출 함수 이름)`을 기록한다(`new Error().stack` 첫 게임 함수). 로직 대조용 덤프에는 **로직 함수에서 나온 값만** 순서대로 남긴다(12.3.2) |
 | 시간 | `performance.now`·`Date.now`를 가짜 시계로 바꾸고 `requestAnimationFrame`을 끊은 뒤 하네스가 `frame()`을 직접 호출한다. 프레임 dt는 1/60초 고정 |
 | 저장 | 페이지 로드 전에 `localStorage['catescape_moon_v1']`에 장면 정의의 저장 JSON을 넣는다 |
@@ -33,7 +33,7 @@
 | 저장 | 장면 정의의 저장 JSON을 정본 형식으로 읽어 DataContainer에 넣는 개발 전용 가져오기(MV-SAVE의 정본 가져오기 경로와 같은 변환 함수) |
 | 입력 | 같은 입력 기록 재생 |
 
-장면 정의 파일 `QA/Scenes/<장면ID>.json`: `{ id, seed, preset, save, inputs[], frames, captureAt[], mask[] }`. 양쪽 도구가 같은 파일을 읽는다.
+장면 정의 파일 `QA/Scenes/<장면ID>.json`: `{ id, seed, preset, save, inputs[], frames, captureAt[], mask[], ops[], rng, epochMs, protoNA }`. `ops[]`는 테스트 패널 조작(card·deliver·debug·speed), `protoNA`는 정본에 없는 장면 표시다. 양쪽 도구가 같은 파일을 읽으며 Unity 개발 빌드 주입 도구도 같은 이름을 구현한다. 형식 정본은 `QA/Scenes/README.md`.
 
 ## 12.2 비교 장면 목록
 
