@@ -374,11 +374,11 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 | 〃 위로 흐르는 흰 줄 5개 L3635 | `Fx_Stripe` | World | 16×64 | Center | 1(런타임 스크롤) | none | `Atlas_Fx_Common` | |
 | `drawWarpGate` 사이잘 기둥(일반·금빛) L3216 | `World_Obj_Arch_Post`, `World_Obj_Arch_Post_Gold` | World | 280×444(피벗 화소 60,436. 기둥 x = 4.6 m의 원근 기울기 포함, 왼쪽은 flipX) | BottomCenter | 1 | all | 테마 | `105_objectKind.sprite`(arch) |
 | 〃 받침·중간·위 발판(`drawBox`) L3217~3219 | **메쉬**(색 P1/P2) | — | — | — | — | — | — | `105_objectKind.tint` |
-| 〃 매달린 장난감 3색 L3221 | `World_Obj_Arch_Toy_{0..2}` | World | 80×80 | Center | 1(흔들림 런타임 `sin(t*2+dx)*0.3`) | all | 테마 | |
+| 〃 매달린 장난감 3색 L3221 | `World_Obj_Arch_Toy_{0..2}` | World | 80×80(외곽선 `max(1.5, 0.05·s)`, L3213 `c0.s` 대신 공 위치 s [추정]) | Center | 1(흔들림 런타임 `sin(t*2+dx)*0.3`) | all | 테마 | |
 | 〃 금빛 광륜·별 L3223 | `Fx_Glow_Lin` + `Fx_Star4` | — | — | — | — | — | Fx | |
 | `drawWell` 입구 L3645 | `World_Obj_Well_Mouth` | World | 248×128 | WellMouth | 1 | all | 테마 | `105_objectKind.sprite`(tower) |
 | 〃 벽돌 4색(우물 고리) L3646~3649, 색 L1340 | `World_Obj_Well_Brick_{0..3}` | World | 80×48 | Center | 1(배치는 3D 고리 44개, [02](02_Visual.md)) | all | 테마 | |
-| 〃 위 잡동사니 5색 L1346 | `World_Obj_Well_Junk_{0..4}` | World | 64×40 | Center | 1 | all | 테마 | |
+| 〃 위 잡동사니 5색 L1346 | `World_Obj_Well_Junk_{0..4}` | World | 80×48(정본은 벽돌과 같은 식 `0.54·0.3·s`로 그림) | Center | 1 | all | 테마 | |
 | coin 츄르 더미 L3108(츄르 6개 개별 출렁 `sin(t+i)*0.02c`) | `World_Item_Churu_{0..2}`(조립) | World | 96×40 | Center | 1 | all | 테마 | `105_objectKind.sprite`(coin) |
 | gem 캣닢 화분 L3112 | `World_Item_CatnipPot` | World | 192×212(피벗 화소 96,204) | BottomCenter | 1 | all | 테마 | `105_objectKind.sprite`(gem) |
 | 〃 반짝이 L3116 | `Fx_Star4` | — | — | — | 크기 `0.14*(0.8+0.2 sin(now/200))` 런타임 | — | Fx | |
@@ -392,10 +392,10 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 | 함수(줄) | 스프라이트 이름 | 종류 | 캔버스 | 피벗 | 프레임 | 테마 | 아틀라스 | 표·열 |
 |---|---|---|---|---|---|---|---|---|
 | `drawProjShape` t 1~8 L3368 (게임 반지름 0.5 m, blades 0.6 m) | `World_Proj_{1..8}` | World | 160×160 | Center | 1(회전 런타임 `now/110`, `now/180`) | all | 테마 | `103_item.projSprite` |
-| spear 머리 3겹(fire `#ffb03a`/그 외 `#ff3a4a`) L3802 | `World_Proj_SpearHead_Fire`, `_Bolt` | World | 96×96 | Center | 1 | none | Fx | `110_card` spear 행 [제안 열 `projSprite`] |
+| spear 머리 3겹(fire `#ffb03a`/그 외 `#ff3a4a`) L3802 | `World_Proj_SpearHead_Fire`, `_Bolt` | World | 96×96 | Center | 1 | none | `Atlas_Fx_Common` | `110_card` spear 행 [제안 열 `projSprite`] |
 | spear 궤적 선 L3802 | **선 메쉬**(LineRenderer, 굵기 `max(4, s*0.32)`, 흰 심) | — | — | — | — | — | — | [06](06_Effects.md) |
 | `drawPawFx` 발바닥 L3747 | `Fx_Paw` | World | 160×128 | Center | 1(낙하·페이드 런타임, 수명 0.55 s) | none | Fx | `04_effect.prefab` |
-| 〃 착지 링 | `Fx_RingEllipse` | World | 256×80 | Center | 1(스케일 런타임) | none | Fx | 〃 |
+| 〃 착지 링 | `Fx_RingEllipse` | World | 192×80(rx 84, ry = rx·0.33, 굵기 rx·0.2/0.9) | Center | 1(스케일 런타임) | none | Fx | 〃 |
 | `drawHissFx` 3겹 링 + 방사선 10 L3753 | `Fx_Hiss` | World | 512×288 | Center | 1(반지름 `0.8+k*5`, 알파 `1−k` 런타임) | none | Fx | 〃 |
 | `drawFx` 빛(glowTex 프로필 `c → c+'99'@0.45 → 0`) L3142 | `Fx_Glow_Fx` | World | 64×64 | Center | 1(색 틴트) | none | Fx | 〃 |
 | `drawLights`·라벨 빛(선형 `c+'77' → 0`) L3603, L3131 | `Fx_Glow_Lin` | World | 64×64 | Center | 1(색 틴트, 가산) | none | Fx | 〃 |
@@ -414,9 +414,9 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 | 노을 광륜 L3177 | `Fx_Glow_Lin` | — | — | — | — | — |
 | 달 크레이터 `rgba(200,190,160,.35)` L3178 | `Fx_Disc` 틴트 | — | — | — | — | — |
 | 초승달 가림(하늘색 `s1` 원) L3179 | `Fx_Disc` 틴트 | — | — | — | — | — |
-| 휴지 롤 몸·구멍·외곽선 L3185 | `Fx_Warp_RollBody`, `Fx_Warp_RollHole`, `Fx_Warp_RollLine` | UI | 64×48 | Center | none | Fx |
+| 휴지 롤 몸·구멍·외곽선 L3185 | `Fx_Warp_RollBody`, `Fx_Warp_RollHole`, `Fx_Warp_RollLine` | UI | 48×48(반지름 20, 구멍 0.35배, 선 OLC 0.12배. 세 장 같은 피벗) | Center | none | Fx |
 | 별(night>0.5, 2px) L3172 | `Fx_Dot` | — | — | — | — | — |
-| 섬광 링 `drawWarpOut` L3199 | `Fx_Ring` | UI | 256×256 | Center | none | Fx |
+| 섬광 링 `drawWarpOut` L3199 | `Fx_Ring` | UI | 256×256(반지름 118, 굵기 16 = wo 0의 값 [추정]) | Center | none | Fx |
 | 집중선 18줄 L3814 | `Fx_SpeedLine` | UI | 8×128 | 아래 가운데 | none | Fx |
 | 단계 이름 L3193 | TMP(§3.7) | — | — | — | — | — |
 
@@ -429,15 +429,15 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 | 방 배경(벽·징두리·창(달·건물)·선반·달력 '12월'·바닥·러그) L3478~3505 | `Tex_Lobby_Room` | Texture | 1080×1920 | Center | 1. 억제: 전구 `E`(4색·`shadeC −0.5` 색, rx≤3), 전구 빛 `fillRect` 24×24, 창밖 눈 `ctx.arc`, 전체 그라데이션 `fillRect`(난로 빛·비네트), `drawFac`·`mochi`·`facCushion`·`star4`, 시설 이름표 `RR`(`rgba(40,24,36,.72)`)·`fillText`(달력 '12월'은 남김: 억제 조건을 시설 글자 크기 `W*0.026`로 한정) | 단독 | LobbyStage 프리팹 |
 | 비네트 L3537 | `Tex_Lobby_Vignette` | Texture | 540×960 | Center | 1(늘려 씀) | 단독 | 〃 |
 | 난로 빛 L3505 | `Fx_Glow_Lin` 틴트 `rgba(255,170,90)` 알파 `0.22+0.04 sin(7t)+stove·0.05` | — | — | — | — | — | — |
-| 가랜드 전구 4색 × 켬/끔 L3497 | `Lobby_Bulb_{0..3}_On`, `_Off` | World(로비) | 16×16 | Center | 1(깜빡임 `((k + (t*2.5|0)) % 3) !== 0`, 빛 `Fx_Glow_Lin` r 12px) | `Atlas_World_Lobby` | |
+| 가랜드 전구 4색 × 켬/끔 L3497 | `Lobby_Bulb_{0..3}_On`, `_Off` | World(로비) | 16×16(화면 3×4 px 타원을 160/(1080·0.115)배) | Center | 1(깜빡임 `((k + (t*2.5|0)) % 3) !== 0`, 빛 `Fx_Glow_Lin` r 12px) | `Atlas_World_Lobby` | |
 | 창밖 눈 26개 L3489 | `Fx_Dot`(창 사각형 마스크 안) | — | — | — | — | — | — |
-| `drawFac` 캣타워 st 1~3 L3401 | `Lobby_Fac_Tower_{1..3}_{00..11}` | World(로비) | 352×464 | BottomCenter | st1: 1, st2·3: 12(t 0~2.856 s, 공 흔들림 `sin(t*2.2)`), 4.2 fps | `Atlas_World_Lobby` | `10_lobbyUpgrade.facSprite`[제안 열] |
-| 〃 스크래쳐 st 1~3 L3415 | `Lobby_Fac_Scratch_{1..3}` | 〃 | 288×336 | BottomCenter | 1(st3 별은 `Fx_Star4` 런타임) | 〃 | 〃 |
-| 〃 생선 건조대 st 1~3 × 생선 수 `nF`(1~2/1~4/1~6) L3424 | `Lobby_Fac_Rack_{st}_F{n}` (12종) | 〃 | 320×336 | BottomCenter | 1(흔들림 `sin(t*1.6+i)*0.03` 생략 [추정]) | 〃 | 〃 |
-| 〃 장난감 바구니 st 1~3 L3436 | `Lobby_Fac_Basket_{1..3}` | 〃 | 256×224 | BottomCenter | 1 | 〃 | LobbyStage(Area 강화 합계) |
-| 〃 난로 st 0~3 L3446 | `Lobby_Fac_Stove_{0..3}_{00..07}` | 〃 | 288×448 | BottomCenter | st0: 1, st1~3: 8(t 0~0.785 s, 불꽃 `0.9+0.1 sin(t*9)`), 10.2 fps | 〃 | LobbyStage(부활) |
-| `facCushion` 친구 방석 4색 L3523 | `Lobby_Cushion_{0..3}` | 〃 | 176×80 | Center | 1 | 〃 | |
-| 감정 말풍선 L3534 | `Lobby_Bubble` | 〃 | 112×112 | Center | 1(크기 `k`·알파 런타임) | 〃 | |
+| `drawFac` 캣타워 st 1~3 L3401 | `Lobby_Fac_Tower_1`, `Lobby_Fac_Tower_{2,3}_{00..11}` | World(로비) | 336×536(피벗 화소 168,498. 단계 공통, s = 160·1.0) | BottomCenter | st1: 1, st2·3: 12(t 0~2.856 s, 공 흔들림 `sin(t*2.2)`), 4.2 fps | `Atlas_World_Lobby` | `10_lobbyUpgrade.facSprite`[제안 열] |
+| 〃 스크래쳐 st 1~3 L3415 | `Lobby_Fac_Scratch_{1..3}` | 〃 | 268×252(피벗 화소 134,216. s = 160·0.9) | BottomCenter | 1(st3 별은 `Fx_Star4` 런타임) | 〃 | 〃 |
+| 〃 생선 건조대 st 1~3 × 생선 수 `nF`(1~2/1~4/1~6) L3424 | `Lobby_Fac_Rack_{st}_F{n}` (12종) | 〃 | 312×284(피벗 화소 156,248. s = 160·0.85) | BottomCenter | 1(흔들림 `sin(t*1.6+i)*0.03` 생략 [추정]) | 〃 | 〃 |
+| 〃 장난감 바구니 st 1~3 L3436 | `Lobby_Fac_Basket_{1..3}` | 〃 | 220×232(피벗 화소 110,196. s = 160·0.85) | BottomCenter | 1 | 〃 | LobbyStage(Area 강화 합계) |
+| 〃 난로 st 0~3 L3446 | `Lobby_Fac_Stove_0`, `Lobby_Fac_Stove_{1..3}_{00..07}` | 〃 | 320×428(피벗 화소 160,392. s = 160·0.95) | BottomCenter | st0: 1, st1~3: 8(t 0~0.785 s, 불꽃 `0.9+0.1 sin(t*9)`), 10.2 fps | 〃 | LobbyStage(부활) |
+| `facCushion` 친구 방석 4색 L3523 | `Lobby_Cushion_{0..3}` | 〃 | 176×80(피벗 화소 88,36) | Center | 1 | 〃 | |
+| 감정 말풍선 L3534 | `Lobby_Bubble` | 〃 | 112×108(피벗 화소 56,48 = 타원 중심, 꼬리 포함) | Center | 1(크기 `k`·알파 런타임) | 〃 | |
 | 말풍선 기호 ♪ ♥ ✦ (Gothic A1 900, 색 `#7a5ac8`/`#e8504a`/`#f2b33d`) | `UI_Emoji_Note`, `UI_Emoji_Heart`, `UI_Emoji_Sparkle` | UI | 64×64 | Center | 1 | `Atlas_UI_Icon` | |
 | 터치 반동 별 6개 L3516 | `Fx_Star4_Pale`(색 `#fff3a0` 틴트) | — | — | — | — | — | — |
 | 시설 이름표·자는 친구 'Z' L3519, L3526 | TMP + `UI_Skin_Pill` | — | — | — | — | — | — |

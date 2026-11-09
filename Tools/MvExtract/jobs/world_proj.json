@@ -198,5 +198,55 @@
   },
   "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
   "src": "L3368"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_SpearHead_Fire",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "c": "#ffb03a"
+  },
+  "expr": "(E(g, X, Y, S*0.34, S*0.34, ha(A.c, 0.5)), E(g, X, Y, S*0.17, S*0.17, A.c), E(g, X, Y, S*0.07, S*0.07, '#ffffff'))",
+  "src": "L3802~3803"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_SpearHead_Bolt",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "c": "#ff3a4a"
+  },
+  "expr": "(E(g, X, Y, S*0.34, S*0.34, ha(A.c, 0.5)), E(g, X, Y, S*0.17, S*0.17, A.c), E(g, X, Y, S*0.07, S*0.07, '#ffffff'))",
+  "src": "L3802~3803"
  }
 ]

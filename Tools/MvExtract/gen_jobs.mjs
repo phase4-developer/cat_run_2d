@@ -137,6 +137,56 @@ for (const [nm, ch, c] of [['Note', '♪', '#7a5ac8'], ['Heart', '♥', '#e8504a
   add('ui_emoji.json', { name: `UI_Emoji_${nm}`, atlas: 'Atlas_UI_Icon', mode: 'direct', pivot: 'Center', canvas: { w: 64, h: 64, pivotPx: [32, 32] }, args: { ch, c },
     expr: "(g.font = '900 44px \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = A.c, g.fillText(A.ch, X, Y + 2))", src: 'L3534' });
 
+// ── 3.5.6 로비 시설(drawFac L3399~3460): 로비 s = 160 px/단위(W*0.115, 로비 주인공과 같은 ppu 160). scaleK = fac() 배율 ──
+const LOB = { atlas: 'Atlas_World_Lobby', mode: 'direct', pivot: 'BottomCenter', ppu: 160, expr: 'drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)' };
+const FAC = { tower: ['Tower', 1.0, [336, 536, 168, 498]], scratch: ['Scratch', 0.9, [268, 252, 134, 216]], rack: ['Rack', 0.85, [312, 284, 156, 248]], basket: ['Basket', 0.85, [220, 232, 110, 196]], stove: ['Stove', 0.95, [320, 428, 160, 392]] };
+const facCv = (k) => { const [w, h, px, py] = FAC[k][2]; return { w, h, pivotPx: [px, py] }; };
+for (let st = 1; st <= 3; st++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Tower_${st}`, scaleK: 1.0, canvas: facCv('tower'), args: { kind: 'tower', st, extra: undefined }, src: 'L3401, L3509',
+  ...(st >= 2 ? { frames: { var: 't', from: 0, period: TAU / 2.2, count: 12, fps: 4.2 } } : {}) });
+for (let st = 1; st <= 3; st++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Scratch_${st}`, scaleK: 0.9, canvas: facCv('scratch'), args: { kind: 'scratch', st }, suppress: st === 3 ? [{ fn: 'star4' }] : [], src: 'L3415, L3512(st3 별은 런타임 Fx_Star4)' });
+for (let st = 1; st <= 3; st++) for (let n = 1; n <= st * 2; n++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Rack_${st}_F${n}`, scaleK: 0.85, canvas: facCv('rack'), args: { kind: 'rack', st, extra: n }, src: 'L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)' });
+for (let st = 1; st <= 3; st++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Basket_${st}`, scaleK: 0.85, canvas: facCv('basket'), args: { kind: 'basket', st }, src: 'L3436, L3513' });
+for (let st = 0; st <= 3; st++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Stove_${st}`, scaleK: 0.95, canvas: facCv('stove'), args: { kind: 'stove', st }, src: 'L3446, L3508',
+  ...(st >= 1 ? { frames: { var: 't', from: 0, period: TAU / 8, count: 8, fps: 10.2 } } : {}) });
+const CUSH = ['#7ac0a8', '#e8a0b0', '#a0b8e8', '#f0d080'];
+for (let i = 0; i < 4; i++) add('lobby.json', { name: `Lobby_Cushion_${i}`, atlas: 'Atlas_World_Lobby', mode: 'direct', pivot: 'Center', ppu: 160, canvas: { w: 176, h: 80, pivotPx: [88, 36] }, args: { c: CUSH[i] },
+  expr: 'facCushion(g, X, Y, S*0.5, A.c, Math.max(1.2, S*0.045))', src: 'L3396, L3523' });
+// 말풍선(L3534, k = 1). 외곽선 lw = max(1.5, W*0.005), 로비 W = s/0.115
+add('lobby.json', { name: 'Lobby_Bubble', atlas: 'Atlas_World_Lobby', mode: 'direct', pivot: 'Center', ppu: 160, canvas: { w: 112, h: 108, pivotPx: [56, 48] }, src: 'L3534(크기 k·알파는 런타임)',
+  expr: "(E(g, X, Y, S*0.3, S*0.26, '#ffffff', OLC, Math.max(1.5, S/0.115*0.005)), PL(g, [[X - S*0.12, Y + S*0.18], [X - S*0.28, Y + S*0.36], [X, Y + S*0.22]], '#ffffff'))" });
+// 가랜드 전구(L3501): 화면 고정 3×4 px 타원. 로비 ppu 160 기준으로 1080 폭 화면 화소를 160/(1080*0.115)배
+const BULB = ['#ff6a5a', '#ffd84a', '#6ad0ff', '#8af06a'];
+for (let i = 0; i < 4; i++) for (const on of [true, false]) add('lobby.json', { name: `Lobby_Bulb_${i}_${on ? 'On' : 'Off'}`, atlas: 'Atlas_World_Lobby', mode: 'direct', pivot: 'Center', ppu: 160, canvas: { w: 16, h: 16, pivotPx: [8, 8] }, args: { c: BULB[i], on },
+  expr: 'E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))', src: 'L3501(빛은 Fx_Glow_Lin 런타임)' });
+
+// ── 3.5.4·3.5.5 흰 이펙트(색 틴트는 런타임) ──
+const FX = (name, w, h, expr, src, extra = {}) => add('fx.json', { name, atlas: 'Atlas_Fx_Common', mode: 'direct', pivot: 'Center', canvas: { w, h, pivotPx: [w / 2, h / 2] }, expr, src, ...extra });
+FX('Fx_Glow_Fx', 64, 64, "(() => { const gr = g.createRadialGradient(X, Y, 0, X, Y, 32); gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.45, '#ffffff99'); gr.addColorStop(1, '#ffffff00'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); })()", 'L3142', { allowEdge: true });
+FX('Fx_Glow_Lin', 64, 64, "(() => { const gr = g.createRadialGradient(X, Y, 0, X, Y, 32); gr.addColorStop(0, '#ffffff77'); gr.addColorStop(1, '#ffffff00'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); })()", 'L3603, L3131', { allowEdge: true });
+FX('Fx_Disc', 128, 128, "E(g, X, Y, 62, 62, '#ffffff')", 'L3176~3179');
+FX('Fx_Ring', 256, 256, "E(g, X, Y, 118, 118, null, '#ffffff', 16)", 'L3199(굵기 14·(1−wo)+2의 wo = 0 값 16 px, 반지름·굵기는 런타임 스케일)');
+FX('Fx_RingEllipse', 192, 80, "E(g, X, Y, 84, 84*0.33, null, '#ffffff', 84*0.2/0.9)", 'L3146(rx = 0.9·sc·s, ry = rx·0.33, 굵기 0.2·sc·s)');
+FX('Fx_Square', 8, 8, "(g.fillStyle = '#ffffff', g.fillRect(0, 0, 8, 8))", 'L3148(외곽선 1px 생략)', { allowEdge: true });
+FX('Fx_Dot', 8, 8, "E(g, X, Y, 3, 3, '#ffffff')", 'L3604', { allowEdge: true });
+FX('Fx_SpeedLine', 8, 128, "(g.fillStyle = '#ffffff', g.fillRect(2, 0, 4, 128))", 'L3814(알파 .6·굵기 1~4·길이 H*0.2는 런타임)', { allowEdge: true, pivot: 'BottomCenter', canvas: { w: 8, h: 128, pivotPx: [4, 128] } });
+// 우다다 휴지 롤(L3185): 몸·구멍은 흰(색 mixC 틴트), 외곽선은 OLC 굵기 rr*0.12. 세 장을 같은 캔버스·같은 피벗에 겹친다
+FX('Fx_Warp_RollBody', 48, 48, "E(g, X, Y, 20, 20, '#ffffff')", 'L3185');
+FX('Fx_Warp_RollHole', 48, 48, "E(g, X, Y, 20*0.35, 20*0.35, '#ffffff')", 'L3185');
+FX('Fx_Warp_RollLine', 48, 48, "E(g, X, Y, 20, 20, null, OLC, 20*0.12)", 'L3185');
+
+// ── 3.5.3 관문 장난감·우물 벽돌·잡동사니 ──
+const TOY = ['#ff8fb0', '#7ad0f0', '#ffd84a'];
+for (let i = 0; i < 3; i++) add('world_obj.json', { name: `World_Obj_Arch_Toy_${i}`, atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'direct', pivot: 'Center', canvas: { w: 80, h: 80, pivotPx: [40, 40] }, args: { c: TOY[i] },
+  expr: 'E(g, X, Y, 0.26*S, 0.26*S, A.c, OLC, Math.max(1.5, S*0.05))', src: 'L3213(lw), L3221(끈·흔들림은 런타임)' });
+const WB = (name, c) => add('world_obj.json', { name, atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'direct', pivot: 'Center', canvas: { w: 80, h: 48, pivotPx: [40, 24] }, args: { c }, src: 'L3646~3649, L1340·L1346(색)',
+  expr: "(() => { const w = 0.54*S, h = 0.3*S; RR(g, X - w/2, Y - h/2, w, h, h*0.18, A.c, OLC, Math.max(1, S*0.03)); g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(X - w/2 + 1, Y - h/2 + 1, w - 2, Math.max(1, h*0.2)); })()" });
+['#c8643c', '#d9874a', '#b8543a', '#e0a060'].forEach((c, i) => WB(`World_Obj_Well_Brick_${i}`, c));
+['#6fd27a', '#f2c14e', '#58a6f0', '#e05a4a', '#c9c2b4'].forEach((c, i) => WB(`World_Obj_Well_Junk_${i}`, c));
+
+// ── 3.5.4 창 투사체 머리(L3803): 3겹 원. 궤적 선은 LineRenderer ──
+for (const [el, c] of [['Fire', '#ffb03a'], ['Bolt', '#ff3a4a']]) add('world_proj.json', { name: `World_Proj_SpearHead_${el}`, atlas: 'Atlas_Fx_Common', mode: 'direct', pivot: 'Center', canvas: { w: 96, h: 96, pivotPx: [48, 48] }, args: { c },
+  expr: "(E(g, X, Y, S*0.34, S*0.34, ha(A.c, 0.5)), E(g, X, Y, S*0.17, S*0.17, A.c), E(g, X, Y, S*0.07, S*0.07, '#ffffff'))", src: 'L3802~3803' });
+
 mkdirSync(join(ROOT, 'jobs'), { recursive: true });
 let n = 0;
 for (const [f, list] of Object.entries(out)) { writeFileSync(join(ROOT, 'jobs', f), JSON.stringify(list, null, 1) + '\n'); n += list.length; }

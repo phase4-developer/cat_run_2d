@@ -1,0 +1,1033 @@
+[
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Tower_1",
+  "canvas": {
+   "w": 336,
+   "h": 536,
+   "pivotPx": [
+    168,
+    498
+   ]
+  },
+  "args": {
+   "kind": "tower",
+   "st": 1
+  },
+  "src": "L3401, L3509"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Tower_2",
+  "canvas": {
+   "w": 336,
+   "h": 536,
+   "pivotPx": [
+    168,
+    498
+   ]
+  },
+  "args": {
+   "kind": "tower",
+   "st": 2
+  },
+  "src": "L3401, L3509",
+  "frames": {
+   "var": "t",
+   "from": 0,
+   "period": 2.855993321445266,
+   "count": 12,
+   "fps": 4.2
+  }
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Tower_3",
+  "canvas": {
+   "w": 336,
+   "h": 536,
+   "pivotPx": [
+    168,
+    498
+   ]
+  },
+  "args": {
+   "kind": "tower",
+   "st": 3
+  },
+  "src": "L3401, L3509",
+  "frames": {
+   "var": "t",
+   "from": 0,
+   "period": 2.855993321445266,
+   "count": 12,
+   "fps": 4.2
+  }
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.9,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Scratch_1",
+  "canvas": {
+   "w": 268,
+   "h": 252,
+   "pivotPx": [
+    134,
+    216
+   ]
+  },
+  "args": {
+   "kind": "scratch",
+   "st": 1
+  },
+  "src": "L3415, L3512(st3 별은 런타임 Fx_Star4)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.9,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Scratch_2",
+  "canvas": {
+   "w": 268,
+   "h": 252,
+   "pivotPx": [
+    134,
+    216
+   ]
+  },
+  "args": {
+   "kind": "scratch",
+   "st": 2
+  },
+  "src": "L3415, L3512(st3 별은 런타임 Fx_Star4)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.9,
+  "themeSet": "none",
+  "suppress": [
+   {
+    "fn": "star4"
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Scratch_3",
+  "canvas": {
+   "w": 268,
+   "h": 252,
+   "pivotPx": [
+    134,
+    216
+   ]
+  },
+  "args": {
+   "kind": "scratch",
+   "st": 3
+  },
+  "src": "L3415, L3512(st3 별은 런타임 Fx_Star4)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_1_F1",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 1,
+   "extra": 1
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_1_F2",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 1,
+   "extra": 2
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_2_F1",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 2,
+   "extra": 1
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_2_F2",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 2,
+   "extra": 2
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_2_F3",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 2,
+   "extra": 3
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_2_F4",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 2,
+   "extra": 4
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_3_F1",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 3,
+   "extra": 1
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_3_F2",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 3,
+   "extra": 2
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_3_F3",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 3,
+   "extra": 3
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_3_F4",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 3,
+   "extra": 4
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_3_F5",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 3,
+   "extra": 5
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Rack_3_F6",
+  "canvas": {
+   "w": 312,
+   "h": 284,
+   "pivotPx": [
+    156,
+    248
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 3,
+   "extra": 6
+  },
+  "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Basket_1",
+  "canvas": {
+   "w": 220,
+   "h": 232,
+   "pivotPx": [
+    110,
+    196
+   ]
+  },
+  "args": {
+   "kind": "basket",
+   "st": 1
+  },
+  "src": "L3436, L3513"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Basket_2",
+  "canvas": {
+   "w": 220,
+   "h": 232,
+   "pivotPx": [
+    110,
+    196
+   ]
+  },
+  "args": {
+   "kind": "basket",
+   "st": 2
+  },
+  "src": "L3436, L3513"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.85,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Basket_3",
+  "canvas": {
+   "w": 220,
+   "h": 232,
+   "pivotPx": [
+    110,
+    196
+   ]
+  },
+  "args": {
+   "kind": "basket",
+   "st": 3
+  },
+  "src": "L3436, L3513"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.95,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Stove_0",
+  "canvas": {
+   "w": 320,
+   "h": 428,
+   "pivotPx": [
+    160,
+    392
+   ]
+  },
+  "args": {
+   "kind": "stove",
+   "st": 0
+  },
+  "src": "L3446, L3508"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.95,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Stove_1",
+  "canvas": {
+   "w": 320,
+   "h": 428,
+   "pivotPx": [
+    160,
+    392
+   ]
+  },
+  "args": {
+   "kind": "stove",
+   "st": 1
+  },
+  "src": "L3446, L3508",
+  "frames": {
+   "var": "t",
+   "from": 0,
+   "period": 0.7853981633974483,
+   "count": 8,
+   "fps": 10.2
+  }
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.95,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Stove_2",
+  "canvas": {
+   "w": 320,
+   "h": 428,
+   "pivotPx": [
+    160,
+    392
+   ]
+  },
+  "args": {
+   "kind": "stove",
+   "st": 2
+  },
+  "src": "L3446, L3508",
+  "frames": {
+   "var": "t",
+   "from": 0,
+   "period": 0.7853981633974483,
+   "count": 8,
+   "fps": 10.2
+  }
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.95,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "expr": "drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)",
+  "name": "Lobby_Fac_Stove_3",
+  "canvas": {
+   "w": 320,
+   "h": 428,
+   "pivotPx": [
+    160,
+    392
+   ]
+  },
+  "args": {
+   "kind": "stove",
+   "st": 3
+  },
+  "src": "L3446, L3508",
+  "frames": {
+   "var": "t",
+   "from": 0,
+   "period": 0.7853981633974483,
+   "count": 8,
+   "fps": 10.2
+  }
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Cushion_0",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 176,
+   "h": 80,
+   "pivotPx": [
+    88,
+    36
+   ]
+  },
+  "args": {
+   "c": "#7ac0a8"
+  },
+  "expr": "facCushion(g, X, Y, S*0.5, A.c, Math.max(1.2, S*0.045))",
+  "src": "L3396, L3523"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Cushion_1",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 176,
+   "h": 80,
+   "pivotPx": [
+    88,
+    36
+   ]
+  },
+  "args": {
+   "c": "#e8a0b0"
+  },
+  "expr": "facCushion(g, X, Y, S*0.5, A.c, Math.max(1.2, S*0.045))",
+  "src": "L3396, L3523"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Cushion_2",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 176,
+   "h": 80,
+   "pivotPx": [
+    88,
+    36
+   ]
+  },
+  "args": {
+   "c": "#a0b8e8"
+  },
+  "expr": "facCushion(g, X, Y, S*0.5, A.c, Math.max(1.2, S*0.045))",
+  "src": "L3396, L3523"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Cushion_3",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 176,
+   "h": 80,
+   "pivotPx": [
+    88,
+    36
+   ]
+  },
+  "args": {
+   "c": "#f0d080"
+  },
+  "expr": "facCushion(g, X, Y, S*0.5, A.c, Math.max(1.2, S*0.045))",
+  "src": "L3396, L3523"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bubble",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 112,
+   "h": 108,
+   "pivotPx": [
+    56,
+    48
+   ]
+  },
+  "src": "L3534(크기 k·알파는 런타임)",
+  "expr": "(E(g, X, Y, S*0.3, S*0.26, '#ffffff', OLC, Math.max(1.5, S/0.115*0.005)), PL(g, [[X - S*0.12, Y + S*0.18], [X - S*0.28, Y + S*0.36], [X, Y + S*0.22]], '#ffffff'))"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bulb_0_On",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 16,
+   "h": 16,
+   "pivotPx": [
+    8,
+    8
+   ]
+  },
+  "args": {
+   "c": "#ff6a5a",
+   "on": true
+  },
+  "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
+  "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bulb_0_Off",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 16,
+   "h": 16,
+   "pivotPx": [
+    8,
+    8
+   ]
+  },
+  "args": {
+   "c": "#ff6a5a",
+   "on": false
+  },
+  "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
+  "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bulb_1_On",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 16,
+   "h": 16,
+   "pivotPx": [
+    8,
+    8
+   ]
+  },
+  "args": {
+   "c": "#ffd84a",
+   "on": true
+  },
+  "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
+  "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bulb_1_Off",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 16,
+   "h": 16,
+   "pivotPx": [
+    8,
+    8
+   ]
+  },
+  "args": {
+   "c": "#ffd84a",
+   "on": false
+  },
+  "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
+  "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bulb_2_On",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 16,
+   "h": 16,
+   "pivotPx": [
+    8,
+    8
+   ]
+  },
+  "args": {
+   "c": "#6ad0ff",
+   "on": true
+  },
+  "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
+  "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bulb_2_Off",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 16,
+   "h": 16,
+   "pivotPx": [
+    8,
+    8
+   ]
+  },
+  "args": {
+   "c": "#6ad0ff",
+   "on": false
+  },
+  "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
+  "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bulb_3_On",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 16,
+   "h": 16,
+   "pivotPx": [
+    8,
+    8
+   ]
+  },
+  "args": {
+   "c": "#8af06a",
+   "on": true
+  },
+  "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
+  "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Lobby_Bulb_3_Off",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 16,
+   "h": 16,
+   "pivotPx": [
+    8,
+    8
+   ]
+  },
+  "args": {
+   "c": "#8af06a",
+   "on": false
+  },
+  "expr": "E(g, X, Y, 3*S/124.2, 4*S/124.2, A.on ? A.c : shadeC(A.c, -0.5))",
+  "src": "L3501(빛은 Fx_Glow_Lin 런타임)"
+ }
+]
