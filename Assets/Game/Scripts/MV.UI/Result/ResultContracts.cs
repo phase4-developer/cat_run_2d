@@ -1,5 +1,4 @@
 using System;
-using jjevol;
 using MV.Data;
 using MV.Meta;
 using MV.Run;
@@ -11,10 +10,10 @@ namespace MV.UI
     public enum ResultKind { ZoneClear, AreaOpen, LevelDone, Fail }
 
     /// <summary>
-    /// 결과 팝업 데이터(05 §5.6 <c>ResultViewData</c>). 게임 루프가 <see cref="Create"/>로 만들고
-    /// <c>UIManager.Instance.SpawnUIPopupAsync(MvUiIds.Result, data)</c>로 연다.
+    /// 결과 화면 데이터(05 §5.6 <c>ResultViewData</c>). 게임 루프가 <see cref="Create"/>로 만들고
+    /// <see cref="MvUiNav.OpenResultAsync"/>로 연다(Framework 팝업 데이터 껍데기 <see cref="ResultPopupData"/>로 감싼다).
     /// </summary>
-    public sealed class ResultViewData : IPopupData
+    public sealed class ResultViewData
     {
         public ResultKind Kind;
         /// <summary>제목에 쓰는 Zone 번호(<c>301_zone.sort</c>).</summary>

@@ -35,6 +35,6 @@ namespace MV.UI
 
         /// <summary>결과 팝업을 연다(HUD는 팝업 설정으로 숨는다).</summary>
         public static async UniTask<ResultPopup> OpenResultAsync(ResultViewData data) =>
-            await Ui.SpawnUIPopupAsync(MvUiIds.Result, data) as ResultPopup;
+            await Ui.SpawnUIPopupAsync(MvUiIds.Result, new ResultPopupData(data)) as ResultPopup;
     }
 }
