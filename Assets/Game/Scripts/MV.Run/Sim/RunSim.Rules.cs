@@ -704,6 +704,7 @@ namespace MV.Run
             s.Phase = RunPhase.Climb;
             int k = ClimbK(c, n);
             double pw = (double)n / k, z0 = o.Z + c["z0Gap"], zEnd = z0 + k * c["stepD"], dH = k * c["stepH"];
+            s.Cliff = new RunCliff(zEnd, s.WorldY, s.WorldY + dH); s.HasCliff = true; // R.cliff(shiftWorld L2227), View용
             ShiftWorld(o.Z + c["shiftFrom"], k * c["stepD"] + c["shiftExtra"]);
             s.Climb = new ClimbState { StairObjId = o.Id, N = n, K = k, Pw = pw, Z0 = z0, ZEnd = zEnd, DH = dH, T = ClimbT(c, k) };
             s.Emit(new RunEvent(RunEventType.ClimbStart, a: n, b: k, amount: pw, x: z0, z: zEnd, amount2: dH, amount3: s.Climb.T));
