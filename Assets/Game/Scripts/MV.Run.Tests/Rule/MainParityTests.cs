@@ -11,13 +11,30 @@ namespace MV.Run.Tests.Rule
     /// <summary>
     /// 본편 동일 시험(04 §4.20.6-1). Area 1~5 × Level 1·8·15를 같은 시드·같은 입력으로 돌려
     /// RunResult·RunEvent 열·RunRng 소비 횟수와 순서를 확장 지점을 넣기 전 커밋(dev 1ad0b23)의 골든 요약과 맞춘다.
-    /// 골든 = 「프레임 수 / 이벤트 수 / RunRng 소비 수 / 종료 사유 / SHA256 앞 16자」.
+    /// 골든 = 「프레임 수 / 이벤트 수 / RunRng 소비 수 / 종료 사유 / SHA256 앞 16자」(커밋 c2a69fa에서 기록, 잡 43876e9a0589).
+    /// 두 경로를 다 본다: 기존 진입점 <c>RunSim.Create(setup, …)</c>(규칙 생략 = MainRunRule)과
+    /// <c>RunSim.Create(RunContext, MainRunRule, …)</c>(① Build → ② BuildCourse, 모디파이어 0·동행 없음).
     /// </summary>
     public sealed class MainParityTests
     {
         /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
+            ["A1L1"] = "f3181 e473 r238 Wall 71bb533fd4b11561",
+            ["A1L8"] = "f4036 e637 r302 Wall 4c77a7619eec48f3",
+            ["A1L15"] = "f4047 e681 r290 Wall 9b979a6c5766a80c",
+            ["A2L1"] = "f3773 e838 r261 Wall 5adcb29567c32a6d",
+            ["A2L8"] = "f3991 e579 r299 Wall 6bd20b477d519b6b",
+            ["A2L15"] = "f3721 e522 r279 Wall b4530fd749af4407",
+            ["A3L1"] = "f3538 e1052 r570 Wall 25e8706e54d73849",
+            ["A3L8"] = "f3923 e1020 r580 Wall 9ea3a878b363ea7b",
+            ["A3L15"] = "f4042 e1297 r569 Wall 2d4976b6f72b973e",
+            ["A4L1"] = "f3273 e875 r481 Wall bdc1cd89e6597266",
+            ["A4L8"] = "f3959 e1037 r582 Wall 8747be5aa7c79fe3",
+            ["A4L15"] = "f3798 e1018 r561 Wall ddcff8a0719fb060",
+            ["A5L1"] = "f3621 e1087 r563 Wall 43bbfa08f3284f00",
+            ["A5L8"] = "f4223 e1092 r606 Wall 2deaa4ad4d22a2c1",
+            ["A5L15"] = "f3805 e939 r562 Wall 179ba6fe1587e267",
         };
 
         [Test] public void Area1() => Check(0);
@@ -33,9 +50,17 @@ namespace MV.Run.Tests.Rule
             foreach (int level in ParityRun.Levels)
             {
                 string key = $"A{area + 1}L{level}";
-                string got = ParityRun.Play(t, area, level, (setup, rng) => RunSim.Create(setup, t, rng, new RunLevelBuilder()));
-                UnityEngine.Debug.Log($"[PARITY] {key} {got}");
-                if (!Golden.TryGetValue(key, out var want) || want != got) bad.Add($"{key}: 골든 {(want ?? "없음")} / 지금 {got}");
+                Golden.TryGetValue(key, out var want);
+                string legacy = ParityRun.Play(t, area, level, (setup, rng) => RunSim.Create(setup, t, rng, new RunLevelBuilder()));
+                string viaRule = ParityRun.Play(t, area, level, (setup, rng) =>
+                {
+                    var b = new RunLevelBuilder();
+                    var ctx = new RunContext { Tables = t, Snapshot = setup, MetaModifiers = RunModifiers.Zero };
+                    return RunSim.Create(ctx, new MainRunRule(b), rng, b);
+                });
+                UnityEngine.Debug.Log($"[PARITY] {key} {legacy} / {viaRule}");
+                if (want != legacy) bad.Add($"{key} 기존 진입점: 골든 {(want ?? "없음")} / 지금 {legacy}");
+                if (want != viaRule) bad.Add($"{key} RunContext+MainRunRule: 골든 {(want ?? "없음")} / 지금 {viaRule}");
             }
             Assert.IsEmpty(bad, string.Join("\n", bad));
         }
