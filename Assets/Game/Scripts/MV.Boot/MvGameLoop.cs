@@ -105,24 +105,30 @@ namespace MV.Boot
                 // UI는 Boot 8단계에서 시작했고 씬이 바뀌면 UIManagerCreater가 이 씬에 다시 붙는다. 그 끝을 기다린다.
                 var ui = GameBootstrap.Ui;
                 if (ui) await ui.StartInitAsync(_ct);
+                Alive();
 
                 _input = new MvRunInputReader(tables.RunConfig.D(RunConfigKeys.DRAG_SCREEN_M));
 
                 var world = await AddressableScope.InstantiateWithLease(WorldRootAddress, transform, _ct);
+                Alive();
                 Keep(world.lease, world.destroyOnDispose);
                 _world = world.instance ? world.instance.GetComponent<WorldView>() : null;
                 if (_world == null) throw new InvalidOperationException($"'{WorldRootAddress}' 프리팹에 WorldView가 없습니다.");
                 _world.Init(tables, _viewSource);
                 await ApplyThemeAsync(CurrentArea());
+                Alive();
 
                 var lobby = await AddressableScope.InstantiateWithLease(LobbyStageAddress, transform, _ct);
+                Alive();
                 Keep(lobby.lease, lobby.destroyOnDispose);
                 _lobby = lobby.instance ? lobby.instance.GetComponent<LobbyStage>() : null;
                 if (_lobby == null) throw new InvalidOperationException($"'{LobbyStageAddress}' 프리팹에 LobbyStage가 없습니다.");
                 _lobby.Init(_world.Sprites);
                 if (!await _lobby.LoadAsync(_ct)) Debug.LogWarning("[MvGameLoop] 로비 그림 일부를 불러오지 못했습니다.");
+                Alive();
 
                 await InstallFxAsync();
+                Alive();
                 TakeSceneCamera();
                 await EnterLobbyAsync();
             }
@@ -135,6 +141,12 @@ namespace MV.Boot
                 Phase = MvLoopPhase.Failed;
                 throw;
             }
+        }
+
+        /// <summary>기다리는 동안 씬이 바뀌어 이 오브젝트가 사라졌으면 초기화를 취소로 끝낸다.</summary>
+        void Alive()
+        {
+            if (!this) throw new OperationCanceledException(_ct);
         }
 
         void Keep(IDisposable lease, IDisposable destroy)

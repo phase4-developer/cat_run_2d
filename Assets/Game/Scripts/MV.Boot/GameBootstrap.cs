@@ -115,7 +115,8 @@ namespace MV.Boot
                 ServicesReady = true;
 
                 // 10. 게임 씬. Boot 오브젝트는 이 전환에서 사라지므로 여기 뒤에서는 정적 상태만 쓴다.
-                var result = await CustomSceneManager.Instance.LoadSceneAsync(GameSceneName);
+                //    로딩 화면(LoadingSceneScreen)은 아직 없어 덮개 없이 바로 넘어간다(교체 지점: 로딩 프리팹이 생기면 SceneLoadOption.Loading()).
+                var result = await CustomSceneManager.Instance.LoadSceneAsync(GameSceneName, SceneLoadOption.Direct());
                 if (!result.IsSuccess)
                     throw new InvalidOperationException($"Game scene load {result.Status} at {result.Stage}.", result.Exception);
 
