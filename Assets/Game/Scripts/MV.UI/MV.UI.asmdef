@@ -12,7 +12,14 @@
         "JJEvol.UI.Economy.Runtime",
         "Unity.TextMeshPro",
         "UnityEngine.UI",
-        "UniTask"
+        "UniTask",
+        "MV.View",
+        "MV.Sound",
+        "MV.Save",
+        "JJEvol.Tables.Runtime",
+        "JJEvol.Resources.Addressables.Runtime",
+        "JJEvol.Data.Runtime",
+        "JJEvol.Economy.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
