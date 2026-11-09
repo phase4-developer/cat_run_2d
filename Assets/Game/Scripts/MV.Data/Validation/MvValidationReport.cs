@@ -117,5 +117,10 @@ namespace MV.Data
         public IMvResourceCatalog Resources { get; set; }
         /// <summary>없거나 준비 전이면 `name` 문구 검사를 건너뛴다.</summary>
         public ITableLocalization Localization { get; set; }
+        /// <summary>
+        /// 105 컴포넌트 type 구현 확인(열 이름, enum 값) → 등록됨. 레지스트리는 MV.Run(ObjectKindRegistry)에 있어 MV.Data가 직접 보지 못한다.
+        /// 없으면 건너뛴다(MV-RUN-SIM이 등록 뒤 넘긴다).
+        /// </summary>
+        public Func<string, string, bool> IsComponentImplemented { get; set; }
     }
 }

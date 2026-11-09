@@ -113,7 +113,11 @@ namespace MV.Data
         public void BuildIndexes()
         {
             TemplateObject.BuildZOrder();
+            Drops = new MvDropRoller(this);
         }
+
+        /// <summary>801·802 추첨·확률 표시. <see cref="BuildIndexes"/>가 만든다(D-85: 패키지가 나오면 MvDropSource로 교체).</summary>
+        public IMvDropSource Drops { get; private set; }
 
         /// <summary>Zone 순서(0기반 zoneIndex, 07 §7.4.1) — sort 순 위치.</summary>
         public int ZoneIndexOfArea(int areaNo)

@@ -27,19 +27,26 @@ namespace MV.Data
         /// <summary>
         /// 작성 검증. 표 원문 묶음으로 새 <see cref="MvTables"/>를 채우고 검사한다. 원문 첫 줄로 중복 열도 본다.
         /// </summary>
-        public static MvValidationReport ValidateAuthoring(IEnumerable<KeyValuePair<string, string>> tableTexts, MvValidationOptions options = null)
+        /// <param name="fallback">tableTexts에 없는 표를 읽을 원본(TableBuilder가 일부 표만 빌드할 때 TSV 폴더).</param>
+        public static MvValidationReport ValidateAuthoring(IEnumerable<KeyValuePair<string, string>> tableTexts, MvValidationOptions options = null,
+            ITableSource fallback = null)
         {
-            var source = new MvMemoryTableSource();
+            var source = new MvMemoryTableSource(fallback);
             foreach (var pair in tableTexts) source.Set(pair.Key, pair.Value);
             var report = new MvValidationReport();
             var tables = new MvTables();
             if (!TryLoad(tables, source, report)) return report;
             options ??= new MvValidationOptions();
             if (options.Headers == null)
-                options.Headers = name => source.TryGetText(name, out var text) ? FirstLine(text) : null;
+                options.Headers = name => source.TryGetText(name, out var text) ? FirstLine(text)
+                    : fallback is MvTsvDirectorySource dir ? dir.ReadHeaders(name) : null;
             Validate(tables, report, options);
             return report;
         }
+
+        /// <summary>작성 검증(빌드 입력에 없는 표는 TSV 폴더에서). Editor 어셈블리가 jjevol 표 타입 없이 부르는 입구.</summary>
+        public static MvValidationReport ValidateAuthoringTsv(IEnumerable<KeyValuePair<string, string>> tableTexts, string tsvDirectory) =>
+            ValidateAuthoring(tableTexts, null, new MvTsvDirectorySource(tsvDirectory));
 
         /// <summary>원본에서 표마다 읽는다. 표가 없거나 읽기가 실패하면 오류로 남기고 false.</summary>
         public static bool TryLoad(MvTables tables, ITableSource source, MvValidationReport report)
@@ -81,7 +88,7 @@ namespace MV.Data
             foreach (var table in t.All) CheckReferences(t, table, r, o);
             CheckConsumeTypeTable(t, r);
             CheckRunConfigKeys(t, r);
-            CheckSemantics(t, r);
+            CheckSemantics(t, r, o);
             CheckLoot(t, r);
             if (o.Localization != null && o.Localization.IsReady) CheckNames(t, r, o.Localization);
         }
