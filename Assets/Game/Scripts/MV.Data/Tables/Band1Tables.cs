@@ -196,11 +196,13 @@ namespace MV.Data
     public sealed class LevelPriceData : MvRow
     {
         public const string Table = "16_levelPrice";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Group().Int("targetLevel", true).Consume("price");
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Group().Int("targetLevel", true).Consume("price").Int("needPiece");
 
         public int group { get; private set; }
         public int targetLevel { get; private set; }
         public IReadOnlyList<ConsumeData> price { get; private set; }
+        /// <summary>함께 드는 카드 수(그룹 301 펫, 08 §8.5.2). 빈칸 = 0.</summary>
+        public int needPiece { get; private set; }
 
         public LevelPriceData(TSVRow r) : base(r) { }
 
@@ -210,6 +212,7 @@ namespace MV.Data
             group = I(r, "group");
             targetLevel = I(r, "targetLevel");
             price = Consume(r, "price");
+            needPiece = I(r, "needPiece");
         }
     }
 

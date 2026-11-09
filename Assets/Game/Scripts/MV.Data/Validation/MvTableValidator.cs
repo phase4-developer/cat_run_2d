@@ -19,11 +19,11 @@ namespace MV.Data
         static readonly CultureInfo C = CultureInfo.InvariantCulture;
 
         /// <summary>id 0을 「지금 고른 것」으로 쓰는 type(07 §7.8.12 valueMeaning).</summary>
-        static readonly HashSet<int> s_zeroIdAllowed = new HashSet<int> { 3, 601, 621, 622 };
+        static readonly HashSet<int> s_zeroIdAllowed = new HashSet<int> { 3, 500, 601, 621, 622, 630 };
 
         /// <summary>런 표 밖에서도 쓸 수 있는 600번대(07 §7.13.2).</summary>
-        /// 630(Blessing)은 07 §7.8.12가 08 광고 보상에 쓰므로 함께 둔다(§7.13.2 문구와 다름, 보고에 남김).
-        static readonly HashSet<int> s_metaRunTypes = new HashSet<int> { 608, 609, 630 };
+        /// 610·620·621·622·630은 메타 보관 재화(장비·펫 카드·친구 코인·신 조각·축복)라 상점·16·광고 보상에도 쓴다(07 §7.13.2 동기화).
+        static readonly HashSet<int> s_metaRunTypes = new HashSet<int> { 608, 609, 610, 620, 621, 622, 630 };
 
         /// <summary>
         /// 작성 검증. 표 원문 묶음으로 새 <see cref="MvTables"/>를 채우고 검사한다. 원문 첫 줄로 중복 열도 본다.

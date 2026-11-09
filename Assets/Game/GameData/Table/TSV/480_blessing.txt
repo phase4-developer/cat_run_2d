@@ -1,0 +1,5 @@
+id	key	effectType	value1	value2	adRuns	icon	active
+480001001	rebirth	1	20	-20	10		1
+480001002	god	2	1	20	10		1
+480001003	energy	3	10		10		0
+480001004	gear	4	10		10		1

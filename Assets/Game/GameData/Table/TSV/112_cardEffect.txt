@@ -20,3 +20,8 @@ id	key	type	p1	p2	p3	p4	active	procEffect	procSound
 112001019	beam	Beam	5	3	22	0.7	0		
 112001020	meteor	Meteor	6	1	2.5	5	0		
 112001021	frost	ProcChill			0.25		0		
+112001022	procChill	ProcChill	0.4	2	0.25	0.5	0		
+112001023	cloneDmg	CloneDmgMul	0.5				0		
+112001024	shield	Shield	1				0		
+112001025	dropBonus	DropBonus	0.08	0.3			0		
+112001026	chainLightning	ChainJump	2	0.5	9		0		

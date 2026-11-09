@@ -65,6 +65,20 @@ namespace MV.Data
         public MvTable<CameraData> Camera { get; } = new MvTable<CameraData>(CameraData.Schema, r => new CameraData(r));
         public ClimbTable Climb { get; } = new ClimbTable();
 
+        // 4xx 메타 시스템(08 §8.3.5, §8.5)
+        public MvTable<PetData> Pet { get; } = new MvTable<PetData>(PetData.Schema, r => new PetData(r));
+        public MvTable<PetBuildData> PetBuild { get; } = new MvTable<PetBuildData>(PetBuildData.Schema, r => new PetBuildData(r), d => d.tier);
+        public ResearchTable Research { get; } = new ResearchTable();
+        public MvTable<FriendData> Friend { get; } = new MvTable<FriendData>(FriendData.Schema, r => new FriendData(r));
+        public MvTable<FriendPowerData> FriendPower { get; } = new MvTable<FriendPowerData>(FriendPowerData.Schema, r => new FriendPowerData(r));
+        public MvTable<RuneData> Rune { get; } = new MvTable<RuneData>(RuneData.Schema, r => new RuneData(r));
+        public MvTable<GearPartData> GearPart { get; } = new MvTable<GearPartData>(GearPartData.Schema, r => new GearPartData(r));
+        public MvTable<GearRarityData> GearRarity { get; } = new MvTable<GearRarityData>(GearRarityData.Schema, r => new GearRarityData(r));
+        public MvTable<BlessingData> Blessing { get; } = new MvTable<BlessingData>(BlessingData.Schema, r => new BlessingData(r));
+        public MvTable<AttendanceData> Attendance { get; } = new MvTable<AttendanceData>(AttendanceData.Schema, r => new AttendanceData(r));
+        public MvTable<RoadMapData> RoadMap { get; } = new MvTable<RoadMapData>(RoadMapData.Schema, r => new RoadMapData(r));
+        public MvTable<GodLevelData> GodLevel { get; } = new MvTable<GodLevelData>(GodLevelData.Schema, r => new GodLevelData(r));
+
         // 8xx
         public MvTable<DropData> Drop { get; } = new MvTable<DropData>(DropData.Schema, r => new DropData(r), d => d.dropGroup);
         public MvTable<RandomBoxData> RandomBox { get; } = new MvTable<RandomBoxData>(RandomBoxData.Schema, r => new RandomBoxData(r), d => d.group);
@@ -84,6 +98,7 @@ namespace MV.Data
                 God, HpRule, CardTier,
                 RunConfig, Zone, Area, AreaFloor, Theme, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup, Camera,
                 Climb,
+                Pet, PetBuild, Research, Friend, FriendPower, Rune, GearPart, GearRarity, Blessing, Attendance, RoadMap, GodLevel,
                 Drop, RandomBox, GuaranteeLink, Guarantee,
             };
             _byName = new Dictionary<string, IMvTable>(StringComparer.Ordinal);

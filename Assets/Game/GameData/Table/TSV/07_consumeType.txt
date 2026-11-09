@@ -1,4 +1,5 @@
 typeId	codeName	idTable	idKind	valueMeaning	valueKind	iconAtlas	iconColumn	worldBadge	gainSound	gainEffect	applyMul	settleTo	collectMul	active
+0	None	-	none	없음(코드 기본값, 보상·비용에 쓰지 않음)	Int						None		0	0
 1	Wealth	01_wealth	row	개수	Int	Atlas_UI_Icon	icon				None		0	1
 3	PlayResource	02_playResource	row	개수(id 0 = 고른 모드 입장권)	Int	Atlas_UI_Icon	icon				None		0	1
 5	Item	103_item	row	장수	Int	Atlas_UI_Icon	icon				None		0	1

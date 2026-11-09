@@ -1361,7 +1361,7 @@ id 형식은 [08 §8.3.4](08_Content.md)와 같다: 공용 = `110000{순번}`, �
 | unlockPriceType / Id / Value | consume | unlockType 2일 때 |
 | passiveStat / passivePerLv | enum / float | 신 레벨 패시브 [08 §8.3.5] |
 | gearSet | bool01 | 장비 세트 대상 [08 §8.5.8] |
-| portrait | res | 초상 `Tex_God_<key>`(AddressableTexture) |
+| portrait | res | 초상 `Tex_God_<Key>`(key 첫 글자 대문자, 예 `Tex_God_Thunder`. [03](03_ResourcePipeline.md) 명명. AddressableTexture) |
 | icon | res | 신 버튼 아이콘. 기본 아틀라스 `Atlas_UI_Icon` |
 
 이름 `name:{id}`, 부제 `description:{id}`.
@@ -1508,6 +1508,7 @@ id 형식은 [08 §8.3.4](08_Content.md)와 같다: 공용 = `110000{순번}`, �
 | group | int | 성장 표의 `levelPriceGroup` |
 | targetLevel | int | 이 구매로 도달하는 수(= 현재 P + 1) |
 | priceType / priceId / priceValue | consume | 비용(`;`로 여러 재화 가능) |
+| needPiece | int | 함께 드는 카드 수(그룹 301 펫, [08 §8.5.2](08_Content.md)). 빈칸 = 0 |
 
 **그룹 배정**
 
@@ -2027,7 +2028,7 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 |---|---|
 | 모든 fk 열 값이 대상 표에 있음(0·빈칸 허용 열 제외) | 오류 |
 | consumeData: §7.1.6 개수 규칙, type이 07에 있고 active, id가 idTable에 있음 | 오류 |
-| 600번대 type은 런 표(102·105·313·801·802 중 런 드롭 그룹·401 clearReward 제외)에서만, 608·609·630은 어디서나 | 오류 |
+| 600번대 type은 런 표(102·105·313·801·802 중 런 드롭 그룹·401 clearReward 제외)에서만, 608·609와 메타 보관 재화 610·620·621·622·630은 어디서나 | 오류 |
 | `07_consumeType.codeName`과 C# `ConsumeType` enum이 1:1, idKind와 `{p}Id`가 맞음(group이면 묶음 첫 행 id) | 오류 |
 | `300_runConfig`·`499_contentConfig` 키 = 코드 상수 목록(누락·남음) | 오류 |
 | 소리·이펙트 열 값이 `03_sound.key`·`04_effect.key`에 있음(변형 소리는 `_n` 붙인 key 확인) | 오류 |

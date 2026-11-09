@@ -26,6 +26,8 @@ namespace MV.Data
             CheckUiResource(t, r);
             CheckValueFormats(t, r);
             CheckPairValues(t, r);
+            CheckContentData(t, r);
+            CheckMetaSystems(t, r);
         }
 
         // ---------------- 06 ----------------
