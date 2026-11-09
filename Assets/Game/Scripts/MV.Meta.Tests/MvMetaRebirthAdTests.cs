@@ -182,7 +182,7 @@ namespace MV.Meta.Tests
             Assert.That(Store.Settings.ContentTab, Is.EqualTo("mode"), "다른 설정 칸은 그대로");
             Assert.That(Meta.SetMuted(false).Ok, Is.True);
             Assert.That(Store.Settings.Muted, Is.False);
-            Assert.That(Meta.Send(new MvMetaRequest(MvMetaRequestNames.SetMuted)).Code, Is.EqualTo(MvMetaErrors.BadParams));
+            Assert.That(Meta.SendDebug(MvMetaRequestNames.SetMuted).Code, Is.EqualTo(MvMetaErrors.BadParams));
         }
 
         [Test]
