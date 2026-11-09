@@ -19,7 +19,8 @@
         "JJEvol.Tables.Runtime",
         "JJEvol.Resources.Addressables.Runtime",
         "JJEvol.Data.Runtime",
-        "JJEvol.Economy.Runtime"
+        "JJEvol.Economy.Runtime",
+        "MV.Content"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
