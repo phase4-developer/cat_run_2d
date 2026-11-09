@@ -159,6 +159,10 @@ namespace MV.Data
         public const string METEOR_FALL = "METEOR_FALL";
         public const string METEOR_BOX = "METEOR_BOX";
         public const string BLADE_ANG_SPEED = "BLADE_ANG_SPEED";
+        /// <summary>폭풍 착탄 x 흔들림 반폭(대상 있을 때, 04 §4.9.3 L2168).</summary>
+        public const string STORM_JIT_TARGET = "STORM_JIT_TARGET";
+        /// <summary>폭풍 착탄 x·z 흔들림 반폭(대상 없을 때, 04 §4.9.3 L2168).</summary>
+        public const string STORM_JIT_FREE = "STORM_JIT_FREE";
         public const string Ui_Hand_Budget = "ui.hand.budget";
         public const string Ui_Hand_LeftMin = "ui.hand.leftMin";
         public const string Ui_Hand_DealCost = "ui.hand.dealCost";
@@ -329,6 +333,8 @@ namespace MV.Data
             METEOR_FALL,
             METEOR_BOX,
             BLADE_ANG_SPEED,
+            STORM_JIT_TARGET,
+            STORM_JIT_FREE,
             Ui_Hand_Budget,
             Ui_Hand_LeftMin,
             Ui_Hand_DealCost,

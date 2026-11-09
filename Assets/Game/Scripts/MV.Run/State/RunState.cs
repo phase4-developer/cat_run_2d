@@ -64,6 +64,16 @@ namespace MV.Run
         public bool Done;
     }
 
+    /// <summary>동행 1개의 진행(04 §4.20.5). T = Seconds 타이머(초기값 Every), Armed = Hits·Chance 예약.</summary>
+    public sealed class CompanionRuntime
+    {
+        public CompanionSpec Spec;
+        public double T;
+        public bool Armed;
+        /// <summary>쏜 횟수(표시·시험용).</summary>
+        public int Shots;
+    }
+
     /// <summary>폭풍 진행(`godStorm` FX 타이머, sdt, 04 §4.9.3).</summary>
     public sealed class StormJob
     {
@@ -139,6 +149,9 @@ namespace MV.Run
             Setup = setup;
             Tables = tables;
             Rng = rng;
+            ulong seed = setup?.Seed ?? 0;
+            ModeRng = new Pcg32Rng(seed, RunRngStreams.Mode);
+            CompanionRng = new Pcg32Rng(seed, RunRngStreams.Companion);
         }
 
         // ---- 주입 ----
@@ -150,6 +163,16 @@ namespace MV.Run
         public List<RngDraw> RngLog;
         /// <summary>06_balancePreset 행(GEN).</summary>
         public BalancePresetData Bal;
+
+        // ---- 확장 지점(04 §4.20) ----
+        /// <summary>이 런의 규칙. RunSim.Create가 붙인다. <see cref="Emit"/>마다 OnEvent를 부른다.</summary>
+        public IRunRule Rule { get; internal set; }
+        /// <summary>모드 규칙 난수(Seed 파생 별도 줄기). 정본 경로는 뽑지 않는다.</summary>
+        public readonly IRng ModeRng;
+        /// <summary>동행 사격 난수(Seed 파생 별도 줄기). Chance 판정만 뽑는다.</summary>
+        public readonly IRng CompanionRng;
+        /// <summary>동행 진행 상태(Setup.Companions 순서 = 처리 순서).</summary>
+        public readonly List<CompanionRuntime> Companions = new List<CompanionRuntime>();
 
         // ---- 상태 기계 ----
         public RunPhase Phase = RunPhase.Run;
@@ -275,6 +298,11 @@ namespace MV.Run
             return 1;
         }
 
-        public void Emit(in RunEvent e) => Events.Add(e);
+        /// <summary>이벤트를 쌓고 규칙의 OnEvent를 부른다(§4.20.2).</summary>
+        public void Emit(in RunEvent e)
+        {
+            Events.Add(e);
+            Rule?.OnEvent(this, e);
+        }
     }
 }

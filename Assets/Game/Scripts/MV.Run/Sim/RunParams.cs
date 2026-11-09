@@ -14,7 +14,7 @@ namespace MV.Run
         public double CloneXMax, DblShotDx, ProjSpawnDz, ThrowT, ProjSpeed, DmgMin, DmgMax;
         public double WellFlushBehind, WellBrickDiv, BrickFlushInterval;
         public int WellBrickMax, CpMax, PlayableAreas, MergeN;
-        public double BurnTick, ChainFireBox, StormLife, StormK0, StormDk, StormPickDz, StormBox, BlastBox;
+        public double BurnTick, ChainFireBox, StormLife, StormK0, StormDk, StormPickDz, StormBox, StormJitTarget, StormJitFree, BlastBox;
         public double MeteorMinDz, MeteorMaxDz, MeteorFall, MeteorBox, OrbZBack;
         public readonly List<(double dx, double dz)> CloneOff = new List<(double, double)>();
         public ClimbData Climb;
@@ -41,7 +41,8 @@ namespace MV.Run
                 CpMax = c.I(RunConfigKeys.CP_MAX), PlayableAreas = c.I(RunConfigKeys.PLAYABLE_AREAS), MergeN = c.I(RunConfigKeys.MERGE_N),
                 BurnTick = c.D(RunConfigKeys.BURN_TICK), ChainFireBox = c.D(RunConfigKeys.CHAIN_FIRE_BOX),
                 StormLife = c.D(RunConfigKeys.STORM_LIFE), StormK0 = c.D("STORM_K0"), StormDk = c.D(RunConfigKeys.STORM_DK),
-                StormPickDz = c.D(RunConfigKeys.STORM_PICK_DZ), StormBox = c.D(RunConfigKeys.STORM_BOX), BlastBox = c.D(RunConfigKeys.BLAST_BOX),
+                StormPickDz = c.D(RunConfigKeys.STORM_PICK_DZ), StormBox = c.D(RunConfigKeys.STORM_BOX),
+                StormJitTarget = c.D(RunConfigKeys.STORM_JIT_TARGET), StormJitFree = c.D(RunConfigKeys.STORM_JIT_FREE), BlastBox = c.D(RunConfigKeys.BLAST_BOX),
                 MeteorMinDz = c.D(RunConfigKeys.METEOR_MIN_DZ), MeteorMaxDz = c.D(RunConfigKeys.METEOR_MAX_DZ),
                 MeteorFall = c.D(RunConfigKeys.METEOR_FALL), MeteorBox = c.D(RunConfigKeys.METEOR_BOX), OrbZBack = c.D(RunConfigKeys.ORB_Z_BACK),
             };

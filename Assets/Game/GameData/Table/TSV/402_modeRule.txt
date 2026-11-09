@@ -1,0 +1,5 @@
+id	key	ruleClass	layout	forwardSpeed	failOnWall	useLobbyDeck	fixedWeaponTier	craftPerMade	useLobbyUpgrade	useAreaUpgrade	useRebirthPerk	useMetaStats	cardPoolId	cycleGroup	fieldGenKey	climbKey	hpSource	runRewardToAccount	keepBars	useCheckpoint	themeId	arenaSpawnZ	arenaLaneX	arenaJitter	arenaLineZ	baseHpMax	xpPerKill	xpBase	xpStep	cardChoices	cardTierWeight
+402001001	alleyWar	DefenceRule	1	0	0	1	0	1	1	1	1	1	defence				1	0	0	0	304001007	26	-2.4/0/2.4	0.4	0.5	10	1	4	2	3	50/25/15/8/2
+402001002	rapidRush	FixedLoadoutRule	0	4	1	0	4	3	0	0	1	1	rush				1	0	0	0	0										
+402001003	churuRush	CourseRule	2	4	1	1	0	1	1	1	1	1	main				1	1	0	0	304001012										
+402001004	bigMouse	BossRule	1	0	0	1	0	1	1	1	1	1	defence				1	0	0	0	304001003	24	0	0	1.0						

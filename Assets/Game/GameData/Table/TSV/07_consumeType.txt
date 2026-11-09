@@ -1,4 +1,5 @@
 typeId	codeName	idTable	idKind	valueMeaning	valueKind	iconAtlas	iconColumn	worldBadge	gainSound	gainEffect	applyMul	settleTo	collectMul	active
+0	None	-	none	없음(코드 기본값, 보상·비용에 쓰지 않음)	Int						None		0	0
 1	Wealth	01_wealth	row	개수	Int	Atlas_UI_Icon	icon				None		0	1
 3	PlayResource	02_playResource	row	개수(id 0 = 고른 모드 입장권)	Int	Atlas_UI_Icon	icon				None		0	1
 5	Item	103_item	row	장수	Int	Atlas_UI_Icon	icon				None		0	1
@@ -14,7 +15,7 @@ typeId	codeName	idTable	idKind	valueMeaning	valueKind	iconAtlas	iconColumn	world
 602	RunGold	-	none	런 츄르	Double	Atlas_UI_Icon	=UI_Icon_Gold	World_Item_Badge_Gold	coin		GoldMul	1/1001001	1	1
 603	RunSouls	-	none	런 생선	Int	Atlas_UI_Icon	=UI_Icon_Soul		soul	run.wallRewardSoul	None	1/1001003	0	1
 604	RunDia	-	none	런 캣닢	Int	Atlas_UI_Icon	=UI_Icon_Dia	World_Item_Badge_Dia	gem	run.wallRewardDia	None	1/1001002	1	1
-605	RunStairs	-	none	모은 계단 수	Int	Atlas_UI_Hud	=UI_Icon_Stair				None		0	1
+605	RunStairs	-	none	모은 계단 수	Int	Atlas_UI_Icon	=UI_Icon_Stair				None		0	1
 606	RunWeapon	103_item	row	런 손패 카드 장수	Int	Atlas_UI_Icon	icon				None		0	1
 607	GaugeFill	-	none	우물 게이지 양	Double	Atlas_UI_Hud	=UI_Icon_Gauge				None		0	1
 608	RbPending	-	none	목숨 조각 적립 대기	Int	Atlas_UI_Icon	=UI_Icon_RbToken				None	rbPending	0	1

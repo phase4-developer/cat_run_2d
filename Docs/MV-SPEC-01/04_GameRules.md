@@ -1427,7 +1427,7 @@ Area 2는 게이트·공방·게이지가 2배, Area 3은 5배, Area 4는 7배, 
   3. `RunRng` 소비 횟수와 순서(§4.17)
 - 기본값이 정본과 같은 값을 내는 근거: 모디파이어는 `× (1 + m/100)` 또는 `+ m/100` 꼴로만 붙인다. m = 0이면 IEEE 754에서 `x × 1.0 = x`, `x + 0.0 = x`가 정확히 성립한다. 그래서 **곱·합을 붙이는 위치와 순서는 아래 표 그대로 고정**한다. 다른 인자와 미리 합쳐 하나의 배율로 만들지 않는다.
 - `MainRunRule`의 훅은 정본 동작을 그대로 하거나 아무것도 하지 않는다. 훅 호출 자체가 `RunRng`를 뽑거나 이벤트를 만들지 않는다.
-- 모드 규칙이 쓰는 난수는 `ModeRng`, 동행 사격은 `CompanionRng`다. 둘 다 `RunSetup.seed`에서 파생한 **별도 줄기**다(파생식은 구현 자유, 고정). 모드·동행이 생겨도 `RunRng` 순서는 정본과 같다. §4.17.2의 「`RunRng` 하나만」 규칙은 정본 경로에 대한 것이고, 이 두 줄기는 정본 경로에서 한 번도 뽑지 않는다.
+- 모드 규칙이 쓰는 난수는 `ModeRng`, 동행 사격은 `CompanionRng`다. 둘 다 `RunSetup.seed`에서 파생한 **별도 줄기**다(파생식은 구현 자유, 고정). 구현: 같은 시드의 PCG32를 줄기 번호만 달리 만든다 — `ModeRng` = `0x6d6f6465`, `CompanionRng` = `0x636f6d70`(`RunRngStreams`). `RunState.ModeRng`·`RunState.CompanionRng`로 쓴다. 모드·동행이 생겨도 `RunRng` 순서는 정본과 같다. §4.17.2의 「`RunRng` 하나만」 규칙은 정본 경로에 대한 것이고, 이 두 줄기는 정본 경로에서 한 번도 뽑지 않는다.
 
 ### 4.20.2 훅 (`IRunRule`, MV.Run)
 
@@ -1465,7 +1465,14 @@ public interface IModeRule : MV.Run.IRunRule {
 
 - 정산 분기(`MV.Meta`): contentType 0이면 §4.11.2 `collect`, 아니면 `CollectMode(ModeResult)`다. `402.runRewardToAccount`(0 없음 / 1 츄르·캣닢만 / 2 정본처럼)는 `SettleMode`가 반영한다. 모드에서는 Level +1, Area 개방, 장애물 기록 저장을 하지 않는다(08 §8.4).
 - `FinishReason`은 정본 `gate`·`wall`에 `modeClear`·`modeFail`을 더한다. `RunResult.pass`는 정본 계산 그대로 둔다(모드에선 무시).
-- `HitInfo` = `{objId, kind, dmg(정수, §4.3.2 반올림 뒤), crit, killed, source}`. `source`: Projectile / Spear / GodProc / Chain / Storm / Blast / Burn / Orb / Companion / Mode.
+- `HitInfo` = `{objId, kind, dmg(정수, §4.3.2 반올림 뒤), crit, killed, source}`. `source`: Projectile / Spear / GodProc / Chain / Storm / Blast / Burn / Orb / Companion / Mode. 구현은 휴면 카드 출처 Spin / Beam / Meteor도 따로 둔다. `kind` = 105_objectKind.id, `killed` = 이 hit의 반응으로 죽었는가(가호 전 판정).
+
+**구현 메모(MV-RUN-RULE)**
+- 진입점: `RunSim.Create(RunContext, IRunRule, rng, builder)`가 ① `Build`를 부른다. `RunContext` = `{Tables, Snapshot(save로 만든 정본 RunSetup), MetaModifiers, Companions}`이고 스냅숏은 호출자(MV.Meta/Boot)가 만든다(MV.Run은 save를 모른다). `MainRunRule.Build`는 스냅숏 복사본에 모디파이어·동행을 넣는다. 기존 `RunSim.Create(RunSetup, …)`는 Build를 마친 setup으로 보고 `MainRunRule(builder)`를 쓴다.
+- ② `BuildCourse`: GEN이 `IRunStateFactory.NewState`(§4.14.5 1~5단계)로 상태를 만들고 SIM이 6단계 자리에서 `BuildCourse(s, CourseRequest(0, level, keepBars ? bars : null))`를 부른다. `NewRun` = `NewState` + `BuildLevel`(정본 그대로). `NewState`가 없는 생성기(시험 대역)는 `NewRun`이 코스까지 만들고 BuildCourse를 건너뛴다.
+- `OnEvent`: `RunState.Emit`마다 이벤트를 쌓은 뒤 부른다.
+- `Tick`·`CheckEnd`: updRun 끝(15단계 뒤 = 동행 사격 다음)에 updRun마다 부른다(배속이면 한 프레임에 여러 번). Run 상태가 아니거나 이미 끝났으면 CheckEnd를 부르지 않는다.
+- ⑤ `Settle`: 정본 계산은 `RunSettlement.Main(s, reason, builder)`(공개)다. 모드 규칙도 이것을 불러 그대로 넘긴다.
 
 ### 4.20.3 RunSetup 모드 필드 (기본값 = 정본)
 
@@ -1499,7 +1506,7 @@ public interface IModeRule : MV.Run.IRunRule {
 | `CritChance` | 0 | `crC = 0.15·crit + 0.1·aup.crit + CritChance/100` §4.2.2 | 볼리마다 치명 판정. **난수는 정본처럼 확률과 무관하게 1회 뽑는다** | CritChance 5 → 0.05 |
 | `DoubleChance` | 0 | `dbC = min(1, 0.2·dbl + 0.1·aup.dbl + DoubleChance/100)` §4.2.2 | 2연발 판정. 창 볼리는 판정 없음(정본 그대로) | DoubleChance 10 → 0.1 |
 
-- 검증기: `FireRate > −100`, 나머지 ≥ 0. 음수 합은 로드 실패로 처리한다(감소 효과는 아직 없다).
+- 검증기: `FireRate > −100`, 나머지 ≥ 0. 음수 합은 로드 실패로 처리한다(감소 효과는 아직 없다). 구현: `RunModifiers.Validate()`, `RunSetup.Validate()`(동행 포함)에 걸리면 `RunSim.Create`가 `ArgumentException`을 낸다.
 - 표 열 대응: statKey 문자열(`Dmg` …)은 08의 430·440·450·460·470·480·495 표 `statKey` 열 값이다. 07은 이 7개 이름을 enum으로 둔다.
 
 ### 4.20.5 CompanionShot (동행 자동 사격)
@@ -1522,12 +1529,12 @@ public readonly struct CompanionSpec {
 
 | Trigger | 규칙 |
 |---|---|
-| Seconds | 타이머 `c.t`의 초기값은 `Every`다. 매 프레임 `c.t −= dt`, `c.t ≤ 0`이고 대상이 있으면 발사 후 `c.t += Every`. 대상이 없으면 `c.t`를 그대로 두었다가 대상이 생기는 프레임에 쏜다. 프레임당 최대 1발 |
-| Hits | 본체 볼리 수 `R.vol`(§4.2.2, 창 볼리 포함)이 이번 프레임에 `Every`의 배수가 되었으면 1발 예약 → 같은 프레임 동행 단계에서 발사. 대상이 없으면 버린다 |
-| Chance | §4.2.3에서 **플레이어 투사체(본체·분신·창)가 명중할 때마다** `CompanionRng.Chance(Every)`. 성공하면 1발 예약(프레임당 동행 하나에 최대 1발). 대상이 없으면 버린다 |
+| Seconds | 타이머 `c.t`의 초기값은 `Every`다. 매 프레임 `c.t −= dt`, `c.t ≤ 0`이고 대상이 있으면 발사 후 `c.t += Every`. 대상이 없으면 `c.t = 0`에 멈춰 두었다가(시간 빚을 쌓지 않아 몰아 쏘지 않는다) 대상이 생기는 프레임에 쏜다. 프레임당 최대 1발 |
+| Hits | 본체 볼리 수 `R.vol`(§4.2.2, 창 볼리 포함)이 이번 프레임에 `n = round(Every)`의 배수가 되었으면 1발 예약 → 같은 프레임 동행 단계에서 발사. 대상이 없으면 버린다 |
+| Chance | §4.2.3에서 **플레이어 투사체(본체·분신·창)가 명중할 때마다** `CompanionRng.Chance(Every)`(이미 예약돼 있어도 뽑는다). 성공하면 1발 예약(프레임당 동행 하나에 최대 1발). 대상이 없으면 버린다 |
 
 **대상 선택**
-- 후보: `hittable(o) && breakable(o) && o.k ≠ 'tower'`. 우물·게이트는 동행이 채우지 않아 정본 경제를 건드리지 않는다.
+- 후보: `hittable(o) && breakable(o) && o.k ≠ 'tower'`. 우물·게이트는 동행이 채우지 않아 정본 경제를 건드리지 않는다. 구현은 종류 이름 대신 105 열로 고른다: `chargeGateId` = 0(107 충전 게이트 없음). 지금 표에서 우물(tower)·계단 게이트·공방 게이트가 빠져 같은 결과다.
 - 위치 조건: `o.z − o.hd ≥ P.z`(앞쪽)이고 `(o.z − o.hd) − P.z ≤ RANGE`(§4.20.4의 Range 반영).
 - 정렬 ① `o.z − o.hd` 오름차순 ② `|o.x − P.x|` 오름차순 ③ `R.objs` 순서. 앞에서 `Targets`개를 고른다.
 
@@ -1536,7 +1543,7 @@ public readonly struct CompanionSpec {
 - 반올림·최소 1, 보상·goldMul·히트스톱은 §4.3 그대로다.
 - 투사체를 만들지 않는 **즉시 명중**이다. 날아가는 그림은 View가 이벤트로 그린다.
 
-**이벤트** — `CompanionShot{sourceId, fromX, fromZ, targetIds[], dmgEach}`. 대상들의 `hit()`보다 먼저 쌓는다. 이 이벤트는 §4.18 목록에 더하는 항목이다.
+**이벤트** — `CompanionShot{sourceId, fromX, fromZ, targetIds[], dmgEach}`. 대상들의 `hit()`보다 먼저 쌓는다. 이 이벤트는 §4.18 목록에 더하는 항목이다. 구현: from = 플레이어 위치(`P.x`, `P.z`), `dmgEach` = `baseDmg() × DmgPct / 100`(반올림 전). 검증: 동행 최대 5, `Every` > 0, `DmgPct` ≥ 0, `Targets` ≥ 1.
 
 ### 4.20.6 검증
 
@@ -1558,3 +1565,6 @@ public readonly struct CompanionSpec {
 | 동행 사격이 즉시 명중인가, 투사체인가 | 즉시 명중이다. 그림만 날아간다 |
 | 모드 런에 메타 능력치를 적용하나 | 08 D-76 A안(402 `useMetaStats` 열)을 따른다 |
 | 동행 주기에 FireRate를 곱하나 | 곱하지 않는다 |
+| Seconds 동행이 대상 없이 기다린 시간을 몰아 쏘나 | 몰아 쏘지 않는다. `c.t`를 0에 멈춰 두고 대상이 생기면 1발, 다음은 `Every` 뒤 |
+| 동행 대상 제외(우물·게이트)를 무엇으로 고르나 | 105 `chargeGateId` ≠ 0(충전 게이트가 있는 오브젝트)을 뺀다. 종류 이름(`tower`)으로 고르지 않는다 |
+| 배속(ts > 1)에서 `Tick`·`CheckEnd`를 몇 번 부르나 | updRun마다(배속 수만큼) 부른다 |
