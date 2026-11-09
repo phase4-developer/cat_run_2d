@@ -1,0 +1,31 @@
+{
+    "name": "MV.Fx.Tests",
+    "rootNamespace": "MV.Fx.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "MV.Core",
+        "MV.Data",
+        "MV.Run",
+        "MV.View",
+        "MV.Fx",
+        "JJEvol.Tables.Runtime",
+        "JJEvol.Effects.Runtime",
+        "UniTask"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
