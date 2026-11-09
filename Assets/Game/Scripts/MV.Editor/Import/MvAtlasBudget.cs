@@ -147,7 +147,7 @@ namespace MV.Editor.Import
                 ("친구 고양이 ×3", 3 * Max(n => n.StartsWith(MvArtRules.FriendAtlasPrefix, StringComparison.Ordinal))),
                 ("Fx", Sum(n => n.StartsWith("Atlas_Fx_", StringComparison.Ordinal))),
                 ("UI 전부", Sum(MvArtRules.IsUiAtlas)),
-                ("로비 아틀라스", Sum(n => n == MvArtRules.LobbyAtlas)),
+                ("로비 아틀라스", Sum(MvArtRules.IsLobbyAtlas)),
                 ("방 텍스처(1080x1920 6x6)", CompressedBytes(1080, 1920, TextureImporterFormat.ASTC_6x6, false)),
             };
             var sb = new StringBuilder();

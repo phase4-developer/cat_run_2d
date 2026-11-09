@@ -139,12 +139,14 @@ for (const [nm, ch, c] of [['Note', '♪', '#7a5ac8'], ['Heart', '♥', '#e8504a
 
 // ── 3.5.6 로비 시설(drawFac L3399~3460): 로비 s = 160 px/단위(W*0.115, 로비 주인공과 같은 ppu 160). scaleK = fac() 배율 ──
 const LOB = { atlas: 'Atlas_World_Lobby', mode: 'direct', pivot: 'BottomCenter', ppu: 160, expr: 'drawFac(g, A.kind, X, Y, S, A.st, t, A.extra)' };
+// 03 §3.8.1: 로비 아틀라스가 2048 한 페이지를 넘어(하한 118 %) 프레임이 많은 시설 Tower·Rack을 `_2`로 나눈다(시설 하나의 프레임은 한 아틀라스).
+const LOB2 = 'Atlas_World_Lobby_2';
 const FAC = { tower: ['Tower', 1.0, [336, 536, 168, 498]], scratch: ['Scratch', 0.9, [268, 252, 134, 216]], rack: ['Rack', 0.85, [312, 284, 156, 248]], basket: ['Basket', 0.85, [220, 232, 110, 196]], stove: ['Stove', 0.95, [320, 428, 160, 392]] };
 const facCv = (k) => { const [w, h, px, py] = FAC[k][2]; return { w, h, pivotPx: [px, py] }; };
-for (let st = 1; st <= 3; st++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Tower_${st}`, scaleK: 1.0, canvas: facCv('tower'), args: { kind: 'tower', st, extra: undefined }, src: 'L3401, L3509',
+for (let st = 1; st <= 3; st++) add('lobby.json', { ...LOB, atlas: LOB2, name: `Lobby_Fac_Tower_${st}`, scaleK: 1.0, canvas: facCv('tower'), args: { kind: 'tower', st, extra: undefined }, src: 'L3401, L3509',
   ...(st >= 2 ? { frames: { var: 't', from: 0, period: TAU / 2.2, count: 12, fps: 4.2 } } : {}) });
 for (let st = 1; st <= 3; st++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Scratch_${st}`, scaleK: 0.9, canvas: facCv('scratch'), args: { kind: 'scratch', st }, suppress: st === 3 ? [{ fn: 'star4' }] : [], src: 'L3415, L3512(st3 별은 런타임 Fx_Star4)' });
-for (let st = 1; st <= 3; st++) for (let n = 1; n <= st * 2; n++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Rack_${st}_F${n}`, scaleK: 0.85, canvas: facCv('rack'), args: { kind: 'rack', st, extra: n }, src: 'L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)' });
+for (let st = 1; st <= 3; st++) for (let n = 1; n <= st * 2; n++) add('lobby.json', { ...LOB, atlas: LOB2, name: `Lobby_Fac_Rack_${st}_F${n}`, scaleK: 0.85, canvas: facCv('rack'), args: { kind: 'rack', st, extra: n }, src: 'L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)' });
 for (let st = 1; st <= 3; st++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Basket_${st}`, scaleK: 0.85, canvas: facCv('basket'), args: { kind: 'basket', st }, src: 'L3436, L3513' });
 for (let st = 0; st <= 3; st++) add('lobby.json', { ...LOB, name: `Lobby_Fac_Stove_${st}`, scaleK: 0.95, canvas: facCv('stove'), args: { kind: 'stove', st }, src: 'L3446, L3508',
   ...(st >= 1 ? { frames: { var: 't', from: 0, period: TAU / 8, count: 8, fps: 10.2 } } : {}) });

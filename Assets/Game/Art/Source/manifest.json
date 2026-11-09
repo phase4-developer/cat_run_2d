@@ -9230,6 +9230,483 @@
    }
   },
   {
+   "name": "Lobby_Fac_Rack_1_F1",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_1_F1.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 1,
+    "extra": 1
+   },
+   "sha256": "fbb98328ddec46d1367fc1d428dea6ff648c5ed92160eb6cd2533081f65f18f2"
+  },
+  {
+   "name": "Lobby_Fac_Rack_1_F2",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_1_F2.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 1,
+    "extra": 2
+   },
+   "sha256": "9345085e404fec786c73740798f7a87b1a87e9e30382d3adcfb9e4106b049dd4"
+  },
+  {
+   "name": "Lobby_Fac_Rack_2_F1",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_2_F1.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 2,
+    "extra": 1
+   },
+   "sha256": "177bab600a30ecc2b94c7384a828ce03309a46168adfbcccb5398b90f739843e"
+  },
+  {
+   "name": "Lobby_Fac_Rack_2_F2",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_2_F2.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 2,
+    "extra": 2
+   },
+   "sha256": "8569d7cea37c3e42b08679ed8b683f232a1cbb9b02f3c4f90c690b3a367165a2"
+  },
+  {
+   "name": "Lobby_Fac_Rack_2_F3",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_2_F3.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 2,
+    "extra": 3
+   },
+   "sha256": "bf4422a68e53d32336745c8e70af91ce04d4bc1674dc966957c756e3f9244325"
+  },
+  {
+   "name": "Lobby_Fac_Rack_2_F4",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_2_F4.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 2,
+    "extra": 4
+   },
+   "sha256": "0da2d0368fae87834cd94de35eea2b4e845c80017ec7e82c66581ab0415f63a5"
+  },
+  {
+   "name": "Lobby_Fac_Rack_3_F1",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_3_F1.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 3,
+    "extra": 1
+   },
+   "sha256": "86b35a5222f57887ec517f8b9b092e7420b157b0eb92490b9ecc57d5e6a99bc5"
+  },
+  {
+   "name": "Lobby_Fac_Rack_3_F2",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_3_F2.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 3,
+    "extra": 2
+   },
+   "sha256": "620d64230831b1f5cc5e9427585c9f03bc4a685d34e2d5456a17024f81f32521"
+  },
+  {
+   "name": "Lobby_Fac_Rack_3_F3",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_3_F3.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 3,
+    "extra": 3
+   },
+   "sha256": "8fbae4e7542b0d4677bdd3d17022ea42cf7f00d1304e0853f00f4fe8f965c0e4"
+  },
+  {
+   "name": "Lobby_Fac_Rack_3_F4",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_3_F4.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 3,
+    "extra": 4
+   },
+   "sha256": "b97685696a81c60cb1a34a958d1e3d772ee9f4b64103fa4024d4f80016016dd9"
+  },
+  {
+   "name": "Lobby_Fac_Rack_3_F5",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_3_F5.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 3,
+    "extra": 5
+   },
+   "sha256": "c9e80c10da9fcc02c1bd832d18b2ecdd9a0f5c34267caa3334f4b9b310e8d6c5"
+  },
+  {
+   "name": "Lobby_Fac_Rack_3_F6",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Rack_3_F6.png",
+   "w": 312,
+   "h": 284,
+   "pivot": [
+    0.5,
+    0.12676
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
+   "args": {
+    "kind": "rack",
+    "st": 3,
+    "extra": 6
+   },
+   "sha256": "7cb50f14eef3be695afdac66038769169785a6faeac72e4efdd90025cf975d40"
+  },
+  {
+   "name": "Lobby_Fac_Tower_1",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_1.png",
+   "w": 336,
+   "h": 536,
+   "pivot": [
+    0.5,
+    0.0709
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "src": "L3401, L3509",
+   "args": {
+    "kind": "tower",
+    "st": 1
+   },
+   "sha256": "1b90ae840de36bae5fe1945998b86f60753d44b9fd7db3010ae1583cf419fed9"
+  },
+  {
+   "name": "Lobby_Fac_Tower_2",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": null,
+   "w": 336,
+   "h": 536,
+   "pivot": [
+    0.5,
+    0.0709
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "frames": [
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_00.png",
+     "name": "Lobby_Fac_Tower_2_00",
+     "t": 0,
+     "sha256": "bac660cff8734115f5f1026431cb02a2d9fb96eafdfc52d5e4adba12c082091e"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_01.png",
+     "name": "Lobby_Fac_Tower_2_01",
+     "t": 0.237999,
+     "sha256": "48344ee2c00662f4b2e34132a19c350936044afb87784ac44261851a69d1fb52"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_02.png",
+     "name": "Lobby_Fac_Tower_2_02",
+     "t": 0.475999,
+     "sha256": "9e78c97b7f4446ec43aaf78779e6af83b9f531ebb8310b97dbc3b1f06b66b8ae"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_03.png",
+     "name": "Lobby_Fac_Tower_2_03",
+     "t": 0.713998,
+     "sha256": "e4adc14a0e6cef9e82a1b33372eb97a1d7d324fec801b8a3339ecaffaa891e8c"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_04.png",
+     "name": "Lobby_Fac_Tower_2_04",
+     "t": 0.951998,
+     "sha256": "9e78c97b7f4446ec43aaf78779e6af83b9f531ebb8310b97dbc3b1f06b66b8ae"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_05.png",
+     "name": "Lobby_Fac_Tower_2_05",
+     "t": 1.189997,
+     "sha256": "48344ee2c00662f4b2e34132a19c350936044afb87784ac44261851a69d1fb52"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_06.png",
+     "name": "Lobby_Fac_Tower_2_06",
+     "t": 1.427997,
+     "sha256": "bac660cff8734115f5f1026431cb02a2d9fb96eafdfc52d5e4adba12c082091e"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_07.png",
+     "name": "Lobby_Fac_Tower_2_07",
+     "t": 1.665996,
+     "sha256": "70a19bf9ccf9e7577406c4220b8fb53c692066b682267eb75f74af3c3f9aad3a"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_08.png",
+     "name": "Lobby_Fac_Tower_2_08",
+     "t": 1.903996,
+     "sha256": "19cc940893651e479e1dddee9472c55584e9d3f530ceb414f0dad18e5166faa3"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_09.png",
+     "name": "Lobby_Fac_Tower_2_09",
+     "t": 2.141995,
+     "sha256": "5897480038c89091f53c8301a40911552ae3cdbc7166ac5c9b7442e9610bbc52"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_10.png",
+     "name": "Lobby_Fac_Tower_2_10",
+     "t": 2.379994,
+     "sha256": "19cc940893651e479e1dddee9472c55584e9d3f530ceb414f0dad18e5166faa3"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_2_11.png",
+     "name": "Lobby_Fac_Tower_2_11",
+     "t": 2.617994,
+     "sha256": "70a19bf9ccf9e7577406c4220b8fb53c692066b682267eb75f74af3c3f9aad3a"
+    }
+   ],
+   "fps": 4.2,
+   "drive": "time",
+   "src": "L3401, L3509",
+   "args": {
+    "kind": "tower",
+    "st": 2
+   }
+  },
+  {
+   "name": "Lobby_Fac_Tower_3",
+   "atlas": "Atlas_World_Lobby_2",
+   "theme": null,
+   "file": null,
+   "w": 336,
+   "h": 536,
+   "pivot": [
+    0.5,
+    0.0709
+   ],
+   "pivotName": "BottomCenter",
+   "ppu": 160,
+   "border": null,
+   "frames": [
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_00.png",
+     "name": "Lobby_Fac_Tower_3_00",
+     "t": 0,
+     "sha256": "00ceeca0e27210860f97053fd812a36001a071ae53107dbc4d647fa4bccc2291"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_01.png",
+     "name": "Lobby_Fac_Tower_3_01",
+     "t": 0.237999,
+     "sha256": "555aa663e6600d5e0484704f17f6b1e382863dcc90f8862a9da35921990b2f5a"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_02.png",
+     "name": "Lobby_Fac_Tower_3_02",
+     "t": 0.475999,
+     "sha256": "55d7a8f48e8b78c97b776fbb51e3f5b4357b305ffdc70442b346f6774ebef453"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_03.png",
+     "name": "Lobby_Fac_Tower_3_03",
+     "t": 0.713998,
+     "sha256": "fd5772b9a409619ce9b9a486361aa1a7c7b152de3bbcf92e71df1404fbc4d9ce"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_04.png",
+     "name": "Lobby_Fac_Tower_3_04",
+     "t": 0.951998,
+     "sha256": "0875c1d0478bd41cb5a5d18e78123e4860b7285e3fa4ace0b4da7363f44f9f4c"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_05.png",
+     "name": "Lobby_Fac_Tower_3_05",
+     "t": 1.189997,
+     "sha256": "caaed4793627945c3f2c6df4c9e577eba5d789748285a67b71b48288593a84d4"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_06.png",
+     "name": "Lobby_Fac_Tower_3_06",
+     "t": 1.427997,
+     "sha256": "b63b63e1ced9200f78707175cb52ef55162a09a49f0f94c5ad1280fb27904531"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_07.png",
+     "name": "Lobby_Fac_Tower_3_07",
+     "t": 1.665996,
+     "sha256": "5b58595e986abed8424a738e3b2969cc7dd7f1975ffcb47e6873e0e91af32b6e"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_08.png",
+     "name": "Lobby_Fac_Tower_3_08",
+     "t": 1.903996,
+     "sha256": "07120b11ef66f57ef54bfb38cad7860a50d63377be312f090721f3837a65e9d5"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_09.png",
+     "name": "Lobby_Fac_Tower_3_09",
+     "t": 2.141995,
+     "sha256": "b8a74043f98c68173920d231f504ea135f7b057babd1c539b93c5466d38f734a"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_10.png",
+     "name": "Lobby_Fac_Tower_3_10",
+     "t": 2.379994,
+     "sha256": "8ed16376a9effb674c1776c46be14acc9cbe8325155028ab3f0057f61389a376"
+    },
+    {
+     "file": "Sprite/Atlas_World_Lobby_2/Lobby_Fac_Tower_3_11.png",
+     "name": "Lobby_Fac_Tower_3_11",
+     "t": 2.617994,
+     "sha256": "096fecc9e1066d4c17a4198f38910d765a0a01401dd3b2f54206499ca929f956"
+    }
+   ],
+   "fps": 4.2,
+   "drive": "time",
+   "src": "L3401, L3509",
+   "args": {
+    "kind": "tower",
+    "st": 3
+   }
+  },
+  {
    "name": "Lobby_Bubble",
    "atlas": "Atlas_World_Lobby",
    "theme": null,
@@ -10019,270 +10496,6 @@
    "sha256": "af1d286bd51a8547d76f3c300b0fecd2bf386fdbcd1c7900711812ac52f120c7"
   },
   {
-   "name": "Lobby_Fac_Rack_1_F1",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_1_F1.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 1,
-    "extra": 1
-   },
-   "sha256": "fbb98328ddec46d1367fc1d428dea6ff648c5ed92160eb6cd2533081f65f18f2"
-  },
-  {
-   "name": "Lobby_Fac_Rack_1_F2",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_1_F2.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 1,
-    "extra": 2
-   },
-   "sha256": "9345085e404fec786c73740798f7a87b1a87e9e30382d3adcfb9e4106b049dd4"
-  },
-  {
-   "name": "Lobby_Fac_Rack_2_F1",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_2_F1.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 2,
-    "extra": 1
-   },
-   "sha256": "177bab600a30ecc2b94c7384a828ce03309a46168adfbcccb5398b90f739843e"
-  },
-  {
-   "name": "Lobby_Fac_Rack_2_F2",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_2_F2.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 2,
-    "extra": 2
-   },
-   "sha256": "8569d7cea37c3e42b08679ed8b683f232a1cbb9b02f3c4f90c690b3a367165a2"
-  },
-  {
-   "name": "Lobby_Fac_Rack_2_F3",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_2_F3.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 2,
-    "extra": 3
-   },
-   "sha256": "bf4422a68e53d32336745c8e70af91ce04d4bc1674dc966957c756e3f9244325"
-  },
-  {
-   "name": "Lobby_Fac_Rack_2_F4",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_2_F4.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 2,
-    "extra": 4
-   },
-   "sha256": "0da2d0368fae87834cd94de35eea2b4e845c80017ec7e82c66581ab0415f63a5"
-  },
-  {
-   "name": "Lobby_Fac_Rack_3_F1",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_3_F1.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 3,
-    "extra": 1
-   },
-   "sha256": "86b35a5222f57887ec517f8b9b092e7420b157b0eb92490b9ecc57d5e6a99bc5"
-  },
-  {
-   "name": "Lobby_Fac_Rack_3_F2",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_3_F2.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 3,
-    "extra": 2
-   },
-   "sha256": "620d64230831b1f5cc5e9427585c9f03bc4a685d34e2d5456a17024f81f32521"
-  },
-  {
-   "name": "Lobby_Fac_Rack_3_F3",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_3_F3.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 3,
-    "extra": 3
-   },
-   "sha256": "8fbae4e7542b0d4677bdd3d17022ea42cf7f00d1304e0853f00f4fe8f965c0e4"
-  },
-  {
-   "name": "Lobby_Fac_Rack_3_F4",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_3_F4.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 3,
-    "extra": 4
-   },
-   "sha256": "b97685696a81c60cb1a34a958d1e3d772ee9f4b64103fa4024d4f80016016dd9"
-  },
-  {
-   "name": "Lobby_Fac_Rack_3_F5",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_3_F5.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 3,
-    "extra": 5
-   },
-   "sha256": "c9e80c10da9fcc02c1bd832d18b2ecdd9a0f5c34267caa3334f4b9b310e8d6c5"
-  },
-  {
-   "name": "Lobby_Fac_Rack_3_F6",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Rack_3_F6.png",
-   "w": 312,
-   "h": 284,
-   "pivot": [
-    0.5,
-    0.12676
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3424, L3511(흔들림 sin(t*1.6+i)은 t = 0)",
-   "args": {
-    "kind": "rack",
-    "st": 3,
-    "extra": 6
-   },
-   "sha256": "7cb50f14eef3be695afdac66038769169785a6faeac72e4efdd90025cf975d40"
-  },
-  {
    "name": "Lobby_Fac_Scratch_1",
    "atlas": "Atlas_World_Lobby",
    "theme": null,
@@ -10579,219 +10792,6 @@
    "src": "L3446, L3508",
    "args": {
     "kind": "stove",
-    "st": 3
-   }
-  },
-  {
-   "name": "Lobby_Fac_Tower_1",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_1.png",
-   "w": 336,
-   "h": 536,
-   "pivot": [
-    0.5,
-    0.0709
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "src": "L3401, L3509",
-   "args": {
-    "kind": "tower",
-    "st": 1
-   },
-   "sha256": "1b90ae840de36bae5fe1945998b86f60753d44b9fd7db3010ae1583cf419fed9"
-  },
-  {
-   "name": "Lobby_Fac_Tower_2",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": null,
-   "w": 336,
-   "h": 536,
-   "pivot": [
-    0.5,
-    0.0709
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "frames": [
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_00.png",
-     "name": "Lobby_Fac_Tower_2_00",
-     "t": 0,
-     "sha256": "bac660cff8734115f5f1026431cb02a2d9fb96eafdfc52d5e4adba12c082091e"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_01.png",
-     "name": "Lobby_Fac_Tower_2_01",
-     "t": 0.237999,
-     "sha256": "48344ee2c00662f4b2e34132a19c350936044afb87784ac44261851a69d1fb52"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_02.png",
-     "name": "Lobby_Fac_Tower_2_02",
-     "t": 0.475999,
-     "sha256": "9e78c97b7f4446ec43aaf78779e6af83b9f531ebb8310b97dbc3b1f06b66b8ae"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_03.png",
-     "name": "Lobby_Fac_Tower_2_03",
-     "t": 0.713998,
-     "sha256": "e4adc14a0e6cef9e82a1b33372eb97a1d7d324fec801b8a3339ecaffaa891e8c"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_04.png",
-     "name": "Lobby_Fac_Tower_2_04",
-     "t": 0.951998,
-     "sha256": "9e78c97b7f4446ec43aaf78779e6af83b9f531ebb8310b97dbc3b1f06b66b8ae"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_05.png",
-     "name": "Lobby_Fac_Tower_2_05",
-     "t": 1.189997,
-     "sha256": "48344ee2c00662f4b2e34132a19c350936044afb87784ac44261851a69d1fb52"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_06.png",
-     "name": "Lobby_Fac_Tower_2_06",
-     "t": 1.427997,
-     "sha256": "bac660cff8734115f5f1026431cb02a2d9fb96eafdfc52d5e4adba12c082091e"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_07.png",
-     "name": "Lobby_Fac_Tower_2_07",
-     "t": 1.665996,
-     "sha256": "70a19bf9ccf9e7577406c4220b8fb53c692066b682267eb75f74af3c3f9aad3a"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_08.png",
-     "name": "Lobby_Fac_Tower_2_08",
-     "t": 1.903996,
-     "sha256": "19cc940893651e479e1dddee9472c55584e9d3f530ceb414f0dad18e5166faa3"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_09.png",
-     "name": "Lobby_Fac_Tower_2_09",
-     "t": 2.141995,
-     "sha256": "5897480038c89091f53c8301a40911552ae3cdbc7166ac5c9b7442e9610bbc52"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_10.png",
-     "name": "Lobby_Fac_Tower_2_10",
-     "t": 2.379994,
-     "sha256": "19cc940893651e479e1dddee9472c55584e9d3f530ceb414f0dad18e5166faa3"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_2_11.png",
-     "name": "Lobby_Fac_Tower_2_11",
-     "t": 2.617994,
-     "sha256": "70a19bf9ccf9e7577406c4220b8fb53c692066b682267eb75f74af3c3f9aad3a"
-    }
-   ],
-   "fps": 4.2,
-   "drive": "time",
-   "src": "L3401, L3509",
-   "args": {
-    "kind": "tower",
-    "st": 2
-   }
-  },
-  {
-   "name": "Lobby_Fac_Tower_3",
-   "atlas": "Atlas_World_Lobby",
-   "theme": null,
-   "file": null,
-   "w": 336,
-   "h": 536,
-   "pivot": [
-    0.5,
-    0.0709
-   ],
-   "pivotName": "BottomCenter",
-   "ppu": 160,
-   "border": null,
-   "frames": [
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_00.png",
-     "name": "Lobby_Fac_Tower_3_00",
-     "t": 0,
-     "sha256": "00ceeca0e27210860f97053fd812a36001a071ae53107dbc4d647fa4bccc2291"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_01.png",
-     "name": "Lobby_Fac_Tower_3_01",
-     "t": 0.237999,
-     "sha256": "555aa663e6600d5e0484704f17f6b1e382863dcc90f8862a9da35921990b2f5a"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_02.png",
-     "name": "Lobby_Fac_Tower_3_02",
-     "t": 0.475999,
-     "sha256": "55d7a8f48e8b78c97b776fbb51e3f5b4357b305ffdc70442b346f6774ebef453"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_03.png",
-     "name": "Lobby_Fac_Tower_3_03",
-     "t": 0.713998,
-     "sha256": "fd5772b9a409619ce9b9a486361aa1a7c7b152de3bbcf92e71df1404fbc4d9ce"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_04.png",
-     "name": "Lobby_Fac_Tower_3_04",
-     "t": 0.951998,
-     "sha256": "0875c1d0478bd41cb5a5d18e78123e4860b7285e3fa4ace0b4da7363f44f9f4c"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_05.png",
-     "name": "Lobby_Fac_Tower_3_05",
-     "t": 1.189997,
-     "sha256": "caaed4793627945c3f2c6df4c9e577eba5d789748285a67b71b48288593a84d4"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_06.png",
-     "name": "Lobby_Fac_Tower_3_06",
-     "t": 1.427997,
-     "sha256": "b63b63e1ced9200f78707175cb52ef55162a09a49f0f94c5ad1280fb27904531"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_07.png",
-     "name": "Lobby_Fac_Tower_3_07",
-     "t": 1.665996,
-     "sha256": "5b58595e986abed8424a738e3b2969cc7dd7f1975ffcb47e6873e0e91af32b6e"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_08.png",
-     "name": "Lobby_Fac_Tower_3_08",
-     "t": 1.903996,
-     "sha256": "07120b11ef66f57ef54bfb38cad7860a50d63377be312f090721f3837a65e9d5"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_09.png",
-     "name": "Lobby_Fac_Tower_3_09",
-     "t": 2.141995,
-     "sha256": "b8a74043f98c68173920d231f504ea135f7b057babd1c539b93c5466d38f734a"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_10.png",
-     "name": "Lobby_Fac_Tower_3_10",
-     "t": 2.379994,
-     "sha256": "8ed16376a9effb674c1776c46be14acc9cbe8325155028ab3f0057f61389a376"
-    },
-    {
-     "file": "Sprite/Atlas_World_Lobby/Lobby_Fac_Tower_3_11.png",
-     "name": "Lobby_Fac_Tower_3_11",
-     "t": 2.617994,
-     "sha256": "096fecc9e1066d4c17a4198f38910d765a0a01401dd3b2f54206499ca929f956"
-    }
-   ],
-   "fps": 4.2,
-   "drive": "time",
-   "src": "L3401, L3509",
-   "args": {
-    "kind": "tower",
     "st": 3
    }
   },
