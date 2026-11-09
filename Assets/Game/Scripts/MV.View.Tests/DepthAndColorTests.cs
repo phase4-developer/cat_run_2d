@@ -14,15 +14,15 @@ namespace MV.View.Tests
             Assert.That(DepthMath.Depth(p, cam, fwd), Is.EqualTo(DepthMath.Depth(new Vector3d(0, 0.7, 0), cam, fwd)).Within(1e-12));
         }
 
-        [TestCase(10.0, 1.0)]
-        [TestCase(34.0, 1.0)]
-        [TestCase(59.0, 0.5)]
-        [TestCase(84.0, 0.0)]
-        [TestCase(120.0, 0.0)]
-        public void FogAlpha_MatchesReferenceFogK(double d, double alpha)
+        [TestCase(10, 100)]
+        [TestCase(34, 100)]
+        [TestCase(59, 50)]
+        [TestCase(84, 0)]
+        [TestCase(120, 0)]
+        public void FogAlpha_MatchesReferenceFogK(int d, int alphaPercent)
         {
             var cfg = ViewTestTables.Config();
-            Assert.That(DepthMath.FogAlpha(d, cfg.FogStart, cfg.FogRange), Is.EqualTo(alpha).Within(1e-12));
+            Assert.That(DepthMath.FogAlpha(d, cfg.FogStart, cfg.FogRange), Is.EqualTo(alphaPercent / 100.0).Within(1e-12));
         }
 
         [Test]

@@ -131,21 +131,21 @@ namespace MV.View.Tests
             Assert.That(p.Hh, Is.EqualTo(hh).Within(1e-12));
         }
 
-        [TestCase("market", 0.2, "World_Prop_Crate_Blue_A")]
-        [TestCase("market", 0.1, "World_Prop_Crate_Blue_B")]
-        [TestCase("market", 0.3, "World_Prop_Crate_Red_B")]
-        [TestCase("market", 0.6, "World_Prop_Pot")]
-        [TestCase("harbor", 0.3, "World_Prop_Buoy")]
-        [TestCase("harbor", 0.5, "World_Prop_Crate_Red_Fish")]
-        [TestCase("harbor", 0.8, "World_Prop_Jar")]
-        [TestCase("snow", 0.2, "World_Prop_Snowman")]
-        [TestCase("snow", 0.5, "World_Prop_Jar")]
-        [TestCase("stairs", 0.1, "World_Prop_Pot")]
-        [TestCase("stairs", 0.5, "World_Prop_Jar")]
-        [TestCase("stairs", 0.9, "World_Prop_Bag")]
-        public void RoadsideSprite_FollowsDecoThresholds(string deco, double hh, string sprite)
+        [TestCase("market", 20, "World_Prop_Crate_Blue_A")]
+        [TestCase("market", 10, "World_Prop_Crate_Blue_B")]
+        [TestCase("market", 30, "World_Prop_Crate_Red_B")]
+        [TestCase("market", 60, "World_Prop_Pot")]
+        [TestCase("harbor", 30, "World_Prop_Buoy")]
+        [TestCase("harbor", 50, "World_Prop_Crate_Red_Fish")]
+        [TestCase("harbor", 80, "World_Prop_Jar")]
+        [TestCase("snow", 20, "World_Prop_Snowman")]
+        [TestCase("snow", 50, "World_Prop_Jar")]
+        [TestCase("stairs", 10, "World_Prop_Pot")]
+        [TestCase("stairs", 50, "World_Prop_Jar")]
+        [TestCase("stairs", 90, "World_Prop_Bag")]
+        public void RoadsideSprite_FollowsDecoThresholds(string deco, int hhPercent, string sprite)
         {
-            Assert.That(PropLayout.RoadsideSprite(deco, hh), Is.EqualTo(sprite));
+            Assert.That(PropLayout.RoadsideSprite(deco, hhPercent / 100.0), Is.EqualTo(sprite));
         }
 
         [Test]

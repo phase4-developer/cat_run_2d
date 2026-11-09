@@ -111,15 +111,16 @@ namespace MV.View.Tests
             Assert.That(o.x, Is.EqualTo(0));
         }
 
-        [TestCase(9.0 / 16.0, 52.00)]
-        [TestCase(9.0 / 18.0, 57.51)]
-        [TestCase(9.0 / 19.5, 61.46)]
-        [TestCase(9.0 / 21.0, 65.25)]
-        [TestCase(9.0 / 30.0, 65.25)]
-        [TestCase(3.0 / 4.0, 52.00)]
-        public void VerticalFov_ExtendsTallScreens(double aspect, double expected)
+        // 이름이 정수만 갖도록 화면비는 폭·높이, 기대 FOV는 0.01° 단위.
+        [TestCase(18, 32, 5200)]
+        [TestCase(18, 36, 5751)]
+        [TestCase(18, 39, 6146)]
+        [TestCase(18, 42, 6525)]
+        [TestCase(18, 60, 6525)]
+        [TestCase(3, 4, 5200)]
+        public void VerticalFov_ExtendsTallScreens(int w, int h, int expectedCentiDeg)
         {
-            Assert.That(CameraModel.VerticalFov(52, aspect), Is.EqualTo(expected).Within(0.01));
+            Assert.That(CameraModel.VerticalFov(52, w / (double)h), Is.EqualTo(expectedCentiDeg / 100.0).Within(0.01));
         }
 
         static void AssertVec(Vector3d v, double x, double y, double z)
