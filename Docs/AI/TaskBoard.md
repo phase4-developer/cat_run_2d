@@ -27,24 +27,24 @@
 | MV-PLAT-IAP / ANALYTICS / NOTI | 스텁 취소(D-88) → 고정 tgz 연결로 | — | `ai/MV-PLAT-IAP-stub`·`ai/MV-PLAT-ANALYTICS-stub` 병합 안 함 |
 | MV-UI-META | 1차 완료 | `fa7bac4` | 화면·PlayMode NOT_RUN. 총괄: Addressables `UIPopup_GodSelect`·`AreaUpgrade`·`Rebirth`·`Map`·`FeatureUnlock`(Remote_UI), `UIPopup_Debug`(개발 전용 그룹) — PLAY-INT 병합 뒤. 요청 MV-META: 로컬 `debug.*` 처리기 8개, `MvMeta.DisarmRebirth()`. 결정 후보: 지도 필터(`05_contentOpen.showOnMap` 빈칸 → conditionType 1 전부), 지도 체크포인트 문구, 05 §5.1.14 클래스 표 소유(테스트 패널·공통 틀을 META가 만듦) |
 | MV-UI-LOBBY | 1차 완료 | `2367b4c` | 화면 NOT_RUN. PLAY-INT 2차로: `MvGameLoop.EnterLobbyAsync`에 `OnFacilityBump`·`ApplyFacilities()`(1초마다 권장). 요청 MV-META: `settings.muted` 저장, `MvLobbyBuyResult` 화면 입구. MV-UI-META: `WatchAdForReward`도 가짜 광고 팝업 경유. MV-DATA 후보: 아지트 시설 단계 문턱(정본 azStages L3469~3471) 표로. 결정 후보: 가짜 광고 3초 자동(05 §5.12) vs 버튼(지금), 컨텐츠 버튼 「준비 중」 임시. 남음: 시작 무기 덱 표시(§5.5.2), 구역 클리어 문구, 배너 |
-| MV-UI-CONTENT | 1차 진행(칸 a) | — | D-92 겉 더미 |
+| MV-UI-CONTENT | 1차 완료 | `14db621` | 담당 잡 `f3bc8f255c40` PASS, 화면 NOT_RUN. 모드 탭(400_content)·성장 탭(05_contentOpen key 목록)·잠금 토스트·하루 한도·`RecordModePlay`→닫힘→시작 콜백. G7 연결 지점: `ContentMenuData.StartModeHandler`(모드 시작)·`OpenMetaHandler`(성장 탭). 요청 MV-META: 입장권(02_playResource) 보유·충전·차감 API, `ContentEntry.CanEnter/TryEnter` — 교체 지점 `MvContentMenuPort.TicketCount`(지금 「-/3」, 소탕·광고 +1 없음). 결정 후보: 시작 콜백 없으면 메타 기록 안 함, 성장 탭 행 구분 열 없음(MV-DATA 후보) |
 | MV-PLAY-INT 2차 | 완료 | `ac38d4d` | 시설 단계·`meta.setMuted`·구매 결과(`MetaResult.LvBefore/After·Tier`)·보상 광고 관문(`WatchAdForReward(key,done,gate)`, 사용 수 1번)·Fx 머티리얼 주소·디버그 상수. 결정 후보 D-PI2-1 가짜 광고 여는 코드 2곳 합치기, D-PI2-2 TMP Essential Resources(`TMP Settings`) 없음 — 배치 PlayMode에서 로비 1초 넘으면 No graphic device 오류, 한글 글꼴 결정과 함께 |
-| MV-CONTENT-* (G7) | 대기 | — | — |
+| MV-CONTENT-* (G7) | 준비 완료 | asmdef `14db621` | MV.Content 참조(Save·Tables·Data·Economy·UniTask), MV.UI→MV.Content, `MV.Content.Tests` asmdef. 계약서 작성됨(미배정): `G7-common.md`, `MV-META-RESEARCH-1.md`(칸 b), `MV-META-QUEST-1.md`(칸 c) — `<DEV>`를 배정 시 dev SHA로 바꾼다 |
 | MV-QA-ACCEPT (G8) | 대기 | — | D-87 기준 |
 
 ## 담당표
 
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
-| a | `moonvillage-a` | MV-UI-CONTENT 1차 | `ai/MV-UI-CONTENT-menu` | `S/MV.UI/Content/`·Tests, MvUiIds·MvUiNav 줄, LobbyPresenter 컨텐츠 버튼 줄, `A/Addressables/Remote/UI/Content/` |
+| a | `moonvillage-a` | (비어 있음) | — | — |
 | b | `moonvillage-b` | (비어 있음) | — | — |
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
-| f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
+| f | `moonvillage-f` | (비어 있음, `ai/MV-PLAT-IAP-stub` 체크아웃·깨끗) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
 | g | `moonvillage-g` | (비어 있음) | — | — |
 
-- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 464, PlayMode 7, `2367b4c` 기준).
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 478, PlayMode 7, `14db621` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
@@ -71,3 +71,17 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 교체 MV-TABLE-SWAP 병합, dev `b9182cb` 전체 확인 `c0fcbf8e461f` PASS(EditMode 426, PlayMode 7)(viewShape·304 소품·줄·04 part·dailyLimit). bumpH 1줄은 MV-META 3차에서 끝. 결정 후보(SWAP): 길가 소품은 정본 deco 문턱 우선·목록만으로 고르려면 가중치 열, 원소 when은 bolt 아니면 fire(god.blast key null만 옛 색과 다름), 400에 없는 key는 한도 없음. 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
 - 미해결(사용자): 없음.
+
+## 총괄 인계 (2026-11-10, 3번째 총괄 대화 마감)
+
+- 마감 사유: 압축 2회. dev `14db621` 전체 확인 `7b472de116eb` PASS(compile, EditMode 478/478, PlayMode 7/7). 돌고 있는 담당·잡 없음.
+- 이 대화 병합: G3-INT(G3 끝), RUN-VIEWAPI, UI-HUD 1차, FX 1차, TOOL-SND 2차, VIEW 2차, PLAY-INT(플레이 가능 빌드, D-91), DATA 3차, UI-META 1차, TABLE-SWAP, META 3차, UI-LOBBY 1차, PLAY-INT 2차, G7 asmdef 준비·UI-CONTENT 1차. Addressables 그룹 Local_UI·Remote_UI·Remote_Effect·Remote_Audio_Sfx·Remote_Audio_Music·Remote_World·Dev_Debug는 총괄이 손으로 썼고 전체 확인을 통과했다.
+- 칸: a~e·g 비어 있음(detached, 깨끗). f는 `ai/MV-PLAT-IAP-stub` 체크아웃(깨끗, 병합 안 함 — D-88로 취소). `ai/MV-PLAT-ANALYTICS-stub`도 병합 안 함.
+- 다음 순서:
+  1. G7 메타 시스템: MV-META-RESEARCH(440, 1차 메타 능력치의 유일한 출처) → QUEST(410·413·420) 계약서 있음. 이어서 ATTENDANCE(485), SHOP(700·701·702, 결제 스텁) 계약서를 같은 형식으로 쓴다. 입장권 API(UI-CONTENT 요청)는 MV-META 계약에 넣는다.
+  2. G7 모드(`IModeRule`): alleyWar·rapidRush·churuRush(08 §8.4.5~8.4.7, 402·401). 시작은 `ContentMenuData.StartModeHandler`에 연결.
+  3. 패키지: bundle3 20개 + `com.unity.purchasing` 5.3.1 연결은 총괄 세션 권한 검사에 막혀 사용자 직접 허용 대기(문구 「bundle3 패키지 20개 연결과 com.unity.purchasing 5.3.1 추가 허용」). Firebase 13.17.0·AdMob 10.7.0 SDK 내려받기는 사용자 확인 뒤.
+  4. TMP Essential Resources·한글 글꼴(D-PI2-2), MV-UI-FX2, MV-TOOL-ART-5-1(배치 모드 `MvArtSetup.RequestEnsure` 쓰기 — 계약서만 있음, 그 영역은 mv-process-improve 세션과 겹치는지 먼저 본다).
+  5. G8: MV-QA-HARNESS Unity 쪽, MV-QA-ACCEPT(D-87).
+- 기대 시험 목록 `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`은 새 시험이 들어오면 갱신한다(담당 근거 `EditMode.xml`의 fullname을 더함). Addressables 항목 추가는 그룹 파일 `  m_ReadOnly: 0
+  m_Settings:` 앞에 넣는다.
