@@ -1,0 +1,22 @@
+{
+  "id": "W-05",
+  "title": "적 무리(z 57.42) 접근(8m 앞, 743)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 753,
+  "captureAt": [
+    733,
+    743,
+    753
+  ],
+  "mask": []
+}

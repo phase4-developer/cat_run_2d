@@ -1,0 +1,460 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Weapon_1",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 208,
+   "h": 208,
+   "pivotPx": [
+    104,
+    104
+   ]
+  },
+  "args": {
+   "t": 1
+  },
+  "expr": "paintWeapon(g, A.t, 208)",
+  "allowEdge": true,
+  "src": "L3388"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Weapon_2",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 208,
+   "h": 208,
+   "pivotPx": [
+    104,
+    104
+   ]
+  },
+  "args": {
+   "t": 2
+  },
+  "expr": "paintWeapon(g, A.t, 208)",
+  "allowEdge": true,
+  "src": "L3388"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Weapon_3",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 208,
+   "h": 208,
+   "pivotPx": [
+    104,
+    104
+   ]
+  },
+  "args": {
+   "t": 3
+  },
+  "expr": "paintWeapon(g, A.t, 208)",
+  "allowEdge": true,
+  "src": "L3388"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Weapon_4",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 208,
+   "h": 208,
+   "pivotPx": [
+    104,
+    104
+   ]
+  },
+  "args": {
+   "t": 4
+  },
+  "expr": "paintWeapon(g, A.t, 208)",
+  "allowEdge": true,
+  "src": "L3388"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Weapon_5",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 208,
+   "h": 208,
+   "pivotPx": [
+    104,
+    104
+   ]
+  },
+  "args": {
+   "t": 5
+  },
+  "expr": "paintWeapon(g, A.t, 208)",
+  "allowEdge": true,
+  "src": "L3388"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Weapon_6",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 208,
+   "h": 208,
+   "pivotPx": [
+    104,
+    104
+   ]
+  },
+  "args": {
+   "t": 6
+  },
+  "expr": "paintWeapon(g, A.t, 208)",
+  "allowEdge": true,
+  "src": "L3388"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Weapon_7",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 208,
+   "h": 208,
+   "pivotPx": [
+    104,
+    104
+   ]
+  },
+  "args": {
+   "t": 7
+  },
+  "expr": "paintWeapon(g, A.t, 208)",
+  "allowEdge": true,
+  "src": "L3388"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Weapon_8",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 208,
+   "h": 208,
+   "pivotPx": [
+    104,
+    104
+   ]
+  },
+  "args": {
+   "t": 8
+  },
+  "expr": "paintWeapon(g, A.t, 208)",
+  "allowEdge": true,
+  "src": "L3388"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Fac_Tower_1",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 128,
+   "h": 128,
+   "pivotPx": [
+    64,
+    64
+   ]
+  },
+  "args": {
+   "kind": "tower",
+   "st": 1
+  },
+  "allowEdge": true,
+  "src": "L3463",
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Fac_Tower_2",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 128,
+   "h": 128,
+   "pivotPx": [
+    64,
+    64
+   ]
+  },
+  "args": {
+   "kind": "tower",
+   "st": 2
+  },
+  "allowEdge": true,
+  "src": "L3463",
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Fac_Tower_3",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 128,
+   "h": 128,
+   "pivotPx": [
+    64,
+    64
+   ]
+  },
+  "args": {
+   "kind": "tower",
+   "st": 3
+  },
+  "allowEdge": true,
+  "src": "L3463",
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Fac_Rack_1",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 128,
+   "h": 128,
+   "pivotPx": [
+    64,
+    64
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 1
+  },
+  "allowEdge": true,
+  "src": "L3463",
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Fac_Rack_2",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 128,
+   "h": 128,
+   "pivotPx": [
+    64,
+    64
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 2
+  },
+  "allowEdge": true,
+  "src": "L3463",
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Fac_Rack_3",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 128,
+   "h": 128,
+   "pivotPx": [
+    64,
+    64
+   ]
+  },
+  "args": {
+   "kind": "rack",
+   "st": 3
+  },
+  "allowEdge": true,
+  "src": "L3463",
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Gold",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "svg",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "selector": ".ic-gold",
+  "src": "CSS .ic-gold"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Dia",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "svg",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "selector": ".ic-dia",
+  "src": "CSS .ic-dia"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Soul",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "svg",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 68,
+   "pivotPx": [
+    48,
+    34
+   ]
+  },
+  "selector": ".ic-soul",
+  "src": "CSS .ic-soul"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Icon_Stair",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "svg",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "selector": ".ic-stair",
+  "src": "CSS .ic-stair"
+ }
+]

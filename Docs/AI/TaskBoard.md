@@ -6,28 +6,48 @@
 |---|---|---|---|---|---|---|---|
 | MV-00 프로젝트 생성·기반 연결 | 완료 | 총괄(Claude Code 대화) | `ai/MV-00-project-framework`, `ai/MV-00-boot-skeleton` | `c8c7c3a` | 아래 병합 Commit | compile PASS(잡 `8d04cd506014`, `7f1f90c67dd7`), PlayMode `BootFlowTests` 1/1 PASS(잡 `7f1f90c67dd7`, 후보 `04e675c`), EditMode NOT_RUN(시험 없음), 기기 실행 NOT_RUN | 아래 「MV-00 남김」 |
 
-| MV-DATA 표·검증기·로더 | 진행 | 하위 에이전트(이 총괄 대화) — 2번째 담당. 1번째 담당(앱 세션)은 사용자 지시로 멈추고 「작업 중」 Commit `d397e9d`로 넘김 | `ai/MV-DATA-tables-loader` @ `C:/Project/MoonVillage.wt/a`, 실행기 `moonvillage-a` | `b210aab`(작업 중 Commit 기준), dev `43637e7` | | | 쓰기: `S/MV.Data/`, `S/MV.Data.Tests/`, TSV·Resources, `S/MV.Editor/Tables/`, `GameBootstrap.cs` 4단계. 총괄 asmdef `464f8b8` |
-| MV-SAVE 저장·이관 | 진행 | 하위 에이전트 | `ai/MV-SAVE-save-migration` @ `.wt/b`, `moonvillage-b` | `43637e7` | | | 쓰기: `S/MV.Save/`, `S/MV.Save.Tests/`. Boot 6단계 연결은 G1 통합 때 총괄. D-68 대기(키 위치) → 교체 지점. 총괄 asmdef `f0214ef` |
-| MV-TOOL-ART 그림 추출 | 진행 | 하위 에이전트 2번째(1번째 닫힘: 입력 한도, `b9eb8b6` — PNG 1339, V1 결정성 PASS, `.meta`·compile NOT_RUN) | `ai/MV-TOOL-ART-extract` @ `.wt/c`, `moonvillage-c` | `43637e7` | | | 쓰기: `Tools/MvExtract/`(sound 제외), `A/Art/Source/`, `A/Art/Temp/`. D-50 승인(2026-11-09 사용자 「전부 승인」) |
-| MV-QA-HARNESS 캡처 도구(프로토 쪽) | 진행 | 하위 에이전트 | `ai/MV-QA-HARNESS-proto` @ `.wt/d`, `moonvillage-d` | `43637e7` | | | 쓰기: `Tools/MvCapture/`, `QA/Scenes/`, `QA/Dumps/`, `QA/Captures/Proto/`. Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도 계약 |
-| MV-TOOL-SND 소리 굽기 | 진행 | 하위 에이전트 | `ai/MV-TOOL-SND-bake` @ `.wt/e`, `moonvillage-e` | `e4e492d`(MV-TOOL-ART 공용 기반, dev `43637e7` 위) | | | 쓰기: `Tools/MvExtract/sound/`, `A/Addressables/Remote/Audio/`. 공용 파일 변경은 요청으로 |
-| MV-ART-ATLAS 아틀라스·임포트 | 대기 | — | — | | | | 선행: MV-TOOL-ART 출력, MV-DATA 표 클래스 |
+| MV-DATA 표·검증기·로더 | 1차 병합, 2차 구현 끝·검증 대기 | 1번째(앱 세션) 멈춤 → 2번째 닫힘 → 3번째 닫힘(부분, 입력 한도) → **다음 담당 필요(검증만)** | 1차 `ai/MV-DATA-tables-loader`(병합 뒤 지움), 2차 `ai/MV-DATA-content-tables` @ `.wt/a`, `moonvillage-a` | 1차 `b210aab`, 2차 dev `05b42af` | 1차 `b7c2db5` → dev `05b42af`. 2차 HEAD `5c7657c`(트리 깨끗) | 1차: compile `3d1988cf6179` PASS, EditMode `0263185fe518` 46/46 PASS, PlayMode `c172e9cb5edf` PASS. 2차: `cfd587b` compile `0e02dbd2b992` PASS, `5c7657c` compile `f660a8e6efd9` PASS, EditMode 116개 NOT_RUN(기대 목록 scratchpad `mvdata3-editmode.json`). 티켓 06·07 start, 08·09 미완 | 다음 담당: EditMode 116 → 실패 수정 → 티켓 done → 총괄 dev 병합. 추가 요청(ART-ATLAS 검사기): 07 605 iconAtlas·09 atlas 열(9001001~4, 9002001~3, 9003001~2) → Atlas_UI_Icon, `MvTableAuthoring.Validate`에 `MvResourceColumnChecker` 합치기, 폭풍 흔들림 상수(RUN-SIM). ConsumeType 생성 「적용」은 `ProjectSettings/` 쓰기라 총괄 몫인데 고정본 Framework 0.1.0-pre.7에서 Collision·GeneratedUnmanagedConflict로 막혀 손 enum 유지(Framework 요청 필요). 결정: 802401001 행 보류, 480 statKey 열, 413 `step` 뜻, 701 2차 상품 active 0. D-73·74·78·79 권장안 적용. 기획서 07·08 같은 브랜치 동기화함. 자료 빈칸(icon·banner·SKU 등)은 보고 원문 참조 |
+| MV-SAVE 저장·이관 | 완료(dev 병합) | 하위 에이전트 닫힘 | `ai/MV-SAVE-save-migration`(G1 통합 브랜치로 병합, 지움) | `43637e7` | `31b51a3` → dev `bf2921c`(MV-G1-INT와 함께) | compile `291ea15aa1bd` PASS, EditMode `9a7bd185e321` 18/18 PASS, PlayMode NOT_RUN(계약 없음) | D-68 대기: 고정본 save는 평문 불가 → 개발은 공개 고정 키, 출시는 키 공급자 교체 지점(지금 출시 빌드는 저장 못 엶) |
+| MV-G1-INT 표+저장 Boot 연결 | 완료(dev 병합) | 하위 에이전트 닫힘 | `ai/MV-G1-INT-boot-save`(병합 뒤 지움) | dev `05b42af` + MV-SAVE `e9d9927` + 총괄 asmdef `ed5083c` | `5a0aa09` → dev `bf2921c` | compile `3121c21cc91d` PASS, EditMode `51d33fefac68` 71/71 PASS, PlayMode `3fbf1b89cb52` BootFlow 1/1 PASS. NOT_RUN: 플레이어 빌드 저장·표(TableBuilder Resources) | Boot 4→6→5 순서(10 §10.7·09 동기화). `mvDaily.modePlays`는 `400_content` 표(MV-DATA 2차) 뒤. G3 통합 때 Boot에 `options.IsComponentImplemented = MV.Run.RunComponents.IsImplemented` 연결(MV-RUN-SIM 요청). D-68 |
+| MV-RUN-SIM 런 시뮬레이션 | 완료(dev 병합, G2) | 1·2번째 담당 닫힘 | `ai/MV-RUN-SIM-core`(병합 뒤 지움) | dev `05b42af` + 총괄 asmdef `3155544`·`4576f19` | 담당 `30473b8` + 총괄 GEN 최신 병합 `c0cfe6e` → dev `23cec8a` | 잡 `5c09fa8d07a0` compile + EditMode 34/34 PASS(SIM 23 + GEN 11). 덤프 재생 대조 BASE 3560·RUN-01 3418·RUN-02 5830·RUN-03 4083 프레임 전부 일치. PlayMode NOT_RUN(계약 없음). 유성·폭풍 카드는 덤프에 없어 미검증 | G3 통합 때 Boot에 `options.IsComponentImplemented = MV.Run.RunComponents.IsImplemented`. 04 §4.20 `IRunRule`·`MainRunRule`·동행 사격 본체는 코드 없음 → G7(MV-CONTENT) 전에 후속 계약. 결정 후보: 막힘 종료 사유(정본 `blocked.k` 이름, Unity는 `FinishReason.Wall`만). MV-DATA 요청: 폭풍 착탄 흔들림 상수(±0.3/±2) 표로 |
+| MV-RUN-GEN 레벨 생성 | 완료(dev 병합 `23cec8a`, G2) | 하위 에이전트 닫힘 | `ai/MV-RUN-GEN-level`(병합 뒤 지움) | `1bd449d`(MV-RUN-SIM 공용 상태) | `cf76819`(코드 `1a4158b` + 기획서 04 동기화) | compile `1d5d2bd45a6c` PASS(`a680690`), EditMode `67b49640b85e` Gen 11/11 PASS(`1a4158b`). GEN 덤프 900/900×3, FIELD hash 4619 비트 일치×3, 칸 90/90·Baked 90/90·표만 45/45. NOT_RUN: IL2CPP ARM64 실기 FIELD(D-27) | 기반이 RUN-SIM 미완 상태라 RUN-SIM 완료 뒤 같이 병합. Hash는 `JsMath.Sin`(04 §4.14.3 동기화, 총괄 결정). 병합 뒤 정리: gaugeNeed 식 SIM `RunFormulas.GaugeNeed`와 합치기, `RunState.Tpl`=310 id. Unity Mono `double.Parse` 17자리 1ulp 오차 → 덤프 대조 시험은 직접 파서 |
+| MV-META 메타 규칙 | 시작 가능 | — | (칸 b 또는 e) | | | | 선행 MV-SAVE·MV-G1-INT dev 들어옴(`bf2921c`). 총괄 asmdef: `MV.Meta.Tests` 필요 |
+| MV-TOOL-ART 그림 추출 | 1차 병합, 3차 구현 끝·EditMode 2건 FAIL(병합 보류) | 1·2·3번째 담당 닫힘 → **다음 담당 필요** | 1차 `ai/MV-TOOL-ART-extract`(병합 뒤 지움), 3차 `ai/MV-TOOL-ART-remaining` @ `.wt/c` | `43637e7`, 3차 dev `688ecaf` | 1차 `e7b58c8` → dev `688ecaf`. 3차 담당 `dea2c42` + 총괄 dev 병합 `80b91a9` + Unity 임포트 결과 `2e1178f` | 1차: compile `630d4553c1d9` PASS, V1·V2(ΔE ≤ 3)·V4 PASS, V3 NOT_RUN. 3차(`dea2c42`): 정식 1699→2141장(+442), V1·V1'·V2·V4 PASS, V3 NOT_RUN, compile `a2ac703deba6` PASS. dev 병합 뒤(`2e1178f`): 잡 `6cbf41b8790a` compile PASS, EditMode ATLAS 18/20 — FAIL ① `EveryAtlas_FitsOnePageOfMaxSize`: Atlas_World_Lobby 101장 하한 118 % → `_2` 분할 필요(03 §3.8.1) ② `AllTableResourceColumns_ResolveOrAreReported`: 09 9002002 `UI_Icon_Brick` @Atlas_UI_Hud 없음(실제 Atlas_UI_Icon) | 다음: ①은 로비 아틀라스 분할(ART-ATLAS 규칙·101 atlasPattern이면 MV-DATA) ②는 MV-DATA 요청 목록에 추가. 남은 그림: `Tex_Lobby_Room`, 집 부품, `World_Prop_Pole`, 담장 장식, 빨래 21·전구줄 8, `Fx_Hiss`·`Fx_Paw`·`Fx_FlashEllipse`·`Fx_Stripe`, UI 스킨 전체(dom 방식 준비됨), `World_Label_*`, `Tex_UI_Vignette`. 확인 필요 추정: 관문 기둥 원근·flipX, 금빛 기둥, 계단 피벗, 항구 파랑 생선 상자 조합 |
+| MV-QA-HARNESS 캡처 도구(프로토 쪽) | 프로토 쪽 병합 | 하위 에이전트 닫힘 | `ai/MV-QA-HARNESS-proto`(병합 뒤 지움) | `43637e7` | `b66c41f` → dev `63c76dc` | 37/38장면(U-14 protoNA) 118장 2회 픽셀 해시 동일, GEN·FIELD·SIM 덤프 재생성 SHA 동일. 사람 확인 NOT_RUN: U-04·U-12·U-13 연출 포착 | Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도. `mask[]` 실측은 MV-QA-ACCEPT. 기획서 12 §12.1 동기화. 결정 D-41+D-30·D-71·D-27 |
+| MV-TOOL-SND 소리 굽기 | 완료(dev 병합) | 하위 에이전트 닫힘 | `ai/MV-TOOL-SND-bake`(병합 뒤 지움) | `e4e492d` | `cb96a78` → dev `25ae2cb` | 형식 32/32, 재실행 해시 32/32, V6 실시간 녹음 대조 32/32 PASS(상관 최저 0.9954), compile `78fc269bf094` PASS. 청취 확인 NOT_RUN | 03 §3.9.1과 다르게 한 4가지는 총괄 결정으로 03 동기화(앞 무음 1.0014 s, BGM 두 번째 루프, 뒤 무음 정리 끔, GainNode 사슬). D-55 잔재 5종 정의만, D-56 WAV→Vorbis 임포트, D-57 BGM 2파일. `package.json` snd 스크립트 총괄이 추가 |
+| MV-ART-ATLAS 아틀라스·임포트 | 부분 완료(dev 병합 `12f354d`) | 하위 에이전트 닫힘 | `ai/MV-ART-ATLAS-import`(병합 뒤 지움) | dev `688ecaf` + 총괄 asmdef `474ad46` | 담당 `64ee754` + 총괄 Sprite Atlas V2 켜기 `7867fb3` | `64ee754`: 잡 `3a020e6a3455` compile + EditMode 20/20 PASS, 생성 산출물 재실행 변화 없음. `7867fb3`: 잡 `5bc1deca8c67` compile + EditMode 20/20 PASS. NOT_RUN: 아틀라스 실제 패킹 크기·Memory Profiler(§3.8.12), ΔE 압축 품질(§3.11.2) | 아틀라스 35개, 런 텍스처 31.9 MB(목표 48). 검사기 오류 11건 = MV-DATA 요청(07 605 iconAtlas→Atlas_UI_Icon, 09 atlas 열 9001001~4·9002001·9002003·9003001·9003002 → Atlas_UI_Icon, 113 portrait 대소문자(2차에서 고침), `MvTableAuthoring.Validate`에 `MvResourceColumnChecker` 합치기). 미추출 20건은 TOOL-ART 3차. 위험: Friend_T1~T6 실제 패킹이 2페이지면 `_2` 분할+101 atlasPattern(MV-DATA). Cat 아틀라스 2048². `Tex_God_*`는 `Art/Source/Texture`에 둔 채 주소만(§3.4.2와 다름, 이동은 TOOL-ART/총괄 결정). Fx 패딩 8(§3.8.1 규칙 우선) |
 
 ## 담당표 (2026-11-09)
 
 | 칸 | 작업 폴더 | 실행기 id | 지금 계약 | 닫는 조건 |
 |---|---|---|---|---|
-| a | `C:/Project/MoonVillage.wt/a` | `moonvillage-a` | MV-DATA | 완료·체크포인트·입력 약 15만 토큰 |
-| b | `C:/Project/MoonVillage.wt/b` | `moonvillage-b` | MV-SAVE | 같음 |
-| c | `C:/Project/MoonVillage.wt/c` | `moonvillage-c` | MV-TOOL-ART | 같음 |
-| d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | MV-QA-HARNESS(프로토) | 같음 |
-| e | `C:/Project/MoonVillage.wt/e` | `moonvillage-e` | MV-TOOL-SND | 같음 |
+| a | `C:/Project/MoonVillage.wt/a` | `moonvillage-a` | MV-DATA 2차(담당 닫힘, 브랜치 유지·검증 대기) | 완료·체크포인트·입력 약 15만 토큰 |
+| b | `C:/Project/MoonVillage.wt/b` | `moonvillage-b` | 비어 있음(detached, MV-G1-INT 닫힘) | — |
+| c | `C:/Project/MoonVillage.wt/c` | `moonvillage-c` | MV-TOOL-ART 3차(담당 닫힘, 브랜치 유지·FAIL 2건) | 같음 |
+| d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | 비어 있음(detached) | — |
+| e | `C:/Project/MoonVillage.wt/e` | `moonvillage-e` | 비어 있음(detached, MV-TOOL-SND 닫힘) | — |
+| f | `C:/Project/MoonVillage.wt/f` | `moonvillage-f` | 비어 있음(detached) | — |
+| g | `C:/Project/MoonVillage.wt/g` | `moonvillage-g` | 비어 있음(detached) | — |
 
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`다. 작업 폴더는 칸을 재사용하고 브랜치만 바꾼다(Unity Library 재생성 절약).
 - 실행기 하위 호스트 위임: `moonvillage --hosts`, compile·EditMode·PlayMode, 근거 「작업 폴더를 실행기에 등록해」, 만료 2026-11-19.
 - 담당 공통 규칙: `C:/Project/MoonVillage.wt/_notes/CONTRACT_COMMON.md`(저장소 밖, 이 PC).
 - 시험 어셈블리는 계약마다 `S/MV.<모듈>.Tests/`(기획서 11의 `MV.Run.Tests` 방식)로 둬서 브랜치끼리 asmdef가 겹치지 않게 했다.
 
+## 총괄 인계 (2026-11-09, 1번째 총괄 대화 마감 — 압축 2회)
+
+- dev `086c1f9` 기준. dev에 들어온 계약: MV-00, MV-DATA 1차, MV-SAVE, MV-G1-INT, MV-TOOL-ART 1차, MV-QA-HARNESS(프로토), MV-TOOL-SND, MV-RUN-SIM, MV-RUN-GEN, MV-ART-ATLAS(부분). G1은 MV-DATA 2차, G2는 끝.
+- 열린 하위 에이전트 없음(모두 보고 후 닫힘). 실행기에 이 프로젝트 잡 없음. 사용자 테스트 폴더 `C:/Project/MoonVillage`는 `dev`, 미커밋 없음.
+- 브랜치가 남은 칸: a `ai/MV-DATA-content-tables`(`5c7657c`, compile PASS, EditMode 116 NOT_RUN — 기대 목록 scratchpad `mvdata3-editmode.json`, scratchpad는 1번째 총괄 대화 것이라 새 총괄은 목록을 다시 만든다), c `ai/MV-TOOL-ART-remaining`(`2e1178f`, FAIL 2건 위 행). b·d·e·f·g는 detached, 재사용 가능.
+- 다음 순서(권장):
+  1. MV-DATA 2차 검증 담당(칸 a): EditMode → 실패 수정 → 위 MV-DATA 행의 추가 요청 반영 → dev 병합(G1 끝).
+  2. MV-TOOL-ART 3차 FAIL 2건 담당(칸 c): 로비 아틀라스 분할(①), ②는 MV-DATA 요청 반영 뒤 재시험 → dev 병합. 남은 그림은 다음 회차.
+  3. MV-META(칸 b): 총괄이 `MV.Meta.Tests` asmdef를 먼저 만든다.
+  4. G3 통합: Boot에 `options.IsComponentImplemented = MV.Run.RunComponents.IsImplemented`. 이후 기획서 11 순서대로 G3(MV-VIEW 등) → G4 …
+  5. MV-QA-HARNESS Unity 쪽은 MV-VIEW 뒤.
+- 남은 결정(총괄 권장안으로 진행 중, 교체 가능): D-27(실기 FIELD), D-68(출시 저장 키), 802401001 행, 480 statKey, 413 step, 701 2차 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지 여부(Sprite Atlas V2 켠 뒤 실측), `Tex_God_*` 위치, ConsumeType 생성(고정본 Framework 0.1.0-pre.7 Collision — Framework 요청).
+- 실행기: `RESOURCE_BUSY: OTHER_OWNER_DEVICE_WORK`는 다시 낸다. Unity가 실행 중 만든 `.meta`·아틀라스·그룹 변경은 `PROJECT_EXECUTION_CANDIDATE_CHANGED`/FAIL로 나오니 범위 확인 뒤 Commit하고 다시 낸다. 덤프 대조 시험은 Mono `double.Parse` 1ulp 오차 때문에 GEN의 직접 파서(`MiniJson`)를 쓴다.
+- 승인 경계: 하위 호스트 위임 만료 2026-11-19. D-50 승인됨. 그 밖 승인은 새 총괄이 현행 문서로 다시 확인한다.
 ## MV-00 남김
 
 - Managed Addressables Project Config는 만들지 않았다. 만들면 모든 Player 빌드가 BootstrapSplit 경로를 타므로(Framework `NewGame.md` 3단계) 첫 Addressable 콘텐츠가 들어오는 계약(MV-TOOL-ART·MV-UI-*)에서 만든다. 기본 `AddressableAssetSettings`만 있다.

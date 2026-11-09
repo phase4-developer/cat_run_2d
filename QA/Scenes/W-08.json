@@ -1,0 +1,22 @@
+{
+  "id": "W-08",
+  "title": "끝 장애물 필드 입구(첫 벽 6m 앞, 3284)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 3304,
+  "captureAt": [
+    3284,
+    3294,
+    3304
+  ],
+  "mask": []
+}

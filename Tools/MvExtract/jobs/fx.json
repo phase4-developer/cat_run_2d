@@ -1,0 +1,150 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Star4",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 32,
+   "h": 32,
+   "pivotPx": [
+    16,
+    16
+   ]
+  },
+  "expr": "star4(g, X, Y, 13, '#ffffff')",
+  "src": "L3261"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Star4_Pale",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 32,
+   "h": 32,
+   "pivotPx": [
+    16,
+    16
+   ]
+  },
+  "expr": "star4(g, X, Y, 13, '#fff6a0')",
+  "src": "L3261, L3732"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_BrickBit_0",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "ctx",
+  "pivot": "Center",
+  "canvas": {
+   "w": 40,
+   "h": 24,
+   "pivotPx": [
+    20,
+    12
+   ]
+  },
+  "args": {
+   "i": 0
+  },
+  "pre": "g.translate(X, Y), g.rotate(-(X + Y)*0.05), g.translate(-X, -Y)",
+  "expr": "brickBit(X, Y, 0.06*S, ENERGY_C[A.i])",
+  "src": "L3605, L3096"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_BrickBit_1",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "ctx",
+  "pivot": "Center",
+  "canvas": {
+   "w": 40,
+   "h": 24,
+   "pivotPx": [
+    20,
+    12
+   ]
+  },
+  "args": {
+   "i": 1
+  },
+  "pre": "g.translate(X, Y), g.rotate(-(X + Y)*0.05), g.translate(-X, -Y)",
+  "expr": "brickBit(X, Y, 0.06*S, ENERGY_C[A.i])",
+  "src": "L3605, L3096"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_BrickBit_2",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "ctx",
+  "pivot": "Center",
+  "canvas": {
+   "w": 40,
+   "h": 24,
+   "pivotPx": [
+    20,
+    12
+   ]
+  },
+  "args": {
+   "i": 2
+  },
+  "pre": "g.translate(X, Y), g.rotate(-(X + Y)*0.05), g.translate(-X, -Y)",
+  "expr": "brickBit(X, Y, 0.06*S, ENERGY_C[A.i])",
+  "src": "L3605, L3096"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_BrickBit_3",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "ctx",
+  "pivot": "Center",
+  "canvas": {
+   "w": 40,
+   "h": 24,
+   "pivotPx": [
+    20,
+    12
+   ]
+  },
+  "args": {
+   "i": 3
+  },
+  "pre": "g.translate(X, Y), g.rotate(-(X + Y)*0.05), g.translate(-X, -Y)",
+  "expr": "brickBit(X, Y, 0.06*S, ENERGY_C[A.i])",
+  "src": "L3605, L3096"
+ }
+]

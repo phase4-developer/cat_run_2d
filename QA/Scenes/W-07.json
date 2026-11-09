@@ -1,0 +1,22 @@
+{
+  "id": "W-07",
+  "title": "계단(z 66.5) 도착 → 오르기 중간(cannon 999~1121)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 1120,
+  "captureAt": [
+    1000,
+    1060,
+    1120
+  ],
+  "mask": []
+}

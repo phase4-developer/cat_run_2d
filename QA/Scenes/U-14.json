@@ -1,0 +1,14 @@
+{
+  "id": "U-14",
+  "title": "로비 「컨텐츠」 메뉴 열림",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [],
+  "frames": 1,
+  "captureAt": [
+    1
+  ],
+  "mask": [],
+  "protoNA": "신규 화면 — 정본 없음(12 §12.2). 사람 확인 대상"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "W-02",
+  "title": "Area 1, Level 1, 출발 직후(z≈0)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 30,
+  "captureAt": [
+    1,
+    15,
+    30
+  ],
+  "mask": []
+}

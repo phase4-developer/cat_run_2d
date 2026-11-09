@@ -1,0 +1,22 @@
+{
+  "id": "U-13",
+  "title": "카드 룰렛 확정 직전(룰렛 1122~1326)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 1326,
+  "captureAt": [
+    1200,
+    1300,
+    1326
+  ],
+  "mask": []
+}
