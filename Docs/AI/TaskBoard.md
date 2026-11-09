@@ -22,7 +22,7 @@
 | MV-SND 소리 재생 | 완료 | `b148dc5` | Boot 연결(G4 통합) |
 | MV-FX 이펙트 | 1차 완료 | `79aeb7e` | PLAY-INT로: Addressables `Fx/<이름>` 13건(라벨 Effect), Boot `MvFx.InstallDefault(...)`·매 프레임 `MvFx.OnRunEvents`. 팝업·비행 아이콘·플래시·단계 이름 그림은 MV.UI가 `IMvPopView`·`IMvFlyView`·`IMvHudAnchors`·`IMvFlashView` 구현(총괄 권장, asmdef 변경 없음 — D-FX-1). 요청: MV-DATA 04_effect 자식별 파라미터 열, MV-RUN `RunProjectile.El`. 캡처·손맛 NOT_RUN |
 | MV-UI-HUD 1차 | 완료 | `c95e5c9` | PlayMode·화면 NOT_RUN. PLAY-INT로: Boot 씬 UIManagerCreater+EventSystem, GameBootstrap `MvUiBoot.InitAsync(ui)`, Addressables 4건(UIManager는 Local 권장). 결정 후보: 한글 TMP 글꼴, Space 출발 키(MV.UI는 InputSystem 참조 없음), Sorting Layer 「UI」 |
-| MV-PLAY-INT 플레이 가능 빌드 | 대기(G3-INT·VIEW 2차·HUD 뒤) | — | 게임 루프·씬 연결 |
+| MV-PLAY-INT 플레이 가능 빌드 | 완료(D-91) | `6837d00` | 전체 확인 `65d66446eb88` PASS(compile, EditMode 419, PlayMode 7). 사람 확인 NOT_RUN(화면·카메라·손맛). 없음: 로딩 화면(`LoadingSceneScreen` 등록 뒤 `Loading()`), 로비 시설 단계, 전면 광고·×3, 선택 UI. 결정 후보: 런 시드(런 순번 결정적 vs 04 §4.17.2-3 MV.Meta 무작위, `SeedFor` 한 곳), Boot 없이 Game 실행 시 Boot로 돌려보냄, MV-SAVE `GetBars(area)` API. Dev_Debug 그룹은 출시 전 IncludeInBuild 끄기. MvFx 머티리얼 리플렉션 우회 → `Fx/Mat_Normal`·`Fx/Mat_Add`로 교체(다음 FX 담당) |
 | MV-PLAT-NET / ADS / LOGIN | 완료 | `9c354a6` / `1d3bb2a` / `979b171` | 연결은 G6 통합(LOGIN은 D-90으로 연결 안 함) |
 | MV-PLAT-IAP / ANALYTICS / NOTI | 스텁 취소(D-88) → 고정 tgz 연결로 | — | `ai/MV-PLAT-IAP-stub`·`ai/MV-PLAT-ANALYTICS-stub` 병합 안 함 |
 | MV-UI-META | 1차 완료 | `fa7bac4` | 화면·PlayMode NOT_RUN. 총괄: Addressables `UIPopup_GodSelect`·`AreaUpgrade`·`Rebirth`·`Map`·`FeatureUnlock`(Remote_UI), `UIPopup_Debug`(개발 전용 그룹) — PLAY-INT 병합 뒤. 요청 MV-META: 로컬 `debug.*` 처리기 8개, `MvMeta.DisarmRebirth()`. 결정 후보: 지도 필터(`05_contentOpen.showOnMap` 빈칸 → conditionType 1 전부), 지도 체크포인트 문구, 05 §5.1.14 클래스 표 소유(테스트 패널·공통 틀을 META가 만듦) |
@@ -34,7 +34,7 @@
 
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
-| a | `moonvillage-a` | MV-PLAY-INT | `ai/MV-PLAY-INT-loop` | `S/MV.Boot/`, `A/Tests/PlayMode/`, `S/MV.View/Runtime/RunStateViewSource.cs` |
+| a | `moonvillage-a` | (비어 있음) | — | — |
 | b | `moonvillage-b` | MV-TABLE-SWAP(3차 표 열 → View·Fx·Meta 코드) | `ai/MV-TABLE-SWAP-data3` | `S/MV.View/`(RunStateViewSource 제외)·`S/MV.Fx/`·`S/MV.Meta/`와 각 Tests |
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | (비어 있음) | — | — |
@@ -42,7 +42,7 @@
 | f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
 | g | `moonvillage-g` | (비어 있음) | — | — |
 
-- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 419, PlayMode 2, `fa7bac4` 기준).
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 419, PlayMode 7, PLAY-INT 병합 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
