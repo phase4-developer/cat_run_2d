@@ -15,7 +15,7 @@
 | MV-QA-HARNESS | 프로토 쪽 완료 | `63c76dc` | Unity 쪽(VIEW 뒤, D-87로 참고 보고서) |
 | MV-RUN-SIM / GEN | 완료(G2·G3) | `23cec8a` | — |
 | MV-RUN-RULE 확장 지점 | 완료 | `cfe1f46` | 402 표 연결, G7 `IModeRule` |
-| MV-RUN-VIEWAPI WY·옹벽 읽기 | 진행(칸 b) | — | — |
+| MV-RUN-VIEWAPI WY·옹벽 읽기 | 완료 | `a0303d7` | MV.View `RunStateViewSource` Wy·HasCliff·Cliff 교체(VIEW 다음 담당) |
 | MV-META 메타 규칙 | 완료 | `d120b2e` | `modePlays` 한도(400_content) 교체 지점 |
 | MV-G3-INT Boot 연결 | 완료(G3 끝) | `8de2dc7` | Meta 저장→`RunContext` 도우미 없음 → MV-PLAY-INT. dev 전체 `448a6fc73f04` PASS(compile, EditMode 335/335, PlayMode 2/2) |
 | MV-VIEW 월드 렌더 | 1차 완료, 2차 진행(칸 d) | 1차 `64aa5b4` | 2차: 오브젝트 뷰·WorldRoot 프리팹 먼저(D-91) |
@@ -34,7 +34,7 @@
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
 | a | `moonvillage-a` | (비어 있음, dev `8de2dc7` 분리 HEAD) | — | — |
-| b | `moonvillage-b` | MV-RUN-VIEWAPI | `ai/MV-RUN-VIEWAPI-read` | `S/MV.Run/`, `S/MV.Run.Tests/ViewApi/` |
+| b | `moonvillage-b` | (비어 있음) | — | — |
 | c | `moonvillage-c` | MV-UI-HUD 1차 | `ai/MV-UI-HUD-min` | `S/MV.UI/`, `S/MV.UI.Tests/`, `A/Addressables/Remote/UI/` |
 | d | `moonvillage-d` | MV-VIEW 2차 | `ai/MV-VIEW-world2` | `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders|Materials/`, `A/Addressables/Remote/World/` |
 | e | `moonvillage-e` | MV-FX | `ai/MV-FX-effects` | `S/MV.Fx/`, `S/MV.Fx.Tests/`, `A/Addressables/Remote/Effect/`, `04_effect` 행 |
