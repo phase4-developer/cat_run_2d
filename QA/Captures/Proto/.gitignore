@@ -1,0 +1,2 @@
+# 캡처 PNG는 장면당 수 MB x 100장 이상이라 Git에 넣지 않는다. hashes.tsv만 넣는다.
+*.png

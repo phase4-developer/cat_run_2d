@@ -1,0 +1,22 @@
+{
+  "id": "U-01",
+  "title": "런 HUD 기본",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 180,
+  "captureAt": [
+    60,
+    120,
+    180
+  ],
+  "mask": []
+}

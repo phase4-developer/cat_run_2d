@@ -801,17 +801,17 @@ ASTC 6x6 2048² = 1.87 MB(밉 포함 2.49 MB), 4x4 1024² = 1.0 MB, 2048×1024 6
 
 1. `init.js`가 `window.AudioContext`와 `webkitAudioContext`를 다음 생성자로 바꾼다: `new OfflineAudioContext({ numberOfChannels: 1, length: ceil(L × 44100), sampleRate: 44100 })`를 만들고 `window.__off`에 보관.
 2. `init.js`가 `setInterval`을 감싸 지연이 50 ms인 호출(BGM 스케줄러 `sched`, L1635)은 등록만 하고 `window.__sched`에 보관한다(효과음 렌더에 BGM이 섞이지 않게).
-3. 효과음: 페이지 로드 → `SND.init()`(공개 L1695) → `SND.play(key, a)` → `__off.startRendering()` → 결과 버퍼를 16bit PCM WAV로 저장. 효과음 하나마다 페이지를 새로 연다(컨텍스트가 하나뿐이고 `init`이 다시 만들지 않음, L1627).
-4. BGM: `SND.intensity = 0|1` 설정 → `SND.init()` → `__off.suspend(t)`를 0.05 s 간격(렌더 단위 128 샘플로 반올림)으로 걸고, 멈출 때마다 `__sched()`를 불러 실시간 스케줄과 같게 예약 → 전체 렌더. 정본은 `next = currentTime + 0.1`(L1635)에서 시작하므로 [0.1 s, 0.1 s + 16.5517 s) 구간을 잘라 1루프로 쓴다.
+3. 효과음: 페이지 로드 → `SND.init()`(공개 L1695) → `SND.play(key, a)` → `__off.startRendering()` → 결과 버퍼를 16bit PCM WAV로 저장. 효과음 하나마다 페이지를 새로 연다(컨텍스트가 하나뿐이고 `init`이 다시 만들지 않음, L1627). **재생은 1.0014 s(128×345 샘플) 무음 뒤에 하고 그 앞을 잘라 낸다**: 컴프레서가 컨텍스트 시작 직후 감쇠 상태에서 약 0.5 s에 걸쳐 풀리므로 시각 0에 재생하면 정본 실시간보다 작게 구워진다(click −13 dB). (MV-TOOL-SND 실측, 총괄 결정)
+4. BGM: `SND.intensity = 0|1` 설정 → `SND.init()` → `__off.suspend(t)`를 0.05 s 간격(렌더 단위 128 샘플로 반올림)으로 걸고, 멈출 때마다 `__sched()`를 불러 실시간 스케줄과 같게 예약 → 전체 렌더. 정본은 `next = currentTime + 0.1`(L1635)에서 시작하므로 첫 루프가 아니라 **두 번째 루프 [0.1 s + n, 0.1 s + 2n)**(n = 16.5517 s, 729,931 샘플)을 잘라 1루프로 쓴다. 첫 루프에는 컴프레서 시작 감쇠가 섞이고, 두 번째 루프가 반복 재생 이음매와 같다. (MV-TOOL-SND, 총괄 결정)
 5. 출력 수준은 **정본 그대로 들리는 크기**: 버스 게인(효과음 0.6, BGM 0.15, L1632~1633)과 컴프레서(threshold −16 dB, ratio 5, 나머지 기본값, L1630)가 렌더에 포함된다. 그래서 `03_sound.volume = 1.0`이 정본 크기다.
-6. 잡음 버퍼(`Math.random`)는 시드 고정(3.2.2) → 한 번 구운 결과로 고정한다. 정본은 재생마다 잡음 모양이 조금씩 다르지만 들리는 차이는 없다고 본다 [추정].
-7. 뒤쪽 무음 정리: 마지막 −90 dBFS 이상 샘플 뒤 10 ms만 남기고 자른다.
+6. 잡음 버퍼(`Math.random`)는 시드 고정(3.2.2) → 한 번 구운 결과로 고정한다. 정본은 재생마다 잡음 모양이 조금씩 다르지만 들리는 차이는 없다고 본다 [추정]. 한 노드에 입력이 셋 이상 모이면 Chromium이 더하는 순서가 실행마다 달라 1~2 ULP 흔들리므로, 굽기 도구는 그 연결을 이득 1 GainNode 사슬(입력 2개 이하)로 바꾼다. 값은 같다.
+7. 뒤쪽 무음 정리: **하지 않는다**(`snd.json` `trim.enabled=false`). 길이는 3.9.3 표 길이를 따른다. 켜면 wood·land가 표 길이보다 짧아지고, 잘리는 꼬리는 −90 dBFS 미만이라 들리는 차이가 없다. (MV-TOOL-SND, 총괄 결정)
 
 | 형식 | 값 |
 |---|---|
 | 샘플레이트 | 44100 Hz |
 | 채널 | 모노(정본 발진기·잡음이 모노) |
-| 원본 | WAV 16bit PCM, `Art/Source/Audio/` → Addressables 폴더로 복사 |
+| 원본 | WAV 16bit PCM, `Addressables/Remote/Audio/Sfx·Music/<soundName>.wav`에 바로 쓴다. 해시 `Tools/MvExtract/sound/manifest.json` |
 | 빌드 안 형식 | **Unity 오디오 임포터가 Vorbis로 압축**(D-56). 효과음 Quality 70, Decompress On Load, Force To Mono, Preload; BGM Quality 60, **Streaming**, Load In Background |
 | 피치 무작위 | 정본에 없음 → `pitchRand = 0`. 굽지도, 재생 시 적용하지도 않음 |
 | 음 높이 인자 있는 소리 | `tierup(t)`, `card(t)`는 인자마다 따로 굽는다. 재생 피치로 바꾸면 길이도 바뀌어 정본과 달라진다 |
@@ -947,7 +947,7 @@ gapMs 출처: `GAP`(L1677) — throw 70, hit 35, crit 50, wood 50, coin 45, tick
 | V3 장면 대조 | 정본 실제 런 장면을 고정 상태(같은 시드·같은 위치)로 캡처하고, 같은 장면을 추출 스프라이트를 정본 투영 위치·크기에 찍어 합성한 그림과 비교 | ΔE2000 평균 ≤ 1.0(샘플링 차이만) |
 | V4 억제 규칙 | 억제한 그림 + 따로 뽑은 부품을 합성한 결과 = 억제 없는 원래 그림 | ΔE2000 99백분위 ≤ 3(캔버스 전체 기준. 회전 합성 재표본화로 물체 화소만 센 값이 조금 넘는 것은 기록만 한다 — 2026-11-09 총괄 결정) |
 | V5 프레임 | 프레임 i를 정본 `ph = v_i`로 직접 그린 것과 비교, 고리 이음매 오차 기록 | 완전 일치, 이음매는 manifest |
-| V6 소리 | 구운 WAV를 정본 실시간 녹음(같은 시드, `MediaRecorder`)과 비교: 길이 ±1 ms, RMS 차 ≤ 0.5 dB, 스펙트럼 상관 ≥ 0.98 | 청취 확인은 사람 확인(NOT_RUN 가능) |
+| V6 소리 | 구운 WAV를 정본 실시간 녹음(같은 시드, AudioWorklet으로 PCM을 그대로 받음 — MediaRecorder는 Opus 손실이라 쓰지 않음)과 비교: 길이 ±1 ms, RMS 차 ≤ 0.5 dB, 스펙트럼 상관 ≥ 0.98 | 청취 확인은 사람 확인(NOT_RUN 가능) |
 
 ### 3.11.2 Unity 쪽 대조 (MV-ART-ATLAS, MV-VIEW)
 

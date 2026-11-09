@@ -1,0 +1,313 @@
+{
+  "id": "RUN-02",
+  "title": "런 전체 2: 강한 save(Area 포털 통과), 좌우 드래그(150프레임마다 ±240px)",
+  "seed": 12,
+  "preset": "easy",
+  "save": {
+    "level": 3,
+    "area": 0,
+    "zone": 0,
+    "gold": 0,
+    "souls": 45,
+    "dia": 0,
+    "bars": {},
+    "cp": 0,
+    "up": {
+      "stair": 30,
+      "weapon": 60,
+      "income": 10
+    },
+    "deck": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      0
+    ],
+    "god": "thunder",
+    "escaped": false,
+    "runs": 2,
+    "aup": {
+      "rate": 10,
+      "range": 10,
+      "clone": 4,
+      "crit": 10,
+      "dbl": 10
+    },
+    "rb": {
+      "lv": 0,
+      "tokens": 0,
+      "pending": 0,
+      "perks": {
+        "power": 0,
+        "crit": 0,
+        "obst": 0,
+        "dcap": 0
+      },
+      "cdUntil": 0
+    },
+    "ads": {
+      "day": "",
+      "dia": 3,
+      "skip": 4
+    },
+    "zoneClear": false
+  },
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "down",
+      "x": 540,
+      "y": 1000
+    },
+    {
+      "frame": 150,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 300,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 450,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 600,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 750,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 900,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 1050,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 1200,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 1350,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 1500,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 1650,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 1800,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 1950,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 2100,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 2250,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 2400,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 2550,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 2700,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 2850,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 3000,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 3150,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 3300,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 3450,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 3600,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 3750,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 3900,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 4050,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 4200,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 4350,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 4500,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 4650,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 4800,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 4950,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 5100,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 5250,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 5400,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 5550,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 5700,
+      "type": "move",
+      "x": 300,
+      "y": 1000
+    },
+    {
+      "frame": 5850,
+      "type": "move",
+      "x": 780,
+      "y": 1000
+    },
+    {
+      "frame": 6000,
+      "type": "up",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 9000,
+  "captureAt": [
+    1
+  ],
+  "mask": []
+}

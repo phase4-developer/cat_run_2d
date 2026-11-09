@@ -11,7 +11,9 @@
     "art": "node run_art.mjs",
     "verify": "node verify.mjs",
     "temp": "node temp_art.mjs",
-    "selftest": "node selftest.mjs"
+    "selftest": "node selftest.mjs",
+    "snd": "node sound/run_snd.mjs",
+    "snd:verify": "node sound/verify_snd.mjs"
   },
   "dependencies": {
     "playwright": "1.65.0"

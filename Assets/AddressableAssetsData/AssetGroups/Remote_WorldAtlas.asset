@@ -1,0 +1,214 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Remote_WorldAtlas
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Remote_WorldAtlas
+  m_GUID: 515089c627c8b854aa2e05d8cce3b885
+  m_SerializeEntries:
+  - m_GUID: 00f7be53c3795824d849589323397b4b
+    m_Address: Atlas_World_Theme_cafe
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.cafe
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 019f47afaf3e10c46863d7c612e033c7
+    m_Address: Atlas_World_Theme_snow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.snow
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 02307324a21b28644996305fbee1bfb1
+    m_Address: Atlas_World_Friend_T2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 08564e6700d028f44b08e14cf401a079
+    m_Address: Atlas_World_Theme_park
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.park
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c3e3eb7b041d154dbecdf34d93e270a
+    m_Address: Atlas_World_Theme_snowday
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.snowday
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0cf838a5859e2964ebf32b71c8166990
+    m_Address: Atlas_World_Theme_blossom
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.blossom
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d4b74cfb122a204d8857a1b59c70d82
+    m_Address: Atlas_World_Cat_T2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 25bc3b4eeba817745a8dcd77e9251a58
+    m_Address: Atlas_World_Theme_skyline
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.skyline
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2f007566eda1a6041a0d683184bfb2bd
+    m_Address: Atlas_World_Theme_harbor
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.harbor
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 344361e9ce471f64ba1fad6cacdadd67
+    m_Address: Atlas_World_Theme_market
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.market
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 37684063aaa8e314b8bd5c11eb890416
+    m_Address: Atlas_World_Friend_T3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4cea62a4afa344a4c9b3128589d9af97
+    m_Address: Atlas_World_Theme_onsen
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.onsen
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 56e1f39e368378944ab4d35b7923d001
+    m_Address: Atlas_World_Cat_T5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 633989764a288e14fbeb9c604e2cca17
+    m_Address: Atlas_World_Cat_T3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 64050694417b85e4db7a906e4cf00518
+    m_Address: Atlas_World_Friend_T6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 646689a6f8a90384d88ffb517878d251
+    m_Address: Atlas_Fx_Common
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6814025b471947241b0d5d6e22affdb7
+    m_Address: Atlas_World_Cat_T6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6d7c7c8cd0f01504380ab6c0d9797120
+    m_Address: Atlas_World_Lobby
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7827953d724e43a4db8ee3250f9dec64
+    m_Address: Atlas_World_Cat_T4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b511e235a0341e4095973b9c2628f3d
+    m_Address: Atlas_World_Theme_moonstair
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.moonstair
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a46c41750d4d3f24ba2a9413532676f5
+    m_Address: Atlas_World_Cat_T7
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a683db9dcf492ab458638296265357a5
+    m_Address: Atlas_World_Friend_T4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: acc81761ab810364698b777c7c68f57e
+    m_Address: Atlas_World_Theme_stairs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.stairs
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af3bb876ce96b7d4db49f1ac1caa74ca
+    m_Address: Atlas_World_Friend_T5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b265c24a87704f04ca47685194edcf0f
+    m_Address: Atlas_World_Theme_roof
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.roof
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c9ab8abd1b7ec1e4791e448ddc97aeaa
+    m_Address: Atlas_World_Theme_stallnight
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.stallnight
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cd40f38dd2acb35448a24baaad3c5a8f
+    m_Address: Atlas_World_Cat_T1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dcb44b17d594923458ffd2de12a37afb
+    m_Address: Atlas_World_Theme_subway
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.subway
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: df9b9163b3dd793438225b727ff29117
+    m_Address: Atlas_World_Cat_T8
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ea21f8ea5dccb65429e82b879f650b92
+    m_Address: Atlas_World_Friend_T1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - cat
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f20310a93c90db344827cf933b8bf839
+    m_Address: Atlas_World_Theme_lighthouse
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - theme.lighthouse
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 3104e1b2672fd924983b6c9627702eda, type: 2}
+    - {fileID: 11400000, guid: 90e7b1b7849079b4eb6844c09b17d7b8, type: 2}
+    m_SchemaDisplayOrder:
+    - Remote_WorldAtlas_BundledAssetGroupSchema
+    - Remote_WorldAtlas_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

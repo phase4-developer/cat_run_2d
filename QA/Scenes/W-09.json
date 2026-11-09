@@ -1,0 +1,22 @@
+{
+  "id": "W-09",
+  "title": "Floor 아치 통과 순간(아치 0.2m 앞, 3281)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 3287,
+  "captureAt": [
+    3275,
+    3281,
+    3287
+  ],
+  "mask": []
+}

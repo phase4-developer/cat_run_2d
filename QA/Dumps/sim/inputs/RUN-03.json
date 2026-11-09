@@ -1,0 +1,661 @@
+{
+  "id": "RUN-03",
+  "title": "런 전체 3: Area 3 중간 save, 방향키 조향(120프레임마다 40프레임 누름)",
+  "seed": 13,
+  "preset": "easy",
+  "save": {
+    "level": 4,
+    "area": 2,
+    "zone": 0,
+    "gold": 300,
+    "souls": 120,
+    "dia": 0,
+    "bars": {},
+    "cp": 0,
+    "up": {
+      "stair": 8,
+      "weapon": 20,
+      "income": 4
+    },
+    "deck": [
+      0,
+      0,
+      3,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "god": "thunder",
+    "escaped": false,
+    "runs": 0,
+    "aup": {
+      "rate": 2,
+      "range": 1,
+      "clone": 1,
+      "crit": 1,
+      "dbl": 1
+    },
+    "rb": {
+      "lv": 0,
+      "tokens": 0,
+      "pending": 0,
+      "perks": {
+        "power": 0,
+        "crit": 0,
+        "obst": 0,
+        "dcap": 0
+      },
+      "cdUntil": 0
+    },
+    "ads": {
+      "day": "",
+      "dia": 3,
+      "skip": 4
+    },
+    "zoneClear": false
+  },
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    },
+    {
+      "frame": 120,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 160,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 240,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 280,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 360,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 400,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 480,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 520,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 600,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 640,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 720,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 760,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 840,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 880,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 960,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 1000,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 1080,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 1120,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 1200,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 1240,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 1320,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 1360,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 1440,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 1480,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 1560,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 1600,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 1680,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 1720,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 1800,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 1840,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 1920,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 1960,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 2040,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 2080,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 2160,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 2200,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 2280,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 2320,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 2400,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 2440,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 2520,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 2560,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 2640,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 2680,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 2760,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 2800,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 2880,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 2920,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 3000,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 3040,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 3120,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 3160,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 3240,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 3280,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 3360,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 3400,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 3480,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 3520,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 3600,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 3640,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 3720,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 3760,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 3840,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 3880,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 3960,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 4000,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 4080,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 4120,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 4200,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 4240,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 4320,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 4360,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 4440,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 4480,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 4560,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 4600,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 4680,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 4720,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 4800,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 4840,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 4920,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 4960,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 5040,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 5080,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 5160,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 5200,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 5280,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 5320,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 5400,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 5440,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 5520,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 5560,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 5640,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 5680,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    },
+    {
+      "frame": 5760,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "down"
+    },
+    {
+      "frame": 5800,
+      "type": "key",
+      "key": "ArrowLeft",
+      "state": "up"
+    },
+    {
+      "frame": 5880,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "down"
+    },
+    {
+      "frame": 5920,
+      "type": "key",
+      "key": "ArrowRight",
+      "state": "up"
+    }
+  ],
+  "frames": 9000,
+  "captureAt": [
+    1
+  ],
+  "mask": []
+}

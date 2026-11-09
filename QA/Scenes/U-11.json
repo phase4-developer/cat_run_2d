@@ -1,0 +1,88 @@
+{
+  "id": "U-11",
+  "title": "토스트 + 배너(U-02 → 다음 → Area 배너 + 쿨타임 해제 토스트)",
+  "seed": 2,
+  "preset": "easy",
+  "save": {
+    "level": 3,
+    "area": 0,
+    "zone": 0,
+    "gold": 0,
+    "souls": 45,
+    "dia": 0,
+    "bars": {},
+    "cp": 0,
+    "up": {
+      "stair": 30,
+      "weapon": 60,
+      "income": 10
+    },
+    "deck": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      0
+    ],
+    "god": "thunder",
+    "escaped": false,
+    "runs": 2,
+    "aup": {
+      "rate": 10,
+      "range": 10,
+      "clone": 4,
+      "crit": 10,
+      "dbl": 10
+    },
+    "rb": {
+      "lv": 0,
+      "tokens": 0,
+      "pending": 0,
+      "perks": {
+        "power": 0,
+        "crit": 0,
+        "obst": 0,
+        "dcap": 0
+      },
+      "cdUntil": 0
+    },
+    "ads": {
+      "day": "",
+      "dia": 3,
+      "skip": 4
+    },
+    "zoneClear": false
+  },
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    },
+    {
+      "frame": 5200,
+      "type": "tap",
+      "x": 540,
+      "y": 1431
+    }
+  ],
+  "ops": [
+    {
+      "frame": 5203,
+      "op": "debug",
+      "id": "rbCdClear"
+    }
+  ],
+  "frames": 5250,
+  "captureAt": [
+    5206,
+    5230,
+    5250
+  ],
+  "mask": []
+}
