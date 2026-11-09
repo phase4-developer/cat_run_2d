@@ -84,7 +84,7 @@ Tools/MvExtract/
 
 1. `page.addInitScript(init.js)` → `page.goto(file:///…/MoonVillage.html)` → `boot`(L3878)까지 끝나기를 `window.SND && window.camera` 확인으로 기다린다.
 2. `page.addScriptTag(harness.js)`. 주입 코드는 **고전 스크립트**라 정본의 전역 바인딩을 그대로 쓴다.
-   - `function` 선언(`pj`, `E`, `RR`, `PL`, `LN`, `star4`, `drawFac`, `mochi` …)은 `window` 속성이라 **바꿔 끼울 수 있다**(3.2.5 억제 규칙의 근거).
+   - 정본 스크립트는 `'use strict'` IIFE 안이라 `function` 선언(`pj`, `E`, `RR`, `PL`, `LN`, `star4`, `drawFac`, `mochi` …)이 `window` 속성이 **아니다**. 그래서 도구가 응답 본문의 그 IIFE 끝에 `window.__mvScope = code => eval(code)`(`inject/scope_hook.js`)를 붙여 넣고, 주입 코드는 `__mvScope`로 그 범위의 이름을 읽고 **바꿔 끼운다**(3.2.5 억제 규칙의 근거). 디스크의 정본 파일은 그대로다.
    - `let` 전역(`W`, `H`, `R`, `CN`, `save` 내부 값)은 대입할 수 있다(L942 `let W = 360, H = 640`).
    - `const` 전역(`CTX` L2792, `OLC` L2804, `CAT_PAT`, `AREA_TH`)은 바꿀 수 없다. 단 배열·객체의 **내용**(예: `AREA_TH[i].door`)은 바꿀 수 있다 → 새 테마 색 주입에 쓴다(§3.6.4).
 3. 정본 파일 자체는 한 글자도 고치지 않는다.
@@ -317,15 +317,15 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 
 | 함수(줄) | 스프라이트 이름 | 종류 | 캔버스 | 피벗 | 프레임 | 테마 | 아틀라스 | 표·열 |
 |---|---|---|---|---|---|---|---|---|
-| `mochiBack` L3679 (플레이어 pat 0) | `World_Cat_P0_T{t}_Run_A_{00..11}` | World | 244×364 | Feet | ph 0~2π, 12 | none | `Atlas_World_Cat_T{t}` | `101_cat.spritePrefix`[제안 열] = `World_Cat_P0` |
-| 〃 던지는 중(`thr > 0`, L3712) | `World_Cat_P0_T{t}_Run_B_{00..11}` | World | 244×364 | Feet | 12 | none | 〃 | 〃 (`thr > 0`이면 `_B`) |
-| 〃 우다다(`st:'climb'`, 먼지 포함) | `World_Cat_P0_T{t}_Climb_{00..11}` | World | 244×364 | Feet | 12 | none | 〃 | 〃 |
-| 〃 정지(`st:'idle'`) | `World_Cat_P0_T{t}_Idle` | World | 244×364 | Feet | 1 + Transform 숨쉬기 | none | 〃 | 〃 |
+| `mochiBack` L3679 (플레이어 pat 0) | `World_Cat_P0_T{t}_Run_A_{00..11}` | World | 244×408(피벗 화소 122,344) | Feet | ph 0~2π, 12 | none | `Atlas_World_Cat_T{t}` | `101_cat.spritePrefix`[제안 열] = `World_Cat_P0` |
+| 〃 던지는 중(`thr > 0`, L3712) | `World_Cat_P0_T{t}_Run_B_{00..11}` | World | 244×408(피벗 화소 122,344) | Feet | 12 | none | 〃 | 〃 (`thr > 0`이면 `_B`) |
+| 〃 우다다(`st:'climb'`, 먼지 포함) | `World_Cat_P0_T{t}_Climb_{00..11}` | World | 244×408(피벗 화소 122,344) | Feet | 12 | none | 〃 | 〃 |
+| 〃 정지(`st:'idle'`) | `World_Cat_P0_T{t}_Idle` | World | 244×408(피벗 화소 122,344) | Feet | 1 + Transform 숨쉬기 | none | 〃 | 〃 |
 | `mochiBack` 친구 pat 1~4, t = 손패 최고−2(최소 1, 최대 6) L3799 | `World_Cat_P{p}_T{t}_{Run_A|Climb}_{00..11}`, `_Idle` | World | 196×296 | Feet | 12+12+1 | none | `Atlas_World_Friend_T{t}` (t 1~6) | `101_cat.spritePrefix` 친구 행 |
 | t=8 회전 별(L3732, 몸 그림에서 억제) | `Fx_Star4_Pale` | World | 32×32 | Center | 1(회전·크기는 런타임 `now*1.5`, `0.07+0.03 sin(now*6+i)`) | none | `Atlas_Fx_Common` | 101_cat 연출 규칙 |
-| `mochi` L3267 로비 주인공(`s*1.25`, idle, t 1~8, pat 0) | `Lobby_Cat_Front_T{t}`, `Lobby_Cat_Front_T{t}_Blink` | World(로비) | 288×352 | Feet | 2(눈 감음 0.12 s / 3.6 s, L3316) + Transform 숨쉬기 | none | `Atlas_World_Lobby` | `101_cat.lobbySprite`[제안 열] |
+| `mochi` L3267 로비 주인공(`s*1.25`, idle, t 1~8, pat 0) | `Lobby_Cat_Front_T{t}`, `Lobby_Cat_Front_T{t}_Blink` | World(로비) | 320×484(피벗 화소 148,450) | Feet | 2(눈 감음 0.12 s / 3.6 s, L3316) + Transform 숨쉬기 | none | `Atlas_World_Lobby` | `101_cat.lobbySprite`[제안 열] |
 | 〃 t=8 정면 회전 별(L3361) | `Fx_Star4_Pale` 공용 | — | — | — | — | — | — | — |
-| `mochi` 자는 친구(`s*0.62`, sleep, t 1, pat 1~4) L3528 | `Lobby_Cat_Sleep_P{1..4}` | World(로비) | 160×112 | Feet | 1 + Transform(`0.97+0.025 sin`) | none | `Atlas_World_Lobby` | 〃 |
+| `mochi` 자는 친구(`s*0.62`, sleep, t 1, pat 1~4) L3528 | `Lobby_Cat_Sleep_P{1..4}` | World(로비) | 144×132(피벗 화소 72,114) | Feet | 1 + Transform(`0.97+0.025 sin`) | none | `Atlas_World_Lobby` | 〃 |
 | `paintGod` L2481 (신 초상: 하늘·달/해·`mochi` god) | `Tex_God_Thunder`, `Tex_God_Flame` | Texture | 400×468 | Center | 1 | none | 단독(AddressableTexture) | `113_god.portrait`[제안 열] |
 
 프레임 합계: 플레이어 8룩 × 37 = 296, 친구 6룩 × 4무늬 × 25 = 600. 묶음 로드(§3.8.5). 다른 방식(파츠·팔레트 교체)은 D-51.
@@ -362,17 +362,17 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 
 | 함수(줄) | 스프라이트 이름 | 종류 | 캔버스 | 피벗 | 프레임 | 테마 | 아틀라스 | 표·열 |
 |---|---|---|---|---|---|---|---|---|
-| `drawJunk` 생선 상자(`rew:'soul'`) L3610 | `World_Obj_Junk_FishBox` | World | 304×248 | FrontBottom | 1 | all | `Atlas_World_Theme_<key>` | `105_objectKind.sprite`(wall 행 변형 목록 `sprite` = `/` 리스트) |
-| 〃 v0 택배 상자 L3614 | `World_Obj_Junk_Parcel` | World | 304×248 | FrontBottom | 1 | all | 〃 | 〃 |
-| 〃 v1 쓰레기 봉투 2색(`idx%2`) L3616 | `World_Obj_Junk_Bag_Dark`, `_Blue` | World | 304×248 | FrontBottom | 1 | all | 〃 | 〃 |
-| 〃 v2 우유 상자 2색 L3618 | `World_Obj_Junk_Crate_Red`, `_Blue` | World | 304×248 | FrontBottom | 1 | all | 〃 | 〃 |
-| 〃 보상 배지(dia: 캣닢 잎 0.26q, 그 외: 츄르 0.55q) L3626 | `World_Item_Badge_Dia`, `World_Item_Badge_Gold` | World | 48×48 / 80×40 | Center | 1 | all | 〃 | 보상 종류의 `07_consumeType` 배지 [제안 열 `worldBadge`] |
+| `drawJunk` 생선 상자(`rew:'soul'`) L3610 | `World_Obj_Junk_FishBox` | World | 296×264(피벗 화소 140,232) | FrontBottom | 1 | all | `Atlas_World_Theme_<key>` | `105_objectKind.sprite`(wall 행 변형 목록 `sprite` = `/` 리스트) |
+| 〃 v0 택배 상자 L3614 | `World_Obj_Junk_Parcel` | World | 296×264(피벗 화소 140,232) | FrontBottom | 1 | all | 〃 | 〃 |
+| 〃 v1 쓰레기 봉투 2색(`idx%2`) L3616 | `World_Obj_Junk_Bag_Dark`, `_Blue` | World | 296×264(피벗 화소 140,232) | FrontBottom | 1 | all | 〃 | 〃 |
+| 〃 v2 우유 상자 2색 L3618 | `World_Obj_Junk_Crate_Red`, `_Blue` | World | 296×264(피벗 화소 140,232) | FrontBottom | 1 | all | 〃 | 〃 |
+| 〃 보상 배지(dia: 캣닢 잎 0.26q, 그 외: 츄르 0.55q) L3626 | `World_Item_Badge_Dia`, `World_Item_Badge_Gold` | World | 48×80 / 80×40 | Center | 1 | all | 〃 | 보상 종류의 `07_consumeType` 배지 [제안 열 `worldBadge`] |
 | 〃 맞음 흰 섬광 L3628 | `Fx_FlashEllipse` | World | 144×104 | Center | 1(알파 ×0.35) | none | `Atlas_Fx_Common` | |
 | `drawRollGate` 배경(초록 `#6fd27a`/분홍 `#f08ab0`) L3634 | **메쉬**(정점색 그라데이션, §3.5.9) | — | — | — | — | — | — | `105_objectKind.tint`[제안 열] |
-| 〃 휴지 롤 L3638 | `World_Obj_Gate_RollPaper` | World | 72×72 | Center | 1 | all | 〃 | `105_objectKind.sprite`(sgate) |
-| 〃 털실 롤 4색 L3639 | `World_Obj_Gate_RollYarn_{0..3}` | World | 72×72 | Center | 1 | all | 〃 | cgate |
+| 〃 휴지 롤 L3638 | `World_Obj_Gate_RollPaper` | World | 76×76 | Center | 1 | all | 〃 | `105_objectKind.sprite`(sgate) |
+| 〃 털실 롤 4색 L3639 | `World_Obj_Gate_RollYarn_{0..3}` | World | 76×76 | Center | 1 | all | 〃 | cgate |
 | 〃 위로 흐르는 흰 줄 5개 L3635 | `Fx_Stripe` | World | 16×64 | Center | 1(런타임 스크롤) | none | `Atlas_Fx_Common` | |
-| `drawWarpGate` 사이잘 기둥(일반·금빛) L3216 | `World_Obj_Arch_Post`, `World_Obj_Arch_Post_Gold` | World | 120×600 | BottomCenter | 1 | all | 테마 | `105_objectKind.sprite`(arch) |
+| `drawWarpGate` 사이잘 기둥(일반·금빛) L3216 | `World_Obj_Arch_Post`, `World_Obj_Arch_Post_Gold` | World | 280×444(피벗 화소 60,436. 기둥 x = 4.6 m의 원근 기울기 포함, 왼쪽은 flipX) | BottomCenter | 1 | all | 테마 | `105_objectKind.sprite`(arch) |
 | 〃 받침·중간·위 발판(`drawBox`) L3217~3219 | **메쉬**(색 P1/P2) | — | — | — | — | — | — | `105_objectKind.tint` |
 | 〃 매달린 장난감 3색 L3221 | `World_Obj_Arch_Toy_{0..2}` | World | 80×80 | Center | 1(흔들림 런타임 `sin(t*2+dx)*0.3`) | all | 테마 | |
 | 〃 금빛 광륜·별 L3223 | `Fx_Glow_Lin` + `Fx_Star4` | — | — | — | — | — | Fx | |
@@ -380,11 +380,11 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 | 〃 벽돌 4색(우물 고리) L3646~3649, 색 L1340 | `World_Obj_Well_Brick_{0..3}` | World | 80×48 | Center | 1(배치는 3D 고리 44개, [02](02_Visual.md)) | all | 테마 | |
 | 〃 위 잡동사니 5색 L1346 | `World_Obj_Well_Junk_{0..4}` | World | 64×40 | Center | 1 | all | 테마 | |
 | coin 츄르 더미 L3108(츄르 6개 개별 출렁 `sin(t+i)*0.02c`) | `World_Item_Churu_{0..2}`(조립) | World | 96×40 | Center | 1 | all | 테마 | `105_objectKind.sprite`(coin) |
-| gem 캣닢 화분 L3112 | `World_Item_CatnipPot` | World | 192×208 | BottomCenter | 1 | all | 테마 | `105_objectKind.sprite`(gem) |
+| gem 캣닢 화분 L3112 | `World_Item_CatnipPot` | World | 192×212(피벗 화소 96,204) | BottomCenter | 1 | all | 테마 | `105_objectKind.sprite`(gem) |
 | 〃 반짝이 L3116 | `Fx_Star4` | — | — | — | 크기 `0.14*(0.8+0.2 sin(now/200))` 런타임 | — | Fx | |
-| `drawMouse` L3652 | `World_Enemy_Mouse_{00..15}` | World | 128×136 | Feet | t 0~2π(`now/200`), 16, 12.7 fps | all | 테마 | `102_enemy.sprite` |
-| `drawBlackHole` 계단 단 3개 L3204~3206 | `World_Obj_Stair_Step_{0..2}` | World | 1008×200 / 984×168 / 960×120 | FrontBottom | 1 | all | 테마 | `105_objectKind.sprite`(stair) |
-| 〃 화살표 L3208 | `World_Obj_Stair_Arrow` | World | 96×96 | Center | 1(출렁 런타임 `sin(t*5)*0.25`) | all | 테마 | |
+| `drawMouse` L3652 | `World_Enemy_Mouse_{00..15}` | World | 160×148(피벗 화소 64,128) | Feet | t 0~2π(`now/200`), 16, 12.7 fps | all | 테마 | `102_enemy.sprite` |
+| `drawBlackHole` 계단 단 3개 L3204~3206 | `World_Obj_Stair_Step_{0..2}` | World | 1076×104 / 1048×160 / 1020×220(피벗 화소 518,52 / 504,113 / 490,173 = `drawBox` 기준점) | FrontBottom | 1 | all | 테마 | `105_objectKind.sprite`(stair) |
+| 〃 화살표 L3208 | `World_Obj_Stair_Arrow` | World | 168×176(피벗 화소 84,96) | Center | 1(출렁 런타임 `sin(t*5)*0.25`) | all | 테마 | |
 | `brickBit`/`energyOrb` L3605(벽돌 조각 4색 `ENERGY_C` L3096) | `Fx_BrickBit_{0..3}` | World | 40×24 | Center | 1(회전 런타임) | none | Fx | `04_effect` |
 
 ### 3.5.4 투사체·전투 연출
@@ -447,7 +447,7 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 | 함수(줄) | 스프라이트 이름 | 종류 | 캔버스 | 피벗 | 아틀라스 | 표·열 |
 |---|---|---|---|---|---|---|
 | `paintWeapon` t 1~8 L3388(배경 광륜 + `drawProjShape` R 62) | `UI_Icon_Weapon_{1..8}` | UI | 208×208 | Center | `Atlas_UI_Icon` | `103_item.icon` |
-| `facIconURL` 캣타워 st 1~3 L3463(사용 L869, L2637) | `UI_Icon_Fac_Tower_{1..3}` | UI | 128×128 | Center | `Atlas_UI_Icon` | `10_lobbyUpgrade.icon`(stair, 단계 목록 `/`) |
+| `facIconURL` 캣타워 st 1~3 L3463(사용 L869, L2637) | `UI_Icon_Fac_Tower_{1..3}` | UI | 128×128(96 px 원본을 늘리지 않고 같은 `drawFac` 호출을 4/3배로 다시 그림. 2·3단계는 정본처럼 가장자리까지) | Center | `Atlas_UI_Icon` | `10_lobbyUpgrade.icon`(stair, 단계 목록 `/`) |
 | 〃 생선 건조대 st 1~3 L2638 | `UI_Icon_Fac_Rack_{1..3}` | UI | 128×128 | Center | 〃 | `10_lobbyUpgrade.icon`(income) |
 | `#gIcon` = `cannonURL()` = 캣타워 2단계 L869 | `UI_Icon_Fac_Tower_2` 공용 | — | — | — | — | HUD 고정 |
 | SVG `.ic-gold` 츄르 L599 | `UI_Icon_Gold` | UI | 96×96 | Center | 〃 | `01_wealth.icon`(1) |
@@ -943,9 +943,9 @@ gapMs 출처: `GAP`(L1677) — throw 70, hit 35, crit 50, wood 50, coin 45, tick
 | 단계 | 방법 | 기준 |
 |---|---|---|
 | V1 결정성 | 같은 job 2회 실행 PNG SHA256 비교 | 완전 일치 |
-| V2 감싸기 무결성 | `project` job마다 감싸기 없이(`k = 1`이 되게 `H`를 `2·S·d/P5`로 맞춤) 정본 함수를 주 캔버스에 그린 결과를 피벗 기준으로 잘라 추출 PNG와 비교 | 화소 완전 일치([12 §12.4.3](12_Acceptance.md)) |
+| V2 감싸기 무결성 | `project` job마다 감싸기 없이(`k = 1`이 되게 `H`를 `2·S·d/P5`로 맞춤) 정본 함수를 주 캔버스에 그린 결과를 피벗 기준으로 잘라 추출 PNG와 비교 | 화소 완전 일치 목표. 감싸기·평행이동 경로의 부동소수 반올림으로 안티앨리어싱 화소만 다르면 ΔE2000 최대 ≤ 3을 통과로 본다(2026-11-09 총괄 결정, MV-TOOL-ART 실측 19개 중 7개가 2~20화소·ΔE 최대 2.98)([12 §12.4.3](12_Acceptance.md)) |
 | V3 장면 대조 | 정본 실제 런 장면을 고정 상태(같은 시드·같은 위치)로 캡처하고, 같은 장면을 추출 스프라이트를 정본 투영 위치·크기에 찍어 합성한 그림과 비교 | ΔE2000 평균 ≤ 1.0(샘플링 차이만) |
-| V4 억제 규칙 | 억제한 그림 + 따로 뽑은 부품을 합성한 결과 = 억제 없는 원래 그림 | ΔE2000 99백분위 ≤ 3 |
+| V4 억제 규칙 | 억제한 그림 + 따로 뽑은 부품을 합성한 결과 = 억제 없는 원래 그림 | ΔE2000 99백분위 ≤ 3(캔버스 전체 기준. 회전 합성 재표본화로 물체 화소만 센 값이 조금 넘는 것은 기록만 한다 — 2026-11-09 총괄 결정) |
 | V5 프레임 | 프레임 i를 정본 `ph = v_i`로 직접 그린 것과 비교, 고리 이음매 오차 기록 | 완전 일치, 이음매는 manifest |
 | V6 소리 | 구운 WAV를 정본 실시간 녹음(같은 시드, `MediaRecorder`)과 비교: 길이 ±1 ms, RMS 차 ≤ 0.5 dB, 스펙트럼 상관 ≥ 0.98 | 청취 확인은 사람 확인(NOT_RUN 가능) |
 

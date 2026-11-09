@@ -1,0 +1,202 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 160,
+   "h": 160,
+   "pivotPx": [
+    80,
+    80
+   ]
+  },
+  "args": {
+   "t": 1
+  },
+  "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
+  "src": "L3368"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 160,
+   "h": 160,
+   "pivotPx": [
+    80,
+    80
+   ]
+  },
+  "args": {
+   "t": 2
+  },
+  "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
+  "src": "L3368"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_3",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 160,
+   "h": 160,
+   "pivotPx": [
+    80,
+    80
+   ]
+  },
+  "args": {
+   "t": 3
+  },
+  "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
+  "src": "L3368"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_4",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 160,
+   "h": 160,
+   "pivotPx": [
+    80,
+    80
+   ]
+  },
+  "args": {
+   "t": 4
+  },
+  "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
+  "src": "L3368"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_5",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 160,
+   "h": 160,
+   "pivotPx": [
+    80,
+    80
+   ]
+  },
+  "args": {
+   "t": 5
+  },
+  "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
+  "src": "L3368"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_6",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 160,
+   "h": 160,
+   "pivotPx": [
+    80,
+    80
+   ]
+  },
+  "args": {
+   "t": 6
+  },
+  "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
+  "src": "L3368"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_7",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 160,
+   "h": 160,
+   "pivotPx": [
+    80,
+    80
+   ]
+  },
+  "args": {
+   "t": 7
+  },
+  "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
+  "src": "L3368"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Proj_8",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 160,
+   "h": 160,
+   "pivotPx": [
+    80,
+    80
+   ]
+  },
+  "args": {
+   "t": 8
+  },
+  "expr": "(g.translate(X, Y), drawProjShape(g, A.t, 0.5*S, OLC))",
+  "src": "L3368"
+ }
+]

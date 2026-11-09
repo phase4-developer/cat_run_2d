@@ -1,0 +1,4131 @@
+{
+ "tool": "Tools/MvExtract temp_art.mjs",
+ "tables": "git:dev",
+ "items": [
+  {
+   "name": "UI_Icon_Gauge",
+   "atlas": "Atlas_UI_Hud",
+   "file": "Sprite/Atlas_UI_Hud/UI_Icon_Gauge.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 📊",
+   "sha256": "5c0ba70d0b76dd7fca585a37f869e3bf04b75f593ab28c38ea59767797018ae3"
+  },
+  {
+   "name": "UI_Icon_Ad",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Ad.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 📺",
+   "sha256": "b1e6d7e1762b4e5ec31344613e0bc18d6c9eeab22b40631048d2f8e2dc8eb3bd"
+  },
+  {
+   "name": "UI_Icon_BoxGold",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_BoxGold.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🎁",
+   "sha256": "85b7ce09e196a6469a20557b67d3efa788dce8fd68de096fea4f02082d3891a2"
+  },
+  {
+   "name": "UI_Icon_BoxPaper",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_BoxPaper.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 📦",
+   "sha256": "9ee810f0a0de4d1161560d58fc6a26c9d03796c24b97b2499265de3d97189a2f"
+  },
+  {
+   "name": "UI_Icon_BoxWood",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_BoxWood.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 📦",
+   "sha256": "c2bc2eaa0f145191471d77e2e1145f38cd14c16825af07ef0f8735e064dc8510"
+  },
+  {
+   "name": "UI_Icon_Clock",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Clock.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 ⏰",
+   "sha256": "84c80bfaf14d8d8c3d82e40951de9ef2368a9ff20594b679d6e369d231c2512b"
+  },
+  {
+   "name": "UI_Icon_Drop",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Drop.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🎲",
+   "sha256": "187905be875d24f195c9f83995995f9bd06736a3c9078effca8220a1b6d9d775"
+  },
+  {
+   "name": "UI_Icon_Energy",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Energy.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 ⚡",
+   "sha256": "941c81e20eab60bb41576f484471ddf1031d30d15d14fca12570952a469c471b"
+  },
+  {
+   "name": "UI_Icon_FriendAny",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_FriendAny.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🐱",
+   "sha256": "ec73192fb35450421ee67df17e0515400bfa3b225c17adb505a3051c67678584"
+  },
+  {
+   "name": "UI_Icon_FriendCoin",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_FriendCoin.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🐾",
+   "sha256": "d08c82ee0031168370d6342d475165d3fa2bff1236c0d38edd0a87c0a8b4d4ce"
+  },
+  {
+   "name": "UI_Icon_FriendUp",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_FriendUp.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 ⬆️",
+   "sha256": "2d31b32fea4e02948efe760200342d69a5be66502473aad5788d210516e45866"
+  },
+  {
+   "name": "UI_Icon_GodCoin",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_GodCoin.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🪙",
+   "sha256": "23d2aeda6f27761eca78f0338729a3ac9a88d6d274ceaf16fa11eed24e940947"
+  },
+  {
+   "name": "UI_Icon_GodShard",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_GodShard.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 💎",
+   "sha256": "5b01a6c7c2063c2765f8cc340d87d6d35f3c1bdc8318602ec750860a7e92afc3"
+  },
+  {
+   "name": "UI_Icon_Inapp",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Inapp.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 💳",
+   "sha256": "92b0a8d751af17d0075129035d1a049001cd59dd82abe24b3e4e6b70a9ace078"
+  },
+  {
+   "name": "UI_Icon_Medal",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Medal.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🏅",
+   "sha256": "1a04d62f2d3f82721c4348904696830e38e2edf7fcf26a887a6683d69f644f1a"
+  },
+  {
+   "name": "UI_Icon_NoAds",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_NoAds.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🚫",
+   "sha256": "d52da71f11410be52cd8b9f93d64d2043b605a26158ff9801840c83bba162871"
+  },
+  {
+   "name": "UI_Icon_PassXp",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_PassXp.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 ⭐",
+   "sha256": "eabca96ea2d0c372d46e511914ddc680ef96df06f870cff3f66bf7bb6c1a3823"
+  },
+  {
+   "name": "UI_Icon_PetFood",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_PetFood.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🍖",
+   "sha256": "5f45e2694649a752c752dacbdf79e66eba3f280e07d661a0289fe0c53129f08d"
+  },
+  {
+   "name": "UI_Icon_QuestDaily",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_QuestDaily.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 📅",
+   "sha256": "9daac505eb40daa203bd0fa66dc53ea0673d0935cfefeb784b9689214f45d813"
+  },
+  {
+   "name": "UI_Icon_QuestWeekly",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_QuestWeekly.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🗓️",
+   "sha256": "1d82648b1ab9525ceec05b471b73659c97e037e2971caa2f5d990d1175a9431f"
+  },
+  {
+   "name": "UI_Icon_RbToken",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_RbToken.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🪙",
+   "sha256": "54180d2908732aea0682628110c873a010fa75392f2e9c5e6b6416f97c2cf0ed"
+  },
+  {
+   "name": "UI_Icon_StairLv",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_StairLv.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🪜",
+   "sha256": "1a1a335f7ed82064a7c8d1d4269737028644f6be9a89f788652bee533ae8b656"
+  },
+  {
+   "name": "UI_Icon_StarCandy",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_StarCandy.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🍬",
+   "sha256": "1030e0ff2826783b32f15e9db351d0c6de44c8b29261497554523adeadb24e79"
+  },
+  {
+   "name": "UI_Icon_Ticket_AlleyWar",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Ticket_AlleyWar.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🎟️",
+   "sha256": "d4fab523d670044f5887e1eb8e759f34bbf5fe8e1df2832ceb8ec09fb725da94"
+  },
+  {
+   "name": "UI_Icon_Ticket_BigMouse",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Ticket_BigMouse.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🎟️",
+   "sha256": "9c51f1fc77c603563cdf07b307a501b8edf23a241b318103f12dba045f5ad642"
+  },
+  {
+   "name": "UI_Icon_Ticket_ChuruRush",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Ticket_ChuruRush.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🎟️",
+   "sha256": "270ad584e6f14288daa8de0ea9162b10ef4042fe8c355f0e011750fc4518c999"
+  },
+  {
+   "name": "UI_Icon_Ticket_RapidRush",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Ticket_RapidRush.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🎟️",
+   "sha256": "d573ad428e05207c386457efe2c151ab1af8c269462276ea4ce1b56c6f37b021"
+  },
+  {
+   "name": "UI_Icon_Yarn",
+   "atlas": "Atlas_UI_Icon",
+   "file": "Sprite/Atlas_UI_Icon/UI_Icon_Yarn.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🧶",
+   "sha256": "1b4c6d26f1fab2654d63589e3612aea48714d9355b1d80c8f029546c881998de"
+  },
+  {
+   "name": "UI_Icon_Content",
+   "atlas": "Atlas_UI_Lobby",
+   "file": "Sprite/Atlas_UI_Lobby/UI_Icon_Content.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 📜",
+   "sha256": "f397d6526a567c50b6538476980baf4ac655df82645a8aca80c1b2b4d2aa7a61"
+  },
+  {
+   "name": "UI_Icon_Map_Zone1",
+   "atlas": "Atlas_UI_Lobby",
+   "file": "Sprite/Atlas_UI_Lobby/UI_Icon_Map_Zone1.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🗺️",
+   "sha256": "40585424b51beb2a7dea004b275115e34594c672e165c65af13d40b243b99ac2"
+  },
+  {
+   "name": "UI_Icon_Map_Zone2",
+   "atlas": "Atlas_UI_Lobby",
+   "file": "Sprite/Atlas_UI_Lobby/UI_Icon_Map_Zone2.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🗺️",
+   "sha256": "bf16ede2005f2bbafc0b4730272262c7566736e5092567dd82448af056897b2a"
+  },
+  {
+   "name": "UI_Icon_Map_Zone3",
+   "atlas": "Atlas_UI_Lobby",
+   "file": "Sprite/Atlas_UI_Lobby/UI_Icon_Map_Zone3.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🗺️",
+   "sha256": "160875c4c55b729bfaf82f2d8c8454d5eb6ede1dacf7d44928845588b386f8d0"
+  },
+  {
+   "name": "UI_Icon_Map_Zone4",
+   "atlas": "Atlas_UI_Lobby",
+   "file": "Sprite/Atlas_UI_Lobby/UI_Icon_Map_Zone4.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🗺️",
+   "sha256": "dd5c1041598d9513baa433837e5afd83de61e4b8e8debb584ab8b0dcf4b9cd8d"
+  },
+  {
+   "name": "UI_Icon_Map_Zone5",
+   "atlas": "Atlas_UI_Lobby",
+   "file": "Sprite/Atlas_UI_Lobby/UI_Icon_Map_Zone5.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🗺️",
+   "sha256": "e3528d8245e9df452a4b3f123a684a360e785f7ac6806235766786c7060fbd74"
+  },
+  {
+   "name": "UI_Icon_Map_Zone6",
+   "atlas": "Atlas_UI_Lobby",
+   "file": "Sprite/Atlas_UI_Lobby/UI_Icon_Map_Zone6.png",
+   "w": 96,
+   "h": 96,
+   "pivot": [
+    0.5,
+    0.5
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "2 이모지 🗺️",
+   "sha256": "f3b445862a03d6e3e1aa1cb7eefb52f18dfa48720874087b3fada5bb36a9e38d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_blossom",
+   "file": "Sprite/Atlas_World_Theme_blossom/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_cafe",
+   "file": "Sprite/Atlas_World_Theme_cafe/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_harbor",
+   "file": "Sprite/Atlas_World_Theme_harbor/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_lighthouse",
+   "file": "Sprite/Atlas_World_Theme_lighthouse/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_market",
+   "file": "Sprite/Atlas_World_Theme_market/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_moonstair",
+   "file": "Sprite/Atlas_World_Theme_moonstair/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_onsen",
+   "file": "Sprite/Atlas_World_Theme_onsen/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_park",
+   "file": "Sprite/Atlas_World_Theme_park/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_roof",
+   "file": "Sprite/Atlas_World_Theme_roof/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_skyline",
+   "file": "Sprite/Atlas_World_Theme_skyline/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_snowday",
+   "file": "Sprite/Atlas_World_Theme_snowday/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_snow",
+   "file": "Sprite/Atlas_World_Theme_snow/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_stairs",
+   "file": "Sprite/Atlas_World_Theme_stairs/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_stallnight",
+   "file": "Sprite/Atlas_World_Theme_stallnight/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_00",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_00.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_01",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_01.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_02",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_02.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_03",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_03.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_04",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_04.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "d27883c44c275a01bf44ec727ed75c7c44193432c252bc9932cf39cf8d8644c1"
+  },
+  {
+   "name": "World_Enemy_BigMouse_05",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_05.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "5d686eb9878055a655790e99d917c170c5dc9745a2c3ac2c3dd087005a9adb9c"
+  },
+  {
+   "name": "World_Enemy_BigMouse_06",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_06.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "bfae7dfb97e6ad1d40fa68b162916810cf823dc635af6ca387589b99ad662b08"
+  },
+  {
+   "name": "World_Enemy_BigMouse_07",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_07.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "6382f7be1c777f0dc61193729ee6cecac43875961a70ff99d4c94f16b3a5f3dc"
+  },
+  {
+   "name": "World_Enemy_BigMouse_08",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_08.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "b0c5c610812b8d12d13922523adc62abffc0b5bfa73683b2b5d6b671cb49c50b"
+  },
+  {
+   "name": "World_Enemy_BigMouse_09",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_09.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  },
+  {
+   "name": "World_Enemy_BigMouse_10",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_10.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_11",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_11.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_12",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_12.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "f0775364b5f9bba32cb4085937a884aec8dc60c6fcddb71875a04c4d11180bf3"
+  },
+  {
+   "name": "World_Enemy_BigMouse_13",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_13.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "e600f1f6384037f81d6290dfb5a6e86da9f8e6ac2faacfa5350aaff445f803c5"
+  },
+  {
+   "name": "World_Enemy_BigMouse_14",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_14.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "dec77363c73c4ee19838bd5f7e8efbcfa8882450f5857389edd8e2d9a4a4d52d"
+  },
+  {
+   "name": "World_Enemy_BigMouse_15",
+   "atlas": "Atlas_World_Theme_subway",
+   "file": "Sprite/Atlas_World_Theme_subway/World_Enemy_BigMouse_15.png",
+   "w": 160,
+   "h": 148,
+   "pivot": [
+    0.4,
+    0.13514
+   ],
+   "ppu": 128,
+   "temp": 1,
+   "method": "1 정본 조합(쥐 프레임 색 바꿈)",
+   "sha256": "56a1a108b5e1a52ca716705f064188d185c9ae0546141b0babcb047f31e4cf26"
+  }
+ ]
+}

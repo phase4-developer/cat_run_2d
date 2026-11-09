@@ -1,0 +1,1090 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T1",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T1_Run_A",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 1,
+   "pat": 0,
+   "st": "run",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T1",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T1_Run_B",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 1,
+   "pat": 0,
+   "st": "run",
+   "thr": 0.2
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T1",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T1_Climb",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 1,
+   "pat": 0,
+   "st": "climb",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T1",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T1_Idle",
+  "args": {
+   "t": 1,
+   "pat": 0,
+   "st": "idle",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: 0})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T2",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T2_Run_A",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 2,
+   "pat": 0,
+   "st": "run",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T2",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T2_Run_B",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 2,
+   "pat": 0,
+   "st": "run",
+   "thr": 0.2
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T2",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T2_Climb",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 2,
+   "pat": 0,
+   "st": "climb",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T2",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T2_Idle",
+  "args": {
+   "t": 2,
+   "pat": 0,
+   "st": "idle",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: 0})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T3",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T3_Run_A",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 3,
+   "pat": 0,
+   "st": "run",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T3",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T3_Run_B",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 3,
+   "pat": 0,
+   "st": "run",
+   "thr": 0.2
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T3",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T3_Climb",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 3,
+   "pat": 0,
+   "st": "climb",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T3",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T3_Idle",
+  "args": {
+   "t": 3,
+   "pat": 0,
+   "st": "idle",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: 0})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T4",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T4_Run_A",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 4,
+   "pat": 0,
+   "st": "run",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T4",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T4_Run_B",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 4,
+   "pat": 0,
+   "st": "run",
+   "thr": 0.2
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T4",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T4_Climb",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 4,
+   "pat": 0,
+   "st": "climb",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T4",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T4_Idle",
+  "args": {
+   "t": 4,
+   "pat": 0,
+   "st": "idle",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: 0})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T5",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T5_Run_A",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 5,
+   "pat": 0,
+   "st": "run",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T5",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T5_Run_B",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 5,
+   "pat": 0,
+   "st": "run",
+   "thr": 0.2
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T5",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T5_Climb",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 5,
+   "pat": 0,
+   "st": "climb",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T5",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T5_Idle",
+  "args": {
+   "t": 5,
+   "pat": 0,
+   "st": "idle",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: 0})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T6",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T6_Run_A",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 6,
+   "pat": 0,
+   "st": "run",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T6",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T6_Run_B",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 6,
+   "pat": 0,
+   "st": "run",
+   "thr": 0.2
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T6",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T6_Climb",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 6,
+   "pat": 0,
+   "st": "climb",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T6",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T6_Idle",
+  "args": {
+   "t": 6,
+   "pat": 0,
+   "st": "idle",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: 0})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T7",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T7_Run_A",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 7,
+   "pat": 0,
+   "st": "run",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T7",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T7_Run_B",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 7,
+   "pat": 0,
+   "st": "run",
+   "thr": 0.2
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T7",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T7_Climb",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 7,
+   "pat": 0,
+   "st": "climb",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T7",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T7_Idle",
+  "args": {
+   "t": 7,
+   "pat": 0,
+   "st": "idle",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: 0})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [
+   {
+    "fn": "star4",
+    "argIndex": 4,
+    "in": [
+     "#fff6a0"
+    ]
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T8",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T8_Run_A",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 8,
+   "pat": 0,
+   "st": "run",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [
+   {
+    "fn": "star4",
+    "argIndex": 4,
+    "in": [
+     "#fff6a0"
+    ]
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T8",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T8_Run_B",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 8,
+   "pat": 0,
+   "st": "run",
+   "thr": 0.2
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [
+   {
+    "fn": "star4",
+    "argIndex": 4,
+    "in": [
+     "#fff6a0"
+    ]
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T8",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T8_Climb",
+  "frames": {
+   "var": "ph",
+   "from": 0,
+   "period": 6.283185307179586,
+   "count": 12,
+   "fps": null
+  },
+  "args": {
+   "t": 8,
+   "pat": 0,
+   "st": "climb",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: v})"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1.05,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Cat_T8",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 244,
+   "h": 408,
+   "pivotPx": [
+    122,
+    344
+   ]
+  },
+  "src": "L3679~3736",
+  "name": "World_Cat_P0_T8_Idle",
+  "args": {
+   "t": 8,
+   "pat": 0,
+   "st": "idle",
+   "thr": 0
+  },
+  "expr": "mochiBack(g, X, Y, S, {...A, ph: 0})"
+ }
+]

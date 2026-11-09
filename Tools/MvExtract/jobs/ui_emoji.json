@@ -1,0 +1,530 @@
+[
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Basket",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🧺"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Map",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🗺️"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Fire",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🔥"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Herb",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🌿"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Paw",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🐾"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Close",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "✕"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Sound",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "♪"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Play",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "▶"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Lock",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🔒"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Target",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🎯"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Cat",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🐱"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Boom",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "💥"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Swords",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "⚔️"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Dagger",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🗡️"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Brick",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🧱"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Shield",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🛡️"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Moon",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🌙"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Chick",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 96,
+   "h": 96,
+   "pivotPx": [
+    48,
+    48
+   ]
+  },
+  "args": {
+   "ch": "🐣"
+  },
+  "expr": "(g.font = '72px MvEmoji, \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = '#ffffff', g.fillText(A.ch, X, Y + 4))",
+  "src": "D-52 마크업 L658~713, L2499~2586"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Note",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 64,
+   "h": 64,
+   "pivotPx": [
+    32,
+    32
+   ]
+  },
+  "args": {
+   "ch": "♪",
+   "c": "#7a5ac8"
+  },
+  "expr": "(g.font = '900 44px \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = A.c, g.fillText(A.ch, X, Y + 2))",
+  "src": "L3534"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Heart",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 64,
+   "h": 64,
+   "pivotPx": [
+    32,
+    32
+   ]
+  },
+  "args": {
+   "ch": "♥",
+   "c": "#e8504a"
+  },
+  "expr": "(g.font = '900 44px \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = A.c, g.fillText(A.ch, X, Y + 2))",
+  "src": "L3534"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "UI_Emoji_Sparkle",
+  "atlas": "Atlas_UI_Icon",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 64,
+   "h": 64,
+   "pivotPx": [
+    32,
+    32
+   ]
+  },
+  "args": {
+   "ch": "✦",
+   "c": "#f2b33d"
+  },
+  "expr": "(g.font = '900 44px \"Gothic A1\"', g.textAlign = 'center', g.textBaseline = 'middle', g.fillStyle = A.c, g.fillText(A.ch, X, Y + 2))",
+  "src": "L3534"
+ }
+]

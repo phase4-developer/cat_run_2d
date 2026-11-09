@@ -1,0 +1,578 @@
+[
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.427996660722633,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 1,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T1",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 1,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T1_Blink",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.427996660722633,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 2,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T2",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 2,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T2_Blink",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.427996660722633,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 3,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T3",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 3,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T3_Blink",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.427996660722633,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 4,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T4",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 4,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T4_Blink",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.427996660722633,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 5,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T5",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 5,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T5_Blink",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.427996660722633,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 6,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T6",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 6,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T6_Blink",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.427996660722633,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 7,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T7",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 7,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T7_Blink",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [
+   {
+    "fn": "star4",
+    "argIndex": 4,
+    "in": [
+     "#fff6a0"
+    ]
+   }
+  ],
+  "only": [],
+  "clock": 1.427996660722633,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 8,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T8",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 1.25,
+  "themeSet": "none",
+  "suppress": [
+   {
+    "fn": "star4",
+    "argIndex": 4,
+    "in": [
+     "#fff6a0"
+    ]
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 320,
+   "h": 484,
+   "pivotPx": [
+    148,
+    450
+   ]
+  },
+  "src": "L3267~3363, L3532",
+  "args": {
+   "t": 8,
+   "pat": 0,
+   "st": "idle",
+   "ph": 0
+  },
+  "name": "Lobby_Cat_Front_T8_Blink",
+  "expr": "mochi(g, X, Y, S, {...A})"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.62,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.3384954084936207,
+  "name": "Lobby_Cat_Sleep_P1",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 144,
+   "h": 132,
+   "pivotPx": [
+    72,
+    114
+   ]
+  },
+  "args": {
+   "t": 1,
+   "pat": 1,
+   "st": "sleep",
+   "ph": 0
+  },
+  "expr": "mochi(g, X, Y, S, {...A})",
+  "src": "L3528"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.62,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0.7134954084936207,
+  "name": "Lobby_Cat_Sleep_P2",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 144,
+   "h": 132,
+   "pivotPx": [
+    72,
+    114
+   ]
+  },
+  "args": {
+   "t": 1,
+   "pat": 2,
+   "st": "sleep",
+   "ph": 0
+  },
+  "expr": "mochi(g, X, Y, S, {...A})",
+  "src": "L3528"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.62,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0.0884954084936207,
+  "name": "Lobby_Cat_Sleep_P3",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 144,
+   "h": 132,
+   "pivotPx": [
+    72,
+    114
+   ]
+  },
+  "args": {
+   "t": 1,
+   "pat": 3,
+   "st": "sleep",
+   "ph": 0
+  },
+  "expr": "mochi(g, X, Y, S, {...A})",
+  "src": "L3528"
+ },
+ {
+  "ppu": 160,
+  "scaleK": 0.62,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 1.4269908169872414,
+  "name": "Lobby_Cat_Sleep_P4",
+  "atlas": "Atlas_World_Lobby",
+  "mode": "direct",
+  "pivot": "Feet",
+  "canvas": {
+   "w": 144,
+   "h": 132,
+   "pivotPx": [
+    72,
+    114
+   ]
+  },
+  "args": {
+   "t": 1,
+   "pat": 4,
+   "st": "sleep",
+   "ph": 0
+  },
+  "expr": "mochi(g, X, Y, S, {...A})",
+  "src": "L3528"
+ }
+]
