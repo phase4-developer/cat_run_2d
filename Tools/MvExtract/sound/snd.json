@@ -1,0 +1,52 @@
+{
+  "_doc": "MV-TOOL-SND 소리 정의(03 §3.9). key·soundName은 03_sound 표와 같다. L = 정본 정지 시각 max(at + d + 0.05)(03 §3.9.3). 파일 = <outDir[soundType]>/<soundName>.wav",
+  "format": { "sampleRate": 44100, "channels": 1, "bitsPerSample": 16 },
+  "trim": { "enabled": false, "dbfs": -90, "keepMs": 10, "_doc": "03 §3.9.1-7 뒤쪽 무음 정리. 켜면 wood 0.2860 s·land 0.2687 s로 짧아져 03 §3.9.3 표 L·11 완료 기준(길이 = 03 표)과 V6 길이 ±1 ms에 어긋난다. 잘리는 꼬리는 −90 dBFS 미만(16bit 1 LSB 이하)이라 들리는 차이 없음 → 표 길이를 따르고 끈다(보고에 결정 요청)" },
+  "outDir": {
+    "Sfx": "../../../Assets/Game/Addressables/Remote/Audio/Sfx",
+    "Music": "../../../Assets/Game/Addressables/Remote/Audio/Music"
+  },
+  "sfx": [
+    { "id": 3001001, "key": "throw", "soundName": "Sfx_Throw", "lib": "throw", "arg": null, "L": 0.12, "src": "L1649 · L2091" },
+    { "id": 3001002, "key": "hit", "soundName": "Sfx_Hit", "lib": "hit", "arg": null, "L": 0.12, "src": "L1650 · L2107" },
+    { "id": 3001003, "key": "crit", "soundName": "Sfx_Crit", "lib": "crit", "arg": null, "L": 0.15, "src": "L1651 · L2107" },
+    { "id": 3001004, "key": "wood", "soundName": "Sfx_Wood", "lib": "wood", "arg": null, "L": 0.29, "src": "L1652 · L1936, L2068" },
+    { "id": 3001005, "key": "coin", "soundName": "Sfx_Coin", "lib": "coin", "arg": null, "L": 0.27, "src": "L1653 · L1925, L1941, L1966" },
+    { "id": 3001006, "key": "gem", "soundName": "Sfx_Gem", "lib": "gem", "arg": null, "L": 0.35, "src": "L1654 · L1939, L1964" },
+    { "id": 3001007, "key": "soul", "soundName": "Sfx_Soul", "lib": "soul", "arg": null, "L": 0.61, "src": "L1655 · L1937" },
+    { "id": 3001008, "key": "gate", "soundName": "Sfx_Gate", "lib": "gate", "arg": null, "L": 0.33, "src": "L1656 · L2046, L2260" },
+    { "id": 3001009, "key": "forge", "soundName": "Sfx_Forge", "lib": "forge", "arg": null, "L": 0.26, "src": "L1657 · L2051" },
+    { "id": 3001010, "key": "clank", "soundName": "Sfx_Clank", "lib": "clank", "arg": null, "L": 0.13, "src": "L1658 · L1912, L1919" },
+    { "id": 3001011, "key": "lvup", "soundName": "Sfx_Lvup", "lib": "lvup", "arg": null, "L": 0.37, "src": "L1659 · L1221, L1890, L2553, L2613" },
+    { "id": 3001012, "key": "tierup_1", "soundName": "Sfx_Tierup_1", "lib": "tierup", "arg": 1, "L": 0.32, "src": "L1665 · L2281, L3165" },
+    { "id": 3001013, "key": "tierup_2", "soundName": "Sfx_Tierup_2", "lib": "tierup", "arg": 2, "L": 0.32, "src": "L1665 · L2281, L3165" },
+    { "id": 3001014, "key": "tierup_3", "soundName": "Sfx_Tierup_3", "lib": "tierup", "arg": 3, "L": 0.32, "src": "L1665 · L2281, L3165" },
+    { "id": 3001015, "key": "tierup_4", "soundName": "Sfx_Tierup_4", "lib": "tierup", "arg": 4, "L": 0.32, "src": "L1665 · L2281, L3165" },
+    { "id": 3001016, "key": "land", "soundName": "Sfx_Land", "lib": "land", "arg": null, "L": 0.35, "src": "L1666 · L2286" },
+    { "id": 3001017, "key": "tick", "soundName": "Sfx_Tick", "lib": "tick", "arg": null, "L": 0.075, "src": "L1667 · L2270, L2368" },
+    { "id": 3001018, "key": "card_0", "soundName": "Sfx_Card_0", "lib": "card", "arg": 0, "L": 0.52, "src": "L1668 · L2369" },
+    { "id": 3001019, "key": "card_1", "soundName": "Sfx_Card_1", "lib": "card", "arg": 1, "L": 0.52, "src": "L1668 · L2369" },
+    { "id": 3001020, "key": "card_2", "soundName": "Sfx_Card_2", "lib": "card", "arg": 2, "L": 0.52, "src": "L1668 · L2369" },
+    { "id": 3001021, "key": "card_3", "soundName": "Sfx_Card_3", "lib": "card", "arg": 3, "L": 0.52, "src": "L1668 · L2369" },
+    { "id": 3001022, "key": "card_4", "soundName": "Sfx_Card_4", "lib": "card", "arg": 4, "L": 0.52, "src": "L1668 · L2277, L2369" },
+    { "id": 3001023, "key": "merge", "soundName": "Sfx_Merge", "lib": "merge", "arg": null, "L": 0.22, "src": "L1669 · L1193, L2644" },
+    { "id": 3001024, "key": "buy", "soundName": "Sfx_Buy", "lib": "buy", "arg": null, "L": 0.20, "src": "L1670 · L2377, L2530, L2644" },
+    { "id": 3001025, "key": "click", "soundName": "Sfx_Click", "lib": "click", "arg": null, "L": 0.08, "src": "L1671 · L2444, L2445, L2610, L3856" },
+    { "id": 3001026, "key": "warn", "soundName": "Sfx_Warn", "lib": "warn", "arg": null, "L": 0.25, "src": "L1672 · L2739" },
+    { "id": 3001027, "key": "steal", "soundName": "Sfx_Steal", "lib": "steal", "arg": null, "L": 0.21, "src": "L1673 · L2063" },
+    { "id": 3001028, "key": "fail", "soundName": "Sfx_Fail", "lib": "fail", "arg": null, "L": 0.65, "src": "L1674 · L2408" },
+    { "id": 3001029, "key": "win", "soundName": "Sfx_Win", "lib": "win", "arg": null, "L": 0.63, "src": "L1675 · L2408, L2563" },
+    { "id": 3001030, "key": "floor", "soundName": "Sfx_Floor", "lib": "floor", "arg": null, "L": 0.67, "src": "L1676 · L2028" },
+    { "id": null, "key": "load", "soundName": "Sfx_Load", "lib": "load", "arg": null, "L": 0.13, "src": "L1660 (호출 없음)", "enabled": false, "note": "D-55 잔재: 굽지 않음" },
+    { "id": null, "key": "fuse", "soundName": "Sfx_Fuse", "lib": "fuse", "arg": null, "L": 0.65, "src": "L1661 (호출 없음)", "enabled": false, "note": "D-55 잔재: 굽지 않음" },
+    { "id": null, "key": "boom", "soundName": "Sfx_Boom", "lib": "boom", "arg": null, "L": 1.05, "src": "L1662 (호출 없음)", "enabled": false, "note": "D-55 잔재: 굽지 않음" },
+    { "id": null, "key": "stamp", "soundName": "Sfx_Stamp", "lib": "stamp", "arg": null, "L": 0.40, "src": "L1663 (호출 없음)", "enabled": false, "note": "D-55 잔재: 굽지 않음" },
+    { "id": null, "key": "whoosh", "soundName": "Sfx_Whoosh", "lib": "whoosh", "arg": null, "L": 1.65, "src": "L1664 (호출 없음)", "enabled": false, "note": "D-55 잔재: 굽지 않음" }
+  ],
+  "bgm": [
+    { "id": 3002001, "key": "bgm_lobby", "soundName": "Bgm_Lobby", "intensity": 0, "src": "L1680~1692 · L2473" },
+    { "id": 3002002, "key": "bgm_run", "soundName": "Bgm_Run", "intensity": 1, "src": "L1680~1692 · L2661" }
+  ],
+  "sfxPreroll": { "frames": 44160, "_doc": "345 × 128 샘플(1.0014 s) 무음 뒤에 SND.play. 정본 컴프레서(L1630)는 컨텍스트 시작 직후 감쇠 상태에서 약 0.5 s에 걸쳐 풀린다. 시각 0에서 울리면 click −13 dB, fail −1.3 dB 작게 구워져 V6(실시간 녹음, RMS ±0.5 dB)에 어긋난다. 03 §3.9.1-3과 다른 점(보고)" },
+  "bgmLoop": { "startSec": 0.1, "loopFrames": 729931, "cutLoop": 1, "schedIntervalSec": 0.05, "renderQuantum": 128, "_doc": "64 step × 60/116/2 s = 16.5517 s. 정본 next = currentTime + 0.1(L1635). cutLoop 1 = 두 번째 루프 [0.1 s + n, 0.1 s + 2n)를 자른다: 첫 루프는 컴프레서 시작 감쇠가 섞이고, 두 번째 루프는 앞 루프에서 이어진 정상 상태라 반복 재생 이음매와 같다. 03 §3.9.1-4(첫 루프)와 다른 점(보고)" }
+}
