@@ -1,0 +1,6 @@
+{
+  "path": "../../Docs/Reference/MoonVillage.html",
+  "sha256": "fe573cf2f8ed9b90030c993e8127ecd479f4f2d47195d3fbfa19962694926dfa",
+  "origin": "http://mv.canon/",
+  "note": "정본 파일은 바이트를 바꾸지 않는다. 다르면 중단하고 --accept-canon <sha>로만 갱신한다(03 §3.2.2)."
+}
