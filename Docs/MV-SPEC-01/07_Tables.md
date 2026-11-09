@@ -1703,7 +1703,7 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | 630 | Blessing | 480_blessing | 런 수 | Int | Atlas_UI_Icon | icon | [08] |
 
 - **정산**(`collect(mul)`, [04 §4.11.2](04_GameRules.md)): settleTo가 있는 600번대 값을 `floor(값) × (collectMul ? mul : 1)`로 대상에 넣는다. 츄르 `floor(R.gold) × mul`, 캣닢 `R.dia × mul`, 생선 그대로, 목숨 조각은 `rb.pending += R.tok`. 한 번의 `ApplyAndSave`로 묶는다([09](09_Save.md)).
-- 600번대를 런 밖(메타)에서 지급하면 검증 오류(608·609 제외). 1~599를 런 안 오브젝트 보상으로 쓰면 「정산 대기 목록」에 넣었다가 정산 때 지급.
+- 600번대를 런 밖(메타)에서 지급하면 검증 오류(608·609·630 제외 — 630 축복은 광고 보상(§7.8.12, `08_adPlacement`)으로 런 밖에서 준다). 1~599를 런 안 오브젝트 보상으로 쓰면 「정산 대기 목록」에 넣었다가 정산 때 지급.
 - 새 type 추가 = 이 표 행 + C# enum 값 + 지급 처리(`IConsumeHandler` 1개) 등록.
 
 ### 7.8.13 09_uiResource — 표 행이 없는 화면 고정 그림
@@ -2027,7 +2027,7 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 |---|---|
 | 모든 fk 열 값이 대상 표에 있음(0·빈칸 허용 열 제외) | 오류 |
 | consumeData: §7.1.6 개수 규칙, type이 07에 있고 active, id가 idTable에 있음 | 오류 |
-| 600번대 type은 런 표(102·105·313·801·802 중 런 드롭 그룹·401 clearReward 제외)에서만, 608·609는 어디서나 | 오류 |
+| 600번대 type은 런 표(102·105·313·801·802 중 런 드롭 그룹·401 clearReward 제외)에서만, 608·609·630은 어디서나 | 오류 |
 | `07_consumeType.codeName`과 C# `ConsumeType` enum이 1:1, idKind와 `{p}Id`가 맞음(group이면 묶음 첫 행 id) | 오류 |
 | `300_runConfig`·`499_contentConfig` 키 = 코드 상수 목록(누락·남음) | 오류 |
 | 소리·이펙트 열 값이 `03_sound.key`·`04_effect.key`에 있음(변형 소리는 `_n` 붙인 key 확인) | 오류 |
@@ -2185,7 +2185,7 @@ id	group	floor	h0	h1	rows	souls	cellMode
 
 ### 7.15.2 다른 문서에 넘기는 가정
 
-- **08**: 4xx·7xx 표 열 정의는 08이 정본이고 이 문서는 목록·관계(§7.2, §7.9)만 가진다. 08의 consumeType(610·620·621·622·630), 16_levelPrice 그룹(301 이상), `01_wealth` 5~17, `02_playResource` 101~105, `05_contentOpen` 5001001~018, `08_adPlacement` 모드·상점·축복 행을 이 문서 표에 그대로 받는다. 600번대 type을 메타 보상에 쓰지 않는다(608·609 제외).
+- **08**: 4xx·7xx 표 열 정의는 08이 정본이고 이 문서는 목록·관계(§7.2, §7.9)만 가진다. 08의 consumeType(610·620·621·622·630), 16_levelPrice 그룹(301 이상), `01_wealth` 5~17, `02_playResource` 101~105, `05_contentOpen` 5001001~018, `08_adPlacement` 모드·상점·축복 행을 이 문서 표에 그대로 받는다. 600번대 type을 메타 보상에 쓰지 않는다(608·609·630 제외).
 - **05**: `09_uiResource` 행과 `ui.*` 문구는 05가 늘린다. 화면은 `08_adPlacement.key`로 광고 자리를 찾는다.
 - **02·06**: `300_runConfig` 그룹 001~008(95키)과 `04_effect` 행·`320_camera` 열은 02·06이 정본이다.
 - **03**: `03_sound` 32행, 아틀라스 이름, `sprite_catalog.tsv` 형식은 03이 정본이다. 이 문서는 열 정의와 검증 규칙만 가진다.
