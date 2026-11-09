@@ -64,7 +64,11 @@ namespace MV.Run.Tests.Gen
                 var log = new FieldGen.HashLog();
                 var cells = FieldGen.Build(g, input, log);
                 var want = Arr(f["cells"]);
-                string err = CompareCells(want, cells) ?? CompareLog(soulHash, log.Soul, "soulHash") ?? CompareLog(diaHash, log.Dia, "diaHash");
+                // 덤프 diaHash는 모든 idx를 적지만 정본은 생선 칸에서 hash를 부르지 않는다(`else if`). 생선 칸을 빼고 순서를 맞춘다.
+                var diaCalled = new List<object>();
+                for (int i = 0; i < diaHash.Count && i < want.Count; i++)
+                    if ((string)Obj(want[i])["rew"] != "soul") diaCalled.Add(diaHash[i]);
+                string err = CompareCells(want, cells) ?? CompareLog(soulHash, log.Soul, "soulHash") ?? CompareLog(diaCalled, log.Dia, "diaHash");
                 if (err == null) cellsOk++;
                 else Fail($"{at} 정본 FINAL 입력: {err}");
 
