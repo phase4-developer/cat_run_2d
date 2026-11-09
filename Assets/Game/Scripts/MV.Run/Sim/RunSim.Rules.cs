@@ -31,6 +31,8 @@ namespace MV.Run
             double dt = Math.Min(_p.DtCap, realDt);
             s.RealTime += dt;
             if (input.DragTargetX.HasValue) s.P.Tx = Clamp(input.DragTargetX.Value, -_p.LaneXMax, _p.LaneXMax);
+            // 실시간 타이머(정본 setTimeout)는 프레임 처리 전에 만기를 본다: 시작한 프레임 다음 프레임부터 dt를 뺀다.
+            StepRealTimers(dt);
 
             bool hs = s.HitStop > 0 && s.Phase == RunPhase.Run;
             if (s.HitStop > 0) s.HitStop -= dt;
@@ -44,7 +46,6 @@ namespace MV.Run
             if (input.KeyAxis != 0) s.P.Tx = Clamp(s.P.Tx + input.KeyAxis * dt * _p.KeyMoveSpeed, -_p.LaneXMax, _p.LaneXMax);
             StepFx(sdt);
             SyncWells(dt);
-            StepRealTimers(dt);
         }
 
         // ================= updRun (§4.13.3) =================

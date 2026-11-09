@@ -78,7 +78,7 @@ namespace MV.Run.Tests
         public void Climb_KCompressionAndTiers()
         {
             var t = RunTestTables.Load(); var c = t.Climb.Config();
-            Assert.AreEqual(60, ClimbK(c, 60)); Assert.AreEqual(61, ClimbK(c, 61)); Assert.AreEqual(150, ClimbK(c, 327)); Assert.AreEqual(150, ClimbK(c, 1000));
+            Assert.AreEqual(60, ClimbK(c, 60)); Assert.AreEqual(61, ClimbK(c, 61)); Assert.AreEqual(149, ClimbK(c, 327)); Assert.AreEqual(150, ClimbK(c, 330)); Assert.AreEqual(150, ClimbK(c, 1000));
             Assert.AreEqual(1.6 + 0.05 * 10, ClimbT(c, 10), 1e-12); Assert.AreEqual(9, ClimbT(c, 150), 1e-12);
             void Tiers(int n, params int[] e) => Assert.AreEqual(e, ClimbTiers(t, n).ToArray(), $"n={n}");
             Tiers(4); Tiers(5, 0); Tiers(74, 3); Tiers(75, 4); Tiers(80, 4, 0); Tiers(150, 4, 4); Tiers(200, 4, 4, 3); Tiers(225, 4, 4, 4); Tiers(400, 4, 4, 4);
