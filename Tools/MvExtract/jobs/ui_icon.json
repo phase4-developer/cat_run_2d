@@ -216,7 +216,7 @@
   "clock": 0,
   "name": "UI_Icon_Fac_Tower_1",
   "atlas": "Atlas_UI_Icon",
-  "mode": "svg",
+  "mode": "direct",
   "pivot": "Center",
   "canvas": {
    "w": 128,
@@ -230,10 +230,9 @@
    "kind": "tower",
    "st": 1
   },
-  "margin": 0,
   "allowEdge": true,
   "src": "L3463",
-  "srcExpr": "facIconURL('tower', 1)"
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
  },
  {
   "ppu": 128,
@@ -244,7 +243,7 @@
   "clock": 0,
   "name": "UI_Icon_Fac_Tower_2",
   "atlas": "Atlas_UI_Icon",
-  "mode": "svg",
+  "mode": "direct",
   "pivot": "Center",
   "canvas": {
    "w": 128,
@@ -258,10 +257,9 @@
    "kind": "tower",
    "st": 2
   },
-  "margin": 0,
   "allowEdge": true,
   "src": "L3463",
-  "srcExpr": "facIconURL('tower', 2)"
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
  },
  {
   "ppu": 128,
@@ -272,7 +270,7 @@
   "clock": 0,
   "name": "UI_Icon_Fac_Tower_3",
   "atlas": "Atlas_UI_Icon",
-  "mode": "svg",
+  "mode": "direct",
   "pivot": "Center",
   "canvas": {
    "w": 128,
@@ -286,10 +284,9 @@
    "kind": "tower",
    "st": 3
   },
-  "margin": 0,
   "allowEdge": true,
   "src": "L3463",
-  "srcExpr": "facIconURL('tower', 3)"
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
  },
  {
   "ppu": 128,
@@ -300,7 +297,7 @@
   "clock": 0,
   "name": "UI_Icon_Fac_Rack_1",
   "atlas": "Atlas_UI_Icon",
-  "mode": "svg",
+  "mode": "direct",
   "pivot": "Center",
   "canvas": {
    "w": 128,
@@ -314,10 +311,9 @@
    "kind": "rack",
    "st": 1
   },
-  "margin": 0,
   "allowEdge": true,
   "src": "L3463",
-  "srcExpr": "facIconURL('rack', 1)"
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
  },
  {
   "ppu": 128,
@@ -328,7 +324,7 @@
   "clock": 0,
   "name": "UI_Icon_Fac_Rack_2",
   "atlas": "Atlas_UI_Icon",
-  "mode": "svg",
+  "mode": "direct",
   "pivot": "Center",
   "canvas": {
    "w": 128,
@@ -342,10 +338,9 @@
    "kind": "rack",
    "st": 2
   },
-  "margin": 0,
   "allowEdge": true,
   "src": "L3463",
-  "srcExpr": "facIconURL('rack', 2)"
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
  },
  {
   "ppu": 128,
@@ -356,7 +351,7 @@
   "clock": 0,
   "name": "UI_Icon_Fac_Rack_3",
   "atlas": "Atlas_UI_Icon",
-  "mode": "svg",
+  "mode": "direct",
   "pivot": "Center",
   "canvas": {
    "w": 128,
@@ -370,10 +365,9 @@
    "kind": "rack",
    "st": 3
   },
-  "margin": 0,
   "allowEdge": true,
   "src": "L3463",
-  "srcExpr": "facIconURL('rack', 3)"
+  "expr": "drawFac(g, A.kind, X, Y - 64 + (A.kind === 'tower' && A.st >= 2 ? 90 : 78)*4/3, (A.kind === 'tower' && A.st >= 2 ? 30 : 38)*4/3, A.st, 0.5, 4)"
  },
  {
   "ppu": 128,

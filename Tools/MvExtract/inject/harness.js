@@ -99,6 +99,7 @@
     const scale = (job.ppu || 128) * (job.scaleK || 1);
     const t = frameVal != null && job.frames && job.frames.var === 't' ? frameVal : (job.clock ?? 0);
     window.__clock = t;
+    window.__mvJ = job; window.__mvPX = X; window.__mvPY = Y; // 억제 규칙 test 식에서 쓴다
     if (window.__mvSeed && window.__mvHash) window.__mvSeed(window.__mvHash(job.name));
     const out = newCanvas(w, h);
     const TH = job.theme != null ? S(`AREA_TH[${job.theme | 0}]`) : null;
@@ -120,8 +121,16 @@
         if (job.mode === 'project') {
           setRunCamera(job.view ? job.view[0] : 1080, job.view ? job.view[1] : 1920);
           const nrm = job.norm ? compile(job.norm)(CTX, X, Y, scale, t, frameVal, job, job.args || {}, TH) : 1;
-          const an = job.anchor;
-          proj = wrapPj([an[0], an[1], an[2]], X, Y, scale, nrm);
+          // anchorExpr(선택): 함수가 앵커에 더하는 무작위 흔들림(drawJunk의 jx 등)을 정본 hash로 계산할 때
+          const an = job.anchorExpr ? compile(job.anchorExpr)(CTX, X, Y, scale, t, frameVal, job, job.args || {}, TH) : job.anchor;
+          // shiftExpr(선택): 그림 안 한 부품(게이트 롤 하나 등)을 피벗에 오게 옮기는 화소 오프셋
+          const sh = job.shiftExpr ? compile(job.shiftExpr)(CTX, X, Y, scale, t, frameVal, job, job.args || {}, TH) : [0, 0];
+          if (job.__raw) { // V2(03 §3.11.1): 감싸지 않고 k = 1이 되게 H = 2·S·d/(P5·norm)로 맞춘 뒤 평행이동만
+            const A0 = S('pj')(an[0], an[1], an[2]); const P5 = S('camera.projectionMatrix.elements[5]');
+            const H2 = (2 * scale * A0.d) / (P5 * nrm); S(`W = ${(H2 * 9) / 16}; H = ${H2};`);
+            const A1 = S('pj')(an[0], an[1], an[2]);
+            CTX.setTransform(1, 0, 0, 1, X + sh[0] - A1.x, Y + sh[1] - A1.y);
+          } else proj = wrapPj([an[0], an[1], an[2]], X + sh[0], Y + sh[1], scale, nrm);
         } else if (job.wh) {
           S(`W = ${job.wh[0]}; H = ${job.wh[1]};`);
         }
