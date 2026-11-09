@@ -47,6 +47,9 @@
 | c | MV-TOOL-ART 3차 검증 | 5번째(`MV-TOOL-ART-3-5.md`) | `ai/MV-TOOL-ART-remaining` `99c7614` | `Tools/MvExtract/`, `A/Art/Source/`, 아틀라스, `MvArtRules`, 그룹 로비 항목만 |
 | d | MV-VIEW 1차 | 2번째(`MV-VIEW-2.md`) | `ai/MV-VIEW-world` `b28b038`(총괄 정렬 레이어 10개) | `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders/`, `A/Art/Materials/`, `A/Addressables/Remote/World/`(그룹 등록 없음) |
 | e | MV-RUN-RULE 런 확장 지점(MV-RUN-SIM 후속, 04 §4.20) | 1번째(`MV-RUN-RULE-1.md`) | `ai/MV-RUN-RULE-hooks` dev `1ad0b23` | `S/MV.Run/`(Gen 제외), `S/MV.Run.Tests/Rule/`, 기획서 04 §4.20 |
+| c | MV-TOOL-ART 4차 남은 그림 추출 | 1번째(`MV-TOOL-ART-4-1.md`) | `ai/MV-TOOL-ART-ui-lobby` (3차 `99c7614` 위) | `Tools/MvExtract/`, `A/Art/Source/`, `A/Art/Temp/`, 새 아틀라스 파일, `MvArtRules` |
+
+- MV-TOOL-ART 3차 검증 끝(담당 닫힘): `99c7614` 새 Commit 없음, EditMode 잡 `a6c9597f2d67` 19/20 PASS(`EveryAtlas_FitsOnePageOfMaxSize` PASS, 로비 하한 71.6 %·_2 46.5 %, 사각 추정 107 %는 실측 위험). FAIL `AllTableResourceColumns_ResolveOrAreReported` = 09[9002002] `UI_Icon_Brick` atlas(MV-DATA, 칸 a에 전달). dev 병합은 MV-DATA 2차 뒤 재시험하고 한다.
 
 ## 총괄 인계 (2026-11-09, 1번째 총괄 대화 마감 — 압축 2회)
 
