@@ -25,7 +25,7 @@
 | MV-PLAY-INT 플레이 가능 빌드 | 대기(G3-INT·VIEW 2차·HUD 뒤) | — | 게임 루프·씬 연결 |
 | MV-PLAT-NET / ADS / LOGIN | 완료 | `9c354a6` / `1d3bb2a` / `979b171` | 연결은 G6 통합(LOGIN은 D-90으로 연결 안 함) |
 | MV-PLAT-IAP / ANALYTICS / NOTI | 스텁 취소(D-88) → 고정 tgz 연결로 | — | `ai/MV-PLAT-IAP-stub`·`ai/MV-PLAT-ANALYTICS-stub` 병합 안 함 |
-| MV-UI-META | 1차 진행(칸 c) | — | D-92 겉 더미 |
+| MV-UI-META | 1차 완료 | `fa7bac4` | 화면·PlayMode NOT_RUN. 총괄: Addressables `UIPopup_GodSelect`·`AreaUpgrade`·`Rebirth`·`Map`·`FeatureUnlock`(Remote_UI), `UIPopup_Debug`(개발 전용 그룹) — PLAY-INT 병합 뒤. 요청 MV-META: 로컬 `debug.*` 처리기 8개, `MvMeta.DisarmRebirth()`. 결정 후보: 지도 필터(`05_contentOpen.showOnMap` 빈칸 → conditionType 1 전부), 지도 체크포인트 문구, 05 §5.1.14 클래스 표 소유(테스트 패널·공통 틀을 META가 만듦) |
 | MV-UI-LOBBY / CONTENT | 대기(PLAY-INT 뒤, 로비 API 겹침) | — | D-92 겉 더미 |
 | MV-CONTENT-* (G7) | 대기 | — | — |
 | MV-QA-ACCEPT (G8) | 대기 | — | D-87 기준 |
@@ -36,13 +36,13 @@
 |---|---|---|---|---|
 | a | `moonvillage-a` | MV-PLAY-INT | `ai/MV-PLAY-INT-loop` | `S/MV.Boot/`, `A/Tests/PlayMode/`, `S/MV.View/Runtime/RunStateViewSource.cs` |
 | b | `moonvillage-b` | MV-TABLE-SWAP(3차 표 열 → View·Fx·Meta 코드) | `ai/MV-TABLE-SWAP-data3` | `S/MV.View/`(RunStateViewSource 제외)·`S/MV.Fx/`·`S/MV.Meta/`와 각 Tests |
-| c | `moonvillage-c` | MV-UI-META 1차 | `ai/MV-UI-META-panels` | `S/MV.UI/Meta/`, `MvUiIds`·`MvUiNav` 줄 추가, `S/MV.UI.Tests/Meta/`, `A/Addressables/Remote/UI/Meta/` |
+| c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
 | f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
 | g | `moonvillage-g` | (비어 있음) | — | — |
 
-- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 403, PlayMode 2, `a2be0d6` 기준).
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 419, PlayMode 2, `fa7bac4` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
