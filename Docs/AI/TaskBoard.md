@@ -35,7 +35,7 @@
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
 | a | `moonvillage-a` | MV-PLAY-INT | `ai/MV-PLAY-INT-loop` | `S/MV.Boot/`, `A/Tests/PlayMode/`, `S/MV.View/Runtime/RunStateViewSource.cs` |
-| b | `moonvillage-b` | (비어 있음) | — | — |
+| b | `moonvillage-b` | MV-TABLE-SWAP(3차 표 열 → View·Fx·Meta 코드) | `ai/MV-TABLE-SWAP-data3` | `S/MV.View/`(RunStateViewSource 제외)·`S/MV.Fx/`·`S/MV.Meta/`와 각 Tests |
 | c | `moonvillage-c` | MV-UI-META 1차 | `ai/MV-UI-META-panels` | `S/MV.UI/Meta/`, `MvUiIds`·`MvUiNav` 줄 추가, `S/MV.UI.Tests/Meta/`, `A/Addressables/Remote/UI/Meta/` |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
