@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Remote_UIAtlas
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Remote_UIAtlas
+  m_GUID: dc6b77afb964a0942b6b39dfaab84d79
+  m_SerializeEntries:
+  - m_GUID: 27e12e892c8064b46861bc91988ee057
+    m_Address: Atlas_UI_Hud
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b4da452858eb8a49ab819bf40d251b6
+    m_Address: Atlas_UI_Lobby
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 78f97436f1fe69d41b95081d659893d4
+    m_Address: Atlas_UI_Card
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.card
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9d1904f3c6fd4c644b4b0d54d71ba25a
+    m_Address: Atlas_UI_Icon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 8ceeebdf813889c4b8a954d4cb83e5b2, type: 2}
+    - {fileID: 11400000, guid: 47318ef1591c34346a96a46873ccbc25, type: 2}
+    m_SchemaDisplayOrder:
+    - Remote_UIAtlas_BundledAssetGroupSchema
+    - Remote_UIAtlas_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1
