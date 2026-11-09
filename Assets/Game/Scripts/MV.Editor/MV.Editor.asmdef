@@ -5,6 +5,7 @@
         "MV.Core",
         "MV.Data",
         "MV.Boot",
+        "JJEvol.Scene.Runtime",
         "JJEvol.Tables.Authoring.Editor",
         "JJEvol.UI.Runtime",
         "JJEvol.UI.Addressables.Runtime",
