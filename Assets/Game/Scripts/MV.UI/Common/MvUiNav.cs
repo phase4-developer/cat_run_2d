@@ -82,5 +82,9 @@ namespace MV.UI
             if (!UnityEngine.Debug.isDebugBuild) return null;
             return await Ui.SpawnUIPopupAsync(MvUiIds.Debug, data ?? new MetaPopupData()) as DebugPopup;
         }
+
+        /// <summary>가짜 광고(05 §5.12, MV-UI-LOBBY). 보통은 <see cref="MvFakeAd.Watch"/>가 부른다.</summary>
+        public static async UniTask<FakeAdPopup> OpenFakeAdAsync(FakeAdPopupData data) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.FakeAd, data) as FakeAdPopup;
     }
 }

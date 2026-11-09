@@ -33,6 +33,8 @@ namespace MV.UI
         public Action<MvSettleResult> OnCollected;
         /// <summary>비우면 <see cref="MvMetaResultSettler"/>(<c>MvMeta.Current</c>).</summary>
         public IResultSettler Settler;
+        /// <summary>×3 광고(<c>08_adPlacement collect3</c>). 비우면 <see cref="MvMetaResultAd"/>(가짜 광고 팝업 경유).</summary>
+        public IResultAdWatcher AdWatcher;
 
         /// <summary>런 결과 → 결과 화면 값 + 정산 값(MV.Meta는 MV.Run을 모르므로 여기서 옮긴다).</summary>
         /// <param name="savedArea">정산 전 <c>save.area</c>(0기반).</param>
@@ -91,6 +93,58 @@ namespace MV.UI
             if (meta == null) throw new InvalidOperationException("MvMeta.Current is not set.");
             return meta.Settle(outcome, mul);
         }
+    }
+
+    /// <summary>결과 ×3 광고 입구. 정산은 하지 않고 「끝까지 봤으면 배수」만 알린다(정산은 <see cref="IResultSettler"/> 1번).</summary>
+    public interface IResultAdWatcher
+    {
+        /// <summary>false면 ×3 버튼을 막는다(메타 없음·자리 꺼짐).</summary>
+        bool Ready { get; }
+        /// <summary>×3 배수(<c>08_adPlacement collect3.mul</c>, 없으면 <c>00_config.collectAdMul</c>).</summary>
+        int Mul { get; }
+        /// <summary>광고 1번. <paramref name="done"/>(배수, 안 봤으면 0)을 한 번 부른다.</summary>
+        void WatchX3(Action<int> done);
+    }
+
+    /// <summary>기본 ×3 입구: <see cref="MvMeta.Current"/> + <see cref="MvFakeAd.Watch"/>(공급자 없으면 가짜 광고 팝업).</summary>
+    public sealed class MvMetaResultAd : IResultAdWatcher
+    {
+        public const string Key = "collect3";
+        public static readonly MvMetaResultAd Instance = new MvMetaResultAd();
+
+        public bool Ready
+        {
+            get
+            {
+                var m = MvMeta.Current;
+                var row = m != null && m.IsReady ? m.Tables.AdPlacement.ByKey(Key) : null;
+                return row != null && row.active;
+            }
+        }
+
+        public int Mul => MulOf(MvMeta.Current?.Tables ?? MvTables.Current);
+
+        public static int MulOf(MvTables t)
+        {
+            var row = t?.AdPlacement.ByKey(Key);
+            if (row != null && row.mul > 0) return row.mul;
+            return t != null ? t.Config.Value.collectAdMul : 3;
+        }
+
+        public void WatchX3(Action<int> done)
+        {
+            if (!Ready) { done?.Invoke(0); return; }
+            int mul = Mul;
+            MvFakeAd.Watch(Key, watched => done?.Invoke(watched ? mul : 0));
+        }
+    }
+
+    /// <summary>결과 겉의 ×3 광고 버튼 부분. 기존 <see cref="IResultView"/> 구현을 깨지 않도록 나눴다. 기본 겉 <see cref="ResultView"/>는 둘 다 구현한다.</summary>
+    public interface IResultAdView
+    {
+        /// <summary>「▶ 광고 보고 ×3 받기」.</summary>
+        event Action X3Pressed;
+        void SetX3(string text, bool interactable);
     }
 
     /// <summary>결과 겉(D-92). 컨트롤러 <see cref="ResultPopup"/>는 이 인터페이스로만 겉을 만진다.</summary>

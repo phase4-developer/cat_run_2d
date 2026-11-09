@@ -23,6 +23,12 @@ namespace MV.UI
     public interface ILobbySource
     {
         bool TryRead(out LobbyState state);
+
+        /// <summary>
+        /// 로비 아지트 시설 단계(0 = 잠김). key는 <see cref="LobbyFacilities.Keys"/>(= <c>LobbyIso.Slots</c>).
+        /// 게임 루프(MV-PLAY-INT)가 로비를 열 때와 <see cref="LobbyViewData.OnFacilityBump"/> 때 <c>LobbyStage.SetFacility</c>로 넘긴다.
+        /// </summary>
+        int FacilityStage(string key, out int extra);
     }
 
     /// <summary>
@@ -35,6 +41,12 @@ namespace MV.UI
         public Action OnStart;
         /// <summary>비우면 <see cref="MvSaveLobbySource"/>.</summary>
         public ILobbySource Source;
+        /// <summary>강화·잠금·메타 화면 입구. 비우면 <see cref="MvMetaUiPort.Instance"/>(<c>MvMeta.Current</c>).</summary>
+        public IMetaUiPort Port;
+        /// <summary>
+        /// 강화 구매로 시설이 반짝일 때(시설 key, 정본 <c>AZ.bump</c>). 게임 루프가 시설 단계를 다시 넣고 <c>LobbyStage.Bump(key)</c>를 부른다.
+        /// </summary>
+        public Action<string> OnFacilityBump;
     }
 
     /// <summary>로비 겉(D-92). 컨트롤러 <see cref="LobbyScreen"/>는 이 인터페이스로만 겉을 만진다.</summary>
@@ -69,5 +81,7 @@ namespace MV.UI
                     if (a.areaNo == s.AreaNo) { s.NeedSouls = a.needSouls; s.AreaName = MvUiText.Name(a.id, ""); break; }
             return true;
         }
+
+        public int FacilityStage(string key, out int extra) => LobbyFacilities.Stage(MvMetaUiPort.Instance, key, out extra);
     }
 }
