@@ -4,8 +4,19 @@
   "seed": 1,
   "preset": "easy",
   "save": null,
-  "inputs": [{"frame": 0, "type": "tap", "x": 540, "y": 1000}],
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
   "frames": 30,
-  "captureAt": [1, 15, 30],
+  "captureAt": [
+    1,
+    15,
+    30
+  ],
   "mask": []
 }

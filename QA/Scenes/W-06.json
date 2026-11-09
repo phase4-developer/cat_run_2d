@@ -1,0 +1,22 @@
+{
+  "id": "W-06",
+  "title": "제작 게이트 카드 부채(게이트 8m 앞, 1603)",
+  "seed": 1,
+  "preset": "easy",
+  "save": null,
+  "inputs": [
+    {
+      "frame": 0,
+      "type": "tap",
+      "x": 540,
+      "y": 1000
+    }
+  ],
+  "frames": 1613,
+  "captureAt": [
+    1593,
+    1603,
+    1613
+  ],
+  "mask": []
+}

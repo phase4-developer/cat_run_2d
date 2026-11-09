@@ -6,6 +6,10 @@
   "save": null,
   "inputs": [],
   "frames": 120,
-  "captureAt": [1, 60, 120],
+  "captureAt": [
+    1,
+    60,
+    120
+  ],
   "mask": []
 }

@@ -29,6 +29,13 @@ module.exports = function mvqInject(cfg) {
   FakeDate.UTC = realDate.UTC; FakeDate.parse = realDate.parse;
   window.Date = FakeDate;
 
+  // 정본 소리(SND, L1630~1690)는 ctx.currentTime으로 재생 간격을 거르고 잡음 버퍼에 Math.random을 쓴다.
+  // 실제 오디오 시계면 난수 소비 횟수가 실행마다 달라지므로 오디오 시계도 가짜 시계에 묶는다.
+  for (const C of [window.BaseAudioContext, window.AudioContext]) {
+    if (C && Object.getOwnPropertyDescriptor(C.prototype, 'currentTime'))
+      Object.defineProperty(C.prototype, 'currentTime', { get() { return (now - T0) / 1000; }, configurable: true });
+  }
+
   let tid = 1, raf = [], timers = new Map();
   window.requestAnimationFrame = cb => { const id = tid++; raf.push([id, cb]); return id; };
   window.cancelAnimationFrame = id => { raf = raf.filter(r => r[0] !== id); };
