@@ -1829,8 +1829,8 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | 표 | 핵심 열 |
 |---|---|
 | `700_productTab` | id, sort, active, icon |
-| `702_shopSection` | id, tabId, sort, active, layout |
-| `701_product` | id, sectionId, sort, active, icon, rewardType/Id/Value, priceType/Id/Value(100 AD / 101 Inapp / 1 재화), limitType(None/Daily/Weekly/Account), limitCount, storeProductId(스텁) |
+| `702_shopSection` | id, active, sort, sectionType, hideIfEmpty, tabIds(`/`, 700 id) — 열 정본 [08 §8.5.7](08_Content.md) |
+| `701_product` | id, tabId, active, sort, icon, rewardType/Id/Value, priceType/Id/Value(100 AD / 101 Inapp / 1 재화), chargeType(0 무제한 / 1 평생 / 2 일일), chargedQuantity, googleProductId·appleProductId(스텁), minArea, minLevel, cooldownHours, perArea — 열 정본 [08 §8.5.7](08_Content.md) |
 
 행은 [08 §8.5.7](08_Content.md). 구매 기록 저장은 [09](09_Save.md) `mvShop`.
 
@@ -2040,7 +2040,7 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 | 표 | 규칙 | 등급 |
 |---|---|---|
 | 301·302 | areaNo 1부터 연속, Zone 범위 겹침·빈틈 없음, `PLAYABLE_AREAS ≤ active Area 수` | 오류 |
-| 303 | floorGroup마다 floor 1~FLOOR_COUNT 존재, rows ≥ 1, h0 ≤ h1. Baked: soulCells·soulAmts 개수 같음, 합 = souls, 모든 idx < rows×3, 생선 idx ≥ soulMinIdx, 생선·캣닢 칸 겹침 없음 | 오류 |
+| 303 | Area가 쓰는 floorGroup은 floor 1~FLOOR_COUNT 존재(모드 전용 묶음 901~은 floor 1부터 빈틈 없이), rows ≥ 1, h0 ≤ h1. Baked: soulCells·soulAmts 개수 같음, 합 = souls, 모든 idx < rows×3, 생선 idx ≥ soulMinIdx, 생선·캣닢 칸 겹침 없음 | 오류 |
 | 303 | 같은 Baked 묶음을 여러 Area가 공유 | 경고 |
 | 310·311 | 템플릿마다 stair ≥ 1, 모든 z < endZ, `|x| ≤ LANE_X_MAX + hw`, wall 종류 없음(blocks=1 종류는 템플릿 금지) | 오류 |
 | 312 | cycleGroup 0이 Level 1~∞를 빈틈·겹침 없이 덮음 | 오류 |

@@ -177,8 +177,7 @@ namespace MV.Data
     public sealed class ContentOpenData : MvRow
     {
         public const string Table = "05_contentOpen";
-        // contentId → 400_content는 4xx 표가 들어올 때 Fk로 바꾼다(TaskBoard MV-DATA 남김).
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("contentId").Int("sort").Bool("active")
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Fk("contentId", ContentData.Table).Int("sort").Bool("active")
             .Res("icon", MvAtlas.UiIcon).Int("conditionType", true).Int("conditionValue").Bool("sticky").Bool("showOnMap");
 
         public int contentId { get; private set; }

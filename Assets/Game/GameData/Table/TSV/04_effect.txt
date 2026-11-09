@@ -1,48 +1,48 @@
-id	key	type	prefab	poolSize	blend	sortBias	color	count	speed	size	life	grav	radius	flag	children	y	anchor	chance	shake	hitStop	#근거
-4001001	fx.sparks	particle	Fx/Sparks	24	add	-0.2		8	4	0.35	0.6	6									§6.3 표1 L1552~1559
-4001002	fx.debris	particle	Fx/Debris	16	normal	-0.1		6		0.22											§6.3 표2 L1560~1566
-4001003	fx.dust	particle	Fx/Dust	16	normal	-0.2		6													§6.3 표7 L1609~1613
-4001004	fx.trail	particle	Fx/Trail	64	add	-0.2					0.3										§6.3 표8 L1614~1619, L2113
-4001005	fx.impact	shape	Fx/Impact	24	add	-0.2				1.0	0.08										§6.3 표6 L1605~1608
-4001006	fx.boom	shape	Fx/Boom	12	add	-0.2							1.5								§6.3 표3 L1567~1578; 기본값 ring 1(링 없음은 flag=noRing)
-4001007	fx.bolt	shape	Fx/Bolt	8	add	-0.1					0.22										§6.3 표4 L1579~1592
-4001008	fx.fireball	shape	Fx/Fireball	8	add	-0.2				1.6	0.22										§6.3 표9 L2152~2156
-4001009	fx.paw	shape	Fx/Paw	8	normal	-0.4					0.55										§6.3 표13 L3745
-4001010	fx.hiss	shape	Fx/Hiss	4	normal	-0.4					0.7										§6.3 표14 L3746
-4001011	fx.brickChunk	particle	Fx/BrickChunk	16	normal	-0.15					0.26	14									§6.3 표12 L1861~1880
-4001012	fx.holyBeam	shape	Fx/HolyBeam	0	add	-0.2															예약; §6.3 표10 L2190~2201
-4001013	fx.meteor	shape	Fx/Meteor	0	add	-0.2															예약; §6.3 표11 L2202~2213
-4001014	fx.frost	particle	Fx/Frost	0	add	-0.2															예약(D-46); §6.3 표5 L1593~1601
-4002001	run.transform	group					#fff3a0	22	4.5	0.5	0.8				fx.sparks	1.2					L1221; sparks #fff3a0 22·4.5·0.5·0.8 / y 1.2
-4002002	run.towerHit	group					#ffc27a	3	3	0.25	0.3				fx.sparks	1.2	obj	0.3			L1912; 확률 0.3: sparks #ffc27a 3·3·0.25·0.3 / (x±0.6, 1.2, z-1)
-4002003	run.enemyKill	group													fx.debris/fx.sparks/fx.dust					hitstop.enemyKill	L1925; debris #5a8a3a 8·0.2 / 0.8 + sparks #ffd65a 12·5·0.4·0.6 / 1 + dust 4 / 0.8
-4002004	run.wallHit	group					$rew	1		0.16					fx.debris	1.4					L1933; debris 1개 색 $rew(soul #5a5490 / 그 외 #93673f) 크기 0.16 / 1.4
-4002005	run.wallBreak	group													fx.debris/fx.debris/fx.dust/fx.boom				shake.wallBreak	hitstop.wallBreak	L1935~1937; debris $rew 14·0.32 / 1.3 + debris #5b606c 4·0.22 / 1.6 + dust 7 / 1.0 + boom #ffd6a0 1.5 noRing / 1.2
-4002006	run.wallRewardSoul	group					#5fd6c9	16	4	0.5	0.9				fx.sparks	2					L1938; sparks #5fd6c9 16·4·0.5·0.9 / 2
-4002007	run.wallRewardDia	group					#7feaff	12	4	0.45	0.8				fx.sparks	2					L1939; sparks #7feaff 12·4·0.45·0.8 / 2
-4002008	run.coinHit	group						2	3	0.3					fx.sparks	0.8					L1961; sparks (gem #5fd6c9 / coin #ffd65a) 2·3·0.3 / 0.8
-4002009	run.coinBreak	group													fx.dust/fx.sparks					hitstop.coinBreak	L1963~1966; dust 4 / 0.6 + sparks 금 #ffd65a 18·6·0.4·0.8 / 1 · 다이아 #7feaff 20·6·0.45·0.9 / 1.2
-4002010	run.procBolt	group													fx.bolt		hit				L1987; bolt (hx±0.4, 4.5, hz) → (hx, 1, hz)
-4002011	run.procFire	group					$elem	6	3	0.35	0.5	-2			fx.sparks						L1988; sparks $elem 6·3·0.35·0.5·중력 -2
-4002012	run.chainBolt	group													fx.bolt						L1997; bolt 이전 대상 → 다음 대상
-4002013	run.chainFire	group					$elem								fx.boom						L2000; boom $elem 반지름 1.6 + 0.3·연쇄수
-4002014	run.statGatePass	group					#ffb05a	16	5	0.5	0.7	2			fx.sparks	1.5					L2046; sparks #ffb05a 16·5·0.5·0.7·중력 2 / 1.5
-4002015	run.cloneGatePass	group					#8fc0ff	14	5	0.5	0.7	2			fx.sparks	1.5					L2051; sparks #8fc0ff 14·5·0.5·0.7·중력 2 / 1.5
-4002016	run.steal	group					#5a8a3a	5		0.2					fx.debris	0.8			shake.steal		L2063; debris #5a8a3a 5·0.2 / 0.8
-4002017	run.blocked	group						6		0.25					fx.debris	1.2			shake.blocked		L2068; debris (벽 #8a5a34 / 그 외 #b7b0a4) 6·0.25 / 1.2
-4002018	run.projHit	group													fx.impact/fx.sparks		hit				L2107~2108; impact(일반/치명) @(b.x, 1, max(b.z, bz)) + sparks (치명 #ff6a3d 8·3.4·0.5 / 일반 #ffffff 4·3.4·0.3) 수명 0.3 중력 0
-4002019	run.burnTick	group					#ff7a2a	3	2	0.4	0.45	-3			fx.sparks	1	obj				L2137; sparks #ff7a2a 3·2·0.4·0.45·중력 -3 / (x±0.5, 1, z-hd)
-4002020	run.orbHit	group					$elem	3	4	0.3	0.3				fx.sparks						L2143; sparks $elem 3·4·0.3·0.3
-4002021	run.spinHit	group					#f2c14e								fx.sparks						L2149; sparks #f2c14e (예약)
-4002022	run.trail	group													fx.trail						L2113; trail(투사체마다 0.03 s)
-4002023	run.brickFlush	group													fx.brickChunk/fx.sparks						L1861~1880; brickChunk n개 + sparks #ffb04a 4·3·0.3·0.35 / 1.4
-4003001	god.storm	group					$elem								fx.paw/fx.dust/fx.fireball/fx.boom		hit				L2157~2174; 1.7 s. 불구름(fire 원소만): 일반 빛 6장 #4a2418 크기 rnd(2.6, 3.8), 구름 중심 (cx, 7.5, cz+1)에서 x±2·y-0.3~0.4·z±1, 알파 0.9·min(1, (1-k)·4, k·8). 낙하 due = min(4, floor((k - 0.12)/0.17) + 1)회(대상 앞면 x±0.3): bolt 원소 → paw + dust 5 @y 0.5, fire 원소 → fireball 1.4. 매 낙하 boom 1.5 @y 0.6, 색 fire #ff7a2a / bolt #9fe0ff
-4003002	god.blast	group													fx.hiss/fx.fireball/fx.boom/fx.boom		hit		shake.godBlast		L2175~2183; bolt 원소: hiss / fire: fireball 3개 크기 2.4 x·z±1. boom 4.4 @y 1(색 fire #ff5a1f / bolt #9fe0ff) + boom #ffffff 2.2 noRing @y 1.6 + 팝업 문구; 플래시 0.35(60 ms 뒤 0)
-4004001	climb.lap	group					$tier								fx.boom/fx.sparks		climbTop		shake.climbLap		L2276; boom $tier 3 noRing / 꼭대기 y+2 + sparks $tier 24·7·0.55·1.1 / y+3
-4004002	climb.tier	group					$tier								fx.boom/fx.sparks				shake.climbTier		L2282; boom $tier 2.2 / y+0.6 + sparks $tier 16·5·0.5·0.9 / y+1; 플래시 등급색 0.25(90 ms 뒤 0)
-4004003	climb.land	group					#ffe08a						2.2		fx.boom						L2286; boom #ffe08a 2.2
-4004004	climb.stage	group																	shake.warpStage		L3165; (화면 연출) + 소리 tierup_{n}(03 key)
-4005001	roulette.pick	group					$tier						1.8	noRing	fx.boom	1.4					L2370; boom $tier 1.8 noRing / y 1.4
-4005002	ui.flyIcon		Ui/FlyIcon	24																	§6.8; 보상 아이콘 비행(UGUI)
-4005003	ui.flyCard		Ui/FlyCard	4																	§6.8; 카드 비행
-4005004	ui.damagePop		Ui/DamagePop	61																	§6.7; 숫자 팝업
+id	key	type	prefab	poolSize	blend	sortBias	color	count	speed	size	life	grav	radius	flag	children	y	anchor	chance	shake	hitStop
+4001001	fx.sparks	particle	Fx/Sparks	24	add	-0.2		8	4	0.35	0.6	6								
+4001002	fx.debris	particle	Fx/Debris	16	normal	-0.1		6		0.22										
+4001003	fx.dust	particle	Fx/Dust	16	normal	-0.2		6												
+4001004	fx.trail	particle	Fx/Trail	64	add	-0.2					0.3									
+4001005	fx.impact	shape	Fx/Impact	24	add	-0.2				1.0	0.08									
+4001006	fx.boom	shape	Fx/Boom	12	add	-0.2							1.5							
+4001007	fx.bolt	shape	Fx/Bolt	8	add	-0.1					0.22									
+4001008	fx.fireball	shape	Fx/Fireball	8	add	-0.2				1.6	0.22									
+4001009	fx.paw	shape	Fx/Paw	8	normal	-0.4					0.55									
+4001010	fx.hiss	shape	Fx/Hiss	4	normal	-0.4					0.7									
+4001011	fx.brickChunk	particle	Fx/BrickChunk	16	normal	-0.15					0.26	14								
+4001012	fx.holyBeam	shape	Fx/HolyBeam	0	add	-0.2														
+4001013	fx.meteor	shape	Fx/Meteor	0	add	-0.2														
+4001014	fx.frost	particle	Fx/Frost	0	add	-0.2														
+4002001	run.transform	group					#fff3a0	22	4.5	0.5	0.8				fx.sparks	1.2				
+4002002	run.towerHit	group					#ffc27a	3	3	0.25	0.3				fx.sparks	1.2	obj	0.3		
+4002003	run.enemyKill	group													fx.debris/fx.sparks/fx.dust					hitstop.enemyKill
+4002004	run.wallHit	group					$rew	1		0.16					fx.debris	1.4				
+4002005	run.wallBreak	group													fx.debris/fx.debris/fx.dust/fx.boom				shake.wallBreak	hitstop.wallBreak
+4002006	run.wallRewardSoul	group					#5fd6c9	16	4	0.5	0.9				fx.sparks	2				
+4002007	run.wallRewardDia	group					#7feaff	12	4	0.45	0.8				fx.sparks	2				
+4002008	run.coinHit	group						2	3	0.3					fx.sparks	0.8				
+4002009	run.coinBreak	group													fx.dust/fx.sparks					hitstop.coinBreak
+4002010	run.procBolt	group													fx.bolt		hit			
+4002011	run.procFire	group					$elem	6	3	0.35	0.5	-2			fx.sparks					
+4002012	run.chainBolt	group													fx.bolt					
+4002013	run.chainFire	group					$elem								fx.boom					
+4002014	run.statGatePass	group					#ffb05a	16	5	0.5	0.7	2			fx.sparks	1.5				
+4002015	run.cloneGatePass	group					#8fc0ff	14	5	0.5	0.7	2			fx.sparks	1.5				
+4002016	run.steal	group					#5a8a3a	5		0.2					fx.debris	0.8			shake.steal	
+4002017	run.blocked	group						6		0.25					fx.debris	1.2			shake.blocked	
+4002018	run.projHit	group													fx.impact/fx.sparks		hit			
+4002019	run.burnTick	group					#ff7a2a	3	2	0.4	0.45	-3			fx.sparks	1	obj			
+4002020	run.orbHit	group					$elem	3	4	0.3	0.3				fx.sparks					
+4002021	run.spinHit	group					#f2c14e								fx.sparks					
+4002022	run.trail	group													fx.trail					
+4002023	run.brickFlush	group													fx.brickChunk/fx.sparks					
+4003001	god.storm	group					$elem								fx.paw/fx.dust/fx.fireball/fx.boom		hit			
+4003002	god.blast	group													fx.hiss/fx.fireball/fx.boom/fx.boom		hit		shake.godBlast	
+4004001	climb.lap	group					$tier								fx.boom/fx.sparks		climbTop		shake.climbLap	
+4004002	climb.tier	group					$tier								fx.boom/fx.sparks				shake.climbTier	
+4004003	climb.land	group					#ffe08a						2.2		fx.boom					
+4004004	climb.stage	group																	shake.warpStage	
+4005001	roulette.pick	group					$tier						1.8	noRing	fx.boom	1.4				
+4005002	ui.flyIcon		Ui/FlyIcon	24																
+4005003	ui.flyCard		Ui/FlyCard	4																
+4005004	ui.damagePop		Ui/DamagePop	61																
