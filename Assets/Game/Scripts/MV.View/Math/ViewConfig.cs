@@ -29,11 +29,6 @@ namespace MV.View
             return c != null ? c["bumpH"] : 0;
         }
 
-        /// <summary>
-        /// 옛 상수(정본 0.12). 교체 대기: <see cref="RunStateViewSource"/>(MV-PLAY-INT가 쓰는 중)가 <see cref="ClimbBumpOf"/>로 바꾸면 지운다.
-        /// </summary>
-        public const double ClimbBump = 0.12;
-
         public static ViewConfig From(RunConfigTable t)
         {
             return new ViewConfig

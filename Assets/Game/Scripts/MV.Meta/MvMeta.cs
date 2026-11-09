@@ -34,6 +34,7 @@ namespace MV.Meta
         private long _rebirthArmedAt = long.MinValue;
 
         public MvTables Tables { get; }
+        /// <summary>현재 시각. 넣은 시계를 <see cref="MvOffsetClock"/>로 감싼다(개발 빌드 <c>debug.addTime</c> 보정).</summary>
         public IMvClock Clock { get; }
         public IMvAdService Ads { get; }
 
@@ -50,7 +51,7 @@ namespace MV.Meta
             _store = store ?? throw new ArgumentNullException(nameof(store));
             _resources = resources ?? throw new ArgumentNullException(nameof(resources));
             Tables = tables ?? throw new ArgumentNullException(nameof(tables));
-            Clock = clock ?? MvSystemClock.Instance;
+            Clock = clock as MvOffsetClock ?? new MvOffsetClock(clock ?? MvSystemClock.Instance);
             Ads = ads ?? new MvFakeAdService();
             _local = new MvLocalMetaBackend(store, resources, tables, Clock);
             _backend = backend ?? _local;
@@ -70,9 +71,17 @@ namespace MV.Meta
             MvMetaResponse response = _backend.Handle(request);
             if (!response.Ok) return response;
             string[] keys = response.Data.Properties().Select(p => p.Name).ToArray();
-            if (keys.Length > 0)
+            if (response.ResetProgress || keys.Length > 0)
             {
-                try { Store.ApplyAndSave(response.Data, keys); }
+                try
+                {
+                    if (response.ResetProgress)
+                    {
+                        Store.DevResetProgress(); // D-69: mvSettings만 남기고 기본값(개발 빌드 전용 저장 경로)
+                        _rebirthArmedAt = long.MinValue;
+                    }
+                    if (keys.Length > 0) Store.ApplyAndSave(response.Data, keys);
+                }
                 catch (Exception exception)
                 {
                     // 쓰기 실패·충돌: 같은 변경을 다시 시도하지 않는다. 화면은 toastMessage.saveFailed 뒤 MvSave.Reopen.
@@ -83,6 +92,9 @@ namespace MV.Meta
             Applied?.Invoke(request, response);
             return response;
         }
+
+        /// <summary>테스트 패널 요청(05 §5.14). 처리기는 개발 빌드 로컬 백엔드에만 있다(출시 빌드는 <see cref="MvMetaErrors.UnknownRequest"/>).</summary>
+        public MvMetaResponse SendDebug(string name, string key = null, long amount = 0) => Send(MvMetaRequest.ForDebug(name, key, amount));
 
         // ═════════ 정산(04 §4.11) ═════════
 
@@ -284,6 +296,9 @@ namespace MV.Meta
             _rebirthArmedAt = long.MinValue;
             return Rebirth();
         }
+
+        /// <summary>부활 화면을 열면 확인 대기를 끈다(05 §5.9 「열기」, 정본 L2572).</summary>
+        public void DisarmRebirth() => _rebirthArmedAt = long.MinValue;
 
         public bool RebirthArmed => _rebirthArmedAt != long.MinValue && Clock.NowMs - _rebirthArmedAt <= (long)(Tables.Config.Value.rebirthArmSec * 1000);
 

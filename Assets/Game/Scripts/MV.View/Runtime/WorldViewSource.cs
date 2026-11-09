@@ -46,7 +46,7 @@ namespace MV.View
             var c = tables.Climb.Config();
             _stepH = c != null ? c["stepH"] : 0;
             _stepD = c != null ? c["stepD"] : 0;
-            _bump = ViewConfig.ClimbBump;
+            _bump = ViewConfig.ClimbBumpOf(tables.Climb);
         }
 
         public CameraInput Camera
