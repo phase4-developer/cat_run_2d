@@ -41,7 +41,19 @@ namespace MV.View
         float _lastAlpha = -1f;
         int _index = -1;
 
+        float _alphaScale = 1f;
+
         public static List<DepthSortable> All => s_all;
+
+        /// <summary>그림 자체 알파(관문 가까이 흐려짐 등). 안개 알파에 곱한다.</summary>
+        public float AlphaScale => _alphaScale;
+
+        public void SetAlphaScale(float a)
+        {
+            if (Mathf.Abs(a - _alphaScale) < 1f / 255f) return;
+            _alphaScale = a;
+            _lastAlpha = -1f;
+        }
         public SortingGroup Group => _group;
 
         /// <summary>정렬·안개 기준 점(월드). 정본 소품은 생성 위치로 정렬하고 고정 x로 그린다(draw2D L3785).</summary>
@@ -120,6 +132,7 @@ namespace MV.View
         internal void ApplyFogAlpha(float a)
         {
             if (!Fog) a = 1f;
+            a *= _alphaScale;
             if (Mathf.Abs(a - _lastAlpha) < 1f / 255f) return;
             _lastAlpha = a;
             for (int i = 0; i < _sprites.Length; i++)

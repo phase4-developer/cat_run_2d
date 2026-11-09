@@ -8,12 +8,12 @@ namespace MV.View
     /// <summary>
     /// 테마 소품 배치·표시(02 §2.5.2, 03 §3.5.2). <see cref="PropLayout"/>가 만든 배치에서 그리기 범위(PZ−4 ~ PZ+90) 안의 것만
     /// 뷰를 꺼내 쓰고(풀), 밖으로 나가면 돌려준다. 정렬·안개는 루트의 <see cref="DepthSortable"/>(탐침 = 생성 위치)가 받는다.
-    /// 1차 범위: 길가 소품·전봇대(+가로등 빛)·집(상자 메쉬·문·창·옥상 소품·창 불빛)·담장 몸체. 담장 장식·빨랫줄은 아직 없음.
+    /// 길가 소품·전봇대(+가로등 빛)·집(상자 메쉬·문·창·옥상 소품·창 불빛)·담장(몸체·장식·눈 캡)·빨랫줄/전구줄(+깜빡임·빛).
     /// </summary>
     [DefaultExecutionOrder(60)]
     public sealed class PropStreamer : MonoBehaviour
     {
-        public const string GlowSprite = "Fx_Glow_Lin";
+        public const string GlowSprite = "Fx_Glow_Lin", DiscSprite = "Fx_Disc", FlowerSprite = "World_Fence_Flower";
         public const string LightLayer = "Light", WorldLayer = "World";
 
         [SerializeField] Material _spriteMaterial;
@@ -35,7 +35,25 @@ namespace MV.View
         bool _night;
         Color _lampColor, _winColor;
 
+        readonly List<double> _clothZ = new List<double>(8);
+        readonly Dictionary<double, ClothView> _cloth = new Dictionary<double, ClothView>();
+        readonly Stack<ClothView> _clothPool = new Stack<ClothView>();
+        readonly List<double> _clothDrop = new List<double>(8);
+        readonly Vector3[] _linePts = new Vector3[ClothLineLayout.PointCount];
+
+        /// <summary>빨랫줄 1개 뷰(루트 = (0, groundY, z)).</summary>
+        sealed class ClothView
+        {
+            public GameObject Go;
+            public bool Bulbs;
+            public long Phase = long.MinValue;
+            public readonly List<SpriteRenderer> Items = new List<SpriteRenderer>(9);
+            public readonly List<int> ItemPoint = new List<int>(9);
+        }
+
         public IReadOnlyList<PropSpec> Specs => _specs;
+        /// <summary>지금 보이는 빨랫줄 z(시험·QA용 읽기).</summary>
+        public IReadOnlyCollection<double> ClothZ => _cloth.Keys;
 
         public void Init(ViewConfig cfg, CameraRig rig, WorldSpriteCache sprites, string fxAtlas)
         {
@@ -80,12 +98,15 @@ namespace MV.View
                 if (want && v == null) _views[i] = Show(_specs[i]);
                 else if (!want && v != null) { Hide(_specs[i].Kind, v); _views[i] = null; }
             }
+            UpdateCloth(pz);
         }
 
         void ClearViews()
         {
             for (int i = 0; i < _views.Count; i++)
                 if (_views[i] != null) { Hide(_specs[i].Kind, _views[i]); _views[i] = null; }
+            foreach (var cv in _cloth.Values) HideCloth(cv);
+            _cloth.Clear();
         }
 
         void Hide(PropKind kind, GameObject v)
@@ -279,8 +300,187 @@ namespace MV.View
             _mb.AddQuad(a, b, new Vector3(xi, 0.22f, z1), new Vector3(xi, 0.22f, z0), shade);
             _mb.AddQuad(d, cc, e, f, top);
             Outline(d, cc, e, f, Vector3.up, lw, ol);
+
+            // 장식(정본 L3561~3567): 차양·대문·눈 캡은 면 메쉬, 손잡이·꽃은 화면 타원이라 빌보드.
+            var deco = FenceDeco.Pick(th.deco, p.Hh, th.door);
+            Disable(root, "Knob"); Disable(root, "Flower");
+            if (deco.Kind == FenceDecoKind.Awning)
+            {
+                for (int i = 0; i < FenceDeco.AwningCells; i++)
+                {
+                    FenceDeco.AwningCell(i, sd, xi, out var q1, out var q2, out var q3, out var q4);
+                    Vector3 v1 = V(q1), v2 = V(q2), v3 = V(q3), v4 = V(q4);
+                    _mb.AddQuad(v1, v2, v3, v4, MvColor.ToColor32(FenceDeco.AwningCellColor(deco, i)));
+                    Outline(v1, v2, v3, v4, Vector3.Cross(v2 - v1, v4 - v1).normalized, lw * 0.8f, ol);
+                }
+            }
+            else if (deco.Kind == FenceDecoKind.Gate)
+            {
+                float gx = xi - sd * (float)FenceDeco.GateInset, gw = (float)FenceDeco.GateHalfW, gh = (float)FenceDeco.GateH;
+                Vector3 g1 = new Vector3(gx, 0, -gw), g2 = new Vector3(gx, 0, gw), g3 = new Vector3(gx, gh, gw), g4 = new Vector3(gx, gh, -gw);
+                _mb.AddQuad(g1, g2, g3, g4, MvColor.ToColor32(deco.GateColor));
+                Outline(g1, g2, g3, g4, Vector3.right, lw, ol);
+                var knob = BillboardSprite(root, "Knob", null, new Vector3(gx, (float)FenceDeco.KnobY, (float)FenceDeco.KnobZ), 1, false);
+                knob.sprite = _sprites.Get(_fxAtlas, DiscSprite);
+                knob.color = MvColor.ToColor32(FenceDeco.KnobColor);
+                FitWidth(knob, (float)(FenceDeco.KnobR * 2));
+            }
+            else if (deco.Kind == FenceDecoKind.Flower)
+            {
+                // 굽은 그림은 sd = −1(작은 타원이 화면 오른쪽) 기준 [추정], 오른쪽 담장은 flipX.
+                var fl = BillboardSprite(root, "Flower", FlowerSprite, new Vector3(xi - sd * (float)FenceDeco.FlowerInset, (float)FenceDeco.FlowerY, 0), 1, sd > 0);
+                fl.color = new Color(1, 1, 1, (float)FenceDeco.FlowerAlpha);
+            }
+            if (deco.SnowCap)
+            {
+                float sh2 = h + (float)FenceDeco.SnowH;
+                Vector3 s3 = new Vector3(xi, sh2, z1), s4 = new Vector3(xi, sh2, z0);
+                _mb.AddQuad(d, cc, s3, s4, new Color32(255, 255, 255, 255));
+                Outline(d, cc, s3, s4, Vector3.right, lw * 0.7f, new Color32(74, 52, 70, 102));
+            }
             body.GetComponent<VertexColorFog>().Bind(_mb, "Fence");
             body.GetComponent<MeshRenderer>().sortingOrder = 0;
+        }
+
+        static Vector3 V(Vector3d v) => new Vector3((float)v.x, (float)v.y, (float)v.z);
+
+        static void FitWidth(SpriteRenderer sr, float width)
+        {
+            float size = sr.sprite != null ? Mathf.Max(0.0001f, sr.sprite.bounds.size.x) : 1f;
+            sr.transform.localScale = Vector3.one * (width / size);
+            sr.gameObject.SetActive(sr.sprite != null);
+        }
+
+        // ---------------- 빨랫줄·전구줄 (정본 draw2D L3788, drawClothes L3543) ----------------
+
+        void UpdateCloth(double pz)
+        {
+            PropLayout.ClothLines(pz, _cfg, _clothZ);
+            _clothDrop.Clear();
+            foreach (var z in _cloth.Keys) if (!_clothZ.Contains(z)) _clothDrop.Add(z);
+            for (int i = 0; i < _clothDrop.Count; i++) { HideCloth(_cloth[_clothDrop[i]]); _cloth.Remove(_clothDrop[i]); }
+            double nowMs = Time.realtimeSinceStartupAsDouble * 1000.0;   // 정본 performance.now() — 실시간
+            for (int i = 0; i < _clothZ.Count; i++)
+            {
+                double z = _clothZ[i];
+                if (!_cloth.TryGetValue(z, out var cv)) _cloth[z] = cv = ShowCloth(z);
+                AnimateCloth(cv, nowMs);
+            }
+        }
+
+        void HideCloth(ClothView cv)
+        {
+            cv.Go.SetActive(false);
+            if (_lights.TryGetValue(cv.Go, out var lights))
+                for (int i = 0; i < lights.Count; i++) lights[i].SetActive(false);
+            _clothPool.Push(cv);
+        }
+
+        ClothView ShowCloth(double z)
+        {
+            ClothView cv;
+            if (_clothPool.Count > 0) cv = _clothPool.Pop();
+            else
+            {
+                var go = new GameObject("ClothLine");
+                go.transform.SetParent(transform, false);
+                var sg = go.AddComponent<SortingGroup>();
+                sg.sortingLayerName = WorldLayer;
+                go.AddComponent<DepthSortable>().Rank = DepthMath.RankProp;
+                var line = new GameObject("Line", typeof(MeshFilter), typeof(MeshRenderer), typeof(VertexColorFog));
+                line.transform.SetParent(go.transform, false);
+                line.GetComponent<MeshRenderer>().sharedMaterial = _vertexColorMaterial;
+                cv = new ClothView { Go = go };
+            }
+            var root = cv.Go.transform;
+            float gy = (float)_groundY, cy = (float)_cfg.ClothY;
+            root.position = new Vector3(0, gy, (float)z);
+            var ds = cv.Go.GetComponent<DepthSortable>();
+            // 정렬 탐침 (0, groundY + 3, z) + 편향 sort.cloth, 안개는 가운데 점 pts[5] = (0, groundY + clothY − 0.4, z).
+            float fogY = cy - (float)ClothLineLayout.PointSag(5);
+            ds.SetFixedAnchor(new Vector3(0, gy + fogY, (float)z));
+            ds.SortOffsetY = 3f - fogY;
+            ds.Bias = (float)_cfg.SortCloth;
+
+            for (int i = 0; i < ClothLineLayout.PointCount; i++)
+                _linePts[i] = new Vector3((float)ClothLineLayout.PointX(i), cy - (float)ClothLineLayout.PointSag(i), 0);
+            _mb.Clear();
+            var ol = MvColor.ToColor32(_cfg.OutlineColor);
+            for (int i = 0; i + 1 < _linePts.Length; i++)
+            {
+                var dir = (_linePts[i + 1] - _linePts[i]).normalized;
+                _mb.AddLine(_linePts[i], _linePts[i + 1], new Vector3(-dir.y, dir.x, 0), (float)ClothLineLayout.LineWidth, ol);
+            }
+            root.Find("Line").GetComponent<VertexColorFog>().Bind(_mb, "ClothLine");
+
+            for (int i = 0; i < cv.Items.Count; i++) cv.Items[i].gameObject.SetActive(false);
+            cv.ItemPoint.Clear();
+            cv.Bulbs = ClothLineLayout.UsesBulbs(_theme.deco);
+            cv.Phase = long.MinValue;
+            int n = 0;
+            if (cv.Bulbs)
+            {
+                for (int i = 1; i < 10; i++) AddClothItem(cv, n++, i, ClothLineLayout.BulbSprite(i, true));
+            }
+            else
+            {
+                for (int i = 1; i < 10; i += 2)
+                    if (ClothLineLayout.TryCloth(z, i, out var item)) AddClothItem(cv, n++, i, ClothLineLayout.ClothSprite(item));
+            }
+            cv.Go.SetActive(true);
+            ds.Refresh();
+            return cv;
+        }
+
+        void AddClothItem(ClothView cv, int slot, int point, string sprite)
+        {
+            while (cv.Items.Count <= slot)
+            {
+                var go = new GameObject("Item" + cv.Items.Count);
+                go.transform.SetParent(cv.Go.transform, false);
+                go.AddComponent<Billboard>();
+                var r = go.AddComponent<SpriteRenderer>();
+                r.sharedMaterial = _spriteMaterial;
+                cv.Items.Add(r);
+            }
+            var sr = cv.Items[slot];
+            sr.sprite = _sprites.Get(_atlas, sprite);
+            sr.color = Color.white;
+            sr.sortingOrder = 1;
+            sr.transform.localPosition = _linePts[point];   // 피벗 TopCenter = 줄 점
+            sr.gameObject.SetActive(sr.sprite != null);
+            cv.ItemPoint.Add(point);
+        }
+
+        void AnimateCloth(ClothView cv, double nowMs)
+        {
+            if (cv.Bulbs)
+            {
+                long phase = (long)System.Math.Floor(nowMs / ClothLineLayout.BulbPeriodMs);
+                if (phase == cv.Phase) return;
+                cv.Phase = phase;
+                var root = cv.Go.transform;
+                for (int k = 0; k < cv.ItemPoint.Count; k++)
+                {
+                    int i = cv.ItemPoint[k];
+                    bool on = ClothLineLayout.BulbOn(i, nowMs);
+                    var sr = cv.Items[k];
+                    sr.sprite = _sprites.Get(_atlas, ClothLineLayout.BulbSprite(i, on));
+                    sr.gameObject.SetActive(sr.sprite != null);
+                    MvColor.TryColor32(ClothLineLayout.BulbColor(i), out var bc);
+                    var lc = new Color(bc.r / 255f, bc.g / 255f, bc.b / 255f, (float)_cfg.LightAlpha);
+                    var p = _linePts[i];
+                    SetLight(root, "Bulb" + i, on, new Vector3(p.x, p.y, 0), -(float)ClothLineLayout.BulbDrop, (float)ClothLineLayout.BulbLight, lc);
+                }
+                return;
+            }
+            double t = nowMs / 1000.0;
+            for (int k = 0; k < cv.ItemPoint.Count; k++)
+            {
+                int i = cv.ItemPoint[k];
+                var lp = _linePts[i];
+                cv.Items[k].transform.localPosition = new Vector3(lp.x + (float)ClothLineLayout.Sway(i, t), lp.y, 0);
+            }
         }
 
         void Outline(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 planeNormal, float w, Color32 col)

@@ -288,11 +288,11 @@ const fogK = d => Math.max(0, Math.min(1, (d - 34)/50));   // L2803
 
 | 항목 | 값 |
 |---|---|
-| 입력 | `_MainTex`(아틀라스), 정점색(SpriteRenderer color), MaterialPropertyBlock `_FogAlpha`(0~1), `_Tint`(곱 색, 기본 흰색) |
-| 출력 | `rgb = tex.rgb·vcol.rgb·_Tint.rgb`, `a = tex.a·vcol.a·_FogAlpha` |
+| 입력 | `_MainTex`(아틀라스), 정점색(SpriteRenderer color — 안개 알파가 여기 곱해져 들어온다) |
+| 출력 | `rgb = tex.rgb·vcol.rgb`, `a = tex.a·vcol.a` |
 | 상태 | Unlit, Transparent 큐, `Blend SrcAlpha OneMinusSrcAlpha`, `ZWrite Off`, `ZTest Always`, `Cull Off` |
 | 키워드 | `_ADDITIVE`(Blend SrcAlpha One — 가산 그림), 없으면 일반 |
-| `_FogAlpha` 계산 | CPU(`DepthSorter`): `1 − clamp01((d − view.fogStart)/view.fogRange)`, d = 위 표의 기준 점. 같은 그룹 자식 전부에 같은 값 |
+| 안개 알파 계산 | CPU(`DepthSorter`): `1 − clamp01((d − view.fogStart)/view.fogRange)`, d = 위 표의 기준 점. 같은 그룹 자식 `SpriteRenderer.color` 알파(기본 색 × 값)와 정점색 메쉬(`VertexColorFog`)에 같은 값. MaterialPropertyBlock은 배칭을 깨므로 쓰지 않는다(03 §3.8.9) |
 
 셰이더에서 화소별로 계산하지 않는 이유: 정본은 그림 단위로 한 값을 쓴다. 화소별로 하면 큰 집의 위아래 알파가 달라진다.
 
