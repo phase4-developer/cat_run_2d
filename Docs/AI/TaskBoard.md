@@ -20,7 +20,7 @@
 | MV-G3-INT Boot 연결 | 완료(G3 끝) | `8de2dc7` | Meta 저장→`RunContext` 도우미 없음 → MV-PLAY-INT. dev 전체 `448a6fc73f04` PASS(compile, EditMode 335/335, PlayMode 2/2) |
 | MV-VIEW 월드 렌더 | 1차 완료, 2차 진행(칸 d) | 1차 `64aa5b4` | 2차: 오브젝트 뷰·WorldRoot 프리팹 먼저(D-91) |
 | MV-SND 소리 재생 | 완료 | `b148dc5` | Boot 연결(G4 통합) |
-| MV-FX 이펙트 | 진행(칸 e) | — | — |
+| MV-FX 이펙트 | 1차 완료 | `79aeb7e` | PLAY-INT로: Addressables `Fx/<이름>` 13건(라벨 Effect), Boot `MvFx.InstallDefault(...)`·매 프레임 `MvFx.OnRunEvents`. 팝업·비행 아이콘·플래시·단계 이름 그림은 MV.UI가 `IMvPopView`·`IMvFlyView`·`IMvHudAnchors`·`IMvFlashView` 구현(총괄 권장, asmdef 변경 없음 — D-FX-1). 요청: MV-DATA 04_effect 자식별 파라미터 열, MV-RUN `RunProjectile.El`. 캡처·손맛 NOT_RUN |
 | MV-UI-HUD 1차 | 완료 | `c95e5c9` | PlayMode·화면 NOT_RUN. PLAY-INT로: Boot 씬 UIManagerCreater+EventSystem, GameBootstrap `MvUiBoot.InitAsync(ui)`, Addressables 4건(UIManager는 Local 권장). 결정 후보: 한글 TMP 글꼴, Space 출발 키(MV.UI는 InputSystem 참조 없음), Sorting Layer 「UI」 |
 | MV-PLAY-INT 플레이 가능 빌드 | 대기(G3-INT·VIEW 2차·HUD 뒤) | — | 게임 루프·씬 연결 |
 | MV-PLAT-NET / ADS / LOGIN | 완료 | `9c354a6` / `1d3bb2a` / `979b171` | 연결은 G6 통합(LOGIN은 D-90으로 연결 안 함) |
@@ -37,11 +37,11 @@
 | b | `moonvillage-b` | (비어 있음) | — | — |
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | MV-VIEW 2차 | `ai/MV-VIEW-world2` | `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders|Materials/`, `A/Addressables/Remote/World/` |
-| e | `moonvillage-e` | MV-FX | `ai/MV-FX-effects` | `S/MV.Fx/`, `S/MV.Fx.Tests/`, `A/Addressables/Remote/Effect/`, `04_effect` 행 |
+| e | `moonvillage-e` | (비어 있음) | — | — |
 | f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
 | g | `moonvillage-g` | MV-TOOL-SND 2차 | `ai/MV-TOOL-SND-tierup0` | `Tools/MvExtract/sound/`, 오디오, `03_sound` 행 1개 |
 
-- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 360, PlayMode 2, `c95e5c9` 기준).
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 374, PlayMode 2, `79aeb7e` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
@@ -66,5 +66,5 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 ## 열린 결정 (권장안으로 진행, 교체 가능)
 
-D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06. 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
+D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
 - 미해결(사용자): 없음.
