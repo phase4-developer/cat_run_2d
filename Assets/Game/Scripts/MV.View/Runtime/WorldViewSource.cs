@@ -4,8 +4,7 @@ using MV.Run;
 namespace MV.View
 {
     /// <summary>
-    /// 월드 렌더가 매 프레임 읽는 런 상태(읽기 전용). `MV.Run`에 지면 높이 WY·옹벽 값이 아직 없어 게임 인터페이스로 둔다.
-    /// 교체 지점: MV-RUN이 WY·`R.cliff` 읽기 인터페이스를 내면 <see cref="RunStateViewSource"/>가 그것을 읽게 바꾼다.
+    /// 월드 렌더가 매 프레임 읽는 런 상태(읽기 전용). 런 구현 <see cref="RunStateViewSource"/>는 WY·옹벽을 <see cref="IRunViewState"/>에서 읽는다.
     /// </summary>
     public interface IWorldViewSource
     {
@@ -38,15 +37,8 @@ namespace MV.View
         readonly RunState _s;
         readonly double _stepH, _stepD, _bump;
 
-        /// <summary>
-        /// 지면 높이 WY. Framework 대체 아님 — MV.Run에 값이 없어 통합 코드가 넣는다.
-        /// 교체 지점: MV-RUN의 WY 읽기 인터페이스(요청됨).
-        /// </summary>
-        public double Wy;
-
-        /// <summary>옹벽. 교체 지점: MV-RUN `R.cliff` {z, low, high} 읽기 인터페이스(요청됨).</summary>
-        public bool HasCliff;
-        public CliffInfo Cliff;
+        /// <summary>지면 높이 WY(<see cref="IRunViewState.WorldY"/>, MV-RUN-VIEWAPI).</summary>
+        public double Wy => _s.WorldY;
 
         public RunStateViewSource(RunState state, MvTables tables)
         {
@@ -74,10 +66,13 @@ namespace MV.View
             }
         }
 
+        /// <summary>옹벽(<see cref="IRunViewState.HasCliff"/>·<see cref="IRunViewState.Cliff"/>).</summary>
         public bool TryGetCliff(out CliffInfo cliff)
         {
-            cliff = Cliff;
-            return HasCliff;
+            IRunViewState v = _s;
+            var c = v.Cliff;
+            cliff = new CliffInfo(c.Z, c.Low, c.High);
+            return v.HasCliff;
         }
     }
 }
