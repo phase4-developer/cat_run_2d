@@ -8,7 +8,7 @@ namespace MV.UI
     /// 결과 기본 겉(D-92 더미: 막·상자·글자·버튼만, 스킨·연출 없음). 참조가 비면 자식을 만든다.
     /// 겉 교체 지점: <see cref="IResultView"/>를 구현한 겉을 프리팹에 둔다.
     /// </summary>
-    public class ResultView : MonoBehaviour, IResultView
+    public class ResultView : MonoBehaviour, IResultView, IResultAdView
     {
         const float U = MvUi.U;
 
@@ -21,12 +21,15 @@ namespace MV.UI
         [SerializeField] Text tokText;
         [SerializeField] Text statText;
         [SerializeField] Button collectButton;
+        [SerializeField] Button x3Button;
 
         bool _built;
 
         public event Action CollectPressed;
+        public event Action X3Pressed;
 
         public Button CollectButton { get { EnsureBuilt(); return collectButton; } }
+        public Button X3Button { get { EnsureBuilt(); return x3Button; } }
 
         void Awake() => EnsureBuilt();
 
@@ -35,10 +38,30 @@ namespace MV.UI
             if (_built) return;
             _built = true;
             if (!titleText) Build((RectTransform)transform);
+            if (!x3Button) BuildX3((RectTransform)collectButton.transform.parent);
             if (collectButton) collectButton.onClick.AddListener(OnCollect);
+            if (x3Button) x3Button.onClick.AddListener(OnX3);
         }
 
         void OnCollect() => CollectPressed?.Invoke();
+        void OnX3() => X3Pressed?.Invoke();
+
+        public void SetX3(string text, bool interactable)
+        {
+            EnsureBuilt();
+            x3Button.GetComponentInChildren<Text>().text = text;
+            x3Button.interactable = interactable;
+            x3Button.GetComponent<Image>().color = interactable ? MvUi.Hex("#ffd84a") : new Color(.45f, .42f, .36f, 1);
+        }
+
+        void BuildX3(RectTransform box)
+        {
+            // 광고 버튼 AdButton 큰 모양(05 §5.6): 바탕 #ffd84a, 글 #2a1608. 「그냥 받기」 위.
+            x3Button = MvUi.Button(box, "X3", "▶ 광고 보고 ×3 받기", MvUi.Hex("#ffd84a"), MvUi.Hex("#2a1608"), 5.6f * U); // ui.result.adX3
+            MvUi.Place((RectTransform)x3Button.transform, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -68 * U), new Vector2(70 * U, 10 * U));
+            // 「그냥 받기」는 아래로 내린다(밑줄 글 버튼 자리).
+            MvUi.Place((RectTransform)collectButton.transform, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -81 * U), new Vector2(40 * U, 8 * U));
+        }
 
         public void SetTitle(string text, Color color) { EnsureBuilt(); titleText.text = text; titleText.color = color; }
 

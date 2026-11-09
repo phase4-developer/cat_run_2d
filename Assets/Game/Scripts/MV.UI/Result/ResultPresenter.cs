@@ -16,6 +16,20 @@ namespace MV.UI
         public bool Collected { get; private set; }
         /// <summary>마지막 정산 결과(없거나 예외면 null).</summary>
         public MvSettleResult LastSettle { get; private set; }
+        /// <summary>×3 광고를 보는 중(그동안 두 버튼 모두 막음).</summary>
+        public bool AdPending { get; private set; }
+
+        IResultAdWatcher Watcher => Data?.AdWatcher ?? MvMetaResultAd.Instance;
+
+        /// <summary>×3 버튼 켜짐: 아직 안 받음 && 광고 중 아님 && (츄르 ≥ 1 또는 캣닢 &gt; 0) && 광고 입구 준비(05 §5.6, 정본 L2414).</summary>
+        public bool CanX3
+        {
+            get
+            {
+                var d = Data;
+                return d != null && !Collected && !AdPending && d.Outcome != null && MvMeta.CanCollectX3(d.Outcome) && Watcher.Ready;
+            }
+        }
 
         public void SetView(IResultView view) => View = view;
 
@@ -24,6 +38,7 @@ namespace MV.UI
         {
             Data = data;
             Collected = false;
+            AdPending = false;
             LastSettle = null;
             Draw();
         }
@@ -38,14 +53,36 @@ namespace MV.UI
                 d.SoulsNeed > 0 ? Mathf.Clamp01((float)d.SoulsHave / d.SoulsNeed) : 1f);
             v.SetRewards("+" + MvUiFormat.Fmt(d.Gold), "+" + d.Dia, "+" + d.Tok);
             v.SetStat(d.Stat ?? "");
-            v.SetCollectInteractable(!Collected);
+            v.SetCollectInteractable(!Collected && !AdPending);
+            (v as IResultAdView)?.SetX3("▶ 광고 보고 ×" + Watcher.Mul + " 받기", CanX3); // ui.result.adX3
+        }
+
+        /// <summary>
+        /// 「▶ 광고 보고 ×3 받기」(05 §5.6·§5.12 collect3). 광고를 끝까지 봤으면 ×배수 정산 1번, 안 봤으면 정산 없이 다시 고를 수 있다.
+        /// <paramref name="finished"/>(정산했는지)를 광고가 끝난 뒤 한 번 부른다. 광고를 시작했으면 true.
+        /// </summary>
+        public bool TryCollectX3(Action<bool> finished = null)
+        {
+            if (!CanX3) return false;
+            var d = Data;
+            AdPending = true;
+            Draw();
+            Watcher.WatchX3(mul =>
+            {
+                if (Data != d) { finished?.Invoke(false); return; } // 그사이 다시 열림
+                AdPending = false;
+                bool ok = mul > 0 && TryCollect(mul);
+                if (!ok) Draw();
+                finished?.Invoke(ok);
+            });
+            return true;
         }
 
         /// <summary>「받기」 ×<paramref name="mul"/>. 열린 동안 정산 명령은 한 번만 부른다. 이번에 불렀으면 true.</summary>
         public bool TryCollect(int mul = 1)
         {
             var d = Data;
-            if (Collected || d == null || d.Outcome == null) return false;
+            if (Collected || AdPending || d == null || d.Outcome == null) return false;
             Collected = true;
             View?.SetCollectInteractable(false);
             var settler = d.Settler ?? MvMetaResultSettler.Instance;
