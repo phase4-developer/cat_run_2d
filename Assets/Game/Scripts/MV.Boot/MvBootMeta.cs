@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using MV.Data;
 using MV.Meta;
 using MV.Run;
@@ -43,6 +44,10 @@ namespace MV.Boot
             TableOptions = new MvValidationOptions { IsComponentImplemented = RunComponents.IsImplemented };
             return TableOptions;
         }
+
+        /// <summary>4단계: 기본 원본에서 표를 읽고 위 옵션으로 검증한다. 검증 오류면 <see cref="MvTableValidationException"/>.</summary>
+        public static Task<MvTables> LoadTablesAsync() =>
+            MvTableLoader.LoadAsync(MvTableLoader.DefaultSource(), CreateTableOptions());
 
         /// <summary>
         /// 6단계(<see cref="MvBootSave.Open"/>) 뒤에 부른다. 저장이 열려 있으면 바로 <see cref="MvMeta.Current"/>를 만든다.

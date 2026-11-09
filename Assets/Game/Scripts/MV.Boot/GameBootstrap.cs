@@ -70,7 +70,7 @@ namespace MV.Boot
 
                 // 4. 표(MV-DATA). 원본 지정 → RegisterAll → LoadAllAsync → 게임 검증기. 검증 오류면 예외로 시작을 멈춘다.
                 //    105 컴포넌트 type 구현 확인은 MV.Run 목록으로 한다(MV.Data는 MV.Run을 모른다).
-                await MV.Data.MvTableLoader.LoadAsync(MV.Data.MvTableLoader.DefaultSource(), MvBootMeta.CreateTableOptions());
+                await MvBootMeta.LoadTablesAsync();
 
                 // 5·6. 저장(MV-SAVE): 표 값으로 설정·참조 목록 → 저장소 → 이관 → 컨테이너 등록 → Open → 참조 정리(09 §9.5.2).
                 //    재화 서비스(5단계)는 저장소의 WealthContainer가 있어야 해서 저장이 열릴 때 MvBootSave가 묶는다.

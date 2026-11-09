@@ -81,7 +81,7 @@ namespace MV.Tests
         {
             if (MvTables.Current == null)
             {
-                var load = MvTableLoader.LoadAsync(null, MvBootMeta.CreateTableOptions());
+                var load = MvBootMeta.LoadTablesAsync();
                 while (!load.IsCompleted) yield return null;
                 Assert.IsNull(load.Exception, load.Exception?.ToString());
             }
