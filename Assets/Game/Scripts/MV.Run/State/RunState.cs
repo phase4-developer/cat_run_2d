@@ -142,7 +142,7 @@ namespace MV.Run
     /// 런 상태 루트(프로토 `R` + mode + 시계, 04 §4.14.5). MV.Run 밖은 읽기만 한다.
     /// 채우는 쪽: GEN(<see cref="IRunLevelBuilder.NewRun"/>)이 「GEN」 표시 필드를, SIM이 나머지를 진행한다.
     /// </summary>
-    public sealed class RunState
+    public sealed class RunState : IRunViewState
     {
         public RunState(RunSetup setup, MvTables tables, IRng rng)
         {
@@ -254,8 +254,12 @@ namespace MV.Run
         /// <summary>실시간 누적(재현 확인용).</summary>
         public double RealTime;
         public long Frame;
-        /// <summary>지면 높이(표시용, 계단마다 +dH).</summary>
-        public double WorldY;
+        /// <summary>지면 높이 `WY`(표시용, 계단 오르기가 끝날 때 +dH). <see cref="IRunViewState.WorldY"/>.</summary>
+        public double WorldY { get; internal set; }
+        /// <summary>옹벽이 생겼는가(정본 `R.cliff`). <see cref="IRunViewState.HasCliff"/>.</summary>
+        public bool HasCliff { get; internal set; }
+        /// <summary>가장 최근 옹벽(정본 `R.cliff`, 계단 오르기 시작 때 덮어씀). <see cref="IRunViewState.Cliff"/>.</summary>
+        public RunCliff Cliff { get; internal set; }
 
         // ---- 종료 ----
         public bool Fin;
