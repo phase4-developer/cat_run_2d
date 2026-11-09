@@ -5,7 +5,10 @@
         "MV.Core",
         "JJEvol.Audio.Runtime",
         "JJEvol.Audio.Addressables",
-        "UniTask"
+        "UniTask",
+        "MV.Data",
+        "MV.Run",
+        "JJEvol.Tables.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
