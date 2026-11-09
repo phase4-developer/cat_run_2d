@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "saved_at": "2026-11-09T20:17:04+09:00",
+  "saved_at": "2026-11-09T20:35:40+09:00",
   "saved_by": "사용자(설정 화면)",
   "values": {
     "project_kind": "new",
@@ -147,14 +147,6 @@
     {
       "level": "info",
       "text": "서버 저장을 골랐다. 서버가 생기기 전에는 로컬 백엔드가 기기 안에 저장한다"
-    },
-    {
-      "level": "warn",
-      "text": "이 폴더는 중앙 등록부에 없다. 헤드리스 도구는 등록된 게임만 받는다(REPO_NOT_ALLOWED:NOT_REGISTERED)"
-    },
-    {
-      "level": "info",
-      "text": "이 폴더는 실행기에 Unity 실행 등록이 없다. 등록은 이 저장 뒤 따로 요청한다"
     },
     {
       "level": "info",

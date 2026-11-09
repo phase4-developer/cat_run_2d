@@ -3,7 +3,7 @@
 <!-- jjevol-project-settings:start — 설정 화면(「프로젝트 설정」)이 만든 절. 고치려면 그 화면에서 고른다. -->
 ## 프로젝트 설정
 
-저장: 2026-11-09 20:17 KST, 사용자가 설정 화면에서 고름. 정본은 `Docs/AI/ProjectSettings.json`.
+저장: 2026-11-09 20:35 KST, 사용자가 설정 화면에서 고름. 정본은 `Docs/AI/ProjectSettings.json`.
 
 - Framework 연결 방식: 외부
 - 프로젝트 기본: 어떤 프로젝트인가 = 새 게임; 누구 프로젝트인가 = 회사
@@ -16,7 +16,6 @@
 - 아트·품질: 아트 공급 = 임시 아트로 먼저; 목표 FPS = 60
 - Framework 범위(함께 필요한 패키지 포함): `com.artress.managed-addressables` (고정 1.3.12-pre.10), `com.jjevol.audio` (고정 0.1.0-pre.3), `com.jjevol.audio.addressables` (고정 0.1.0-pre.2), `com.jjevol.data` (고정 0.1.0-pre.1), `com.jjevol.economy` (고정 0.1.0-pre.4), `com.jjevol.economy.drop` (시험 중), `com.jjevol.effects` (고정 0.1.0-pre.2), `com.jjevol.effects.addressables` (고정 0.1.0-pre.2), `com.jjevol.effects.ui` (시험 중), `com.jjevol.localization` (고정 0.1.0-pre.3), `com.jjevol.localization.authoring` (고정 0.1.0-pre.9), `com.jjevol.platform.ads` (시험 중), `com.jjevol.platform.ads.admob` (시험 중), `com.jjevol.platform.analytics` (시험 중), `com.jjevol.platform.analytics.firebase` (시험 중), `com.jjevol.platform.core` (고정 0.1.0-pre.2), `com.jjevol.platform.localnotifications` (시험 중), `com.jjevol.platform.localnotifications.unity` (시험 중), `com.jjevol.platform.login` (시험 중), `com.jjevol.platform.login.firebase` (시험 중), `com.jjevol.platform.network` (시험 중), `com.jjevol.platform.network.data` (시험 중), `com.jjevol.platform.purchase` (시험 중), `com.jjevol.platform.purchase.network` (시험 중), `com.jjevol.platform.purchase.unityiap` (시험 중), `com.jjevol.platform.push` (시험 중), `com.jjevol.platform.push.firebase` (시험 중), `com.jjevol.platform.tracking` (시험 중), `com.jjevol.platform.tracking.apple` (시험 중), `com.jjevol.platform.unity` (고정 0.1.0-pre.2), `com.jjevol.resources.addressables` (고정 0.1.0-pre.3), `com.jjevol.save` (고정 0.1.0-pre.3), `com.jjevol.scene` (고정 0.1.0-pre.2), `com.jjevol.scene.addressables` (고정 0.1.0-pre.2), `com.jjevol.scene.ui` (고정 0.1.0-pre.3), `com.jjevol.tables` (고정 0.1.0-pre.2), `com.jjevol.tables.authoring` (고정 0.1.0-pre.7), `com.jjevol.ui` (고정 0.1.0-pre.2), `com.jjevol.ui.addressables` (고정 0.1.0-pre.4), `com.jjevol.ui.economy` (고정 0.1.0-pre.5), `com.jjevol.ui.urp` (고정 0.1.0-pre.6)
 - 확인 필요: 외부 연결은 고정본만 넣는다. 고정본이 없어 연결을 보류할 패키지: com.jjevol.economy.drop, com.jjevol.effects.ui, com.jjevol.platform.ads, com.jjevol.platform.ads.admob, com.jjevol.platform.analytics, com.jjevol.platform.analytics.firebase, com.jjevol.platform.localnotifications, com.jjevol.platform.localnotifications.unity, com.jjevol.platform.login, com.jjevol.platform.login.firebase, com.jjevol.platform.network, com.jjevol.platform.network.data, com.jjevol.platform.purchase, com.jjevol.platform.purchase.network, com.jjevol.platform.purchase.unityiap, com.jjevol.platform.push, com.jjevol.platform.push.firebase, com.jjevol.platform.tracking, com.jjevol.platform.tracking.apple
-- 확인 필요: 이 폴더는 중앙 등록부에 없다. 헤드리스 도구는 등록된 게임만 받는다(REPO_NOT_ALLOWED:NOT_REGISTERED)
 
 ### AI가 따를 규칙
 
@@ -38,11 +37,10 @@
 
 - Commit·병합: 대화가 따름 — 「AI가 따를 규칙」으로 PROJECT_CONTEXT.md에 들어가 대화가 시작할 때 읽는다
 - AI의 Unity 실행: 도구가 따름 — 실행기(`unity_job.py submit`)가 고르지 않은 compile·EditMode·PlayMode를 거절한다
-- 실행기 등록: 다음 단계 필요 — 이 폴더는 실행기에 등록되지 않았다. 사용자가 「실행기에 등록해」라고 하면 `unity_job.py register`로 등록한다
 - Framework 범위: 다음 단계 필요 — manifest에 아직 없는 패키지 19개. 「Framework 연결해줘」(`jjevol-framework`)로 연결한다
 - 담당 수·설치·수정 횟수: 대화가 따름 — 「AI가 따를 규칙」으로 대화가 따른다
 - 서버 기능 처리: 대화가 따름 — 로컬 백엔드. 「AI가 따를 규칙」으로 대화가 따른다. `INetworkLocalService` 구현은 그 게임의 작업이다. 서버로 바꿀 때 Firebase 공급자 패키지와 Firebase SDK를 넣는다.
-- 헤드리스: 다음 단계 필요 — 중앙 등록부에 없어 도구가 거절한다. 등록하면 이 값으로 받는다
+- 헤드리스: 도구가 따름 — 헤드리스 도구(`headless_work.py`)가 매 턴 이 값을 읽어 이 저장소의 쓰기 작업을 받는다. 「쓰지 않음」으로 바꾸면 다음 턴에 멈춘다. 회사 조건(사용자 Git 이름으로 커밋, 알림은 ID·상태·경로만)으로 돈다.
 
 <!-- jjevol-project-settings:end -->
 
