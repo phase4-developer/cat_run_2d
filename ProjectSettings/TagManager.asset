@@ -41,6 +41,36 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ground
+    uniqueID: 3141590001
+    locked: 0
+  - name: World
+    uniqueID: 3141590002
+    locked: 0
+  - name: Tint
+    uniqueID: 3141590003
+    locked: 0
+  - name: Light
+    uniqueID: 3141590004
+    locked: 0
+  - name: Snow
+    uniqueID: 3141590005
+    locked: 0
+  - name: Warp
+    uniqueID: 3141590006
+    locked: 0
+  - name: WarpCat
+    uniqueID: 3141590007
+    locked: 0
+  - name: WarpOut
+    uniqueID: 3141590008
+    locked: 0
+  - name: SpeedLine
+    uniqueID: 3141590009
+    locked: 0
+  - name: Vignette
+    uniqueID: 3141590010
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1
