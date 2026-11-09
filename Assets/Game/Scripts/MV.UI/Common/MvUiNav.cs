@@ -36,5 +36,51 @@ namespace MV.UI
         /// <summary>결과 팝업을 연다(HUD는 팝업 설정으로 숨는다).</summary>
         public static async UniTask<ResultPopup> OpenResultAsync(ResultViewData data) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.Result, new ResultPopupData(data)) as ResultPopup;
+
+        // ───────── 메타 패널(MV-UI-META). 로비 버튼 연결은 MV-UI-LOBBY. ─────────
+
+        /// <summary>야옹신(05 §5.7).</summary>
+        public static async UniTask<GodSelectPopup> OpenGodSelectAsync(MetaPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.GodSelect, data ?? new MetaPopupData()) as GodSelectPopup;
+
+        /// <summary>Area 강화(05 §5.8).</summary>
+        public static async UniTask<AreaUpgradePopup> OpenAreaUpgradeAsync(MetaPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.AreaUpgrade, data ?? new MetaPopupData()) as AreaUpgradePopup;
+
+        /// <summary>부활(05 §5.9). 잠김이면 토스트만 내고 열지 않는다(null).</summary>
+        public static async UniTask<RebirthPopup> OpenRebirthAsync(MetaPopupData data = null)
+        {
+            var port = data?.Port ?? MvMetaUiPort.Instance;
+            if (port.Ready && !port.RebirthOpen)
+            {
+                int area = port.Tables?.ContentOpen.ByKey(MV.Meta.MvMetaRules.RebirthKey)?.conditionValue ?? 2;
+                MvUiToast.Show("Area " + area + " 개방 시 해금"); // ui.rb.goLocked
+                return null;
+            }
+            return await Ui.SpawnUIPopupAsync(MvUiIds.Rebirth, data ?? new MetaPopupData()) as RebirthPopup;
+        }
+
+        /// <summary>지도(05 §5.10).</summary>
+        public static async UniTask<MapPopup> OpenMapAsync(MetaPopupData data = null)
+        {
+            MV.Sound.MvSound.PlayUi(MV.Sound.MvUiSound.ButtonClick); // 열 때 소리 click
+            return await Ui.SpawnUIPopupAsync(MvUiIds.Map, data ?? new MetaPopupData()) as MapPopup;
+        }
+
+        /// <summary>신기능 해금 안내(05 §5.11). <paramref name="keys"/>가 null이면 아직 안 본 해금 전부. 보여 줄 것이 없으면 null.</summary>
+        public static async UniTask<FeatureUnlockPopup> OpenFeatureUnlockAsync(IReadOnlyList<string> keys = null, IMetaUiPort port = null)
+        {
+            var p = port ?? MvMetaUiPort.Instance;
+            keys = keys ?? p.PendingUnlockShows();
+            if (keys.Count == 0) return null;
+            return await Ui.SpawnUIPopupAsync(MvUiIds.FeatureUnlock, new FeatureUnlockPopupData { Keys = keys, Port = port }) as FeatureUnlockPopup;
+        }
+
+        /// <summary>테스트 패널(05 §5.14). 개발 빌드(<c>Debug.isDebugBuild</c>)가 아니면 열지 않는다.</summary>
+        public static async UniTask<DebugPopup> OpenDebugAsync(MetaPopupData data = null)
+        {
+            if (!UnityEngine.Debug.isDebugBuild) return null;
+            return await Ui.SpawnUIPopupAsync(MvUiIds.Debug, data ?? new MetaPopupData()) as DebugPopup;
+        }
     }
 }
