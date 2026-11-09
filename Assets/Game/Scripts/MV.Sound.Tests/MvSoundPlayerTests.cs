@@ -103,7 +103,7 @@ namespace MV.Sound.Tests
                 _clock.Now += 1;
                 Assert.That(p.Play(row.key), Is.True, row.key);
             }
-            Assert.That(_out.Played.Count, Is.EqualTo(30));
+            Assert.That(_out.Played.Count, Is.EqualTo(31));
             Assert.That(_out.Played.All(s => s.Pitch == 1f), Is.True, "정본 pitchRand = 0");
         }
 

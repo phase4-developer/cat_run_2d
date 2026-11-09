@@ -823,10 +823,10 @@ ASTC 6x6 2048² = 1.87 MB(밉 포함 2.49 MB), 4x4 1024² = 1.0 MB, 2048×1024 6
 | 구분 | 키 | 개수 |
 |---|---|---|
 | 호출됨, 인자 없음 | throw, hit, crit, wood, coin, gem, soul, gate, forge, clank, lvup, land, tick, merge, buy, click, warn, steal, fail, win, floor | 21 |
-| 호출됨, 인자 있음 | tierup(t = 1~4: L2281 `t > C.tier`라 1부터, L3165 `min(4, st+1)`), card(t = 0~4: L2277 `4`, L2369 `c.pick.t`) | 2 → 클립 4 + 5 = 9 |
+| 호출됨, 인자 있음 | tierup(t = 0~4: L2281 `t > C.tier`에서 `C.tier`가 −1로 시작(L2259, L2274)하므로 COMMON(0)에서도 `tierup(0)` = 523 Hz가 울린다, L3165 `min(4, st+1)`), card(t = 0~4: L2277 `4`, L2369 `c.pick.t`) | 2 → 클립 5 + 5 = 10 |
 | 호출 없음(잔재) | load, fuse, boom, stamp(L2217의 `stamp()`는 다른 함수), whoosh | 5 |
 
-→ **구울 효과음 클립 30개**(21 + 9), BGM 2개, `03_sound` 행 **32개**. [01](01_Scope.md)·[10](10_Architecture.md)의 「효과음 31종」은 이 표로 바로잡는다(§3.12 가정).
+→ **구울 효과음 클립 31개**(21 + 10), BGM 2개, `03_sound` 행 **33개**. `tierup_0`은 나중에 찾아 더해 id가 효과음 끝 순번 `3001031`이다(D-SND-1, 기존 id는 바꾸지 않음). [01](01_Scope.md)·[10](10_Architecture.md)의 「효과음 31종」은 이 표로 바로잡는다(§3.12 가정).
 
 ### 3.9.3 `03_sound` 행 (확정)
 
@@ -864,6 +864,7 @@ ASTC 6x6 2048² = 1.87 MB(밉 포함 2.49 MB), 4x4 1024² = 1.0 MB, 2048×1024 6
 | 3001028 | fail | Sfx | Sfx_Fail | 1.0 | 0 | 20 | 0.65 | 삼각 G4·E4·C4·G3 하행 · L2408(350 ms 지연) |
 | 3001029 | win | Sfx | Sfx_Win | 1.0 | 0 | 20 | 0.63 | 사각 C5·E5·G5·C6·E6 · L2408, L2563 |
 | 3001030 | floor | Sfx | Sfx_Floor | 1.0 | 0 | 20 | 0.67 | 삼각 C4·G4·C5 · L2028 |
+| 3001031 | tierup_0 | Sfx | Sfx_Tierup_0 | 1.0 | 0 | 20 | 0.32 | b = 523 Hz, 삼각 b + b×1.5 · L2281(`C.tier` = −1 시작, COMMON) |
 | 3002001 | bgm_lobby | Music | Bgm_Lobby | 1.0 | 0 | 0 | 16.5517(루프) | intensity 0 믹스 · L2473 |
 | 3002002 | bgm_run | Music | Bgm_Run | 1.0 | 0 | 0 | 16.5517(루프) | intensity 1 믹스 · L2661 |
 

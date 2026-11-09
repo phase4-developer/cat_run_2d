@@ -1,7 +1,7 @@
 // MV-TOOL-SND 검수(03 §3.11.1 V6, 11 MV-TOOL-SND 완료·검증).
 // 사용: node sound/verify_snd.mjs [--skip-rerun] [--skip-v6] [--only <key>[,…]]
 //  0) 03_sound 표(--table-ref, 기본 dev) id·key·soundType·soundName = snd.json
-//  1) 형식: 03_sound 32행 파일이 모두 있고 모노·44100 Hz·16bit, 길이 = 03 표(효과음 ceil(L×44100), BGM 729,931 샘플)
+//  1) 형식: 03_sound 표 행 수 = snd.json 사용 정의 수이고 그 파일이 모두 있고 모노·44100 Hz·16bit, 길이 = 03 표(효과음 ceil(L×44100), BGM 729,931 샘플)
 //  2) 재실행 해시: 같은 정의로 다시 구워 sound/out/rerun/ 에 쓰고 sha256이 저장된 파일과 같은지
 //  3) V6: 정본 실시간 녹음(같은 시드) vs 구운 파일 — 길이 ±1 ms, RMS 차 ≤ 0.5 dB, 스펙트럼 상관 ≥ 0.98
 // 결과: sound/out/verify.json, 종료 코드 0 = 모두 PASS
@@ -19,7 +19,7 @@ const { defs, sr, jobs, outPath } = loadDefs();
 const sel = jobs.filter((j) => !only || only.includes(j.key) || only.includes(j.soundName));
 const sha = (b) => createHash('sha256').update(b).digest('hex');
 const OUT = join(SND_DIR, 'out'); mkdirSync(OUT, { recursive: true });
-const rep = { expectedRows: 32, jobs: jobs.length, format: [], rerun: null, v6: [] };
+const rep = { expectedRows: null, jobs: jobs.length, format: [], rerun: null, v6: [] };
 let bad = 0;
 
 // 0) 03_sound 표 대조: id·key·soundType·soundName이 정의와 같은지(표는 git 참조에서 읽음, 기본 dev)
@@ -31,10 +31,11 @@ let bad = 0;
     const want = jobs.map((j) => [String(j.id), j.key, j.soundType, j.soundName].join('\t'));
     const got = rows.map((r) => r.slice(0, 4).join('\t'));
     const diff = want.filter((w) => !got.includes(w)).concat(got.filter((g) => !want.includes(g)).map((g) => '표에만: ' + g));
-    rep.table = { ref, rows: rows.length, ok: diff.length === 0 && rows.length === 32, diff };
+    rep.expectedRows = rows.length;
+    rep.table = { ref, rows: rows.length, ok: diff.length === 0 && rows.length === jobs.length, diff };
   } catch (e) { rep.table = { ref, ok: false, reason: e.message.split('\n')[0] }; }
   if (!rep.table.ok) bad++;
-  console.log(`03_sound(${rep.table.ref}): ${rep.table.ok ? '32행 일치' : 'FAIL ' + JSON.stringify(rep.table)}`);
+  console.log(`03_sound(${rep.table.ref}): ${rep.table.ok ? `${rep.table.rows}행 일치` : 'FAIL ' + JSON.stringify(rep.table)}`);
 }
 
 // 1) 형식
@@ -46,7 +47,7 @@ for (const j of sel) {
   rep.format.push({ soundName: j.soundName, ok, channels: w.channels, sampleRate: w.sampleRate, bits: w.bits, frames: w.frames, expectFrames: j.frames, seconds: +w.seconds.toFixed(6), tableL: j.L });
   if (!ok) bad++;
 }
-if (!only && jobs.length !== rep.expectedRows) { bad++; rep.countError = `정의 ${jobs.length} ≠ 32`; }
+if (!only && jobs.length !== rep.expectedRows) { bad++; rep.countError = `정의 ${jobs.length} ≠ 표 ${rep.expectedRows}`; }
 console.log(`형식: ${rep.format.filter((x) => x.ok).length}/${sel.length} PASS`);
 
 // 2) 재실행 해시

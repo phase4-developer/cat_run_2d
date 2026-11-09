@@ -29,5 +29,6 @@ id	key	soundType	soundName	volume	pitchRand	gapMs
 3001028	fail	Sfx	Sfx_Fail	1.0	0	20
 3001029	win	Sfx	Sfx_Win	1.0	0	20
 3001030	floor	Sfx	Sfx_Floor	1.0	0	20
+3001031	tierup_0	Sfx	Sfx_Tierup_0	1.0	0	20
 3002001	bgm_lobby	Music	Bgm_Lobby	1.0	0	0
 3002002	bgm_run	Music	Bgm_Run	1.0	0	0
