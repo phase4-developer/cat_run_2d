@@ -1901,6 +1901,8 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | 304_theme | worldAtlas, roadsideProps, bgm | (아틀라스 자신) / 자신의 worldAtlas |
 | 330_climb(워프 행) | enterEffect, enterSound | |
 | 400_content | icon / bg / bgm | `Atlas_UI_Icon` / `Tex_*` |
+| 430_pet | icon / sprite | `Atlas_UI_Icon` / `Atlas_World_Pet`(D-MVDATA-PET 권장안, 결정 대기 — 03 §3.8.1에 행 추가 필요) |
+| 450_friend | icon / portrait | `Atlas_UI_Icon` / 주소(`Portrait_Friend_*`) |
 | 4xx·7xx·8xx 그 밖 | icon | `Atlas_UI_Icon`(08 표에 다르게 적힌 것은 그 값) |
 
 ### 7.10.4 테마 변형
@@ -1913,11 +1915,14 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 
 | 상황 | 개발 빌드 | 릴리스 |
 |---|---|---|
-| 검증 단계(표 로드)에서 이름이 카탈로그에 없음 | 오류(표 로드 실패 화면) | 빌드 전 검증에서 막힘(출시 불가) |
+| 검증 단계: 그림·주소는 프로젝트에 있는데 아틀라스·대소문자·주소가 틀림, 또는 규칙(03 §3.8.1)에 없는 아틀라스 이름 | **오류**(표 반영 거부) | 빌드 전 검증에서 막힘(출시 불가) |
+| 검증 단계: 그 이름의 그림이 프로젝트 어디에도 없음(미추출) | **경고**(표 반영은 됨). 미추출 보고 목록 `GameData/Table/TSV/Report/res_unextracted.tsv`에 남긴다(MV-TOOL-ART가 읽음) | 출시 후보 검수에서 목록이 비어야 함 |
 | 런타임에 아틀라스 로드 실패 | 오류 로그 + 자홍색 대체 스프라이트 | 빈 그림 + 오류 보고 1회 |
 | 소리·이펙트 키 없음 | 오류 로그 | 무시 |
 
 검증 근거는 [03 §3.8.6](03_ResourcePipeline.md): 각 아틀라스의 `sprite_catalog.tsv`, Addressables 주소 목록, `03_sound.key`, `04_effect.key`. `@theme` 열은 **모든** 테마 아틀라스에서 확인한다.
+
+경고/오류 구분(D-MVDATA-RES, 2026-11-10): 검사기 `MvResourceColumnChecker`(MV.Editor)가 `MvTableAuthoring.Validate`에서 함께 돈다. 갈래 A(`temp_art_list.tsv`)의 미추출과 그림 없음은 경고(목록), 다른 아틀라스에 있는 이름·대소문자만 다른 이름·파일은 있는데 주소 없음·주소 열에 스프라이트 이름은 오류다. 시험 `MvResourceColumnTests`: 오류 0, 미추출 경고는 모두 목록에 있음. 목록 다시 쓰기는 메뉴 `MV/Tables/Write Unextracted Resource List`.
 
 ---
 

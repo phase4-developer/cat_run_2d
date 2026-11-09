@@ -49,7 +49,7 @@ namespace MV.Editor.Tables
 
         /// <summary>
         /// 표 검증 + 리소스 열 확인(<see cref="MvResourceColumnChecker"/>, 07 §7.10·03 §3.8.6)을 한 보고로 합친다.
-        /// 리소스 오류(이름·아틀라스가 풀리지 않음)는 오류, 미추출·다른 계약 주소·경고는 경고로 넣는다.
+        /// 리소스 오류(그림은 있는데 아틀라스·대소문자·주소가 틀림)는 오류, 미추출(그림 없음, D-MVDATA-RES)·다른 계약 주소·경고는 경고로 넣는다.
         /// </summary>
         public static MvValidationReport Validate(IEnumerable<KeyValuePair<string, string>> tableTexts)
         {
@@ -64,7 +64,8 @@ namespace MV.Editor.Tables
             var tables = new MvTables();
             tables.LoadAll(source);
             var res = MvResourceColumnChecker.Check(tables, MvArtCatalog.FromProject(), MvArtManifest.ReadTempList(),
-                name => source.TryGetText(name, out var text) ? FirstLine(text) : fileSource.ReadHeaders(name));
+                name => source.TryGetText(name, out var text) ? FirstLine(text) : fileSource.ReadHeaders(name),
+                MvResourceColumnChecker.ProjectArtFileNames());
             MergeResourceIssues(report, res);
             return report;
         }

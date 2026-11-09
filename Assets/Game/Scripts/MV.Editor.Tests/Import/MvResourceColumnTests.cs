@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,35 +9,9 @@ using NUnit.Framework;
 
 namespace MV.Editor.Tests
 {
-    /// <summary>표 리소스 열 검사기(07 §7.10, 03 §3.8.6) — 티켓 04.</summary>
+    /// <summary>표 리소스 열 검사기(07 §7.10, 03 §3.8.6) — 티켓 04. 분류는 D-MVDATA-RES(그림 없음 = 경고, 이름은 있는데 틀림 = 오류).</summary>
     public sealed class MvResourceColumnTests
     {
-        /// <summary>
-        /// 표 값이 틀려 풀리지 않는 칸 = MV-DATA 변경 요청(이 계약은 표를 고치지 않는다). 형식 `표|행|열|값`.
-        /// 여기 없는 오류가 나오면 실패한다. MV-DATA가 고쳐 오류가 사라진 줄은 시험 로그에 「해소」로 나온다(지워도 된다).
-        /// </summary>
-        static readonly HashSet<string> s_dataRequests = new HashSet<string>
-        {
-            // 행 iconAtlas = Atlas_UI_Hud, 그림은 Atlas_UI_Icon에 있음
-            "07_consumeType|605|iconColumn|UI_Icon_Stair",
-            // 행 atlas = Atlas_UI_Common(그림 없음), 그림은 Atlas_UI_Icon(03 §3.4.1 UI_Emoji_ 기본 아틀라스)
-            "09_uiResource|9001001|sprite|UI_Emoji_Close",
-            "09_uiResource|9001002|sprite|UI_Emoji_Play",
-            "09_uiResource|9001003|sprite|UI_Emoji_Sound",
-            "09_uiResource|9001004|sprite|UI_Emoji_Lock",
-            // 행 atlas = Atlas_UI_Hud, 그림은 Atlas_UI_Icon
-            "09_uiResource|9002001|sprite|UI_Icon_Stair",
-            "09_uiResource|9002003|sprite|UI_Icon_Fac_Tower_2",
-            // 행 atlas = Atlas_UI_Lobby, 그림은 Atlas_UI_Icon
-            "09_uiResource|9003001|sprite|UI_Emoji_Basket",
-            "09_uiResource|9003002|sprite|UI_Emoji_Map",
-            // 대소문자: 실제 주소 Tex_God_Thunder·Tex_God_Flame
-            "113_god|113001001|portrait|Tex_God_thunder",
-            "113_god|113001002|portrait|Tex_God_flame",
-        };
-
-        static string Key(MvResIssue i) => $"{i.Table}|{i.RowId}|{i.Column}|{i.Value}";
-
         [Test]
         public void AllTableResourceColumns_ResolveOrAreReported()
         {
@@ -44,11 +19,21 @@ namespace MV.Editor.Tests
             TestContext.WriteLine(report.Summary());
 
             Assert.That(report.Checked, Is.GreaterThan(500), "확인한 값 수");
-            var errors = report.Of(MvResIssueKind.Error).ToList();
-            var unexpected = errors.Where(e => !s_dataRequests.Contains(Key(e))).ToList();
-            var resolved = s_dataRequests.Except(errors.Select(Key)).ToList();
-            if (resolved.Count > 0) TestContext.WriteLine("MV-DATA 변경 요청 해소: " + string.Join(", ", resolved));
-            Assert.That(unexpected.Select(e => e.ToString()), Is.Empty, "MV-DATA 변경 요청 목록 밖의 오류");
+            Assert.That(report.Of(MvResIssueKind.Error).Select(e => e.ToString()), Is.Empty, "리소스 열 오류(아틀라스·대소문자·주소가 틀림)");
+            Assert.That(report.Of(MvResIssueKind.Warning).Select(e => e.ToString()), Is.Empty, "스키마에 Res로 선언되지 않은 리소스 열");
+            Assert.That(report.Of(MvResIssueKind.OtherOwner).Where(e => e.Table != "03_sound" && e.Table != "04_effect").Select(e => e.ToString()), Is.Empty,
+                "다른 계약 주소 미생성은 소리·이펙트 표만");
+
+            var path = Path.GetFullPath(MvResourceColumnChecker.UnextractedListPath);
+            Assert.That(File.Exists(path), Is.True, "미추출 보고 목록 " + MvResourceColumnChecker.UnextractedListPath);
+            var listed = MvResourceColumnChecker.ReadUnextractedListKeys(path);
+            var current = MvResourceColumnChecker.UnextractedIssues(report).ToList();
+            var stale = listed.Except(current.Select(MvResourceColumnChecker.ListKey)).ToList();
+            if (stale.Count > 0) TestContext.WriteLine($"미추출 보고 목록에서 해소된 줄 {stale.Count}(메뉴 MV/Tables/Write Unextracted Resource List로 지운다):\n" + string.Join("\n", stale));
+
+            var notListed = current.Where(i => !listed.Contains(MvResourceColumnChecker.ListKey(i))).Select(i => i.Kind + "\t" + MvResourceColumnChecker.ListKey(i)).ToList();
+            if (notListed.Count > 0) TestContext.WriteLine("미추출 보고 목록에 없는 줄:\n" + string.Join("\n", notListed));
+            Assert.That(notListed, Is.Empty, "미추출 경고는 모두 보고 목록에 있어야 한다");
         }
 
         [Test]
@@ -57,27 +42,56 @@ namespace MV.Editor.Tests
             var dir = MvTableLoader.TsvDirectory;
             string Read(string table) => File.ReadAllText(Path.Combine(dir, table + ".txt"), new UTF8Encoding(false));
 
-            var item = Read("103_item").Replace("UI_Icon_Weapon_1\t", "UI_Icon_Weapon_Nope\t").Replace("UI_Icon_Weapon_2\t", "ui_icon_weapon_2\t");
+            var item = Read("103_item").Replace("UI_Icon_Weapon_1\t", "UI_Icon_Weapon_Nope\t").Replace("UI_Icon_Weapon_2\t", "ui_icon_weapon_2\t")
+                .Replace("UI_Icon_Weapon_3\t", "UI_Icon_Only_In_Card\t");
             var theme = Read("304_theme").Replace("World_Prop_Snowman", "World_Prop_Fake");
             var kind = Read("105_objectKind").Replace("World_Obj_Arch_Post_Gold", "World_Obj_Only_Somewhere");
-            Assume.That(item, Does.Contain("UI_Icon_Weapon_Nope"));
+            var ui = Read("09_uiResource").Replace("Atlas_UI_Icon\tUI_Emoji_Close\t", "Atlas_UI_Nope\tUI_Emoji_NotYet\t");
+            var god = Read("113_god").Replace("Tex_God_Wind", "Tex_Only_File").Replace("Tex_God_Sea", "UI_Icon_Weapon_1").Replace("Tex_God_Thunder", "Tex_God_thunder");
+            var pet = Read("430_pet").Replace("\tPet_sparrow\t", "\tPet_NotYetMade\t");
+            Assume.That(item, Does.Contain("UI_Icon_Weapon_Nope").And.Contain("UI_Icon_Only_In_Card"));
             Assume.That(theme, Does.Contain("World_Prop_Fake"));
             Assume.That(kind, Does.Contain("World_Obj_Only_Somewhere"));
+            Assume.That(ui, Does.Contain("UI_Emoji_NotYet"));
+            Assume.That(god, Does.Contain("Tex_Only_File").And.Contain("UI_Icon_Weapon_1").And.Contain("Tex_God_thunder"));
+            Assume.That(pet, Does.Contain("Pet_NotYetMade"));
 
-            var source = new MvMemoryTableSource(new MvTsvDirectorySource(dir)).Set("103_item", item).Set("304_theme", theme).Set("105_objectKind", kind);
+            var source = new MvMemoryTableSource(new MvTsvDirectorySource(dir)).Set("103_item", item).Set("304_theme", theme).Set("105_objectKind", kind)
+                .Set("09_uiResource", ui).Set("113_god", god).Set("430_pet", pet);
             var tables = new MvTables();
             tables.LoadAll(source);
 
             var catalog = MvArtCatalog.FromProject();
             catalog.AddSprite("Atlas_World_Theme_market", "World_Obj_Only_Somewhere"); // 한 테마에만 있음 → 나머지 테마에서 오류
+            catalog.AddSprite(MvAtlas.UiCard, "UI_Icon_Only_In_Card"); // 다른 아틀라스에만 있음 → 오류
             var tempList = new Dictionary<string, string> { ["World_Prop_Fake"] = "A" };
-            var report = MvResourceColumnChecker.Check(tables, catalog, tempList);
+            var artFiles = new HashSet<string>(StringComparer.Ordinal) { "Tex_Only_File" }; // 파일은 있으나 주소 없음
+            var report = MvResourceColumnChecker.Check(tables, catalog, tempList, null, artFiles);
 
             var errors = report.Of(MvResIssueKind.Error).ToList();
-            Assert.That(errors.Any(e => e.Table == "103_item" && e.Value == "UI_Icon_Weapon_Nope"), Is.True, "없는 이름");
+            var unextracted = report.Of(MvResIssueKind.Unextracted).ToList();
+
+            // 그림이 어디에도 없음 → 경고(Unextracted), 오류 아님
+            Assert.That(unextracted.Any(e => e.Table == "103_item" && e.Value == "UI_Icon_Weapon_Nope"), Is.True, "없는 이름은 미추출 경고");
+            Assert.That(errors.Any(e => e.Value == "UI_Icon_Weapon_Nope"), Is.False, "없는 이름은 오류가 아님");
+            var petSprite = unextracted.Where(e => e.Table == "430_pet" && e.Value == "Pet_NotYetMade").ToList();
+            Assert.That(petSprite.Select(e => e.Atlas), Is.EqualTo(new[] { MvAtlas.WorldPet }), "430_pet.sprite는 Atlas_World_Pet 하나에서(테마마다 아님)");
+            Assert.That(unextracted.Any(e => e.Table == "113_god" && e.Value == "Tex_God_Snow"), Is.True, "없는 주소는 미추출 경고");
+
+            // 이름은 있는데 틀림 → 오류
             var cased = errors.FirstOrDefault(e => e.Table == "103_item" && e.Value == "ui_icon_weapon_2");
             Assert.That(cased, Is.Not.Null, "대소문자 다른 이름");
             Assert.That(cased.Message, Does.Contain("UI_Icon_Weapon_2"));
+            var wrongAtlas = errors.FirstOrDefault(e => e.Table == "103_item" && e.Value == "UI_Icon_Only_In_Card");
+            Assert.That(wrongAtlas, Is.Not.Null, "다른 아틀라스에만 있는 이름");
+            Assert.That(wrongAtlas.Message, Does.Contain(MvAtlas.UiCard));
+            Assert.That(errors.Any(e => e.Table == "09_uiResource" && e.Value == "UI_Emoji_NotYet" && e.Atlas == "Atlas_UI_Nope"), Is.True,
+                "규칙에 없는 아틀라스는 그림이 없어도 오류");
+            var godCase = errors.FirstOrDefault(e => e.Table == "113_god" && e.Value == "Tex_God_thunder");
+            Assert.That(godCase, Is.Not.Null, "주소 대소문자");
+            Assert.That(godCase.Message, Does.Contain("Tex_God_Thunder"));
+            Assert.That(errors.Any(e => e.Table == "113_god" && e.Value == "Tex_Only_File"), Is.True, "그림 파일은 있으나 주소 없음");
+            Assert.That(errors.Any(e => e.Table == "113_god" && e.Value == "UI_Icon_Weapon_1"), Is.True, "주소 열에 아틀라스 스프라이트 이름");
 
             var themed = errors.Where(e => e.Table == "105_objectKind" && e.Value == "World_Obj_Only_Somewhere").Select(e => e.Atlas).ToList();
             Assert.That(themed, Does.Not.Contain("Atlas_World_Theme_market"), "@theme: 있는 테마는 통과");
@@ -85,6 +99,30 @@ namespace MV.Editor.Tests
 
             Assert.That(report.Of(MvResIssueKind.Pending).Any(e => e.Value == "World_Prop_Fake" && e.Atlas == "Atlas_World_Theme_snow"), Is.True,
                 "roadsideProps는 그 행의 테마 아틀라스에서, 미추출 이름은 Pending");
+        }
+
+        [Test]
+        public void UnextractedList_RoundTripsKeys()
+        {
+            var report = new MvResourceCheckReport();
+            report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.Unextracted, Table = "430_pet", RowId = "430001002", Column = "icon", Value = "UI_Icon_Pet_b", Atlas = MvAtlas.UiIcon });
+            report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.Pending, Table = "09_uiResource", RowId = "9002002", Column = "sprite", Value = "UI_Icon_Brick", Atlas = MvAtlas.UiIcon });
+            report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.Error, Table = "103_item", RowId = "1", Column = "icon", Value = "x", Atlas = MvAtlas.UiIcon });
+            report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.OtherOwner, Table = "03_sound", RowId = "1", Column = "soundName", Value = "Sfx_A", Atlas = MvAtlas.Address });
+
+            var text = MvResourceColumnChecker.FormatUnextractedList(report);
+            var lines = text.Split('\n').Where(l => l.Length > 0).ToList();
+            Assert.That(lines.Count, Is.EqualTo(3), "머리 줄 + 미추출 2(오류·다른 계약은 빠짐)");
+            Assert.That(lines[1], Does.StartWith("Pending\t09_uiResource"), "표 이름 순 정렬");
+
+            var tmp = Path.Combine(Path.GetTempPath(), "mv_res_unextracted_" + Guid.NewGuid().ToString("N") + ".tsv");
+            try
+            {
+                File.WriteAllText(tmp, text, new UTF8Encoding(false));
+                var keys = MvResourceColumnChecker.ReadUnextractedListKeys(tmp);
+                Assert.That(keys, Is.EquivalentTo(MvResourceColumnChecker.UnextractedIssues(report).Select(MvResourceColumnChecker.ListKey)));
+            }
+            finally { File.Delete(tmp); }
         }
 
         [Test]

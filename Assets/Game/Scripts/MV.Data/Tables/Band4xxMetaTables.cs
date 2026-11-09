@@ -24,7 +24,7 @@ namespace MV.Data
 
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("rarity", true).Enum<MetaStat>("statKey", true)
             .Float("value", true).Int("skillEveryMs", true).Float("skillDmgPct", true).Int("skillTargets", true).Float("skillLevelPct")
-            .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon).Str("sprite").Bool("active");
+            .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon).Res("sprite", MvAtlas.WorldPet).Bool("active");
 
         /// <summary>0~4.</summary>
         public int rarity { get; private set; }
@@ -145,7 +145,7 @@ namespace MV.Data
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("rarity", true).Enum<MetaStat>("statKey", true)
             .Float("baseValue", true).Float("perLevel", true).Int("maxLevel", true).Consume("unlockPrice")
             .Int("skillTrigger", true).Int("skillEvery", true).Float("skillDmgPct", true).Int("skillTargets", true)
-            .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon).Str("portrait").Bool("active");
+            .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon).Res("portrait", MvAtlas.Address).Bool("active");
 
         public int rarity { get; private set; }
         public MetaStat statKey { get; private set; }
