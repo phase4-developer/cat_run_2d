@@ -25,6 +25,8 @@ namespace MV.UI
         public const string Debug = "Debug";
         /// <summary><c>UIPopup_FakeAd</c>(MV-UI-LOBBY, 광고 SDK 없을 때만).</summary>
         public const string FakeAd = "FakeAd";
+        /// <summary><c>UIPopup_ContentMenu</c>(MV-UI-CONTENT).</summary>
+        public const string ContentMenu = "ContentMenu";
     }
 
     /// <summary>층 sortingOrder(05 §5.1.5). 각 화면 프리팹 루트의 Canvas(overrideSorting)에 넣는다.</summary>
