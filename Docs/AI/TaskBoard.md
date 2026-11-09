@@ -54,7 +54,9 @@
 | g | MV-PLAT-LOGIN 게스트 로그인 스텁 | 1번째(`MV-PLAT-LOGIN-1.md`) | `ai/MV-PLAT-LOGIN-stub` 같은 기준 | `S/MV.Platform/Login/`, `S/MV.Platform.Tests/Login/` |
 | e | MV-SND 소리 재생 | 1번째(`MV-SND-1.md`) | `ai/MV-SND-playback` dev `6d946c8`+총괄 asmdef `f3074a2` | `S/MV.Sound/`, `S/MV.Sound.Tests/`, `03_sound.txt` 행 |
 | a | MV-G3-INT 런 코어 Boot 연결 | 1번째(`MV-G3-INT-1.md`) | `ai/MV-G3-INT-boot` dev `72ba086` | `S/MV.Boot/`(asmdef 제외), `A/Tests/PlayMode/` Boot 시험 |
+| b | MV-RUN-VIEWAPI 표시용 런 읽기(WY·옹벽) | 1번째(`MV-RUN-VIEWAPI-1.md`) | `ai/MV-RUN-VIEWAPI-read` dev `9c354a6` | `S/MV.Run/`, `S/MV.Run.Tests/ViewApi/` |
 
+- MV-PLAT-NET 완료(담당 닫힘): `b5c1a66` → dev `9c354a6`. compile `547154755062` PASS, EditMode `512d3922dd5b` 17/17 PASS. 게임 쪽 연결(G6 통합): Boot `NetworkManager.SetLocalService(MvPingRequest.RegisterLocal(new MvLocalNetworkService(), clock))` + `SetResponseApplier`. MV-META `MvLocalMetaBackend` 처리를 `Register(요청이름, 처리기)`로 옮기기, `IMvClock`에 `IServerClock.NowMs` 어댑터. 결정 D-NET-1(공용 시계 MV.Core `IClock` 없음 — 권장: MV.Core에 `IClock` 두고 Meta·Platform이 씀), D-NET-2(시험 asmdef Newtonsoft 참조), D-08.
 - MV-TOOL-ART 3차 검증 끝(담당 닫힘): `99c7614` 새 Commit 없음, EditMode 잡 `a6c9597f2d67` 19/20 PASS(`EveryAtlas_FitsOnePageOfMaxSize` PASS, 로비 하한 71.6 %·_2 46.5 %, 사각 추정 107 %는 실측 위험). FAIL `AllTableResourceColumns_ResolveOrAreReported` = 09[9002002] `UI_Icon_Brick` atlas(MV-DATA, 칸 a에 전달). dev 병합은 MV-DATA 2차 뒤 재시험하고 한다.
 
 ## 총괄 인계 (2026-11-09, 1번째 총괄 대화 마감 — 압축 2회)
