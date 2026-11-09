@@ -10,8 +10,8 @@ namespace MV.Fx
 {
     /// <summary>
     /// RunEvent → 04_effect 그룹 key → 기본 종류 재생 목록(06 §6.4.2~6.4.5, 정본 호출 지점 1:1).
-    /// 자식이 1개인 그룹은 표 행 값(color·count·speed·size·life·grav·y·chance)을 쓰고, 자식이 여럿인 그룹은 표에 자식별 열이 없어
-    /// 정본 호출 인자를 코드에 둔다(MV-DATA 변경 요청 후보: 자식별 파라미터 열).
+    /// 자식이 1개인 그룹은 표 행 값(color·count·speed·size·life·grav·y·chance)을 쓰고, 자식이 여럿인 그룹은 자식마다 part 행
+    /// (07 §7.11.2: when·y·dz·jx·jz·인자)을 읽는다(<see cref="PlayParts"/>). 기준점·색 토큰 풀이·벽돌 수·불구름·chainFire 반지름은 호출부 계산.
     /// 흔들림·히트스톱은 MV.Run이 Shake·Hitstop 이벤트로 이미 내므로 표의 shake·hitStop 열로 다시 내지 않는다(중복 방지).
     /// </summary>
     public sealed class MvFxRouter
@@ -64,17 +64,8 @@ namespace MV.Fx
                     o.Shakes.Add(new Vector2((float)e.Amount, (float)e.Amount2));
                     break;
                 case RunEventType.ProjImpact: // L2107~2108
-                {
-                    Grp(t, o, "run.projHit");
-                    var p = V(e.X, 1 + wy, e.Z);
-                    var imp = FxSpawn.Of("fx.impact", p);
-                    imp.Crit = e.Flag;
-                    o.Spawns.Add(imp);
-                    var sp = FxSpawn.Of("fx.sparks", p).WithColor(C(e.Flag ? "#ff6a3d" : "#ffffff"));
-                    sp.Count = e.Flag ? 8 : 4; sp.Speed = 3.4f; sp.Size = e.Flag ? 0.5f : 0.3f; sp.Life = 0.3f; sp.Grav = 0;
-                    o.Spawns.Add(sp);
+                    PlayParts(t, Grp(t, o, "run.projHit"), o, e.X, wy, e.Z, e.Flag ? s_crit : s_normal, default, crit: e.Flag);
                     break;
-                }
                 case RunEventType.Hit:
                     RouteHit(t, e, w, o, wy);
                     break;
@@ -113,19 +104,10 @@ namespace MV.Fx
                 case RunEventType.WellFlush: // L1861~1880
                 {
                     if (!w.TryObj(e.ObjId, out var ob)) break;
-                    Grp(t, o, "run.brickFlush");
                     int n = Math.Max(1, e.A);
+                    PlayParts(t, Grp(t, o, "run.brickFlush"), o, ob.X, wy, ob.Z, s_none, default, bricks: n);
                     for (int i = 0; i < n; i++)
-                    {
-                        var b = FxSpawn.Of("fx.brickChunk", V(ob.X + Rnd(-0.3f, 0.3f), 1.2 + wy, ob.Z));
-                        b.Variant = i;
-                        b.Dir = i % 2 == 0 ? 1 : -1;
-                        o.Spawns.Add(b);
                         o.Flies.Add(new FlyRequest { Target = FlyTarget.Gauge, World = V(ob.X + Rnd(-0.8f, 0.8f), 1.4 + Rnd(-0.4f, 0.8f) + wy, ob.Z), DelayMs = 260, Amount = i == n - 1 ? (int)Math.Round(e.Amount) : 0 });
-                    }
-                    var sp = FxSpawn.Of("fx.sparks", V(ob.X, 1.4 + wy, ob.Z - 0.8)).WithColor(C("#ffb04a"));
-                    sp.Count = 4; sp.Speed = 3; sp.Size = 0.3f; sp.Life = 0.35f;
-                    o.Spawns.Add(sp);
                     break;
                 }
                 case RunEventType.Steal: // L2063: 쥐 위치
@@ -213,37 +195,11 @@ namespace MV.Fx
                     break;
                 }
                 case RunEventType.GodStormStrike: // L2163~2172
-                {
-                    Grp(t, o, "god.storm");
-                    var col = ElemColor(e.Key);
-                    if (e.Key == BoltEl)
-                    {
-                        o.Spawns.Add(FxSpawn.Of("fx.paw", V(e.X, 0.1 + wy, e.Z)));
-                        var d = FxSpawn.Of("fx.dust", V(e.X, 0.5 + wy, e.Z)); d.Count = 5;
-                        o.Spawns.Add(d);
-                    }
-                    else
-                    {
-                        var f = FxSpawn.Of("fx.fireball", V(e.X, 0.6 + wy, e.Z)); f.Size = 1.4f;
-                        o.Spawns.Add(f);
-                    }
-                    var bm = FxSpawn.Of("fx.boom", V(e.X, 0.6 + wy, e.Z)).WithColor(col); bm.Radius = 1.5f;
-                    o.Spawns.Add(bm);
+                    PlayParts(t, Grp(t, o, "god.storm"), o, e.X, wy, e.Z, ElemFacts(e.Key), ElemColor(e.Key));
                     break;
-                }
                 case RunEventType.GodBlast: // L2175~2183
                 {
-                    Grp(t, o, "god.blast");
-                    if (e.Key == BoltEl) o.Spawns.Add(FxSpawn.Of("fx.hiss", V(e.X, 0.6 + wy, e.Z)));
-                    else
-                        for (int i = 0; i < 3; i++)
-                        {
-                            var f = FxSpawn.Of("fx.fireball", V(e.X + Rnd(-1, 1), 0.6 + wy, e.Z + Rnd(-1, 1))); f.Size = 2.4f;
-                            o.Spawns.Add(f);
-                        }
-                    var b1 = FxSpawn.Of("fx.boom", V(e.X, 1 + wy, e.Z)).WithColor(C(e.Key == Fire ? "#ff5a1f" : "#9fe0ff")); b1.Radius = 4.4f;
-                    var b2 = FxSpawn.Of("fx.boom", V(e.X, 1.6 + wy, e.Z)).WithColor(C("#ffffff")); b2.Radius = 2.2f; b2.NoRing = true;
-                    o.Spawns.Add(b1); o.Spawns.Add(b2);
+                    PlayParts(t, Grp(t, o, "god.blast"), o, e.X, wy, e.Z, ElemFacts(e.Key), ElemColor(e.Key));
                     o.Flashes.Add(new FlashRequest { Peak = Cfg(t, RunConfigKeys.Flash_GodBlast, 0.35f), HoldMs = (int)Cfg(t, RunConfigKeys.Flash_GodBlastMs, 60) });
                     break;
                 }
@@ -279,27 +235,20 @@ namespace MV.Fx
                     break;
                 case RunEventType.ClimbLap: // L2275~2276: x 0, 꼭대기 칸
                 {
-                    Grp(t, o, "climb.lap");
+                    var grp = Grp(t, o, "climb.lap");
                     int lap = ClimbCfg(t, "lap", 75), lapTier = ClimbCfg(t, "lapTier", 4);
                     int si = Math.Min(_climbK - 1, (int)Math.Ceiling(e.A * lap / _climbPw) - 1);
                     si = Math.Max(0, si);
                     double y = (si + 1) * ClimbCfgD(t, "stepH", 0.42), z = _climbZ0 + si * ClimbCfgD(t, "stepD", 0.72);
-                    var col = TierColor(t, lapTier);
-                    var b = FxSpawn.Of("fx.boom", V(0, y + 2, z)).WithColor(col); b.Radius = 3; b.NoRing = true;
-                    var s = FxSpawn.Of("fx.sparks", V(0, y + 3, z)).WithColor(col); s.Count = 24; s.Speed = 7; s.Size = 0.55f; s.Life = 1.1f;
-                    o.Spawns.Add(b); o.Spawns.Add(s);
+                    PlayParts(t, grp, o, 0, y, z, s_none, TierColor(t, lapTier));   // 기준점 = 꼭대기 칸 위(x 0)
                     break;
                 }
                 case RunEventType.ClimbTierUp: // L2281~2283
                 {
-                    Grp(t, o, "climb.tier");
+                    var grp = Grp(t, o, "climb.tier");
                     int si = Math.Max(0, Math.Min(_climbK - 1, (int)Math.Floor(e.B / _climbPw)));
                     double y = (si + 1) * ClimbCfgD(t, "stepH", 0.42), z = _climbZ0 + si * ClimbCfgD(t, "stepD", 0.72);
-                    double px = w?.PlayerX ?? 0;
-                    var col = TierColor(t, e.A);
-                    var b = FxSpawn.Of("fx.boom", V(px, y + 0.6, z)).WithColor(col); b.Radius = 2.2f;
-                    var s = FxSpawn.Of("fx.sparks", V(px, y + 1, z)).WithColor(col); s.Count = 16; s.Speed = 5; s.Size = 0.5f; s.Life = 0.9f;
-                    o.Spawns.Add(b); o.Spawns.Add(s);
+                    PlayParts(t, grp, o, w?.PlayerX ?? 0, y, z, s_none, TierColor(t, e.A));   // 기준점 = 오른 칸 위
                     o.Flashes.Add(new FlashRequest { Peak = Cfg(t, RunConfigKeys.Flash_ClimbTier, 0.25f), HoldMs = (int)Cfg(t, RunConfigKeys.Flash_ClimbTierMs, 90), Color = TierHex(t, e.A) });
                     break;
                 }
@@ -371,55 +320,17 @@ namespace MV.Fx
             string fx = KindEffect(t, e.KindId, false);
             if (string.IsNullOrEmpty(fx)) return;
             string kk = t.ObjectKind.Get(e.KindId)?.key;
-            o.Groups.Add(fx);
+            var row = Grp(t, o, fx);
             double x = e.X, z = e.Z;
-            switch (fx)
-            {
-                case "run.enemyKill": // L1925
-                {
-                    var d = FxSpawn.Of("fx.debris", V(x, 0.8 + wy, z)).WithColor(C("#5a8a3a")); d.Count = 8; d.Size = 0.2f;
-                    var s = FxSpawn.Of("fx.sparks", V(x, 1 + wy, z)).WithColor(C("#ffd65a")); s.Count = 12; s.Speed = 5; s.Size = 0.4f; s.Life = 0.6f;
-                    var u = FxSpawn.Of("fx.dust", V(x, 0.8 + wy, z)); u.Count = 4;
-                    o.Spawns.Add(d); o.Spawns.Add(s); o.Spawns.Add(u);
-                    break;
-                }
-                case "run.wallBreak": // L1935~1939
-                {
-                    var rew = (FieldReward)Math.Max(0, e.A);
-                    bool soul = e.A >= 0 && rew == FieldReward.Soul;
-                    var d1 = FxSpawn.Of("fx.debris", V(x, 1.3 + wy, z)).WithColor(C(soul ? "#5a5490" : "#93673f")); d1.Count = 14; d1.Size = 0.32f;
-                    var d2 = FxSpawn.Of("fx.debris", V(x, 1.6 + wy, z)).WithColor(C("#5b606c")); d2.Count = 4; d2.Size = 0.22f;
-                    var u = FxSpawn.Of("fx.dust", V(x, 1.0 + wy, z)); u.Count = 7;
-                    var b = FxSpawn.Of("fx.boom", V(x, 1.2 + wy, z)).WithColor(C("#ffd6a0")); b.Radius = 1.5f; b.NoRing = true;
-                    o.Spawns.Add(d1); o.Spawns.Add(d2); o.Spawns.Add(u); o.Spawns.Add(b);
-                    if (e.A >= 0 && rew == FieldReward.Soul) o.Spawns.Add(FromRow(Grp(t, o, "run.wallRewardSoul"), V(x, 2 + wy, z)));
-                    else if (e.A >= 0 && rew == FieldReward.Dia) o.Spawns.Add(FromRow(Grp(t, o, "run.wallRewardDia"), V(x, 2 + wy, z)));
-                    break;
-                }
-                case "run.coinBreak": // L1963~1966
-                {
-                    var u = FxSpawn.Of("fx.dust", V(x, 0.6 + wy, z)); u.Count = 4;
-                    o.Spawns.Add(u);
-                    if (IsGem(kk))
-                    {
-                        var s = FxSpawn.Of("fx.sparks", V(x, 1.2 + wy, z)).WithColor(C("#7feaff")); s.Count = 20; s.Speed = 6; s.Size = 0.45f; s.Life = 0.9f;
-                        o.Spawns.Add(s);
-                    }
-                    else
-                    {
-                        var s = FxSpawn.Of("fx.sparks", V(x, 1 + wy, z)).WithColor(C("#ffd65a")); s.Count = 18; s.Speed = 6; s.Size = 0.4f; s.Life = 0.8f;
-                        o.Spawns.Add(s);
-                    }
-                    break;
-                }
-                default:
-                {
-                    // 새 종류: 표 그룹 행이 자식 1개면 그 값으로.
-                    var row = t.Effect.ByKey(fx);
-                    if (row != null && row.children != null && row.children.Count > 0) o.Spawns.Add(FromRow(row, V(x, (row.y > 0 ? row.y : 1) + wy, z)));
-                    break;
-                }
-            }
+            // 필드 보상(Break A ≥ 0: 벽): `$rew` = 보상별 파편 색(L1935 생선 #5a5490 / 그 밖 #93673f).
+            var rew = (FieldReward)Math.Max(0, e.A);
+            if (HasParts(t, row))
+                // L1925 enemyKill, L1935~1939 wallBreak, L1963~1966 coinBreak: part 행. 상자 종류(coin/gem)는 when으로 가른다.
+                PlayParts(t, row, o, x, wy, z, IsGem(kk) ? s_gem : s_coin, C(e.A >= 0 && rew == FieldReward.Soul ? "#5a5490" : "#93673f"));
+            else if (row != null && row.children != null && row.children.Count > 0)
+                o.Spawns.Add(FromRow(row, V(x, (row.y > 0 ? row.y : 1) + wy, z)));   // 자식 1개 묶음: 묶음 행 값
+            if (e.A >= 0 && rew == FieldReward.Soul) o.Spawns.Add(FromRow(Grp(t, o, "run.wallRewardSoul"), V(x, 2 + wy, z)));
+            else if (e.A >= 0 && rew == FieldReward.Dia) o.Spawns.Add(FromRow(Grp(t, o, "run.wallRewardDia"), V(x, 2 + wy, z)));
         }
 
         static bool IsGem(string kindKey) => kindKey == "gem" || kindKey == "gemBonus";
@@ -448,16 +359,76 @@ namespace MV.Fx
         {
             if (row == null || row.children == null || row.children.Count == 0) return FxSpawn.Of("fx.sparks", at);
             var s = FxSpawn.Of(row.children[0], at);
+            if (!string.IsNullOrEmpty(row.color) && row.color == "$elem") s = s.WithColor(ElemColor(el));
+            return Apply(row, s, null);
+        }
+
+        static readonly string[] s_none = new string[0], s_normal = { "normal" }, s_crit = { "crit" }, s_coin = { "coin" }, s_gem = { "gem" },
+            s_fire = { Fire }, s_bolt = { BoltEl };
+
+        /// <summary>원소 사건의 when 사실(bolt가 아니면 fire — <see cref="ElemColor"/>와 같은 규칙).</summary>
+        static string[] ElemFacts(string el) => el == BoltEl ? s_bolt : s_fire;
+
+        /// <summary>묶음 자식에 part 행이 있는지(07 §7.11.2 자식이 여럿인 묶음).</summary>
+        static bool HasParts(MvTables t, EffectData group)
+        {
+            if (group?.children == null) return false;
+            for (int i = 0; i < group.children.Count; i++)
+                if (t.Effect.ByKey(group.children[i])?.type == EffectData.PartType) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// part 묶음 재생(07 §7.11.2): 묶음 `children`(part key, 같은 key는 그 수만큼)을 차례로 돌며 `when`이 모두 <paramref name="facts"/>에 있는
+        /// part 행만 재생한다. 위치 = 기준점(x, baseY, z) + (±jx, y, dz ± jz). `$tier`·`$rew`·`$elem` 색은 <paramref name="token"/>.
+        /// 자식이 `fx.brickChunk`인 행은 <paramref name="bricks"/>개(사건 벽돌 수, 순번 색·좌우 교대)로 낸다. 치명 사건이면 <c>Crit</c>(impact 표시).
+        /// </summary>
+        void PlayParts(MvTables t, EffectData group, MvFxOutput o, double x, double baseY, double z, string[] facts, Color32? token,
+            bool crit = false, int bricks = 1)
+        {
+            if (group?.children == null) return;
+            for (int c = 0; c < group.children.Count; c++)
+            {
+                var part = t.Effect.ByKey(group.children[c]);
+                if (part == null || part.type != EffectData.PartType || part.children == null || part.children.Count == 0) continue;
+                if (!WhenHolds(part.when, facts)) continue;
+                string kind = part.children[0];
+                int n = kind == BrickChunk ? Math.Max(1, bricks) : 1;
+                for (int i = 0; i < n; i++)
+                {
+                    double px = x + (part.jx > 0 ? Rnd((float)-part.jx, (float)part.jx) : 0);
+                    double pz = z + part.dz + (part.jz > 0 ? Rnd((float)-part.jz, (float)part.jz) : 0);
+                    var s = Apply(part, FxSpawn.Of(kind, V(px, baseY + part.y, pz)), token);
+                    s.Crit = crit;
+                    if (kind == BrickChunk) { s.Variant = i; s.Dir = i % 2 == 0 ? 1 : -1; }
+                    o.Spawns.Add(s);
+                }
+            }
+        }
+
+        const string BrickChunk = "fx.brickChunk";
+
+        static bool WhenHolds(IReadOnlyList<string> when, string[] facts)
+        {
+            if (when == null) return true;
+            for (int i = 0; i < when.Count; i++)
+                if (!string.IsNullOrEmpty(when[i]) && Array.IndexOf(facts, when[i]) < 0) return false;
+            return true;
+        }
+
+        /// <summary>행 값(색·count·speed·size·life·grav·radius·flag)을 덮는다. 빈칸은 종류 기본값, grav는 빈칸과 0이 다르다(hasGrav).</summary>
+        static FxSpawn Apply(EffectData row, FxSpawn s, Color32? token)
+        {
             if (!string.IsNullOrEmpty(row.color))
             {
-                if (row.color == "$elem") s = s.WithColor(ElemColor(el));
+                if (row.color[0] == '$') { if (!s.HasColor && token.HasValue) s = s.WithColor(token.Value); }
                 else if (row.color[0] == '#') s = s.WithColor(C(row.color));
             }
             if (row.count > 0) s.Count = (float)row.count;
             if (row.speed > 0) s.Speed = (float)row.speed;
             if (row.size > 0) s.Size = (float)row.size;
             if (row.life > 0) s.Life = (float)row.life;
-            if (row.grav != 0) s.Grav = (float)row.grav;
+            if (row.hasGrav) s.Grav = (float)row.grav;
             if (row.radius > 0) s.Radius = (float)row.radius;
             if (row.flag == "noRing") s.NoRing = true;
             return s;

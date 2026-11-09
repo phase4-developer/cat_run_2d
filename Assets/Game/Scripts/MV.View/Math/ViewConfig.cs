@@ -21,8 +21,16 @@ namespace MV.View
         public double SortQuant, ObjProbeY, CatProbeY, SortCloth, SortLabel, SortBlade, SortProj;
 
         /// <summary>
-        /// 계단 오르기 출렁임(정본 L2758 `sin(frac·π)·0.12`). `330_climb`에 열이 없어 상수로 둔다.
-        /// 교체 지점: MV-DATA가 330_climb 출렁임 열을 넣으면 표에서 읽는다(요청됨).
+        /// 계단 오르기 출렁임 높이 m = `330_climb` 설정 행 `bumpH`(정본 L2758 `sin(frac·π)·0.12`, 07 §7.3.5). 설정 행이 없으면 0.
+        /// </summary>
+        public static double ClimbBumpOf(ClimbTable climb)
+        {
+            var c = climb?.Config();
+            return c != null ? c["bumpH"] : 0;
+        }
+
+        /// <summary>
+        /// 옛 상수(정본 0.12). 교체 대기: <see cref="RunStateViewSource"/>(MV-PLAY-INT가 쓰는 중)가 <see cref="ClimbBumpOf"/>로 바꾸면 지운다.
         /// </summary>
         public const double ClimbBump = 0.12;
 

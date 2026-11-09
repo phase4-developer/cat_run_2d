@@ -146,6 +146,24 @@ namespace MV.View.Tests
         public void RoadsideSprite_FollowsDecoThresholds(string deco, int hhPercent, string sprite)
         {
             Assert.That(PropLayout.RoadsideSprite(deco, hhPercent / 100.0), Is.EqualTo(sprite));
+            var th = ViewTestTables.Theme(deco);   // 정본 1~5행은 key = deco
+            Assert.That(PropLayout.RoadsideSprite(th.roadsideProps, th.deco, hhPercent / 100.0), Is.EqualTo(sprite), "304 roadsideProps 목록으로 읽어도 정본과 같다");
+        }
+
+        [Test]
+        public void RoadsideProps_AndLineKind_FollowThemeTable()
+        {
+            foreach (var th in ViewTestTables.Load().Theme.Sorted)
+                for (int h = 0; h < 100; h++)
+                    Assert.That(th.roadsideProps, Does.Contain(PropLayout.RoadsideSprite(th.roadsideProps, th.deco, h / 100.0)), th.key + " hh " + h);
+
+            var props = ViewTestTables.WithCell(MV.Data.ThemeData.Table, "market", "roadsideProps", "World_Prop_Snowman/World_Prop_Bag").Theme.ByKey("market");
+            Assert.That(PropLayout.RoadsideSprite(props.roadsideProps, props.deco, 0.2), Is.EqualTo("World_Prop_Snowman"), "정본 그림이 목록에 없으면 hh 균등 선택");
+            Assert.That(PropLayout.RoadsideSprite(props.roadsideProps, props.deco, 0.7), Is.EqualTo("World_Prop_Bag"));
+            Assert.That(PropLayout.RoadsideSprite(new string[0], "market", 0.2), Is.Null, "빈 목록이면 소품 그림 없음");
+
+            var line = ViewTestTables.WithCell(MV.Data.ThemeData.Table, "market", "lineKind", ClothLineLayout.LineBulbs).Theme.ByKey("market");
+            Assert.That(ClothLineLayout.IsBulbs(line.lineKind), Is.True, "lineKind만 바꿔도 전구줄");
         }
 
         [Test]

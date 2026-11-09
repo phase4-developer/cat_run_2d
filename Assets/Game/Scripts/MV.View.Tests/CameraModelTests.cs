@@ -93,6 +93,14 @@ namespace MV.View.Tests
         }
 
         [Test]
+        public void ClimbBump_ReadsClimbTableBumpH()
+        {
+            Assert.That(ViewConfig.ClimbBumpOf(ViewTestTables.Load().Climb), Is.EqualTo(0.12).Within(1e-12), "정본 L2758");
+            var edited = ViewTestTables.WithCell(MV.Data.ClimbData.Table, "default", "bumpH", "0.3");
+            Assert.That(ViewConfig.ClimbBumpOf(edited.Climb), Is.EqualTo(0.3).Within(1e-12), "표만 바꿔도 출렁임이 바뀐다");
+        }
+
+        [Test]
         public void Shake_MergesMaxAndClearsAmplitudeWhenTimeRunsOut()
         {
             var s = new CameraShake();

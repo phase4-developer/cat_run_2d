@@ -64,7 +64,8 @@ namespace MV.View.Tests
             var on = Enumerable.Range(1, 9).Select(i => ClothLineLayout.BulbOn(i, 1000) ? 1 : 0);
             Assert.That(on, Is.EqualTo(new[] { 0, 1, 1, 0, 1, 1, 0, 1, 1 }));
             Assert.That(ClothLineLayout.BulbSprite(5, false), Is.EqualTo("World_Line_Bulb_1_Off"));
-            Assert.That(ClothLineLayout.UsesBulbs("roof") && ClothLineLayout.UsesBulbs("snow") && !ClothLineLayout.UsesBulbs("market"), Is.True);
+            Assert.That(new[] { "market", "stairs", "harbor", "roof", "snow" }.Select(k => ClothLineLayout.IsBulbs(ViewTestTables.Theme(k).lineKind)),
+                Is.EqualTo(new[] { false, false, false, true, true }), "정본 deco snow·roof만 전구줄(304 lineKind)");
             var zs = new List<double>();
             PropLayout.ClothLines(10, ViewTestTables.Config(), zs);
             Assert.That(zs, Is.EqualTo(new double[] { 13, 26, 52, 65, 78 }));
