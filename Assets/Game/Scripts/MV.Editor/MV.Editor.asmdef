@@ -4,6 +4,8 @@
     "references": [
         "MV.Core",
         "MV.Data",
+        "JJEvol.Tables.Runtime",
+        "JJEvol.Data.Runtime",
         "MV.Boot",
         "JJEvol.Scene.Runtime",
         "JJEvol.Tables.Authoring.Editor",
