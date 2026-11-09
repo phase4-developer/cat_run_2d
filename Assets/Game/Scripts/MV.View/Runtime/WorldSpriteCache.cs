@@ -63,6 +63,22 @@ namespace MV.View
             return s;
         }
 
+        /// <summary>여러 아틀라스에서 차례로 찾는다(분할 아틀라스 `_2` 등). 없으면 null(대체 그림·경고 없음).</summary>
+        public Sprite GetAny(IReadOnlyList<string> atlasKeys, string spriteName)
+        {
+            if (atlasKeys == null || string.IsNullOrEmpty(spriteName)) return null;
+            for (int i = 0; i < atlasKeys.Count; i++)
+            {
+                if (atlasKeys[i] == null || !_atlases.TryGetValue(atlasKeys[i], out var e)) continue;
+                if (e.Sprites.TryGetValue(spriteName, out var s) && s != null) return s;
+                s = e.Lease.Asset.GetSprite(spriteName);
+                if (s == null) continue;
+                e.Sprites[spriteName] = s;
+                return s;
+            }
+            return null;
+        }
+
         /// <summary>프레임 묶음(`..._00`~`_NN`)을 한 번에 캐시해 배열로 돌려준다(런 중 할당 0).</summary>
         public Sprite[] GetFrames(string atlasKey, string prefix, int count)
         {
