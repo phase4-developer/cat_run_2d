@@ -7,7 +7,7 @@
 | 계약 | 상태 | 결과(dev) | 남은 것 |
 |---|---|---|---|
 | MV-00 기반 | 완료 | — | 보관 「MV-00 남김」 |
-| MV-DATA 표 | 완료(G1) | `6d946c8` | 자료 빈칸(정본 값 없음, 보관 참조). VIEW 요청: `view.groundFar` 92→120, `330_climb` 출렁임 열, `304_theme` 6~15행 |
+| MV-DATA 표 | 2차 완료(G1), 3차 진행(칸 b) | `6d946c8` | 자료 빈칸(정본 값 없음, 보관 참조). VIEW 요청: `view.groundFar` 92→120, `330_climb` 출렁임 열, `304_theme` 6~15행 |
 | MV-SAVE 저장 | 완료(G1) | `bf2921c` | D-68 출시 저장 키 |
 | MV-TOOL-ART 그림 | 완료(G2) | 3차 `72ba086`, 4차 `ce87826` | `UI_Skin_MapZone_Z4~Z6` 임시 아트, D-ART-01~06 |
 | MV-TOOL-SND 소리 굽기 | 완료(2차 tierup_0) | `922cad9` | 효과음 31·`03_sound` 33행, 청취 NOT_RUN. 오디오 Addressables 그룹 없음(33개 미등록) → PLAY-INT 통합 |
@@ -25,7 +25,8 @@
 | MV-PLAY-INT 플레이 가능 빌드 | 대기(G3-INT·VIEW 2차·HUD 뒤) | — | 게임 루프·씬 연결 |
 | MV-PLAT-NET / ADS / LOGIN | 완료 | `9c354a6` / `1d3bb2a` / `979b171` | 연결은 G6 통합(LOGIN은 D-90으로 연결 안 함) |
 | MV-PLAT-IAP / ANALYTICS / NOTI | 스텁 취소(D-88) → 고정 tgz 연결로 | — | `ai/MV-PLAT-IAP-stub`·`ai/MV-PLAT-ANALYTICS-stub` 병합 안 함 |
-| MV-UI-LOBBY / META / CONTENT | 대기 | — | D-92 겉 더미 |
+| MV-UI-META | 1차 진행(칸 c) | — | D-92 겉 더미 |
+| MV-UI-LOBBY / CONTENT | 대기(PLAY-INT 뒤, 로비 API 겹침) | — | D-92 겉 더미 |
 | MV-CONTENT-* (G7) | 대기 | — | — |
 | MV-QA-ACCEPT (G8) | 대기 | — | D-87 기준 |
 
@@ -34,8 +35,8 @@
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
 | a | `moonvillage-a` | MV-PLAY-INT | `ai/MV-PLAY-INT-loop` | `S/MV.Boot/`, `A/Tests/PlayMode/`, `S/MV.View/Runtime/RunStateViewSource.cs` |
-| b | `moonvillage-b` | (비어 있음) | — | — |
-| c | `moonvillage-c` | (비어 있음) | — | — |
+| b | `moonvillage-b` | MV-DATA 3차 | `ai/MV-DATA-requests3` | 표 TSV(요청 표만), `S/MV.Data/`, `S/MV.Data.Tests/`, 07 해당 절 |
+| c | `moonvillage-c` | MV-UI-META 1차 | `ai/MV-UI-META-panels` | `S/MV.UI/Meta/`, `MvUiIds`·`MvUiNav` 줄 추가, `S/MV.UI.Tests/Meta/`, `A/Addressables/Remote/UI/Meta/` |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
 | f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
