@@ -1,0 +1,20 @@
+{
+    "name": "MV.Save",
+    "rootNamespace": "MV.Save",
+    "references": [
+        "MV.Core",
+        "MV.Data",
+        "JJEvol.Data.Runtime",
+        "JJEvol.Save.Runtime",
+        "JJEvol.Economy.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

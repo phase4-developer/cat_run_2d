@@ -1,0 +1,19 @@
+{
+    "name": "MV.Platform",
+    "rootNamespace": "MV.Platform",
+    "references": [
+        "MV.Core",
+        "PlatformLibrary.Core",
+        "PlatformLibrary.UnityRuntime",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

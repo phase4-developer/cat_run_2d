@@ -1,0 +1,22 @@
+{
+    "name": "MV.View",
+    "rootNamespace": "MV.View",
+    "references": [
+        "MV.Core",
+        "MV.Data",
+        "MV.Run",
+        "JJEvol.Resources.Addressables.Runtime",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,20 @@
+{
+    "name": "MV.Meta",
+    "rootNamespace": "MV.Meta",
+    "references": [
+        "MV.Core",
+        "MV.Data",
+        "MV.Save",
+        "JJEvol.Data.Runtime",
+        "JJEvol.Economy.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
