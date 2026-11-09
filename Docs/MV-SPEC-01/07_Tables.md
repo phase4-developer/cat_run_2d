@@ -413,6 +413,8 @@ MvTables.Current = tables;
 | METEOR_FALL | 0.6 | s | [프로토] L2210 |
 | METEOR_BOX | 3.2 | m | [프로토] L2212 |
 | BLADE_ANG_SPEED | 5 | rad/s | [프로토] L2146 |
+| STORM_JIT_TARGET | 0.3 | m | [프로토] L2168 폭풍 착탄 x 흔들림 반폭(대상 있을 때) |
+| STORM_JIT_FREE | 2 | m | [프로토] L2168 폭풍 착탄 x·z 흔들림 반폭(대상 없을 때) |
 
 **그룹 106 손패 연출 시간** (`300106xxx`) — 키 이름은 [05 §5.3](05_Screens.md) `ui.hand.*`
 
@@ -1361,7 +1363,7 @@ id 형식은 [08 §8.3.4](08_Content.md)와 같다: 공용 = `110000{순번}`, �
 | unlockPriceType / Id / Value | consume | unlockType 2일 때 |
 | passiveStat / passivePerLv | enum / float | 신 레벨 패시브 [08 §8.3.5] |
 | gearSet | bool01 | 장비 세트 대상 [08 §8.5.8] |
-| portrait | res | 초상 `Tex_God_<key>`(AddressableTexture) |
+| portrait | res | 초상 `Tex_God_<Key>`(key 첫 글자 대문자, 예 `Tex_God_Thunder`. [03](03_ResourcePipeline.md) 명명. AddressableTexture) |
 | icon | res | 신 버튼 아이콘. 기본 아틀라스 `Atlas_UI_Icon` |
 
 이름 `name:{id}`, 부제 `description:{id}`.
@@ -1508,6 +1510,7 @@ id 형식은 [08 §8.3.4](08_Content.md)와 같다: 공용 = `110000{순번}`, �
 | group | int | 성장 표의 `levelPriceGroup` |
 | targetLevel | int | 이 구매로 도달하는 수(= 현재 P + 1) |
 | priceType / priceId / priceValue | consume | 비용(`;`로 여러 재화 가능) |
+| needPiece | int | 함께 드는 카드 수(그룹 301 펫, [08 §8.5.2](08_Content.md)). 빈칸 = 0 |
 
 **그룹 배정**
 
@@ -1691,7 +1694,7 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | 602 | RunGold | - | 런 츄르 | Double | Atlas_UI_Icon | =UI_Icon_Gold | applyMul GoldMul, settleTo `1/1`, collectMul 1, gainSound coin, worldBadge `World_Item_Badge_Gold` |
 | 603 | RunSouls | - | 런 생선 | Int | Atlas_UI_Icon | =UI_Icon_Soul | settleTo `1/3`, collectMul 0, gainSound soul, gainEffect run.wallRewardSoul |
 | 604 | RunDia | - | 런 캣닢 | Int | Atlas_UI_Icon | =UI_Icon_Dia | settleTo `1/2`, collectMul 1, gainSound gem, gainEffect run.wallRewardDia, worldBadge `World_Item_Badge_Dia` |
-| 605 | RunStairs | - | 모은 계단 수 | Int | Atlas_UI_Hud | =UI_Icon_Stair | 런 전용 |
+| 605 | RunStairs | - | 모은 계단 수 | Int | Atlas_UI_Icon | =UI_Icon_Stair | 런 전용 |
 | 606 | RunWeapon | 103_item | 런 손패 카드 장수 | Int | Atlas_UI_Icon | icon | 런 전용(공방 수령 경로) |
 | 607 | GaugeFill | - | 우물 게이지 양 | Double | Atlas_UI_Hud | =UI_Icon_Gauge | 런 전용 |
 | 608 | RbPending | - | 목숨 조각 적립 대기 | Int | Atlas_UI_Icon | =UI_Icon_RbToken | settleTo `rbPending`, collectMul 0 |
@@ -1722,16 +1725,16 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 
 | id | key | atlas | sprite | address | 근거 |
 |---|---|---|---|---|---|
-| 9001001 | common.close | Atlas_UI_Common | UI_Emoji_Close | | ✕ L351 |
-| 9001002 | common.play | Atlas_UI_Common | UI_Emoji_Play | | ▶ 광고 버튼 |
-| 9001003 | common.sound | Atlas_UI_Common | UI_Emoji_Sound | | ♪ L713 |
-| 9001004 | common.lock | Atlas_UI_Common | UI_Emoji_Lock | | 🔒 |
-| 9002001 | hud.stairCan | Atlas_UI_Hud | UI_Icon_Stair | | L589 |
-| 9002002 | hud.brick | Atlas_UI_Hud | UI_Icon_Brick | | L42 |
-| 9002003 | hud.gaugeIcon | Atlas_UI_Hud | UI_Icon_Fac_Tower_2 | | L869 `cannonURL` |
+| 9001001 | common.close | Atlas_UI_Icon | UI_Emoji_Close | | ✕ L351 |
+| 9001002 | common.play | Atlas_UI_Icon | UI_Emoji_Play | | ▶ 광고 버튼 |
+| 9001003 | common.sound | Atlas_UI_Icon | UI_Emoji_Sound | | ♪ L713 |
+| 9001004 | common.lock | Atlas_UI_Icon | UI_Emoji_Lock | | 🔒 |
+| 9002001 | hud.stairCan | Atlas_UI_Icon | UI_Icon_Stair | | L589 |
+| 9002002 | hud.brick | Atlas_UI_Icon | UI_Icon_Brick | | L42 |
+| 9002003 | hud.gaugeIcon | Atlas_UI_Icon | UI_Icon_Fac_Tower_2 | | L869 `cannonURL` |
 | 9002004 | hud.hatch | Atlas_UI_Hud | UI_Skin_HatchTile | | L530 소모 가림 무늬 |
-| 9003001 | lobby.side.basket | Atlas_UI_Lobby | UI_Emoji_Basket | | 🧺 L658 |
-| 9003002 | lobby.side.map | Atlas_UI_Lobby | UI_Emoji_Map | | 🗺️ L659 |
+| 9003001 | lobby.side.basket | Atlas_UI_Icon | UI_Emoji_Basket | | 🧺 L658 |
+| 9003002 | lobby.side.map | Atlas_UI_Icon | UI_Emoji_Map | | 🗺️ L659 |
 | 9003003 | lobby.side.content | Atlas_UI_Lobby | UI_Icon_Content | | `05_contentOpen[contentMenu].icon`이 비었을 때 |
 | 9004001 | stage.vignette | | | Tex_Lobby_Vignette | L45 `#vig` 540×960 |
 
@@ -1828,8 +1831,8 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | 표 | 핵심 열 |
 |---|---|
 | `700_productTab` | id, sort, active, icon |
-| `702_shopSection` | id, tabId, sort, active, layout |
-| `701_product` | id, sectionId, sort, active, icon, rewardType/Id/Value, priceType/Id/Value(100 AD / 101 Inapp / 1 재화), limitType(None/Daily/Weekly/Account), limitCount, storeProductId(스텁) |
+| `702_shopSection` | id, active, sort, sectionType, hideIfEmpty, tabIds(`/`, 700 id) — 열 정본 [08 §8.5.7](08_Content.md) |
+| `701_product` | id, tabId, active, sort, icon, rewardType/Id/Value, priceType/Id/Value(100 AD / 101 Inapp / 1 재화), chargeType(0 무제한 / 1 평생 / 2 일일), chargedQuantity, googleProductId·appleProductId(스텁), minArea, minLevel, cooldownHours, perArea — 열 정본 [08 §8.5.7](08_Content.md) |
 
 행은 [08 §8.5.7](08_Content.md). 구매 기록 저장은 [09](09_Save.md) `mvShop`.
 
@@ -1898,6 +1901,8 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | 304_theme | worldAtlas, roadsideProps, bgm | (아틀라스 자신) / 자신의 worldAtlas |
 | 330_climb(워프 행) | enterEffect, enterSound | |
 | 400_content | icon / bg / bgm | `Atlas_UI_Icon` / `Tex_*` |
+| 430_pet | icon / sprite | `Atlas_UI_Icon` / `Atlas_World_Pet`(D-MVDATA-PET 권장안, 결정 대기 — 03 §3.8.1에 행 추가 필요) |
+| 450_friend | icon / portrait | `Atlas_UI_Icon` / 주소(`Portrait_Friend_*`) |
 | 4xx·7xx·8xx 그 밖 | icon | `Atlas_UI_Icon`(08 표에 다르게 적힌 것은 그 값) |
 
 ### 7.10.4 테마 변형
@@ -1910,11 +1915,14 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 
 | 상황 | 개발 빌드 | 릴리스 |
 |---|---|---|
-| 검증 단계(표 로드)에서 이름이 카탈로그에 없음 | 오류(표 로드 실패 화면) | 빌드 전 검증에서 막힘(출시 불가) |
+| 검증 단계: 그림·주소는 프로젝트에 있는데 아틀라스·대소문자·주소가 틀림, 또는 규칙(03 §3.8.1)에 없는 아틀라스 이름 | **오류**(표 반영 거부) | 빌드 전 검증에서 막힘(출시 불가) |
+| 검증 단계: 그 이름의 그림이 프로젝트 어디에도 없음(미추출) | **경고**(표 반영은 됨). 미추출 보고 목록 `GameData/Table/TSV/Report/res_unextracted.tsv`에 남긴다(MV-TOOL-ART가 읽음) | 출시 후보 검수에서 목록이 비어야 함 |
 | 런타임에 아틀라스 로드 실패 | 오류 로그 + 자홍색 대체 스프라이트 | 빈 그림 + 오류 보고 1회 |
 | 소리·이펙트 키 없음 | 오류 로그 | 무시 |
 
 검증 근거는 [03 §3.8.6](03_ResourcePipeline.md): 각 아틀라스의 `sprite_catalog.tsv`, Addressables 주소 목록, `03_sound.key`, `04_effect.key`. `@theme` 열은 **모든** 테마 아틀라스에서 확인한다.
+
+경고/오류 구분(D-MVDATA-RES, 2026-11-10): 검사기 `MvResourceColumnChecker`(MV.Editor)가 `MvTableAuthoring.Validate`에서 함께 돈다. 갈래 A(`temp_art_list.tsv`)의 미추출과 그림 없음은 경고(목록), 다른 아틀라스에 있는 이름·대소문자만 다른 이름·파일은 있는데 주소 없음·주소 열에 스프라이트 이름은 오류다. 시험 `MvResourceColumnTests`: 오류 0, 미추출 경고는 모두 목록에 있음. 목록 다시 쓰기는 메뉴 `MV/Tables/Write Unextracted Resource List`.
 
 ---
 
@@ -2027,7 +2035,7 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 |---|---|
 | 모든 fk 열 값이 대상 표에 있음(0·빈칸 허용 열 제외) | 오류 |
 | consumeData: §7.1.6 개수 규칙, type이 07에 있고 active, id가 idTable에 있음 | 오류 |
-| 600번대 type은 런 표(102·105·313·801·802 중 런 드롭 그룹·401 clearReward 제외)에서만, 608·609·630은 어디서나 | 오류 |
+| 600번대 type은 런 표(102·105·313·801·802 중 런 드롭 그룹·401 clearReward 제외)에서만, 608·609와 메타 보관 재화 610·620·621·622·630은 어디서나 | 오류 |
 | `07_consumeType.codeName`과 C# `ConsumeType` enum이 1:1, idKind와 `{p}Id`가 맞음(group이면 묶음 첫 행 id) | 오류 |
 | `300_runConfig`·`499_contentConfig` 키 = 코드 상수 목록(누락·남음) | 오류 |
 | 소리·이펙트 열 값이 `03_sound.key`·`04_effect.key`에 있음(변형 소리는 `_n` 붙인 key 확인) | 오류 |
@@ -2039,7 +2047,7 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 | 표 | 규칙 | 등급 |
 |---|---|---|
 | 301·302 | areaNo 1부터 연속, Zone 범위 겹침·빈틈 없음, `PLAYABLE_AREAS ≤ active Area 수` | 오류 |
-| 303 | floorGroup마다 floor 1~FLOOR_COUNT 존재, rows ≥ 1, h0 ≤ h1. Baked: soulCells·soulAmts 개수 같음, 합 = souls, 모든 idx < rows×3, 생선 idx ≥ soulMinIdx, 생선·캣닢 칸 겹침 없음 | 오류 |
+| 303 | Area가 쓰는 floorGroup은 floor 1~FLOOR_COUNT 존재(모드 전용 묶음 901~은 floor 1부터 빈틈 없이), rows ≥ 1, h0 ≤ h1. Baked: soulCells·soulAmts 개수 같음, 합 = souls, 모든 idx < rows×3, 생선 idx ≥ soulMinIdx, 생선·캣닢 칸 겹침 없음 | 오류 |
 | 303 | 같은 Baked 묶음을 여러 Area가 공유 | 경고 |
 | 310·311 | 템플릿마다 stair ≥ 1, 모든 z < endZ, `|x| ≤ LANE_X_MAX + hw`, wall 종류 없음(blocks=1 종류는 템플릿 금지) | 오류 |
 | 312 | cycleGroup 0이 Level 1~∞를 빈틈·겹침 없이 덮음 | 오류 |

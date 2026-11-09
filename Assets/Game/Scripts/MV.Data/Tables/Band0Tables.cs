@@ -112,13 +112,16 @@ namespace MV.Data
 
     // ---------------- 04_effect ----------------
 
+    /// <summary>이펙트 위치 기준(07 §7.11.2, 06 §6.4). 빈칸 = 호출 함수 기본(<see cref="EffectData.anchor"/> null).</summary>
+    public enum EffectAnchor { hit, obj, player, climbTop }
+
     public sealed class EffectData : MvRow
     {
         public const string Table = "04_effect";
-        // 열 정의 정본은 06 §6.4. type·blend·anchor 값 목록이 06에서 자라므로 문자열로 둔다.
+        // 열 정의 정본은 06 §6.4. type·blend 값 목록이 06에서 자라므로 문자열로 둔다. anchor는 07 §7.11.2 enum.
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Str("type").Res("prefab", MvAtlas.Address)
             .Int("poolSize").Str("blend").Float("sortBias").Str("color").Float("count").Float("speed").Float("size")
-            .Float("life").Float("grav").Float("radius").Str("flag").Strs("children").Float("y").Str("anchor")
+            .Float("life").Float("grav").Float("radius").Str("flag").Strs("children").Float("y").Enum<EffectAnchor>("anchor")
             .Float("chance").ConfigKey("shake", prefix: true).ConfigKey("hitStop");
 
         public string type { get; private set; }
@@ -136,7 +139,8 @@ namespace MV.Data
         public string flag { get; private set; }
         public IReadOnlyList<string> children { get; private set; }
         public double y { get; private set; }
-        public string anchor { get; private set; }
+        /// <summary>null = 빈칸(함수 기본값, 06 §6.4).</summary>
+        public EffectAnchor? anchor { get; private set; }
         public double chance { get; private set; }
         public string shake { get; private set; }
         public string hitStop { get; private set; }
@@ -161,7 +165,7 @@ namespace MV.Data
             flag = S(r, "flag");
             children = Strs(r, "children");
             y = D(r, "y");
-            anchor = S(r, "anchor");
+            anchor = ConsumeData.TryParseEnum(r.Get("anchor"), out EffectAnchor a) ? a : (EffectAnchor?)null;
             chance = D(r, "chance", 1);
             shake = S(r, "shake");
             hitStop = S(r, "hitStop");
@@ -173,8 +177,7 @@ namespace MV.Data
     public sealed class ContentOpenData : MvRow
     {
         public const string Table = "05_contentOpen";
-        // contentId → 400_content는 4xx 표가 들어올 때 Fk로 바꾼다(TaskBoard MV-DATA 남김).
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("contentId").Int("sort").Bool("active")
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Fk("contentId", ContentData.Table).Int("sort").Bool("active")
             .Res("icon", MvAtlas.UiIcon).Int("conditionType", true).Int("conditionValue").Bool("sticky").Bool("showOnMap");
 
         public int contentId { get; private set; }
