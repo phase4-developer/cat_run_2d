@@ -38,9 +38,6 @@ namespace MV.Boot
     {
         public const string WorldRootAddress = "WorldRoot";
         public const string LobbyStageAddress = "LobbyStage";
-        /// <summary>로비에 있는 동안 시설 단계를 다시 넣는 간격(초). 메타 팝업에서 산 것을 닫은 뒤 반영한다.</summary>
-        public const float FacilityRefreshSec = 1f;
-
         public static MvGameLoop Current { get; private set; }
 
         public MvLoopPhase Phase { get; private set; }
@@ -65,6 +62,8 @@ namespace MV.Boot
         public int TicksPerFrame { get; set; } = 1;
         /// <summary>값이 있으면 실시간 dt 대신 이 dt로 Tick한다.</summary>
         public double? FixedDt { get; set; }
+        /// <summary>로비에 있는 동안 시설 단계를 다시 넣는 간격(초, 기본 1). 메타 팝업에서 산 것을 닫은 뒤 반영한다.</summary>
+        public float FacilityRefreshSec { get; set; } = 1f;
         /// <summary>값이 있으면 포인터 대신 이 함수(런 프레임 → 목표 tx, null = 드래그 없음)로 드래그한다.</summary>
         public Func<int, double?> ScriptedDrag { get; set; }
 

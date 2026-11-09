@@ -35,6 +35,7 @@ namespace MV.Tests
                 loop.ScriptedDrag = null;
                 loop.FixedDt = null;
                 loop.TicksPerFrame = 1;
+                loop.FacilityRefreshSec = 1f;
             }
             MvBootMeta.Detach();
             MvSave.Shutdown();
@@ -115,7 +116,9 @@ namespace MV.Tests
             Assert.AreEqual(1, loop.SettleCount);
             Assert.Greater(_prefs.Count, 0, "정산이 시험 메모리 저장소에 써지지 않았다");
 
-            // 로비에 있는 동안 1초마다 시설 단계를 다시 넣는다(메타 팝업을 닫은 뒤 반영).
+            // 로비에 있는 동안 주기(기본 1초)마다 시설 단계를 다시 넣는다(메타 팝업을 닫은 뒤 반영).
+            // 시험은 간격을 0으로 줄여 기다리지 않는다(로비에 1초 넘게 머물면 TMP 설정 없음 지연 창이 배치 모드 오류를 낸다).
+            loop.FacilityRefreshSec = 0f;
             applied = loop.FacilityApplyCount;
             elapsed = 0f;
             while (loop.FacilityApplyCount == applied && elapsed < 3f)
