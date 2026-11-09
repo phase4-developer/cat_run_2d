@@ -10,7 +10,7 @@
 | MV-SAVE 저장·이관 | 완료(G1 통합 대기) | 하위 에이전트 닫힘 | `ai/MV-SAVE-save-migration`(G1 통합 브랜치로 병합) | `43637e7` | `31b51a3` | compile `291ea15aa1bd` PASS, EditMode `9a7bd185e321` 18/18 PASS, PlayMode NOT_RUN(계약 없음) | D-68 대기: 고정본 save는 평문 불가 → 개발은 공개 고정 키, 출시는 키 공급자 교체 지점(지금 출시 빌드는 저장 못 엶). 참조 정리·Boot 6단계는 MV-G1-INT |
 | MV-G1-INT 표+저장 Boot 연결 | 진행 | 하위 에이전트 | `ai/MV-G1-INT-boot-save` @ `.wt/b`, `moonvillage-b` | dev `05b42af` + MV-SAVE 병합 `e9d9927` + 총괄 asmdef `ed5083c` | | | 쓰기: `S/MV.Boot/`, `S/MV.Save/`, `S/MV.Save.Tests/`, `Tests/PlayMode/`, 기획서 09 동기화. 통과하면 이 브랜치를 dev에 병합(G1 끝) |
 | MV-RUN-SIM 런 시뮬레이션 | 진행 | 하위 에이전트 | `ai/MV-RUN-SIM-core` @ `.wt/f`, `moonvillage-f` | dev `05b42af` + 총괄 asmdef `3155544`(MV.Run.Tests) | | | 쓰기: `S/MV.Run/`, `S/MV.Run.Tests/`(Gen 제외). 공용 상태 Commit 뒤 MV-RUN-GEN 시작 |
-| MV-RUN-GEN 레벨 생성 | 대기 | — | — | | | | MV-RUN-SIM 공용 상태(RunObject) Commit 위에서 시작 |
+| MV-RUN-GEN 레벨 생성 | 진행 | 하위 에이전트 | `ai/MV-RUN-GEN-level` @ `.wt/d`, `moonvillage-d` | `1bd449d`(MV-RUN-SIM 공용 상태: dev `d9fcddc` + 총괄 asmdef `4576f19` MV.Run→JJEvol.Tables.Runtime) | | | 쓰기: `S/MV.Run/Gen/`, `S/MV.Run.Tests/Gen/`. 대조: `QA/Dumps/gen/` |
 | MV-META 메타 규칙 | 대기 | — | — | | | | 선행: MV-SAVE가 dev에 들어간 뒤(MV-G1-INT) |
 | MV-TOOL-ART 그림 추출 | 1차 병합, 3차 진행 | 1·2번째 닫힘 → 3번째 진행 | 1차 `ai/MV-TOOL-ART-extract`(병합 뒤 지움), 3차 `ai/MV-TOOL-ART-remaining` @ `.wt/c` | `43637e7`, 3차 dev `688ecaf` | `e7b58c8` → dev `688ecaf` | compile `630d4553c1d9` PASS, V1 결정성 PASS, V2 PASS(ΔE 최대 ≤ 3 — 총괄 결정, 03 §3.11 동기화), V4 PASS, V3 NOT_RUN | 정식 1699·임시 275. 남은 것: 표가 쓰는 미추출 14이름, 로비·이펙트·UI 스킨. MV-DATA 요청: 113 portrait 대소문자(2차 담당에 전달) |
 | MV-QA-HARNESS 캡처 도구(프로토 쪽) | 프로토 쪽 병합 | 하위 에이전트 닫힘 | `ai/MV-QA-HARNESS-proto`(병합 뒤 지움) | `43637e7` | `b66c41f` → dev `63c76dc` | 37/38장면(U-14 protoNA) 118장 2회 픽셀 해시 동일, GEN·FIELD·SIM 덤프 재생성 SHA 동일. 사람 확인 NOT_RUN: U-04·U-12·U-13 연출 포착 | Unity 쪽은 MV-RUN-SIM·MV-VIEW 뒤 별도. `mask[]` 실측은 MV-QA-ACCEPT. 기획서 12 §12.1 동기화. 결정 D-41+D-30·D-71·D-27 |
@@ -24,7 +24,7 @@
 | a | `C:/Project/MoonVillage.wt/a` | `moonvillage-a` | MV-DATA 2차 | 완료·체크포인트·입력 약 15만 토큰 |
 | b | `C:/Project/MoonVillage.wt/b` | `moonvillage-b` | MV-G1-INT(MV-SAVE 끝) | 같음 |
 | c | `C:/Project/MoonVillage.wt/c` | `moonvillage-c` | MV-TOOL-ART 3차 | 같음 |
-| d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | 비어 있음(dev 분리 HEAD, 다음 계약에 재사용) | — |
+| d | `C:/Project/MoonVillage.wt/d` | `moonvillage-d` | MV-RUN-GEN | 완료·체크포인트·입력 약 15만 토큰 |
 | e | `C:/Project/MoonVillage.wt/e` | `moonvillage-e` | MV-TOOL-SND | 같음 |
 | f | `C:/Project/MoonVillage.wt/f` | `moonvillage-f` | MV-RUN-SIM | 같음 |
 | g | `C:/Project/MoonVillage.wt/g` | `moonvillage-g` | MV-ART-ATLAS | 같음 |
