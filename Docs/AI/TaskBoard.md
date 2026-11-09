@@ -16,7 +16,7 @@
 | MV-RUN-SIM / GEN | 완료(G2·G3) | `23cec8a` | — |
 | MV-RUN-RULE 확장 지점 | 완료 | `cfe1f46` | 402 표 연결, G7 `IModeRule` |
 | MV-RUN-VIEWAPI WY·옹벽 읽기 | 완료 | `a0303d7` | MV.View `RunStateViewSource` Wy·HasCliff·Cliff 교체(VIEW 다음 담당) |
-| MV-META 메타 규칙 | 완료 | `d120b2e` | `modePlays` 한도(400_content) 교체 지점 |
+| MV-META 메타 규칙 | 3차 완료 | `d120b2e`, 3차 `f678cbd` | 3차: 테스트 패널 로컬 처리기 8개(개발 빌드만), `DisarmRebirth`. 결정 후보 D1 unlockAll은 Area·런 수 올리기, D2 addTime은 저장 안 함, D3 DisarmRebirth는 RebirthPresenter 직접 호출(port에 넣을 자리), `MvDebugRequests`·`MvMetaRequestNames.Debug*` 상수 중복. 요청(LOBBY): `settings.muted` 저장 요청, 로비 구매 결과(`MvLobbyBuyResult`) 화면 입구 |
 | MV-G3-INT Boot 연결 | 완료(G3 끝) | `8de2dc7` | Meta 저장→`RunContext` 도우미 없음 → MV-PLAY-INT. dev 전체 `448a6fc73f04` PASS(compile, EditMode 335/335, PlayMode 2/2) |
 | MV-VIEW 월드 렌더 | 2차 완료 | 1차 `64aa5b4`, 2차 `bd7bb3b` | PlayMode·캡처·드로우콜 NOT_RUN. 남음: ScreenRig Vignette, 로비 이름표·말풍선·고양이·방석·전구·난로 빛, 빠진 연출(관문 줄·광륜·별·롤 게이트 줄·벽돌 빠짐), renderScale(폭 1080 상한, URP 통합 Writer). 요청: MV-DATA 105 `viewShape` 열. 결정 후보: 라벨 위치, 꽃 flipX, 우물 잡동사니 배치 |
 | MV-SND 소리 재생 | 완료 | `b148dc5` | Boot 연결(G4 통합) |
@@ -36,7 +36,7 @@
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
 | a | `moonvillage-a` | MV-UI-LOBBY 1차 | `ai/MV-UI-LOBBY-main` | `S/MV.UI/Lobby/`·`Result/`·Common 줄 추가, 각 Tests, `A/Addressables/Remote/UI/Lobby/`·`Result/` |
-| b | `moonvillage-b` | MV-META 3차(디버그 처리기·DisarmRebirth·VIEW bumpH 1줄) | `ai/MV-META-debug` | `S/MV.Meta/`·Tests, `S/MV.UI/Meta/Rebirth/` 1줄, `WorldViewSource.cs`·`ViewConfig.cs` |
+| b | `moonvillage-b` | (비어 있음) | — | — |
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
@@ -68,5 +68,5 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 ## 열린 결정 (권장안으로 진행, 교체 가능)
 
-D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 교체 MV-TABLE-SWAP 병합, dev `b9182cb` 전체 확인 `c0fcbf8e461f` PASS(EditMode 426, PlayMode 7)(viewShape·304 소품·줄·04 part·dailyLimit). 남음: `WorldViewSource.cs`의 `RunStateViewSource` `_bump = ViewConfig.ClimbBumpOf(tables.Climb)` 1줄(다음 VIEW 담당). 결정 후보(SWAP): 길가 소품은 정본 deco 문턱 우선·목록만으로 고르려면 가중치 열, 원소 when은 bolt 아니면 fire(god.blast key null만 옛 색과 다름), 400에 없는 key는 한도 없음. 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
+D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 교체 MV-TABLE-SWAP 병합, dev `b9182cb` 전체 확인 `c0fcbf8e461f` PASS(EditMode 426, PlayMode 7)(viewShape·304 소품·줄·04 part·dailyLimit). bumpH 1줄은 MV-META 3차에서 끝. 결정 후보(SWAP): 길가 소품은 정본 deco 문턱 우선·목록만으로 고르려면 가중치 열, 원소 when은 bolt 아니면 fire(god.blast key null만 옛 색과 다름), 400에 없는 key는 한도 없음. 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
 - 미해결(사용자): 없음.
