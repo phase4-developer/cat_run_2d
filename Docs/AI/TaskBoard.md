@@ -36,14 +36,14 @@
 | 칸 | 실행기 | 지금 계약 | 브랜치 | 쓰기 범위 |
 |---|---|---|---|---|
 | a | `moonvillage-a` | MV-UI-LOBBY 1차 | `ai/MV-UI-LOBBY-main` | `S/MV.UI/Lobby/`·`Result/`·Common 줄 추가, 각 Tests, `A/Addressables/Remote/UI/Lobby/`·`Result/` |
-| b | `moonvillage-b` | (총괄 dev 전체 확인 `c0fcbf8e461f`) | dev 분리 HEAD | — |
+| b | `moonvillage-b` | (비어 있음) | — | — |
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | (비어 있음) | — | — |
 | e | `moonvillage-e` | (비어 있음) | — | — |
 | f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
 | g | `moonvillage-g` | (비어 있음) | — | — |
 
-- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 419, PlayMode 7, PLAY-INT 병합 기준).
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 426, PlayMode 7, `b9182cb` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
@@ -68,5 +68,5 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 ## 열린 결정 (권장안으로 진행, 교체 가능)
 
-D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 교체 MV-TABLE-SWAP 병합(viewShape·304 소품·줄·04 part·dailyLimit). 남음: `WorldViewSource.cs`의 `RunStateViewSource` `_bump = ViewConfig.ClimbBumpOf(tables.Climb)` 1줄(다음 VIEW 담당). 결정 후보(SWAP): 길가 소품은 정본 deco 문턱 우선·목록만으로 고르려면 가중치 열, 원소 when은 bolt 아니면 fire(god.blast key null만 옛 색과 다름), 400에 없는 key는 한도 없음. 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
+D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 교체 MV-TABLE-SWAP 병합, dev `b9182cb` 전체 확인 `c0fcbf8e461f` PASS(EditMode 426, PlayMode 7)(viewShape·304 소품·줄·04 part·dailyLimit). 남음: `WorldViewSource.cs`의 `RunStateViewSource` `_bump = ViewConfig.ClimbBumpOf(tables.Climb)` 1줄(다음 VIEW 담당). 결정 후보(SWAP): 길가 소품은 정본 deco 문턱 우선·목록만으로 고르려면 가중치 열, 원소 when은 bolt 아니면 fire(god.blast key null만 옛 색과 다름), 400에 없는 key는 한도 없음. 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
 - 미해결(사용자): 없음.
