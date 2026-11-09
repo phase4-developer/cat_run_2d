@@ -10,7 +10,7 @@
 | MV-DATA 표 | 완료(G1) | `6d946c8` | 자료 빈칸(정본 값 없음, 보관 참조). VIEW 요청: `view.groundFar` 92→120, `330_climb` 출렁임 열, `304_theme` 6~15행 |
 | MV-SAVE 저장 | 완료(G1) | `bf2921c` | D-68 출시 저장 키 |
 | MV-TOOL-ART 그림 | 완료(G2) | 3차 `72ba086`, 4차 `ce87826` | `UI_Skin_MapZone_Z4~Z6` 임시 아트, D-ART-01~06 |
-| MV-TOOL-SND 소리 굽기 | 1차 완료, 2차(tierup_0) 진행 | `25ae2cb` | — |
+| MV-TOOL-SND 소리 굽기 | 완료(2차 tierup_0) | `922cad9` | 효과음 31·`03_sound` 33행, 청취 NOT_RUN. 오디오 Addressables 그룹 없음(33개 미등록) → PLAY-INT 통합 |
 | MV-ART-ATLAS 아틀라스 | 부분 완료 | `12f354d` | 실측 패킹·메모리 NOT_RUN, D-MVDATA-PET `Atlas_World_Pet` 규칙 행 |
 | MV-QA-HARNESS | 프로토 쪽 완료 | `63c76dc` | Unity 쪽(VIEW 뒤, D-87로 참고 보고서) |
 | MV-RUN-SIM / GEN | 완료(G2·G3) | `23cec8a` | — |
@@ -39,7 +39,7 @@
 | d | `moonvillage-d` | MV-VIEW 2차 | `ai/MV-VIEW-world2` | `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders|Materials/`, `A/Addressables/Remote/World/` |
 | e | `moonvillage-e` | (비어 있음) | — | — |
 | f | `moonvillage-f` | (비어 있음) → 총괄 bundle3 패키지 20개 연결(권한 허용 대기) | — | 총괄 통합 Writer |
-| g | `moonvillage-g` | MV-TOOL-SND 2차 | `ai/MV-TOOL-SND-tierup0` | `Tools/MvExtract/sound/`, 오디오, `03_sound` 행 1개 |
+| g | `moonvillage-g` | (비어 있음) | — | — |
 
 - dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 374, PlayMode 2, `79aeb7e` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.

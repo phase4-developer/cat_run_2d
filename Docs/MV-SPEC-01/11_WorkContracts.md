@@ -99,7 +99,7 @@ G8의 MV-QA-HARNESS(프로토 쪽)는 G0과 동시에 시작할 수 있다.
 | 입력 | [03 §3.9](03_ResourcePipeline.md) |
 | 쓰기 | `Tools/MvExtract/sound/`, `A/Addressables/Remote/Audio/` |
 | 선행 | MV-TOOL-ART와 같은 설치 승인. 쓰기 범위가 달라 병렬 가능 |
-| 완료 | `03_sound` 32행(효과음 30클립 + BGM 2, [03 §3.9.3](03_ResourcePipeline.md))의 파일이 모두 있고, 길이·채널·샘플레이트가 03 표와 같음 |
+| 완료 | `03_sound` 33행(효과음 31클립 + BGM 2, [03 §3.9.3](03_ResourcePipeline.md))의 파일이 모두 있고, 길이·채널·샘플레이트가 03 표와 같음 |
 | 검증 | 파형 대조(정본 실시간 녹음 vs 구운 파일, 03 §3.11), 청취 확인은 사람 확인 NOT_RUN |
 
 #### MV-ART-ATLAS 아틀라스·임포트 설정

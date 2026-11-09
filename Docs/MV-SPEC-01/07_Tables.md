@@ -1941,7 +1941,7 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | gapMs | int | 같은 키 최소 간격(ms). 간격 안 요청은 버림(정본 `GAP`, L1678~1679) |
 | #비고 | | |
 
-행은 **32행**(효과음 30: `3001001`~`3001030`, BGM 2: `3002001 bgm_lobby`, `3002002 bgm_run`)이며 정본은 [03 §3.9.3](03_ResourcePipeline.md). 이 문서의 소리 열 값(`clank`, `wood`, `coin`, `gem`, `soul`, `gate`, `forge`, `floor`, `steal`, `card_n`, `bgm_run`)은 그 행의 key다.
+행은 **33행**(효과음 31: `3001001`~`3001031`, BGM 2: `3002001 bgm_lobby`, `3002002 bgm_run`)이며 정본은 [03 §3.9.3](03_ResourcePipeline.md). 이 문서의 소리 열 값(`clank`, `wood`, `coin`, `gem`, `soul`, `gate`, `forge`, `floor`, `steal`, `card_n`, `bgm_run`)은 그 행의 key다.
 
 ### 7.11.2 04_effect
 
@@ -2196,5 +2196,5 @@ id	group	floor	h0	h1	rows	souls	cellMode
 - **08**: 4xx·7xx 표 열 정의는 08이 정본이고 이 문서는 목록·관계(§7.2, §7.9)만 가진다. 08의 consumeType(610·620·621·622·630), 16_levelPrice 그룹(301 이상), `01_wealth` 5~17, `02_playResource` 101~105, `05_contentOpen` 5001001~018, `08_adPlacement` 모드·상점·축복 행을 이 문서 표에 그대로 받는다. 600번대 type을 메타 보상에 쓰지 않는다(608·609·630 제외).
 - **05**: `09_uiResource` 행과 `ui.*` 문구는 05가 늘린다. 화면은 `08_adPlacement.key`로 광고 자리를 찾는다.
 - **02·06**: `300_runConfig` 그룹 001~008(95키)과 `04_effect` 행·`320_camera` 열은 02·06이 정본이다.
-- **03**: `03_sound` 32행, 아틀라스 이름, `sprite_catalog.tsv` 형식은 03이 정본이다. 이 문서는 열 정의와 검증 규칙만 가진다.
+- **03**: `03_sound` 33행, 아틀라스 이름, `sprite_catalog.tsv` 형식은 03이 정본이다. 이 문서는 열 정의와 검증 규칙만 가진다.
 - **09**: 저장은 표 id가 아니라 **key**를 저장한다(덱·재화 제외). 표에서 행이 빠졌을 때 처리는 §7.13.4.

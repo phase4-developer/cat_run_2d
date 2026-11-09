@@ -779,7 +779,7 @@ ASTC 6x6 2048² = 1.87 MB(밉 포함 2.49 MB), 4x4 1024² = 1.0 MB, 2048×1024 6
 | **합(렌더 타깃 제외)** | | | **약 30~33 MB** |
 
 - **목표: 텍스처 총량(렌더 타깃 제외) ≤ 48 MB, 상한 64 MB.**
-- 오디오: 효과음 30개 Decompress On Load PCM 합 약 1.0 MB, BGM Streaming 버퍼만.
+- 오디오: 효과음 31개 Decompress On Load PCM 합 약 1.0 MB, BGM Streaming 버퍼만.
 - Memory Profiler 스냅샷에서 `Texture2D` 항목을 아틀라스별로 확인하고, 이름이 `(Clone)`인 Sprite 수가 「캐시된 이름 수 + 화면의 AddressableImage 수」를 넘지 않는지 본다.
 
 ### 3.8.12 검수 방법
@@ -994,7 +994,7 @@ gapMs 출처: `GAP`(L1677) — throw 70, hit 35, crit 50, wood 50, coin 45, tick
 | [06](06_Effects.md) | `04_effect` 프리팹이 `Atlas_Fx_Common` 스프라이트를 쓰고, 우다다 하늘·지붕은 셰이더·메쉬 |
 | [07](07_Tables.md) | 제안 열: `101_cat.spritePrefix`, `101_cat.lobbySprite`, `113_god.portrait`, `10_lobbyUpgrade.facSprite`, `105_objectKind.tint`(게이트 배경·관문 발판 색), `304_theme.worldAtlas`·`roadsideProps`·`lineKind`, `07_consumeType.worldBadge`, `110_card.projSprite`. 표 정의에 「기본 아틀라스」 칸(값 `@theme` 허용). 리소스 열 검증기 |
 | [08](08_Content.md) | 카드·무기·모드 추가 시 그림은 같은 도구로 굽고 이름 규칙(§3.4.1)을 따른다. 잔재 효과음이 필요하면 D-55를 바꾼다 |
-| [11](11_WorkContracts.md) | MV-TOOL-ART 완료 기준 = §3.5의 모든 이름 + V1~V5 통과, MV-TOOL-SND = §3.9.3 32행 + V6, MV-ART-ATLAS = §3.8 |
+| [11](11_WorkContracts.md) | MV-TOOL-ART 완료 기준 = §3.5의 모든 이름 + V1~V5 통과, MV-TOOL-SND = §3.9.3 33행 + V6, MV-ART-ATLAS = §3.8 |
 
 ### 남은 의문
 

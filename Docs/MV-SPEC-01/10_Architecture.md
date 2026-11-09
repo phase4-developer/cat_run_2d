@@ -31,7 +31,7 @@
 | Addressables | resources.addressables | 요청 | 런타임 로드·반환 `AddressablesManager`·`AddressableScope` | 고정 |
 | Addressables | `com.artress.managed-addressables` | 요청 | Boot/Revision 제작, 앱 포함 A. 원격 콘텐츠 교체(테마 팩 추가 배포) | 고정 pre.10 |
 | 씬 | scene, scene.addressables, scene.ui | 보강 | Boot→Lobby→Run 씬 전환, 로딩·페이드 | 시험 중 |
-| 사운드 | audio, audio.addressables | 요청 | 효과음 30클립·BGM 2개(`03_sound` 32행), 볼륨·음소거 | audio 고정 pre.2 / audio.addressables 시험 중 |
+| 사운드 | audio, audio.addressables | 요청 | 효과음 31클립·BGM 2개(`03_sound` 33행), 볼륨·음소거 | audio 고정 pre.2 / audio.addressables 시험 중 |
 | 이펙트 | effects, effects.addressables | 요청 | 파티클·스프라이트 이펙트 풀 | effects 고정 / .addressables 시험 중 |
 | 이펙트 | effects.ui | 보강 | 토스트, HUD로 날아가는 아이콘 | 시험 중 |
 | 데이터 | save, data | 보강(필수) | 진행 저장(프로토 `save` 전체), Container 분리 | 고정 |
@@ -133,7 +133,7 @@ Assets/Game/
       UIAtlas/       UI 아틀라스(SpriteAtlas) — [03 §3.8]
       WorldAtlas/    월드 아틀라스(공용·테마별) — [03 §3.8]
       Texture/       AddressableTexture 단독 텍스처(아지트 배경 등)
-      Audio/Sfx/     효과음 30클립
+      Audio/Sfx/     효과음 31클립
       Audio/Music/   BGM
       Effect/        이펙트 프리팹
       Mode/          모드 씬·프리팹

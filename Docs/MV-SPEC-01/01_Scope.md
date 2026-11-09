@@ -20,7 +20,7 @@
 | 저장 키 | `catescape_moon_v1` |
 | 외부 의존 | three.js r128(cdnjs, 카메라·행렬 계산만), Google Fonts(Black Han Sans, Gothic A1) |
 | 그리기 | Canvas 2D 벡터. 이미지 파일 0개. L917~922 「2D 버전: WebGL 없이 캔버스 2D로 그린다. three.js는 좌표 · 카메라 계산에만 쓴다」, `renderer`는 빈 껍데기(`render(){}`) |
-| 소리 | WebAudio 합성(LIB 효과음 키 28개 중 사용 23개 + BGM). Unity에서는 효과음 클립 30개 + BGM 2개 = `03_sound` 32행([03 §3.9](03_ResourcePipeline.md)). 오디오 파일 0개 |
+| 소리 | WebAudio 합성(LIB 효과음 키 28개 중 사용 23개 + BGM). Unity에서는 효과음 클립 31개 + BGM 2개 = `03_sound` 33행([03 §3.9](03_ResourcePipeline.md)). 오디오 파일 0개 |
 
 이 문서의 모든 「L123」은 위 파일의 줄 번호다. 정본이 바뀌면 SHA256이 달라지므로, 개발 중 정본 교체는 기획 변경으로 다룬다.
 
