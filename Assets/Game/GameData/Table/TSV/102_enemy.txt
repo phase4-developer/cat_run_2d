@@ -1,0 +1,4 @@
+id	key	sort	active	hpRuleId	moveAiId	rewardType	rewardId	rewardValue	rewardValuePerZone	rewardValueRule	dropId	sprite	frameCount	fps	hitSound	breakSound	hitEffect	breakEffect	hw	hd	scale	icon
+102001001	mouse	1	1	114001002	109001002	602	0	6	4	Flat	801001001	World_Enemy_Mouse	16	12.7		coin		run.enemyKill				
+102001002	mouseDefence	2	1	114001007	109001003						0	World_Enemy_Mouse	16	12.7		coin		run.enemyKill				
+102001003	bossMouse	3	1	114001007	109001003						0	World_Enemy_BigMouse	16	12.7		coin		run.enemyKill	2.2	1.2	2.2	

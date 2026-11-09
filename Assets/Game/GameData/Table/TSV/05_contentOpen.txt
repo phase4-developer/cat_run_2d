@@ -1,0 +1,19 @@
+id	key	contentId	sort	active	icon	conditionType	conditionValue	sticky	showOnMap
+5001001	rebirth	0	1	1		1	2	1	
+5001002	attendance	0	2	1		2	1		
+5001003	contentMenu	0	3	1		1	3		
+5001004	god.flame	0	4	1		1	4		
+5001005	quest	0	5	1		2	1		
+5001006	mode.rapidRush	400001002	6	1		1	4		
+5001007	mode.churuRush	400001003	7	1		1	5		
+5001008	mode.bigMouse	400001004	8	0		1	6		
+5001009	research	0	9	1		1	5		
+5001010	gear	0	10	0		1	3		
+5001011	friend	0	11	0		1	6		
+5001012	pet	0	12	0		1	7		
+5001013	shop	0	13	1		0	0		
+5001014	achievement	0	14	1		2	1		
+5001015	pass	0	15	0		1	4		
+5001016	blessing	0	16	0		1	3		
+5001017	godLevel	0	17	0		1	6		
+5001018	roadMap	0	18	0		1	2		

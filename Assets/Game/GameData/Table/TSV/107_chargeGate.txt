@@ -1,0 +1,4 @@
+id	key	gateType	base	step	growth	cap	mul	useScale	useGauge	useAreaHp	diffMul	perPass
+107001001	sgate	StairGate	1.9	0	None	0	2	1	0	1	1	GaugeLv
+107001002	cgate	CraftGate	1.9	3.8	Add	20	1	1	0	1	0	One
+107001003	well	Well	150	1.6	Pow	8	1	0	1	1	0	Level

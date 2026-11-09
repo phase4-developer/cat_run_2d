@@ -1,0 +1,1 @@
+id	group	subGroup	rewardType	rewardId	rewardValue_min	rewardValue_max	weight	icon	nameKey

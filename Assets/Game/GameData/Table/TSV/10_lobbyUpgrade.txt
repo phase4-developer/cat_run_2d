@@ -1,0 +1,4 @@
+id	key	sort	active	max	levelPriceGroup	effectType	icon	facSprite	costFormula	costBase	costGrowth
+10001001	stair	1	1	30	1	StartStairLv			Pow	25	1.18
+10001002	weapon	2	1	149	2	DeckAdd			Pow	30	1.043
+10001003	income	3	1	50	3	GoldMul			LinearNext	20	8

@@ -1,0 +1,8 @@
+id	key	type	flash	punch	objShake	breakHitstop	breakShake	breakStat
+106001001	none	None	0	0	0			None
+106001002	damageEnemy	Damage	1	1	0	hitstop.enemyKill		Kills
+106001003	damageWall	Damage	1	0	1	hitstop.wallBreak	shake.wallBreak	Walls
+106001004	damageBox	Damage	1	1	0	hitstop.coinBreak		Boxes
+106001005	chargeStairGate	ChargeStairGate	1	0	0			None
+106001006	chargeCraftGate	ChargeCraftGate	1	0	0			None
+106001007	chargeWell	ChargeWell	0	1	0			None

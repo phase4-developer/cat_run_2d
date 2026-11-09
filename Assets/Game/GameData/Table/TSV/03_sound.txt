@@ -1,0 +1,33 @@
+id	key	soundType	soundName	volume	pitchRand	gapMs	#비고
+3001001	throw	Sfx	Sfx_Throw	1.0	0	70	L=0.12s; 잡음 BP 1800→4200 · L2091
+3001002	hit	Sfx	Sfx_Hit	1.0	0	35	L=0.12s; 삼각 230→110 + 잡음 · L2107
+3001003	crit	Sfx	Sfx_Crit	1.0	0	50	L=0.15s; 사각 340→140 + 잡음 + 사인 1250→1900 · L2107
+3001004	wood	Sfx	Sfx_Wood	1.0	0	50	L=0.29s; 잡음 LP 1500→260 + 사인 125→52 + 사각 · L1936, L2068
+3001005	coin	Sfx	Sfx_Coin	1.0	0	45	L=0.27s; 사각 G6 → C7 · L1925, L1941, L1966
+3001006	gem	Sfx	Sfx_Gem	1.0	0	60	L=0.35s; 사인 A6·C#7·E7 · L1939, L1964
+3001007	soul	Sfx	Sfx_Soul	1.0	0	20	L=0.61s; 사인 C5·G5·C6·G6 + 잡음 HP · L1937
+3001008	gate	Sfx	Sfx_Gate	1.0	0	20	L=0.33s; 삼각 392→784, 784→1175 · L2046, L2260
+3001009	forge	Sfx	Sfx_Forge	1.0	0	20	L=0.26s; 사각 880 + 잡음 + 삼각 660 · L2051
+3001010	clank	Sfx	Sfx_Clank	1.0	0	60	L=0.13s; 사각 640→390 + 잡음 BP · L1912, L1919
+3001011	lvup	Sfx	Sfx_Lvup	1.0	0	20	L=0.37s; 사각 C5·E5·G5·C6 · L1221, L1890, L2553, L2613
+3001012	tierup_1	Sfx	Sfx_Tierup_1	1.0	0	20	L=0.32s; b = 523·2^(1/5) = 600.8 Hz, 삼각 b + b×1.5 · L2281, L3165
+3001013	tierup_2	Sfx	Sfx_Tierup_2	1.0	0	20	L=0.32s; b = 690.1 Hz
+3001014	tierup_3	Sfx	Sfx_Tierup_3	1.0	0	20	L=0.32s; b = 792.7 Hz
+3001015	tierup_4	Sfx	Sfx_Tierup_4	1.0	0	20	L=0.32s; b = 910.6 Hz
+3001016	land	Sfx	Sfx_Land	1.0	0	20	L=0.35s; 잡음 LP 700→150 + 사인 110→60 · L2286
+3001017	tick	Sfx	Sfx_Tick	1.0	0	20	L=0.075s; 사각 1400 · L2270, L2368
+3001018	card_0	Sfx	Sfx_Card_0	1.0	0	20	L=0.52s; r = 0(C) 장3화음+8도 아르페지오 · L2369
+3001019	card_1	Sfx	Sfx_Card_1	1.0	0	20	L=0.52s; r = 2(D)
+3001020	card_2	Sfx	Sfx_Card_2	1.0	0	20	L=0.52s; r = 4(E)
+3001021	card_3	Sfx	Sfx_Card_3	1.0	0	20	L=0.52s; r = 5(F)
+3001022	card_4	Sfx	Sfx_Card_4	1.0	0	20	L=0.52s; r = 7(G) · L2277, L2369
+3001023	merge	Sfx	Sfx_Merge	1.0	0	20	L=0.22s; 사각 660→990 + 삼각 990→1320 · L1193, L2644
+3001024	buy	Sfx	Sfx_Buy	1.0	0	20	L=0.20s; 사각 880, 1320 · L2377, L2530, L2644
+3001025	click	Sfx	Sfx_Click	1.0	0	20	L=0.08s; 사각 900 · L2444, L2445, L2610, L3856, UIButtonSound 기본
+3001026	warn	Sfx	Sfx_Warn	1.0	0	20	L=0.25s; 사각 880 → 660 · L2739
+3001027	steal	Sfx	Sfx_Steal	1.0	0	20	L=0.21s; 사각 700→300 · L2063
+3001028	fail	Sfx	Sfx_Fail	1.0	0	20	L=0.65s; 삼각 G4·E4·C4·G3 하행 · L2408(350 ms 지연)
+3001029	win	Sfx	Sfx_Win	1.0	0	20	L=0.63s; 사각 C5·E5·G5·C6·E6 · L2408, L2563
+3001030	floor	Sfx	Sfx_Floor	1.0	0	20	L=0.67s; 삼각 C4·G4·C5 · L2028
+3002001	bgm_lobby	Music	Bgm_Lobby	1.0	0	0	L=16.5517s(루프); intensity 0 믹스 · L2473
+3002002	bgm_run	Music	Bgm_Run	1.0	0	0	L=16.5517s(루프); intensity 1 믹스 · L2661
