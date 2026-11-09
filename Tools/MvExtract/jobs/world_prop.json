@@ -294,5 +294,1028 @@
   "anchorExpr": "[4.22 + (A.hh - 0.5)*0.12, 0, 0]",
   "expr": "drawMoonProp(null, {deco: TH && TH.deco === 'snow' ? 'snow' : 'roof', night: 0}, {kind: 'bush'}, {x: 1, y: 0, z: 0}, 0, 0, A.hh)",
   "src": "L3570~3578"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "each",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_House_Door",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 128,
+   "h": 176,
+   "pivotPx": [
+    64,
+    170
+   ]
+  },
+  "expr": "RR(g, X - 0.45*S, Y - 1.25*S, 0.9*S, 1.25*S, 0.06*S, (TH && TH.door) || '#4a7ac8', OLC, Math.max(1, S*0.035))",
+  "src": "L3594(th.door, 테마마다)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_House_Win_On",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 104,
+   "h": 88,
+   "pivotPx": [
+    52,
+    44
+   ]
+  },
+  "expr": "(RR(g, X - 0.35*S, Y - 0.3*S, 0.7*S, 0.6*S, 0.04*S, '#ffd878', OLC, Math.max(1, S*0.035)), LN(g, [[X, Y - 0.3*S], [X, Y + 0.3*S]], OLC, Math.max(1, S*0.035)*0.7))",
+  "src": "L3595~3596(불빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_House_Win_Off",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 104,
+   "h": 88,
+   "pivotPx": [
+    52,
+    44
+   ]
+  },
+  "expr": "(RR(g, X - 0.35*S, Y - 0.3*S, 0.7*S, 0.6*S, 0.04*S, '#a8d0f0', OLC, Math.max(1, S*0.035)), LN(g, [[X, Y - 0.3*S], [X, Y + 0.3*S]], OLC, Math.max(1, S*0.035)*0.7))",
+  "src": "L3595~3596(불빛은 Fx_Glow_Lin 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_House_Tank",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 152,
+   "h": 148,
+   "pivotPx": [
+    76,
+    142
+   ]
+  },
+  "expr": "(RR(g, X - 0.55*S, Y - 0.9*S, 1.1*S, 0.9*S, 0.2*S, '#5a9ad8', OLC, Math.max(1, S*0.035)), E(g, X, Y - 0.9*S, 0.55*S, 0.16*S, '#7ab8f0', OLC, Math.max(1, S*0.035)))",
+  "src": "L3598"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_House_Jars",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 216,
+   "h": 116,
+   "pivotPx": [
+    108,
+    106
+   ]
+  },
+  "expr": "(() => { for (const [dx, sc] of [[-0.5, 1], [0.05, 0.8], [0.5, 0.65]]) { E(g, X + dx*S, Y - 0.28*S*sc, 0.3*S*sc, 0.3*S*sc, '#6a4030', OLC, Math.max(1, S*0.035)); E(g, X + dx*S, Y - 0.55*S*sc, 0.18*S*sc, 0.06*S*sc, '#4a2a22'); } })()",
+  "src": "L3599(피벗 = 집 위 가운데 tp)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_House_SnowCap",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 128,
+   "h": 40,
+   "pivotPx": [
+    64,
+    36
+   ]
+  },
+  "expr": "RR(g, 4, 36 - 0.75*0.3*S, 120, 0.75*0.3*S, 0.3*0.3*S, '#f4f8ff', 'rgba(74,52,70,.35)', 1)",
+  "src": "L3597(r.T = 0.3 m [추정], snow 테마만 쓰지만 이름은 공통)",
+  "border": [
+   24,
+   0,
+   24,
+   0
+  ]
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "each",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Fence_Gate",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 152,
+   "h": 148,
+   "pivotPx": [
+    76,
+    142
+   ]
+  },
+  "expr": "(g.lineJoin = 'round', PL(g, [[X - 0.55*S, Y], [X + 0.55*S, Y], [X + 0.55*S, Y - 1.05*S], [X - 0.55*S, Y - 1.05*S]], (TH && TH.door) || '#4a7ac8', OLC, Math.max(1, S*0.035)), E(g, X + 0.3*S, Y - 0.5*S, 0.05*S, 0.05*S, '#ffd84a'))",
+  "src": "L3563(th.door, 문고리 m.s·0.05)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Fence_Flower",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 112,
+   "h": 64,
+   "pivotPx": [
+    72,
+    32
+   ]
+  },
+  "expr": "(g.globalAlpha = 0.7, E(g, X, Y, 0.18*S, 0.12*S, '#ff9ab0'), E(g, X - 0.25*S, Y + 0.08*S, 0.14*S, 0.1*S, '#ffd84a'), g.globalAlpha = 1)",
+  "src": "L3565(오른쪽 담장 sd = 1, 왼쪽은 flipX)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Fence_Awning_Red",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 416,
+   "h": 64,
+   "pivotPx": [
+    208,
+    6
+   ]
+  },
+  "expr": "(() => { g.lineJoin = 'round'; const L = 3.16*S, x0 = X - L/2; for (let i = 0; i < 6; i++) PL(g, [[x0 + L*i/6, Y + 0.0], [x0 + L*(i + 1)/6, Y], [x0 + L*(i + 1)/6, Y + 0.4*S], [x0 + L*i/6, Y + 0.4*S]], i % 2 ? '#fff4ea' : '#e8504a', OLC, Math.max(1, S*0.035)*0.8); })()",
+  "src": "L3561(6칸, 담장 길이 3.16 m. 면 밖으로 0.8 m 나온 것은 면 텍스처로 근사 [추정])"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Fence_Awning_Blue",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 416,
+   "h": 64,
+   "pivotPx": [
+    208,
+    6
+   ]
+  },
+  "expr": "(() => { g.lineJoin = 'round'; const L = 3.16*S, x0 = X - L/2; for (let i = 0; i < 6; i++) PL(g, [[x0 + L*i/6, Y + 0.0], [x0 + L*(i + 1)/6, Y], [x0 + L*(i + 1)/6, Y + 0.4*S], [x0 + L*i/6, Y + 0.4*S]], i % 2 ? '#fff4ea' : '#4a8ad8', OLC, Math.max(1, S*0.035)*0.8); })()",
+  "src": "L3561(6칸, 담장 길이 3.16 m. 면 밖으로 0.8 m 나온 것은 면 텍스처로 근사 [추정])"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Fence_SnowCap",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "BottomCenter",
+  "canvas": {
+   "w": 128,
+   "h": 28,
+   "pivotPx": [
+    64,
+    22
+   ]
+  },
+  "expr": "PL(g, [[4, Y], [124, Y], [124, Y - 0.12*S], [4, Y - 0.12*S]], '#ffffff', 'rgba(74,52,70,.4)', Math.max(1, S*0.035)*0.7)",
+  "src": "L3567(snow 테마만 쓰지만 이름은 공통)",
+  "border": [
+   16,
+   0,
+   16,
+   0
+  ]
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Shirt_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 136,
+   "h": 112,
+   "pivotPx": [
+    68,
+    12
+   ]
+  },
+  "expr": "(PL(g, [[X - 0.32*S, Y], [X + 0.32*S, Y], [X + 0.48*S, Y + 0.2*S], [X + 0.3*S, Y + 0.3*S], [X + 0.26*S, Y + 0.72*S], [X - 0.26*S, Y + 0.72*S], [X - 0.3*S, Y + 0.3*S], [X - 0.48*S, Y + 0.2*S]], '#f2a8b8', OLC, Math.max(1, S*0.035)), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3550(흔들림은 런타임 x 이동)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Towel_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 76,
+   "h": 120,
+   "pivotPx": [
+    38,
+    12
+   ]
+  },
+  "expr": "(RR(g, X - 0.25*S, Y, 0.5*S, 0.8*S, 0.04*S, '#f2a8b8', OLC, Math.max(1, S*0.035)), g.fillStyle = 'rgba(255,255,255,.6)', g.fillRect(X - 0.25*S, Y + 0.55*S, 0.5*S, 0.08*S), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3551"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Socks_0",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 96,
+   "h": 92,
+   "pivotPx": [
+    46,
+    12
+   ]
+  },
+  "expr": "(() => { for (const dx of [-0.14, 0.14]) PL(g, [[X + (dx - 0.07)*S, Y], [X + (dx + 0.07)*S, Y], [X + (dx + 0.07)*S, Y + 0.4*S], [X + (dx + 0.18)*S, Y + 0.48*S], [X + (dx + 0.14)*S, Y + 0.58*S], [X + (dx - 0.07)*S, Y + 0.5*S]], '#f2a8b8', OLC, Math.max(1, S*0.03)); E(g, X, Y, S*0.04, S*0.06, '#8a6a50'); })()",
+  "src": "L3552"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Shirt_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 136,
+   "h": 112,
+   "pivotPx": [
+    68,
+    12
+   ]
+  },
+  "expr": "(PL(g, [[X - 0.32*S, Y], [X + 0.32*S, Y], [X + 0.48*S, Y + 0.2*S], [X + 0.3*S, Y + 0.3*S], [X + 0.26*S, Y + 0.72*S], [X - 0.26*S, Y + 0.72*S], [X - 0.3*S, Y + 0.3*S], [X - 0.48*S, Y + 0.2*S]], '#8ac0e8', OLC, Math.max(1, S*0.035)), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3550(흔들림은 런타임 x 이동)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Towel_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 76,
+   "h": 120,
+   "pivotPx": [
+    38,
+    12
+   ]
+  },
+  "expr": "(RR(g, X - 0.25*S, Y, 0.5*S, 0.8*S, 0.04*S, '#8ac0e8', OLC, Math.max(1, S*0.035)), g.fillStyle = 'rgba(255,255,255,.6)', g.fillRect(X - 0.25*S, Y + 0.55*S, 0.5*S, 0.08*S), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3551"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Socks_1",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 96,
+   "h": 92,
+   "pivotPx": [
+    46,
+    12
+   ]
+  },
+  "expr": "(() => { for (const dx of [-0.14, 0.14]) PL(g, [[X + (dx - 0.07)*S, Y], [X + (dx + 0.07)*S, Y], [X + (dx + 0.07)*S, Y + 0.4*S], [X + (dx + 0.18)*S, Y + 0.48*S], [X + (dx + 0.14)*S, Y + 0.58*S], [X + (dx - 0.07)*S, Y + 0.5*S]], '#8ac0e8', OLC, Math.max(1, S*0.03)); E(g, X, Y, S*0.04, S*0.06, '#8a6a50'); })()",
+  "src": "L3552"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Shirt_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 136,
+   "h": 112,
+   "pivotPx": [
+    68,
+    12
+   ]
+  },
+  "expr": "(PL(g, [[X - 0.32*S, Y], [X + 0.32*S, Y], [X + 0.48*S, Y + 0.2*S], [X + 0.3*S, Y + 0.3*S], [X + 0.26*S, Y + 0.72*S], [X - 0.26*S, Y + 0.72*S], [X - 0.3*S, Y + 0.3*S], [X - 0.48*S, Y + 0.2*S]], '#f6e08a', OLC, Math.max(1, S*0.035)), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3550(흔들림은 런타임 x 이동)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Towel_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 76,
+   "h": 120,
+   "pivotPx": [
+    38,
+    12
+   ]
+  },
+  "expr": "(RR(g, X - 0.25*S, Y, 0.5*S, 0.8*S, 0.04*S, '#f6e08a', OLC, Math.max(1, S*0.035)), g.fillStyle = 'rgba(255,255,255,.6)', g.fillRect(X - 0.25*S, Y + 0.55*S, 0.5*S, 0.08*S), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3551"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Socks_2",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 96,
+   "h": 92,
+   "pivotPx": [
+    46,
+    12
+   ]
+  },
+  "expr": "(() => { for (const dx of [-0.14, 0.14]) PL(g, [[X + (dx - 0.07)*S, Y], [X + (dx + 0.07)*S, Y], [X + (dx + 0.07)*S, Y + 0.4*S], [X + (dx + 0.18)*S, Y + 0.48*S], [X + (dx + 0.14)*S, Y + 0.58*S], [X + (dx - 0.07)*S, Y + 0.5*S]], '#f6e08a', OLC, Math.max(1, S*0.03)); E(g, X, Y, S*0.04, S*0.06, '#8a6a50'); })()",
+  "src": "L3552"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Shirt_3",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 136,
+   "h": 112,
+   "pivotPx": [
+    68,
+    12
+   ]
+  },
+  "expr": "(PL(g, [[X - 0.32*S, Y], [X + 0.32*S, Y], [X + 0.48*S, Y + 0.2*S], [X + 0.3*S, Y + 0.3*S], [X + 0.26*S, Y + 0.72*S], [X - 0.26*S, Y + 0.72*S], [X - 0.3*S, Y + 0.3*S], [X - 0.48*S, Y + 0.2*S]], '#ffffff', OLC, Math.max(1, S*0.035)), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3550(흔들림은 런타임 x 이동)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Towel_3",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 76,
+   "h": 120,
+   "pivotPx": [
+    38,
+    12
+   ]
+  },
+  "expr": "(RR(g, X - 0.25*S, Y, 0.5*S, 0.8*S, 0.04*S, '#ffffff', OLC, Math.max(1, S*0.035)), g.fillStyle = 'rgba(255,255,255,.6)', g.fillRect(X - 0.25*S, Y + 0.55*S, 0.5*S, 0.08*S), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3551"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Socks_3",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 96,
+   "h": 92,
+   "pivotPx": [
+    46,
+    12
+   ]
+  },
+  "expr": "(() => { for (const dx of [-0.14, 0.14]) PL(g, [[X + (dx - 0.07)*S, Y], [X + (dx + 0.07)*S, Y], [X + (dx + 0.07)*S, Y + 0.4*S], [X + (dx + 0.18)*S, Y + 0.48*S], [X + (dx + 0.14)*S, Y + 0.58*S], [X + (dx - 0.07)*S, Y + 0.5*S]], '#ffffff', OLC, Math.max(1, S*0.03)); E(g, X, Y, S*0.04, S*0.06, '#8a6a50'); })()",
+  "src": "L3552"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Shirt_4",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 136,
+   "h": 112,
+   "pivotPx": [
+    68,
+    12
+   ]
+  },
+  "expr": "(PL(g, [[X - 0.32*S, Y], [X + 0.32*S, Y], [X + 0.48*S, Y + 0.2*S], [X + 0.3*S, Y + 0.3*S], [X + 0.26*S, Y + 0.72*S], [X - 0.26*S, Y + 0.72*S], [X - 0.3*S, Y + 0.3*S], [X - 0.48*S, Y + 0.2*S]], '#a8d8a0', OLC, Math.max(1, S*0.035)), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3550(흔들림은 런타임 x 이동)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Towel_4",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 76,
+   "h": 120,
+   "pivotPx": [
+    38,
+    12
+   ]
+  },
+  "expr": "(RR(g, X - 0.25*S, Y, 0.5*S, 0.8*S, 0.04*S, '#a8d8a0', OLC, Math.max(1, S*0.035)), g.fillStyle = 'rgba(255,255,255,.6)', g.fillRect(X - 0.25*S, Y + 0.55*S, 0.5*S, 0.08*S), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3551"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Socks_4",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 96,
+   "h": 92,
+   "pivotPx": [
+    46,
+    12
+   ]
+  },
+  "expr": "(() => { for (const dx of [-0.14, 0.14]) PL(g, [[X + (dx - 0.07)*S, Y], [X + (dx + 0.07)*S, Y], [X + (dx + 0.07)*S, Y + 0.4*S], [X + (dx + 0.18)*S, Y + 0.48*S], [X + (dx + 0.14)*S, Y + 0.58*S], [X + (dx - 0.07)*S, Y + 0.5*S]], '#a8d8a0', OLC, Math.max(1, S*0.03)); E(g, X, Y, S*0.04, S*0.06, '#8a6a50'); })()",
+  "src": "L3552"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Shirt_5",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 136,
+   "h": 112,
+   "pivotPx": [
+    68,
+    12
+   ]
+  },
+  "expr": "(PL(g, [[X - 0.32*S, Y], [X + 0.32*S, Y], [X + 0.48*S, Y + 0.2*S], [X + 0.3*S, Y + 0.3*S], [X + 0.26*S, Y + 0.72*S], [X - 0.26*S, Y + 0.72*S], [X - 0.3*S, Y + 0.3*S], [X - 0.48*S, Y + 0.2*S]], '#c8a8e8', OLC, Math.max(1, S*0.035)), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3550(흔들림은 런타임 x 이동)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Towel_5",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 76,
+   "h": 120,
+   "pivotPx": [
+    38,
+    12
+   ]
+  },
+  "expr": "(RR(g, X - 0.25*S, Y, 0.5*S, 0.8*S, 0.04*S, '#c8a8e8', OLC, Math.max(1, S*0.035)), g.fillStyle = 'rgba(255,255,255,.6)', g.fillRect(X - 0.25*S, Y + 0.55*S, 0.5*S, 0.08*S), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3551"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Socks_5",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 96,
+   "h": 92,
+   "pivotPx": [
+    46,
+    12
+   ]
+  },
+  "expr": "(() => { for (const dx of [-0.14, 0.14]) PL(g, [[X + (dx - 0.07)*S, Y], [X + (dx + 0.07)*S, Y], [X + (dx + 0.07)*S, Y + 0.4*S], [X + (dx + 0.18)*S, Y + 0.48*S], [X + (dx + 0.14)*S, Y + 0.58*S], [X + (dx - 0.07)*S, Y + 0.5*S]], '#c8a8e8', OLC, Math.max(1, S*0.03)); E(g, X, Y, S*0.04, S*0.06, '#8a6a50'); })()",
+  "src": "L3552"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Shirt_6",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 136,
+   "h": 112,
+   "pivotPx": [
+    68,
+    12
+   ]
+  },
+  "expr": "(PL(g, [[X - 0.32*S, Y], [X + 0.32*S, Y], [X + 0.48*S, Y + 0.2*S], [X + 0.3*S, Y + 0.3*S], [X + 0.26*S, Y + 0.72*S], [X - 0.26*S, Y + 0.72*S], [X - 0.3*S, Y + 0.3*S], [X - 0.48*S, Y + 0.2*S]], '#f0a070', OLC, Math.max(1, S*0.035)), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3550(흔들림은 런타임 x 이동)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Towel_6",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 76,
+   "h": 120,
+   "pivotPx": [
+    38,
+    12
+   ]
+  },
+  "expr": "(RR(g, X - 0.25*S, Y, 0.5*S, 0.8*S, 0.04*S, '#f0a070', OLC, Math.max(1, S*0.035)), g.fillStyle = 'rgba(255,255,255,.6)', g.fillRect(X - 0.25*S, Y + 0.55*S, 0.5*S, 0.08*S), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))",
+  "src": "L3551"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Socks_6",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 96,
+   "h": 92,
+   "pivotPx": [
+    46,
+    12
+   ]
+  },
+  "expr": "(() => { for (const dx of [-0.14, 0.14]) PL(g, [[X + (dx - 0.07)*S, Y], [X + (dx + 0.07)*S, Y], [X + (dx + 0.07)*S, Y + 0.4*S], [X + (dx + 0.18)*S, Y + 0.48*S], [X + (dx + 0.14)*S, Y + 0.58*S], [X + (dx - 0.07)*S, Y + 0.5*S]], '#f0a070', OLC, Math.max(1, S*0.03)); E(g, X, Y, S*0.04, S*0.06, '#8a6a50'); })()",
+  "src": "L3552"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Bulb_0_On",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 32,
+   "h": 44,
+   "pivotPx": [
+    16,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y + S*0.13, S*0.09, S*0.13, '#ff6a5a', OLC, 1)",
+  "src": "L3548(깜빡임·빛은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Bulb_0_Off",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 32,
+   "h": 44,
+   "pivotPx": [
+    16,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y + S*0.13, S*0.09, S*0.13, shadeC('#ff6a5a', -0.5), OLC, 1)",
+  "src": "L3548(깜빡임·빛은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Bulb_1_On",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 32,
+   "h": 44,
+   "pivotPx": [
+    16,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y + S*0.13, S*0.09, S*0.13, '#ffd84a', OLC, 1)",
+  "src": "L3548(깜빡임·빛은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Bulb_1_Off",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 32,
+   "h": 44,
+   "pivotPx": [
+    16,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y + S*0.13, S*0.09, S*0.13, shadeC('#ffd84a', -0.5), OLC, 1)",
+  "src": "L3548(깜빡임·빛은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Bulb_2_On",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 32,
+   "h": 44,
+   "pivotPx": [
+    16,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y + S*0.13, S*0.09, S*0.13, '#6ad0ff', OLC, 1)",
+  "src": "L3548(깜빡임·빛은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Bulb_2_Off",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 32,
+   "h": 44,
+   "pivotPx": [
+    16,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y + S*0.13, S*0.09, S*0.13, shadeC('#6ad0ff', -0.5), OLC, 1)",
+  "src": "L3548(깜빡임·빛은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Bulb_3_On",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 32,
+   "h": 44,
+   "pivotPx": [
+    16,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y + S*0.13, S*0.09, S*0.13, '#8af06a', OLC, 1)",
+  "src": "L3548(깜빡임·빛은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Line_Bulb_3_Off",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "TopCenter",
+  "canvas": {
+   "w": 32,
+   "h": 44,
+   "pivotPx": [
+    16,
+    4
+   ]
+  },
+  "expr": "E(g, X, Y + S*0.13, S*0.09, S*0.13, shadeC('#8af06a', -0.5), OLC, 1)",
+  "src": "L3548(깜빡임·빛은 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Prop_Pole",
+  "atlas": "Atlas_World_Theme",
+  "mode": "project",
+  "pivot": "PoleBase",
+  "canvas": {
+   "w": 336,
+   "h": 516,
+   "pivotPx": [
+    77,
+    510
+   ]
+  },
+  "anchor": [
+   4.5,
+   0,
+   0
+  ],
+  "expr": "drawMoonProp(null, {deco: 'roof', night: 0}, {kind: 'sign'}, {x: 1, y: 0, z: 0}, 0, 0, 0.5)",
+  "src": "L3584~3590(실제 카메라 원근 포함: 위로 갈수록 바깥으로 벌어짐. 왼쪽은 flipX — 카메라가 x = 0 대칭이라 원근도 거울상)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Label_Arch",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 32,
+   "h": 32,
+   "pivotPx": [
+    16,
+    16
+   ]
+  },
+  "border": [
+   12,
+   12,
+   12,
+   12
+  ],
+  "allowEdge": true,
+  "src": "L1384(현판 판만, 글자는 TMP)",
+  "expr": "(g.fillStyle = '#5a3a4a', g.fillRect(0, 0, 32, 32), g.strokeStyle = '#e8c89a', g.lineWidth = 8, g.strokeRect(4, 4, 24, 24))"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Label_Arch_Gold",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 32,
+   "h": 32,
+   "pivotPx": [
+    16,
+    16
+   ]
+  },
+  "border": [
+   12,
+   12,
+   12,
+   12
+  ],
+  "allowEdge": true,
+  "src": "L1384(현판 판만, 글자는 TMP)",
+  "expr": "(g.fillStyle = '#7a4a22', g.fillRect(0, 0, 32, 32), g.strokeStyle = '#ffd84a', g.lineWidth = 8, g.strokeRect(4, 4, 24, 24))"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Label_GaugeBg",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 8,
+   "h": 8,
+   "pivotPx": [
+    4,
+    4
+   ]
+  },
+  "allowEdge": true,
+  "src": "L1499, L1512",
+  "expr": "(g.fillStyle = 'rgba(0,0,0,.55)', g.fillRect(0, 0, 8, 8))"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "all",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "World_Label_GaugeFill",
+  "atlas": "Atlas_World_Theme",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 8,
+   "h": 8,
+   "pivotPx": [
+    4,
+    4
+   ]
+  },
+  "allowEdge": true,
+  "src": "L1499, L1512(흰색, 틴트)",
+  "expr": "(g.fillStyle = '#ffffff', g.fillRect(0, 0, 8, 8))"
  }
 ]

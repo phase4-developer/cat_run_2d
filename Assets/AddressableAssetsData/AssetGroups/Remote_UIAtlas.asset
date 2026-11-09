@@ -39,6 +39,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - ui.core
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cfa48997e5df4c898573633fb42740a5
+    m_Address: Atlas_UI_Common
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
   m_SchemaSet:

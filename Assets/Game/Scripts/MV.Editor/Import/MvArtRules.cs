@@ -238,12 +238,14 @@ namespace MV.Editor.Import
         public static TextureImporterFormat TextureFormatFor(string name) =>
             name != null && name.StartsWith("Tex_Lobby_Room", StringComparison.Ordinal) ? TextureImporterFormat.ASTC_6x6 : TextureImporterFormat.ASTC_4x4;
 
-        /// <summary>단독 텍스처 라벨(03 §3.8.5 `lobby`/`ui.god`). 규칙 없는 이름은 null.</summary>
+        /// <summary>단독 텍스처 라벨(03 §3.8.5 `lobby`/`ui.god`, `Tex_UI_*`는 `ui.core`). 규칙 없는 이름은 null.</summary>
         public static string TextureLabelFor(string name)
         {
             if (name == null) return null;
             if (name.StartsWith("Tex_God_", StringComparison.Ordinal)) return "ui.god";
             if (name.StartsWith("Tex_Lobby_", StringComparison.Ordinal)) return "lobby";
+            // 화면 비네트 #vig는 런·로비 무대에 늘 깔리므로 상주 UI 묶음과 같이 둔다(03 §3.8.5 표에 없음 — 결정 후보).
+            if (name.StartsWith("Tex_UI_", StringComparison.Ordinal)) return "ui.core";
             return null;
         }
 

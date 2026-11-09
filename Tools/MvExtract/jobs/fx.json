@@ -417,5 +417,102 @@
   },
   "expr": "E(g, X, Y, 20, 20, null, OLC, 20*0.12)",
   "src": "L3185"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [
+   {
+    "fn": "E",
+    "argIndex": 6,
+    "in": [
+     "#ffffff"
+    ]
+   }
+  ],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Paw",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "ctx",
+  "pivot": "Center",
+  "canvas": {
+   "w": 288,
+   "h": 244,
+   "pivotPx": [
+    144,
+    134
+   ]
+  },
+  "expr": "drawPawFx({x: X, y: Y, d: 15, s: S}, 0.35)",
+  "src": "L3747(k = 0.35 낙하 끝. 착지 링은 Fx_RingEllipse, 낙하·페이드는 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Hiss",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "ctx",
+  "pivot": "Center",
+  "canvas": {
+   "w": 516,
+   "h": 308,
+   "pivotPx": [
+    258,
+    154
+   ]
+  },
+  "expr": "drawHissFx({x: X, y: Y, d: 15, s: S}, 0.2)",
+  "src": "L3753(k = 0.2: 반지름 1.8 m, 알파 0.8 포함. 반지름·알파는 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_FlashEllipse",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 148,
+   "h": 108,
+   "pivotPx": [
+    74,
+    54
+   ]
+  },
+  "expr": "E(g, X, Y, 70, 70*0.8/1.1, '#ffffff')",
+  "src": "L3628(1.1q×0.8q 흰 타원, 알파 ×0.35·크기는 런타임)"
+ },
+ {
+  "ppu": 128,
+  "scaleK": 1,
+  "themeSet": "none",
+  "suppress": [],
+  "only": [],
+  "clock": 0,
+  "name": "Fx_Stripe",
+  "atlas": "Atlas_Fx_Common",
+  "mode": "direct",
+  "pivot": "Center",
+  "canvas": {
+   "w": 64,
+   "h": 16,
+   "pivotPx": [
+    32,
+    8
+   ]
+  },
+  "expr": "LN(g, [[4, Y], [60, Y]], '#ffffff', Math.max(1, S*0.03))",
+  "src": "L3635(가로 흰 줄 굵기 q·0.03, 알파 .5·스크롤·폭은 런타임. 03 표의 16×64는 가로 줄이라 64×16으로)",
+  "allowEdge": true
  }
 ]

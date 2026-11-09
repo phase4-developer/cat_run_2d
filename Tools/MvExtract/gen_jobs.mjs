@@ -189,6 +189,107 @@ const WB = (name, c) => add('world_obj.json', { name, atlas: 'Atlas_World_Theme'
 for (const [el, c] of [['Fire', '#ffb03a'], ['Bolt', '#ff3a4a']]) add('world_proj.json', { name: `World_Proj_SpearHead_${el}`, atlas: 'Atlas_Fx_Common', mode: 'direct', pivot: 'Center', canvas: { w: 96, h: 96, pivotPx: [48, 48] }, args: { c },
   expr: "(E(g, X, Y, S*0.34, S*0.34, ha(A.c, 0.5)), E(g, X, Y, S*0.17, S*0.17, A.c), E(g, X, Y, S*0.07, S*0.07, '#ffffff'))", src: 'L3802~3803' });
 
+// ── 3.5.8 UI 스킨(skin 방식): 정본 CSS 연쇄(뒤쪽 덮어쓰기 규칙 L279~602 포함)를 그대로 입힌 빈 요소를 찍는다. u = 10.8 px ──
+// 선형 그라데이션 판은 9-slice 최소 크기 2·(모서리) + 10, 원형 그라데이션·무늬 판은 정본 표시 크기 그대로(경계는 같이 적는다)
+const U = 10.8, WGRADE = ['#9ea4ae', '#46c35a', '#3a8ff0', '#a65be8', '#f08a24', '#e8443a', '#1fc8c8', '#ffd23a'], TIER_C = ['#c9c2b4', '#6fd27a', '#58a6f0', '#c07af0', '#f2b33d'];
+const ZONE_COL = [['#a85a4a', '#e0a070'], ['#4a6aa8', '#8ab0e0'], ['#8a5aa8', '#c08ad8']];
+const S9 = (r, b = 0) => 2 * Math.ceil(Math.max(r, b)) + 10;
+const SK = (name, atlas, html, size, src, o = {}) => { const m = o.margin ?? 64, hw = o.host ? o.host[0] : Math.min(1080, Math.ceil((size[0] + 2 * m) / 4) * 4), hh = o.host ? o.host[1] : Math.ceil((size[1] + 2 * m) / 4) * 4;
+  add('ui_skin.json', { name, atlas, mode: 'skin', pivot: 'Center', canvas: { w: hw, h: hh, pivotPx: [hw / 2, hh / 2] }, html, size, src, ...o }); };
+SK('UI_Skin_Panel', 'Atlas_UI_Common', '<div id="hud" data-w><div class="floor" data-t></div></div>', [S9(2 * U), S9(2 * U)], 'CSS --panel L13·L582, #hud .floor L50·L283');
+SK('UI_Skin_Chip', 'Atlas_UI_Common', '<div class="chip" data-t></div>', [70, 60], 'CSS .chip L38·L280(높이 = 아이콘 4.2u + 위아래 .6u + 테두리, 반지름 5u는 높이 반으로 줄어듦)');
+SK('UI_Skin_StairBox', 'Atlas_UI_Hud', '<div id="stairBox" data-t></div>', [S9(3 * U), S9(3 * U)], 'CSS #stairBox L53·L284');
+SK('UI_Skin_StairBox_Fly', 'Atlas_UI_Hud', '<div id="stairBox" class="fly" data-t></div>', [S9(3 * U), S9(3 * U)], 'CSS #stairBox.fly L74', { margin: 72 });
+WGRADE.forEach((c, i) => {
+  SK(`UI_Skin_WCard_G${i + 1}`, 'Atlas_UI_Hud', `<div class="wcard2" data-t style="--gc:${c}"></div>`, [114, 114], 'CSS .wcard2 L494~496·L567~568(크기 ch = W·0.105, L1201)');
+  SK(`UI_Skin_WpnCard_G${i + 1}`, 'Atlas_UI_Hud', `<div id="wpnCard" data-t style="--gc:${c}"></div>`, [206, 206], 'CSS #wpnCard L96·L291·L506·L576(19u)');
+});
+TIER_C.forEach((c, i) => {
+  SK(`UI_Skin_HCard_T${i}`, 'Atlas_UI_Card', `<div class="hcard" data-t style="--tc:${c}"></div>`, [226, 162], 'CSS .hcard L411~413(21u×15u)');
+  SK(`UI_Skin_HCardCenter_T${i}`, 'Atlas_UI_Card', `<div id="hc" class="center" data-w><div class="hcard" data-t style="--tc:${c}"></div></div>`, [270, 356], 'CSS #hc.center .hcard L555~556(25u×33u, 사선 무늬 포함)');
+  SK(`UI_Skin_CardBig_T${i}`, 'Atlas_UI_Card', `<div id="card" data-t style="--tc:${c};--tg:transparent"></div>`, null, 'CSS #card L236~238·L326(크기 = 정본 #card 내용으로 잰 값, --tg 빛은 final 때만이라 끔)', { clone: '#card', host: [544, 660] });
+  SK(`UI_Skin_MsCard_T${i}`, 'Atlas_UI_Hud', `<div class="ms-card" data-t style="--tc:${c}"></div>`, [S9(2 * U, 0.6 * U), S9(2 * U, 0.6 * U)], 'CSS .ms-card L429·L542·L602', { margin: 96 });
+});
+SK('UI_Skin_UpButton', 'Atlas_UI_Lobby', '<button class="up" data-t></button>', [S9(2.4 * U), S9(2.4 * U)], 'CSS .up L164~165·L316·L590');
+SK('UI_Skin_PopupBox', 'Atlas_UI_Common', '<div class="pnl" data-w style="--pc:transparent"><div class="box" data-t></div></div>', [S9(3 * U), S9(3 * U)], 'CSS .pnl .box L348·L595(테두리색 --pc는 UI_Skin_PopupEdge 틴트)');
+SK('UI_Skin_PopupEdge', 'Atlas_UI_Common', '<div class="pnl" data-w style="--pc:#ffffff"><div class="box" data-t></div></div>', [S9(3 * U), S9(3 * U)], 'CSS .pnl .box 테두리 L348(흰색, --pc 틴트)', { targetCss: 'background:none;box-shadow:none' });
+SK('UI_Skin_ResultCell', 'Atlas_UI_Common', '<div id="result" data-w><div class="rw" data-w><div data-t></div></div></div>', [S9(2 * U), S9(2 * U)], 'CSS #result .rw div L262·L329');
+ZONE_COL.forEach(([c1, c2], i) => SK(`UI_Skin_MapZone_Z${i + 1}`, 'Atlas_UI_Lobby', `<div class="mp-zone" data-t style="--z1:${c1};--z2:${c2}"></div>`, [972, 184], 'CSS .mp-zone L453~454, ZONE_COL L2580(폭 90u [추정]: 135° 그라데이션이라 늘이지 않는 크기)', { margin: 24 }));
+SK('UI_Skin_MapCp', 'Atlas_UI_Lobby', '<div class="mp-cp" data-w><div data-t></div></div>', [S9(1.6 * U), S9(1.6 * U)], 'CSS .mp-cp div L469');
+SK('UI_Skin_MapFt', 'Atlas_UI_Lobby', '<div class="mp-ft" data-w><div data-t></div></div>', [S9(1.6 * U), S9(1.6 * U)], 'CSS .mp-ft div L475');
+SK('UI_Skin_MapFt_On', 'Atlas_UI_Lobby', '<div class="mp-ft" data-w><div class="on" data-t></div></div>', [S9(1.6 * U), S9(1.6 * U)], 'CSS .mp-ft div.on L479');
+SK('UI_Skin_UnlockBox', 'Atlas_UI_Common', '<div class="ul-box" data-t></div>', null, 'CSS .ul-box L482(크기 = 정본 .ul-box 내용으로 잰 값, 원형 그라데이션이라 늘이지 않는 크기)', { clone: '.ul-box', host: [1076, 1000] });
+// 막대 채움: Simple 늘림(9-slice 없음). 폭 방향 그라데이션은 128 px로 굽는다
+SK('UI_Skin_Bar_Stair', 'Atlas_UI_Hud', '<div id="gFill" data-t></div>', [44, 256], 'CSS #gFill L518~519·L587(세로 채움, 칸 4.4u−테두리 × 24u. 바깥 빛 box-shadow는 칸 overflow로 잘려 뺌)', { slice: false, margin: 8, targetCss: 'box-shadow:none' });
+SK('UI_Skin_Bar_Ms', 'Atlas_UI_Hud', '<div class="ms-bar" data-w><i data-t></i></div>', [128, 28], 'CSS .ms-bar i L436(JS가 등급색으로 바꾸는 경우는 런타임 틴트)', { slice: false, margin: 8 });
+SK('UI_Skin_Bar_Soul', 'Atlas_UI_Hud', '<div id="lSoulFill" data-t></div>', [128, 24], 'CSS #lSoulFill L158', { slice: false, margin: 8 });
+SK('UI_Skin_Bar_Result', 'Atlas_UI_Hud', '<div id="rBar" data-t></div>', [128, 24], 'CSS #rBar L260', { slice: false, margin: 8 });
+SK('UI_Skin_Bar_Up', 'Atlas_UI_Hud', '<div class="up" data-w><div class="g" data-w><b data-t></b></div></div>', [128, 24], 'CSS .up .g b L223', { slice: false, margin: 8 });
+// 화면 비네트 #vig(L45): 화면 전체 비례 그라데이션이라 540×960으로 굽고 늘려 쓴다
+SK('Tex_UI_Vignette', null, '<div id="vig" data-t></div>', [540, 960], 'CSS #vig L45(1080×1920의 절반, 늘려 씀)', { texture: true, noCrop: true, slice: false, margin: 0, allowEdge: true });
+// 알약 이름표(L3519): RR 높이 W*0.04, 반지름 W*0.02, 색 rgba(40,24,36,.72). 1080 폭 기준
+add('ui_skin.json', { name: 'UI_Skin_Pill', atlas: 'Atlas_UI_Common', mode: 'direct', pivot: 'Center', canvas: { w: 56, h: 48, pivotPx: [28, 24] }, border: [25, 24, 25, 24], src: 'L3519(W = 1080)',
+  expr: "RR(g, 2, 2.4, 52, 43.2, 21.6, 'rgba(40,24,36,.72)')" });
+
+// ── 3.5.6 로비 방 배경 Tex_Lobby_Room(drawAzit L3474~3537, ctx, W×H = 1080×1920) ──
+// 억제: 가랜드 전구 E(3×4)·전구 빛 fillRect 24×24·창밖 눈 arc·전체 그라데이션 fillRect(난로 빛·비네트)·시설 drawFac·고양이 mochi·방석 facCushion·
+// 이름표 RR·글자 fillText(달력 「12월」만 남김)·감정 말풍선(흰 E·PL). 회전 별 star4는 터치 반동 때만 그려져 0건이라 규칙에 넣지 않는다
+add('lobby.json', { name: 'Tex_Lobby_Room', texture: true, atlas: null, mode: 'ctx', pivot: 'Center', wh: [1080, 1920], canvas: { w: 1080, h: 1920, pivotPx: [540, 960] }, allowEdge: true, clock: 0,
+  expr: 'drawAzit()', src: 'L3474~3505(시설·고양이·전구·눈·빛·비네트·이름표는 따로)',
+  suppress: [{ fn: 'E', test: 'a[3] === 3 && a[4] === 4' }, { ctx: 'fillRect', test: 'a[2] === 24 && a[3] === 24' }, { ctx: 'arc', test: 'a[2] < 3' },
+    { ctx: 'fillRect', fillIsGradient: true, full: true }, { fn: 'drawFac' }, { fn: 'mochi' }, { fn: 'facCushion' },
+    { fn: 'RR', argIndex: 6, in: ['rgba(40,24,36,.72)'] }, { ctx: 'fillText', test: "a[0] !== '12월'" }, { fn: 'E', argIndex: 5, in: ['#ffffff'] }, { fn: 'PL', argIndex: 2, in: ['#ffffff'] }] });
+
+// ── 3.5.2 집 부품(drawMoonProp 집 분기 L3593~3600): 집 앞면 기준 화면 평면 그림이라 s = 128 px/m로 바로 그린다(L2 = max(1, s·0.035)) ──
+const HP = (name, w, h, px, py, expr, src, o = {}) => add('world_prop.json', { name, atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'direct', pivot: 'BottomCenter', canvas: { w, h, pivotPx: [px, py] }, expr, src, ...o });
+HP('World_House_Door', 128, 176, 64, 170, "RR(g, X - 0.45*S, Y - 1.25*S, 0.9*S, 1.25*S, 0.06*S, (TH && TH.door) || '#4a7ac8', OLC, Math.max(1, S*0.035))", 'L3594(th.door, 테마마다)', { themeSet: 'each' });
+for (const [nm, c] of [['On', '#ffd878'], ['Off', '#a8d0f0']]) HP(`World_House_Win_${nm}`, 104, 88, 52, 44,
+  `(RR(g, X - 0.35*S, Y - 0.3*S, 0.7*S, 0.6*S, 0.04*S, '${c}', OLC, Math.max(1, S*0.035)), LN(g, [[X, Y - 0.3*S], [X, Y + 0.3*S]], OLC, Math.max(1, S*0.035)*0.7))`, 'L3595~3596(불빛은 Fx_Glow_Lin 런타임)', { pivot: 'Center' });
+HP('World_House_Tank', 152, 148, 76, 142, "(RR(g, X - 0.55*S, Y - 0.9*S, 1.1*S, 0.9*S, 0.2*S, '#5a9ad8', OLC, Math.max(1, S*0.035)), E(g, X, Y - 0.9*S, 0.55*S, 0.16*S, '#7ab8f0', OLC, Math.max(1, S*0.035)))", 'L3598');
+HP('World_House_Jars', 216, 116, 108, 106, "(() => { for (const [dx, sc] of [[-0.5, 1], [0.05, 0.8], [0.5, 0.65]]) { E(g, X + dx*S, Y - 0.28*S*sc, 0.3*S*sc, 0.3*S*sc, '#6a4030', OLC, Math.max(1, S*0.035)); E(g, X + dx*S, Y - 0.55*S*sc, 0.18*S*sc, 0.06*S*sc, '#4a2a22'); } })()", 'L3599(피벗 = 집 위 가운데 tp)');
+// 지붕 눈(L3597): 지붕 윗면 두께 r.T의 0.75배 높이, 폭은 집마다 → 가로 9-slice. r.T = 0.3 m(드는 깊이 기준 [추정])
+HP('World_House_SnowCap', 128, 40, 64, 36, "RR(g, 4, 36 - 0.75*0.3*S, 120, 0.75*0.3*S, 0.3*0.3*S, '#f4f8ff', 'rgba(74,52,70,.35)', 1)", 'L3597(r.T = 0.3 m [추정], snow 테마만 쓰지만 이름은 공통)', { border: [24, 0, 24, 0] });
+
+// ── 3.5.2 담장 면 장식(L3558~3567): 「측면 정사영」 면 좌표(앞쪽 z → 오른쪽, y → 위), s = 128 ──
+const FP = (name, w, h, px, py, expr, src, o = {}) => add('world_prop.json', { name, atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'direct', pivot: 'BottomCenter', canvas: { w, h, pivotPx: [px, py] }, expr, src, ...o });
+FP('World_Fence_Gate', 152, 148, 76, 142, "(g.lineJoin = 'round', PL(g, [[X - 0.55*S, Y], [X + 0.55*S, Y], [X + 0.55*S, Y - 1.05*S], [X - 0.55*S, Y - 1.05*S]], (TH && TH.door) || '#4a7ac8', OLC, Math.max(1, S*0.035)), E(g, X + 0.3*S, Y - 0.5*S, 0.05*S, 0.05*S, '#ffd84a'))", 'L3563(th.door, 문고리 m.s·0.05)', { themeSet: 'each' });
+FP('World_Fence_Flower', 112, 64, 72, 32, "(g.globalAlpha = 0.7, E(g, X, Y, 0.18*S, 0.12*S, '#ff9ab0'), E(g, X - 0.25*S, Y + 0.08*S, 0.14*S, 0.1*S, '#ffd84a'), g.globalAlpha = 1)", 'L3565(오른쪽 담장 sd = 1, 왼쪽은 flipX)', { pivot: 'Center' });
+for (const [nm, c] of [['Red', '#e8504a'], ['Blue', '#4a8ad8']]) FP(`World_Fence_Awning_${nm}`, 416, 64, 208, 6,
+  `(() => { g.lineJoin = 'round'; const L = 3.16*S, x0 = X - L/2; for (let i = 0; i < 6; i++) PL(g, [[x0 + L*i/6, Y + 0.0], [x0 + L*(i + 1)/6, Y], [x0 + L*(i + 1)/6, Y + 0.4*S], [x0 + L*i/6, Y + 0.4*S]], i % 2 ? '#fff4ea' : '${c}', OLC, Math.max(1, S*0.035)*0.8); })()`,
+  'L3561(6칸, 담장 길이 3.16 m. 면 밖으로 0.8 m 나온 것은 면 텍스처로 근사 [추정])', { pivot: 'TopCenter' });
+FP('World_Fence_SnowCap', 128, 28, 64, 22, "PL(g, [[4, Y], [124, Y], [124, Y - 0.12*S], [4, Y - 0.12*S]], '#ffffff', 'rgba(74,52,70,.4)', Math.max(1, S*0.035)*0.7)", 'L3567(snow 테마만 쓰지만 이름은 공통)', { border: [16, 0, 16, 0] });
+
+// ── 3.5.2 빨래 3종 × 7색(drawClothes L3550~3553), 전구줄 4색 × 켬/끔(L3548): 매달린 점 = 피벗(집게) ──
+const CLOTH = ['#f2a8b8', '#8ac0e8', '#f6e08a', '#ffffff', '#a8d8a0', '#c8a8e8', '#f0a070'];
+const LINE = (name, w, h, px, py, expr, src) => add('world_prop.json', { name, atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'direct', pivot: 'TopCenter', canvas: { w, h, pivotPx: [px, py] }, expr, src });
+CLOTH.forEach((c, i) => {
+  LINE(`World_Line_Shirt_${i}`, 136, 112, 68, 12, `(PL(g, [[X - 0.32*S, Y], [X + 0.32*S, Y], [X + 0.48*S, Y + 0.2*S], [X + 0.3*S, Y + 0.3*S], [X + 0.26*S, Y + 0.72*S], [X - 0.26*S, Y + 0.72*S], [X - 0.3*S, Y + 0.3*S], [X - 0.48*S, Y + 0.2*S]], '${c}', OLC, Math.max(1, S*0.035)), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))`, 'L3550(흔들림은 런타임 x 이동)');
+  LINE(`World_Line_Towel_${i}`, 76, 120, 38, 12, `(RR(g, X - 0.25*S, Y, 0.5*S, 0.8*S, 0.04*S, '${c}', OLC, Math.max(1, S*0.035)), g.fillStyle = 'rgba(255,255,255,.6)', g.fillRect(X - 0.25*S, Y + 0.55*S, 0.5*S, 0.08*S), E(g, X, Y, S*0.04, S*0.06, '#8a6a50'))`, 'L3551');
+  LINE(`World_Line_Socks_${i}`, 96, 92, 46, 12, `(() => { for (const dx of [-0.14, 0.14]) PL(g, [[X + (dx - 0.07)*S, Y], [X + (dx + 0.07)*S, Y], [X + (dx + 0.07)*S, Y + 0.4*S], [X + (dx + 0.18)*S, Y + 0.48*S], [X + (dx + 0.14)*S, Y + 0.58*S], [X + (dx - 0.07)*S, Y + 0.5*S]], '${c}', OLC, Math.max(1, S*0.03)); E(g, X, Y, S*0.04, S*0.06, '#8a6a50'); })()`, 'L3552');
+});
+['#ff6a5a', '#ffd84a', '#6ad0ff', '#8af06a'].forEach((c, i) => { for (const on of [true, false])
+  LINE(`World_Line_Bulb_${i}_${on ? 'On' : 'Off'}`, 32, 44, 16, 4, `E(g, X, Y + S*0.13, S*0.09, S*0.13, ${on ? `'${c}'` : `shadeC('${c}', -0.5)`}, OLC, 1)`, 'L3548(깜빡임·빛은 런타임)'); });
+
+// ── 3.5.2 전봇대+가로등(drawMoonProp sign L3584~3590): 오른쪽(sd = 1) 기둥 밑 (4.5, 0, 0)을 피벗으로 project. 빛은 Fx_Glow_Lin 런타임 ──
+add('world_prop.json', { name: 'World_Prop_Pole', atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'project', pivot: 'PoleBase', canvas: { w: 336, h: 516, pivotPx: [77, 510] }, anchor: [4.5, 0, 0],
+  expr: "drawMoonProp(null, {deco: 'roof', night: 0}, {kind: 'sign'}, {x: 1, y: 0, z: 0}, 0, 0, 0.5)", src: 'L3584~3590(실제 카메라 원근 포함: 위로 갈수록 바깥으로 벌어짐. 왼쪽은 flipX — 카메라가 x = 0 대칭이라 원근도 거울상)' });
+
+// ── 3.5.3·3.5.4 이펙트 4종 ──
+add('fx.json', { name: 'Fx_Paw', atlas: 'Atlas_Fx_Common', mode: 'ctx', pivot: 'Center', canvas: { w: 288, h: 244, pivotPx: [144, 134] }, expr: 'drawPawFx({x: X, y: Y, d: 15, s: S}, 0.35)',
+  suppress: [{ fn: 'E', argIndex: 6, in: ['#ffffff'] }], src: 'L3747(k = 0.35 낙하 끝. 착지 링은 Fx_RingEllipse, 낙하·페이드는 런타임)' });
+add('fx.json', { name: 'Fx_Hiss', atlas: 'Atlas_Fx_Common', mode: 'ctx', pivot: 'Center', canvas: { w: 516, h: 308, pivotPx: [258, 154] }, expr: 'drawHissFx({x: X, y: Y, d: 15, s: S}, 0.2)', src: 'L3753(k = 0.2: 반지름 1.8 m, 알파 0.8 포함. 반지름·알파는 런타임)' });
+FX('Fx_FlashEllipse', 148, 108, "E(g, X, Y, 70, 70*0.8/1.1, '#ffffff')", 'L3628(1.1q×0.8q 흰 타원, 알파 ×0.35·크기는 런타임)');
+FX('Fx_Stripe', 64, 16, "LN(g, [[4, Y], [60, Y]], '#ffffff', Math.max(1, S*0.03))", 'L3635(가로 흰 줄 굵기 q·0.03, 알파 .5·스크롤·폭은 런타임. 03 표의 16×64는 가로 줄이라 64×16으로)', { allowEdge: true });
+
+// ── 3.7.1 라벨 판(L1384) ──
+// 관문 현판(labelPlane 512×128 = 4.2×1.05 m ≈ 122 px/m): 칠한 판 + 안쪽 4 px부터 굵기 8 테두리. 글자는 TMP. 9-slice로 늘려 쓴다
+for (const [nm, f, s] of [['World_Label_Arch', '#5a3a4a', '#e8c89a'], ['World_Label_Arch_Gold', '#7a4a22', '#ffd84a']])
+  add('world_prop.json', { name: nm, atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'direct', pivot: 'Center', canvas: { w: 32, h: 32, pivotPx: [16, 16] }, border: [12, 12, 12, 12], allowEdge: true, src: 'L1384(현판 판만, 글자는 TMP)',
+    expr: `(g.fillStyle = '${f}', g.fillRect(0, 0, 32, 32), g.strokeStyle = '${s}', g.lineWidth = 8, g.strokeRect(4, 4, 24, 24))` });
+// 라벨 게이지(L1499·L1512): 바탕 rgba(0,0,0,.55)(계단 게이트는 .6 — 런타임 알파), 채움은 흰색(색 틴트 #ffb05a/#ff6a3d/#8fc0ff). Simple 늘림
+add('world_prop.json', { name: 'World_Label_GaugeBg', atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'direct', pivot: 'Center', canvas: { w: 8, h: 8, pivotPx: [4, 4] }, allowEdge: true, src: 'L1499, L1512', expr: "(g.fillStyle = 'rgba(0,0,0,.55)', g.fillRect(0, 0, 8, 8))" });
+add('world_prop.json', { name: 'World_Label_GaugeFill', atlas: 'Atlas_World_Theme', themeSet: 'all', mode: 'direct', pivot: 'Center', canvas: { w: 8, h: 8, pivotPx: [4, 4] }, allowEdge: true, src: 'L1499, L1512(흰색, 틴트)', expr: "(g.fillStyle = '#ffffff', g.fillRect(0, 0, 8, 8))" });
+
 mkdirSync(join(ROOT, 'jobs'), { recursive: true });
 let n = 0;
 for (const [f, list] of Object.entries(out)) { writeFileSync(join(ROOT, 'jobs', f), JSON.stringify(list, null, 1) + '\n'); n += list.length; }

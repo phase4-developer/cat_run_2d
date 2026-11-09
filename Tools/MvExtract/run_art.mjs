@@ -37,6 +37,13 @@ async function renderDom(j) {
   const dataURL = 'data:image/png;base64,' + buf.toString('base64');
   return { dataURL, w: j.canvas.w, h: j.canvas.h, hits: [], zeroRules: [], alpha: await page.evaluate((u) => MvH.alphaOf(u), dataURL) };
 }
+// skin 방식(03 §3.5.8): 정본 CSS 연쇄로 그린 빈 요소를 찍고, 그림자 끝까지 대칭으로 잘라 9-slice 경계를 잰다
+async function renderSkin(j) {
+  const info = await page.evaluate((jj) => MvH.skinPrep(jj), j);
+  const buf = await page.locator('#mvDomHost').screenshot({ omitBackground: true, animations: 'disabled', caret: 'hide' });
+  await page.evaluate(() => MvH.domClear());
+  return page.evaluate(([u, inf, jj]) => MvH.skinCrop(u, inf, jj), ['data:image/png;base64,' + buf.toString('base64'), info, j]);
+}
 const write = (rel, buf) => { const p = join(OUT, rel); mkdirSync(join(p, '..'), { recursive: true }); writeFileSync(p, buf); return p; };
 
 for (const job of pick) {
@@ -56,7 +63,7 @@ for (const job of pick) {
       let r;
       try {
         if (PROBE) j = { ...j, canvas: { w: j.canvas.w * 3, h: j.canvas.h * 3, pivotPx: [j.canvas.pivotPx[0] + j.canvas.w, j.canvas.pivotPx[1] + j.canvas.h] } };
-        r = j.mode === 'svg' ? await page.evaluate((jj) => MvH.renderSvg(jj), j) : j.mode === 'dom' ? await renderDom(j) : await page.evaluate(([jj, v]) => MvH.renderOne(jj, v), [j, frames[i]]);
+        r = j.mode === 'svg' ? await page.evaluate((jj) => MvH.renderSvg(jj), j) : j.mode === 'dom' ? await renderDom(j) : j.mode === 'skin' ? await renderSkin(j) : await page.evaluate(([jj, v]) => MvH.renderOne(jj, v), [j, frames[i]]);
       } catch (e) { failures.push(`${name}: 예외 ${String(e.message || e).split('\n')[0]}`); continue; }
       if (PROBE) { const bb = await page.evaluate((u) => new Promise((res) => { const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const g = c.getContext('2d'); g.drawImage(im, 0, 0); const d = g.getImageData(0, 0, c.width, c.height).data; let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1; for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3]) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); } res([x0, y0, x1, y1]); }; im.src = u; }), r.dataURL);
         const [px, py] = j.canvas.pivotPx; console.log(`PROBE ${name} left ${px - bb[0]} right ${bb[2] - px + 1} up ${py - bb[1]} down ${bb[3] - py + 1}`); j = { ...job }; continue; }
@@ -65,6 +72,7 @@ for (const job of pick) {
       if (r.alpha.edgeHit > 0 && !job.allowEdge) errs.push(`가장자리 2px 안 알파 ${r.alpha.edgeHit}`);
       if (r.zeroRules.length) errs.push(`억제 규칙 0건 일치 #${r.zeroRules.join(',')}`);
       if (errs.length) { failures.push(`${name}${vv.theme ? '@' + vv.theme.key : ''}: ${errs.join(', ')}`); continue; }
+      if (r.pivotPx) j = { ...j, canvas: { w: r.w, h: r.h, pivotPx: r.pivotPx }, border: r.border }; // skin: 잘라낸 크기·잰 9-slice
       const png = Buffer.from(r.dataURL.split(',')[1], 'base64');
       const folder = j.texture ? 'Texture' : `Sprite/${vv.theme ? `Atlas_World_Theme_${vv.theme.key}` : j.atlas}`;
       const targets = j.themeSet === 'all' ? themeList.map((t) => `Sprite/Atlas_World_Theme_${t.key}`) : [folder];

@@ -27,11 +27,23 @@ MonoBehaviour:
     m_SerializedLabels:
     - lobby
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c876493cfd7f07641a313990b83ea8d1
+    m_Address: Tex_UI_Vignette
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c8c8607f50b1e054996ffdff3ff85073
     m_Address: Tex_God_Thunder
     m_ReadOnly: 0
     m_SerializedLabels:
     - ui.god
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cf5b0d3f2d60d104ca75774118fe7666
+    m_Address: Tex_Lobby_Room
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
