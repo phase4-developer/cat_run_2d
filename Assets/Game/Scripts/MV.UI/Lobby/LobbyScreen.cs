@@ -172,10 +172,11 @@ namespace MV.UI
                     MvUiToast.Show("컨텐츠 메뉴 준비 중");
                     break;
                 case LobbySideIds.Sound:
-                    // 설정 자리(05 §5.14 소리 버튼). 저장(settings.muted)은 메타 요청이 생기면 그쪽으로(MV-META 변경 요청).
+                    // 설정 자리(05 §5.14 소리 버튼). 저장은 메타 요청 settings.muted(실패해도 이번 실행의 소리는 바뀐 대로 둔다).
                     MvSound.Muted = !MvSound.Muted;
                     MvSound.PlayUi(MvUiSound.ButtonClick); // 정본 L3856: 전환 뒤 click
                     _presenter.Muted = MvSound.Muted;
+                    _presenter.Port.SetMuted(MvSound.Muted);
                     Redraw();
                     break;
                 case LobbySideIds.Debug:

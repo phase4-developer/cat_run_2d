@@ -20,6 +20,10 @@ namespace MV.Fx
     /// </summary>
     public static class MvFx
     {
+        /// <summary>파티클 머티리얼 주소(Addressables, 라벨 fx). <see cref="InstallDefault"/>의 normal·add로 Boot가 읽어 넘긴다.</summary>
+        public const string MatNormalAddress = "Fx/Mat_Normal";
+        public const string MatAddAddress = "Fx/Mat_Add";
+
         public static MvFxPlayer Player { get; private set; }
 
         public static void Install(MvFxPlayer player) => Player = player;

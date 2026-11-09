@@ -62,6 +62,7 @@ namespace MV.Meta
                 case MvMetaRequestNames.UseAd: return UseAd(Str(p, "key"));
                 case MvMetaRequestNames.RecordModePlay: return RecordModePlay(Str(p, "key"));
                 case MvMetaRequestNames.MarkSeen: return MarkSeen(p);
+                case MvMetaRequestNames.SetMuted: return SetMuted(p);
                 default:
                     return _debug.TryGetValue(request.Name, out var debug)
                         ? debug(p)
@@ -428,6 +429,14 @@ namespace MV.Meta
             if (unlock.HasValues) data[MvSaveKeys.Unlock] = unlock;
             if (p["contentTab"]?.Type == JTokenType.String) data[MvSaveKeys.Settings] = new JObject { ["contentTab"] = p.Value<string>("contentTab") };
             return MvMetaResponse.Success(data);
+        }
+
+        /// <summary>설정 소리 끄기(09 §9.3.6 <c>mvSettings.muted</c>). 다른 설정 칸은 그대로 둔다(병합).</summary>
+        private static MvMetaResponse SetMuted(JObject p)
+        {
+            if (p["muted"]?.Type != JTokenType.Boolean) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "muted");
+            bool muted = p.Value<bool>("muted");
+            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = new JObject { ["muted"] = muted } }, new JObject { ["muted"] = muted });
         }
 
         private static JArray Union(IReadOnlyList<string> current, JArray add)
