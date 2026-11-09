@@ -98,7 +98,10 @@ namespace MV.Meta.Tests
             Assert.That(Store.ApplyAndSaveJson("{\"wealthInfos\":[" + rows + "]}", false, MvSaveKeys.Wealth), Is.True);
         }
 
-        /// <summary>컨테이너 하나의 필드를 병합한다. <paramref name="fieldsJson"/>은 <c>"area":2,"runs":5</c> 식.</summary>
+        /// <summary>
+        /// 컨테이너 하나의 필드를 병합한다. <paramref name="fieldsJson"/>은 <c>"area":2,"runs":5</c> 식.
+        /// 값이 바뀌지 않으면 저장소가 false를 돌려주므로 기본값과 같은 값은 넣지 않는다.
+        /// </summary>
         protected void SetContainer(string containerKey, string fieldsJson)
             => Assert.That(Store.ApplyAndSaveJson("{\"" + containerKey + "\":{" + fieldsJson + "}}", false, containerKey), Is.True);
 

@@ -17,7 +17,7 @@ namespace MV.Meta.Tests
             SetContainer(MvSaveKeys.Rebirth, "\"pending\":9,\"perks\":{\"power\":2}");
             SetContainer(MvSaveKeys.Lobby, "\"up\":{\"stair\":3},\"deck\":[0,2,1,0,0,0,0,0,0]");
             SetContainer(MvSaveKeys.AreaUp, "\"lv\":{\"rate\":2}");
-            SetContainer(MvSaveKeys.God, "\"sel\":\"thunder\"");
+            Assert.That(Store.God.Selected, Is.EqualTo("thunder"), "시작 신(00_config.startGodKey)");
         }
 
         [Test]
