@@ -297,6 +297,7 @@ namespace MV.UI
             Bought?.Invoke();
             FacilityBump?.Invoke(LobbyFacilities.OfEffect(row.effectType));
             int after = StepLevel(t, row, Port.Level(MvGrowth.Lobby, key));
+            if (r.HasLobbyBuy) { before = r.LvBefore; after = r.LvAfter; } // 메타 구매 결과(MvLobbyBuyResult)의 Lv. 머지 등급(r.MergedTier) 연출은 2차.
             // 배너 자리(OverlayHud.ShowBanner는 2차 연출). 1차는 토스트로 알린다.
             if (after > before)
                 Say(row.effectType == LobbyEffectType.StartStairLv ? "캣타워 Lv " + after   // ui.banner.stairUp

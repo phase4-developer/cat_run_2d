@@ -138,6 +138,22 @@ namespace MV.Meta.Tests
             Assert.That(Meta.AdsLeft("dia"), Is.EqualTo(3));
         }
 
+        /// <summary>가짜 광고 팝업(gate)을 거치는 보상 광고: 팝업 1번, 닫으면 광고·보상·사용 수 없음, 보면 보상과 사용 수 1번.</summary>
+        [TestCase(true)]
+        [TestCase(false)]
+        public void RewardAd_Gate_ShowsOnce_CountsOnce(bool watched)
+        {
+            int gates = 0;
+            MvMetaResponse got = null;
+            Meta.WatchAdForReward("dia", r => got = r, (key, pass) => { gates++; Assert.That(key, Is.EqualTo("dia")); pass(watched); });
+            Assert.That(gates, Is.EqualTo(1));
+            Assert.That(Ads.RewardShown, Is.EqualTo(watched ? 1 : 0), "팝업을 닫으면 공급자 광고를 띄우지 않는다");
+            Assert.That(got.Ok, Is.EqualTo(watched), got.ToString());
+            if (!watched) Assert.That(got.Code, Is.EqualTo(MvMetaErrors.AdNotWatched));
+            Assert.That(W(MvWealthIds.Dia), Is.EqualTo(watched ? 100 : 0));
+            Assert.That(Meta.AdsLeft("dia"), Is.EqualTo(watched ? 2 : 3), "사용 수는 보상과 함께 한 번만");
+        }
+
         [Test]
         public void SkipAd_CutsCooldown70Min_OnlyWhileCooling()
         {
@@ -154,6 +170,19 @@ namespace MV.Meta.Tests
             Assert.That(Store.Rebirth.CdUntil, Is.EqualTo(T0 + CooldownMs - 4200L * 1000L));
             Assert.That(Meta.AdsLeft("skip"), Is.EqualTo(3));
             Assert.That(Ads.LastPlacement, Is.EqualTo("rebirth_skip"));
+        }
+
+        /// <summary>소리 끄기 저장(<c>mvSettings.muted</c>): 켜고 끄기, 다른 설정 칸 유지, 값 없는 요청은 거절.</summary>
+        [Test]
+        public void SetMuted_SavesSetting_KeepsContentTab()
+        {
+            SetContainer(MvSaveKeys.Settings, "\"contentTab\":\"mode\"");
+            Assert.That(Meta.SetMuted(true).Ok, Is.True);
+            Assert.That(Store.Settings.Muted, Is.True);
+            Assert.That(Store.Settings.ContentTab, Is.EqualTo("mode"), "다른 설정 칸은 그대로");
+            Assert.That(Meta.SetMuted(false).Ok, Is.True);
+            Assert.That(Store.Settings.Muted, Is.False);
+            Assert.That(Meta.Send(new MvMetaRequest(MvMetaRequestNames.SetMuted)).Code, Is.EqualTo(MvMetaErrors.BadParams));
         }
 
         [Test]

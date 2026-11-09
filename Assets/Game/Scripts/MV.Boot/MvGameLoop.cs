@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using jjevol;
@@ -39,8 +38,8 @@ namespace MV.Boot
     {
         public const string WorldRootAddress = "WorldRoot";
         public const string LobbyStageAddress = "LobbyStage";
-        /// <summary>MV_FxNormal·MV_FxAdd를 가진 이펙트 프리팹(머티리얼 자체는 주소가 없다).</summary>
-        public const string FxMaterialSource = "Fx/Bolt";
+        /// <summary>로비에 있는 동안 시설 단계를 다시 넣는 간격(초). 메타 팝업에서 산 것을 닫은 뒤 반영한다.</summary>
+        public const float FacilityRefreshSec = 1f;
 
         public static MvGameLoop Current { get; private set; }
 
@@ -56,6 +55,10 @@ namespace MV.Boot
         public string LastFinishReason { get; private set; }
         public long CurrentRunSeq => _runSeq;
         public ulong CurrentSeed { get; private set; }
+        /// <summary>로비 시설 단계를 넣은 횟수(로비 진입·강화 반짝임·1초마다).</summary>
+        public int FacilityApplyCount { get; private set; }
+        /// <summary>파티클 머티리얼 2개(<see cref="MvFx.MatNormalAddress"/>·<see cref="MvFx.MatAddAddress"/>)를 읽었는지.</summary>
+        public bool FxMaterialsLoaded { get; private set; }
 
         // ---- 시험 훅(PlayMode 시험이 쓴다. 실제 플레이에서는 기본값) ----
         /// <summary>한 프레임에 돌릴 Tick 수(기본 1).</summary>
@@ -78,6 +81,7 @@ namespace MV.Boot
         long _runSeq;
         int _savedArea, _savedSouls;
         int _themeId = int.MinValue;
+        float _facilityTimer;
         CancellationToken _ct;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -159,26 +163,21 @@ namespace MV.Boot
         {
             var fxRoot = new GameObject("FxRoot").transform;
             fxRoot.SetParent(transform, false);
-            Material normal = null, add = null;
-            // Framework 대체 아님 — 교체 지점: MV_FxNormal·MV_FxAdd가 Addressables 주소를 가지면(통합 Writer 요청) 그 주소로 바로 읽는다.
-            // 지금은 두 머티리얼을 가진 이펙트 프리팹의 MvFxDriver 직렬화 칸에서 꺼낸다.
-            var lease = await AddressableScope.GetPrefab(FxMaterialSource, _ct);
-            if (lease != null)
-            {
-                _leases.Add(lease);
-                var driver = lease.Asset ? lease.Asset.GetComponent<MvFxDriver>() : null;
-                normal = ReadMaterial(driver, "_normal");
-                add = ReadMaterial(driver, "_add");
-            }
-            if (normal == null || add == null) Debug.LogWarning("[MvGameLoop] 우다다 머티리얼을 찾지 못했습니다(" + FxMaterialSource + ").");
+            var normal = await LoadMaterialAsync(MvFx.MatNormalAddress);
+            Alive();
+            var add = await LoadMaterialAsync(MvFx.MatAddAddress);
+            Alive();
+            FxMaterialsLoaded = normal != null && add != null;
+            if (!FxMaterialsLoaded) Debug.LogWarning("[MvGameLoop] 우다다 머티리얼을 찾지 못했습니다(" + MvFx.MatNormalAddress + ", " + MvFx.MatAddAddress + ").");
             MvFx.InstallDefault(fxRoot, _world.Rig, () => _sim?.State, normal, add);
         }
 
-        static Material ReadMaterial(MvFxDriver driver, string field)
+        async UniTask<Material> LoadMaterialAsync(string address)
         {
-            if (driver == null) return null;
-            var f = typeof(MvFxDriver).GetField(field, BindingFlags.Instance | BindingFlags.NonPublic);
-            return f?.GetValue(driver) as Material;
+            var lease = await AddressableScope.Get<Material>(address, _ct);
+            if (lease == null) return null;
+            _leases.Add(lease);
+            return lease.Asset;
         }
 
         /// <summary>
@@ -230,11 +229,29 @@ namespace MV.Boot
             _lobby.SetActive(true);
             UseCamera(_lobby.Cam);
             MvSound.EnterLobby();
-            // 교체 지점: 시설 단계(SetFacility)는 MV-UI-LOBBY 2차가 메타 값으로 넣는다.
+            ApplyFacilities();
+            _facilityTimer = 0f;
 
-            _lobbyScreen = await MvUiNav.OpenLobbyAsync(new LobbyViewData { OnStart = OnLobbyStart });
+            _lobbyScreen = await MvUiNav.OpenLobbyAsync(new LobbyViewData { OnStart = OnLobbyStart, OnFacilityBump = BumpFacility });
             if (_lobbyScreen == null) throw new InvalidOperationException("로비 화면을 열지 못했습니다.");
             Phase = MvLoopPhase.Lobby;
+        }
+
+        /// <summary>로비 아지트 시설 단계(정본 azStages)를 메타 값으로 로비 무대에 넣는다.</summary>
+        void ApplyFacilities()
+        {
+            if (_lobby == null) return;
+            ILobbySource src = MvSaveLobbySource.Instance;
+            foreach (var k in LobbyFacilities.Keys) _lobby.SetFacility(k, src.FacilityStage(k, out int extra), extra);
+            FacilityApplyCount++;
+        }
+
+        /// <summary>강화 구매 반짝임(<see cref="LobbyViewData.OnFacilityBump"/>, 시험도 부른다): 단계를 다시 넣고 그 시설을 튕긴다.</summary>
+        public void BumpFacility(string key)
+        {
+            if (_lobby == null) return;
+            ApplyFacilities();
+            _lobby.Bump(key);
         }
 
         /// <summary>로비 출발(시험·키 입력). 로비가 떠 있으면 런이 이 프레임에 시작된다.</summary>
@@ -298,6 +315,12 @@ namespace MV.Boot
         {
             if (Phase == MvLoopPhase.Lobby)
             {
+                _facilityTimer += Time.unscaledDeltaTime;
+                if (_facilityTimer >= FacilityRefreshSec)
+                {
+                    _facilityTimer = 0f;
+                    ApplyFacilities();
+                }
                 if (MvRunInputReader.StartKeyPressed()) PressStart();
                 return;
             }

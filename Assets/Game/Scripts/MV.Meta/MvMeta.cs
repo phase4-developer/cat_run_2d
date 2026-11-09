@@ -318,6 +318,9 @@ namespace MV.Meta
         /// <summary>모드 오늘 입장 수(<c>mvDaily.modePlays</c>). 한도는 <c>400_content.dailyLimit</c>(0 = 없음).</summary>
         public int ModePlaysToday(string contentKey) => IsReady ? _local.ModePlaysToday(contentKey) : 0;
 
+        /// <summary>설정 소리 끄기를 저장한다(<c>mvSettings.muted</c>). 소리 모듈 값은 화면이 바꾼다(이 명령은 저장만).</summary>
+        public MvMetaResponse SetMuted(bool muted) => Send(new MvMetaRequest(MvMetaRequestNames.SetMuted, new JObject { ["muted"] = muted }));
+
         public MvMetaResponse RecordModePlay(string contentKey) =>
             Send(new MvMetaRequest(MvMetaRequestNames.RecordModePlay, new JObject { ["key"] = contentKey }));
 
@@ -342,7 +345,13 @@ namespace MV.Meta
         /// <summary>
         /// 보상 광고(dia 캣닢 +100, skip 부활 쿨 −70분 …): 한도·조건 확인 → 광고 → 끝까지 봤으면 보상과 사용 수를 한 번에 저장.
         /// </summary>
-        public void WatchAdForReward(string key, Action<MvMetaResponse> done)
+        public void WatchAdForReward(string key, Action<MvMetaResponse> done) => WatchAdForReward(key, done, null);
+
+        /// <param name="gate">
+        /// 광고 공급자 앞에 거칠 화면(가짜 광고 팝업, 05 §5.12): (key, 봤는지). false면 광고·보상 없이 <see cref="MvMetaErrors.AdNotWatched"/>.
+        /// 한도·조건 확인 뒤, 광고 제거로 건너뛰지 않을 때만 부른다. 사용 수는 보상과 함께 한 번만 센다(<c>meta.useAd</c>를 따로 보내지 않는다).
+        /// </param>
+        public void WatchAdForReward(string key, Action<MvMetaResponse> done, Action<string, Action<bool>> gate)
         {
             var row = Tables.AdPlacement.ByKey(key);
             if (row == null || !row.active) { done?.Invoke(MvMetaResponse.Reject(MvMetaErrors.UnknownKey, key)); return; }
@@ -351,8 +360,14 @@ namespace MV.Meta
             { done?.Invoke(MvMetaResponse.Reject(MvMetaErrors.NoCooldown, key)); return; }
             var request = new MvMetaRequest(MvMetaRequestNames.GrantAd, new JObject { ["key"] = key });
             if (SkipsAd(key)) { done?.Invoke(Send(request)); return; }
-            Ads.ShowReward(row.placement, watched =>
+            void Show() => Ads.ShowReward(row.placement, watched =>
                 done?.Invoke(watched ? Send(request) : MvMetaResponse.Reject(MvMetaErrors.AdNotWatched, key)));
+            if (gate == null) { Show(); return; }
+            gate(key, passed =>
+            {
+                if (passed) Show();
+                else done?.Invoke(MvMetaResponse.Reject(MvMetaErrors.AdNotWatched, key));
+            });
         }
 
         // ═════════ 해금(07 §7.8.9) ═════════
