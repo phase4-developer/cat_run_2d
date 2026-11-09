@@ -46,6 +46,7 @@
 | b | MV-META | 2번째(`MV-META-2.md`) | `ai/MV-META-rules` `8a3a6bc` | `S/MV.Meta/`, `S/MV.Meta.Tests/`, `QA/Dumps/meta/` |
 | c | MV-TOOL-ART 3차 검증 | 5번째(`MV-TOOL-ART-3-5.md`) | `ai/MV-TOOL-ART-remaining` `99c7614` | `Tools/MvExtract/`, `A/Art/Source/`, 아틀라스, `MvArtRules`, 그룹 로비 항목만 |
 | d | MV-VIEW 1차 | 2번째(`MV-VIEW-2.md`) | `ai/MV-VIEW-world` `b28b038`(총괄 정렬 레이어 10개) | `S/MV.View/`, `S/MV.View.Tests/`, `A/Art/Shaders/`, `A/Art/Materials/`, `A/Addressables/Remote/World/`(그룹 등록 없음) |
+| e | MV-RUN-RULE 런 확장 지점(MV-RUN-SIM 후속, 04 §4.20) | 1번째(`MV-RUN-RULE-1.md`) | `ai/MV-RUN-RULE-hooks` dev `1ad0b23` | `S/MV.Run/`(Gen 제외), `S/MV.Run.Tests/Rule/`, 기획서 04 §4.20 |
 
 ## 총괄 인계 (2026-11-09, 1번째 총괄 대화 마감 — 압축 2회)
 
