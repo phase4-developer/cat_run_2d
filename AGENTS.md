@@ -25,8 +25,11 @@ AI 작업자가 이 저장소에서 따르는 규칙이다. 여기 없는 것은
 - AI가 Unity로 돌리는 것은 중앙 실행기(`unity_job.py`, 프로젝트 id `moonvillage`)의 compile·EditMode·PlayMode뿐이다.
 - 통합 Writer: `Packages/manifest.json`, `ProjectSettings/`, 모든 `.asmdef`, `Assets/Game/Scenes/*.unity`, Addressables 설정·그룹 자산, URP 설정 자산은 총괄 1명만 쓴다(기획서 11 §11.1).
 - 새 파일·폴더를 Commit할 때 `.meta`도 함께 넣는다. 실행기는 실행 중 생긴 파일을 후보 불일치로 본다.
+- 새 파일·폴더를 Commit할 때 `.meta`도 함께 넣는다. 이미 있던 자산에 Unity가 새로 쓴 `.meta`는 실행기가 `project_generated`로 적고 PASS로 둔다. 담당이 쓰기 범위를 보고 바로 Commit한다. 그 밖의 `SOURCE_CANDIDATE_CHANGED`(아틀라스·Addressables 그룹 등)는 담당이 범위를 확인해 Commit하고 FAIL한 모드부터 다시 낸다. 총괄이 대신 Commit하지 않는다.
+- 시험은 적당히: 계약 브랜치는 compile 1회와 바꾼 모듈의 EditMode 1회. dev 병합 뒤 전체 시험은 그룹 끝이나 통합 Writer 파일(asmdef·Scene·Addressables·manifest·ProjectSettings)·쓰기 범위가 겹친 병합 뒤에만 한다. 그 밖의 병합은 계약 브랜치 PASS SHA를 증거로 둔다.
 
 ## Framework
 
-- 연결 방식 「외부」: `Docs/AI/PROJECT_CONTEXT.md` 「Framework 기준선」의 고정 tgz만 `Packages/Frozen/`에 두고 `file:Frozen/...`으로 연결한다. 시험 중 패키지는 연결하지 않는다.
-- 외부 패키지·SDK 설치는 매번 사용자에게 확인한다.
+- 연결 방식 「외부」: tgz를 `Packages/Frozen/`에 두고 `file:Frozen/...`으로 연결한다. 기준선은 `Docs/AI/PROJECT_CONTEXT.md` 「Framework 기준선」에 적는다.
+- **프로젝트 설정이 이 파일보다 먼저다.** `PROJECT_CONTEXT.md` 설정 절의 「Framework 범위」에 적힌 패키지는 사용자가 범위로 승인한 것이라 묻지 않고 연결한다. 고정본이 있으면 그것을, 아직 없으면 Framework 후보 tgz를 쓰고 기준선에 「시험 중」과 SHA를 적는다(사용자 2026-11-10: 「저거 프로젝트 설정을 우선하도록 규칙 바꿔줘」). 통합 Writer(`Packages/manifest.json`)는 그대로 총괄 1명이 쓴다.
+- 범위 밖 서드파티 SDK(Firebase·AdMob·Unity IAP 본체 등)와 유료만 설치 전에 사용자에게 확인한다. 결제·통계·알림은 패키지만 넣어 둔다(D-88).

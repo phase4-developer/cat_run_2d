@@ -44,6 +44,10 @@
 
 <!-- jjevol-project-settings:end -->
 
+## 설정 절 보정 (2026-11-10, 사용자 지시)
+
+위 설정 절은 2026-11-09 저장본이라 3차 묶음(`Snapshots/20261109-bundle3`) 고정 전의 「시험 중」·「연결 보류」 표기가 남아 있다. 사용자 원문 「결제·분석·알림 패키지는 넣어두기만 해도 돼」, 「저거 프로젝트 설정을 우선하도록 규칙 바꿔줘」에 따라 Framework 범위에 적힌 패키지는 설치 확인 없이 연결한다(고정본이 있으면 그것, 없으면 후보 tgz와 「시험 중」 기록). `AGENTS.md`는 이 절보다 낮다. 설정 화면에서 다시 저장하면 위 표기도 고쳐진다.
+
 ## Framework 기준선
 
 연결: 2026-11-09, 계약 MV-00(작업 브랜치 `ai/MV-00-project-framework`), 사용자 지시 「만들고 연결해」·「넣어」. 방식은 「외부」라 Framework `Docs/Guide/Delivery.md`(2026-11-09, master `48868b1`) 「고정」 tgz만 `Packages/Frozen/`에 넣고 `file:Frozen/...`으로 연결했다. 복사본 SHA-256은 모두 목록과 같다. `audio`·`ui.urp`는 `scene.ui`·`audio.addressables`가 요구하는 2차 묶음 버전을 쓴다.
