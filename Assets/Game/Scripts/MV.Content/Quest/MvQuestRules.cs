@@ -109,6 +109,9 @@ namespace MV.Content
         public static MvQuestSnapshot Read(MvQuestContainer quest, long nowMs)
             => Read(quest != null ? JObject.Parse(quest.ToJsonString()) : null, nowMs);
 
+        /// <summary>빈 저장(새 계정) 기준 사본.</summary>
+        public static MvQuestSnapshot Empty(long nowMs) => Read((JObject)null, nowMs);
+
         public static MvQuestSnapshot Read(JObject quest, long nowMs) => new MvQuestSnapshot
         {
             Daily = Rolled(quest?[DailySlot] as JObject, DayKey(nowMs)),

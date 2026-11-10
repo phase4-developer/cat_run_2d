@@ -258,7 +258,7 @@ namespace MV.Content.Tests
         [Test]
         public void TableRowAdded_AddsEntryAndStep()
         {
-            var snap = MvQuestRules.Read((MvQuestContainer)null, T0);
+            var snap = MvQuestRules.Empty(T0);
             int Daily(MvTables t) => MvQuestRules.Board(t, snap, T0).First(g => g.Row.group == 1).Entries.Count;
             int Steps(MvTables t) => MvQuestRules.Board(t, snap, T0).First(g => g.Row.group == 300).Entries.Single().StepCount;
 
