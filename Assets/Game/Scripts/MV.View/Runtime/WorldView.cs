@@ -24,6 +24,7 @@ namespace MV.View
         [SerializeField] ScreenRig _screen;
         [SerializeField] Material _screenMultiply;
         [SerializeField] CatView _cats;
+        [SerializeField] ProjectileView _projs;
 
         readonly WorldSpriteCache _sprites = new WorldSpriteCache();
         ViewConfig _cfg;
@@ -36,6 +37,7 @@ namespace MV.View
         public PropStreamer Props => _props;
         public ScreenRig Screen => _screen;
         public CatView Cats => _cats;
+        public ProjectileView Projectiles => _projs;
 
         public void Init(MvTables tables, IWorldViewSource source)
         {
@@ -54,6 +56,13 @@ namespace MV.View
                 _cats = go.AddComponent<CatView>();
             }
             _cats.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null);
+            if (_projs == null)   // 프리팹에 없으면 만든다
+            {
+                var go = new GameObject("Projectiles");
+                go.transform.SetParent(transform, false);
+                _projs = go.AddComponent<ProjectileView>();
+            }
+            _projs.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null, FxAtlas);
         }
 
         /// <summary>테마 아틀라스·Fx 아틀라스를 먼저 로드한 뒤 색·소품을 바꾼다(03 §3.8.5·§3.8.8). 이전 테마 아틀라스는 그 뒤 반환.</summary>
@@ -70,6 +79,7 @@ namespace MV.View
             if (_tint != null) _tint.SetTheme(theme);
             if (_objects != null) _objects.SetTheme(theme);
             if (_screen != null) _screen.SetTheme(theme);
+            if (_projs != null) _projs.SetTheme(theme.worldAtlas);
             if (prev != null && prev != _themeAtlas) _sprites.ReleaseAtlas(prev);
             return ok;
         }
@@ -88,13 +98,15 @@ namespace MV.View
         }
 
         /// <summary>
-        /// 런 고양이 맞추기(매 프레임, 통합 코드가 시뮬 뒤에 부른다). 런이 없으면(null) 숨긴다. 정본 `draw2D` L3797~3799.
+        /// 런 고양이·투사체 맞추기(매 프레임, 통합 코드가 시뮬 뒤에 부른다). 런이 없으면(null) 숨긴다. 정본 `draw2D` L3797~3804.
+        /// 투사체·창·회전 장난감(<see cref="ProjectileView"/>)도 같은 프레임에 맞춘다(통합 코드 호출을 늘리지 않으려고 여기서 함께).
         /// </summary>
         public void SyncCats(RunState state)
         {
-            if (_cats == null) return;
-            if (state == null || _rig == null || !_rig.Ready) { _cats.Hide(); return; }
-            _cats.Sync(state, Time.realtimeSinceStartupAsDouble);
+            bool off = state == null || _rig == null || !_rig.Ready;
+            double now = Time.realtimeSinceStartupAsDouble;
+            if (_cats != null) { if (off) _cats.Hide(); else _cats.Sync(state, now); }
+            if (_projs != null) { if (off) _projs.Hide(); else _projs.Sync(state, now); }
         }
 
         /// <summary>런 이벤트 → 월드 뷰 반응(오브젝트 맞음·우물 벽돌 빠짐, 06 §6.13). <see cref="SyncObjects"/> 전에 같은 프레임 목록으로 부른다.</summary>
