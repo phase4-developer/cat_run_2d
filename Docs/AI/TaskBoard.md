@@ -49,9 +49,9 @@
 
 | 순 | 작업 | 상태 |
 |---|---|---|
-| ① | id 규칙(MV-DATA-IDRULE): 시트 id 수식, `02_playResource` 2001001~, 검증기 표 번호 검사 | `ai/MV-DATA-IDRULE-sheet-id`, 산출물 재생성 빌드 중 → 병합 |
-| ② | 표 새 기획 반영(MV-DATA-SPEC2): `ai/MV-DATA-SPEC2-tables` 이어서 완료·병합 | 재개 |
-| ③ | 코드 연결 + 새 규칙 코드(MV-RUN-SPEC2): 바뀐 key·행·열 읽기, 계단 오르기 공식(`330_climb` 상수 열), 계단 게이트 M, 지팡이 단계·`AddWeapon`, 분신 상한, 결계 막힘, 하수인 위치. ②와 병렬로 시작 | 배정 |
+| ① | id 규칙(MV-DATA-IDRULE): 시트 id 수식, `02_playResource` 2001001~, 검증기 표 번호 검사 | dev 병합 `46e4921` |
+| ② | 표 새 기획 반영(MV-DATA-SPEC2): `ai/MV-DATA-SPEC2-tables` 이어서 완료·병합 | dev 병합 `b48e312` |
+| ③ | 코드 연결 + 새 규칙 코드(MV-RUN-SPEC2): 바뀐 key·행·열 읽기, 계단 오르기 공식(`330_climb` 상수 열), 계단 게이트 M, 지팡이 단계·`AddWeapon`, 분신 상한, 결계 막힘, 하수인 위치. ②와 병렬로 시작 | dev 병합 `32b454d` (2026-11-11). 지팡이 12단계(Q-08, 사용자 「행도 키고 이전 성장값 참고해서 추가해서 넣어 q-08 지팡이 기획서에 없는 내용이면 우선 테이블에서 설정만 하게하고 더미값 연결해」): 103 w9~w12 active, 12_weaponLevel 9~12 need 24/28/32/37 더미, 10 weapon max 254, 16_levelPrice Lv150~254 더미, 상한은 `MvTables.WeaponTierMax()`로 표에서 읽음. 검증(de202a1): build PASS, PlayMode 7/7 PASS, EditMode 587 PASS·7 Ignore(Q-04 덤프 대조)·0 FAIL — 실행기는 Ignore를 FAIL로 표시. APK 빌드 진행 중 |
 
 공통 완료 기준: 하드코딩 금지(상수·한도·위치는 표 열·변수, 맵 배치는 표·프리팹 정본), 「기획서보다 적은 표값은 추가해서 더미값 넣어둬」(더미는 시트 색 표시), Q-34 key까지 새 기준·저장 이관 없음.
 
