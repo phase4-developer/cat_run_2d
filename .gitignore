@@ -52,3 +52,5 @@ crashlytics-build.properties
 # Addressables platform build state (written by each player build)
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/Android/
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/Android.meta
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/link.xml
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/link.xml.meta
