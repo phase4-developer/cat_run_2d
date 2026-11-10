@@ -10,7 +10,7 @@ namespace MV.Save.Tests
     public sealed class MvSaveRoundTripTests : MvSaveFixture
     {
         private const string Changes =
-            "{\"wealthInfos\":[{\"wealthType\":\"gold\",\"quantity\":777},{\"wealthType\":\"dia\",\"quantity\":12},{\"wealthType\":\"rbToken\",\"quantity\":3}]," +
+            "{\"wealthInfos\":[{\"wealthType\":\"gold\",\"quantity\":777},{\"wealthType\":\"dia\",\"quantity\":12},{\"wealthType\":\"goldenFish\",\"quantity\":3}]," +
             "\"mvProgress\":{\"level\":9,\"area\":3,\"cp\":1,\"bars\":{\"A3\":[[5,0,null],[2.5],[]]},\"runs\":8,\"zoneClear\":true,\"lastSettledRunSeq\":8}," +
             "\"mvLobby\":{\"up\":{\"stair\":2,\"income\":1},\"deck\":[0,3,1,0,0,0,0,0,0]}," +
             "\"mvAreaUp\":{\"lv\":{\"rate\":4}}," +

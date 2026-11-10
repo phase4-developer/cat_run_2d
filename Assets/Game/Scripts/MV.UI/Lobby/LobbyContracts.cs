@@ -72,7 +72,7 @@ namespace MV.UI
             s.Level = store.Progress.Level;
             s.AreaNo = store.Progress.Area + 1;
             s.Gold = store.Wealth.Get("gold");   // 01_wealth.type
-            s.Souls = store.Wealth.Get("souls");
+            s.Souls = store.Wealth.Get("rescueCat");
             s.Dia = store.Wealth.Get("dia");
             s.AreaName = "";
             var tables = MvTables.Current;

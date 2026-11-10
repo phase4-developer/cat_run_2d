@@ -6,9 +6,11 @@ namespace MV.Data
 
     public enum LobbyEffectType { StartStairLv, DeckAdd, GoldMul }
     public enum CostFormula { Pow, LinearNext }
-    public enum AreaStatKey { FireRate, Range, Clone, CritChance, DoubleChance }
+    /// <summary>뒤 3개(PierceChance·DiaPerLevel·GoldPerLevel)는 MV-SPEC-02 Q-28 더미 행. 런 적용은 MV-RUN-SPEC2.</summary>
+    public enum AreaStatKey { FireRate, Range, Clone, CritChance, DoubleChance, PierceChance, DiaPerLevel, GoldPerLevel }
     public enum ResetOn { AreaChange, Never }
-    public enum RebirthStatKey { DmgMul, CritMul, ObstMul, DiaCap }
+    /// <summary>뒤 5개(GoldCap~StairDouble)는 MV-SPEC-02 Q-27 임시 값 행. 런 적용은 MV-RUN-SPEC2.</summary>
+    public enum RebirthStatKey { DmgMul, CritMul, ObstMul, DiaCap, GoldCap, StartGold, StartDia, CraftDouble, StairDouble }
 
     /// <summary>levelPriceGroup·max를 가진 성장 표(검증기가 16_levelPrice 빈틈을 본다).</summary>
     public interface ILevelPriced

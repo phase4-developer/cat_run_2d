@@ -1,13 +1,13 @@
-id	name	key	sort	active	element	color	projTint	cardGroup	unlockType	openId	unlockPriceType	unlockPriceId	unlockPriceValue	passiveStat	passivePerLv	gearSet	portrait	icon
-113001001	물병자리냥	thunder	1	1	bolt	#9ab8ff		1	0					CritChance	1	1	Tex_God_Thunder	
-113001002	햇살 야옹신	flame	2	1	fire	#ff8a3d		2	1	5001004				Dmg	2	1	Tex_God_Flame	
-113001003	바람 야옹신	wind	3	0	wind	#9fe8c0		3	2		1	1001008	50	FireRate	2	1	Tex_God_Wind	
-113001004	눈꽃 야옹신	snow	4	0	ice	#aee9ff		4	2		1	1001008	50	CritDmg	5	1	Tex_God_Snow	
-113001005	구름 야옹신	cloud	5	0	cloud	#d6c0ff		5	2		1	1001008	80	DoubleChance	1	1	Tex_God_Cloud	
-113001006	바다 야옹신	sea	6	0	water	#5fa8f0		6	2		1	1001008	80	Range	2	0	Tex_God_Sea	
-113001007	별빛 야옹신	star	7	0	star	#ffe08a		7	2		1	1001008	120	Gold	5	0	Tex_God_Star	
-113001008	숲 야옹신	forest	8	0	leaf	#8ad06a		8	2		1	1001008	120	Dmg	3	0	Tex_God_Forest	
-113001009	그림자 야옹신	shadow	9	0	shadow	#9a7ad6		9	2		1	1001008	150	CritDmg	5	0	Tex_God_Shadow	
-113001010	번개 야옹신	lightning	10	0	spark	#ffd84a		10	2		1	1001008	150	FireRate	3	0	Tex_God_Lightning	
-113001011	흙 야옹신	earth	11	0	rock	#c49a62		11	2		1	1001008	200	Dmg	3	0	Tex_God_Earth	
-113001012	생선 야옹신	fish	12	0	fish	#6ad0e8		12	2		1	1001008	200	Gold	8	0	Tex_God_Fish	
+id	name	key	sort	active	showInMenu	element	color	projTint	cardGroup	unlockType	openId	unlockPriceType	unlockPriceId	unlockPriceValue	passiveStat	passivePerLv	gearSet	portrait	icon
+113001001	물병자리냥	thunder	1	1	1	bolt	#9ab8ff		1	0					CritChance	1	1	Tex_God_Thunder	
+113001002	사자자리냥	flame	2	0	1	fire	#ff8a3d		2	1	5001004				Dmg	2	1	Tex_God_Flame	
+113001003	물고기자리냥	pisces	3	0	1	water	#9fe8c0		3	2		1	1001008	50	FireRate	2	1	Tex_God_Pisces	
+113001004	사수자리냥	sagittarius	4	0	1	arrow	#aee9ff		4	2		1	1001008	50	CritDmg	5	1	Tex_God_Sagittarius	
+113001005	전갈자리냥	scorpio	5	0	1	poison	#d6c0ff		5	2		1	1001008	80	DoubleChance	1	1	Tex_God_Scorpio	
+113001006	양자리냥	aries	6	0	1	war	#5fa8f0		6	2		1	1001008	80	Range	2	0	Tex_God_Aries	
+113001007	처녀자리냥	virgo	7	0	1	light	#ffe08a		7	2		1	1001008	120	Gold	5	0	Tex_God_Virgo	
+113001008	황소자리냥	taurus	8	0	1	earth	#8ad06a		8	2		1	1001008	120	Dmg	3	0	Tex_God_Taurus	
+113001009	천칭자리냥	libra	9	0	1	time	#9a7ad6		9	2		1	1001008	150	CritDmg	5	0	Tex_God_Libra	
+113001010	염소자리냥	capricorn	10	0	1	soul	#ffd84a		10	2		1	1001008	150	FireRate	3	0	Tex_God_Capricorn	
+113001011	쌍둥이자리냥	gemini	11	0	0	spear	#c49a62		11	2		1	1001008	200	Dmg	3	0	Tex_God_Gemini	
+113001012	게자리냥	cancer	12	0	0	cosmic	#6ad0e8		12	2		1	1001008	200	Gold	8	0	Tex_God_Cancer	

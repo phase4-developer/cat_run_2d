@@ -7,3 +7,7 @@
 103001006	마법 지팡이 6단계	w6	6	6	1	189	#ece6d6	#e8443a	1	UI_Icon_Weapon_6	World_Proj_6	ui.item.look6
 103001007	마법 지팡이 7단계	w7	7	7	1	340	#cfe0ff	#1fc8c8	0	UI_Icon_Weapon_7	World_Proj_7	ui.item.look7
 103001008	마법 지팡이 8단계	w8	8	8	1	612	#ffe08a	#ffd23a	1	UI_Icon_Weapon_8	World_Proj_8	ui.item.look8
+103001009	마법 지팡이 9단계	w9	9	9	0	1102	#ffe08a	#ff7ad9	1	UI_Icon_Weapon_8	World_Proj_8	ui.item.look8
+103001010	마법 지팡이 10단계	w10	10	10	0	1984	#ffe08a	#7a5cff	1	UI_Icon_Weapon_8	World_Proj_8	ui.item.look8
+103001011	마법 지팡이 11단계	w11	11	11	0	3570	#ffe08a	#c0c0c0	1	UI_Icon_Weapon_8	World_Proj_8	ui.item.look8
+103001012	마법 지팡이 12단계	w12	12	12	0	6427	#ffe08a	#ffffff	1	UI_Icon_Weapon_8	World_Proj_8	ui.item.look8

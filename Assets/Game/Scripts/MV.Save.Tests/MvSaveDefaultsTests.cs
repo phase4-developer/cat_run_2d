@@ -49,7 +49,7 @@ namespace MV.Save.Tests
 
             // DEF: gold·souls·dia 0, rb.tokens 0 → 재화. 08의 5~17도 0.
             foreach (int id in MvWealthIds.AllIds) Assert.That(save.GetWealth(id), Is.EqualTo(0), "wealth " + id);
-            Assert.That(save.Wealth.Balances.Count, Is.EqualTo(17));
+            Assert.That(save.Wealth.Balances.Count, Is.EqualTo(18));
 
             // DEF: up:{stair,weapon,income}=0, deck:[0,1,0,0,0,0,0,0,0], god:'thunder'
             Assert.That(save.Lobby.Up.Keys, Is.EquivalentTo(new[] { "stair", "weapon", "income" }));

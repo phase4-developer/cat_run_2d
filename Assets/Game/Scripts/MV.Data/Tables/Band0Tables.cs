@@ -255,7 +255,7 @@ namespace MV.Data
     {
         public const string Table = "08_adPlacement";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active")
-            .Enum<AdType>("adType", true).Str("placement", true).Int("dailyLimit").Int("mul").Int("minArea").Bool("noAdsSkip")
+            .Enum<AdType>("adType", true).Str("placement", true).Int("dailyLimit").Int("chargeMax").Int("chargeSec").Int("mul").Int("minArea").Bool("noAdsSkip")
             .Consume("adReward").Res("icon", MvAtlas.UiIcon);
 
         /// <summary>화면 코드가 찾는 key(07 §7.13.3).</summary>
@@ -264,6 +264,9 @@ namespace MV.Data
         public AdType adType { get; private set; }
         public string placement { get; private set; }
         public int dailyLimit { get; private set; }
+        /// <summary>충전형 최대 횟수·1회 충전 초(MV-SPEC-02 11-2, Q-29). 0 = 충전형 아님. 적용은 MV-RUN-SPEC2(mvDaily → 충전 시각).</summary>
+        public int chargeMax { get; private set; }
+        public int chargeSec { get; private set; }
         public int mul { get; private set; }
         public int minArea { get; private set; }
         public bool noAdsSkip { get; private set; }
@@ -278,6 +281,8 @@ namespace MV.Data
             adType = E(r, "adType", AdType.Reward);
             placement = S(r, "placement");
             dailyLimit = I(r, "dailyLimit");
+            chargeMax = I(r, "chargeMax");
+            chargeSec = I(r, "chargeSec");
             mul = I(r, "mul");
             minArea = I(r, "minArea");
             noAdsSkip = Bool(r, "noAdsSkip");

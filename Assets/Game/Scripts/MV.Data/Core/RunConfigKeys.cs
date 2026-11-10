@@ -104,6 +104,8 @@ namespace MV.Data
         public const string KEY_MOVE_SPEED = "KEY_MOVE_SPEED";
         public const string MOVE_FOLLOW_K = "MOVE_FOLLOW_K";
         public const string RUN_SPEED = "RUN_SPEED";
+        /// <summary>중간 구역 전진 속도(MV-SPEC-02 4-1, Q-15). 구간 위치는 <c>310_template.midFromZ·midToZ</c>.</summary>
+        public const string RUN_SPEED_MID = "RUN_SPEED_MID";
         public const string PHASE_RUN = "PHASE_RUN";
         public const string PHASE_BLOCKED = "PHASE_BLOCKED";
         public const string PHASE_CLIMB = "PHASE_CLIMB";
@@ -142,6 +144,10 @@ namespace MV.Data
         public const string WEAPON_EXTRA_BUYS = "WEAPON_EXTRA_BUYS";
         public const string ARCH_LABEL_HIDE = "ARCH_LABEL_HIDE";
         public const string MERGE_N = "MERGE_N";
+        /// <summary>지팡이 스택 칸 수(MV-SPEC-02 6-3, Q-17). 0 = 상한 없음(값은 기획 쪽 확인).</summary>
+        public const string WEAPON_STACK_MAX = "WEAPON_STACK_MAX";
+        /// <summary>결계에 막힌 뒤 종료까지 초(MV-SPEC-02 6-8, Q-13). 더미 값, 적용은 MV-RUN-SPEC2.</summary>
+        public const string STUCK_END_SEC = "STUCK_END_SEC";
         public const string ORB_COUNT = "ORB_COUNT";
         public const string ORB_RADIUS = "ORB_RADIUS";
         public const string ORB_ANG_SPEED = "ORB_ANG_SPEED";
@@ -278,6 +284,7 @@ namespace MV.Data
             KEY_MOVE_SPEED,
             MOVE_FOLLOW_K,
             RUN_SPEED,
+            RUN_SPEED_MID,
             PHASE_RUN,
             PHASE_BLOCKED,
             PHASE_CLIMB,
@@ -316,6 +323,8 @@ namespace MV.Data
             WEAPON_EXTRA_BUYS,
             ARCH_LABEL_HIDE,
             MERGE_N,
+            WEAPON_STACK_MAX,
+            STUCK_END_SEC,
             ORB_COUNT,
             ORB_RADIUS,
             ORB_ANG_SPEED,

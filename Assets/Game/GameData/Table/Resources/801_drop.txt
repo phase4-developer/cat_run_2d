@@ -1,3 +1,5 @@
 ﻿id	name	dropGroup	rewardType	rewardId	rewardValue_min	rewardValue_max	rewardValueRule	weight	icon
 801001001	하수인 블루 마법석 드롭	801001001	604	0	0	0	HalfDiaCapCeil	800	
 801001002	하수인 드롭 꽝	801001001	0	0	0	0	Flat	9200	
+801002001	블루 마법석 원석 드롭	801002001	604	0	0	0	DiaCap	1000	
+801002002	블루 마법석 원석 드롭 꽝	801002001	0	0	0	0	Flat	9000	
