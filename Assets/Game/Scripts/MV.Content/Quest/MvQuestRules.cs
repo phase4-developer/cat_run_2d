@@ -7,6 +7,7 @@ using MV.Data;
 using MV.Meta;
 using MV.Save;
 using Newtonsoft.Json.Linq;
+using ConsumeData = MV.Data.ConsumeData;
 
 namespace MV.Content
 {
