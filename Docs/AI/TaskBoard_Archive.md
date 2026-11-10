@@ -123,3 +123,15 @@ D-27, D-68, 802401001 행, 480 statKey, 413 step, 701 2차 active 0, 막힘 종�
 - `UIManager` 프리팹과 `ui.StartInitAsync()`(10 §10.7 8단계)는 MV-UI-*. 지금 `UIManagerCreater`는 시작하지 않는다.
 - 시험 중 Framework 19개는 고정본이 없어 연결하지 않았다(`PROJECT_CONTEXT.md` 「Framework 기준선」).
 - 골격은 `MoonVillage/Setup/Build Project Skeleton`(`MV.Editor.Setup.MvProjectSkeleton`)으로 만들었다. 있는 것은 건드리지 않으므로 다시 실행해도 된다.
+
+## 원장 결정 정리에서 뺀 것 (2026-11-10, 잠정 결정 표 전환)
+
+| 번호 | 이유 |
+|---|---|
+| D-META3-DUP(`MvDebugRequests`·`MvMetaRequestNames.Debug*` 상수 중복) | MV-PLAY-INT 2차에서 끝남: `MvDebugRequests`가 `MvMetaRequestNames.Debug*`를 그대로 가리킴(`S/MV.UI/Meta/Common/MetaUiPort.cs`) |
+| D-HUD-KEY(Space 출발 키, MV.UI에 InputSystem 참조 없음) | MV-PLAY-INT에서 끝남: MV.Boot `MvRunInputReader`가 Space/Enter로 출발 |
+| D-LOBBY-SOON(로비 컨텐츠 버튼 「준비 중」 임시) | MV-UI-CONTENT로 끝남: 로비 버튼이 컨텐츠 메뉴를 엶. 남은 「준비 중」은 D-CONTENT-a |
+| bumpH 1줄 | 결정 아님, MV-META 3차에서 끝남 |
+| MV-TABLE-SWAP 병합·전체 확인 문장 | 결정 아님, 상태 기록(결과는 원장 행에 있음) |
+| MV-UI-FX2 | 결정 아님, 후속 계약(원장 다음 순서 4) |
+| MvFx 머티리얼 리플렉션 우회 교체 | MV-PLAY-INT 2차에서 끝남(Fx 머티리얼 주소 `Fx/Mat_Normal`·`Fx/Mat_Add`) |
