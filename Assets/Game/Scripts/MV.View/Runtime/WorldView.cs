@@ -1,6 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MV.Data;
+using MV.Run;
 using UnityEngine;
 
 namespace MV.View
@@ -22,6 +23,7 @@ namespace MV.View
         [SerializeField] ObjectViewFactory _objects;
         [SerializeField] ScreenRig _screen;
         [SerializeField] Material _screenMultiply;
+        [SerializeField] CatView _cats;
 
         readonly WorldSpriteCache _sprites = new WorldSpriteCache();
         ViewConfig _cfg;
@@ -33,6 +35,7 @@ namespace MV.View
         public ObjectViewFactory Objects => _objects;
         public PropStreamer Props => _props;
         public ScreenRig Screen => _screen;
+        public CatView Cats => _cats;
 
         public void Init(MvTables tables, IWorldViewSource source)
         {
@@ -44,6 +47,13 @@ namespace MV.View
             if (_tint != null) _tint.Init(_rig.Cam, _screenMultiply);
             if (_objects != null) _objects.Init(_cfg, _rig.Cam.transform, _sprites, FxAtlas);
             if (_screen != null) _screen.Init(_cfg, _rig.Cam, _sprites, FxAtlas);
+            if (_cats == null)   // 프리팹에 없으면 만든다(예전 프리팹 호환)
+            {
+                var go = new GameObject("Cats");
+                go.transform.SetParent(transform, false);
+                _cats = go.AddComponent<CatView>();
+            }
+            _cats.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null);
         }
 
         /// <summary>테마 아틀라스·Fx 아틀라스를 먼저 로드한 뒤 색·소품을 바꾼다(03 §3.8.5·§3.8.8). 이전 테마 아틀라스는 그 뒤 반환.</summary>
@@ -75,6 +85,22 @@ namespace MV.View
         {
             if (_objects == null || _rig == null || !_rig.Ready) return;
             _objects.Sync(objs, _rig.Model.Pos.z, playerZ, groundY);
+        }
+
+        /// <summary>
+        /// 런 고양이 맞추기(매 프레임, 통합 코드가 시뮬 뒤에 부른다). 런이 없으면(null) 숨긴다. 정본 `draw2D` L3797~3799.
+        /// </summary>
+        public void SyncCats(RunState state)
+        {
+            if (_cats == null) return;
+            if (state == null || _rig == null || !_rig.Ready) { _cats.Hide(); return; }
+            _cats.Sync(state, Time.realtimeSinceStartupAsDouble);
+        }
+
+        /// <summary>런 이벤트 → 월드 뷰 반응(오브젝트 맞음·우물 벽돌 빠짐, 06 §6.13). <see cref="SyncObjects"/> 전에 같은 프레임 목록으로 부른다.</summary>
+        public void OnRunEvents(System.Collections.Generic.IReadOnlyList<RunEvent> events)
+        {
+            if (_objects != null) _objects.OnRunEvents(events);
         }
 
         /// <summary>정본 `shake(a, t)`.</summary>
