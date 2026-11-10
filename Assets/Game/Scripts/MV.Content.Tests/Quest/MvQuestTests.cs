@@ -7,7 +7,6 @@ using jjevol;
 using MV.Data;
 using MV.Meta;
 using MV.Save;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace MV.Content.Tests
@@ -212,9 +211,11 @@ namespace MV.Content.Tests
         [TestCase(1, -5)]
         public void Record_RejectsBadEvents(int type, int amount)
         {
-            var r = Meta.Send(new MvMetaRequest(MvMetaRequestNames.QuestRecord,
-                new JObject { ["ev"] = new JArray(new JObject { ["t"] = type, ["c"] = 0, ["v"] = amount }) }));
-            Assert.That(r.Code, Is.EqualTo(MvMetaErrors.BadParams));
+            var r = Quest.Record(new MvQuestEvent((QuestClearType)type, amount));
+            if (amount > 0) Assert.That(r.Code, Is.EqualTo(MvMetaErrors.BadParams), "모르는 종류·일일 포인트(받기 전용) 거절");
+            else Assert.That(r.Ok, Is.True, "0 이하 양은 보내지 않는다");
+            Assert.That(Entry(DailyRun).Count, Is.EqualTo(0), "카운터 그대로");
+            Assert.That(Entry(Summary40).Count, Is.EqualTo(0));
         }
 
         // ───────── 메타 요청 → 카운터 ─────────
@@ -229,11 +230,10 @@ namespace MV.Content.Tests
             Assert.That(Entry(413001004).Count, Is.EqualTo(settled.GoldGained), "goldEarn = 계정 츄르 증가분");
             Assert.That(Entry(MonthlySoul).Count, Is.EqualTo(4), "soulEarn");
 
-            Assert.That(MvQuest.EventsOf(new MvMetaRequest(MvMetaRequestNames.BuyLobbyUp, new JObject { ["key"] = MvMetaRules.LobbyIncome }),
-                MvMetaResponse.Success(new JObject())).Single().Condition, Is.EqualTo(3), "생선 건조대 = 조건 3");
+            Assert.That(MvQuest.LobbyCondition(MvMetaRules.LobbyIncome), Is.EqualTo(3), "생선 건조대 = 조건 3");
             Assert.That(Quest.Record(new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, 3), new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, 1)).Ok, Is.True);
             Assert.That(Entry(MonthlyIncome).Count, Is.EqualTo(1), "조건 3만");
-            Assert.That(MvQuestRules.Count(Quest.Snapshot().Achieve, QuestClearType.LobbyUpgrade, 0), Is.EqualTo(2), "조건 0 = 전체");
+            Assert.That(Quest.LifetimeCount(QuestClearType.LobbyUpgrade), Is.EqualTo(2), "조건 0 = 전체");
         }
 
         // ───────── 표 확장(12 §12.6-C) ─────────
@@ -258,7 +258,7 @@ namespace MV.Content.Tests
         [Test]
         public void TableRowAdded_AddsEntryAndStep()
         {
-            var snap = MvQuestRules.Read((JObject)null, T0);
+            var snap = MvQuestRules.Read((MvQuestContainer)null, T0);
             int Daily(MvTables t) => MvQuestRules.Board(t, snap, T0).First(g => g.Row.group == 1).Entries.Count;
             int Steps(MvTables t) => MvQuestRules.Board(t, snap, T0).First(g => g.Row.group == 300).Entries.Single().StepCount;
 

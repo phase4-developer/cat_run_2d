@@ -97,6 +97,9 @@ namespace MV.Content
         /// <summary>1차 묶음 전부(410 순서).</summary>
         public List<MvQuestGroupView> Board() => IsReady ? MvQuestRules.Board(_meta.Tables, Snapshot(), NowMs) : new List<MvQuestGroupView>();
 
+        /// <summary>평생 카운터(조건 0 = 전체).</summary>
+        public long LifetimeCount(QuestClearType type, int condition = 0) => MvQuestRules.Count(Snapshot().Achieve, type, condition);
+
         public bool IsOpen(QuestCategory category) => _meta.IsOpen(MvQuestRules.UnlockKey(category));
 
         /// <summary>받을 수 있는 칸이 있는지(로비 빨간 점). 잠긴 분류는 뺀다.</summary>
