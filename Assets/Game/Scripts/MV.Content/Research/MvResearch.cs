@@ -4,7 +4,6 @@ using MV.Data;
 using MV.Meta;
 using MV.Run;
 using MV.Save;
-using Newtonsoft.Json.Linq;
 
 namespace MV.Content
 {
@@ -28,17 +27,11 @@ namespace MV.Content
 
         /// <summary>단계 올리기 시작(비용 먼저, 끝 시각 저장).</summary>
         public static MvMetaResponse Start(MvMeta meta, int group)
-            => Send(meta, MvMetaRequestNames.StartResearch, group);
+            => meta == null ? MvMetaResponse.Reject(MvMetaErrors.NoStore) : meta.StartResearch(group);
 
         /// <summary>완료 수령(끝 시각이 지났을 때 1번).</summary>
         public static MvMetaResponse Claim(MvMeta meta, int group)
-            => Send(meta, MvMetaRequestNames.ClaimResearch, group);
-
-        static MvMetaResponse Send(MvMeta meta, string name, int group)
-        {
-            if (meta == null) return MvMetaResponse.Reject(MvMetaErrors.NoStore);
-            return meta.Send(new MvMetaRequest(name, new JObject { ["group"] = group }));
-        }
+            => meta == null ? MvMetaResponse.Reject(MvMetaErrors.NoStore) : meta.ClaimResearch(group);
 
         // ───────── 런 시작 메타 능력치(08 §8.5.0, 04 §4.20.4) ─────────
 

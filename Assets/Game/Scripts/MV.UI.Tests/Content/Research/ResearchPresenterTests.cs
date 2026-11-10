@@ -29,17 +29,12 @@ namespace MV.UI.Tests
 
         static MvTables WithRow(string kind)
         {
-            string row = kind == "group" ? "440006001	6	1		CritChance	3	1	1001002	10	50	1"
-                : "440001006	1	6		Dmg	15	1	1001002	60	6000	1";
+            string row = kind == "group" ? "440006001\t6\t1\t\tCritChance\t3\t1\t1001002\t10\t50\t1"
+                : "440001006\t1\t6\t\tDmg\t15\t1\t1001002\t60\t6000\t1";
             string dir = MvTableLoader.TsvDirectory;
-            string text = File.ReadAllText(Path.Combine(dir, ResearchData.Table + ".txt"), new UTF8Encoding(false)).Replace("
-", "
-").TrimEnd('
-');
+            string text = File.ReadAllText(Path.Combine(dir, ResearchData.Table + ".txt"), new UTF8Encoding(false)).Replace("\r\n", "\n").TrimEnd('\n');
             var t = new MvTables();
-            t.LoadAll(new MvMemoryTableSource(new MvTsvDirectorySource(dir)).Set(ResearchData.Table, text + "
-" + row + "
-"));
+            t.LoadAll(new MvMemoryTableSource(new MvTsvDirectorySource(dir)).Set(ResearchData.Table, text + "\n" + row + "\n"));
             return t;
         }
 

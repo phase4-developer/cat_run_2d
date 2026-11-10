@@ -1,5 +1,4 @@
 using MV.Save;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace MV.Meta.Tests
@@ -15,8 +14,8 @@ namespace MV.Meta.Tests
 
         void OpenResearch() => SetContainer(MvSaveKeys.Progress, "\"area\":4"); // 0기반 4 = Area 5
 
-        MvMetaResponse Start(int group) => Meta.Send(new MvMetaRequest(MvMetaRequestNames.StartResearch, new JObject { ["group"] = group }));
-        MvMetaResponse Claim(int group) => Meta.Send(new MvMetaRequest(MvMetaRequestNames.ClaimResearch, new JObject { ["group"] = group }));
+        MvMetaResponse Start(int group) => Meta.StartResearch(group);
+        MvMetaResponse Claim(int group) => Meta.ClaimResearch(group);
 
         [Test]
         public void Start_ThenClaim_FollowsTableCostAndSeconds_ToMax()
