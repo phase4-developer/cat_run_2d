@@ -19,13 +19,14 @@ namespace MV.View.Tests
             Assert.That(ProjLayout.ToDegrees(-System.Math.PI / 2 - 2 * System.Math.PI * 1000), Is.EqualTo(-90f).Within(1e-3f));
         }
 
-        [TestCase(0, "World_Proj_1")]
-        [TestCase(1, "World_Proj_1")]
-        [TestCase(6, "World_Proj_6")]
-        [TestCase(8, "World_Proj_8")]
-        [TestCase(9, "World_Proj_8")]
-        public void ProjSpriteName_ReadsItemTableAndClampsTier(int tier, string expected)
+        [TestCase(0, 1)]
+        [TestCase(1, 1)]
+        [TestCase(6, 6)]
+        [TestCase(8, 8)]
+        [TestCase(9, 8)]
+        public void ProjSpriteName_ReadsItemTableAndClampsTier(int tier, int drawn)
         {
+            string expected = "World_Proj_" + drawn;
             var names = ProjLayout.NamesByTier(ViewTestTables.Load());
             Assert.That(ProjLayout.ProjSpriteName(tier, names), Is.EqualTo(expected));
             Assert.That(ProjLayout.ProjSpriteName(tier, null), Is.EqualTo(expected), "표 없음 = 기본 이름");
@@ -56,15 +57,23 @@ namespace MV.View.Tests
             Assert.That(z, Is.EqualTo(37.2).Within(1e-12));
         }
 
-        [TestCase(0.0, 0, 1.8, 1.0, 10.0)]
-        [TestCase(0.5, 1, -0.9809789648991944, 0.8667023477486399, 10.780444034819785)]
-        [TestCase(7.25, 2, 0.9432702959232617, 0.8837768561168614, 8.644934198504442)]
-        public void BladePos_MatchesReferenceOrbit(double spinA, int i, double ex, double ey, double ez)
+        [Test]
+        public void BladePos_MatchesReferenceOrbit()
         {
-            ProjLayout.BladePos(spinA, i, 0.3, 10, out double x, out double y, out double z);
-            Assert.That(x, Is.EqualTo(ex).Within(1e-12));
-            Assert.That(y, Is.EqualTo(ey).Within(1e-12));
-            Assert.That(z, Is.EqualTo(ez).Within(1e-12));
+            // (spinA, i) → (x, y, z), 플레이어 (0.3, 10)
+            double[,] g =
+            {
+                { 0.0, 0, 1.8, 1.0, 10.0 },
+                { 0.5, 1, -0.9809789648991944, 0.8667023477486399, 10.780444034819785 },
+                { 7.25, 2, 0.9432702959232617, 0.8837768561168614, 8.644934198504442 },
+            };
+            for (int r = 0; r < g.GetLength(0); r++)
+            {
+                ProjLayout.BladePos(g[r, 0], (int)g[r, 1], 0.3, 10, out double x, out double y, out double z);
+                Assert.That(x, Is.EqualTo(g[r, 2]).Within(1e-12), "x " + r);
+                Assert.That(y, Is.EqualTo(g[r, 3]).Within(1e-12), "y " + r);
+                Assert.That(z, Is.EqualTo(g[r, 4]).Within(1e-12), "z " + r);
+            }
         }
 
         [Test]
