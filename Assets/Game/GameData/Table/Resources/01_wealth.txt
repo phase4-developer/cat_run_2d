@@ -1,18 +1,18 @@
-﻿id	type	sort	active	icon	maxValue	chargeShopSectionId
-1001001	gold	1	1	UI_Icon_Gold	0	0
-1001002	dia	2	1	UI_Icon_Dia	0	0
-1001003	souls	3	1	UI_Icon_Soul	0	0
-1001004	rbToken	4	1	UI_Icon_RbToken	0	0
-1001005	medal	5	1	UI_Icon_Medal	0	702001004
-1001006	petFood	6	1	UI_Icon_PetFood	0	0
-1001007	yarn	7	1	UI_Icon_Yarn	0	702001001
-1001008	godCoin	8	1	UI_Icon_GodCoin	0	702001001
-1001009	godShard	9	1	UI_Icon_GodShard	0	702001001
-1001010	friendCoin	10	1	UI_Icon_FriendCoin	0	702001001
-1001011	friendUp	11	1	UI_Icon_FriendUp	0	702001001
-1001012	friendAny	12	1	UI_Icon_FriendAny	0	702001001
-1001013	starCandy	13	1	UI_Icon_StarCandy	0	702001001
-1001014	boxPaper	14	1	UI_Icon_BoxPaper	0	702001002
-1001015	boxWood	15	1	UI_Icon_BoxWood	0	702001002
-1001016	boxGold	16	1	UI_Icon_BoxGold	0	702001002
-1001017	noAds	17	1	UI_Icon_NoAds	0	0
+﻿id	name	type	sort	active	icon	maxValue	chargeShopSectionId
+1001001	골드	gold	1	1	UI_Icon_Gold	0	0
+1001002	블루 마법석	dia	2	1	UI_Icon_Dia	0	0
+1001003	구출 고양이	souls	3	1	UI_Icon_Soul	0	0
+1001004	황금 생선	rbToken	4	1	UI_Icon_RbToken	0	0
+1001005	도전 메달	medal	5	1	UI_Icon_Medal	0	702001004
+1001006	사료	petFood	6	1	UI_Icon_PetFood	0	0
+1001007	털실	yarn	7	1	UI_Icon_Yarn	0	702001001
+1001008	야옹신 방울	godCoin	8	1	UI_Icon_GodCoin	0	702001001
+1001009	공용 신 조각	godShard	9	1	UI_Icon_GodShard	0	702001001
+1001010	동료 간식	friendCoin	10	1	UI_Icon_FriendCoin	0	702001001
+1001011	공용 간식	friendUp	11	1	UI_Icon_FriendUp	0	702001001
+1001012	만능 간식	friendAny	12	1	UI_Icon_FriendAny	0	702001001
+1001013	별사탕	starCandy	13	1	UI_Icon_StarCandy	0	702001001
+1001014	종이 상자	boxPaper	14	1	UI_Icon_BoxPaper	0	702001002
+1001015	나무 상자	boxWood	15	1	UI_Icon_BoxWood	0	702001002
+1001016	황금 상자	boxGold	16	1	UI_Icon_BoxGold	0	702001002
+1001017	광고 제거	noAds	17	1	UI_Icon_NoAds	0	0

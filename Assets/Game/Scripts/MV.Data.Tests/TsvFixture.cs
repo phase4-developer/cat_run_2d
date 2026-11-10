@@ -36,7 +36,8 @@ namespace MV.Data.Tests
             return sb.ToString();
         }
 
-        /// <summary>다른 열 순서로 적힌 행(기획서 예시)을 표 열 순서에 맞춰 붙인다. 표에 없는 열은 버린다(`#` 열 등).</summary>
+        /// <summary>다른 열 순서로 적힌 행(기획서 예시)을 표 열 순서에 맞춰 붙인다. 표에 없는 열은 버린다(`#` 열 등).
+        /// 사람용 `name`을 주지 않으면 「시험 행 {id}」로 채운다(빈칸은 작성 검증 오류, 07 §7.1.1a).</summary>
         public static string Append(string text, string rowHeader, string row)
         {
             var (header, rows) = Parse(text);
@@ -46,6 +47,8 @@ namespace MV.Data.Tests
             for (int i = 0; i < names.Length; i++) map[names[i]] = i < values.Length ? values[i] : string.Empty;
             foreach (var n in names)
                 if (!header.Contains(n) && !n.StartsWith("#")) throw new ArgumentException($"표에 열 {n}가 없습니다");
+            if (!map.ContainsKey(MvTableValidator.HumanNameColumn) && header.Length > 0 && map.TryGetValue(header[0], out var rowId))
+                map[MvTableValidator.HumanNameColumn] = "시험 행 " + rowId;
             rows.Add(header.Select(h => map.TryGetValue(h, out var v) ? v : string.Empty).ToArray());
             return Join(header, rows);
         }

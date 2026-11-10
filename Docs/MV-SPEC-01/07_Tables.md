@@ -60,7 +60,7 @@
 | 항목 | 규칙 |
 |---|---|
 | 위치 | `Assets/Game/GameData/Table/TSV/NNN_camelCase.txt` (UTF-8, BOM 없음, 줄바꿈 LF) |
-| 첫 줄 | 열 이름 헤더. 대소문자 구분. 열 순서는 자유(이름으로 읽음) |
+| 첫 줄 | 열 이름 헤더. 대소문자 구분. 열 순서는 자유(이름으로 읽음). 단 키 열(`id`, `07_consumeType`은 `typeId`) 바로 다음 2번째 열은 사람용 `name`(§7.1.1a) |
 | 주석 열 | 이름이 `#`로 시작하는 열(`#kind`, `#비고`)은 시트에서 내보낼 때 뺀다. 남아 있어도 로더는 열 이름으로 읽으므로 무해하지만 검증기는 경고 |
 | 주석 행 | TSV에는 두지 않는다. Framework는 첫 줄을 열 이름으로 읽을 뿐 사람용 줄을 거르지 않는다 |
 | 빈칸 | 열마다 기본값(각 표 정의에 적음). consumeData 열이 비면 「보상 없음」 |
@@ -81,6 +81,10 @@
 | 3줄 열 이름 | 노란 바탕(#FFFF00)·굵게·아래 굵은 선. `#` 열은 진회색 머리 + 연회색 데이터 |
 | 데이터 | 4줄부터 흰 바탕 |
 | 고정 | 위 3줄과 첫 열(id) 고정 |
+| 사람용 `name` 열 | **모든 표는 id 다음에 사람용 `name` 열(코드 미사용)**을 둔다. 키 열(`id`, `07_consumeType`은 `typeId`) 바로 다음 2번째 열, string, 빈칸 금지. 값은 기획서·용어집 용어 그대로(새 기준 MV-SPEC-02 `TermIdMap`에서 일치·이름만 다름·값 다름인 행은 새 기준 용어, 그 밖은 MV-SPEC-01 이름). 런타임 코드·표 클래스는 읽지 않는다(화면 문구는 언어 키 `name:{id}`). `#` 열이 아니어서 TSV에 남는다. 검증기 `MvTableValidator`는 이 열을 모르는 열로 경고하지 않고, 없음·위치·빈칸을 작성 검증 오류로 막는다(§7.13.1) |
+| 용어(id) | **문서·설명에서 행을 가리킬 때는 용어(id)**로 쓴다(예 `마법서 탑(105001001)`). 용어는 그 행의 `name`. 표 이름(`113_god`)·열 이름·표 칸의 값은 그대로 쓴다 |
+| 새 기준 표시 | 새 기준(MV-SPEC-02)에 없는 데이터는 시트에서 색으로 따로 표시한다(2026-11-10 사용자 결정, [DiffReport 결정 기록](../MV-SPEC-02/DiffReport.md)). 판정은 `TermIdMap.md`: 행의 매칭 상태가 「MV-SPEC-01에만 있음」·「후보」면 행을 주황, TermIdMap이 다루지 않는 MV-SPEC-01 확장 표(`02_playResource`, 400~899번)는 표 전체를 연보라·탭 보라로 칠한다. TSV 값은 바꾸지 않는다. 「표목록」 「새 기준」 열에 요약 |
+| 공용 규칙 | 공용 규칙 JJEvolAutomation `docs/Guides/05_게임_테이블_규격.md`을 따른다 — 특히 JJEvol 표 규격 v1.1 §3.1(사람용 `name` 열)·§3.2(「용어(id)」 표기). 이 절과 다르면 이 절이 게임 쪽 세부, 공용 문서는 고치지 않는다 |
 | 열·표 추가 | 1~3줄을 모두 채우고 「표목록」·이 문서(또는 정본 절)를 같이 고친다 |
 | 다시 만들기 | 저장소 TSV에서 `C:/Project/MoonVillage.wt/_notes/tools/make_table_xlsx.py`(같은 폴더 `coldesc.json`·`tabledesc.json`·`rules.tsv`를 읽음)로 xlsx를 만들고 시트에서 「파일 → 가져오기 → 스프레드시트 바꾸기」. 링크는 유지된다 |
 
@@ -117,6 +121,7 @@
 ### 7.1.4 id·key·group·sort·active
 
 - **id**: 정수, 표 안에서 유일. 형식 `{표번호}{그룹 3자리}{순번 3자리}`. 예: `105_objectKind` 1번 그룹 3번째 = `105001003`. 표번호가 2자리면 `16001001`처럼 그대로 붙인다. 작은 정의 표는 1, 2, 3.
+- **name**: 모든 표의 2번째 열(키 열 바로 다음). 사람용 용어, 코드 미사용, 빈칸 금지(§7.1.1a). `410_questGroup`의 예전 `name` 열도 코드가 읽지 않으므로(작성용 필드만 있었고 쓰는 곳 없음, 2026-11-10 필드 삭제) 이 사람용 열로 2번째에 옮겼다.
 - **key**: 코드가 이름으로 찾아야 하는 행만 `key`(string, 표 안 유일, 영문 lowerCamel). **코드에서 id 숫자를 하드코딩하지 않는다.** 예: `MvTables.Current.ObjectKind.ByKey("tower")`.
 - **group**: 묶음 정수. 의미는 표마다 정의. `GroupedTable<int, T>`로 읽는다.
 - **sort**: 화면 정렬·선택 순서(오름차순). 같으면 id 순.
@@ -1017,7 +1022,7 @@ key `mouse`는 정본 화면(L3117 `drawMouse`)과 맞춘 이름이다(정본 �
 | hpRuleId | fk 114 | 빈칸 = 종류 기본. 이 배치만 체력 규칙을 바꿀 때 |
 | reward 3열 | consume | 빈칸 = 종류 기본. 이 배치만 보상을 바꿀 때(덮어쓰기) |
 
-**초기 84행** [프로토] L738 `PLACE` (노트 B §1.1 원문). 정본 type 번호 → kindId: 7 tower 105001001, 5 enemy 105001002(groupId 1 = mouse5), 14 sgate 105001003, 13 cgate 105001004, 15 stair 105001005, 2 coin 105001006, 3 gem 105001007. 모든 z < endZ(검증됨).
+**초기 84행** [프로토] L738 `PLACE` (노트 B §1.1 원문). 정본 type 번호 → kindId: 7 tower 마법서 탑(105001001), 5 enemy 105001002(groupId 1 = mouse5), 14 sgate 계단 게이트(105001003), 13 cgate 지팡이 공방 게이트(105001004), 15 stair 계단(105001005), 2 coin 금화 더미(플레이 구간)(105001006), 3 gem 블루 마법석 원석(플레이 구간)(105001007). 모든 z < endZ(검증됨).
 
 ```tsv
 id	templateId	seq	kindId	x	z	groupId	active	#kind
@@ -1134,12 +1139,12 @@ Level(판 번호) → 템플릿. 정본 `tplFor`(L857): Level 1~8은 그대로, 
 
 | 열 | 값 | 뜻 |
 |---|---|---|
-| id / key | 313000001 / default | |
+| id / key | 기본 필드 생성 규칙(313000001) / default | |
 | lanes | 3 | 레인 수 |
 | laneX0 / laneStep | −2.4 / 2.4 | 레인 x = laneX0 + laneStep × l |
 | rowStep | 1.7 | 줄 간격(m) |
-| wallKindId | 105001010 | 칸 오브젝트 종류(크기 1.15 / 0.55는 105 행) |
-| archKindId / archGoalKindId | 105001011 / 105001012 | 골목 아치, Area 아치 |
+| wallKindId | 종이 결계 블록(105001010) | 칸 오브젝트 종류(크기 1.15 / 0.55는 105 행) |
+| archKindId / archGoalKindId | 결계문(105001011) / 마법진 포털(105001012) | 골목 아치, Area 아치 |
 | soulPerRows | 3 | 생선 칸 수 = max(1, ceil(rows / 3)) |
 | soulMinIdx | 3 | 첫 줄(idx 0~2) 제외 |
 | soulHashStep / soulTryMax | 7.31 / 400 | 생선 칸 해시 간격, 시도 상한 |
@@ -1153,7 +1158,7 @@ Level(판 번호) → 템플릿. 정본 `tplFor`(L857): Level 1~8은 그대로, 
 | bonusLaneX | −2.2/0/2.2 | 보너스 상자 x |
 | bonusZ0 / bonusRowStep | 3 / 4.5 | 보너스 z = base + endZ + 3 + r × 4.5 |
 | bonusGemRow / bonusGemLane | 1 / 1 | 둘째 줄 가운데만 캣닢 |
-| bonusCoinKindId / bonusGemKindId | 105001008 / 105001009 | |
+| bonusCoinKindId / bonusGemKindId | 금화 더미(보너스 구간)(105001008) / 블루 마법석 원석(보너스 구간)(105001009) | |
 | bonusToArch | 14 | 보너스 시작 → 첫 아치 |
 | archToField / fieldToNext | 6 / 6 | 아치 → 필드 첫 줄, 필드 끝 → 다음 아치 |
 
@@ -2091,6 +2096,8 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 | 규칙 | 등급 |
 |---|---|
 | 헤더에 정의된 필수 열이 모두 있음, 같은 열 이름 두 번 없음 | 오류 |
+| 사람용 `name` 열이 있고 키 열 바로 다음, 모든 행 값이 비지 않음(§7.1.1a, 작성 검증만 — 원문 머리가 있을 때) | 오류 |
+| 열 정의에 없는 열(`name`·consumeData 열 제외), `#` 주석 열 | 경고 |
 | id 중복 없음, id가 `{표번호}…` 접두로 시작(작은 정의 표 제외) | 오류 |
 | 원문 문자열 기준 타입 확인(int·float·bool01은 `0`/`1`만·enum·color·list) — `TSVRow`의 조용한 기본값을 믿지 않음 | 오류 |
 | key 열 유일, 영문·숫자·`.`·`_`만 | 오류 |

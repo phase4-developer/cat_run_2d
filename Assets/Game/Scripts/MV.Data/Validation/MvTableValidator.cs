@@ -18,6 +18,12 @@ namespace MV.Data
         static readonly Regex s_color = new Regex("^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$", RegexOptions.CultureInvariant);
         static readonly CultureInfo C = CultureInfo.InvariantCulture;
 
+        /// <summary>
+        /// 사람용 용어 열(07 §7.1.1a, JJEvol 표 규격 v1.1 §3.1). 모든 표가 키 열 바로 다음에 두고, 코드는 읽지 않는다.
+        /// 스키마에 없어도 모르는 열 경고를 내지 않고, 원문 머리가 있을 때(작성 검증) 없음·위치·빈칸을 오류로 막는다.
+        /// </summary>
+        public const string HumanNameColumn = "name";
+
         /// <summary>id 0을 「지금 고른 것」으로 쓰는 type(07 §7.8.12 valueMeaning).</summary>
         static readonly HashSet<int> s_zeroIdAllowed = new HashSet<int> { 3, 500, 601, 621, 622, 630 };
 
@@ -119,9 +125,13 @@ namespace MV.Data
                 {
                     if (!seen.Add(h)) r.Error(name, null, h, "같은 열 이름이 두 번 있습니다");
                     else if (h.StartsWith("#")) r.Warn(name, null, h, "주석 열이 남아 있습니다(내보내기 도구가 빼야 합니다)");
-                    else if (h.Length > 0 && s.Find(h) == null && !IsConsumeColumn(s, h)) r.Warn(name, null, h, "열 정의에 없는 열입니다");
+                    else if (h.Length > 0 && h != HumanNameColumn && s.Find(h) == null && !IsConsumeColumn(s, h)) r.Warn(name, null, h, "열 정의에 없는 열입니다");
                 }
+                int keyAt = IndexOf(headers, s.IdColumn), human = IndexOf(headers, HumanNameColumn);
+                if (human < 0) r.Error(name, null, HumanNameColumn, "사람용 name 열이 없습니다(키 열 바로 다음에 둡니다)");
+                else if (keyAt >= 0 && human != keyAt + 1) r.Error(name, null, HumanNameColumn, $"name 열은 키 열 `{s.IdColumn}` 바로 다음이어야 합니다");
             }
+            bool checkHuman = headers != null && IndexOf(headers, HumanNameColumn) >= 0;
 
             foreach (var c in s.Columns)
             {
@@ -161,7 +171,14 @@ namespace MV.Data
                 }
 
                 foreach (var cc in s.Consumes) CheckConsumeFormat(name, id, row, cc, r);
+                if (checkHuman && string.IsNullOrWhiteSpace(row.Get(HumanNameColumn))) r.Error(name, id, HumanNameColumn, "사람용 name 값이 비었습니다");
             }
+        }
+
+        static int IndexOf(IReadOnlyList<string> headers, string column)
+        {
+            for (int i = 0; i < headers.Count; i++) if (headers[i] == column) return i;
+            return -1;
         }
 
         static bool IsConsumeColumn(MvSchema s, string header)

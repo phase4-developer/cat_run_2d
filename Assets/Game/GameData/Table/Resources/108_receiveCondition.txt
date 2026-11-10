@@ -1,8 +1,8 @@
-﻿id	key	type	margin	insideX	preDelayMs	delayMs	clock	arriveAction	passEffect	passSound
-108001001	onBreak	OnBreak			0	0	Game	None		
-108001002	sgatePass	OnPass	0.2	1.45	0	560	Real	None	run.statGatePass	gate
-108001003	cgatePass	OnPass	0.2	1.45	0	500	Game	None	run.cloneGatePass	forge
-108001004	wellGauge	OnFlush			260	560	Real	None	run.brickFlush	
-108001005	onArriveStair	OnArrive			0	0	Game	StartClimb		gate
-108001006	onArriveFloor	OnArrive			0	0	Game	FloorBanner		floor
-108001007	onArriveGoal	OnArrive			0	0	Game	FinishGate		
+﻿id	name	key	type	margin	insideX	preDelayMs	delayMs	clock	arriveAction	passEffect	passSound
+108001001	파괴 시 수령	onBreak	OnBreak			0	0	Game	None		
+108001002	계단 게이트 통과 수령	sgatePass	OnPass	0.2	1.45	0	560	Real	None	run.statGatePass	gate
+108001003	지팡이 공방 통과 수령	cgatePass	OnPass	0.2	1.45	0	500	Game	None	run.cloneGatePass	forge
+108001004	마법서 탑 게이지 수령	wellGauge	OnFlush			260	560	Real	None	run.brickFlush	
+108001005	계단 도착	onArriveStair	OnArrive			0	0	Game	StartClimb		gate
+108001006	결계문 도착	onArriveFloor	OnArrive			0	0	Game	FloorBanner		floor
+108001007	마법진 포털 도착	onArriveGoal	OnArrive			0	0	Game	FinishGate		

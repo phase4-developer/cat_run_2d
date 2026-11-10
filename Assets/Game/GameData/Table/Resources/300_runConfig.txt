@@ -1,169 +1,169 @@
-﻿id	key	value	unit
-300001001	time.dtCap	0.05	s
-300001002	time.hitStopScale	0.12	배
-300001003	time.targetFps	60	fps
-300002001	view.nearCut	0.3	m
-300002002	view.fogStart	34	m
-300002003	view.fogRange	50	m
-300002004	view.objCullBack	-18	m
-300002005	view.objCullFront	78	m
-300002006	view.objDrawBack	-2	m
-300002007	view.objDrawFront	90	m
-300002008	view.propDrawBack	-4	m
-300002009	view.propDrawFront	90	m
-300002010	view.groundNear	0.8	m
-300002011	view.groundFar	120	m
-300002012	view.groundStep	2	m
-300002013	view.mixQuant	20	단계
-300002014	view.clothFrom	2	m
-300002015	view.clothTo	75	m
-300002016	view.clothStep	13	m
-300002017	view.clothSkip	0.25	확률
-300002018	view.clothY	3.1	m
-300002019	view.lightAlpha	0.467	0~1
-300002020	view.snowCount	70	개
-300002021	view.refWidthPx	360	px
-300002022	view.refHeightPx	640	px
-300002023	view.outlineColor	#4a3446	color
-300002024	view.playerCatScale	1.05	배
-300002025	view.cloneCatScale	0.85	배
-300003001	sort.quant	64	칸/m
-300003002	sort.objProbeY	0.8	m
-300003003	sort.catProbeY	0.7	m
-300003004	sort.cloth	0.5	m
-300003005	sort.label	-0.05	m
-300003006	sort.blade	-0.03	m
-300003007	sort.proj	-0.02	m
-300004001	shake.wallBreak.amp	0.16	m
-300004002	shake.wallBreak.time	0.14	s
-300004003	shake.steal.amp	0.12	m
-300004004	shake.steal.time	0.12	s
-300004005	shake.blocked.amp	0.35	m
-300004006	shake.blocked.time	0.3	s
-300004007	shake.godBlast.amp	0.45	m
-300004008	shake.godBlast.time	0.3	s
-300004009	shake.climbLap.amp	0.22	m
-300004010	shake.climbLap.time	0.2	s
-300004011	shake.climbTier.amp	0.12	m
-300004012	shake.climbTier.time	0.12	s
-300004013	shake.warpStage.amp	0.18	m
-300004014	shake.warpStage.time	0.2	s
-300004015	shake.holyBeam.amp	0.12	m
-300004016	shake.holyBeam.time	0.2	s
-300004017	shake.meteor.amp	0.5	m
-300004018	shake.meteor.time	0.35	s
-300005001	hitstop.enemyKill	0.03	s
-300005002	hitstop.wallBreak	0.06	s
-300005003	hitstop.coinBreak	0.03	s
-300006001	fx.sparkCapThreshold	700	개
-300006002	fx.sparkCapCount	4	개
-300006003	fx.maxHandles	120	개
-300006004	fx.trailInterval	0.03	s
-300006005	fx.brickFlushInterval	0.22	s
-300006006	fx.towerHitChance	0.3	확률
-300007001	pop.max	61	개
-300007002	pop.life	0.8	s
-300007003	pop.rise	1.4	m/s
-300007004	pop.scaleIn	0.15	k
-300007005	pop.scaleBoost	3	배
-300007006	pop.fadeFrom	0.6	k
-300007007	pop.fontU	4.2	u
-300007008	pop.critColor	#ff6a3d	color
-300007009	fly.time	0.55	s
-300007010	fly.removeMs	560	ms
-300007011	fly.bezier	.5/0/.8/.6	곡선
-300007012	fly.startScale	1.3	배
-300007013	fly.endScale	0.6	배
-300007014	fly.endAlpha	0.4	0~1
-300007015	fly.cloneGapMs	70	ms
-300007016	flyCard.time	0.6	s
-300007017	flyCard.removeMs	620	ms
-300007018	flyCard.bezier	.55/0/.75/.4	곡선
-300008001	banner.time	1.5	s
-300008002	toast.time	1.4	s
-300008003	toast.fade	0.2	s
-300008004	flash.fade	0.25	s
-300008005	flash.godBlast	0.35	0~1
-300008006	flash.godBlastMs	60	ms
-300008007	flash.climbTier	0.25	0~1
-300008008	flash.climbTierMs	90	ms
-300008009	warp.fadeIn	0.35	s
-300008010	warp.vanishY	0.2	H 비율
-300008011	warp.roofCount	9	채
-300008012	warp.stepCount	16	칸
-300008013	warp.stageNameMs	1800	ms
-300008014	warp.outMs	700	ms
-300008015	warp.speedLines	18	줄
-300101001	DRAG_SCREEN_M	7.2	m
-300101002	LANE_X_MAX	3.2	m
-300101003	KEY_MOVE_SPEED	9	m/s
-300101004	MOVE_FOLLOW_K	14	1/s
-300101005	RUN_SPEED	4	m/s
-300101006	PHASE_RUN	13	1/s
-300101007	PHASE_BLOCKED	4	1/s
-300101008	PHASE_CLIMB	30	1/s
-300101009	CLIMB_X_FOLLOW_K	6	1/s
-300101010	PLAYER_HALF_W	0.32	m
-300101011	WALL_FACE_GAP	0.35	m
-300101012	WALL_FACE_EPS	0.02	m
-300101013	WARN_DIST	9	m
-300102001	FIRE_PHASE	0/0.13/0.26/0.07/0.19	s
-300102002	MAX_CLONES	4	명
-300102003	CLONE_X_MAX	3.4	m
-300102004	DBL_SHOT_DX	0.2	m
-300102005	PROJ_SPAWN_DZ	0.4	m
-300102006	THROW_T	0.12	s
-300102007	PROJ_SPEED	20	m/s
-300102008	PROJ_RANGE	22	m
-300102009	DMG_MIN	1	
-300102010	DMG_MAX	99999	
-300102011	INCOME_PER_LV	0.05	배/단계
-300102012	ENEMY_X_MAX	3	m
-300103001	WELL_FLUSH_BEHIND	0.5	m
-300103002	WELL_BRICK_MAX	4	개
-300103003	WELL_BRICK_DIV	0.1	배
-300103004	WELL_BRICK_LIFE	0.26	s
-300103005	ORE_ICON_GAP_MS	60	ms
-300103006	CRAFT_ICON_MAX	5	개
-300104001	FLOOR_COUNT	3	개
-300104002	CP_MAX	2	
-300104003	PLAYABLE_AREAS	5	개
-300104004	TOK_BASE	1	개
-300104005	TOK_SOUL_DIV	4	생선/개
-300104006	TOK_GATE	2	개
-300104007	TOK_OPEN	3	개
-300104008	FAIL_SFX_DELAY_MS	350	ms
-300104009	LOBBY_STAIR_MAX_LV	4	Lv
-300104010	WEAPON_EXTRA_BUYS	60	회
-300104011	ARCH_LABEL_HIDE	3	m
-300104012	MERGE_N	3	장
-300105001	ORB_COUNT	3	개
-300105002	ORB_RADIUS	1.5	m
-300105003	ORB_ANG_SPEED	4	rad/s
-300105004	ORB_Z_BACK	1.4	m
-300105005	BURN_TICK	0.5	s
-300105006	CHAIN_FIRE_BOX	2.4	m
-300105007	STORM_LIFE	1.7	s
-300105008	STORM_K0	0.12	s
-300105009	STORM_DK	0.17	s
-300105010	STORM_PICK_DZ	7	m
-300105011	STORM_BOX	1.3	m
-300105012	BLAST_BOX	3.6	m
-300105013	METEOR_MIN_DZ	2	m
-300105014	METEOR_MAX_DZ	20	m
-300105015	METEOR_FALL	0.6	s
-300105016	METEOR_BOX	3.2	m
-300105017	BLADE_ANG_SPEED	5	rad/s
-300105018	STORM_JIT_TARGET	0.3	m
-300105019	STORM_JIT_FREE	2	m
-300106001	ui.hand.budget	3	s
-300106002	ui.hand.leftMin	0.4	s
-300106003	ui.hand.dealCost	0.12	단위
-300106004	ui.hand.unitMin	0.07	s
-300106005	ui.hand.unitMax	0.54	s
-300106006	ui.hand.dealGapMax	0.05	s
-300106007	ui.hand.dealGapMul	0.12	배
-300106008	ui.hand.mergeMul	0.92	배
-300106009	ui.hand.moveMul	0.9	배
-300106010	ui.hand.afterMax	0.04	s
-300106011	ui.hand.afterMul	0.08	배
+﻿id	name	key	value	unit
+300001001	프레임 시간 상한	time.dtCap	0.05	s
+300001002	히트스톱 시간 배율	time.hitStopScale	0.12	배
+300001003	목표 FPS	time.targetFps	60	fps
+300002001	가까운 자르기 거리	view.nearCut	0.3	m
+300002002	안개 시작 거리	view.fogStart	34	m
+300002003	안개 길이	view.fogRange	50	m
+300002004	오브젝트 뒤 컬링	view.objCullBack	-18	m
+300002005	오브젝트 앞 컬링	view.objCullFront	78	m
+300002006	오브젝트 뒤 그리기 거리	view.objDrawBack	-2	m
+300002007	오브젝트 앞 그리기 거리	view.objDrawFront	90	m
+300002008	소품 뒤 그리기 거리	view.propDrawBack	-4	m
+300002009	소품 앞 그리기 거리	view.propDrawFront	90	m
+300002010	바닥 가까운 끝	view.groundNear	0.8	m
+300002011	바닥 먼 끝	view.groundFar	120	m
+300002012	바닥 칸 간격	view.groundStep	2	m
+300002013	색 섞기 단계	view.mixQuant	20	단계
+300002014	빨랫줄 시작	view.clothFrom	2	m
+300002015	빨랫줄 끝	view.clothTo	75	m
+300002016	빨랫줄 간격	view.clothStep	13	m
+300002017	빨랫줄 건너뛰기	view.clothSkip	0.25	확률
+300002018	빨랫줄 높이	view.clothY	3.1	m
+300002019	조명 투명도	view.lightAlpha	0.467	0~1
+300002020	눈송이 수	view.snowCount	70	개
+300002021	기준 해상도 폭	view.refWidthPx	360	px
+300002022	기준 해상도 높이	view.refHeightPx	640	px
+300002023	외곽선 색	view.outlineColor	#4a3446	color
+300002024	냥법사 그림 배율	view.playerCatScale	1.05	배
+300002025	분신 냥법사 그림 배율	view.cloneCatScale	0.85	배
+300003001	깊이 정렬 단위	sort.quant	64	칸/m
+300003002	오브젝트 정렬 기준 높이	sort.objProbeY	0.8	m
+300003003	냥법사 정렬 기준 높이	sort.catProbeY	0.7	m
+300003004	빨랫줄 정렬 편향	sort.cloth	0.5	m
+300003005	글자판 정렬 편향	sort.label	-0.05	m
+300003006	칼날 정렬 편향	sort.blade	-0.03	m
+300003007	마법탄 정렬 편향	sort.proj	-0.02	m
+300004001	결계 블록 파괴 흔들림 세기	shake.wallBreak.amp	0.16	m
+300004002	결계 블록 파괴 흔들림 시간	shake.wallBreak.time	0.14	s
+300004003	훔치기 흔들림 세기	shake.steal.amp	0.12	m
+300004004	훔치기 흔들림 시간	shake.steal.time	0.12	s
+300004005	막힘 흔들림 세기	shake.blocked.amp	0.35	m
+300004006	막힘 흔들림 시간	shake.blocked.time	0.3	s
+300004007	낙뢰 폭발 흔들림 세기	shake.godBlast.amp	0.45	m
+300004008	낙뢰 폭발 흔들림 시간	shake.godBlast.time	0.3	s
+300004009	계단 바퀴 흔들림 세기	shake.climbLap.amp	0.22	m
+300004010	계단 바퀴 흔들림 시간	shake.climbLap.time	0.2	s
+300004011	계단 단계 흔들림 세기	shake.climbTier.amp	0.12	m
+300004012	계단 단계 흔들림 시간	shake.climbTier.time	0.12	s
+300004013	워프 단계 흔들림 세기	shake.warpStage.amp	0.18	m
+300004014	워프 단계 흔들림 시간	shake.warpStage.time	0.2	s
+300004015	성스러운 광선 흔들림 세기	shake.holyBeam.amp	0.12	m
+300004016	성스러운 광선 흔들림 시간	shake.holyBeam.time	0.2	s
+300004017	운석 흔들림 세기	shake.meteor.amp	0.5	m
+300004018	운석 흔들림 시간	shake.meteor.time	0.35	s
+300005001	하수인 처치 히트스톱	hitstop.enemyKill	0.03	s
+300005002	결계 블록 파괴 히트스톱	hitstop.wallBreak	0.06	s
+300005003	금화 더미 파괴 히트스톱	hitstop.coinBreak	0.03	s
+300006001	불꽃 상한 기준	fx.sparkCapThreshold	700	개
+300006002	불꽃 상한 개수	fx.sparkCapCount	4	개
+300006003	이펙트 핸들 상한	fx.maxHandles	120	개
+300006004	꼬리 간격	fx.trailInterval	0.03	s
+300006005	벽돌 배출 간격	fx.brickFlushInterval	0.22	s
+300006006	마법서 탑 타격 이펙트 확률	fx.towerHitChance	0.3	확률
+300007001	숫자 팝업 상한	pop.max	61	개
+300007002	숫자 팝업 수명	pop.life	0.8	s
+300007003	숫자 팝업 상승	pop.rise	1.4	m/s
+300007004	숫자 팝업 등장 배율	pop.scaleIn	0.15	k
+300007005	숫자 팝업 강조 배율	pop.scaleBoost	3	배
+300007006	숫자 팝업 사라짐 시작	pop.fadeFrom	0.6	k
+300007007	숫자 팝업 글자 크기	pop.fontU	4.2	u
+300007008	치명타 숫자 색	pop.critColor	#ff6a3d	color
+300007009	아이콘 비행 시간	fly.time	0.55	s
+300007010	아이콘 비행 제거 지연	fly.removeMs	560	ms
+300007011	아이콘 비행 곡선	fly.bezier	.5/0/.8/.6	곡선
+300007012	아이콘 비행 시작 배율	fly.startScale	1.3	배
+300007013	아이콘 비행 끝 배율	fly.endScale	0.6	배
+300007014	아이콘 비행 끝 투명도	fly.endAlpha	0.4	0~1
+300007015	공방 아이콘 간격	fly.cloneGapMs	70	ms
+300007016	카드 비행 시간	flyCard.time	0.6	s
+300007017	카드 비행 제거 지연	flyCard.removeMs	620	ms
+300007018	카드 비행 곡선	flyCard.bezier	.55/0/.75/.4	곡선
+300008001	배너 시간	banner.time	1.5	s
+300008002	토스트 시간	toast.time	1.4	s
+300008003	토스트 사라짐	toast.fade	0.2	s
+300008004	플래시 사라짐	flash.fade	0.25	s
+300008005	낙뢰 폭발 플래시	flash.godBlast	0.35	0~1
+300008006	낙뢰 폭발 플래시 시간	flash.godBlastMs	60	ms
+300008007	계단 단계 플래시	flash.climbTier	0.25	0~1
+300008008	계단 단계 플래시 시간	flash.climbTierMs	90	ms
+300008009	워프 페이드 인	warp.fadeIn	0.35	s
+300008010	워프 사라짐 높이	warp.vanishY	0.2	H 비율
+300008011	워프 지붕 수	warp.roofCount	9	채
+300008012	워프 계단 수	warp.stepCount	16	칸
+300008013	워프 단계 이름 시간	warp.stageNameMs	1800	ms
+300008014	워프 끝 시간	warp.outMs	700	ms
+300008015	워프 속도선	warp.speedLines	18	줄
+300101001	드래그 화면 폭	DRAG_SCREEN_M	7.2	m
+300101002	이동 x 한계	LANE_X_MAX	3.2	m
+300101003	키 이동 속도	KEY_MOVE_SPEED	9	m/s
+300101004	x 추종 계수	MOVE_FOLLOW_K	14	1/s
+300101005	전진 속도	RUN_SPEED	4	m/s
+300101006	달리기 위상 속도	PHASE_RUN	13	1/s
+300101007	막힘 위상 속도	PHASE_BLOCKED	4	1/s
+300101008	계단 위상 속도	PHASE_CLIMB	30	1/s
+300101009	계단 중 x 복귀 계수	CLIMB_X_FOLLOW_K	6	1/s
+300101010	냥법사 반폭	PLAYER_HALF_W	0.32	m
+300101011	막힐 때 앞면 간격	WALL_FACE_GAP	0.35	m
+300101012	앞면 판정 여유	WALL_FACE_EPS	0.02	m
+300101013	전방 장애물 경고 거리	WARN_DIST	9	m
+300102001	유닛별 첫 발사 위상	FIRE_PHASE	0/0.13/0.26/0.07/0.19	s
+300102002	분신 상한	MAX_CLONES	4	명
+300102003	분신 x 한계	CLONE_X_MAX	3.4	m
+300102004	2연발 좌우 간격	DBL_SHOT_DX	0.2	m
+300102005	마법탄 출발 z	PROJ_SPAWN_DZ	0.4	m
+300102006	던지기 자세 시간	THROW_T	0.12	s
+300102007	마법탄 속도	PROJ_SPEED	20	m/s
+300102008	기본 사거리	PROJ_RANGE	22	m
+300102009	피해 하한	DMG_MIN	1	
+300102010	피해 상한	DMG_MAX	99999	
+300102011	수입 증가 단계당 배율	INCOME_PER_LV	0.05	배/단계
+300102012	하수인 무리 x 한계	ENEMY_X_MAX	3	m
+300103001	마법서 탑 배출 거리	WELL_FLUSH_BEHIND	0.5	m
+300103002	벽돌 조각 수 상한	WELL_BRICK_MAX	4	개
+300103003	벽돌 조각 기준 배율	WELL_BRICK_DIV	0.1	배
+300103004	벽돌 조각 튐 시간	WELL_BRICK_LIFE	0.26	s
+300103005	벽돌 아이콘 간격	ORE_ICON_GAP_MS	60	ms
+300103006	공방 비행 아이콘 상한	CRAFT_ICON_MAX	5	개
+300104001	Area당 Floor 수	FLOOR_COUNT	3	개
+300104002	체크포인트 상한	CP_MAX	2	
+300104003	플레이 가능 Area 수	PLAYABLE_AREAS	5	개
+300104004	황금 생선 기본	TOK_BASE	1	개
+300104005	황금 생선 구출 고양이 나눗수	TOK_SOUL_DIV	4	생선/개
+300104006	황금 생선 포털 도달	TOK_GATE	2	개
+300104007	황금 생선 개방	TOK_OPEN	3	개
+300104008	실패 소리 지연	FAIL_SFX_DELAY_MS	350	ms
+300104009	시작 계단 Lv 상한	LOBBY_STAIR_MAX_LV	4	Lv
+300104010	지팡이 Lv 8 이후 추가 구매 수	WEAPON_EXTRA_BUYS	60	회
+300104011	결계문 글자판 숨김 거리	ARCH_LABEL_HIDE	3	m
+300104012	머지 장수	MERGE_N	3	장
+300105001	구슬 개수	ORB_COUNT	3	개
+300105002	구슬 반경	ORB_RADIUS	1.5	m
+300105003	구슬 각속도	ORB_ANG_SPEED	4	rad/s
+300105004	구슬 뒤 거리	ORB_Z_BACK	1.4	m
+300105005	화상 틱 간격	BURN_TICK	0.5	s
+300105006	불씨 연쇄 범위	CHAIN_FIRE_BOX	2.4	m
+300105007	뇌우 수명	STORM_LIFE	1.7	s
+300105008	뇌우 첫 간격	STORM_K0	0.12	s
+300105009	뇌우 간격 증가	STORM_DK	0.17	s
+300105010	뇌우 대상 거리	STORM_PICK_DZ	7	m
+300105011	뇌우 착탄 범위	STORM_BOX	1.3	m
+300105012	낙뢰 폭발 범위	BLAST_BOX	3.6	m
+300105013	운석 최소 거리	METEOR_MIN_DZ	2	m
+300105014	운석 최대 거리	METEOR_MAX_DZ	20	m
+300105015	운석 낙하 시간	METEOR_FALL	0.6	s
+300105016	운석 범위	METEOR_BOX	3.2	m
+300105017	칼날 각속도	BLADE_ANG_SPEED	5	rad/s
+300105018	뇌우 흔들림(대상 있음)	STORM_JIT_TARGET	0.3	m
+300105019	뇌우 흔들림(대상 없음)	STORM_JIT_FREE	2	m
+300106001	손패 연출 시간 예산	ui.hand.budget	3	s
+300106002	손패 남은 예산 하한	ui.hand.leftMin	0.4	s
+300106003	손패 1장 전달 비용	ui.hand.dealCost	0.12	단위
+300106004	손패 단위 시간 하한	ui.hand.unitMin	0.07	s
+300106005	손패 단위 시간 상한	ui.hand.unitMax	0.54	s
+300106006	손패 전달 간격 상한	ui.hand.dealGapMax	0.05	s
+300106007	손패 전달 간격 계수	ui.hand.dealGapMul	0.12	배
+300106008	손패 머지 시간 계수	ui.hand.mergeMul	0.92	배
+300106009	손패 모으기 이동 계수	ui.hand.moveMul	0.9	배
+300106010	손패 머지 뒤 쉼 상한	ui.hand.afterMax	0.04	s
+300106011	손패 머지 뒤 쉼 계수	ui.hand.afterMul	0.08	배

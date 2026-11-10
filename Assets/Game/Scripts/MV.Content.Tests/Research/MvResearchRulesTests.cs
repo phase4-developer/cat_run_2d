@@ -75,9 +75,9 @@ namespace MV.Content.Tests
         {
             switch (kind)
             {
-                case "level": return "440001006\t1\t6\t\tDmg\t15\t1\t1001002\t60\t6000\t1";
-                case "group": return "440006001\t6\t1\t\tCritChance\t3\t1\t1001002\t10\t50\t1";
-                case "inactive": return "440001006\t1\t6\t\tDmg\t15\t1\t1001002\t60\t6000\t0";
+                case "level": return "440001006\tresearch test\t1\t6\t\tDmg\t15\t1\t1001002\t60\t6000\t1";
+                case "group": return "440006001\tresearch test\t6\t1\t\tCritChance\t3\t1\t1001002\t10\t50\t1";
+                case "inactive": return "440001006\tresearch test\t1\t6\t\tDmg\t15\t1\t1001002\t60\t6000\t0";
                 default: throw new ArgumentException(kind);
             }
         }

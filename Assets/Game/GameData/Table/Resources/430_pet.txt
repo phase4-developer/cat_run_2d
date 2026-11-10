@@ -1,17 +1,17 @@
-﻿id	key	rarity	statKey	value	skillEveryMs	skillDmgPct	skillTargets	skillLevelPct	levelPriceGroup	icon	sprite	active
-430001001	sparrow	0	Dmg	5	2000	20	1	3	301	UI_Icon_Pet_sparrow	Pet_sparrow	1
-430001002	pigeon	0	Gold	8	2000	20	1	3	301	UI_Icon_Pet_pigeon	Pet_pigeon	1
-430001003	hamster	0	FireRate	4	2000	20	1	3	301	UI_Icon_Pet_hamster	Pet_hamster	1
-430001004	goldfish	0	Range	4	2000	20	1	3	301	UI_Icon_Pet_goldfish	Pet_goldfish	1
-430001005	snail	0	CritChance	2	2000	20	1	3	301	UI_Icon_Pet_snail	Pet_snail	1
-430001006	squirrel	1	FireRate	6	1800	30	1	3	301	UI_Icon_Pet_squirrel	Pet_squirrel	1
-430001007	hedgehog	1	CritDmg	15	1800	30	1	3	301	UI_Icon_Pet_hedgehog	Pet_hedgehog	1
-430001008	duck	1	Gold	12	1800	30	1	3	301	UI_Icon_Pet_duck	Pet_duck	1
-430001009	rabbit	1	Dmg	8	1800	30	1	3	301	UI_Icon_Pet_rabbit	Pet_rabbit	1
-430001010	raccoon	2	Dmg	12	1600	45	1	3	301	UI_Icon_Pet_raccoon	Pet_raccoon	1
-430001011	owl	2	CritChance	5	1600	45	1	3	301	UI_Icon_Pet_owl	Pet_owl	1
-430001012	otter	2	DoubleChance	4	1600	45	1	3	301	UI_Icon_Pet_otter	Pet_otter	1
-430001013	fox	3	CritDmg	40	1400	70	1	3	301	UI_Icon_Pet_fox	Pet_fox	1
-430001014	crane	3	FireRate	12	1400	70	1	3	301	UI_Icon_Pet_crane	Pet_crane	1
-430001015	moonRabbit	4	CritDmg	60	1200	100	1	3	301	UI_Icon_Pet_moonRabbit	Pet_moonRabbit	1
-430001016	goldKoi	4	Gold	40	1200	100	1	3	301	UI_Icon_Pet_goldKoi	Pet_goldKoi	1
+﻿id	name	key	rarity	statKey	value	skillEveryMs	skillDmgPct	skillTargets	skillLevelPct	levelPriceGroup	icon	sprite	active
+430001001	참새	sparrow	0	Dmg	5	2000	20	1	3	301	UI_Icon_Pet_sparrow	Pet_sparrow	1
+430001002	비둘기	pigeon	0	Gold	8	2000	20	1	3	301	UI_Icon_Pet_pigeon	Pet_pigeon	1
+430001003	햄스터	hamster	0	FireRate	4	2000	20	1	3	301	UI_Icon_Pet_hamster	Pet_hamster	1
+430001004	금붕어	goldfish	0	Range	4	2000	20	1	3	301	UI_Icon_Pet_goldfish	Pet_goldfish	1
+430001005	달팽이	snail	0	CritChance	2	2000	20	1	3	301	UI_Icon_Pet_snail	Pet_snail	1
+430001006	다람쥐	squirrel	1	FireRate	6	1800	30	1	3	301	UI_Icon_Pet_squirrel	Pet_squirrel	1
+430001007	고슴도치	hedgehog	1	CritDmg	15	1800	30	1	3	301	UI_Icon_Pet_hedgehog	Pet_hedgehog	1
+430001008	오리	duck	1	Gold	12	1800	30	1	3	301	UI_Icon_Pet_duck	Pet_duck	1
+430001009	토끼	rabbit	1	Dmg	8	1800	30	1	3	301	UI_Icon_Pet_rabbit	Pet_rabbit	1
+430001010	너구리	raccoon	2	Dmg	12	1600	45	1	3	301	UI_Icon_Pet_raccoon	Pet_raccoon	1
+430001011	부엉이	owl	2	CritChance	5	1600	45	1	3	301	UI_Icon_Pet_owl	Pet_owl	1
+430001012	수달	otter	2	DoubleChance	4	1600	45	1	3	301	UI_Icon_Pet_otter	Pet_otter	1
+430001013	여우	fox	3	CritDmg	40	1400	70	1	3	301	UI_Icon_Pet_fox	Pet_fox	1
+430001014	두루미	crane	3	FireRate	12	1400	70	1	3	301	UI_Icon_Pet_crane	Pet_crane	1
+430001015	달토끼	moonRabbit	4	CritDmg	60	1200	100	1	3	301	UI_Icon_Pet_moonRabbit	Pet_moonRabbit	1
+430001016	황금 잉어	goldKoi	4	Gold	40	1200	100	1	3	301	UI_Icon_Pet_goldKoi	Pet_goldKoi	1

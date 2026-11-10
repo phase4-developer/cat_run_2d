@@ -1,34 +1,34 @@
-id	key	soundType	soundName	volume	pitchRand	gapMs
-3001001	throw	Sfx	Sfx_Throw	1.0	0	70
-3001002	hit	Sfx	Sfx_Hit	1.0	0	35
-3001003	crit	Sfx	Sfx_Crit	1.0	0	50
-3001004	wood	Sfx	Sfx_Wood	1.0	0	50
-3001005	coin	Sfx	Sfx_Coin	1.0	0	45
-3001006	gem	Sfx	Sfx_Gem	1.0	0	60
-3001007	soul	Sfx	Sfx_Soul	1.0	0	20
-3001008	gate	Sfx	Sfx_Gate	1.0	0	20
-3001009	forge	Sfx	Sfx_Forge	1.0	0	20
-3001010	clank	Sfx	Sfx_Clank	1.0	0	60
-3001011	lvup	Sfx	Sfx_Lvup	1.0	0	20
-3001012	tierup_1	Sfx	Sfx_Tierup_1	1.0	0	20
-3001013	tierup_2	Sfx	Sfx_Tierup_2	1.0	0	20
-3001014	tierup_3	Sfx	Sfx_Tierup_3	1.0	0	20
-3001015	tierup_4	Sfx	Sfx_Tierup_4	1.0	0	20
-3001016	land	Sfx	Sfx_Land	1.0	0	20
-3001017	tick	Sfx	Sfx_Tick	1.0	0	20
-3001018	card_0	Sfx	Sfx_Card_0	1.0	0	20
-3001019	card_1	Sfx	Sfx_Card_1	1.0	0	20
-3001020	card_2	Sfx	Sfx_Card_2	1.0	0	20
-3001021	card_3	Sfx	Sfx_Card_3	1.0	0	20
-3001022	card_4	Sfx	Sfx_Card_4	1.0	0	20
-3001023	merge	Sfx	Sfx_Merge	1.0	0	20
-3001024	buy	Sfx	Sfx_Buy	1.0	0	20
-3001025	click	Sfx	Sfx_Click	1.0	0	20
-3001026	warn	Sfx	Sfx_Warn	1.0	0	20
-3001027	steal	Sfx	Sfx_Steal	1.0	0	20
-3001028	fail	Sfx	Sfx_Fail	1.0	0	20
-3001029	win	Sfx	Sfx_Win	1.0	0	20
-3001030	floor	Sfx	Sfx_Floor	1.0	0	20
-3001031	tierup_0	Sfx	Sfx_Tierup_0	1.0	0	20
-3002001	bgm_lobby	Music	Bgm_Lobby	1.0	0	0
-3002002	bgm_run	Music	Bgm_Run	1.0	0	0
+id	name	key	soundType	soundName	volume	pitchRand	gapMs
+3001001	던지기	throw	Sfx	Sfx_Throw	1.0	0	70
+3001002	명중	hit	Sfx	Sfx_Hit	1.0	0	35
+3001003	치명타	crit	Sfx	Sfx_Crit	1.0	0	50
+3001004	나무 타격	wood	Sfx	Sfx_Wood	1.0	0	50
+3001005	동전	coin	Sfx	Sfx_Coin	1.0	0	45
+3001006	보석	gem	Sfx	Sfx_Gem	1.0	0	60
+3001007	구출 고양이 획득	soul	Sfx	Sfx_Soul	1.0	0	20
+3001008	게이트 통과	gate	Sfx	Sfx_Gate	1.0	0	20
+3001009	공방 제작	forge	Sfx	Sfx_Forge	1.0	0	20
+3001010	쇠 타격	clank	Sfx	Sfx_Clank	1.0	0	60
+3001011	레벨업	lvup	Sfx	Sfx_Lvup	1.0	0	20
+3001012	단계 상승 1	tierup_1	Sfx	Sfx_Tierup_1	1.0	0	20
+3001013	단계 상승 2	tierup_2	Sfx	Sfx_Tierup_2	1.0	0	20
+3001014	단계 상승 3	tierup_3	Sfx	Sfx_Tierup_3	1.0	0	20
+3001015	단계 상승 4	tierup_4	Sfx	Sfx_Tierup_4	1.0	0	20
+3001016	착지	land	Sfx	Sfx_Land	1.0	0	20
+3001017	틱	tick	Sfx	Sfx_Tick	1.0	0	20
+3001018	카드 확정 0	card_0	Sfx	Sfx_Card_0	1.0	0	20
+3001019	카드 확정 1	card_1	Sfx	Sfx_Card_1	1.0	0	20
+3001020	카드 확정 2	card_2	Sfx	Sfx_Card_2	1.0	0	20
+3001021	카드 확정 3	card_3	Sfx	Sfx_Card_3	1.0	0	20
+3001022	카드 확정 4	card_4	Sfx	Sfx_Card_4	1.0	0	20
+3001023	머지	merge	Sfx	Sfx_Merge	1.0	0	20
+3001024	구매	buy	Sfx	Sfx_Buy	1.0	0	20
+3001025	버튼 클릭	click	Sfx	Sfx_Click	1.0	0	20
+3001026	경고	warn	Sfx	Sfx_Warn	1.0	0	20
+3001027	훔치기	steal	Sfx	Sfx_Steal	1.0	0	20
+3001028	실패	fail	Sfx	Sfx_Fail	1.0	0	20
+3001029	승리	win	Sfx	Sfx_Win	1.0	0	20
+3001030	Floor 도달	floor	Sfx	Sfx_Floor	1.0	0	20
+3001031	단계 상승 0	tierup_0	Sfx	Sfx_Tierup_0	1.0	0	20
+3002001	로비 배경음	bgm_lobby	Music	Bgm_Lobby	1.0	0	0
+3002002	런 배경음	bgm_run	Music	Bgm_Run	1.0	0	0

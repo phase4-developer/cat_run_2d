@@ -89,6 +89,26 @@ namespace MV.Data.Tests
 
         // ---------------- 형식·참조 ----------------
 
+        /// <summary>사람용 name 열(07 §7.1.1a, JJEvol 표 규격 v1.1 §3.1): 없음·키 열 다음이 아님·빈칸은 오류, 있으면 모르는 열 경고 없음.</summary>
+        [TestCase("missing", "사람용 name 열이 없습니다")]
+        [TestCase("moved", "키 열 `id` 바로 다음")]
+        [TestCase("empty", "사람용 name 값이 비었습니다")]
+        public void Format_HumanNameColumn_IsRequired(string broken, string fragment)
+        {
+            var good = TsvFixture.Read("11_stairLevel");
+            Assert.That(TsvFixture.Validate(("11_stairLevel", good)).Contains(MvIssueLevel.Warning, "11_stairLevel", "열 정의에 없는 열"), Is.False);
+            var lines = good.Replace("\r\n", "\n").TrimEnd('\n').Split('\n');
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var c = lines[i].Split('\t').ToList();
+                if (broken == "missing") c.RemoveAt(1);
+                else if (broken == "moved") { var n = c[1]; c.RemoveAt(1); c.Add(n); }
+                else if (i == 1) c[1] = "";
+                lines[i] = string.Join("\t", c);
+            }
+            AssertError(TsvFixture.Validate(("11_stairLevel", string.Join("\n", lines) + "\n")), "11_stairLevel", fragment);
+        }
+
         [Test]
         public void Format_BoolNotZeroOne_IsError() =>
             AssertError(TsvFixture.Validate(("10_lobbyUpgrade", TsvFixture.Set(TsvFixture.Read("10_lobbyUpgrade"), "10001001", "active", "2"))),

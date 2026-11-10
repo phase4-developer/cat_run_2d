@@ -273,12 +273,10 @@ namespace MV.Data
     public sealed class QuestGroupData : MvRow
     {
         public const string Table = "410_questGroup";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Group().Str("name").Int("periodType").Int("category", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Group().Int("periodType").Int("category", true)
             .Int("groupType", true).Int("progressScope", true).Int("selectionType").Int("selectionCount");
 
         public int group { get; private set; }
-        /// <summary>작성용 이름(화면 문구는 Localization `name:{id}`).</summary>
-        public string name { get; private set; }
         public QuestPeriodType periodType { get; private set; }
         public QuestCategory category { get; private set; }
         public QuestGroupType groupType { get; private set; }
@@ -292,7 +290,6 @@ namespace MV.Data
         {
             base.Init(r);
             group = I(r, "group");
-            name = S(r, "name");
             periodType = (QuestPeriodType)I(r, "periodType");
             category = (QuestCategory)I(r, "category");
             groupType = (QuestGroupType)I(r, "groupType");
