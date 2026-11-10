@@ -47,7 +47,7 @@ namespace MV.Editor.Tests
             var theme = Read("304_theme").Replace("World_Prop_Snowman", "World_Prop_Fake");
             var kind = Read("105_objectKind").Replace("World_Obj_Arch_Post_Gold", "World_Obj_Only_Somewhere");
             var ui = Read("09_uiResource").Replace("Atlas_UI_Icon\tUI_Emoji_Close\t", "Atlas_UI_Nope\tUI_Emoji_NotYet\t");
-            var god = Read("113_god").Replace("Tex_God_Wind", "Tex_Only_File").Replace("Tex_God_Sea", "UI_Icon_Weapon_1").Replace("Tex_God_Thunder", "Tex_God_thunder");
+            var god = Read("113_god").Replace("Tex_God_Pisces", "Tex_Only_File").Replace("Tex_God_Aries", "UI_Icon_Weapon_1").Replace("Tex_God_Thunder", "Tex_God_thunder");
             var pet = Read("430_pet").Replace("\tPet_sparrow\t", "\tPet_NotYetMade\t");
             Assume.That(item, Does.Contain("UI_Icon_Weapon_Nope").And.Contain("UI_Icon_Only_In_Card"));
             Assume.That(theme, Does.Contain("World_Prop_Fake"));
@@ -76,7 +76,7 @@ namespace MV.Editor.Tests
             Assert.That(errors.Any(e => e.Value == "UI_Icon_Weapon_Nope"), Is.False, "없는 이름은 오류가 아님");
             var petSprite = unextracted.Where(e => e.Table == "430_pet" && e.Value == "Pet_NotYetMade").ToList();
             Assert.That(petSprite.Select(e => e.Atlas), Is.EqualTo(new[] { MvAtlas.WorldPet }), "430_pet.sprite는 Atlas_World_Pet 하나에서(테마마다 아님)");
-            Assert.That(unextracted.Any(e => e.Table == "113_god" && e.Value == "Tex_God_Snow"), Is.True, "없는 주소는 미추출 경고");
+            Assert.That(unextracted.Any(e => e.Table == "113_god" && e.Value == "Tex_God_Sagittarius"), Is.True, "없는 주소는 미추출 경고");
 
             // 이름은 있는데 틀림 → 오류
             var cased = errors.FirstOrDefault(e => e.Table == "103_item" && e.Value == "ui_icon_weapon_2");

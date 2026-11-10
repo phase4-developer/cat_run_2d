@@ -217,10 +217,13 @@ namespace MV.Meta.Tests
             Assert.That(Meta.SelectGod("flame").Code, Is.EqualTo(MvMetaErrors.Locked));
             Assert.That(Store.God.Selected, Is.EqualTo("thunder"));
 
+            // MV-SPEC-02 Q-21(D-74 대체): 1번만 공개. 사자자리냥(113001002)은 Area 4에서도 잠긴 채다.
             SetContainer(MvSaveKeys.Progress, "\"area\":3");
-            Assert.That(Meta.GodUnlocked("flame"), Is.True, "god.flame: areaNo 4");
-            Assert.That(Meta.SelectGod("flame").Ok, Is.True);
-            Assert.That(Store.God.Selected, Is.EqualTo("flame"));
+            Assert.That(Meta.GodUnlocked("flame"), Is.False, "113001002 active 0");
+            Assert.That(Meta.SelectGod("flame").Code, Is.EqualTo(MvMetaErrors.Locked));
+            Assert.That(Meta.GodUnlocked("thunder"), Is.True);
+            Assert.That(Meta.SelectGod("thunder").Ok, Is.True);
+            Assert.That(Store.God.Selected, Is.EqualTo("thunder"));
         }
 
         /// <summary>400_content 원문에서 한 행의 dailyLimit만 바꾼 표(나머지 표는 저장소 TSV).</summary>

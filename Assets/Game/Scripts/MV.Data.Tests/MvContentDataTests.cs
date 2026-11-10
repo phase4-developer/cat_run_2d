@@ -26,10 +26,12 @@ namespace MV.Data.Tests
         {
             var t = TsvFixture.LoadTables();
             Assert.That(t.God.Datas.Count, Is.EqualTo(12));
-            // D-74: 1차 공개는 thunder·flame만.
-            Assert.That(t.God.Datas.Where(g => g.active).Select(g => g.key), Is.EquivalentTo(new[] { "thunder", "flame" }));
+            // MV-SPEC-02 Q-21(D-74 대체): 1번 물병자리냥만 공개, 메뉴 10종(11·12번은 데이터만).
+            Assert.That(t.God.Datas.Where(g => g.active).Select(g => g.key), Is.EquivalentTo(new[] { "thunder" }));
+            Assert.That(t.God.Datas.Where(g => !g.showInMenu).Select(g => g.id), Is.EquivalentTo(new[] { 113001011, 113001012 }));
 
-            var wind = t.God.ByKey("wind");
+            // Q-20: 3~12번은 id 유지, 새 기준 key(GodRefill 1절).
+            var wind = t.God.ByKey("pisces");
             Assert.That(wind.id, Is.EqualTo(113001003));
             Assert.That(wind.cardGroup, Is.EqualTo(3));
             Assert.That(wind.unlockType, Is.EqualTo(2));
@@ -41,11 +43,11 @@ namespace MV.Data.Tests
             Assert.That(wind.gearSet, Is.True);
             Assert.That(wind.projTint, Is.EqualTo(wind.color)); // 빈칸 = color
 
-            var fish = t.God.ByKey("fish");
+            var fish = t.God.ByKey("cancer");
             Assert.That(fish.unlockPrice[0].Value, Is.EqualTo(200));
             Assert.That(fish.passivePerLv, Is.EqualTo(8));
             Assert.That(fish.gearSet, Is.False);
-            Assert.That(fish.portrait, Is.EqualTo("Tex_God_Fish"));
+            Assert.That(fish.portrait, Is.EqualTo("Tex_God_Cancer"));
         }
 
         [Test]
@@ -60,27 +62,28 @@ namespace MV.Data.Tests
                 Assert.That(cards.All(c => c.active == god.active), Is.True, god.key + " 카드 active = 신 active");
             }
 
-            // 08 §8.3.4 창작 신의 특수 슬롯.
-            Assert.That(EffectOf(t, 110003004).type, Is.EqualTo(CardEffectType.Spin)); // wind storm
-            Assert.That(EffectOf(t, 110005002).type, Is.EqualTo(CardEffectType.CloneAdd)); // cloud proc
-            Assert.That(EffectOf(t, 110006004).type, Is.EqualTo(CardEffectType.Shield)); // sea storm
-            Assert.That(EffectOf(t, 110007004).type, Is.EqualTo(CardEffectType.Meteor)); // star storm
-            Assert.That(EffectOf(t, 110007007).type, Is.EqualTo(CardEffectType.Beam)); // star spear
-            Assert.That(EffectOf(t, 110008002).type, Is.EqualTo(CardEffectType.ProcBurn)); // forest proc
-            Assert.That(EffectOf(t, 110009002).type, Is.EqualTo(CardEffectType.CritChance)); // shadow proc
-            Assert.That(EffectOf(t, 110009003).type, Is.EqualTo(CardEffectType.Pierce)); // shadow chain
-            Assert.That(EffectOf(t, 110011002).type, Is.EqualTo(CardEffectType.DoubleChance)); // earth proc
+            // MV-SPEC-02 GodRefill 2절 [컨셉 가안]: 대표 스킬 슬롯.
+            Assert.That(EffectOf(t, 110003002).type, Is.EqualTo(CardEffectType.CloneAdd)); // pisces proc 물 분신
+            Assert.That(EffectOf(t, 110004002).type, Is.EqualTo(CardEffectType.DoubleChance)); // sagittarius proc 다중 화살
+            Assert.That(EffectOf(t, 110005002).type, Is.EqualTo(CardEffectType.ProcBurn)); // scorpio proc 독 베기
+            Assert.That(EffectOf(t, 110006002).type, Is.EqualTo(CardEffectType.DmgMul)); // aries proc 전쟁 버프
+            Assert.That(EffectOf(t, 110007004).type, Is.EqualTo(CardEffectType.Beam)); // virgo storm 빛줄기
+            Assert.That(EffectOf(t, 110007007).type, Is.EqualTo(CardEffectType.Shield)); // virgo spear 보호막
+            Assert.That(EffectOf(t, 110008004).type, Is.EqualTo(CardEffectType.Meteor)); // taurus storm 낙석
+            Assert.That(EffectOf(t, 110009004).type, Is.EqualTo(CardEffectType.ProcChill)); // libra storm 시간 정지
+            Assert.That(EffectOf(t, 110011003).type, Is.EqualTo(CardEffectType.ChainSplash)); // gemini chain 분열 창
+            Assert.That(EffectOf(t, 110012007).type, Is.EqualTo(CardEffectType.Pierce)); // cancer spear 관통 투사체
 
-            var chill = EffectOf(t, 110004002); // snow proc
+            var chill = EffectOf(t, 110009002); // libra proc 둔화
             Assert.That(chill.type, Is.EqualTo(CardEffectType.ProcChill));
             Assert.That(new[] { chill.p1, chill.p2, chill.p3, chill.p4 }, Is.EqualTo(new[] { 0.4, 2, 0.25, 0.5 }));
-            var cloneDmg = EffectOf(t, 110005003); // cloud chain
+            var cloneDmg = t.CardEffect.ByKey("cloneDmg"); // 쓰는 카드 없음(가안 뒤 보관)
             Assert.That(cloneDmg.type, Is.EqualTo(CardEffectType.CloneDmgMul));
             Assert.That(cloneDmg.p1, Is.EqualTo(0.5));
-            var drop = EffectOf(t, 110012002); // fish proc
+            var drop = EffectOf(t, 110010002); // capricorn proc 처치 시 추가 효과
             Assert.That(drop.type, Is.EqualTo(CardEffectType.DropBonus));
             Assert.That(new[] { drop.p1, drop.p2 }, Is.EqualTo(new[] { 0.08, 0.3 }));
-            var chain = EffectOf(t, 110010003); // lightning chain
+            var chain = t.CardEffect.ByKey("chainLightning"); // 쓰는 카드 없음(가안 뒤 보관)
             Assert.That(chain.type, Is.EqualTo(CardEffectType.ChainJump));
             Assert.That(chain.p1, Is.EqualTo(2));
 

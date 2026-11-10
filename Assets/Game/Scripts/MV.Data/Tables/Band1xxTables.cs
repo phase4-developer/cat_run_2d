@@ -469,11 +469,13 @@ namespace MV.Data
     public sealed class GodData : MvRow
     {
         public const string Table = "113_god";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active").Str("element", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active").Bool("showInMenu").Str("element", true)
             .Color("color", true).Color("projTint").Int("cardGroup", true).Int("unlockType").Fk("openId", ContentOpenData.Table)
             .Consume("unlockPrice").Str("passiveStat").Float("passivePerLv").Bool("gearSet")
             .Res("portrait", MvAtlas.Address).Res("icon", MvAtlas.UiIcon);
 
+        /// <summary>신 선택 메뉴에 보이는지(MV-SPEC-02 Q-21: 10종, 11·12번은 데이터만). 빈칸 = 1.</summary>
+        public bool showInMenu { get; private set; }
         public string element { get; private set; }
         public string color { get; private set; }
         /// <summary>빈칸 = color.</summary>
@@ -495,6 +497,7 @@ namespace MV.Data
         public override void Init(TSVRow r)
         {
             base.Init(r);
+            showInMenu = Bool(r, "showInMenu", true);
             element = S(r, "element");
             color = S(r, "color");
             projTint = S(r, "projTint");
