@@ -2,6 +2,7 @@
     "name": "MV.Boot",
     "rootNamespace": "MV.Boot",
     "references": [
+        "PlatformLibrary.Network",
         "MV.Core",
         "MV.Data",
         "MV.Save",

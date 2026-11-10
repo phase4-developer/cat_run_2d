@@ -2,6 +2,7 @@
     "name": "MV.Platform.Tests",
     "rootNamespace": "MV.Platform.Tests",
     "references": [
+        "PlatformLibrary.Network",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "MV.Core",
