@@ -357,15 +357,15 @@ MvTables.Current = tables;
 | key | value | unit | 근거 | 쓰는 곳 |
 |---|---|---|---|---|
 | DRAG_SCREEN_M | 7.2 | m | [프로토] L3843~3852 | 드래그: 게임 영역 폭 = 7.2m |
-| LANE_X_MAX | 3.2 | m | [프로토] L3845, L2025 | 목표 x·현재 x 제한 |
+| LANE_X_MAX | 3.5 | m | MV-SPEC-02 Q-10(옛 [프로토] 3.2) | 목표 x·현재 x 제한 |
 | KEY_MOVE_SPEED | 9 | m/s | [프로토] L3833 | 키 이동 |
-| MOVE_FOLLOW_K | 14 | 1/s | [프로토] L2025 | x 추종 |
+| MOVE_FOLLOW_K | 10 | 1/s | MV-SPEC-02 Q-10 「감속 0.1초」(옛 [프로토] 14) | x 추종. `x += (tx − x) · min(1, dt·k)`라 시간상수 1/k = 0.1초 |
 | RUN_SPEED | 4 | m/s | [프로토] L2029 | 전진 |
 | RUN_SPEED_MID | 2.5 | m/s | MV-SPEC-02 4-1(Q-15) | 중간 구역 전진 속도. 구간 = `310_template.midFromZ·midToZ`. 런 적용은 MV-RUN-SPEC2 |
 | PHASE_RUN | 13 | 1/s | [프로토] L2029 | 달리기 위상(그림) |
 | PHASE_BLOCKED | 4 | 1/s | [프로토] L2029 | 막힘 위상 |
 | PHASE_CLIMB | 30 | 1/s | [프로토] L2264 | 계단 위상 |
-| CLIMB_X_FOLLOW_K | 6 | 1/s | [프로토] L2264 | 계단 중 x 복귀 |
+| CLIMB_X_FOLLOW_K | 6 | 1/s | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2264 | 계단 중 x 복귀. **미사용**(행은 둔다) |
 | PLAYER_HALF_W | 0.32 | m | [프로토] L2033 | 막힘·경고 폭 |
 | WALL_FACE_GAP | 0.35 | m | [프로토] L2066 | 막힐 때 앞면과 간격 |
 | WALL_FACE_EPS | 0.02 | m | [프로토] L2066 | 앞면 판정 여유 |
@@ -376,8 +376,8 @@ MvTables.Current = tables;
 | key | value | unit | 근거 | 쓰는 곳 |
 |---|---|---|---|---|
 | FIRE_PHASE | 0/0.13/0.26/0.07/0.19/… (31칸) | s | [프로토] L1811 | 유닛별 첫 발사 위상(본체, 분신 1~30). 6번째부터 **더미**(Q-09 분신 상한 30 준비) |
-| MAX_CLONES | 4 | 명 | [프로토] L830 | 분신 상한, clone 카드 후보 제외. MV-SPEC-02 Q-09는 30 — 런 코드 `RunState.FireT[5]` 고정 길이 때문에 MV-RUN-SPEC2가 올린다(표 314·FIRE_PHASE·16 그룹 13은 30까지 준비됨) |
-| CLONE_X_MAX | 3.4 | m | [프로토] L2073 | 분신 x 제한 |
+| MAX_CLONES | 30 | 명 | MV-SPEC-02 Q-09(옛 [프로토] L830 4) | 분신 상한, clone 카드 후보 제외. 런 코드의 5칸 고정 배열은 MV-RUN-SPEC2가 표 길이로 바꾼다 |
+| CLONE_X_MAX | 3.5 | m | MV-SPEC-02 Q-10(옛 [프로토] 3.4) | 분신 x 제한 |
 | DBL_SHOT_DX | 0.2 | m | [프로토] L2088 | 2연발 좌우 간격 |
 | PROJ_SPAWN_DZ | 0.4 | m | [프로토] L2081 | 탄 출발 z |
 | THROW_T | 0.12 | s | [프로토] L2086 | 던지기 자세(그림) |
@@ -523,15 +523,15 @@ MV.View 소유. 열 정의와 값은 [02 §2.2.2](02_Visual.md)를 그대로 옮
 | lap | 75 | [프로토] L773, L2274 | 랩 1회 계단 수 |
 | maxCards | 3 | [프로토] `MAX_CLIMB_CARDS` | 한 번 오를 때 카드 최대 |
 | lapTier | 4 | [프로토] L2276 | 랩 카드 등급(LEGENDARY) |
-| kDirectMax / kCompress / kMax | 60 / 3 / 150 | [프로토] L2246 | 칸 압축 |
-| stepH / stepD / stepW | 0.42 / 0.72 / 8.6 | [프로토] L2246 | 칸 높이·깊이·폭(m) |
+| kDirectMax / kCompress / kMax | 60 / 3 / 150 | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2246 | 칸 압축. **미사용**(새 압축은 cmpFrom·cmpBand) |
+| stepH / stepD / stepW | 0.7 / 0.87 / 8.6 | MV-SPEC-02 6-5c(옛 [프로토] 0.42 / 0.72) | 칸 높이·깊이·폭(m) |
 | bumpH | 0.12 | [프로토] L2758 | 오르는 중 칸 사이 출렁임 높이(m): `py = (floor(sp)+1)·stepH + sin(frac(sp)·π)·bumpH` |
 | z0Gap | 1.4 | [프로토] L2246 | 첫 칸 z = 계단 z + 1.4 |
 | shiftFrom / shiftExtra | 0.5 / 8 | [프로토] L2226, L2247 | 오브젝트 제거 기준, 밀어내기 여분 |
 | landGap | 0.2 | [프로토] L2290 | 착지 z = zEnd + 0.2 |
-| tBase / tPerStep / tMax | 1.6 / 0.05 / 9 | [프로토] L2259 | 오르는 시간 min(9, 1.6 + 0.05k) |
+| tBase / tPerStep / tMax | 1.6 / 0.05 / 9 | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2259 | 오르는 시간 min(9, 1.6 + 0.05k). **미사용**(새 시간은 rise*) |
 | accelP | 0.12 | [프로토] L2263 | 처음 12% 가속 |
-| riseMin / risePerK / riseAhead | 30 / 1.6 / 6 | [프로토] L2265~2266 | 칸 등장 |
+| riseMin / risePerK / riseAhead | 30 / 1.6 / 6 | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2265~2266 | 칸 등장. **미사용** |
 | dropSec / dropH | 0.2 / 5 | [프로토] L2267 | 칸 낙하 연출 |
 | tickEvery | 4 | [프로토] L2270 | 칸 4개마다 tick 소리 |
 | rlEndBase / rlEndStep | 1.0 / 0.45 | [프로토] L2362 | 카드 i 확정 = 1.0 + 0.45i(게임 초) |
@@ -545,7 +545,7 @@ MV.View 소유. 열 정의와 값은 [02 §2.2.2](02_Visual.md)를 그대로 옮
 | stepPop | 1.1 | MV-SPEC-02 6-5 | 칸 튕김 배율 |
 | cmpBandFrom / cmpBandC | 31/100/150/200/250 · 4/5/6/7/8 | MV-SPEC-02 6-5 | 압축 구간 시작 N과 구간별 C(intList) |
 
-위 6-5 열은 MV-SPEC-02 반영(MV-DATA-SPEC2)으로 열만 먼저 둔다. 새 공식 적용과 `stepH`·`stepD` 0.7·0.87 전환은 MV-RUN-SPEC2.
+위 6-5 열은 MV-SPEC-02 반영(MV-DATA-SPEC2)으로 열만 먼저 둔다. 새 공식 적용은 MV-RUN-SPEC2(`stepH`·`stepD`는 6-5c 값 0.7·0.87로 이미 바꿈).
 
 **워프 단계 행(`rowType=WarpStage`)** — 정본 `WARP_ST` L3155, 값 정본 [06 §6.11.1](06_Effects.md)
 
@@ -797,10 +797,10 @@ public interface IRunRewardSink    { void Grant(IReadOnlyList<ConsumeData> rewar
 | moveAiId | fk 109 | 0 | 0 = Static |
 | enemyId | fk 102 | 0 | 0이 아니면 102 행의 hpRuleId·moveAiId·보상·그림·소리가 이 행 값을 덮어쓴다 |
 | rewardSource | enum | Row | `Row` = 이 행의 reward 열 / `FieldCell` = 필드 칸의 보상(wall, §7.6.4) / `Enemy` = 102 행 |
-| rewardType / rewardId / rewardValue | consume | 빈칸 | 파괴(또는 receive 조건 성립) 보상 |
+| rewardType / rewardId / rewardValue | consume | 빈칸 | 파괴(또는 receive 조건 성립) 보상. 블루 마법석 원석(플레이 구간)(105001007)은 MV-SPEC-02 Q-16으로 비움(드롭 `dropId`로 지급) |
 | rewardValuePerZone / rewardValueRule | §7.1.7 | 0 / Flat | |
 | hitRewardType / hitRewardId / hitRewardValue | consume | 빈칸 | **맞을 때마다** 보상(상자 타격당 츄르 1) |
-| dropId | fk 801 group | 0 | 파괴 보상 드롭 묶음(MV-SPEC-02 6-7 원석 10%, Q-16). 지금 `801002001`(10% 블루 마법석) 한 행만 씀. 런이 읽기 전까지 reward 열 유지(MV-RUN-SPEC2) |
+| dropId | fk 801 group | 0 | 파괴 보상 드롭 묶음(MV-SPEC-02 6-7 원석 10%, Q-16). 지금 `801002001`(10% 블루 마법석) 한 행만 씀. 원석(105001007)의 고정 reward는 비웠다(런 적용은 MV-RUN-SPEC2) |
 | sprite | res(`/` 변형) | | 본체 스프라이트. 기본 아틀라스 `@theme` |
 | viewShape | enum | Single | 그림 모양(MV.View 뷰 조립 방식): `Single`(스프라이트 1장) / `Junk`(잡동사니 칸) / `RollGate`(두루마리 관문) / `WarpGate`(아치) / `Well`(우물) / `Stair`(계단) / `CoinPile`(츄르 더미) / `CatnipPot`(캣닢 화분) / `Mouse`(쥐). 값 목록은 MV.View `ObjectShape`와 1:1 |
 | spritePick | enum | Single | `Single` / `JunkCycle`(wall: `v = (lane + row×2 + bar) % 3`로 목록에서 고르고 색 2종은 `idx % 2`, [03 §3.5.3](03_ResourcePipeline.md)) / `Anim`(프레임 접두 + 번호) |
@@ -898,7 +898,7 @@ flash·punch·objShake의 시간·크기 값은 [02](02_Visual.md)·[06](06_Effe
 
 | id | key | gateType | base | step | growth | cap | mul | useScale | useGauge | useAreaHp | diffMul | perPass | 근거 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 107001001 | sgate | StairGate | 1.9 | 0 | None | 0 | 2 | 1 | 0 | 1 | 1 | GaugeLv | L835 `GATE_MAX[0]`, L1945~1951 |
+| 107001001 | sgate | StairGate | 1.9 | 0 | None | 0 | 1 | 1 | 0 | 0 | 0 | GaugeLv | L835 `GATE_MAX[0]`, L1945~1951. MV-SPEC-02 Q-06: mul 2→1, useAreaHp 1→0, diffMul 1→0(M은 `302_area.sgateM`). useScale은 Q-03 미정이라 그대로 |
 | 107001002 | cgate | CraftGate | 1.9 | 3.8 | Add | 20 | 1 | 1 | 0 | 1 | 0 | One | L837~838 |
 | 107001003 | well | Well | 150 | 1.6 | Pow | 8 | 1 | 0 | 1 | 1 | 0 | Level | L1745~1747, L1887~1893 |
 
@@ -1015,7 +1015,7 @@ key `mouse`는 정본 화면(L3117 `drawMouse`)과 맞춘 이름이다(정본 �
 | key | string | `tpl1`~`tpl8` |
 | sort, active | int | |
 | endZ | float | 템플릿 길이. 보너스 상자 줄 시작 z = base + endZ [프로토] L739 `TPL_END` |
-| midFromZ / midToZ | float | 중간 구역(감속 `RUN_SPEED_MID`) 시작·끝 z(MV-SPEC-02 4-1, Q-15). 빈칸 = 감속 구간 없음. 위치는 원작 확인 뒤 |
+| midFromZ / midToZ | float | 중간 구역(감속 `RUN_SPEED_MID`) 시작·끝 z(MV-SPEC-02 4-1, Q-15). 빈칸 = 감속 구간 없음. 지금 값은 **더미**: 첫 계단 게이트 z ~ 계단① z(새 기준 9-2 공통 패턴 「계단 게이트 → (중간 구역) → 계단①」). 원작 위치를 받으면 바꾼다 |
 | #비고 | | |
 
 | id | key | endZ | 오브젝트 수 |
@@ -1043,13 +1043,13 @@ key `mouse`는 정본 화면(L3117 `drawMouse`)과 맞춘 이름이다(정본 �
 | hpRuleId | fk 114 | 빈칸 = 종류 기본. 이 배치만 체력 규칙을 바꿀 때 |
 | reward 3열 | consume | 빈칸 = 종류 기본. 이 배치만 보상을 바꿀 때(덮어쓰기) |
 
-**초기 84행** [프로토] L738 `PLACE` (노트 B §1.1 원문). 정본 type 번호 → kindId: 7 tower 마법서 탑(105001001), 5 enemy 105001002(groupId 1 = mouse5), 14 sgate 계단 게이트(105001003), 13 cgate 지팡이 공방 게이트(105001004), 15 stair 계단(105001005), 2 coin 금화 더미(플레이 구간)(105001006), 3 gem 블루 마법석 원석(플레이 구간)(105001007). 모든 z < endZ(검증됨).
+**초기 84행** [프로토] L738 `PLACE` (노트 B §1.1 원문). 정본 type 번호 → kindId: 7 tower 마법서 탑(105001001), 5 enemy 마녀의 하수인(105001002)(groupId 1 = mouse5. MV-SPEC-02 Q-14로 z 57.42 → 템플릿마다 `endZ − 12`: 새 기준 6-7·9-2 「계단② → 하수인 무리 → 보너스 오브젝트」, 무리 dz +6~+8.2가 템플릿 끝(보너스 줄·결계문 1) 3.8m 앞에서 끝나고 계단②와 모든 템플릿 오브젝트보다 뒤. 원작 z가 없어 **더미**. 츄르 털이 311101006 = 178, 311102007 = 218), 14 sgate 계단 게이트(105001003), 13 cgate 지팡이 공방 게이트(105001004), 15 stair 계단(105001005), 2 coin 금화 더미(플레이 구간)(105001006), 3 gem 블루 마법석 원석(플레이 구간)(105001007). 모든 z < endZ(검증됨).
 
 ```tsv
 id	templateId	seq	kindId	x	z	groupId	active	#kind
 311001001	310000001	1	105001001	0	24.82	0	1	tower
 311001002	310000001	2	105001003	0	52.16	0	1	sgate
-311001003	310000001	3	105001002	0	57.42	1	1	enemy
+311001003	310000001	3	105001002	0	177	1	1	enemy
 311001004	310000001	4	105001005	0	66.5	0	1	stair
 311001005	310000001	5	105001004	2.25	100.17	0	1	cgate
 311001006	310000001	6	105001004	-2.25	123.83	0	1	cgate
@@ -1058,7 +1058,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311002001	310000002	1	105001001	0	17.17	0	1	tower
 311002002	310000002	2	105001003	-2.08	39.25	0	1	sgate
 311002003	310000002	3	105001007	2.39	55.67	0	1	gem
-311002004	310000002	4	105001002	0	57.42	1	1	enemy
+311002004	310000002	4	105001002	0	191	1	1	enemy
 311002005	310000002	5	105001005	0	66.5	0	1	stair
 311002006	310000002	6	105001004	-2.25	100.11	0	1	cgate
 311002007	310000002	7	105001004	2.25	122.77	0	1	cgate
@@ -1067,7 +1067,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311002010	310000002	10	105001006	1.48	188.3	0	1	coin
 311003001	310000003	1	105001001	0	17.17	0	1	tower
 311003002	310000003	2	105001003	-2.08	39.25	0	1	sgate
-311003003	310000003	3	105001002	0	57.42	1	1	enemy
+311003003	310000003	3	105001002	0	212	1	1	enemy
 311003004	310000003	4	105001004	2.25	62.45	0	1	cgate
 311003005	310000003	5	105001005	0	73.5	0	1	stair
 311003006	310000003	6	105001001	2.2	108.52	0	1	tower
@@ -1078,7 +1078,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311003011	310000003	11	105001007	-2.09	210.7	0	1	gem
 311004001	310000004	1	105001001	-2.17	17.17	0	1	tower
 311004002	310000004	2	105001001	0	39.43	0	1	tower
-311004003	310000004	3	105001002	0	57.42	1	1	enemy
+311004003	310000004	3	105001002	0	212	1	1	enemy
 311004004	310000004	4	105001003	2.25	62.4	0	1	sgate
 311004005	310000004	5	105001005	0	73.5	0	1	stair
 311004006	310000004	6	105001004	0	107.2	0	1	cgate
@@ -1089,7 +1089,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311004011	310000004	11	105001006	0	210.53	0	1	coin
 311005001	310000005	1	105001004	0	19.34	0	1	cgate
 311005002	310000005	2	105001001	-1.77	40.37	0	1	tower
-311005003	310000005	3	105001002	0	57.42	1	1	enemy
+311005003	310000005	3	105001002	0	219	1	1	enemy
 311005004	310000005	4	105001003	2.25	62.01	0	1	sgate
 311005005	310000005	5	105001005	0	73.5	0	1	stair
 311005006	310000005	6	105001004	-2.11	107.16	0	1	cgate
@@ -1100,7 +1100,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311005011	310000005	11	105001007	-1.91	215.46	0	1	gem
 311006001	310000006	1	105001001	-2.17	19.81	0	1	tower
 311006002	310000006	2	105001003	2.25	43.1	0	1	sgate
-311006003	310000006	3	105001002	0	57.42	1	1	enemy
+311006003	310000006	3	105001002	0	212	1	1	enemy
 311006004	310000006	4	105001003	-2.25	66.39	0	1	sgate
 311006005	310000006	5	105001005	0	80.5	0	1	stair
 311006006	310000006	6	105001004	-2.11	114.11	0	1	cgate
@@ -1111,7 +1111,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311006011	310000006	11	105001007	2.52	209.49	0	1	gem
 311007001	310000007	1	105001001	0	19.81	0	1	tower
 311007002	310000007	2	105001003	-2.25	43.99	0	1	sgate
-311007003	310000007	3	105001002	0	57.42	1	1	enemy
+311007003	310000007	3	105001002	0	219	1	1	enemy
 311007004	310000007	4	105001007	2.07	63.18	0	1	gem
 311007005	310000007	5	105001005	0	73.5	0	1	stair
 311007006	310000007	6	105001004	-2.25	107.12	0	1	cgate
@@ -1122,7 +1122,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311007011	310000007	11	105001006	-2.11	216.46	0	1	coin
 311008001	310000008	1	105001001	0	19.81	0	1	tower
 311008002	310000008	2	105001003	2.25	43.62	0	1	sgate
-311008003	310000008	3	105001002	0	57.42	1	1	enemy
+311008003	310000008	3	105001002	0	226	1	1	enemy
 311008004	310000008	4	105001004	-2.25	67.13	0	1	cgate
 311008005	310000008	5	105001005	0	80.5	0	1	stair
 311008006	310000008	6	105001001	0	115.15	0	1	tower
@@ -1548,7 +1548,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 |---|---|---|---|---|---|---|---|---|---|---|
 | 13001001 | rate | 10 | 0.1 | FireRate | {0}% | 0 | 10 | 11 | 40 | 냥냥펀치 연사 |
 | 13001002 | range | 10 | 0.1 | Range | {0}% | 0 | 10 | 12 | 40 | 사거리 |
-| 13001003 | clone | 4 | 1 | Clone | {0} | 0 | 1 | 13 | 100 | 친구 수 |
+| 13001003 | clone | 30 | 1 | Clone | {0} | 0 | 1 | 13 | 100 | 분신 수(MV-SPEC-02 Q-09: max 4 → 30) |
 | 13001004 | crit | 10 | 0.1 | CritChance | {0}% | 0 | 10 | 14 | 80 | 치명타 확률 |
 | 13001005 | dbl | 10 | 0.1 | DoubleChance | {0}% | 0 | 10 | 15 | 80 | 2연발 확률 |
 | 13001006 | pierce | 10 | 0.1 | PierceChance | {0}% | 0 | 10 | 16 | 80 | 관통 확률(**더미** 행) |
@@ -1601,7 +1601,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | group | 대상 | 재화 | 행 수 | 소유 |
 |---|---|---|---|---|
 | 1 / 2 / 3 | 로비 stair / weapon / income | 츄르 `1 / 1` | 30 / 149 / 50 | 07 |
-| 11~18 | Area 강화 rate / range / clone / crit / dbl / pierce / diaLv / goldLv | 캣닢 `1 / 2` | 10 / 10 / 30 / 10 / 10 / 10 / 10 / 10 | 07. 그룹 13 Lv 5~30과 16~18은 **더미**(분신 상한 30 준비, max는 4 그대로) |
+| 11~18 | Area 강화 rate / range / clone / crit / dbl / pierce / diaLv / goldLv | 캣닢 `1 / 2` | 10 / 10 / 30 / 10 / 10 / 10 / 10 / 10 | 07. 그룹 13 Lv 5~30과 16~18은 **더미** 가격(분신 수 max 30) |
 | 21~29 | 부활 power / crit / obst / dcap / gcap / startGold / startDia / craftDbl / stairDbl | 목숨 조각 `1 / 4` | 20 / 20 / 10 / 20 / 21 / 20 / 20 / 20 / 20 | 07. 25~29는 **더미** |
 | 301 / 302 / 304 / 306~313 | 펫 / 친구 / 신 레벨 / 장비 | 08 정의 | 08 | [08](08_Content.md) |
 
