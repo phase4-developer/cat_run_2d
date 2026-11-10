@@ -150,6 +150,9 @@ namespace MV.Data
                 if (!ids.Add(id)) r.Error(name, id, s.IdColumn, "id가 중복됩니다");
                 if (!s.FreeIds && !id.StartsWith(s.IdPrefix, StringComparison.Ordinal))
                     r.Error(name, id, s.IdColumn, $"id가 표 번호 `{s.IdPrefix}`로 시작하지 않습니다");
+                // 07 §7.1.1a id 입력 열: id = table × 1,000,000 + category × 1,000 + index. 코드 정의 표(키 typeId, 07_consumeType)는 제외.
+                if (s.IdColumn == "id" && int.TryParse(s.Number, out int tableNo) && (!long.TryParse(id, out long idValue) || idValue / 1000000 != tableNo))
+                    r.Error(name, id, s.IdColumn, $"id / 1,000,000이 표 번호 {tableNo}가 아닙니다(id = table×1,000,000 + category×1,000 + index)");
 
                 foreach (var c in s.Columns)
                 {

@@ -71,7 +71,7 @@ namespace MV.Data
         /// <summary>표 번호 문자열(`105`). 작은 정의 표도 앞자리를 맞춘다(D-80 권장안).</summary>
         public string Number { get; }
         public string IdColumn { get; private set; } = "id";
-        /// <summary>id 접두 규칙을 쓰지 않는 표(`00_config`, `02_playResource`).</summary>
+        /// <summary>id 접두 규칙을 쓰지 않는 표(`00_config` 1행, `07_consumeType`).</summary>
         public bool FreeIds { get; private set; }
         public bool SingleRow { get; private set; }
         public string GroupColumn { get; private set; }
