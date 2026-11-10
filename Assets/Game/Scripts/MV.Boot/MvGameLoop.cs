@@ -291,6 +291,7 @@ namespace MV.Boot
 
             var builder = new RunLevelBuilder();
             var ctx = MvRunStart.CreateContext(snap, _tables, CurrentSeed);
+            if (hasSave) ctx.MetaModifiers = MV.Content.MvResearch.Modifiers(store, _tables); // 연구 단계 → 런 메타 능력치(MV-META-RESEARCH)
             _sim = RunSim.Create(ctx, new MainRunRule(builder), new Pcg32Rng(CurrentSeed), builder);
             _savedArea = snap.Area;
             _savedSouls = snap.Souls;

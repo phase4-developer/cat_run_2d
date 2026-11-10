@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using MV.Data;
 using MV.Meta;
 using MV.Run;
@@ -62,6 +63,7 @@ namespace MV.Boot
             MvMeta.Current = null;
             MvSave.CurrentChanged -= OnSaveChanged;
             MvSave.CurrentChanged += OnSaveChanged;
+            MV.UI.ContentMenuData.OpenMetaHandler = OpenMeta; // 성장 탭 → 시스템 화면(MV-META-RESEARCH)
             OnSaveChanged(MvSave.Current);
         }
 
@@ -69,9 +71,16 @@ namespace MV.Boot
         public static void Detach()
         {
             MvSave.CurrentChanged -= OnSaveChanged;
+            if (MV.UI.ContentMenuData.OpenMetaHandler == (System.Action<string>)OpenMeta) MV.UI.ContentMenuData.OpenMetaHandler = null;
             MV.Content.MvQuest.Current?.Dispose();
             MvMeta.Current = null;
             _tables = null;
+        }
+
+        /// <summary>컨텐츠 메뉴 「성장」 탭 행(<c>05_contentOpen.key</c>)이 여는 시스템 화면. 모르는 key는 아무것도 하지 않는다.</summary>
+        static void OpenMeta(string key)
+        {
+            if (key == MvResearchRules.UnlockKey) MV.UI.MvUiNav.OpenResearchAsync().Forget();
         }
 
         static void OnSaveChanged(MvSaveStore store)
