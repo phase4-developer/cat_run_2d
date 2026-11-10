@@ -1,12 +1,12 @@
-id	group	key	entryType	cardId	weight
-111001001	1	main	CommonActive		1
-111001002	1	main	GodCards		1
-111002001	2	defence	CommonActive		1
-111002002	2	defence	Exclude	110000004	1
-111002003	2	defence	Card	110000005	1
-111002004	2	defence	Card	110000006	1
-111002005	2	defence	Card	110000007	1
-111002006	2	defence	Card	110000008	1
-111002007	2	defence	GodCards		1
-111003001	3	rush	CommonActive		1
-111003002	3	rush	GodCards		1
+id	name	group	key	entryType	cardId	weight
+111001001	카드 풀(공용 + 고유) 공용	1	main	CommonActive		1
+111001002	카드 풀(공용 + 고유) 고유	1	main	GodCards		1
+111002001	골목 수비전 카드 풀 공용	2	defence	CommonActive		1
+111002002	골목 수비전 카드 풀 제외 황금 축복	2	defence	Exclude	110000004	1
+111002003	골목 수비전 카드 풀 급소 할퀴기	2	defence	Card	110000005	1
+111002004	골목 수비전 카드 풀 양발 펀치	2	defence	Card	110000006	1
+111002005	골목 수비전 카드 풀 꿰뚫는 발톱	2	defence	Card	110000007	1
+111002006	골목 수비전 카드 풀 친구 둘 부르기	2	defence	Card	110000008	1
+111002007	골목 수비전 카드 풀 고유	2	defence	GodCards		1
+111003001	우다다 질주 카드 풀 공용	3	rush	CommonActive		1
+111003002	우다다 질주 카드 풀 고유	3	rush	GodCards		1

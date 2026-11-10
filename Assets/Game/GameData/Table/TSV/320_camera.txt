@@ -1,4 +1,4 @@
-id	key	anchor	posXMul	posY	posZ	lookXMul	lookY	lookZ	posLerp	snap	liftLerp	blendLerp	fovV	near	far
-320001001	run	Player	0.25	13	-9	0.25	0.5	5.5	10	0	6	2	52	0.1	400
-320001002	climb	Player	0.25	15	-10.5	0.25	0.5	5.5	10	0	12	3	52	0.1	400
-320001003	lobby	World	0	4.2	-4.4	0	0.2	3.4	0	1	0	0	52	0.1	400
+id	name	key	anchor	posXMul	posY	posZ	lookXMul	lookY	lookZ	posLerp	snap	liftLerp	blendLerp	fovV	near	far
+320001001	런 카메라	run	Player	0.25	13	-9	0.25	0.5	5.5	10	0	6	2	52	0.1	400
+320001002	계단 오르기 카메라	climb	Player	0.25	15	-10.5	0.25	0.5	5.5	10	0	12	3	52	0.1	400
+320001003	로비 카메라	lobby	World	0	4.2	-4.4	0	0.2	3.4	0	1	0	0	52	0.1	400

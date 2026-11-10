@@ -1,27 +1,27 @@
-typeId	codeName	idTable	idKind	valueMeaning	valueKind	iconAtlas	iconColumn	worldBadge	gainSound	gainEffect	applyMul	settleTo	collectMul	active
-0	None	-	none	없음(코드 기본값, 보상·비용에 쓰지 않음)	Int						None		0	0
-1	Wealth	01_wealth	row	개수	Int	Atlas_UI_Icon	icon				None		0	1
-3	PlayResource	02_playResource	row	개수(id 0 = 고른 모드 입장권)	Int	Atlas_UI_Icon	icon				None		0	1
-5	Item	103_item	row	장수	Int	Atlas_UI_Icon	icon				None		0	1
-8	RandomBox	802_randomBox	group	개봉 횟수(id = group)	Int	Atlas_UI_Icon	icon				None		0	1
-50	Drop	801_drop	group	굴림 횟수(id = dropGroup)	Int	Atlas_UI_Icon	=UI_Icon_Drop				None		0	1
-100	AD	-	none	광고 1회(비용 전용)	Int	Atlas_UI_Icon	=UI_Icon_Ad				None		0	1
-101	Inapp	-	none	가격(스텁)	Int	Atlas_UI_Icon	=UI_Icon_Inapp				None		0	1
-300	DailyQuestPoint	-	none	점수	Int	Atlas_UI_Icon	=UI_Icon_QuestDaily				None		0	1
-301	WeeklyQuestPoint	-	none	점수	Int	Atlas_UI_Icon	=UI_Icon_QuestWeekly				None		0	1
-500	Pass	410_questGroup	row	패스 XP	Int	Atlas_UI_Icon	=UI_Icon_PassXp				None		0	1
-600	StairLv	-	none	런 게이지 Lv + 값	Int	Atlas_UI_Icon	=UI_Icon_StairLv				None		0	1
-601	Card	110_card	row	장수(id 0 = 현재 풀에서 무작위)	Int	Atlas_UI_Card	icon				None		0	1
-602	RunGold	-	none	런 츄르	Double	Atlas_UI_Icon	=UI_Icon_Gold	World_Item_Badge_Gold	coin		GoldMul	1/1001001	1	1
-603	RunSouls	-	none	런 생선	Int	Atlas_UI_Icon	=UI_Icon_Soul		soul	run.wallRewardSoul	None	1/1001003	0	1
-604	RunDia	-	none	런 캣닢	Int	Atlas_UI_Icon	=UI_Icon_Dia	World_Item_Badge_Dia	gem	run.wallRewardDia	None	1/1001002	1	1
-605	RunStairs	-	none	모은 계단 수	Int	Atlas_UI_Icon	=UI_Icon_Stair				None		0	1
-606	RunWeapon	103_item	row	런 손패 카드 장수	Int	Atlas_UI_Icon	icon				None		0	1
-607	GaugeFill	-	none	우물 게이지 양	Double	Atlas_UI_Hud	=UI_Icon_Gauge				None		0	1
-608	RbPending	-	none	목숨 조각 적립 대기	Int	Atlas_UI_Icon	=UI_Icon_RbToken				None	rbPending	0	1
-609	RebirthCooldownSec	-	none	부활 쿨타임 감소(초)	Int	Atlas_UI_Icon	=UI_Icon_Clock				None		0	1
-610	Gear	471_gearRarity	row	장비 개수	Int	Atlas_UI_Icon	icon				None		0	1
-620	PetCard	430_pet	row	장	Int	Atlas_UI_Icon	icon				None		0	1
-621	FriendCoin	450_friend	row	개(id 0 = 지금 올리는 친구)	Int	Atlas_UI_Icon	icon				None		0	1
-622	GodShard	113_god	row	개(id 0 = 지금 올리는 신)	Int	Atlas_UI_Icon	icon				None		0	1
-630	Blessing	480_blessing	row	런 수	Int	Atlas_UI_Icon	icon				None		0	1
+typeId	name	codeName	idTable	idKind	valueMeaning	valueKind	iconAtlas	iconColumn	worldBadge	gainSound	gainEffect	applyMul	settleTo	collectMul	active
+0	없음	None	-	none	없음(코드 기본값, 보상·비용에 쓰지 않음)	Int						None		0	0
+1	재화	Wealth	01_wealth	row	개수	Int	Atlas_UI_Icon	icon				None		0	1
+3	충전형 자원	PlayResource	02_playResource	row	개수(id 0 = 고른 모드 입장권)	Int	Atlas_UI_Icon	icon				None		0	1
+5	마법 지팡이 카드	Item	103_item	row	장수	Int	Atlas_UI_Icon	icon				None		0	1
+8	랜덤 상자	RandomBox	802_randomBox	group	개봉 횟수(id = group)	Int	Atlas_UI_Icon	icon				None		0	1
+50	드롭	Drop	801_drop	group	굴림 횟수(id = dropGroup)	Int	Atlas_UI_Icon	=UI_Icon_Drop				None		0	1
+100	광고	AD	-	none	광고 1회(비용 전용)	Int	Atlas_UI_Icon	=UI_Icon_Ad				None		0	1
+101	인앱 결제	Inapp	-	none	가격(스텁)	Int	Atlas_UI_Icon	=UI_Icon_Inapp				None		0	1
+300	일일 퀘스트 포인트	DailyQuestPoint	-	none	점수	Int	Atlas_UI_Icon	=UI_Icon_QuestDaily				None		0	1
+301	주간 퀘스트 포인트	WeeklyQuestPoint	-	none	점수	Int	Atlas_UI_Icon	=UI_Icon_QuestWeekly				None		0	1
+500	패스 XP	Pass	410_questGroup	row	패스 XP	Int	Atlas_UI_Icon	=UI_Icon_PassXp				None		0	1
+600	계단 Lv	StairLv	-	none	런 게이지 Lv + 값	Int	Atlas_UI_Icon	=UI_Icon_StairLv				None		0	1
+601	대마법 주문카드	Card	110_card	row	장수(id 0 = 현재 풀에서 무작위)	Int	Atlas_UI_Card	icon				None		0	1
+602	런 골드	RunGold	-	none	런 츄르	Double	Atlas_UI_Icon	=UI_Icon_Gold	World_Item_Badge_Gold	coin		GoldMul	1/1001001	1	1
+603	런 구출 고양이	RunSouls	-	none	런 생선	Int	Atlas_UI_Icon	=UI_Icon_Soul		soul	run.wallRewardSoul	None	1/1001003	0	1
+604	런 블루 마법석	RunDia	-	none	런 캣닢	Int	Atlas_UI_Icon	=UI_Icon_Dia	World_Item_Badge_Dia	gem	run.wallRewardDia	None	1/1001002	1	1
+605	계단	RunStairs	-	none	모은 계단 수	Int	Atlas_UI_Icon	=UI_Icon_Stair				None		0	1
+606	런 손패 지팡이	RunWeapon	103_item	row	런 손패 카드 장수	Int	Atlas_UI_Icon	icon				None		0	1
+607	마법서 탑 게이지	GaugeFill	-	none	우물 게이지 양	Double	Atlas_UI_Hud	=UI_Icon_Gauge				None		0	1
+608	잠긴 황금 생선	RbPending	-	none	목숨 조각 적립 대기	Int	Atlas_UI_Icon	=UI_Icon_RbToken				None	rbPending	0	1
+609	냥환생 쿨타임 감소	RebirthCooldownSec	-	none	부활 쿨타임 감소(초)	Int	Atlas_UI_Icon	=UI_Icon_Clock				None		0	1
+610	장비	Gear	471_gearRarity	row	장비 개수	Int	Atlas_UI_Icon	icon				None		0	1
+620	펫 카드	PetCard	430_pet	row	장	Int	Atlas_UI_Icon	icon				None		0	1
+621	동료 간식(친구 지정)	FriendCoin	450_friend	row	개(id 0 = 지금 올리는 친구)	Int	Atlas_UI_Icon	icon				None		0	1
+622	신 조각(신 지정)	GodShard	113_god	row	개(id 0 = 지금 올리는 신)	Int	Atlas_UI_Icon	icon				None		0	1
+630	축복	Blessing	480_blessing	row	런 수	Int	Atlas_UI_Icon	icon				None		0	1

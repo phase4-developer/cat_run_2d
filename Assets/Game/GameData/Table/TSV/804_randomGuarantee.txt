@@ -1,1 +1,1 @@
-id	active	countType	triggerCount	rewardMode	rewardBoxGroup	rewardBoxSubGroup	priority
+id	name	active	countType	triggerCount	rewardMode	rewardBoxGroup	rewardBoxSubGroup	priority
