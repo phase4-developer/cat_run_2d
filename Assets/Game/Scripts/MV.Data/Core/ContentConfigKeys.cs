@@ -32,10 +32,12 @@ namespace MV.Data
         public const string Event_ActiveDays = "event.activeDays";
         public const string Rebirth_FastTravelPerRebirth = "rebirth.fastTravelPerRebirth";
         public const string Rebirth_SkipDiaPer10Min = "rebirth.skipDiaPer10Min";
+        /// <summary>냥환생 쿨타임 보라 마법석 스킵(MV-SPEC-02 Q-30: 꺼 둠, BM은 05 탭 뒤).</summary>
+        public const string Rebirth_SkipEnabled = "rebirth.skipEnabled";
         public const string Energy_Enabled = "energy.enabled";
         public const string Horde_Enabled = "horde.enabled";
 
-        /// <summary>모든 값 키(30개).</summary>
+        /// <summary>모든 값 키(31개).</summary>
         public static readonly string[] All =
         {
             Mode_AdTicketDaily,
@@ -66,6 +68,7 @@ namespace MV.Data
             Event_ActiveDays,
             Rebirth_FastTravelPerRebirth,
             Rebirth_SkipDiaPer10Min,
+            Rebirth_SkipEnabled,
             Energy_Enabled,
             Horde_Enabled,
         };

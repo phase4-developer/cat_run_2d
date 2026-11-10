@@ -40,7 +40,7 @@ namespace MV.Boot
                 Area = store.Progress.Area,
                 Level = Math.Max(1, store.Progress.Level),
                 Cp = store.Progress.Cp,
-                Souls = (int)Math.Min(int.MaxValue, Math.Max(0, store.Wealth.Get("souls"))), // 01_wealth.type
+                Souls = (int)Math.Min(int.MaxValue, Math.Max(0, store.Wealth.Get("rescueCat"))), // 01_wealth.type
                 God = store.God.Selected,
                 UpStair = store.Lobby.GetUp("stair"),
                 UpWeapon = store.Lobby.GetUp("weapon"),

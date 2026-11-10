@@ -41,7 +41,7 @@ namespace MV.Save
         public int GetLevel(string key) => Value["lv"]?[key]?.Value<int>() ?? 0;
     }
 
-    /// <summary><c>mvRebirth</c> — 부활 Lv, 적립 대기, 특성 4종, 쿨타임 끝 시각. 목숨 조각 보유량은 재화 <c>rbToken</c>.</summary>
+    /// <summary><c>mvRebirth</c> — 부활 Lv, 적립 대기, 특성 4종, 쿨타임 끝 시각. 황금 생선 보유량은 재화 <c>goldenFish</c>.</summary>
     public sealed class MvRebirthContainer : MvSaveContainer
     {
         public MvRebirthContainer() : base(MvSaveKeys.Rebirth, MvSaveNormalize.Rebirth) { }

@@ -29,13 +29,15 @@ namespace MV.Save
         public const int BoxWood = 1001015;
         public const int BoxGold = 1001016;
         public const int NoAds = 1001017;
+        /// <summary>보라 마법석(유료, MV-SPEC-02 Q-30). 쓰는 곳은 BM 결정 뒤.</summary>
+        public const int PurpleGem = 1001018;
 
         private static readonly Dictionary<int, string> TypeById = new Dictionary<int, string>
         {
-            [Gold] = "gold", [Dia] = "dia", [Souls] = "souls", [RbToken] = "rbToken", [Medal] = "medal",
+            [Gold] = "gold", [Dia] = "dia", [Souls] = "rescueCat", [RbToken] = "goldenFish", [Medal] = "medal",
             [PetFood] = "petFood", [Yarn] = "yarn", [GodCoin] = "godCoin", [GodShard] = "godShard",
             [FriendCoin] = "friendCoin", [FriendUp] = "friendUp", [FriendAny] = "friendAny", [StarCandy] = "starCandy",
-            [BoxPaper] = "boxPaper", [BoxWood] = "boxWood", [BoxGold] = "boxGold", [NoAds] = "noAds",
+            [BoxPaper] = "boxPaper", [BoxWood] = "boxWood", [BoxGold] = "boxGold", [NoAds] = "noAds", [PurpleGem] = "purpleGem",
         };
 
         private static readonly Dictionary<string, int> IdByType = TypeById.ToDictionary(pair => pair.Value, pair => pair.Key, StringComparer.Ordinal);

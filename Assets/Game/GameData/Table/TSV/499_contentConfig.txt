@@ -36,6 +36,7 @@ id	name	key	value	unit
 499009000	냥환생 설정 묶음	rebirth		
 499009001	냥환생당 빠른 이동	rebirth.fastTravelPerRebirth	1	회
 499009002	냥환생 쿨타임 10분당 블루 마법석	rebirth.skipDiaPer10Min	5	캣닢
+499009003	냥환생 쿨타임 보라 마법석 스킵 사용 여부	rebirth.skipEnabled	0	0/1
 499010000	기운 설정 묶음	energy		
 499010001	기운 사용 여부	energy.enabled	0	0/1
 499011000	무리 설정 묶음	horde		
