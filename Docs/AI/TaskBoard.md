@@ -33,7 +33,7 @@
 | MV-VIEW 3차 고양이·충돌 연출 | 완료 | `3a2c686` | 전체 확인 `755bab57f29b` PASS(EditMode 489, PlayMode 7). CatView(플레이어·친구 최대 4, 뒷모습, Climb/Run/Idle 프레임, 단계 아틀라스 필요 시 로드), ObjectReaction(벽 흔들림·섬광·롤 관문·벽돌 빠짐·광륜·별·장난감 줄), 막힘 뒤 고양이 정지. 화면·에뮬레이터 NOT_RUN(설정은 빌드·에뮬레이터 허용 `00bfe28`, 실행기에 에뮬레이터 실행 기능 없음, 빌드는 MV-BUILD-ANDROID). 요청 MV-DATA: `106_hitReaction` chargeWell `objShake` 0→1. MV-FX: 막힘 「쾅!」 글자. 결정 후보 D-VIEW-BLOCK |
 | MV-CONTENT-* (G7) | 준비 완료 | asmdef `14db621` | MV.Content 참조(Save·Tables·Data·Economy·UniTask), MV.UI→MV.Content, `MV.Content.Tests` asmdef. 계약서 작성됨(미배정): `G7-common.md`, `MV-META-RESEARCH-1.md`(칸 b), `MV-META-QUEST-1.md`(칸 c) — `<DEV>`를 배정 시 dev SHA로 바꾼다 |
 | MV-QA-ACCEPT (G8) | 대기 | — | D-87 기준 |
-| MV-BUILD-ANDROID 빌드 메서드 | 진행(칸 b `ai/MV-BUILD-android`) | — | 계약 `_notes/contracts/MV-BUILD-ANDROID.md`. `MV.Editor.Build.MvBuild.BuildAndroidDev` → `Builds/Android/MoonVillage-dev.apk`(개발·디버그 서명). 병합 뒤 실행기 `allow-build`(사용자 원문 필요) → build 잡. 에뮬레이터 설치·실행은 실행기에 기능 없음(중앙 몫) — VIEW 3차 화면 확인은 그때까지 NOT_RUN |
+| MV-BUILD-ANDROID 빌드 메서드 | 완료(메서드), 실제 빌드 대기 | `f2d802e` | 잡 `ab030400ebb2` PASS(compile, EditMode 491). `MV.Editor.Build.MvBuild.BuildAndroidDev` → `Builds/Android/MoonVillage-dev.apk`. 제출 형태 `--modes build --build-method MV.Editor.Build.MvBuild.BuildAndroidDev --build-target android --build-output Builds/Android/MoonVillage-dev.apk`. 남음: ① 실행기 `allow-build`(사용자 원문 필요) ② 첫 빌드가 쓸 파일(`Assets/GoogleMobileAds/Resources/GoogleMobileAdsSettings.asset`, androidlib, ProjectSettings 재직렬화)은 `project_changes`로 받아 dev 반영 ③ Remote Addressables 9그룹은 `Remote.LoadPath` 미정·원격 카탈로그 끔이라 APK에서 못 읽음 → D-BUILD-REMOTE ④ `google-services.json` 없음(로그 오류로 판정될 수 있음). EDM4U 순서 위험은 Gradle 템플릿이 dev `db6462c`에 들어와 해소. 에뮬레이터 설치·실행은 실행기에 기능 없음(중앙 몫) |
 | MV-NET-SERVER 서버 전환 | 보류(서버 붙일 때, 사용자 「응 그렇게 진행해」 2026-11-10) | — | ① network.firebase 연결·Firebase SDK(App·Functions) — 완료(dev `b8fde6f`, 사용자 「SDK 내려받기 허용」) ② 부팅에서 `NetworkManager.SetServerProvider(new FirebaseNetworkProvider(...))` 1번, 로그인 패키지와 같은 FirebaseApp ③ `NetworkManager.DefaultRoute = Server` 1줄(지금 GameBootstrap이 Local 고정), setter가 대기 요청 취소·캐시 비움이라 요청 전 1번만 ④ `DefaultTimeout`을 null로 끄지 않고 경로 바꿀 때 시간 제한도 함께 설정 ⑤ `SetResponseApplier`는 한 슬롯 — `NetworkDataBinding.Connect`와 게임 자체 반영(MvMeta 등) 충돌 먼저 확인 (Framework 평가 2026-11-10, 중계 경유 사용자 「응 전달해」: ④ 로컬 시간 제한 채택 예정 — 지금 우회는 로컬 요청에 `request.Timeout`을 길게, ⑤ 반영기 여러 개 채택 예정 — 지금 우회는 게임 반영기 하나를 `SetResponseApplier`로 등록하고 그 안에서 `NetworkDataBinding.Apply(repository, request, result)`를 직접 불러 Connect와 게임 반영을 함께) ⑥ 로컬·서버 응답 동일성 시험 + DefaultRoute만 바꿔도 요청 클래스가 도는 회귀 시험, 서버 함수 없는 동안 가짜 `INetworkProvider`로 시험 틀 먼저. 출처: mv-process-improve 소스 정리(컴파일 미확인) ⑦ 서버 전환 때 확인: Framework가 로컬 응답의 시간 필드(TimeKey) 누락 결함을 고쳤는지(오류 코드 표는 게임 몫), 로컬·서버 동일성 시험 도구는 Framework가 서버 전환 때로 미룸 |
 
 ## 담당표
@@ -48,7 +48,7 @@
 | f | `moonvillage-f` | (비어 있음) | — | — |
 | g | `moonvillage-g` | (비어 있음) | — | — |
 
-- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 489, PlayMode 7, `b8fde6f` 기준).
+- dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 491, PlayMode 7, `f2d802e` 기준).
 - 테스트 폴더 `C:/Project/MoonVillage`는 항상 `dev`. 칸은 브랜치만 바꿔 재사용. 실행기 하위 호스트 위임 만료 2026-11-19.
 
 ## 작업 순서 구조 (Unity 병목, 2026-11-10)
@@ -140,6 +140,7 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 | D-BUILD-ID | 개발 APK 패키지 이름 | 템플릿 기본값 그대로(`com.UnityTechnologies.com.unity.template.urpblank`) | 출시 이름을 정하면 ProjectSettings·`google-services.json`·AdMob 앱이 그 이름에 묶임 | 쉬움 — 스토어 등록 전까지 | `ProjectSettings/ProjectSettings.asset`, 계약 MV-BUILD-ANDROID |
 | D-BUILD-ADMOBID | AdMob 앱 ID가 비어 있을 때 빌드 | Google 공개 시험 앱 ID로 채워 빌드(실제 ID가 있으면 그대로) | 실제 ID를 받으면 그 값으로 바꾸고 광고 단위도 실제로 | 쉬움 | `S/MV.Editor/Build/MvBuild.cs`, GoogleMobileAds 설정 자산 |
 | D-BUILD-DEV | AI가 만드는 Android 빌드의 형태 | 개발 빌드(Mono·ARMv7·Development·디버그 서명 APK) | 출시용은 IL2CPP·ARM64·AAB·keystore — ProjectSettings 변경과 서명 자료(사용자) 필요 | 쉬움 | `S/MV.Editor/Build/MvBuild.cs` |
+| D-BUILD-REMOTE | 개발 APK에서 Remote Addressables 그룹을 어떻게 읽나 | 개발 빌드 프로필은 Remote 그룹도 APK 안(Local 경로)에 넣음(통합 Writer: Addressables 프로필 1개) | 원격 서버 주소를 정하면 `Remote.LoadPath`·원격 카탈로그를 켜고 서버에 올리는 절차가 생김 | 쉬움 | Addressables 설정 자산, 원장 MV-BUILD-ANDROID 행 |
 
 ## 확정 결정
 
