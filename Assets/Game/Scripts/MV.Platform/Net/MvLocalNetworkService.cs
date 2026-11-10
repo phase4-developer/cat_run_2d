@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using PlatformLibrary.Network;
 
 namespace MV.Platform.Net
 {
@@ -11,7 +12,8 @@ namespace MV.Platform.Net
     /// 서버와 같은 응답 데이터 JSON을 돌려준다. 규칙 위반은 <see cref="NetworkRejection"/>(오류 코드)을 던진다.
     /// 처리기는 상태를 바꾸지 않는다 — 반영은 <see cref="NetworkManager.SetResponseApplier"/>가 한다.
     /// 실제 요청 종류(정산·구매 등)는 각 기능 모듈이 자기 처리기를 <see cref="Register"/>로 더한다(MV.Platform은 게임 모듈을 참조하지 않는다).
-    /// Framework 대체: platform.network 고정본이 나오면 구현 대상 인터페이스만 <c>PlatformLibrary.Network.INetworkLocalService</c>로 바꾼다.
+    /// platform.network 고정본(0.1.0-pre.1)의 <see cref="INetworkLocalService"/> 구현이다. 고정본의 기본 경로는 Server라
+    /// 서버가 없는 동안 게임 시작 코드가 <c>NetworkManager.DefaultRoute = NetworkRoute.Local</c>을 함께 건다.
     /// </summary>
     public sealed class MvLocalNetworkService : INetworkLocalService
     {

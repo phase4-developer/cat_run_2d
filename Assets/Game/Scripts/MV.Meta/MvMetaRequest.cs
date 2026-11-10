@@ -5,8 +5,8 @@ namespace MV.Meta
 {
     /// <summary>
     /// 영속 상태를 바꾸는 요청 1건(PROJECT_CONTEXT 「AI가 따를 규칙」 서버 판정 구조). 이름·파라미터는 서버 함수와 같게 둔다.
-    /// Framework 대체: platform.network 고정본 없음 → <c>NetworkRequest</c>(Name·Params·DataKeys)와 같은 모양.
-    /// 고정본이 나오면 이 클래스를 <c>NetworkRequest</c> 하위 클래스로 바꾸고 <see cref="MvMeta"/>가 <c>NetworkManager</c>로 보낸다.
+    /// Framework 대체: platform.network 고정본(0.1.0-pre.1)은 연결됐지만 MV.Meta는 아직 쓰지 않는다 → <c>NetworkRequest</c>(Name·Params·DataKeys)와 같은 모양.
+    /// 전환 때 이 클래스를 <c>NetworkRequest</c> 하위 클래스로 바꾸고 <see cref="MvMeta"/>가 <c>NetworkManager</c>로 보낸다.
     /// </summary>
     public sealed class MvMetaRequest
     {

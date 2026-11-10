@@ -1,5 +1,6 @@
 using MV.Platform.Net;
 using NUnit.Framework;
+using PlatformLibrary.Network;
 
 namespace MV.Platform.Tests.Net
 {
@@ -56,6 +57,7 @@ namespace MV.Platform.Tests.Net
             {
                 var clock = new MvLocalServerClock(() => 10_000L, offsetMs: 3_000L);
                 NetworkManager.SetLocalService(MvPingRequest.RegisterLocal(new MvLocalNetworkService(), clock));
+                NetworkManager.DefaultRoute = NetworkRoute.Local;   // 고정본 기본은 Server
                 NetworkResult result = default;
 
                 NetworkManager.Post(new MvPingRequest("t"), r => result = r);
