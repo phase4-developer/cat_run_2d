@@ -1,42 +1,42 @@
-﻿id	key	value	unit
-499001000	mode		
-499001001	mode.adTicketDaily	3	회
-499001002	mode.sweepChuruRatio	0.8	배
-499002000	box		
-499002001	box.fallbackDia.paper	20	캣닢
-499002002	box.fallbackDia.wood	60	캣닢
-499002003	box.fallbackDia.gold	150	캣닢
-499003000	pet		
-499003001	pet.summonPrice	1/1001002/100	consume
-499003002	pet.summonFood	10	사료
-499003003	pet.foodPerClear	30	사료
-499003004	pet.cardsToUnlock	2	장
-499003005	pet.slots	2	칸
-499003006	pet.levelPct	20	%
-499003007	pet.buildSlotsMax	3	칸
-499003008	pet.buildSlotEvery	10	레벨
-499003009	pet.buildCost0	10	털실
-499003010	pet.buildCost1	20	털실
-499003011	pet.buildCost2	40	털실
-499004000	friend		
-499004001	friend.slotsMax	3	칸
-499004002	friend.slotPriceDia	200	캣닢
-499004003	friend.coinPerClear	2	개
-499005000	god		
-499005001	god.shardPerClear	1	개
-499006000	gear		
-499006001	gear.setPieces	4	개
-499006002	gear.setDmg	10	%
-499006003	gear.maxUpgrade	30	레벨
-499007000	blessing		
-499007001	blessing.shopRuns	30	런
-499008000	event		
-499008001	event.cycleDays	14	일
-499008002	event.activeDays	7	일
-499009000	rebirth		
-499009001	rebirth.fastTravelPerRebirth	1	회
-499009002	rebirth.skipDiaPer10Min	5	캣닢
-499010000	energy		
-499010001	energy.enabled	0	0/1
-499011000	horde		
-499011001	horde.enabled	0	0/1
+﻿id	name	key	value	unit
+499001000	모드 설정 묶음	mode		
+499001001	광고 입장권 하루 횟수	mode.adTicketDaily	3	회
+499001002	소탕 보상 비율	mode.sweepChuruRatio	0.8	배
+499002000	상자 설정 묶음	box		
+499002001	종이 상자 대체 블루 마법석	box.fallbackDia.paper	20	캣닢
+499002002	나무 상자 대체 블루 마법석	box.fallbackDia.wood	60	캣닢
+499002003	황금 상자 대체 블루 마법석	box.fallbackDia.gold	150	캣닢
+499003000	펫 설정 묶음	pet		
+499003001	펫 소환 가격	pet.summonPrice	1/1001002/100	consume
+499003002	펫 소환 사료	pet.summonFood	10	사료
+499003003	클리어당 사료	pet.foodPerClear	30	사료
+499003004	펫 해금 카드 수	pet.cardsToUnlock	2	장
+499003005	펫 칸 수	pet.slots	2	칸
+499003006	펫 레벨당 증가율	pet.levelPct	20	%
+499003007	펫 옵션 칸 상한	pet.buildSlotsMax	3	칸
+499003008	펫 옵션 칸 레벨 간격	pet.buildSlotEvery	10	레벨
+499003009	펫 옵션 비용 1	pet.buildCost0	10	털실
+499003010	펫 옵션 비용 2	pet.buildCost1	20	털실
+499003011	펫 옵션 비용 3	pet.buildCost2	40	털실
+499004000	친구 고양이 설정 묶음	friend		
+499004001	친구 고양이 칸 상한	friend.slotsMax	3	칸
+499004002	친구 고양이 칸 가격	friend.slotPriceDia	200	캣닢
+499004003	클리어당 동료 간식	friend.coinPerClear	2	개
+499005000	야옹신 설정 묶음	god		
+499005001	클리어당 신 조각	god.shardPerClear	1	개
+499006000	장비 설정 묶음	gear		
+499006001	장비 세트 부위 수	gear.setPieces	4	개
+499006002	장비 세트 공격력	gear.setDmg	10	%
+499006003	장비 강화 상한	gear.maxUpgrade	30	레벨
+499007000	축복 설정 묶음	blessing		
+499007001	상점 축복 런 수	blessing.shopRuns	30	런
+499008000	이벤트 설정 묶음	event		
+499008001	이벤트 주기 일수	event.cycleDays	14	일
+499008002	이벤트 진행 일수	event.activeDays	7	일
+499009000	냥환생 설정 묶음	rebirth		
+499009001	냥환생당 빠른 이동	rebirth.fastTravelPerRebirth	1	회
+499009002	냥환생 쿨타임 10분당 블루 마법석	rebirth.skipDiaPer10Min	5	캣닢
+499010000	기운 설정 묶음	energy		
+499010001	기운 사용 여부	energy.enabled	0	0/1
+499011000	무리 설정 묶음	horde		
+499011001	무리 사용 여부	horde.enabled	0	0/1

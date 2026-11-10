@@ -1,27 +1,27 @@
-﻿id	key	type	p1	p2	p3	p4	active	procEffect	procSound
-112001001	atk	DmgMul	0.2				1		
-112001002	rate	FireRateMul	0.2				1		
-112001003	clone1	CloneAdd	1				1		
-112001004	gold	GoldMul	0.5				1		
-112001005	orb	Orbit	0.3	1.2	1.5	1.7	1		
-112001006	procBolt	ProcExtraHit	0.5	0.6			1		
-112001007	procFire	ProcBurn	0.5	0.3	3		1		
-112001008	chainBolt	ChainJump	1	0.5	9		1		
-112001009	chainFire	ChainSplash	0.4	1.6	0.3		1		
-112001010	storm	Storm	0.25	2.6	1.5	4	1		
-112001011	blast	Blast	0.1	0.04	1.4	4	1		
-112001012	frate	FireRateMul	0.5				1		
-112001013	spear	PierceEveryN	2	1	99		1		
-112001014	crit	CritChance	0.15				0		
-112001015	dbl	DoubleChance	0.2				0		
-112001016	pierce	Pierce	1				0		
-112001017	clone2	CloneAdd	2				0		
-112001018	spin	Spin	0.3	1.5	1.4	1.6	0		
-112001019	beam	Beam	5	3	22	0.7	0		
-112001020	meteor	Meteor	6	1	2.5	5	0		
-112001021	frost	ProcChill			0.25		0		
-112001022	procChill	ProcChill	0.4	2	0.25	0.5	0		
-112001023	cloneDmg	CloneDmgMul	0.5				0		
-112001024	shield	Shield	1				0		
-112001025	dropBonus	DropBonus	0.08	0.3			0		
-112001026	chainLightning	ChainJump	2	0.5	9		0		
+﻿id	name	key	type	p1	p2	p3	p4	active	procEffect	procSound
+112001001	마력 강화	atk	DmgMul	0.2				1		
+112001002	빠른 영창	rate	FireRateMul	0.2				1		
+112001003	분신 소환	clone1	CloneAdd	1				1		
+112001004	황금 축복	gold	GoldMul	0.5				1		
+112001005	번개 구슬	orb	Orbit	0.3	1.2	1.5	1.7	1		
+112001006	감전	procBolt	ProcExtraHit	0.5	0.6			1		
+112001007	화상 추가타	procFire	ProcBurn	0.5	0.3	3		1		
+112001008	연쇄 번개	chainBolt	ChainJump	1	0.5	9		1		
+112001009	불씨 파편 연쇄	chainFire	ChainSplash	0.4	1.6	0.3		1		
+112001010	뇌우	storm	Storm	0.25	2.6	1.5	4	1		
+112001011	낙뢰 폭발	blast	Blast	0.1	0.04	1.4	4	1		
+112001012	번개 연사	frate	FireRateMul	0.5				1		
+112001013	번개 창	spear	PierceEveryN	2	1	99		1		
+112001014	치명타 확률 증가	crit	CritChance	0.15				0		
+112001015	2연발 확률 증가	dbl	DoubleChance	0.2				0		
+112001016	관통 증가	pierce	Pierce	1				0		
+112001017	분신 2명 소환	clone2	CloneAdd	2				0		
+112001018	회전 칼날	spin	Spin	0.3	1.5	1.4	1.6	0		
+112001019	광선	beam	Beam	5	3	22	0.7	0		
+112001020	운석 낙하	meteor	Meteor	6	1	2.5	5	0		
+112001021	서리 얼림	frost	ProcChill			0.25		0		
+112001022	얼림 추가타	procChill	ProcChill	0.4	2	0.25	0.5	0		
+112001023	분신 피해 증가	cloneDmg	CloneDmgMul	0.5				0		
+112001024	보호막	shield	Shield	1				0		
+112001025	드롭 보너스	dropBonus	DropBonus	0.08	0.3			0		
+112001026	유도 번개 연쇄	chainLightning	ChainJump	2	0.5	9		0		

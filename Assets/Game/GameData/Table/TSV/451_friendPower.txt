@@ -1,4 +1,4 @@
-id	unlockLevel	priceType	priceId	priceValue	statKey	value	icon
-451001001	5	1	1001011	100	CritChance	3	
-451001002	10	1	1001011	300	Dmg	10	
-451001003	20	1	1001011	800	CritDmg	30	
+id	name	unlockLevel	priceType	priceId	priceValue	statKey	value	icon
+451001001	단짝	5	1	1001011	100	CritChance	3	
+451001002	베프	10	1	1001011	300	Dmg	10	
+451001003	평생 친구	20	1	1001011	800	CritDmg	30	

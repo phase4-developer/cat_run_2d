@@ -1,8 +1,8 @@
-id	key	type	flash	punch	objShake	breakHitstop	breakShake	breakStat
-106001001	none	None	0	0	0			None
-106001002	damageEnemy	Damage	1	1	0	hitstop.enemyKill		Kills
-106001003	damageWall	Damage	1	0	1	hitstop.wallBreak	shake.wallBreak	Walls
-106001004	damageBox	Damage	1	1	0	hitstop.coinBreak		Boxes
-106001005	chargeStairGate	ChargeStairGate	1	0	0			None
-106001006	chargeCraftGate	ChargeCraftGate	1	0	0			None
-106001007	chargeWell	ChargeWell	0	1	0			None
+id	name	key	type	flash	punch	objShake	breakHitstop	breakShake	breakStat
+106001001	반응 없음	none	None	0	0	0			None
+106001002	하수인 피해	damageEnemy	Damage	1	1	0	hitstop.enemyKill		Kills
+106001003	결계 블록 피해	damageWall	Damage	1	0	1	hitstop.wallBreak	shake.wallBreak	Walls
+106001004	더미·원석 피해	damageBox	Damage	1	1	0	hitstop.coinBreak		Boxes
+106001005	계단 게이트 충전	chargeStairGate	ChargeStairGate	1	0	0			None
+106001006	지팡이 공방 충전	chargeCraftGate	ChargeCraftGate	1	0	0			None
+106001007	마법서 탑 게이지 충전	chargeWell	ChargeWell	0	1	0			None
