@@ -159,5 +159,16 @@ namespace MV.Data
                 if (areaNo >= zones[i].areaFrom && areaNo <= zones[i].areaTo) return i;
             return -1;
         }
+
+        /// <summary>
+        /// 무기 상한 등급 = <c>103_item</c> active 행의 tier 최대(MV-SPEC-02 Q-08). 런 W·덱 길이 = 이 값 + 1.
+        /// 등급 수는 표 설정만으로 바뀐다(최소 1).
+        /// </summary>
+        public int WeaponTierMax()
+        {
+            int max = 0;
+            foreach (var it in Item.Datas) if (it.active && it.tier > max) max = it.tier;
+            return Math.Max(1, max);
+        }
     }
 }

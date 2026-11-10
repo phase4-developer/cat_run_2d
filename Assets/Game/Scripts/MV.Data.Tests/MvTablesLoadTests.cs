@@ -69,7 +69,7 @@ namespace MV.Data.Tests
             var stair = t.LobbyUpgrade.ByKey("stair");
             Assert.That(stair.max, Is.EqualTo(30));
             Assert.That(stair.costBase, Is.EqualTo(25));
-            Assert.That(t.LobbyUpgrade.ByKey("weapon").max, Is.EqualTo(149));
+            Assert.That(t.LobbyUpgrade.ByKey("weapon").max, Is.EqualTo(254)); // MV-SPEC-02 Q-08: 12등급 Σneed(lv1~11) 194 + 60
             // 07 §7.8.4·7.8.5.
             Assert.That(t.AreaUpgrade.ByKey("rate").valueFormat, Is.EqualTo("{0}%"));
             Assert.That(t.RebirthPerk.ByKey("dcap").@base, Is.EqualTo(10));
@@ -86,7 +86,7 @@ namespace MV.Data.Tests
             Assert.That(t.Climb.Config()["lap"], Is.EqualTo(75));
             // 300 키 = 코드 상수.
             Assert.That(t.RunConfig.Datas.Count, Is.EqualTo(RunConfigKeys.All.Length));
-            Assert.That(t.RunConfig.I(RunConfigKeys.MAX_CLONES), Is.EqualTo(4));
+            Assert.That(t.RunConfig.I(RunConfigKeys.MAX_CLONES), Is.EqualTo(30)); // MV-SPEC-02 Q-09 분신 상한 30
             // 312 Level → 템플릿(정본 tplFor).
             Assert.That(t.TemplateCycle.TemplateFor(0, 1), Is.EqualTo(310000001));
             Assert.That(t.TemplateCycle.TemplateFor(0, 9), Is.EqualTo(310000003));

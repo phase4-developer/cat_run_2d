@@ -139,7 +139,7 @@ namespace MV.Boot
             return new MvSaveReferenceCatalog
             {
                 GodKeys = KeySet(tables.God.Sorted.Select(row => row.key)),
-                MaxWeaponTier = tables.Item.Sorted.Count == 0 ? -1 : tables.Item.Sorted.Max(row => row.tier),
+                MaxWeaponTier = tables.Item.Sorted.Count == 0 ? -1 : tables.WeaponTierMax(), // 103 active 상한(MV-SPEC-02 Q-08)
                 MaxAreaIndex = tables.Area.Sorted.Count == 0 ? -1 : tables.Area.Sorted.Max(row => row.areaNo) - 1,
                 BarCellLimits = barLimits,
                 LobbyUpMax = tables.LobbyUpgrade.Sorted.ToDictionary(row => row.key, row => row.max, StringComparer.Ordinal),

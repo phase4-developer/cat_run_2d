@@ -128,9 +128,7 @@ namespace MV.Run
         /// <summary>지팡이 최고 단계 = 켜진 103_item 행의 tier 최대(MV-SPEC-02 Q-08: 코드에 단계 수를 두지 않는다). 행이 없으면 1.</summary>
         public static int WeaponTierMax(MvTables t)
         {
-            int max = 0;
-            if (t != null) foreach (var it in t.Item.Datas) if (it.active && it.tier > max) max = it.tier;
-            return Math.Max(1, max);
+            return t != null ? t.WeaponTierMax() : 1;
         }
 
         /// <summary>분신 상한 = min(MAX_CLONES, 314_spawnGroup clone 위치 수)(MV-SPEC-02 Q-09). 위치가 없는 분신은 만들지 않는다.</summary>

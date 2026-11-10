@@ -138,11 +138,15 @@ namespace MV.Run.Tests
         [Test]
         public void WeaponTier_MaxFromActiveItemRows_MergesPastEight()
         {
-            var t = RunTestTables.Load();
-            Assert.AreEqual(t.Item.Datas.Where(i => i.active).Max(i => i.tier), WeaponTierMax(t));
-            var all = RunTestTables.Load(new Dictionary<string, string> { ["103_item"] = SetCell(RunTestTables.ReadTsv("103_item"), "key", null, "active", "1") });
-            int max = all.Item.Datas.Max(i => i.tier);
-            Assert.AreEqual(max, WeaponTierMax(all));
+            var all = RunTestTables.Load();
+            int max = WeaponTierMax(all);
+            Assert.AreEqual(all.Item.Datas.Where(i => i.active).Max(i => i.tier), max);
+            Assert.AreEqual(12, max, "w9~w12 active 1(사용자 지시)");
+            // 대조: w9~w12를 끄면 상한 8
+            var tsv = RunTestTables.ReadTsv("103_item");
+            foreach (var k in new[] { "w9", "w10", "w11", "w12" }) tsv = SetCell(tsv, "key", k, "active", "0");
+            var t = RunTestTables.Load(new Dictionary<string, string> { ["103_item"] = tsv });
+            Assert.AreEqual(8, WeaponTierMax(t));
 
             RunSim Merge(MvTables tables)
             {

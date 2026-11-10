@@ -30,7 +30,7 @@ namespace MV.Run
     /// <item>Gain: A=(int)ConsumeType, Amount=표시값, X, Z</item>
     /// <item>Hitstop: Amount=sec / Shake: Amount=amp, Amount2=sec</item>
     /// <item>GateFill: ObjId, KindId, A=got, Amount=progress(0~1) / GateTake·GateMiss: ObjId, KindId, A=amount</item>
-    /// <item>StairsReceived: A=n, B=total / WeaponDeliver: A=n, B=tier / WeaponHandReset: Ids=w[9]</item>
+    /// <item>StairsReceived: A=n, B=total / WeaponDeliver: A=n, B=tier / WeaponHandReset: Ids=w[무기 상한 등급+1]</item>
     /// <item>WellFlush: ObjId, Amount=amount, A=bricks / GaugeReceive: Amount, A=lv, Amount2=fill / GaugeLevelUp: A=lv</item>
     /// <item>Steal: ObjId, A=amount, X, Z / Blocked: ObjId, X, Z</item>
     /// <item>GodProc: ObjId=target, Key=el / GodChain: Key=el, X, Z, Amount=radius, Ids=대상 / BurnTick: ObjId</item>
