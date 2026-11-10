@@ -1,8 +1,8 @@
-﻿id	key	type	mul	fixed	useScale	useObstMul
-114001001	none	None			0	0
-114001002	enemy04	AreaHpMul	0.4		0	0
-114001003	box06	AreaHpMul	0.6		0	0
-114001004	bonus025	AreaHpMul	0.25		0	0
-114001005	bonus04	AreaHpMul	0.4		0	0
-114001006	field	FieldLerp			1	1
-114001007	modeStage	ModeStage			0	0
+﻿id	name	key	type	mul	fixed	useScale	useObstMul
+114001001	체력 없음	none	None			0	0
+114001002	하수인 체력 ×0.4	enemy04	AreaHpMul	0.4		0	0
+114001003	상자 체력 ×0.6	box06	AreaHpMul	0.6		0	0
+114001004	보너스 구간 체력 ×0.25	bonus025	AreaHpMul	0.25		0	0
+114001005	보너스 구간 체력 ×0.4	bonus04	AreaHpMul	0.4		0	0
+114001006	종이 결계 체력	field	FieldLerp			1	1
+114001007	모드 단계 체력	modeStage	ModeStage			0	0
