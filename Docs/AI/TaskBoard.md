@@ -48,6 +48,7 @@
 |---|---|---|
 | G7 | MV-CONTENT-* 전체, MV-META-QUEST 재개, ATTENDANCE·SHOP·G7 모드 배정, RESEARCH Boot·성장 탭·Addressables 연결 | Q-01 유지 |
 | 로비 | MV-UI-LOBBY 남은 것, MV-VIEW 로비 이름표·방석·난로, 아지트 시설 단계 표. 구조는 다시 짜지 않음. 리소스는 나중에 디자이너 제작물로 교체(별도 계약) — 임시 아트에 공 들이지 않음 | Q-02 유지 |
+| Area 강화 입구 | 버튼 위치 그대로 두고 관련 보류 해제 | Q-36 지금 위치 유지 |
 
 ### 결정됨, 반영 계약 대기(보류 유지)
 | 항목 | 반영할 것 | Q |
@@ -64,7 +65,6 @@
 | 런 규칙·수치 | 계단 게이트 M·`107_chargeGate`, 지팡이 단계 `103_item`·`AddWeapon`, 분신 상한, `300_runConfig` 폭, 결계 막힘(D-VIEW-BLOCK), 하수인 위치 `311_templateObject`, `106_hitReaction` 값, MV-RUN SpinA·RunProjectile.El, MV-DATA objShake, MV-FX 「쾅!」 | Q-05·Q-06·Q-08~Q-19 중 열린 것 |
 | 별자리냥·카드 | `113_god`·`110_card`·`495_godLevel`, 카드 공개(D-75), 별자리냥 메뉴 칸 수·첫 공개·해금 | Q-21·Q-22 |
 | 아웃게임·재화·광고 | 결과 광고 ×3 연결, 냥환생 해금·영구 업그레이드·Area 강화 항목, 보라 마법석, 표시 문구(Q-34) | Q-23~Q-35 중 열린 것 |
-| Area 강화 입구 | Q-36 「지금 위치 유지」로 보류 해제(버튼 위치 그대로) | Q-36 |
 | 그 밖 | 위 Q에 걸리는 새 계약·표 행 추가, 「(추정)」 열 설명 13개 확인 | 해당 Q |
 
 계속(영향 없음): MV-DATA-NAME 1차(칸 b 진행 중, 끝날 때까지 다른 담당 표 쓰기 금지), 빌드·실기 경고(`SpriteAtlasManager.atlasRequested`)·아틀라스 실측, FX 머티리얼·Addressables 정리, 오디오 Addressables 등록, 현지화 연결 장치(문구는 Q-34 뒤), TMP 글꼴·Essential Resources, renderScale, 플랫폼 어댑터·서버 전환 준비(MV-NET-SERVER는 이미 보류), Q와 무관한 결함 수정.
