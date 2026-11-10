@@ -45,6 +45,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - ui.core
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 04a0cf3e966945508a6bc28e4fb3173e
+    m_Address: UIPopup_Quest
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e8ff0fa46c6d45598f6bf80e364d25a7
+    m_Address: UIPopup_Research
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 80759d7e13e24fb68de84ec27cbb373d
     m_Address: UIPopup_Rebirth
     m_ReadOnly: 0

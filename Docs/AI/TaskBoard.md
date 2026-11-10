@@ -34,33 +34,34 @@
 | MV-VIEW 3차 고양이·충돌 연출 | 완료 | `3a2c686` | 전체 확인 `755bab57f29b` PASS(EditMode 489, PlayMode 7). CatView(플레이어·친구 최대 4, 뒷모습, Climb/Run/Idle 프레임, 단계 아틀라스 필요 시 로드), ObjectReaction(벽 흔들림·섬광·롤 관문·벽돌 빠짐·광륜·별·장난감 줄), 막힘 뒤 고양이 정지. 화면·에뮬레이터 NOT_RUN(설정은 빌드·에뮬레이터 허용 `00bfe28`, 실행기에 에뮬레이터 실행 기능 없음, 빌드는 MV-BUILD-ANDROID). 요청 MV-DATA: `106_hitReaction` chargeWell `objShake` 0→1. MV-FX: 막힘 「쾅!」 글자. 결정 후보 D-VIEW-BLOCK |
 | MV-VIEW 4차 투사체·창·회전 장난감 | 완료 | `1252823` | 담당 잡 `c89662c378a6` PASS(EditMode 501). 실기 화면에서 털실 투사체 보임. 화면 크기·회전 방향 손맛 NOT_RUN. 요청 MV-RUN: `RunState.SpinA` 올리기(지금 뷰가 게임 시간으로 계산), `RunProjectile.El`. 결정 후보: 풀 상한 64, 등급 8 초과는 8 |
 | MV-CONTENT-* (G7) | 진행(보류 해제: Q-01 유지, dev `0fb018f`) | asmdef `14db621` | MV-META-QUEST 1차 재개(칸 c, `ai/MV-META-quest` `99cfff3`에서 이어감). ATTENDANCE·SHOP·G7 모드 계약 다시 배정 예정 |
-| MV-META-RESEARCH (G7) | 1차 완료 | `978d3be`, 병합 `7c09c44` | 잡 `1b18270efe96` compile PASS·EditMode 543/543, 화면·PlayMode NOT_RUN. 총괄 연결 진행(Q-01 유지): MV.Boot `ctx.MetaModifiers = MvResearch.Modifiers`, 성장 탭 `OpenMetaHandler`, Addressables `UIPopup_Research`. 결정 후보 D-RESEARCH-1: 08 「5계열 동시」 vs 09 저장 `run` 1칸 → 지금 1계열만 |
+| MV-META-RESEARCH (G7) | 1차 완료 | `978d3be`, 병합 `7c09c44` | 잡 `1b18270efe96` compile PASS·EditMode 543/543, 화면·PlayMode NOT_RUN. 총괄 연결 완료 `9de637e`(잡 `bcefb090e38e` compile·EditMode PASS 572): `MvGameLoop` 런 시작에 `MvResearch.Modifiers`, `MvBootMeta` 성장 탭 `OpenMetaHandler`(research → 연구 화면), Addressables `Remote_UI`에 `UIPopup_Research`·`UIPopup_Quest`. 화면·PlayMode NOT_RUN. 결정 후보 D-RESEARCH-1: 08 「5계열 동시」 vs 09 저장 `run` 1칸 → 지금 1계열만 |
 | MV-META-QUEST (G7) | 1·2차 완료 | `c7bb626`, 병합 `f764632` | 병합본 잡 `0e4eaa2695a3` compile·EditMode PASS(기대 572). 2차 = Framework 퀘스트 비교 사례 B 결함 5건 수정(프로젝트 설정 대화 경유 사용자 「총괄에게 전달」): ① `MvMeta.Applied` 안 재요청 제거 → 로컬 백엔드 보탬(`RegisterContributor`)이 원래 응답 Data에 `mvQuest`를 더해 저장 1번 ② 모든 쓰기 전에 기간 굴림 ③ 월간 전용 칸 `monthly`·`claims`(09 §9.3.5) ④ 화면은 `Store.Quest` 컨테이너만 ⑤ Boot `MvQuest.Install`·정산 뒤 `RecordRun`·로비 퀘스트 버튼·빨간 점, 통합 시험 `Settle_OneRun_AddsDailyProgressInSameSave`·`AnyWrite_RollsStalePeriodBeforeSaving`. NOT_RUN: PlayMode·화면, `RecordModeClear` 호출부(모드 결과 흐름 없음). 총괄: Addressables `UIPopup_Quest` 등록. 결정 후보: 일일 기준 UTC 0시(D-77 A) vs 09 adDayUtcOffsetHour, 런 계단·벽 기록 저장 2번(정산 파라미터로 합치면 `MvRunOutcome` 변경), weaponCraft 수 없음(MV-RUN 요청) |
-| MV-QA-ACCEPT (G8) | 대기: 반영 순서 4(MV-QA-SPEC2) 뒤 | — | 인수 W-04·W-05·W-07·덤프 기준·골든 값을 새 기준으로 고친 뒤 진행 |
+| MV-QA-ACCEPT (G8) | 보류(2026-11-11 사용자 범위 축소) | — | 디자이너 제작물 뒤 다시 계약 |
 | 표 구글 시트 | 2차 완료(2026-11-10, 사용자 「컬럼명과 데이터는 구분되게 색상 정리 … 최상단에 각 컬럼 기능 설명, 별도 시트로 각 테이블 시트 설명 … 참고는 정크버스터 테이블로 … 테이블 사용시 시트 규칙에 추가」) | 시트 [moonVillage_Table](https://docs.google.com/spreadsheets/d/1f5D-B2bEbgKoqO2jHk_Ki5RU3vmlo_JlbU15cOcl4U8/edit) (내 드라이브, 링크 그대로) | 탭 71 = 「시트규칙」·「표목록」(표 69개의 이름·하는 일·정본 절·읽는 코드·열·행 수) + 표 69탭(이름 = `Assets/Game/GameData/Table/TSV/<이름>.txt`). 머리 3줄 색: 설명 회색 기울임 / 형식 하늘색 / 열 이름 노랑 굵게, 데이터 흰색, 위 3줄·첫 열 고정. 열 설명 844/844 채움(기획서 539 + 보강 305, 그중 「(추정)」 13: 410 selectionType·selectionCount, 701 popupType·banner·displayImage·badgeType·badgeValue·startTime·endTime, 702 sectionType·hideIfEmpty, 460 grade, 804 priority). 규칙은 기획서 07 §7.1.1a. 대조: 데이터 14,843칸 차이 0(118칸은 gviz가 비워 미확인). 정본은 저장소 TSV. 다시 만들기 `py -3 -I C:/Project/MoonVillage.wt/_notes/tools/make_table_xlsx.py <저장소> <출력.xlsx>`(입력 `coldesc.json`·`tabledesc.json`·`rules.tsv` 같은 폴더) → 「파일 → 가져오기 → 스프레드시트 바꾸기」 |
 | MV-BUILD-ANDROID 빌드 메서드 | 완료, 실기 실행 확인(2026-11-10) | `f2d802e`, 실기 수정 `b631b1e`·병합 (이 커밋 앞) | 갤럭시 S23 Ultra(Android 16)에 설치·실행, 30초 로그 E/Unity 0, 런 화면 캡처 정상(빌드 `b6051036c510`). 고친 것: Mono·ARMv7 → IL2CPP·ARM64(D-BUILD-DEV 변경), Addressables 그룹 전부 Local(사용자 「원격 에셋은 안쓸거니 다 로컬로」, `MvArtSetup`도), `Assets/Game/link.xml`(IL2CPP 코드 제거가 Framework 자동 등록을 지움), 빌드 전 TableBuilder로 Resources 표 산출물 생성·표 대체 경로 제거(사용자 「대체 경로로 읽지말고」). 전체 확인 `e6ba845508ef` PASS(EditMode 504, PlayMode 7). 체크리스트 `Docs/AI/ANDROID_BUILD_CHECKLIST.md`. 남음: 경고 `SpriteAtlasManager.atlasRequested`(Atlas_Fx_Common·테마), 라벨 키 그대로 표시(현지화 미연결), `google-services.json` 없음, 실행기 설치·실행 모드 없음(중앙 r-73959ba9f77b) |
 | MV-NET-SERVER 서버 전환 | 보류(서버 붙일 때, 사용자 「응 그렇게 진행해」 2026-11-10) | — | ① network.firebase 연결·Firebase SDK(App·Functions) — 완료(dev `b8fde6f`, 사용자 「SDK 내려받기 허용」) ② 부팅에서 `NetworkManager.SetServerProvider(new FirebaseNetworkProvider(...))` 1번, 로그인 패키지와 같은 FirebaseApp ③ `NetworkManager.DefaultRoute = Server` 1줄(지금 GameBootstrap이 Local 고정), setter가 대기 요청 취소·캐시 비움이라 요청 전 1번만 ④ `DefaultTimeout`을 null로 끄지 않고 경로 바꿀 때 시간 제한도 함께 설정 ⑤ `SetResponseApplier`는 한 슬롯 — `NetworkDataBinding.Connect`와 게임 자체 반영(MvMeta 등) 충돌 먼저 확인 (Framework 평가 2026-11-10, 중계 경유 사용자 「응 전달해」: ④ 로컬 시간 제한 채택 예정 — 지금 우회는 로컬 요청에 `request.Timeout`을 길게, ⑤ 반영기 여러 개 채택 예정 — 지금 우회는 게임 반영기 하나를 `SetResponseApplier`로 등록하고 그 안에서 `NetworkDataBinding.Apply(repository, request, result)`를 직접 불러 Connect와 게임 반영을 함께) ⑥ 로컬·서버 응답 동일성 시험 + DefaultRoute만 바꿔도 요청 클래스가 도는 회귀 시험, 서버 함수 없는 동안 가짜 `INetworkProvider`로 시험 틀 먼저. 출처: mv-process-improve 소스 정리(컴파일 미확인) ⑦ 서버 전환 때 확인: Framework가 로컬 응답의 시간 필드(TimeKey) 누락 결함을 고쳤는지(오류 코드 표는 게임 몫), 로컬·서버 동일성 시험 도구는 Framework가 서버 전환 때로 미룸 |
 
-## 새 기획(MV-SPEC-02) 반영 — 보류 없음 (2026-11-10, Q-01~Q-36 모두 결정)
+## 이번 회차 범위 (2026-11-11 재정정: 새 기획 표·규칙으로 기본 모드)
 
-근거: dev `e42dd3d` `Docs/MV-SPEC-02/DiffReport.md` 「결정 기록」 1~9차(194행 요약). 용어 `Docs/MV-SPEC-02/TermIdMap.md`(보고·계약에 용어(id)). 보류 항목은 없다.
+근거: 중계 경유 사용자 원문 「일단 테이블은 새 기획에 맞추어서 수정을해야해 그리고 연결은 되면 좋겠어」, 「디자이너들이 투입되서 리소스 제작을 할거라 기존 프로토 에셋을 고집할 이유가 없어 … 그때 다시 그걸보고 작업하는게 좋을거 같고」, 「작업은 보류야 지금 남은 작업은 id 규칙 병함, 테이블 수정 및 적용 까지라고 보면 될거같아 기본 모드만 돌아가는 상태인거지」, 「새 규칙 코드 넣어야해」, 「유니티 체크를 좀더 느슨하게 하면 안돼?」(문안 보고 「보내」).
 
-### 모든 반영 계약의 공통 완료 기준
-- 하드코딩 금지: 공식 상수·한도·위치는 표 열이나 변수로 둔다(Q-07·Q-17·Q-19 등). 맵 배치는 표·프리팹이 정본이고 코드는 읽기만 한다(DiffReport 「맵 구성 메모」).
-- 「기획서보다 적은 표값은 추가해서 더미값 넣어둬」: 기획서가 정한 개수보다 표 행·열이 적으면 모자란 만큼 더하고 더미 값을 넣는다(예: 지팡이 9~12단계, 계단 게이트 M Area 2~5·7~30, 영구 업그레이드·Area 강화 추가 항목). 더미는 시트에 색으로 표시하고, 원작 값을 받으면 교체한다.
-- Q-34 「key 까지 변경하고 저장데이터 이전은 필요없다. 출시전까지 저장데이터 이전은 고려하지 않는다.」: 표시 이름과 key를 새 기준으로 바꾼다(souls·rbToken 등). 저장 이관 코드는 만들지 않는다.
-- 표를 바꾸면 TableBuilder Resources 산출물·빌드 기록을 함께 Commit한다(실행기는 `BuildAndroidDev` 3c로 재생성). 표를 쓰는 계약은 한 번에 1개만 진행한다.
+**목표: 기본 모드(본편 런)가 새 기획(MV-SPEC-02)의 표와 규칙으로 돌아가는 상태.** 기준 `Docs/MV-SPEC-02/DiffReport.md` 「결정 기록」 1~9차, `TermIdMap.md`, `GodRefill.md`.
 
-### 반영 순서 (결정됨 → 반영 계약)
-| 순 | 계약(예정 ID) | 범위 | Q | 상태 |
-|---|---|---|---|---|
-| 1 | MV-DATA-NAME 1차 | 사람용 name 열, 용어(id), 새 기준 없음 색 표시 | — | dev 병합 `b761ecf`. bundle4 뒤 산출물 재생성 확인 중 |
-| 2 | MV-DATA-SPEC2 (표 반영) | 표 값·행·key 변경, GodRefill 3~12번(`113_god`·`110_card`·`112_cardEffect`), 더미 행·색 표시 | Q-06·08·09·10·15~19·20·21·22·27~35 | 1 뒤 |
-| 3 | MV-RUN-SPEC2 (런 규칙·공식) | 계단 오르기 새 공식(`330_climb` 상수 열), 계단 게이트 M, 지팡이 단계·`AddWeapon`, 분신 상한, 결계 막힘, 하수인 위치 등 코드 | Q-07·11~14·23~26 | 2 뒤(표 열이 먼저) |
-| 4 | MV-QA-SPEC2 (인수 기준) | 밸런스 프리셋·골든 값, 인수 W-04·W-05·W-07, 덤프 기준 | Q-03·04 | 2·3 뒤 |
-| 5 | MV-QA-ACCEPT (G8) | 최종 인수 | — | 4 뒤 |
+| 순 | 작업 | 상태 |
+|---|---|---|
+| ① | id 규칙(MV-DATA-IDRULE): 시트 id 수식, `02_playResource` 2001001~, 검증기 표 번호 검사 | `ai/MV-DATA-IDRULE-sheet-id`, 산출물 재생성 빌드 중 → 병합 |
+| ② | 표 새 기획 반영(MV-DATA-SPEC2): `ai/MV-DATA-SPEC2-tables` 이어서 완료·병합 | 재개 |
+| ③ | 코드 연결 + 새 규칙 코드(MV-RUN-SPEC2): 바뀐 key·행·열 읽기, 계단 오르기 공식(`330_climb` 상수 열), 계단 게이트 M, 지팡이 단계·`AddWeapon`, 분신 상한, 결계 막힘, 하수인 위치. ②와 병렬로 시작 | 배정 |
 
-같이 진행(표 쓰기 없음): MV-META-QUEST 2차(구조 결함 5건, 칸 c), RESEARCH·QUEST 앱 연결, 로비 남은 것(Q-02 유지, 임시 아트 최소), Area 강화 입구 위치 유지(Q-36), 빌드·실기 경고·아틀라스, FX·오디오 Addressables, 현지화 연결 장치, TMP 글꼴, renderScale, 플랫폼 어댑터.
+공통 완료 기준: 하드코딩 금지(상수·한도·위치는 표 열·변수, 맵 배치는 표·프리팹 정본), 「기획서보다 적은 표값은 추가해서 더미값 넣어둬」(더미는 시트 색 표시), Q-34 key까지 새 기준·저장 이관 없음.
+
+**확인 완화(사용자 「유니티 체크를 좀더 느슨하게」):** 작업 중에는 compile만 돌린다. EditMode·PlayMode·dev 전체·APK 빌드는 ②·③을 모두 넣은 뒤 마지막에 한 번만 돌린다. 중간 병합의 시험은 NOT_RUN으로 적는다. 표 산출물 재생성(빌드 3c)은 표를 바꿀 때 필요하므로 예외로 돌린다.
+
+**보류(디자이너 제작물·다음 지시 뒤 다시 계약):** 출석·상점, 모드 3종, 로비 남은 것, 현지화 연결, 아틀라스 경고, 한국어 글꼴, MV-UI-FX2, FX·오디오 Addressables, G8 MV-QA-ACCEPT. 아트·UI·아틀라스·프리팹은 디자이너 제작물이 나온 뒤 다시 계약한다. 이미 병합된 모드·퀘스트·연구 코드는 그대로 둔다.
+
+설정 문서 기획서 위치(`c82ed25`, MV-SPEC-02/Source)는 이번 회차 기준과 맞다.
+
+**시트 → 게임 표 가져오기·자동 적용: 사용자 결정으로 하지 않음(닫음).** 사용자 원문(2026-11-11, 「미확인 알림」 대화 경유): 「시트만 열기로하고 테이블 적용은 그냥 사람이 수동으로 하려했어 당분간은 … 이건 만들지말라고 테이블 프레임워크 쓰는곳에 전달해 과투자야 추후 프레임워크에서 만들었을때나 쓰지 그전에는 그냥 사람이 옮기면돼」. 시트 내용을 TSV로 옮기는 일은 사람이 한다. 참고: 기존 에디터 변환기 `MV.Editor/Tables/MvSheetTsvExporter`(2026-11-09, 내려받은 시트 TSV 텍스트에서 설명 2줄·`#` 열을 빼는 함수)가 있다. 새 기능을 더하지 않고, 자동 가져오기·적용으로 키우지 않는다. `make_table_xlsx.py`(TSV → 시트용 xlsx)는 반대 방향이라 해당 없음.
 
 ## 담당표
 
