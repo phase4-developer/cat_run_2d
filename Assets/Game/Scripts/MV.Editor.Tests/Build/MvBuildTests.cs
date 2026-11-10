@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using MV.Editor.Build;
 using NUnit.Framework;
 
@@ -44,6 +45,18 @@ namespace MV.Editor.Tests
             var backend = UnityEditor.PlayerSettings.GetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android);
             var arch = UnityEditor.PlayerSettings.Android.targetArchitectures;
             Assert.That(MvBuild.IsDeviceReady(backend, arch), Is.True, backend + ", " + arch);
+        }
+    
+
+        [Test]
+        public void TableOutputs_ExistForEveryTsv()
+        {
+            // 게임은 Resources 산출물만 읽는다(대체 경로 금지). TSV를 더하고 TableBuilder로 반영하지 않으면 여기서 드러난다.
+            var tsv = System.IO.Directory.GetFiles(MV.Editor.Tables.MvTableAuthoring.TsvAssetPath, "*.txt").Select(System.IO.Path.GetFileName).OrderBy(n => n).ToArray();
+            var outDir = MV.Editor.Tables.MvTableAuthoring.OutputAssetPath;
+            Assert.That(tsv, Is.Not.Empty);
+            var missing = tsv.Where(n => !System.IO.File.Exists(System.IO.Path.Combine(outDir, n))).ToArray();
+            Assert.That(missing, Is.Empty, "Resources 표 산출물 없음: " + string.Join(", ", missing));
         }
     }
 }

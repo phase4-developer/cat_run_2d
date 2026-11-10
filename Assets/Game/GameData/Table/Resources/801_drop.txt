@@ -1,0 +1,3 @@
+﻿id	dropGroup	rewardType	rewardId	rewardValue_min	rewardValue_max	rewardValueRule	weight	icon
+801001001	801001001	604	0	0	0	HalfDiaCapCeil	800	
+801001002	801001001	0	0	0	0	Flat	9200	

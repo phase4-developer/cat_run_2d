@@ -1,0 +1,8 @@
+﻿id	key	type	margin	insideX	preDelayMs	delayMs	clock	arriveAction	passEffect	passSound
+108001001	onBreak	OnBreak			0	0	Game	None		
+108001002	sgatePass	OnPass	0.2	1.45	0	560	Real	None	run.statGatePass	gate
+108001003	cgatePass	OnPass	0.2	1.45	0	500	Game	None	run.cloneGatePass	forge
+108001004	wellGauge	OnFlush			260	560	Real	None	run.brickFlush	
+108001005	onArriveStair	OnArrive			0	0	Game	StartClimb		gate
+108001006	onArriveFloor	OnArrive			0	0	Game	FloorBanner		floor
+108001007	onArriveGoal	OnArrive			0	0	Game	FinishGate		

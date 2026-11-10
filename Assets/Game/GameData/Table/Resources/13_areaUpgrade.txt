@@ -1,0 +1,6 @@
+﻿id	key	sort	active	max	perLv	statKey	valueFormat	valueBase	valueStep	resetOn	levelPriceGroup	icon	costBase	costGrowth
+13001001	rate	1	1	10	0.1	FireRate	{0}%	0	10	AreaChange	11		40	1.6
+13001002	range	2	1	10	0.1	Range	{0}%	0	10	AreaChange	12		40	1.6
+13001003	clone	3	1	4	1	Clone	{0}	0	1	AreaChange	13		100	1.6
+13001004	crit	4	1	10	0.1	CritChance	{0}%	0	10	AreaChange	14		80	1.6
+13001005	dbl	5	1	10	0.1	DoubleChance	{0}%	0	10	AreaChange	15		80	1.6

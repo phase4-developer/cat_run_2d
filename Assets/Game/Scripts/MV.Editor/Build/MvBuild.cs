@@ -8,6 +8,8 @@ using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using jjevol;
+using MV.Editor.Tables;
 
 namespace MV.Editor.Build
 {
@@ -29,6 +31,10 @@ namespace MV.Editor.Build
         public const int ExitResolverMissing = 3;
         public const int ExitAddressablesFailed = 4;
         public const int ExitPlayerSettingsWrong = 5;
+        public const int ExitTablesFailed = 6;
+
+        /// <summary>빌드가 남기는 Addressables 임시 link.xml(Unity가 다음에 열 때 지워 실행기 후보 불일치를 낸다).</summary>
+        public const string AddressablesTempLinkXml = "Assets/AddressableAssetsData/link.xml";
 
         const string LogPrefix = "[MvBuild] ";
         const string ResolverTypeName = "GooglePlayServices.PlayServicesResolver";
@@ -89,6 +95,20 @@ namespace MV.Editor.Build
                 return ExitPlayerSettingsWrong;
             }
 
+            // 3c. 표 산출물 — 플레이어는 Resources 표만 읽는다(에디터의 TSV 대체 경로는 플레이어에 없다). TSV에서 TableBuilder로 만든다(검증기 포함, 암호화 끔).
+            try
+            {
+                var tables = TableBuilder.Build(Path.GetFullPath(MvTableAuthoring.TsvAssetPath), Path.GetFullPath(MvTableAuthoring.OutputAssetPath),
+                    useEncrypt: false, validate: MvTableAuthoring.ValidateBuildInputs);
+                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                Debug.Log(LogPrefix + $"표 산출물 {tables.State}, 파일 {tables.OutputFiles.Count}, 바뀜 없음 {tables.NoOp}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(LogPrefix + "표 산출물 만들기 실패: " + e.Message);
+                return ExitTablesFailed;
+            }
+
             // 4. Addressables — 모든 그룹이 Local 경로라 APK 안에 들어간다(사용자 「원격 에셋은 안쓸거니 다 로컬로」). 플레이어 빌드가 자동으로 콘텐츠를 빌드하지 않을 때만 한 번 빌드한다. 설정 자산은 바꾸지 않는다.
             var aaSettings = AddressableAssetSettingsDefaultObject.Settings;
             if (aaSettings == null)
@@ -130,7 +150,14 @@ namespace MV.Editor.Build
             });
             var summary = report.summary;
             Debug.Log(LogPrefix + $"빌드 결과 {summary.result}, 오류 {summary.totalErrors}, 크기 {summary.totalSize}, 출력 {AndroidDevOutputPath}");
+            DeleteTempLinkXml();
             return summary.result == BuildResult.Succeeded ? ExitSuccess : ExitBuildFailed;
+        }
+
+        static void DeleteTempLinkXml()
+        {
+            foreach (var path in new[] { AddressablesTempLinkXml, AddressablesTempLinkXml + ".meta" })
+                if (File.Exists(path)) File.Delete(path);
         }
 
         /// <summary>64비트 전용 기기에서도 설치·실행되는 조합인지(IL2CPP, ARM64 포함).</summary>

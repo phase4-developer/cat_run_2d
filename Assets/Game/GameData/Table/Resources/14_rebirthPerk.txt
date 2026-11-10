@@ -1,0 +1,5 @@
+﻿id	key	sort	active	max	base	perLv	floor	statKey	valueFormat	valueBase	valueStep	levelPriceGroup	icon	costBase	costGrowth
+14001001	power	1	1	20	1	0.15		DmgMul	{0}%	0	15	21		50	1.5
+14001002	crit	2	1	20	2.2	0.2		CritMul	{0}%	220	20	22		50	1.5
+14001003	obst	3	1	10	1	-0.05	0.5	ObstMul	{0}%	100	-5	23		60	1.5
+14001004	dcap	4	1	20	10	2		DiaCap	{0}	10	2	24		60	1.5
