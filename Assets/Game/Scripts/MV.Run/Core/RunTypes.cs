@@ -136,7 +136,7 @@ namespace MV.Run
 
         // 로비 강화 up.{stair, weapon, income}
         public int UpStair, UpWeapon, UpIncome;
-        /// <summary>시작 덱 save.deck[0..8] (등급별 장수, 0번 미사용).</summary>
+        /// <summary>시작 덱(등급별 장수, 0번 미사용). 기본 9칸은 빈 입력·시험용이고 MvRunStart가 저장 덱 길이로 바꾼다. 런 W 길이는 103_item에서 따로 잡는다.</summary>
         public int[] Deck = new int[9];
         // Area 강화 aup.{rate, range, clone, crit, dbl}
         public int AupRate, AupRange, AupClone, AupCrit, AupDbl;

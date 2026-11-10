@@ -44,6 +44,9 @@ namespace MV.UI.Tests
                     case "key":
                         add[c] = add[c] + "_t";
                         break;
+                    case "showInMenu": // 113_god: 마지막 행(11·12번)은 메뉴에 숨김이라, 더한 행은 보이게 둔다.
+                        add[c] = "1";
+                        break;
                 }
             }
             var src = new MvMemoryTableSource(new MvTsvDirectorySource(dir))

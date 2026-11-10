@@ -316,8 +316,10 @@ namespace MV.Data
             }
             if (t.LobbyUpgrade.ByKey("weapon") is { } weapon && TryConfig(t, RunConfigKeys.WEAPON_EXTRA_BUYS, out double extra))
             {
-                int sum = t.WeaponLevel.Datas.Where(x => x.lv >= 1 && x.lv <= 7).Sum(x => x.need) + (int)extra;
-                if (weapon.max != sum) r.Error(LobbyUpgradeData.Table, weapon.id, "max", $"weapon max {weapon.max} ≠ Σ12.need(lv 1~7) + WEAPON_EXTRA_BUYS = {sum}");
+                // 마지막 Level(12_weaponLevel lv 최대)에서는 게이지 대신 WEAPON_EXTRA_BUYS만큼 더 산다. 상한은 표 행 수에서 읽는다.
+                int lastLv = t.WeaponLevel.Datas.Count > 0 ? t.WeaponLevel.Datas.Max(x => x.lv) : 1;
+                int sum = t.WeaponLevel.Datas.Where(x => x.lv >= 1 && x.lv < lastLv).Sum(x => x.need) + (int)extra;
+                if (weapon.max != sum) r.Error(LobbyUpgradeData.Table, weapon.id, "max", $"weapon max {weapon.max} ≠ Σ12.need(lv 1~{lastLv - 1}) + WEAPON_EXTRA_BUYS = {sum}");
             }
 
             List<MvLevelPriceGenerator.Row> generated;

@@ -21,8 +21,8 @@ namespace MV.Boot
         /// <summary>누적 구출 고양이(재화 <c>rescueCat</c>, MV-SPEC-02 Q-34).</summary>
         public int Souls;
         public string God = "thunder";
-        /// <summary>시작 덱 9칸(등급별 장수, 0번 미사용).</summary>
-        public int[] Deck = new int[9];
+        /// <summary>시작 덱(등급별 장수, 0번 미사용). 길이는 저장 덱·시작 덱 설정을 따른다(단계 수를 코드에 두지 않는다).</summary>
+        public int[] Deck = Array.Empty<int>();
         public int UpStair, UpWeapon, UpIncome;
         /// <summary>Area 강화 Lv(<c>13_areaUpgrade.key</c> → lv). 런 칸은 <see cref="MvRunStart.CreateContext"/>가 statKey로 고른다.</summary>
         public Dictionary<string, int> AreaUps = new Dictionary<string, int>();
@@ -52,7 +52,8 @@ namespace MV.Boot
                 LastSettledRunSeq = store.Progress.LastSettledRunSeq,
             };
             var deck = store.Lobby.Deck;
-            for (int i = 0; i < s.Deck.Length && i < deck.Count; i++) s.Deck[i] = deck[i];
+            s.Deck = new int[deck.Count];
+            for (int i = 0; i < deck.Count; i++) s.Deck[i] = deck[i];
             // 교체 지점: MV.Save가 벽 기록 읽기(GetBars)를 내면 JSON을 거치지 않는다(MV-SAVE 변경 요청 후보).
             s.Bars = ParseBars(store.Progress.ToJsonString(), s.Area, floorCount);
             return s;
@@ -65,8 +66,7 @@ namespace MV.Boot
             if (config != null)
             {
                 if (!string.IsNullOrEmpty(config.StartGodKey)) s.God = config.StartGodKey;
-                if (config.StartDeck != null)
-                    for (int i = 0; i < s.Deck.Length && i < config.StartDeck.Length; i++) s.Deck[i] = config.StartDeck[i];
+                if (config.StartDeck != null) s.Deck = (int[])config.StartDeck.Clone();
             }
             return s;
         }
@@ -146,7 +146,8 @@ namespace MV.Boot
                 God = string.IsNullOrEmpty(snap.God) ? "thunder" : snap.God,
                 Preset = DefaultPreset,
             };
-            for (int i = 0; i < setup.Deck.Length && snap.Deck != null && i < snap.Deck.Length; i++) setup.Deck[i] = snap.Deck[i];
+            // 덱 길이 = 스냅숏 덱 길이. 런 W는 103_item 단계 수로 따로 잡고 겹치는 칸만 옮긴다(RunLevelBuilder).
+            if (snap.Deck != null && snap.Deck.Length > 0) setup.Deck = (int[])snap.Deck.Clone();
             ApplyGrowth(setup, snap, tables);
             if (snap.Bars != null)
             {
