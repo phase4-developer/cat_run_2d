@@ -5,6 +5,7 @@ AI 작업자가 이 저장소에서 따르는 규칙이다. 여기 없는 것은
 ## 먼저 읽을 것
 
 - `Docs/AI/PROJECT_CONTEXT.md` — 프로젝트 설정(설정 화면이 만든 절), Framework 기준선, 실행기 등록.
+- `Docs/AI/ANDROID_BUILD_CHECKLIST.md` — Android 빌드 전 체크리스트와 지난 실수. 빌드를 내거나 빌드·실행 관련 계약을 쓰기 전에 읽는다.
 - `Docs/MV-SPEC-01/README.md` — 기획서 입구. 작업 계약은 `11_WorkContracts.md`, 인수 기준은 `12_Acceptance.md`.
 - 대조 기준 `Docs/Reference/MoonVillage.html`(SHA256 `Docs/Reference/SHA256.txt`). 바이트를 바꾸지 않는다.
 
