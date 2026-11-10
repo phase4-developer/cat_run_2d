@@ -193,7 +193,7 @@ namespace MV.View.Tests
             var wv = prefab.GetComponent<WorldView>();
             Assert.That(wv, Is.Not.Null);
             var so = new SerializedObject(wv);
-            foreach (var field in new[] { "_rig", "_sorter", "_ground", "_props", "_tint", "_screenMultiply", "_objects", "_screen" })
+            foreach (var field in new[] { "_rig", "_sorter", "_ground", "_props", "_tint", "_screenMultiply", "_objects", "_screen", "_cats" })
                 Assert.That(so.FindProperty(field).objectReferenceValue, Is.Not.Null, field);
             Assert.That(prefab.GetComponentInChildren<CameraRig>().GetComponent<Camera>(), Is.Not.Null);
             var props = new SerializedObject(prefab.GetComponentInChildren<PropStreamer>());
@@ -203,6 +203,8 @@ namespace MV.View.Tests
             foreach (var field in new[] { "_spriteMaterial", "_vertexColorMaterial" })
                 Assert.That(objs.FindProperty(field).objectReferenceValue, Is.Not.Null, "ObjectViewFactory." + field);
             Assert.That(prefab.GetComponentInChildren<GroundStripMesh>().GetComponent<MeshRenderer>().sharedMaterial, Is.Not.Null);
+            var cats = new SerializedObject(prefab.GetComponentInChildren<CatView>());
+            Assert.That(cats.FindProperty("_spriteMaterial").objectReferenceValue, Is.Not.Null, "CatView._spriteMaterial");
         }
     }
 }

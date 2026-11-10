@@ -353,10 +353,12 @@ namespace MV.Boot
             var events = _sim.DrainEvents();
             MvSound.OnRunEvents(events);
             MvFx.OnRunEvents(events);
+            _world.OnRunEvents(events);   // 오브젝트 맞음·우물 벽돌 빠짐(06 §6.13)
             foreach (var e in events)
                 if (e.Type == RunEventType.ClimbStart)   // 계단 위 새 지형(정본 buildEnv(len, from, cliff))
                     _world.RebuildProps(e.Z, Math.Max(0, s.Gz - e.Z), true, s.WorldY + e.Amount2);
             _world.SyncObjects(s.Objs, s.P.Z, s.WorldY);
+            _world.SyncCats(s);   // 플레이어·친구 고양이(02 §2.1.4)
 
             if (Phase == MvLoopPhase.Run && s.Phase == RunPhase.Result) FinishRun();
         }

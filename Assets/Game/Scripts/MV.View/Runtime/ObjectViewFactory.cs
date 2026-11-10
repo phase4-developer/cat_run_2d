@@ -43,7 +43,27 @@ namespace MV.View
             public double[] Depth;
             public int[] Order, Scratch;
             public int Stamp;
+            // ---- 맞음 반응(06 §6.13) ----
+            /// <summary>흔들림·번쩍 남은 시간(초).</summary>
+            public double Shake, Flash;
+            /// <summary>장애물 흰 섬광 칸(slot 2)이 있는가(생선 비석은 없음, L3612 return).</summary>
+            public bool HasJunkFlash;
+            /// <summary>우물 벽돌별 숨김 남은 시간·다시 자람(0~1).</summary>
+            public double[] Gone, Grow;
+            /// <summary>롤 관문 반지름(가로·세로 m).</summary>
+            public double Rx, Ry;
+            public bool Gold;
         }
+
+        /// <summary>롤 관문 배경 높이(가운데 y = 1.4, 세로 반지름 1.4), 롤 반지름 0.25(L3633).</summary>
+        const double GateCy = 1.4, GateRy = 1.4, GateRoll = 0.25;
+        /// <summary>`Fx_Stripe.png`(64×16) 안 불투명 영역 56×4 px 비율 [측정]. 줄 길이·굵기를 이 영역으로 맞춘다.</summary>
+        const float StripeFillX = 56f / 64f, StripeFillY = 4f / 16f;
+        public const string FlashEllipse = "Fx_FlashEllipse", Stripe = "Fx_Stripe", GlowLin = "Fx_Glow_Lin", Square = "Fx_Square";
+
+        readonly List<int> _brickPool = new List<int>(64);
+        readonly System.Random _brickRng = new System.Random(0x5EED);   // 표시 전용(정본 Math.random). 규칙 난수와 무관.
+        double _lastMs = -1;
 
         readonly Dictionary<int, View> _views = new Dictionary<int, View>(64);
         readonly Dictionary<ObjectShape, Stack<View>> _pool = new Dictionary<ObjectShape, Stack<View>>();
@@ -58,6 +78,8 @@ namespace MV.View
         int _stamp;
 
         public int ViewCount => _views.Count;
+        /// <summary>월드 스프라이트 공유 머티리얼(고양이 뷰가 프리팹 값이 없을 때 빌린다).</summary>
+        public Material SpriteMaterial => _spriteMaterial;
 
         public void Init(ViewConfig cfg, Transform camera, WorldSpriteCache sprites, string fxAtlas)
         {
@@ -127,6 +149,8 @@ namespace MV.View
             if (_cfg == null || objs == null) return;
             _stamp++;
             double nowMs = Time.realtimeSinceStartupAsDouble * 1000.0;
+            double dt = _lastMs < 0 ? 0 : Math.Max(0, Math.Min(0.1, (nowMs - _lastMs) / 1000.0));
+            _lastMs = nowMs;
             for (int i = 0; i < objs.Count; i++)
             {
                 var o = objs[i];
@@ -134,7 +158,7 @@ namespace MV.View
                 if (!_views.TryGetValue(o.Id, out var v)) _views[o.Id] = v = Show(o, groundY);
                 v.Stamp = _stamp;
                 v.Go.transform.position = new Vector3((float)o.X, (float)groundY, (float)o.Z);
-                Animate(v, nowMs, playerZ);
+                Animate(v, nowMs, playerZ, dt);
             }
             _drop.Clear();
             foreach (var kv in _views) if (kv.Value.Stamp != _stamp) _drop.Add(kv.Key);
@@ -143,6 +167,67 @@ namespace MV.View
 
         /// <summary>오브젝트 하나의 뷰 루트(시험·QA용). 없으면 null.</summary>
         public GameObject ViewOf(int objId) => _views.TryGetValue(objId, out var v) ? v.Go : null;
+
+        /// <summary>시험·QA: 뷰의 흔들림·번쩍 남은 시간. 뷰가 없으면 false.</summary>
+        public bool TryReaction(int objId, out double shake, out double flash)
+        {
+            shake = flash = 0;
+            if (!_views.TryGetValue(objId, out var v)) return false;
+            shake = v.Shake;
+            flash = v.Flash;
+            return true;
+        }
+
+        /// <summary>시험·QA: 우물 뷰에서 지금 빠져 있는(숨김) 벽돌 수.</summary>
+        public int GoneBricks(int objId)
+        {
+            if (!_views.TryGetValue(objId, out var v) || v.Gone == null) return 0;
+            int n = 0;
+            for (int i = 0; i < v.Gone.Length; i++) if (v.Gone[i] > 0) n++;
+            return n;
+        }
+
+        /// <summary>
+        /// 런 이벤트 → 뷰 반응(06 §6.13). 통합 코드가 <see cref="Sync"/> 전에 같은 프레임의 이벤트 목록을 넘긴다.
+        /// Hit: `106_hitReaction.objShake` → 흔들림 0.12 s(장애물·우물), `flash` → 롤 관문 번쩍 0.1 s. WellFlush: 벽돌 A개를 빼서 2.2 s 숨김.
+        /// 뷰가 없는(그리기 범위 밖) 오브젝트의 이벤트는 버린다.
+        /// </summary>
+        public void OnRunEvents(IReadOnlyList<RunEvent> events)
+        {
+            if (events == null) return;
+            for (int i = 0; i < events.Count; i++)
+            {
+                var e = events[i];
+                if (e.Type != RunEventType.Hit && e.Type != RunEventType.WellFlush) continue;
+                if (!_views.TryGetValue(e.ObjId, out var v) || v.Obj == null) continue;
+                if (e.Type == RunEventType.Hit)
+                {
+                    var r = v.Obj.Reaction;
+                    if (r == null) continue;
+                    if (r.objShake > 0 && (v.Shape == ObjectShape.Junk || v.Shape == ObjectShape.Well)) v.Shake = ObjectReaction.ShakeSec;
+                    if (r.flash && v.Shape == ObjectShape.RollGate) v.Flash = ObjectReaction.FlashSec;
+                }
+                else if (v.Shape == ObjectShape.Well) FlushBricks(v, Math.Max(1, e.A));
+            }
+        }
+
+        /// <summary>정본 `flushBricks` L1861: 보이는 벽돌을 층 높은 순(잡동사니 먼저)으로 늘어놓고 앞 10개 안에서 무작위로 n개를 뺀다.</summary>
+        void FlushBricks(View v, int n)
+        {
+            if (v.Gone == null) return;
+            _brickPool.Clear();
+            for (int layer = 5; layer >= 0; layer--)
+                for (int i = 0; i < _bricks.Count && i < v.Gone.Length; i++)
+                    if (_bricks[i].Layer == layer && v.Gone[i] <= 0) _brickPool.Add(i);
+            for (int k = 0; k < n && _brickPool.Count > 0; k++)
+            {
+                int at = Math.Min(_brickPool.Count - 1, (int)Math.Floor(_brickRng.NextDouble() * Math.Min(_brickPool.Count, ObjectReaction.BrickPickTop)));
+                int b = _brickPool[at];
+                _brickPool.RemoveAt(at);
+                v.Gone[b] = ObjectReaction.BrickGoneSec;
+                v.Grow[b] = 0;
+            }
+        }
 
         void Release(View v)
         {
@@ -170,6 +255,8 @@ namespace MV.View
             v.Ds.SortOffsetY = (float)_cfg.ObjProbeY;
             v.Ds.Bias = o.Kind != null ? (float)o.Kind.sortBias : 0f;
             v.Ds.SetAlphaScale(1f);
+            v.Shake = v.Flash = 0;
+            v.HasJunkFlash = false;
             v.Go.transform.position = new Vector3((float)o.X, (float)groundY, (float)o.Z);
             for (int i = 0; i < v.Parts.Count; i++) v.Parts[i].gameObject.SetActive(false);
             v.Base.Clear();
@@ -260,7 +347,20 @@ namespace MV.View
             string sprite = soul ? o.Kind.spriteSoul : SpriteAt(o, ObjectLayout.JunkSpriteIndex(Math.Max(0, o.Lane), Math.Max(0, o.Row), Math.Max(0, o.Bar), Math.Max(0, o.Idx)));
             var body = Part(v, 0, _atlas, sprite, new Vector3((float)jx, (float)ObjectLayout.JunkLiftY, (float)ObjectLayout.JunkFrontZ), 0);
             body.transform.localScale = Vector3.one * (float)sc;
-            if (soul || !o.IsField) return;
+            if (soul) return;
+            // 맞음 흰 섬광(L3629): 그림 발 위 0.6q, 반지름 1.1q × 0.8q, 알파 0.35. 흔들리는 동안만 켠다.
+            var fl = Part(v, 2, _fxAtlas, FlashEllipse,
+                new Vector3((float)jx, (float)(ObjectLayout.JunkLiftY + ObjectReaction.JunkFlashY * sc), (float)ObjectLayout.JunkFrontZ), 2);
+            if (fl.sprite != null)
+            {
+                var b = fl.sprite.bounds.size;
+                fl.transform.localScale = new Vector3((float)(2 * ObjectReaction.JunkFlashRx * sc) / Mathf.Max(0.0001f, b.x),
+                    (float)(2 * ObjectReaction.JunkFlashRy * sc) / Mathf.Max(0.0001f, b.y), 1f);
+                fl.color = new Color(1f, 1f, 1f, (float)ObjectReaction.JunkFlashAlpha);
+                v.HasJunkFlash = true;
+            }
+            fl.gameObject.SetActive(false);
+            if (!o.IsField) return;
             Part(v, 1, _atlas, ObjectLayout.BadgeSprite(o.Rew),
                 new Vector3((float)(jx + ObjectLayout.BadgeX * sc), (float)(ObjectLayout.JunkLiftY + ObjectLayout.BadgeY * sc), (float)ObjectLayout.JunkFrontZ), 1);
         }
@@ -270,23 +370,69 @@ namespace MV.View
             // 정본 drawRollGate L3632: 가운데 (0, 1.4), rx = hw·1.02, ry = 1.4, 롤 반지름 0.25. 배경 둥근 모서리는 사각형 근사.
             bool stairGate = o.Kind.key == "sgate";
             string tint = o.Kind.tint != null && o.Kind.tint.Count > 0 ? o.Kind.tint[0] : (stairGate ? "#6fd27a" : "#f08ab0");
-            double rx = Math.Max(0.1, o.Hw) * 1.02, ry = 1.4, r = 0.25, cy = 1.4;
-            var bg = MeshChild(v.Go.transform, "Bg");
-            bg.localPosition = new Vector3(0, (float)cy, 0);
-            _mb.Clear();
-            Color32 top = MvColor.WithAlpha(tint, 0x22 / 255.0), bottom = MvColor.WithAlpha(tint, 0x55 / 255.0);
+            double rx = Math.Max(0.1, o.Hw) * 1.02, ry = GateRy, r = GateRoll, cy = GateCy;
+            v.Rx = rx;
+            v.Ry = ry;
             float x0 = (float)-rx, x1 = (float)rx, y0 = (float)-ry, y1 = (float)ry;
-            _mb.AddQuad(new Vector3(x0, y0), new Vector3(x1, y0), new Vector3(x1, y1), new Vector3(x0, y1), bottom, bottom, top, top);
-            bg.GetComponent<VertexColorFog>().Bind(_mb, "RollGateBg");
+            // 배경 그라데이션: 평소(아래 `55`)와 번쩍(아래 `aa`) 두 장을 만들어 켜고 끈다(런 중 메쉬 다시 쓰기 없음).
+            for (int f = 0; f < 2; f++)
+            {
+                var bg = MeshChild(v.Go.transform, f == 0 ? "Bg" : "BgFlash");
+                bg.localPosition = new Vector3(0, (float)cy, 0);
+                _mb.Clear();
+                Color32 top = MvColor.WithAlpha(tint, ObjectReaction.GateBgTop),
+                    bottom = MvColor.WithAlpha(tint, f == 0 ? ObjectReaction.GateBgBottom : ObjectReaction.GateBgBottomFlash);
+                _mb.AddQuad(new Vector3(x0, y0), new Vector3(x1, y0), new Vector3(x1, y1), new Vector3(x0, y1), bottom, bottom, top, top);
+                bg.GetComponent<VertexColorFog>().Bind(_mb, f == 0 ? "RollGateBg" : "RollGateBgFlash");
+                bg.GetComponent<MeshRenderer>().sortingOrder = 0;
+                bg.gameObject.SetActive(f == 0);
+            }
+            // 위로 흐르는 흰 줄 5개(L3635): 배경 위·롤 아래, 관문 면(XY 평면)에 둔다.
+            for (int i = 0; i < ObjectReaction.GateStripes; i++)
+            {
+                var sr = Flat(v.Go.transform, StripeName(i), _fxAtlas, Stripe, 1);
+                if (sr.sprite == null) continue;
+                var b = sr.sprite.bounds.size;
+                sr.transform.localScale = new Vector3((float)(rx * ObjectReaction.StripeHalfW * 2) / Mathf.Max(0.0001f, b.x * StripeFillX),
+                    (float)ObjectReaction.StripeThick / Mathf.Max(0.0001f, b.y * StripeFillY), 1f);
+                sr.color = new Color(1f, 1f, 1f, (float)ObjectReaction.StripeAlpha);
+            }
             int slot = 0, ny = Math.Max(2, (int)Math.Round(ry * 2 / (r * 1.9))), nx = Math.Max(2, (int)Math.Round(rx * 2 / (r * 1.9)));
             for (int k = 0; k <= ny; k++)
             {
                 float y = (float)(cy - ry + k * (ry * 2 / ny));   // 정본 c.y + ry − k·… (캔버스 아래 +) → 아래부터 위로
-                Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3(x0, y, 0), 1); slot++;
-                Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3(x1, y, 0), 1); slot++;
+                Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3(x0, y, 0), 2); slot++;
+                Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3(x1, y, 0), 2); slot++;
             }
-            for (int k = 1; k < nx; k++) { Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3((float)(-rx + k * (rx * 2 / nx)), (float)(cy + ry), 0), 1); slot++; }
+            for (int k = 1; k < nx; k++) { Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3((float)(-rx + k * (rx * 2 / nx)), (float)(cy + ry), 0), 2); slot++; }
         }
+
+        /// <summary>
+        /// 빌보드가 아닌 평면 스프라이트 자식(이름으로 찾고 없으면 만든다). 관문 면(XY 평면)에 붙는 줄·흰 줄용. 그림이 없으면 끈다.
+        /// </summary>
+        SpriteRenderer Flat(Transform root, string name, string atlas, string sprite, int order)
+        {
+            var t = root.Find(name);
+            SpriteRenderer sr;
+            if (t == null)
+            {
+                var go = new GameObject(name);
+                go.transform.SetParent(root, false);
+                sr = go.AddComponent<SpriteRenderer>();
+                sr.sharedMaterial = _spriteMaterial;
+            }
+            else sr = t.GetComponent<SpriteRenderer>();
+            sr.sprite = _sprites != null ? _sprites.Get(atlas, sprite) : null;
+            sr.sortingOrder = order;
+            sr.color = Color.white;
+            sr.flipX = false;
+            sr.transform.localPosition = Vector3.zero;
+            sr.transform.localRotation = Quaternion.identity;
+            sr.transform.localScale = Vector3.one;
+            sr.gameObject.SetActive(sr.sprite != null);
+            return sr;
+        }
+
 
         void BuildWarpGate(View v, RunObject o)
         {
@@ -307,8 +453,31 @@ namespace MV.View
             // 기둥(원근 기울기 포함 그림, 왼쪽 flipX)은 받침 위·중간 발판 아래(정본 순서: 받침 → 기둥 → 중간 발판).
             Part(v, 0, _atlas, SpriteAt(o, 0), new Vector3((float)-WarpGateLayout.PostX, 0, 0), 0, true);
             Part(v, 1, _atlas, SpriteAt(o, 0), new Vector3((float)WarpGateLayout.PostX, 0, 0), 0);
+            // 매달린 장난감 줄(L3221, 관문 면 XY 평면) → 공. 줄은 발판 위, 공은 줄 위.
             for (int i = 0; i < 3; i++)
-                Part(v, 2 + i, _atlas, "World_Obj_Arch_Toy_" + i, new Vector3((float)WarpGateLayout.ToyDx[i], 3.3f, 0), 4);
+            {
+                var str = Flat(v.Go.transform, StringName(i), _fxAtlas, Square, 4);
+                if (str.sprite != null) str.color = MvColor.ToColor32(_cfg.OutlineColor);
+                Part(v, 2 + i, _atlas, "World_Obj_Arch_Toy_" + i, new Vector3((float)WarpGateLayout.ToyDx[i], (float)ObjectReaction.ToyBallY, 0), 5);
+            }
+            // 금빛 관문: 광륜(L3215, 맨 먼저)·기둥 위 별(L3223, 맨 나중).
+            v.Gold = gold;
+            if (gold)
+            {
+                var glow = Part(v, 5, _fxAtlas, GlowLin, new Vector3(0, (float)ObjectReaction.GlowY, 0), -1);
+                if (glow.sprite != null)
+                {
+                    glow.transform.localScale = Vector3.one * ((float)(ObjectReaction.GlowR * 2) / Mathf.Max(0.0001f, glow.sprite.bounds.size.x));
+                    var c = (Color)MvColor.ToColor32(ObjectReaction.GlowColor);
+                    c.a = 1f;   // Fx_Glow_Lin 중심 알파 ≈ 0.45(정본 0.55) [근사]
+                    glow.color = c;
+                }
+                for (int s = 0; s < 2; s++)
+                {
+                    var star = Part(v, 6 + s, _fxAtlas, Star, new Vector3((float)(s == 0 ? -WarpGateLayout.PostX : WarpGateLayout.PostX), (float)ObjectReaction.StarY, 0), 6);
+                    star.color = MvColor.ToColor32(ObjectReaction.StarColor);
+                }
+            }
         }
 
         void BuildWell(View v, RunObject o)
@@ -316,6 +485,8 @@ namespace MV.View
             Part(v, 0, _atlas, SpriteAt(o, 0), new Vector3(0, 1.25f, 0), 0);
             int n = _bricks.Count;
             if (v.Depth == null || v.Depth.Length != n) { v.Depth = new double[n]; v.Order = new int[n]; v.Scratch = new int[n]; }
+            if (v.Gone == null || v.Gone.Length != n) { v.Gone = new double[n]; v.Grow = new double[n]; }
+            for (int i = 0; i < n; i++) { v.Gone[i] = 0; v.Grow[i] = 1; }
             for (int i = 0; i < n; i++)
             {
                 var b = _bricks[i];
@@ -352,10 +523,12 @@ namespace MV.View
             return t;
         }
 
-        void Animate(View v, double nowMs, double playerZ)
+        void Animate(View v, double nowMs, double playerZ, double dt)
         {
             var o = v.Obj;
             double t = nowMs / 1000.0;
+            if (v.Shake > 0) v.Shake = Math.Max(0, v.Shake - dt);
+            if (v.Flash > 0) v.Flash = Math.Max(0, v.Flash - dt);
             switch (v.Shape)
             {
                 case ObjectShape.WarpGate:
@@ -364,27 +537,47 @@ namespace MV.View
                     for (int i = 0; i < 3; i++)
                     {
                         var b = v.Base[2 + i];
-                        v.Parts[2 + i].transform.localPosition = new Vector3(b.x + (float)WarpGateLayout.ToySway(i, t), b.y, b.z);
+                        double sw = WarpGateLayout.ToySway(i, t);
+                        v.Parts[2 + i].transform.localPosition = new Vector3(b.x + (float)sw, b.y, b.z);
+                        PlaceString(v.Go.transform.Find(StringName(i)), WarpGateLayout.ToyDx[i], sw);
                     }
+                    if (v.Gold)
+                        for (int s = 0; s < 2 && 6 + s < v.Parts.Count; s++)
+                        {
+                            var star = v.Parts[6 + s];
+                            if (star.sprite == null) continue;
+                            star.transform.localScale = Vector3.one * (float)(2 * ObjectReaction.StarRadius(t) / Mathf.Max(0.0001f, star.sprite.bounds.size.x));
+                        }
                     break;
                 case ObjectShape.Stair:
                     var ab = v.Base[3];
                     v.Parts[3].transform.localPosition = new Vector3(ab.x, ab.y + Mathf.Sin((float)(t * 5)) * 0.25f, ab.z);
                     break;
                 case ObjectShape.CoinPile:
+                {
+                    // 크기 k = 0.55 + 0.45·hp/max(L1525): 츄르 자리·크기 모두 k배(정본 c = s·body.scale.y).
+                    float k = o.HasHp ? (float)ObjectReaction.PickupScale(o.Hp, o.Max, o.Dead) : 1f;
                     for (int i = 0; i < v.Parts.Count && i < 6; i++)
                     {
                         var b = v.Base[i];
-                        v.Parts[i].transform.localPosition = new Vector3(b.x, b.y - (float)(Math.Sin(nowMs / 500.0 + i) * 0.02), b.z);
+                        v.Parts[i].transform.localPosition = new Vector3(b.x * k, (b.y - (float)(Math.Sin(nowMs / 500.0 + i) * 0.02)) * k, b.z);
+                        v.Parts[i].transform.localScale = Vector3.one * k;
                     }
                     break;
+                }
                 case ObjectShape.CatnipPot:
+                {
+                    float k = o.HasHp ? (float)ObjectReaction.PickupScale(o.Hp, o.Max, o.Dead) : 1f;
+                    if (v.Parts.Count > 0) v.Parts[0].transform.localScale = Vector3.one * k;
                     if (v.Parts.Count > 1 && v.Parts[1].sprite != null)
                     {
                         float r = (float)(0.14 * (0.8 + 0.2 * Math.Sin(nowMs / 200.0)));
-                        v.Parts[1].transform.localScale = Vector3.one * (2 * r / Mathf.Max(0.0001f, v.Parts[1].sprite.bounds.size.x));
+                        var b = v.Base[1];
+                        v.Parts[1].transform.localPosition = new Vector3(b.x * k, b.y * k, b.z);
+                        v.Parts[1].transform.localScale = Vector3.one * (2 * r * k / Mathf.Max(0.0001f, v.Parts[1].sprite.bounds.size.x));
                     }
                     break;
+                }
                 case ObjectShape.Mouse:
                     if (v.Frames != null && v.Frames.Length > 0)
                     {
@@ -394,11 +587,92 @@ namespace MV.View
                     }
                     break;
                 case ObjectShape.Well:
+                    AnimateBricks(v, dt);
                     SortBricks(v);
+                    break;
+                case ObjectShape.Junk:
+                {
+                    // 벽 흔들림(L1484): 그림 전체 x += sin(shake·90)·0.05, 흔들리는 동안 흰 섬광(L3629).
+                    bool on = v.Shake > 0;
+                    if (on) v.Go.transform.position += new Vector3((float)ObjectReaction.WallShakeX(v.Shake), 0, 0);
+                    if (v.HasJunkFlash && v.Parts.Count > 2 && v.Parts[2].gameObject.activeSelf != on) v.Parts[2].gameObject.SetActive(on);
+                    break;
+                }
+                case ObjectShape.RollGate:
+                    AnimateRollGate(v, t);
                     break;
             }
             if (v.Label != null && v.Label.gameObject.activeSelf && (o.Kind.labelKind == LabelKind.EnemyHp || o.Kind.labelKind == LabelKind.BoxHp))
                 v.Label.SetText(LabelText != null ? LabelText(o) : DefaultLabel(o));
+        }
+
+        static readonly string[] s_stringNames = { "String0", "String1", "String2" };
+        static readonly string[] s_stripeNames = { "Stripe0", "Stripe1", "Stripe2", "Stripe3", "Stripe4" };
+        static string StringName(int i) => s_stringNames[i];
+        static string StripeName(int i) => s_stripeNames[i];
+
+        /// <summary>장난감 줄: 발판 (dx, 4.6) → 공 (dx + sw, 3.3) 선분을 관문 면 위 얇은 사각형으로.</summary>
+        static void PlaceString(Transform str, double dx, double sw)
+        {
+            if (str == null || !str.gameObject.activeSelf) return;
+            var sr = str.GetComponent<SpriteRenderer>();
+            if (sr == null || sr.sprite == null) return;
+            double ax = dx, ay = ObjectReaction.ToyTopY, bx = dx + sw, by = ObjectReaction.ToyBallY;
+            double len = Math.Sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
+            var size = sr.sprite.bounds.size;
+            str.localPosition = new Vector3((float)((ax + bx) / 2), (float)((ay + by) / 2), 0);
+            str.localRotation = Quaternion.Euler(0, 0, (float)(Math.Atan2(by - ay, bx - ax) * 180 / Math.PI) + 90f);
+            str.localScale = new Vector3((float)ObjectReaction.ToyStringThick / Mathf.Max(0.0001f, size.x), (float)len / Mathf.Max(0.0001f, size.y), 1f);
+        }
+
+        /// <summary>우물: 벽돌 숨김·다시 자람(L1474~1475)과 더미 흔들림 x(L1477).</summary>
+        static void AnimateBricks(View v, double dt)
+        {
+            if (v.Gone == null) return;
+            float sx = (float)ObjectReaction.WellShakeX(v.Shake);
+            int n = Math.Min(v.Gone.Length, v.Parts.Count - 1);
+            for (int i = 0; i < n; i++)
+            {
+                double sc = ObjectReaction.BrickStep(ref v.Gone[i], ref v.Grow[i], dt);
+                var tr = v.Parts[1 + i].transform;
+                var b = v.Base[1 + i];
+                tr.localPosition = new Vector3(b.x + sx, b.y, b.z);
+                tr.localScale = Vector3.one * (float)sc;
+            }
+        }
+
+        /// <summary>롤 관문: 번쩍 배경 바꾸기, 흰 줄 흐름, 통과 뒤 가라앉기(안쪽 y −sink·6, 0.5 넘으면 숨김, L1503).</summary>
+        static void AnimateRollGate(View v, double t)
+        {
+            var o = v.Obj;
+            var root = v.Go.transform;
+            float dy = (float)ObjectReaction.GateSinkY(o.Sink);
+            v.Ds.SetAlphaScale(ObjectReaction.GateHidden(o.Sink) ? 0f : 1f);
+            bool flash = v.Flash > 0;
+            var bg = root.Find("Bg");
+            if (bg != null)
+            {
+                bg.localPosition = new Vector3(0, (float)GateCy + dy, 0);
+                if (bg.gameObject.activeSelf == flash) bg.gameObject.SetActive(!flash);
+            }
+            var bgFlash = root.Find("BgFlash");
+            if (bgFlash != null)
+            {
+                bgFlash.localPosition = new Vector3(0, (float)GateCy + dy, 0);
+                if (bgFlash.gameObject.activeSelf != flash) bgFlash.gameObject.SetActive(flash);
+            }
+            for (int i = 0; i < ObjectReaction.GateStripes; i++)
+            {
+                var s = root.Find(StripeName(i));
+                if (s == null || !s.gameObject.activeSelf) continue;
+                s.localPosition = new Vector3(0, (float)(GateCy + ObjectReaction.StripeY(i, t, v.Ry)) + dy, 0);
+            }
+            if (dy != 0)
+                for (int i = 0; i < v.Parts.Count && i < v.Base.Count; i++)
+                {
+                    var b = v.Base[i];
+                    v.Parts[i].transform.localPosition = new Vector3(b.x, b.y + dy, b.z);
+                }
         }
 
         /// <summary>우물 벽돌 그룹 안 정렬: 카메라 깊이 내림차순(먼 것 먼저, 정본 `list.sort((a,b)=>b.d−a.d)`).</summary>
