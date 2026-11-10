@@ -154,8 +154,8 @@ namespace MV.Data
             .Int("protoType").Float("hw", true).Float("hd", true).Enum<Hittable>("hittable").Bool("breakable").Bool("blocks")
             .Fk("hpRuleId", HpRuleData.Table).Fk("hitReactionId", HitReactionData.Table).Fk("chargeGateId", ChargeGateData.Table)
             .Fk("receiveId", ReceiveConditionData.Table).Fk("moveAiId", MoveAiData.Table).Fk("enemyId", EnemyData.Table)
-            .Enum<RewardSource>("rewardSource").Consume("reward", runExtension: true).Consume("hitReward")
-            .Res("sprite", MvAtlas.Theme).Enum<SpritePick>("spritePick").Enum<ObjectViewShape>("viewShape").Res("spriteSoul", MvAtlas.Theme).Colors("tint")
+            .Enum<RewardSource>("rewardSource").Consume("reward", runExtension: true).FkGroup("dropId", DropData.Table).Consume("hitReward")
+            .Res("sprite", MvAtlas.Theme).Enum<SpritePick>("spritePick").Enum<ObjectViewShape>("viewShape").Res("spriteSoul", MvAtlas.Theme).Colors("tint").Str("gradeColorFrom")
             .Enum<LabelKind>("labelKind").Str("labelKey").Float("sortBias")
             .Sound("hitSound").Sound("breakSound").Effect("hitEffect").Effect("breakEffect");
 
@@ -181,6 +181,13 @@ namespace MV.Data
         public ObjectViewShape viewShape { get; private set; }
         public string spriteSoul { get; private set; }
         public IReadOnlyList<string> tint { get; private set; }
+        /// <summary>
+        /// 테두리 등급색 출처(MV-SPEC-02 05 게이트 색 규칙, Q-18): <c>StairLv</c> = 현재 계단 Lv, <c>WeaponTier</c> = 현재 생산 지팡이 단계.
+        /// 색 표는 <c>103_item.gradeCol</c> 공용. 빈칸 = <c>tint</c> 고정색. 화면 적용은 MV-RUN-SPEC2/MV-VIEW.
+        /// </summary>
+        public string gradeColorFrom { get; private set; }
+        /// <summary>파괴 보상 드롭 묶음(<c>801_drop</c>, MV-SPEC-02 6-7 원석 10%, Q-16). 0 = 없음. 런 적용은 MV-RUN-SPEC2(그때 reward를 비움).</summary>
+        public int dropId { get; private set; }
         public LabelKind labelKind { get; private set; }
         public string labelKey { get; private set; }
         public double sortBias { get; private set; }
@@ -214,6 +221,8 @@ namespace MV.Data
             viewShape = E(r, "viewShape", ObjectViewShape.Single);
             spriteSoul = S(r, "spriteSoul");
             tint = Strs(r, "tint");
+            gradeColorFrom = S(r, "gradeColorFrom");
+            dropId = I(r, "dropId");
             labelKind = E(r, "labelKind", LabelKind.None);
             labelKey = S(r, "labelKey");
             sortBias = D(r, "sortBias");

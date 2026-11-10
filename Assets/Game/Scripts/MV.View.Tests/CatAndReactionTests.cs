@@ -34,7 +34,7 @@ namespace MV.View.Tests
             var offs = new List<(double dx, double dz)>();
             CatLayout.CloneOffsets(ViewTestTables.Load(), offs);
             double[,] proto = { { -0.95, -0.9 }, { 0.95, -0.9 }, { -1.9, -1.8 }, { 1.9, -1.8 } };   // CLONE_OFF L831
-            Assert.That(offs.Count, Is.EqualTo(4));
+            Assert.That(offs.Count, Is.EqualTo(30)); // MV-SPEC-02 Q-09: 30자리, 앞 4자리는 정본 값
             for (int i = 0; i < 4; i++)
             {
                 Assert.That(offs[i].dx, Is.EqualTo(proto[i, 0]).Within(1e-12), "dx " + i);

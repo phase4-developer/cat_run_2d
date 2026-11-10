@@ -1,7 +1,7 @@
-id	name	sort	active	areaFrom	areaTo	mapIcon	mapCol1	mapCol2	bgm
-301001001	냥법사 마을	1	1	1	5	UI_Icon_Map_Zone1	#a85a4a	#e0a070	bgm_run
-301001002	속삭이는 숲	2	1	6	10	UI_Icon_Map_Zone2	#4a6aa8	#8ab0e0	bgm_run
-301001003	수정 동굴	3	1	11	15	UI_Icon_Map_Zone3	#8a5aa8	#c08ad8	bgm_run
-301001004	구름 고개	4	1	16	20	UI_Icon_Map_Zone4	#3a8a8a	#7ad0c8	bgm_run
-301001005	그림자 늪	5	1	21	25	UI_Icon_Map_Zone5	#c85a8a	#f0a8c8	bgm_run
-301001006	마녀의 성	6	1	26	30	UI_Icon_Map_Zone6	#3a3a8a	#9a9ae8	bgm_run
+id	name	sort	active	areaFrom	areaTo	mapIcon	mapCol1	mapCol2	bgm	weaponLookSet
+301001001	냥법사 마을	1	1	1	5	UI_Icon_Map_Zone1	#a85a4a	#e0a070	bgm_run	base
+301001002	속삭이는 숲	2	1	6	10	UI_Icon_Map_Zone2	#4a6aa8	#8ab0e0	bgm_run	base
+301001003	수정 동굴	3	1	11	15	UI_Icon_Map_Zone3	#8a5aa8	#c08ad8	bgm_run	base
+301001004	구름 고개	4	1	16	20	UI_Icon_Map_Zone4	#3a8a8a	#7ad0c8	bgm_run	base
+301001005	그림자 늪	5	1	21	25	UI_Icon_Map_Zone5	#c85a8a	#f0a8c8	bgm_run	base
+301001006	마녀의 성	6	1	26	30	UI_Icon_Map_Zone6	#3a3a8a	#9a9ae8	bgm_run	base

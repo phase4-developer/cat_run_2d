@@ -61,7 +61,7 @@ namespace MV.Data
         public const string Table = "301_zone";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("sort").Bool("active")
             .Int("areaFrom", true).Int("areaTo", true).Res("mapIcon", MvAtlas.UiLobby).Color("mapCol1").Color("mapCol2")
-            .Sound("bgm");
+            .Sound("bgm").Str("weaponLookSet");
 
         public int areaFrom { get; private set; }
         public int areaTo { get; private set; }
@@ -69,6 +69,8 @@ namespace MV.Data
         public string mapCol1 { get; private set; }
         public string mapCol2 { get; private set; }
         public string bgm { get; private set; }
+        /// <summary>지팡이 외형 세트 이름(MV-SPEC-02 9-1·6-4, Q-33). 그림이 오기 전까지 모든 Zone이 같은 세트.</summary>
+        public string weaponLookSet { get; private set; }
 
         public ZoneData(TSVRow r) : base(r) { }
 
@@ -81,6 +83,7 @@ namespace MV.Data
             mapCol1 = S(r, "mapCol1");
             mapCol2 = S(r, "mapCol2");
             bgm = S(r, "bgm");
+            weaponLookSet = S(r, "weaponLookSet");
         }
     }
 
@@ -91,6 +94,7 @@ namespace MV.Data
         public const string Table = "302_area";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("areaNo", true).Fk("zoneId", ZoneData.Table, true)
             .Int("sort").Bool("active").Fk("themeId", ThemeData.Table, true).Int("hp", true).Int("needSouls", true)
+            .Floats("sgateM").Int("startGold")
             .FkGroup("floorGroup", AreaFloorData.Table).Int("fieldSeedArea").Sound("bgm").Res("mapIcon", MvAtlas.UiLobby)
             .Res("bg", MvAtlas.Address).Consume("clearReward").Consume("firstClearReward");
 
@@ -99,6 +103,10 @@ namespace MV.Data
         public int themeId { get; private set; }
         public int hp { get; private set; }
         public int needSouls { get; private set; }
+        /// <summary>계단 게이트 1회 충전 필요 피해 M, 계단 Lv 1부터(MV-SPEC-02 6-2 표, Q-06·Q-19). 칸 수 = Lv 상한. 런 적용은 MV-RUN-SPEC2.</summary>
+        public IReadOnlyList<double> sgateM { get; private set; }
+        /// <summary>이 Area 시작 골드(MV-SPEC-02 11-1, Q-31: Area 2부터 150). 정산 적용은 MV-RUN-SPEC2.</summary>
+        public int startGold { get; private set; }
         /// <summary>빈칸 = areaNo.</summary>
         public int floorGroup { get; private set; }
         /// <summary>빈칸 = areaNo − 1(클램프 전 A).</summary>
@@ -119,6 +127,8 @@ namespace MV.Data
             themeId = I(r, "themeId");
             hp = I(r, "hp");
             needSouls = I(r, "needSouls");
+            sgateM = Doubles(r, "sgateM");
+            startGold = I(r, "startGold");
             floorGroup = string.IsNullOrEmpty(r.Get("floorGroup")) ? areaNo : I(r, "floorGroup");
             fieldSeedArea = string.IsNullOrEmpty(r.Get("fieldSeedArea")) ? areaNo - 1 : I(r, "fieldSeedArea");
             bgm = S(r, "bgm");
@@ -238,9 +248,13 @@ namespace MV.Data
     public sealed class TemplateData : MvRow
     {
         public const string Table = "310_template";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active").Float("endZ", true);
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active").Float("endZ", true)
+            .Float("midFromZ").Float("midToZ");
 
         public double endZ { get; private set; }
+        /// <summary>중간 구역(감속 <c>RUN_SPEED_MID</c>) 시작·끝 z(MV-SPEC-02 4-1, Q-15). 빈칸 = 감속 구간 없음. 위치는 원작 확인 뒤.</summary>
+        public double? midFromZ { get; private set; }
+        public double? midToZ { get; private set; }
 
         public TemplateData(TSVRow r) : base(r) { }
 
@@ -248,6 +262,8 @@ namespace MV.Data
         {
             base.Init(r);
             endZ = D(r, "endZ");
+            midFromZ = string.IsNullOrEmpty(r.Get("midFromZ")) ? (double?)null : D(r, "midFromZ");
+            midToZ = string.IsNullOrEmpty(r.Get("midToZ")) ? (double?)null : D(r, "midToZ");
         }
     }
 
@@ -544,6 +560,8 @@ namespace MV.Data
             "shiftExtra", "landGap", "tBase", "tPerStep", "tMax", "accelP", "riseMin", "risePerK", "riseAhead", "dropSec",
             "dropH", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay", "rlFlyMs",
             "rlEndPad",
+            // MV-SPEC-02 6-5 새 공식 상수(Q-07, 런 적용은 MV-RUN-SPEC2): 압축 시작 N, 연출 시간 상한·기본·칸당·앞당김, 칸 튕김 배율.
+            "cmpFrom", "riseCap", "riseBase", "risePerStep", "riseLead", "stepPop",
         };
 
         /// <summary>설정 행(rowType = Config)이 채워야 하는 열.</summary>
@@ -555,13 +573,16 @@ namespace MV.Data
         {
             var s = new MvSchema(Table).Id().Enum<ClimbRowType>("rowType", true).Key(required: false);
             foreach (var c in s_configColumns) s.Float(c);
-            return s.Int("at").Color("accent").Color("sky1").Color("sky2").Color("sky3").Float("night")
+            return s.Ints("cmpBandFrom").Ints("cmpBandC").Int("at").Color("accent").Color("sky1").Color("sky2").Color("sky3").Float("night")
                 .Effect("enterEffect").Sound("enterSound");
         }
 
         readonly Dictionary<string, double> _config = new Dictionary<string, double>(StringComparer.Ordinal);
 
         public ClimbRowType rowType { get; private set; }
+        /// <summary>압축 구간 시작 N(오름차순)과 구간별 C(MV-SPEC-02 6-5: 31~99 4, 100~149 5 …). 설정 행만.</summary>
+        public IReadOnlyList<int> cmpBandFrom { get; private set; }
+        public IReadOnlyList<int> cmpBandC { get; private set; }
         public int at { get; private set; }
         public string accent { get; private set; }
         public string sky1 { get; private set; }
@@ -581,6 +602,8 @@ namespace MV.Data
             if (rowType == ClimbRowType.Config)
                 foreach (var c in s_configColumns)
                     _config[c] = D(r, c);
+            cmpBandFrom = Ints(r, "cmpBandFrom");
+            cmpBandC = Ints(r, "cmpBandC");
             at = I(r, "at");
             accent = S(r, "accent");
             sky1 = S(r, "sky1");

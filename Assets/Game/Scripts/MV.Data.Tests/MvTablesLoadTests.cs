@@ -15,19 +15,19 @@ namespace MV.Data.Tests
             ["05_contentOpen"] = 18, ["06_balancePreset"] = 3, ["07_consumeType"] = 26, ["08_adPlacement"] = 7, ["09_uiResource"] = 12,
             ["10_lobbyUpgrade"] = 3, ["11_stairLevel"] = 4, ["12_weaponLevel"] = 8, ["13_areaUpgrade"] = 8, ["14_rebirthPerk"] = 9,
             ["16_levelPrice"] = 812,
-            ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 8, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,
+            ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 12, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,
             ["107_chargeGate"] = 3, ["108_receiveCondition"] = 7, ["109_moveAI"] = 3, ["110_card"] = 92, ["111_cardPool"] = 11,
             ["112_cardEffect"] = 26, ["113_god"] = 12, ["114_hpRule"] = 7, ["115_cardTier"] = 5,
-            ["300_runConfig"] = 168, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15,
+            ["300_runConfig"] = 171, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15,
             ["310_template"] = 10, ["311_templateObject"] = 123, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
-            ["314_spawnGroup"] = 9, ["320_camera"] = 3, ["330_climb"] = 5,
+            ["314_spawnGroup"] = 35, ["320_camera"] = 3, ["330_climb"] = 5,
             ["400_content"] = 5, ["401_modeStage"] = 53, ["402_modeRule"] = 4, ["410_questGroup"] = 14, ["413_repeatQuest"] = 16,
             ["414_passQuest"] = 60, ["420_achievement"] = 19, ["499_contentConfig"] = 42,
             ["700_productTab"] = 6, ["701_product"] = 29, ["702_shopSection"] = 4,
             ["430_pet"] = 16, ["431_petBuild"] = 16, ["440_research"] = 25, ["450_friend"] = 10, ["451_friendPower"] = 3,
             ["460_rune"] = 4, ["470_gearPart"] = 7, ["471_gearRarity"] = 8, ["480_blessing"] = 4, ["485_attendance"] = 7,
             ["490_roadMap"] = 6, ["495_godLevel"] = 5,
-            ["801_drop"] = 2, ["802_randomBox"] = 34, ["803_randomGuaranteeLink"] = 0, ["804_randomGuarantee"] = 0,
+            ["801_drop"] = 4, ["802_randomBox"] = 34, ["803_randomGuaranteeLink"] = 0, ["804_randomGuarantee"] = 0,
         };
 
         [TearDown]
@@ -79,7 +79,7 @@ namespace MV.Data.Tests
             Assert.That(enemyDrop[0].rewardType, Is.EqualTo((int)ConsumeType.RunDia));
             Assert.That(enemyDrop[0].rewardValueRule, Is.EqualTo(RewardValueRule.HalfDiaCapCeil));
             // 07 §7.6.5 무리·분신.
-            Assert.That(t.SpawnGroup.GetGroup(2).Count, Is.EqualTo(4));
+            Assert.That(t.SpawnGroup.GetGroup(2).Count, Is.EqualTo(30)); // MV-SPEC-02 Q-09 분신 상한 30(5번째부터 더미 위치)
             Assert.That(t.SpawnGroup.Get(314001002).dz, Is.EqualTo(6.9).Within(1e-9));
             // 07 §7.7.2 가호 카드 등급, 330 lap.
             Assert.That(t.CardTier.Datas.OrderBy(x => x.tierIndex).Select(x => x.need), Is.EqualTo(new[] { 5, 10, 20, 40, 75 }));

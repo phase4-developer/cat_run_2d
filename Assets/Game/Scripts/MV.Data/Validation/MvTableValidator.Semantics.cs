@@ -123,6 +123,17 @@ namespace MV.Data
                     r.Error(name, x.id, "diaCells", $"생선·캣닢 칸이 겹칩니다(idx {idx})");
             }
 
+            // 탈출 가능(08 §8.2.4, MV-SPEC-02 Q-32): 개방 때 넘친 구출 고양이는 남지 않으므로 Area마다 결계 고양이 합 ≥ 요구 증가분.
+            // 경고로 둔다(D-70 「경고로 둔다」). Area 30 원작 1,755는 Area 30 결계 고양이 임시 값으로 맞춘다.
+            int prevNeed = 0;
+            foreach (var a in t.Area.Datas.OrderBy(x => x.areaNo))
+            {
+                int cats = t.AreaFloor.GetGroup(a.floorGroup).Sum(x => x.souls);
+                if (a.needSouls - prevNeed > cats)
+                    r.Warn(AreaData.Table, a.id, "needSouls", $"요구 증가분 {a.needSouls - prevNeed}이 결계 고양이 합 {cats}보다 커서 이 Area를 나갈 수 없습니다");
+                prevNeed = a.needSouls;
+            }
+
             foreach (var g in t.Area.Datas.GroupBy(a => a.floorGroup).Where(g => g.Count() > 1))
                 if (t.AreaFloor.GetGroup(g.Key).Any(x => x.cellMode == CellMode.Baked))
                     r.Warn(AreaData.Table, null, "floorGroup",
