@@ -49,3 +49,5 @@ crashlytics-build.properties
 *.apk
 *.aab
 *.unitypackage
+Assets/Work_Goju.meta
+Assets/Work_Goju
