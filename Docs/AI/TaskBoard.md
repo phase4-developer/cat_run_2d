@@ -32,28 +32,42 @@
 | MV-PLAY-INT 2차 | 완료 | `ac38d4d` | 시설 단계·`meta.setMuted`·구매 결과(`MetaResult.LvBefore/After·Tier`)·보상 광고 관문(`WatchAdForReward(key,done,gate)`, 사용 수 1번)·Fx 머티리얼 주소·디버그 상수. 결정 후보 D-PI2-1 가짜 광고 여는 코드 2곳 합치기, D-PI2-2 TMP Essential Resources(`TMP Settings`) 없음 — 배치 PlayMode에서 로비 1초 넘으면 No graphic device 오류, 한글 글꼴 결정과 함께 |
 | MV-VIEW 3차 고양이·충돌 연출 | 완료 | `3a2c686` | 전체 확인 `755bab57f29b` PASS(EditMode 489, PlayMode 7). CatView(플레이어·친구 최대 4, 뒷모습, Climb/Run/Idle 프레임, 단계 아틀라스 필요 시 로드), ObjectReaction(벽 흔들림·섬광·롤 관문·벽돌 빠짐·광륜·별·장난감 줄), 막힘 뒤 고양이 정지. 화면·에뮬레이터 NOT_RUN(설정은 빌드·에뮬레이터 허용 `00bfe28`, 실행기에 에뮬레이터 실행 기능 없음, 빌드는 MV-BUILD-ANDROID). 요청 MV-DATA: `106_hitReaction` chargeWell `objShake` 0→1. MV-FX: 막힘 「쾅!」 글자. 결정 후보 D-VIEW-BLOCK |
 | MV-VIEW 4차 투사체·창·회전 장난감 | 완료 | `1252823` | 담당 잡 `c89662c378a6` PASS(EditMode 501). 실기 화면에서 털실 투사체 보임. 화면 크기·회전 방향 손맛 NOT_RUN. 요청 MV-RUN: `RunState.SpinA` 올리기(지금 뷰가 게임 시간으로 계산), `RunProjectile.El`. 결정 후보: 풀 상한 64, 등급 8 초과는 8 |
-| MV-CONTENT-* (G7) | 보류: 새 기획 대조 대기(MV-SPEC-02 Q-01) | asmdef `14db621` | 미배정 계약 배정 멈춤. MV-META-QUEST 1차는 담당 중지, 브랜치 `ai/MV-META-quest` `99cfff3`(compile 수정까지, 병합 안 함)로 보관 |
-| MV-META-RESEARCH (G7) | 1차 완료(새 기획 전 병합, 그대로 둠) | `978d3be`, 병합 `7c09c44` | 잡 `1b18270efe96` compile PASS·EditMode 543/543, 화면·PlayMode NOT_RUN. 총괄 연결(MV.Boot `ctx.MetaModifiers = MvResearch.Modifiers`, 성장 탭 `OpenMetaHandler`, Addressables `UIPopup_Research`)도 Q-01 뒤로 보류. 결정 후보 D-RESEARCH-1: 08 「5계열 동시」 vs 09 저장 `run` 1칸 → 지금 1계열만 |
-| MV-QA-ACCEPT (G8) | 보류: 새 기획 대조 대기(MV-SPEC-02 Q-04) | — | 인수 W-04·W-05·W-07·덤프 대조 기준 바뀜 |
+| MV-CONTENT-* (G7) | 진행(보류 해제: Q-01 유지, dev `0fb018f`) | asmdef `14db621` | MV-META-QUEST 1차 재개(칸 c, `ai/MV-META-quest` `99cfff3`에서 이어감). ATTENDANCE·SHOP·G7 모드 계약 다시 배정 예정 |
+| MV-META-RESEARCH (G7) | 1차 완료 | `978d3be`, 병합 `7c09c44` | 잡 `1b18270efe96` compile PASS·EditMode 543/543, 화면·PlayMode NOT_RUN. 총괄 연결 진행(Q-01 유지): MV.Boot `ctx.MetaModifiers = MvResearch.Modifiers`, 성장 탭 `OpenMetaHandler`, Addressables `UIPopup_Research`. 결정 후보 D-RESEARCH-1: 08 「5계열 동시」 vs 09 저장 `run` 1칸 → 지금 1계열만 |
+| MV-QA-ACCEPT (G8) | 보류: 인수 기준 새 기준 반영 뒤(Q-03·Q-04 결정됨, 반영 계약 없음) | — | 인수 W-04·W-05·W-07·덤프 기준·밸런스 프리셋·골든 값을 새 기준으로 고친 뒤 진행 |
 | 표 구글 시트 | 2차 완료(2026-11-10, 사용자 「컬럼명과 데이터는 구분되게 색상 정리 … 최상단에 각 컬럼 기능 설명, 별도 시트로 각 테이블 시트 설명 … 참고는 정크버스터 테이블로 … 테이블 사용시 시트 규칙에 추가」) | 시트 [moonVillage_Table](https://docs.google.com/spreadsheets/d/1f5D-B2bEbgKoqO2jHk_Ki5RU3vmlo_JlbU15cOcl4U8/edit) (내 드라이브, 링크 그대로) | 탭 71 = 「시트규칙」·「표목록」(표 69개의 이름·하는 일·정본 절·읽는 코드·열·행 수) + 표 69탭(이름 = `Assets/Game/GameData/Table/TSV/<이름>.txt`). 머리 3줄 색: 설명 회색 기울임 / 형식 하늘색 / 열 이름 노랑 굵게, 데이터 흰색, 위 3줄·첫 열 고정. 열 설명 844/844 채움(기획서 539 + 보강 305, 그중 「(추정)」 13: 410 selectionType·selectionCount, 701 popupType·banner·displayImage·badgeType·badgeValue·startTime·endTime, 702 sectionType·hideIfEmpty, 460 grade, 804 priority). 규칙은 기획서 07 §7.1.1a. 대조: 데이터 14,843칸 차이 0(118칸은 gviz가 비워 미확인). 정본은 저장소 TSV. 다시 만들기 `py -3 -I C:/Project/MoonVillage.wt/_notes/tools/make_table_xlsx.py <저장소> <출력.xlsx>`(입력 `coldesc.json`·`tabledesc.json`·`rules.tsv` 같은 폴더) → 「파일 → 가져오기 → 스프레드시트 바꾸기」 |
 | MV-BUILD-ANDROID 빌드 메서드 | 완료, 실기 실행 확인(2026-11-10) | `f2d802e`, 실기 수정 `b631b1e`·병합 (이 커밋 앞) | 갤럭시 S23 Ultra(Android 16)에 설치·실행, 30초 로그 E/Unity 0, 런 화면 캡처 정상(빌드 `b6051036c510`). 고친 것: Mono·ARMv7 → IL2CPP·ARM64(D-BUILD-DEV 변경), Addressables 그룹 전부 Local(사용자 「원격 에셋은 안쓸거니 다 로컬로」, `MvArtSetup`도), `Assets/Game/link.xml`(IL2CPP 코드 제거가 Framework 자동 등록을 지움), 빌드 전 TableBuilder로 Resources 표 산출물 생성·표 대체 경로 제거(사용자 「대체 경로로 읽지말고」). 전체 확인 `e6ba845508ef` PASS(EditMode 504, PlayMode 7). 체크리스트 `Docs/AI/ANDROID_BUILD_CHECKLIST.md`. 남음: 경고 `SpriteAtlasManager.atlasRequested`(Atlas_Fx_Common·테마), 라벨 키 그대로 표시(현지화 미연결), `google-services.json` 없음, 실행기 설치·실행 모드 없음(중앙 r-73959ba9f77b) |
 | MV-NET-SERVER 서버 전환 | 보류(서버 붙일 때, 사용자 「응 그렇게 진행해」 2026-11-10) | — | ① network.firebase 연결·Firebase SDK(App·Functions) — 완료(dev `b8fde6f`, 사용자 「SDK 내려받기 허용」) ② 부팅에서 `NetworkManager.SetServerProvider(new FirebaseNetworkProvider(...))` 1번, 로그인 패키지와 같은 FirebaseApp ③ `NetworkManager.DefaultRoute = Server` 1줄(지금 GameBootstrap이 Local 고정), setter가 대기 요청 취소·캐시 비움이라 요청 전 1번만 ④ `DefaultTimeout`을 null로 끄지 않고 경로 바꿀 때 시간 제한도 함께 설정 ⑤ `SetResponseApplier`는 한 슬롯 — `NetworkDataBinding.Connect`와 게임 자체 반영(MvMeta 등) 충돌 먼저 확인 (Framework 평가 2026-11-10, 중계 경유 사용자 「응 전달해」: ④ 로컬 시간 제한 채택 예정 — 지금 우회는 로컬 요청에 `request.Timeout`을 길게, ⑤ 반영기 여러 개 채택 예정 — 지금 우회는 게임 반영기 하나를 `SetResponseApplier`로 등록하고 그 안에서 `NetworkDataBinding.Apply(repository, request, result)`를 직접 불러 Connect와 게임 반영을 함께) ⑥ 로컬·서버 응답 동일성 시험 + DefaultRoute만 바꿔도 요청 클래스가 도는 회귀 시험, 서버 함수 없는 동안 가짜 `INetworkProvider`로 시험 틀 먼저. 출처: mv-process-improve 소스 정리(컴파일 미확인) ⑦ 서버 전환 때 확인: Framework가 로컬 응답의 시간 필드(TimeKey) 누락 결함을 고쳤는지(오류 코드 표는 게임 몫), 로컬·서버 동일성 시험 도구는 Framework가 서버 전환 때로 미룸 |
 
-## 보류: 새 기획 대조 대기 (MV-SPEC-02, 2026-11-10)
+## 보류: 새 기획 대조 대기 (MV-SPEC-02, 2026-11-10 갱신)
 
-근거: 중계 경유 사용자 원문 「정리가 끝나면 오케스트라 총괄한테 현재 남은 작업중에서 변경되거나 수정되어야할 사항이 있으면 우선 보류하고 다른 작업만 완성하라고 전달하자」. 기준 `Docs/MV-SPEC-02/DiffReport.md`(Q-01~Q-35 미답), 용어 `Docs/MV-SPEC-02/TermIdMap.md`(보고·계약에 id 병기). 애매하면 DiffReport 항목 ID·영향 칸으로 판단, 그래도 애매하면 보류.
+근거: 중계 경유 사용자 원문 「정리가 끝나면 오케스트라 총괄한테 현재 남은 작업중에서 변경되거나 수정되어야할 사항이 있으면 우선 보류하고 다른 작업만 완성하라고 전달하자」. 결정 갱신: dev `0fb018f` `Docs/MV-SPEC-02/DiffReport.md` 「결정 기록」(사용자 원문 일부 「q-02 리소스는 이제 디자이너가 제작한걸로 교체할거라 유지 q-01도 유지, q-03,q-04는 새기준 대조로 새기준에 없는 데이터는 테이블 시트에 별도로 색상 등으로 표기 … 계단 오르기 시간 공식은 새 공식으로 하는데 … 추후 조정가능하게 될 수있는 변수로 빼둘준비」). 용어 `Docs/MV-SPEC-02/TermIdMap.md`(보고·계약에 용어(id)). 애매하면 DiffReport 항목 ID·영향 칸으로 판단, 그래도 애매하면 보류.
 
-| 묶음 | 보류 항목 | Q |
+### 보류 해제(진행)
+| 묶음 | 항목 | 근거 |
 |---|---|---|
-| G7 | MV-CONTENT-* 전체, MV-META-QUEST(브랜치 보관), 미작성 ATTENDANCE·SHOP·G7 모드, RESEARCH 총괄 연결 | Q-01 |
-| G8 | MV-QA-ACCEPT | Q-04 |
-| 로비 | MV-UI-LOBBY 남은 것, MV-VIEW 로비 이름표·방석·난로, 아지트 시설 단계 표 | Q-02 |
-| 런 규칙·수치 | 계단 게이트 M·`107_chargeGate`, `330_climb` 열 추가, 지팡이 단계 `103_item`·`AddWeapon`, 분신 상한, `300_runConfig` 폭, 결계 막힘(D-VIEW-BLOCK), 하수인 위치 `311_templateObject`, `106_hitReaction` 값, MV-RUN SpinA·RunProjectile.El, MV-DATA objShake, MV-FX 「쾅!」 | Q-06~Q-19 |
-| 별자리냥·카드 | `113_god`·`110_card`·`495_godLevel`, 카드 공개(D-75) | Q-20~Q-22 |
-| 아웃게임·재화·광고 | 결과 광고 ×3 연결, 냥환생 해금·영구 업그레이드·Area 강화 항목, 보라 마법석, 표시 문구(Q-34) | Q-23~Q-35 |
+| G7 | MV-CONTENT-* 전체, MV-META-QUEST 재개, ATTENDANCE·SHOP·G7 모드 배정, RESEARCH Boot·성장 탭·Addressables 연결 | Q-01 유지 |
+| 로비 | MV-UI-LOBBY 남은 것, MV-VIEW 로비 이름표·방석·난로, 아지트 시설 단계 표. 구조는 다시 짜지 않음. 리소스는 나중에 디자이너 제작물로 교체(별도 계약) — 임시 아트에 공 들이지 않음 | Q-02 유지 |
+| Area 강화 입구 | 버튼 위치 그대로 두고 관련 보류 해제 | Q-36 지금 위치 유지 |
+
+### 결정됨, 반영 계약 대기(보류 유지)
+| 항목 | 반영할 것 | Q |
+|---|---|---|
+| 새 기준 대조 | 밸런스 프리셋·골든 값, 인수 W-04·W-05·W-07, 덤프 기준. G8 MV-QA-ACCEPT는 그 뒤 | Q-03·Q-04 |
+| 계단 오르기 새 공식 | 상수는 `330_climb` 열로(코드에 박지 않음) | Q-07 |
+| 새 기준에 없는 데이터 시트 색 표시 | 07 §7.1.1a 규칙 + `make_table_xlsx.py` — MV-DATA-NAME 1차에 묶음(같은 도구·규칙) | Q-03 |
+| 별자리냥 3~12번 새로 채움 | `113_god`·`110_card`·`112_cardEffect` 3~12번 행을 `Docs/MV-SPEC-02/GodRefill.md` 가안대로, Resources 산출물 재생성, compile·EditMode — MV-DATA-NAME 병합 뒤(표 쓰기) | Q-20 (dev `93c66d5`) |
+| 맵 구성 | 배치는 표·프리팹이 정본, 코드는 읽기만(DiffReport 「맵 구성 메모」) — 반영 계약 완료 기준에 넣음 | — |
+
+### 여전히 보류
+| 묶음 | 항목 | Q |
+|---|---|---|
+| 런 규칙·수치 | 계단 게이트 M·`107_chargeGate`, 지팡이 단계 `103_item`·`AddWeapon`, 분신 상한, `300_runConfig` 폭, 결계 막힘(D-VIEW-BLOCK), 하수인 위치 `311_templateObject`, `106_hitReaction` 값, MV-RUN SpinA·RunProjectile.El, MV-DATA objShake, MV-FX 「쾅!」 | Q-05·Q-06·Q-08~Q-19 중 열린 것 |
+| 별자리냥·카드 | `113_god`·`110_card`·`495_godLevel`, 카드 공개(D-75), 별자리냥 메뉴 칸 수·첫 공개·해금 | Q-21·Q-22 |
+| 아웃게임·재화·광고 | 결과 광고 ×3 연결, 냥환생 해금·영구 업그레이드·Area 강화 항목, 보라 마법석, 표시 문구(Q-34) | Q-23~Q-35 중 열린 것 |
 | 그 밖 | 위 Q에 걸리는 새 계약·표 행 추가, 「(추정)」 열 설명 13개 확인 | 해당 Q |
 
-계속(영향 없음): 빌드·실기 경고(`SpriteAtlasManager.atlasRequested`)·아틀라스 실측, FX 머티리얼·Addressables 정리, 오디오 Addressables 등록, 현지화 연결 장치(문구는 Q-34 뒤), TMP 글꼴·Essential Resources, renderScale, 플랫폼 어댑터·서버 전환 준비(MV-NET-SERVER는 이미 보류), Q와 무관한 결함 수정.
+계속(영향 없음): MV-DATA-NAME 1차(칸 b 진행 중, 끝날 때까지 다른 담당 표 쓰기 금지), 빌드·실기 경고(`SpriteAtlasManager.atlasRequested`)·아틀라스 실측, FX 머티리얼·Addressables 정리, 오디오 Addressables 등록, 현지화 연결 장치(문구는 Q-34 뒤), TMP 글꼴·Essential Resources, renderScale, 플랫폼 어댑터·서버 전환 준비(MV-NET-SERVER는 이미 보류), Q와 무관한 결함 수정.
 
 ## 담당표
 

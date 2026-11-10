@@ -9,9 +9,11 @@
 | [Source/](Source/README.md) | 원문 탭별 사본, `modifiedTime`, 사본 만드는 규칙 |
 | [DiffReport.md](DiffReport.md) | 차이 보고서: 분류별 개수, 사용자 결정 질문 Q-01~Q-35, 장별 대조표 |
 | [TermIdMap.md](TermIdMap.md) | 용어 ↔ 표 id 대조표(`마법서 탑(105001001)` 표기), 확신 없는 매칭 질문 T-Q1~T-Q4 |
+| [GodRefill.md](GodRefill.md) | 별자리냥 3~12번 다시 채우기 데이터 가안(Q-20) |
 
 ## 판 기록
 
 | 판 | 원문 modifiedTime | 비교한 탭 | 보고 |
 |---|---|---|---|
 | 기준선 | 2026-11-10T10:37:50.996Z | 00, 01 (02~05 비어 있음) | [DiffReport.md](DiffReport.md) |
+| 1차 결정 | (같은 원문) | — | DiffReport 「결정 기록」: Q-01·02 유지, Q-03·04 새 기준 대조, Q-07 새 공식+변수 |
