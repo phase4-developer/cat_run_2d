@@ -49,6 +49,7 @@
 |---|---|---|
 | G7 | MV-CONTENT-* 전체, MV-META-QUEST 재개, ATTENDANCE·SHOP·G7 모드 배정, RESEARCH Boot·성장 탭·Addressables 연결 | Q-01 유지 |
 | 로비 | MV-UI-LOBBY 남은 것, MV-VIEW 로비 이름표·방석·난로, 아지트 시설 단계 표. 구조는 다시 짜지 않음. 리소스는 나중에 디자이너 제작물로 교체(별도 계약) — 임시 아트에 공 들이지 않음 | Q-02 유지 |
+| Area 강화 입구 | 버튼 위치 그대로 두고 관련 보류 해제 | Q-36 지금 위치 유지 |
 
 ### 결정됨, 반영 계약 대기(보류 유지)
 | 항목 | 반영할 것 | Q |
@@ -56,13 +57,14 @@
 | 새 기준 대조 | 밸런스 프리셋·골든 값, 인수 W-04·W-05·W-07, 덤프 기준. G8 MV-QA-ACCEPT는 그 뒤 | Q-03·Q-04 |
 | 계단 오르기 새 공식 | 상수는 `330_climb` 열로(코드에 박지 않음) | Q-07 |
 | 새 기준에 없는 데이터 시트 색 표시 | 07 §7.1.1a 규칙 + `make_table_xlsx.py` — MV-DATA-NAME 1차에 묶음(같은 도구·규칙) | Q-03 |
+| 별자리냥 3~12번 새로 채움 | `113_god`·`110_card`·`112_cardEffect` 3~12번 행을 `Docs/MV-SPEC-02/GodRefill.md` 가안대로, Resources 산출물 재생성, compile·EditMode — MV-DATA-NAME 병합 뒤(표 쓰기) | Q-20 (dev `93c66d5`) |
 | 맵 구성 | 배치는 표·프리팹이 정본, 코드는 읽기만(DiffReport 「맵 구성 메모」) — 반영 계약 완료 기준에 넣음 | — |
 
 ### 여전히 보류
 | 묶음 | 항목 | Q |
 |---|---|---|
 | 런 규칙·수치 | 계단 게이트 M·`107_chargeGate`, 지팡이 단계 `103_item`·`AddWeapon`, 분신 상한, `300_runConfig` 폭, 결계 막힘(D-VIEW-BLOCK), 하수인 위치 `311_templateObject`, `106_hitReaction` 값, MV-RUN SpinA·RunProjectile.El, MV-DATA objShake, MV-FX 「쾅!」 | Q-05·Q-06·Q-08~Q-19 중 열린 것 |
-| 별자리냥·카드 | `113_god`·`110_card`·`495_godLevel`, 카드 공개(D-75), 별자리냥 메뉴·해금, Area 강화 입구 | Q-20~Q-22, Q-36 |
+| 별자리냥·카드 | `113_god`·`110_card`·`495_godLevel`, 카드 공개(D-75), 별자리냥 메뉴 칸 수·첫 공개·해금 | Q-21·Q-22 |
 | 아웃게임·재화·광고 | 결과 광고 ×3 연결, 냥환생 해금·영구 업그레이드·Area 강화 항목, 보라 마법석, 표시 문구(Q-34) | Q-23~Q-35 중 열린 것 |
 | 그 밖 | 위 Q에 걸리는 새 계약·표 행 추가, 「(추정)」 열 설명 13개 확인 | 해당 Q |
 
