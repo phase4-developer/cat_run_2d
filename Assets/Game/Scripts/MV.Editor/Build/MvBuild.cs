@@ -28,6 +28,14 @@ namespace MV.Editor.Build
         public const int ExitWrongTarget = 2;
         public const int ExitResolverMissing = 3;
         public const int ExitAddressablesFailed = 4;
+        public const int ExitPlayerSettingsWrong = 5;
+
+        /// <summary>개발 APK용 Addressables 프로필 이름. Remote 그룹도 APK 안(Local 경로)에 넣는다(잠정 결정 D-BUILD-REMOTE).</summary>
+        public const string DevApkProfileName = "DevApk";
+        public const string RemoteBuildPathVar = "Remote.BuildPath";
+        public const string RemoteLoadPathVar = "Remote.LoadPath";
+        public const string LocalBuildPathValue = "[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]";
+        public const string LocalLoadPathValue = "{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]";
 
         const string LogPrefix = "[MvBuild] ";
         const string ResolverTypeName = "GooglePlayServices.PlayServicesResolver";
@@ -81,6 +89,13 @@ namespace MV.Editor.Build
             // 3. AdMob Android 앱 ID — 비어 있으면 GoogleMobileAds ManifestProcessor가 빌드를 멈춘다.
             EnsureAdMobAndroidAppId();
 
+            // 3b. 최신 Android(64비트 전용 기기)에서 돌도록 IL2CPP·ARM64인지 확인한다. 설정은 ProjectSettings가 정본이라 바꾸지 않는다.
+            if (!IsDeviceReady(PlayerSettings.GetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android), PlayerSettings.Android.targetArchitectures))
+            {
+                Debug.LogError(LogPrefix + "Android 설정이 IL2CPP·ARM64가 아니다: " + PlayerSettings.GetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android) + ", " + PlayerSettings.Android.targetArchitectures);
+                return ExitPlayerSettingsWrong;
+            }
+
             // 4. Addressables — 플레이어 빌드가 자동으로 콘텐츠를 빌드하지 않을 때만 한 번 빌드한다. 설정 자산은 바꾸지 않는다.
             var aaSettings = AddressableAssetSettingsDefaultObject.Settings;
             if (aaSettings == null)
@@ -88,6 +103,42 @@ namespace MV.Editor.Build
                 Debug.LogError(LogPrefix + "Addressables 설정이 없다.");
                 return ExitAddressablesFailed;
             }
+            // 원격 서버가 아직 없으므로 빌드하는 동안만 DevApk 프로필로 바꿔 Remote 그룹을 APK에 넣는다. 끝나면 원래 프로필로 돌린다.
+            var previousProfile = aaSettings.activeProfileId;
+            aaSettings.activeProfileId = EnsureDevApkProfile(aaSettings);
+            try
+            {
+                return BuildWithActiveProfile(aaSettings);
+            }
+            finally
+            {
+                aaSettings.activeProfileId = previousProfile;
+                EditorUtility.SetDirty(aaSettings);
+                AssetDatabase.SaveAssets();
+            }
+        }
+
+        /// <summary>64비트 전용 기기에서도 설치·실행되는 조합인지(IL2CPP, ARM64 포함).</summary>
+        public static bool IsDeviceReady(ScriptingImplementation backend, AndroidArchitecture architectures)
+        {
+            return backend == ScriptingImplementation.IL2CPP && (architectures & AndroidArchitecture.ARM64) != 0;
+        }
+
+        /// <summary>DevApk 프로필을 찾거나 만들고 Remote 경로를 Local 값으로 맞춘다. 프로필 id를 돌려준다.</summary>
+        static string EnsureDevApkProfile(AddressableAssetSettings aaSettings)
+        {
+            var profiles = aaSettings.profileSettings;
+            var id = profiles.GetProfileId(DevApkProfileName);
+            if (string.IsNullOrEmpty(id))
+                id = profiles.AddProfile(DevApkProfileName, aaSettings.activeProfileId);
+            profiles.SetValue(id, RemoteBuildPathVar, LocalBuildPathValue);
+            profiles.SetValue(id, RemoteLoadPathVar, LocalLoadPathValue);
+            Debug.Log(LogPrefix + "Addressables 프로필 " + DevApkProfileName + "로 빌드(Remote 그룹을 APK 안에 넣음, D-BUILD-REMOTE)");
+            return id;
+        }
+
+        static int BuildWithActiveProfile(AddressableAssetSettings aaSettings)
+        {
             var option = aaSettings.BuildAddressablesWithPlayerBuild;
             bool auto = BuildsAddressablesWithPlayer(option, EditorPrefs.GetBool(AddressablesPrefKey, true));
             Debug.Log(LogPrefix + "Addressables 플레이어 빌드 시 자동 빌드: " + option + " → " + (auto ? "자동" : "수동"));
