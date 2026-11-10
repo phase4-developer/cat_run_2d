@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "saved_at": "2026-11-10T13:38:12+09:00",
+  "saved_at": "2026-11-11T05:29:51+09:00",
   "saved_by": "사용자(설정 화면)",
   "values": {
     "project_kind": "new",
@@ -84,13 +84,13 @@
     "art_source": [
       "placeholder"
     ],
-    "brief_path": "Docs/MV-SPEC-01/README.md",
-    "rules_doc": "Docs/MV-SPEC-01/04_GameRules.md",
+    "brief_path": "Docs/MV-SPEC-02/README.md",
     "fps_target": "60",
     "git_test_branch": "dev",
     "fw_network_route": "local",
     "headless": "on",
-    "runner_register": "register"
+    "runner_register": "register",
+    "brief_url": "https://docs.google.com/document/d/1R1DI7ckuu3zzKtwmAJ-7PD9MArLRYvfeO8MNY1n7RWo/edit?tab=t.0"
   },
   "framework_packages": [
     "com.artress.managed-addressables",
@@ -137,15 +137,26 @@
   ],
   "missing": [],
   "later": [
+    "rules_doc",
     "fw_skip_reason",
     "fw_beta",
+    "lead_tool",
+    "worker_tool",
     "art_style",
     "min_device"
   ],
   "problems": [
     {
       "level": "info",
+      "text": "외부 원본 문서: AI는 읽기만 하고, 변경 추적은 저장소 사본(「기획서 위치」) 기준이다"
+    },
+    {
+      "level": "info",
       "text": "외부 SDK가 있어야 컴파일되는 범위 패키지: com.jjevol.platform.ads.admob(GoogleMobileAds.Common.dll, GoogleMobileAds.Core.dll, GoogleMobileAds.Ump.dll, GoogleMobileAds.dll); com.jjevol.platform.login.firebase(Firebase.App.dll, Firebase.Auth.dll). 게임에 그 SDK가 없으면 첫 연결 묶음에서 빼고 SDK 설치 결정을 따로 묻는다"
+    },
+    {
+      "level": "info",
+      "text": "Android·iOS Player 빌드에 Firebase SDK 필요: com.jjevol.platform.analytics.firebase(Firebase Analytics), com.jjevol.platform.push.firebase(Firebase Messaging). Editor에서는 SDK 없이 컴파일되므로 첫 연결 묶음에 넣는다. Player 빌드 전에 SDK 설치 결정을 따로 묻는다"
     },
     {
       "level": "info",
