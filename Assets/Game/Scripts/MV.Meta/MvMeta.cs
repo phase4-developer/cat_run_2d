@@ -395,5 +395,10 @@ namespace MV.Meta
             if (contentTab != null) p["contentTab"] = contentTab;
             return Send(new MvMetaRequest(MvMetaRequestNames.MarkSeen, p));
         }
+
+        // ═════════ G7 콘텐츠 ═════════
+
+        /// <summary>로컬 백엔드(콘텐츠 처리기 등록 <see cref="MvLocalMetaBackend.RegisterContent"/>·읽기용). 서버 백엔드를 넣어도 읽기는 이것으로 한다.</summary>
+        public MvLocalMetaBackend Local => _local;
     }
 }

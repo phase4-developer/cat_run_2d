@@ -65,6 +65,12 @@ namespace MV.Meta
         {
             DebugGrant, DebugLevelUp, DebugReset, DebugOpenRebirth, DebugClearCooldown, DebugUnlockAll, DebugResetDaily, DebugAddTime,
         };
+
+        // G7 퀘스트(MV-META-QUEST). 처리기는 MV.Content <c>MvQuestBackend</c>가 <see cref="MvLocalMetaBackend.RegisterContent"/>로 등록한다.
+        /// <summary>퀘스트 카운터 더하기. ev = [{t: clearType, c: clearCondition(0 = 전체), v: 양}].</summary>
+        public const string QuestRecord = "meta.questRecord";
+        /// <summary>퀘스트·업적 보상 받기. id = 413_repeatQuest 또는 420_achievement id.</summary>
+        public const string QuestClaim = "meta.questClaim";
     }
 
     /// <summary>거절 코드(<c>NetworkRejection.Code</c> 자리).</summary>
@@ -85,6 +91,10 @@ namespace MV.Meta
         public const string AdNotWatched = "meta.adNotWatched";
         public const string NoReward = "meta.noReward";
         public const string SaveFailed = "meta.saveFailed";
+        /// <summary>퀘스트 목표 미달(MV-META-QUEST).</summary>
+        public const string NotDone = "meta.notDone";
+        /// <summary>이미 받은 퀘스트·업적 단계(MV-META-QUEST).</summary>
+        public const string AlreadyClaimed = "meta.alreadyClaimed";
     }
 
     /// <summary>

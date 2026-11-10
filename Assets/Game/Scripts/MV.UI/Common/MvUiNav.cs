@@ -90,5 +90,9 @@ namespace MV.UI
         /// <summary>로비 「컨텐츠」 메뉴(05 §5.15, MV-UI-CONTENT). 모드 시작은 <see cref="ContentMenuData.OnStartMode"/>.</summary>
         public static async UniTask<ContentMenuPopup> OpenContentMenuAsync(ContentMenuData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.ContentMenu, data ?? new ContentMenuData()) as ContentMenuPopup;
+
+        /// <summary>퀘스트(08 §8.5.1, MV-META-QUEST). 잠김 판정은 로비 버튼(<see cref="LobbyPresenter.QuestSideId"/>)이 한다.</summary>
+        public static async UniTask<QuestPopup> OpenQuestAsync(QuestPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.Quest, data ?? new QuestPopupData()) as QuestPopup;
     }
 }

@@ -21,6 +21,9 @@ namespace MV.UI
         public const string RebirthUnlockKey = MvMetaRules.RebirthKey;
         /// <summary>컨텐츠 버튼 해금 키(<c>05_contentOpen 5001003</c>).</summary>
         public const string ContentUnlockKey = "contentMenu";
+        /// <summary>퀘스트 사이드 버튼 ID·해금 키(MV-META-QUEST, <c>05_contentOpen 5001005</c>). 열기는 <see cref="MvUiNav.OpenQuestAsync"/>.</summary>
+        public const string QuestSideId = "quest";
+        public const string QuestUnlockKey = "quest";
 
         IMetaUiPort _port;
         ILobbySource _source;
@@ -109,6 +112,11 @@ namespace MV.UI
             ApplyLock(content, t);
             content.Sub = content.Locked ? LockSub(t, content.UnlockKey) : OpenModes(t) + "개 열림"; // ui.lobby.contentSub
 
+            var quest = Add(QuestSideId, "퀘스트", "", ready); // name:<05_contentOpen 5001005>
+            quest.UnlockKey = QuestUnlockKey;
+            ApplyLock(quest, t);
+            if (quest.Locked) quest.Sub = "잠김"; // 해금 조건은 런 1번(conditionType 2)
+
             Add(LobbySideIds.Sound, "♪", Muted ? "꺼짐" : "", true);
             Add(LobbySideIds.Debug, "테스트", "", true).Visible = DevBuild; // ui.debug.btn
         }
@@ -163,6 +171,7 @@ namespace MV.UI
             var row = t?.ContentOpen.ByKey(b.UnlockKey);
             int area = row != null && row.conditionType == 1 ? row.conditionValue : 0;
             if (b.Id == LobbySideIds.Rebirth) return "부활은 Area " + area + "를 열면 해금됩니다"; // toastMessage:rbLocked
+            if (b.Id == QuestSideId && row != null && row.conditionType == 2) return "달리기를 " + row.conditionValue + "번 마치면 열려요"; // toastMessage:questLocked
             return "Area " + area + "에서 열려요";                                              // toastMessage:contentLocked
         }
 
