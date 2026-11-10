@@ -82,8 +82,9 @@ namespace MV.Content.Tests
             Store = opened.Store;
             Res = new ResourceService(Store.Repository, Tables.Wealth, new ConsumeTypeId((int)ConsumeType.Wealth));
             Meta = new MvMeta(() => Store, () => Res, Tables, Clock, new MvFakeAdService());
+            // quest·achievement 열림(런 1번): 메타 정산 요청으로만 진행을 바꾼다. 카운터 연결 전이라 이 정산은 세지 않는다.
+            Assert.That(Meta.Settle(new MvRunOutcome { RunSeq = Meta.BeginRun(), End = MvRunEnd.Wall }).Ok, Is.True);
             Quest = new MvQuest(Meta);
-            Assert.That(Store.ApplyAndSaveJson("{\"" + MvSaveKeys.Progress + "\":{\"runs\":1}}", false, MvSaveKeys.Progress), Is.True); // quest·achievement 열림(런 1번)
         }
 
         [TearDown]
@@ -200,7 +201,7 @@ namespace MV.Content.Tests
         [Test]
         public void Claim_Locked_BeforeFirstRun()
         {
-            Assert.That(Store.ApplyAndSaveJson("{\"" + MvSaveKeys.Progress + "\":{\"runs\":0}}", false, MvSaveKeys.Progress), Is.True);
+            Assert.That(Meta.SendDebug(MvMetaRequestNames.DebugReset).Ok, Is.True, "진행 초기화(런 0번, 개발 빌드 요청)");
             Rec(QuestClearType.RunComplete, 3);
             Assert.That(Quest.Claim(DailyRun).Code, Is.EqualTo(MvMetaErrors.Locked));
         }
