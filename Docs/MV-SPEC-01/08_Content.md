@@ -87,7 +87,7 @@
 | `700_productTab`·`701_product`·`702_shopSection` | 정크버스터즈 구조 | 8.5.7 | 1차(스텁) |
 | `801_drop`·`802_randomBox` | 정크버스터즈 구조 | 8.5.12 | 1차/2차 |
 | `16_levelPrice` 행(그룹 301 펫, 302 친구, 304 신, 306~313 장비) | `16{그룹 3}{목표 레벨 3}` | 8.3.5, 8.5 각 절 | 2차 |
-| `02_playResource` 행 101~105, `05_contentOpen` 행, `08_adPlacement` 행, `01_wealth` 행 5~17 | 07 열 | 8.6, 8.7 | 1차/2차 |
+| `02_playResource` 행 2001001~2001005, `05_contentOpen` 행, `08_adPlacement` 행, `01_wealth` 행 5~17 | 07 열 | 8.6, 8.7 | 1차/2차 |
 
 문구: 이 문서 표 행의 이름·설명은 Localization `name`·`description` 컬렉션에서 **행 id를 키로** 찾는다([07](07_Tables.md) 규칙 7). 아래 표의 「이름」 열이 `name` 컬렉션 ko 값이다.
 
@@ -459,10 +459,10 @@ id	group	floor	h0	h1	rows	souls
 | id | key | 이름 [창작] | 한 줄 설명 [창작] | contentType | active | sort | icon | bg | bgm | modeRuleId | stageGroup | openId | spend Type/Id/Value | sweep |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 400000001 | main | 달동네 탈출 | 본편 | 0 | 1 | 0 | — | — | bgm_run | — | — | — | 빈칸(스태미나 켜면 `3/105/1`) | 0 |
-| 400001001 | alleyWar | 골목 수비전 | 몰려오는 쥐 떼에게서 생선 가게를 지켜라 | 1 | 1 | 1 | UI_Icon_Mode_AlleyWar | Tex_Mode_AlleyWar | bgm_run | 402001001 | 1 | 5001003 | 3 / 101 / 1 | 1 |
-| 400001002 | rapidRush | 우다다 질주 | 정해진 무기 하나로 끝까지 달려라 | 2 | 1 | 2 | UI_Icon_Mode_RapidRush | Tex_Mode_RapidRush | bgm_run | 402001002 | 2 | 5001006 | 3 / 102 / 1 | 1 |
-| 400001003 | churuRush | 츄르 털이 | 츄르가 가득한 골목을 털어라 | 3 | 1 | 3 | UI_Icon_Mode_ChuruRush | Tex_Mode_ChuruRush | bgm_run | 402001003 | 3 | 5001007 | 3 / 103 / 1 | 1 |
-| 400001004 | bigMouse | 대왕쥐 소탕 | 거대한 대왕쥐를 시간 안에 쓰러뜨려라 | 4 | **0 (2차)** | 4 | UI_Icon_Mode_BigMouse | Tex_Mode_BigMouse | bgm_run | 402001004 | 4 | 5001008 | 3 / 104 / 1 | 1 |
+| 400001001 | alleyWar | 골목 수비전 | 몰려오는 쥐 떼에게서 생선 가게를 지켜라 | 1 | 1 | 1 | UI_Icon_Mode_AlleyWar | Tex_Mode_AlleyWar | bgm_run | 402001001 | 1 | 5001003 | 3 / 2001001 / 1 | 1 |
+| 400001002 | rapidRush | 우다다 질주 | 정해진 무기 하나로 끝까지 달려라 | 2 | 1 | 2 | UI_Icon_Mode_RapidRush | Tex_Mode_RapidRush | bgm_run | 402001002 | 2 | 5001006 | 3 / 2001002 / 1 | 1 |
+| 400001003 | churuRush | 츄르 털이 | 츄르가 가득한 골목을 털어라 | 3 | 1 | 3 | UI_Icon_Mode_ChuruRush | Tex_Mode_ChuruRush | bgm_run | 402001003 | 3 | 5001007 | 3 / 2001003 / 1 | 1 |
+| 400001004 | bigMouse | 대왕쥐 소탕 | 거대한 대왕쥐를 시간 안에 쓰러뜨려라 | 4 | **0 (2차)** | 4 | UI_Icon_Mode_BigMouse | Tex_Mode_BigMouse | bgm_run | 402001004 | 4 | 5001008 | 3 / 2001004 / 1 | 1 |
 
 BGM: 정본 BGM은 로비·런 2개뿐이라([03 §3.9](03_ResourcePipeline.md)) 1차는 모든 모드가 `bgm_run`을 쓴다. 모드 전용 BGM은 2차에 `03_sound` 행을 추가하고 이 열 값만 바꾼다(코드 수정 없음) [창작].
 
@@ -472,7 +472,7 @@ BGM: 정본 BGM은 로비·런 2개뿐이라([03 §3.9](03_ResourcePipeline.md))
 
 | 규칙 | 내용 | 값 |
 |---|---|---|
-| 입장권 | `02_playResource` 101~104. `chargeType 2` = 날짜가 바뀌면 `chargeMax`로 **덮어쓰기**(누적 아님) | 하루 3장 [창작·HE임시] |
+| 입장권 | `02_playResource` 골목 수비전 입장권(2001001)~대왕쥐 소탕 입장권(2001004). `chargeType 2` = 날짜가 바뀌면 `chargeMax`로 **덮어쓰기**(누적 아님) | 하루 3장 [창작·HE임시] |
 | 광고 충전 | `08_adPlacement` modeTicket. 광고 1회 = 고른 모드 입장권 +1. 횟수는 **모든 모드 공용** | 하루 3회 [창작·HE임시] |
 | 야옹신 축복 | 켜져 있으면 날짜 변경 때 각 입장권 +1 | 8.5.9 |
 | 단계 진행 | 클리어하면 `clears[contentId] = max(기존, stage+1)`. 다음 도전 = `min(clears, 마지막 단계)` | 원작 규칙 [창작·HE임시] |
@@ -485,13 +485,13 @@ BGM: 정본 BGM은 로비·런 2개뿐이라([03 §3.9](03_ResourcePipeline.md))
 
 | id | key | type | chargeType | chargeSec | chargeMax | sort | active | icon |
 |---|---|---|---|---|---|---|---|---|
-| 101 | ticket.alleyWar | modeTicket | 2 | 0 | 3 | 1 | 1 | UI_Icon_Ticket_AlleyWar |
-| 102 | ticket.rapidRush | modeTicket | 2 | 0 | 3 | 2 | 1 | UI_Icon_Ticket_RapidRush |
-| 103 | ticket.churuRush | modeTicket | 2 | 0 | 3 | 3 | 1 | UI_Icon_Ticket_ChuruRush |
-| 104 | ticket.bigMouse | modeTicket | 2 | 0 | 3 | 4 | 0 | UI_Icon_Ticket_BigMouse |
-| 105 | energy | stamina | 1 | 600 | 30 | 5 | 0 | UI_Icon_Energy |
+| 골목 수비전 입장권(2001001) | ticket.alleyWar | modeTicket | 2 | 0 | 3 | 1 | 1 | UI_Icon_Ticket_AlleyWar |
+| 우다다 질주 입장권(2001002) | ticket.rapidRush | modeTicket | 2 | 0 | 3 | 2 | 1 | UI_Icon_Ticket_RapidRush |
+| 츄르 털이 입장권(2001003) | ticket.churuRush | modeTicket | 2 | 0 | 3 | 3 | 1 | UI_Icon_Ticket_ChuruRush |
+| 대왕쥐 소탕 입장권(2001004) | ticket.bigMouse | modeTicket | 2 | 0 | 3 | 4 | 0 | UI_Icon_Ticket_BigMouse |
+| 기운(2001005) | energy | stamina | 1 | 600 | 30 | 5 | 0 | UI_Icon_Energy |
 
-105(기운)는 원작 스태미나 [창작·HE임시: 600초 1회복, 상한 30]. 정본에 없으므로 `active 0`(D-79).
+기운(2001005)은 원작 스태미나 [창작·HE임시: 600초 1회복, 상한 30]. 정본에 없으므로 `active 0`(D-79).
 
 ### 8.4.4 402_modeRule (모드 규칙)
 
@@ -776,7 +776,7 @@ public interface IModeRule : IRunRule {
 | 축복 | 축복 | 480 | 2차 | 부활·모드와 같이 시험 |
 | 지도 추격(장마 구름) | 로드맵·호드 | 490 | 2차, **기본 꺼짐** | 정본 진행 감각을 바꿈(D-78) |
 | 부활 추가분 | 부활 부가 기능 | 499 | 2차 | 8.5.14 |
-| 스태미나(기운) | 스태미나 | 02_playResource 105 | 꺼짐 | 정본에 없음(D-79) |
+| 스태미나(기운) | 스태미나 | 02_playResource 기운(2001005) | 꺼짐 | 정본에 없음(D-79) |
 
 **메타 능력치(statKey) 7종** — 펫·연구·친구 고양이·신 패시브·신 레벨·장비·축복이 모두 이 7개만 쓴다(원작 공통 효과 키 7종 구조). 각 시스템 값을 % 단위로 **합산**한 뒤, 런 시작 때 `RunModifiers`로 `MV.Run`에 넘긴다. 정본 식에는 **곱 인자 하나**로 들어간다. 합이 0이면 정본과 같다.
 
@@ -1109,7 +1109,7 @@ maxLevel 30 전부. icon `UI_Icon_Friend_{key}`, portrait `Portrait_Friend_{key}
 | 485001003 | 3 | 도전 메달 2 | 1 / 5 / 2 |
 | 485001004 | 4 | 츄르 800 | 1 / 1 / 800 |
 | 485001005 | 5 | 캣닢 40 | 1 / 2 / 40 |
-| 485001006 | 6 | 모드 입장권 각 1 | 3;3;3 / 101;102;103 / 1;1;1 |
+| 485001006 | 6 | 모드 입장권 각 1 | 3;3;3 / 2001001;2001002;2001003 / 1;1;1 |
 | 485001007 | 7 | 캣닢 100 + 나무 상자 1 | 1;1 / 2;15 / 100;1 |
 
 ### 8.5.11 지도 추격 — 장마 구름 (490_roadMap) — 2차, 기본 꺼짐
@@ -1261,11 +1261,11 @@ JJEvol 표 규격 v1 §6~7 모양(열 정의 정본 [07 §7.9.3](07_Tables.md)).
 
 | id | key | chargeType | 회복량 `chargeAmount` / 상한 `chargeMax` (energy는 `chargeSec`=600) | 우선 |
 |---|---|---|---|---|
-| 101 | ticket.alleyWar | 2 일일 초기화 | 3 / 3 | 1차 |
-| 102 | ticket.rapidRush | 2 | 3 / 3 | 1차 |
-| 103 | ticket.churuRush | 2 | 3 / 3 | 1차 |
-| 104 | ticket.bigMouse | 2 | 3 / 3 | 2차 |
-| 105 | energy | 1 시간 회복 | 600초마다 1 / 30 | 꺼짐(D-79) |
+| 골목 수비전 입장권(2001001) | ticket.alleyWar | 2 일일 초기화 | 3 / 3 | 1차 |
+| 우다다 질주 입장권(2001002) | ticket.rapidRush | 2 | 3 / 3 | 1차 |
+| 츄르 털이 입장권(2001003) | ticket.churuRush | 2 | 3 / 3 | 1차 |
+| 대왕쥐 소탕 입장권(2001004) | ticket.bigMouse | 2 | 3 / 3 | 2차 |
+| 기운(2001005) | energy | 1 시간 회복 | 600초마다 1 / 30 | 꺼짐(D-79) |
 
 ### 8.7.3 07_consumeType 신규 요청
 
@@ -1325,7 +1325,7 @@ JJEvol 표 규격 v1 §6~7 모양(열 정의 정본 [07 §7.9.3](07_Tables.md)).
 | **D-76** | 모드 런에서 로비 강화·Area 강화·메타 능력치를 적용하나 | A 모드별 402 열로 정함(수비전 적용, 우다다 고정 무기 tier 4·강화 0) / B 전부 적용 / C 전부 끔 | **A**(8.4.4) | 402 열, `RunModifiers` 생성 경로 |
 | **D-77** | 일일 초기화 시각 | A UTC 0시(정본 `adDay`) / B 한국 시간 0시 | **A**(정본 동등, 한국 9시) | 퀘스트·입장권·출석·광고 |
 | **D-78** | 2차 범위와 지도 정리 | A 8.8 표대로, 지도 추격 기본 꺼짐, 지도 「레이스」 칸 삭제 / B 지도 추격 켬 | **A** | 499 `horde.enabled`, 05 지도 문구 |
-| **D-79** | 기운(스태미나) | A 넣지 않음(행만 active 0) / B 본편 런마다 소모 | **A**. 정본에 없고 손맛을 바꿈 | 02 행 105, 480 행 3 |
+| **D-79** | 기운(스태미나) | A 넣지 않음(행만 active 0) / B 본편 런마다 소모 | **A**. 정본에 없고 손맛을 바꿈 | 02 행 기운(2001005), 480 행 3 |
 
 ### 8.9.1 다른 문서 작성자에게 기대한 가정
 

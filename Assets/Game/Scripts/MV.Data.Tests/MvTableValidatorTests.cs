@@ -127,6 +127,16 @@ namespace MV.Data.Tests
         }
 
         [Test]
+        public void Format_IdNotTableTimesMillion_IsError()
+        {
+            // 접두 `13`은 맞지만 id / 1,000,000 = 130 ≠ 13(07 §7.1.1a id 입력 열).
+            AssertError(TsvFixture.Validate(("13_areaUpgrade", TsvFixture.Set(TsvFixture.Read("13_areaUpgrade"), "13001001", "id", "130001001"))),
+                "13_areaUpgrade", "1,000,000");
+            AssertError(TsvFixture.Validate(("02_playResource", TsvFixture.Set(TsvFixture.Read("02_playResource"), "2001001", "id", "101"))),
+                "02_playResource", "1,000,000");
+        }
+
+        [Test]
         public void Format_TwoDefaultPresets_IsError()
         {
             var text = TsvFixture.Read("06_balancePreset");

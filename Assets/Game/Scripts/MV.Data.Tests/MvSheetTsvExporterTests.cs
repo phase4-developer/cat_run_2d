@@ -19,6 +19,17 @@ namespace MV.Data.Tests
         }
 
         [Test]
+        public void Convert_DropsLeadingIdInputColumns()
+        {
+            // 07 §7.1.1a: table·category·index는 시트 전용, id는 수식 계산값. 뒤쪽의 같은 이름 열(410 category)은 남긴다.
+            const string sheet = "내보낼 때 뺌\t\t\t행 id\t이름\t분류\r\n" +
+                                 "int\tint\tint\tint\tstring\tint\r\n" +
+                                 "table\tcategory\tindex\tid\tname\tcategory\r\n" +
+                                 "410\t1\t2\t410001002\t일일\t3\r\n";
+            Assert.That(MvSheetTsvExporter.Convert(sheet), Is.EqualTo("id\tname\tcategory\n410001002\t일일\t3\n"));
+        }
+
+        [Test]
         public void Convert_WithoutHeaderLine_Throws() =>
             Assert.Throws<System.FormatException>(() => MvSheetTsvExporter.Convert("설명\nint\n"));
     }

@@ -56,7 +56,7 @@ namespace MV.Data
     public sealed class PlayResourceData : MvRow
     {
         public const string Table = "02_playResource";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().FreeIdRule().Key().Str("type").Int("chargeType", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Str("type").Int("chargeType", true)
             .Int("chargeSec").Int("chargeAmount").Int("chargeMax").Int("sort").Bool("active").Res("icon", MvAtlas.UiIcon);
 
         public string type { get; private set; }
