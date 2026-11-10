@@ -43,7 +43,7 @@
 | c | `moonvillage-c` | (비어 있음) | — | — |
 | d | `moonvillage-d` | MV-VIEW 3차 | `ai/MV-VIEW-cat-hit`(dev `220a252`) | `S/MV.View/`·Tests, `MvGameLoop.cs` 줄 추가, `A/Addressables/Remote/World/` |
 | e | `moonvillage-e` | (비어 있음) | — | — |
-| f | `moonvillage-f` | (비어 있음, detached) | — | — |
+| f | `moonvillage-f` | MV-PLAT-NET 2차(NET 스텁 → platform.network, 사용자 「NET 스텁교체해줘」) | `ai/MV-PLAT-NET-swap`(dev `023eebb` + 총괄 asmdef `147769b`) | `S/MV.Platform/Net/`·Tests/Net, GameBootstrap NET 줄, MvMetaRequest 주석 |
 | g | `moonvillage-g` | (비어 있음) | — | — |
 
 - dev 전체 기대 시험 목록: `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`(EditMode 478, PlayMode 7, `14db621` 기준).
