@@ -170,6 +170,10 @@ namespace MV.UI
                     MvSound.PlayUi(MvUiSound.ButtonClick);
                     MvUiNav.OpenContentMenuAsync(new ContentMenuData { Port = Data?.Port, OnClosed = Redraw }).Forget(Debug.LogException);
                     break;
+                case LobbyPresenter.QuestSideId:
+                    MvSound.PlayUi(MvUiSound.ButtonClick);
+                    MvUiNav.OpenQuestAsync(new QuestPopupData { Port = Data?.Port, OnClosed = Redraw }).Forget(Debug.LogException);
+                    break;
                 case LobbySideIds.Sound:
                     // 설정 자리(05 §5.14 소리 버튼). 저장은 메타 요청 settings.muted(실패해도 이번 실행의 소리는 바뀐 대로 둔다).
                     MvSound.Muted = !MvSound.Muted;

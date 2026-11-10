@@ -25,6 +25,23 @@ namespace MV.UI
         public const string QuestSideId = "quest";
         public const string QuestUnlockKey = "quest";
 
+        IQuestUiPort _questPort;
+        /// <summary>퀘스트 빨간 점 입구. null이면 <see cref="MvQuestUiPort.Instance"/>(저장소 컨테이너 읽기).</summary>
+        public IQuestUiPort QuestPort => _questPort ?? MvQuestUiPort.Instance;
+        public void SetQuestPort(IQuestUiPort port) => _questPort = port;
+
+        /// <summary>열린 분류에 받을 칸이 있는지(로비 퀘스트 빨간 점).</summary>
+        bool QuestClaimable()
+        {
+            var q = QuestPort;
+            if (q == null || !q.Ready) return false;
+            foreach (var g in q.Groups())
+                if (g.Open)
+                    foreach (var i in g.Items)
+                        if (i.State == QuestItemState.Claimable) return true;
+            return false;
+        }
+
         IMetaUiPort _port;
         ILobbySource _source;
         float _subTimer;
@@ -116,6 +133,7 @@ namespace MV.UI
             quest.UnlockKey = QuestUnlockKey;
             ApplyLock(quest, t);
             if (quest.Locked) quest.Sub = "잠김"; // 해금 조건은 런 1번(conditionType 2)
+            quest.Dot = !quest.Locked && QuestClaimable();
 
             Add(LobbySideIds.Sound, "♪", Muted ? "꺼짐" : "", true);
             Add(LobbySideIds.Debug, "테스트", "", true).Visible = DevBuild; // ui.debug.btn

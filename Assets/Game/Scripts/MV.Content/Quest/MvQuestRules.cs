@@ -67,14 +67,9 @@ namespace MV.Content
     public static class MvQuestRules
     {
         public const string DailySlot = "daily";
-        /// <summary>
-        /// 월간 칸. 09 §9.3.5 <c>mvQuest</c>에는 <c>weekly</c>만 있고 08 §8.5.1은 월간(periodType 3)이다.
-        /// MV.Save 변경 요청: <c>weekly</c> → <c>monthly</c>. 그때 이 상수만 바꾼다(기간 문자열은 <c>yyyyMM</c>).
-        /// </summary>
-        public const string MonthlySlot = "weekly";
+        /// <summary>월간 칸(09 §9.3.5 <c>mvQuest.monthly</c>, 기간 키 <c>yyyyMM</c>).</summary>
+        public const string MonthlySlot = "monthly";
         public const string AchieveSlot = "achieve";
-        /// <summary>월간 칸 <c>cnt</c> 안 받은 횟수 키 접두어(<c>n:413003001</c>). 카운터 키(숫자, <c>8:3</c>)와 겹치지 않는다.</summary>
-        public const string ClaimPrefix = "n:";
 
         /// <summary>해금 키(05_contentOpen): 일일·월간은 quest, 업적은 achievement.</summary>
         public const string QuestUnlockKey = "quest";
@@ -131,9 +126,14 @@ namespace MV.Content
                     ["period"] = period,
                     ["cnt"] = (slot["cnt"] as JObject)?.DeepClone() ?? new JObject(),
                     ["got"] = (slot["got"] as JArray)?.DeepClone() ?? new JArray(),
+                    ["claims"] = (slot["claims"] as JObject)?.DeepClone() ?? new JObject(),
                 };
-            return new JObject { ["period"] = period, ["cnt"] = new JObject(), ["got"] = new JArray() };
+            return new JObject { ["period"] = period, ["cnt"] = new JObject(), ["got"] = new JArray(), ["claims"] = new JObject() };
         }
+
+        /// <summary>저장 값의 기간(일일·월간)이 지금과 다른지(굴려서 다시 써야 하는지).</summary>
+        public static bool Stale(MvQuestContainer quest, long nowMs)
+            => quest != null && (quest.Period(DailySlot) != DayKey(nowMs) || quest.Period(MonthlySlot) != MonthKey(nowMs));
 
         /// <summary>응답 Data의 <c>mvQuest</c> 값(바꾸는 세 칸 전체 — 저장은 최상위 필드 병합).</summary>
         public static JObject Write(MvQuestSnapshot s) => new JObject
@@ -204,7 +204,7 @@ namespace MV.Content
             if (!Got(slot, id)) ((JArray)slot["got"]).Add(id);
         }
 
-        static int ClaimCount(JObject slot, int id) => slot["cnt"]?.Value<int?>(ClaimPrefix + id.ToString(Inv)) ?? 0;
+        static int ClaimCount(JObject slot, int id) => slot["claims"]?.Value<int?>(id.ToString(Inv)) ?? 0;
 
         // ───────── 목록 ─────────
 
@@ -359,8 +359,8 @@ namespace MV.Content
             JObject slot = Slot(s, g);
             if (ReferenceEquals(slot, s.Monthly))
             {
-                var cnt = (JObject)slot["cnt"];
-                cnt[ClaimPrefix + id.ToString(Inv)] = entry.Claimed + 1;
+                var claims = (JObject)slot["claims"];
+                claims[id.ToString(Inv)] = entry.Claimed + 1;
             }
             else MarkGot(slot, id);
             Add(s, QuestClearType.DailyPoint, 0, points);

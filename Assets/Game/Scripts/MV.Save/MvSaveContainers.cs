@@ -110,7 +110,15 @@ namespace MV.Save
     {
         public MvQuestContainer() : base(MvSaveKeys.Quest, MvSaveNormalize.Quest) { }
         public string DailyPeriod => Value["daily"].Value<string>("period");
-        public string WeeklyPeriod => Value["weekly"].Value<string>("period");
+        public string MonthlyPeriod => Value["monthly"].Value<string>("period");
+        /// <summary>칸(daily·monthly·achieve)의 카운터 값. 없으면 0.</summary>
+        public long Count(string slot, string counterKey) => Value[slot]?["cnt"]?.Value<long?>(counterKey) ?? 0;
+        /// <summary>칸의 받은 1회형 id 목록에 있는지.</summary>
+        public bool Got(string slot, long id) => (Value[slot]?["got"] as JArray)?.Any(t => t.Type == JTokenType.Integer && t.Value<long>() == id) ?? false;
+        /// <summary>반복형 받은 횟수(<c>claims</c>).</summary>
+        public int Claims(string slot, long id) => Value[slot]?["claims"]?.Value<int?>(id.ToString(System.Globalization.CultureInfo.InvariantCulture)) ?? 0;
+        /// <summary>칸의 기간 키(daily·monthly). 업적 칸은 null.</summary>
+        public string Period(string slot) => Value[slot]?.Value<string>("period");
         public int AttendDays => Value["attend"].Value<int>("days");
     }
 

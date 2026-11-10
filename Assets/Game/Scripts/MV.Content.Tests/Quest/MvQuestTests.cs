@@ -222,7 +222,7 @@ namespace MV.Content.Tests
         // ───────── 메타 요청 → 카운터 ─────────
 
         [Test]
-        public void MetaRequests_CountedThroughApplied()
+        public void MetaRequests_CountedInSameResponse()
         {
             long seq = Meta.BeginRun();
             var settled = Meta.Settle(new MvRunOutcome { RunSeq = seq, End = MvRunEnd.Wall, Gold = 120.7, Souls = 4 });
@@ -235,6 +235,36 @@ namespace MV.Content.Tests
             Assert.That(Quest.Record(new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, 3), new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, 1)).Ok, Is.True);
             Assert.That(Entry(MonthlyIncome).Count, Is.EqualTo(1), "조건 3만");
             Assert.That(Quest.LifetimeCount(QuestClearType.LobbyUpgrade), Is.EqualTo(2), "조건 0 = 전체");
+        }
+
+        // ───────── 통합: 원래 요청의 같은 저장·기간 굴림 ─────────
+
+        [Test]
+        public void Settle_OneRun_AddsDailyProgressInSameSave()
+        {
+            int applied = 0;
+            Meta.Applied += (rq, rs) => applied++;
+            var settled = Meta.Settle(new MvRunOutcome { RunSeq = Meta.BeginRun(), End = MvRunEnd.Wall, Souls = 2 });
+            Assert.That(settled.Ok, Is.True, settled.Code);
+            Assert.That(applied, Is.EqualTo(1), "성공 알림 안에서 기록 요청을 다시 보내지 않는다");
+            Assert.That(Store.Quest.Count(MvQuestRules.DailySlot, MvQuestRules.CounterKey(QuestClearType.RunComplete, 0)), Is.EqualTo(1), "정산 저장에 일일 진행 +1");
+            Assert.That(Store.Quest.Count(MvQuestRules.MonthlySlot, MvQuestRules.CounterKey(QuestClearType.SoulEarn, 0)), Is.EqualTo(2));
+            Assert.That(Entry(DailyRun).Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AnyWrite_RollsStalePeriodBeforeSaving()
+        {
+            Rec(QuestClearType.RunComplete, 2);
+            string today = MvQuestRules.DayKey(T0);
+            Clock.NowMs = MvQuestRules.NextMonthMs(T0);
+            Assert.That(Store.Quest.Period(MvQuestRules.DailySlot), Is.EqualTo(today), "아직 쓰기 전");
+            Assert.That(Entry(DailyRun).Count, Is.EqualTo(0), "읽기는 굴린 값");
+            Assert.That(Meta.SetMuted(true).Ok, Is.True, "퀘스트와 무관한 쓰기");
+            Assert.That(Store.Quest.Period(MvQuestRules.DailySlot), Is.EqualTo(MvQuestRules.DayKey(Clock.NowMs)));
+            Assert.That(Store.Quest.Period(MvQuestRules.MonthlySlot), Is.EqualTo(MvQuestRules.MonthKey(Clock.NowMs)));
+            Assert.That(Store.Quest.Count(MvQuestRules.DailySlot, "1"), Is.EqualTo(0));
+            Assert.That(Store.Quest.Count(MvQuestRules.AchieveSlot, "1"), Is.EqualTo(2), "평생 카운터는 굴리지 않는다");
         }
 
         // ───────── 표 확장(12 §12.6-C) ─────────

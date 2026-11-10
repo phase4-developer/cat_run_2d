@@ -44,13 +44,34 @@ namespace MV.Content
             });
         }
 
+        /// <summary>
+        /// 원래 요청(정산·강화·부활·광고)의 성공 응답에 퀘스트 카운터를 더한다(같은 저장 1번, 08 §8.5.1).
+        /// 기간이 바뀌었으면 셀 것이 없어도 굴린 값을 함께 쓴다(지연 초기화 없음). 퀘스트 요청 자체는 처리기가 쓴다.
+        /// </summary>
+        public static Action<MvMetaRequest, MvMetaResponse> Contributor(MvLocalMetaBackend backend)
+        {
+            if (backend == null) throw new ArgumentNullException(nameof(backend));
+            return (request, response) =>
+            {
+                if (request.Name == MvMetaRequestNames.QuestRecord || request.Name == MvMetaRequestNames.QuestClaim) return;
+                if (response.Data[MV.Save.MvSaveKeys.Quest] != null) return;
+                var events = MvQuest.EventsOf(request, response);
+                long now = backend.Clock.NowMs;
+                if (events.Count == 0 && !MvQuestRules.Stale(backend.Store.Quest, now)) return;
+                var s = MvQuestRules.Read(backend.Store.Quest, now);
+                foreach (var e in events) MvQuestRules.Add(s, e.Type, e.Condition, e.Amount);
+                response.Data[MV.Save.MvSaveKeys.Quest] = MvQuestRules.Write(s);
+            };
+        }
+
         static MvQuestSnapshot Snapshot(MvLocalMetaBackend b) => MvQuestRules.Read(b.Store.Quest, b.Clock.NowMs);
     }
 
     /// <summary>
     /// 퀘스트 입구(08 §8.5.1). 화면은 <see cref="Board"/>·<see cref="Claim"/>만 쓴다.
-    /// 메타 요청 결과(<see cref="MvMeta.Applied"/>)에서 정산·강화·부활·광고 카운터를 세고, 런 안 값(계단·벽)은 <see cref="RecordRun"/>,
-    /// 모드 클리어는 <see cref="RecordModeClear"/>로 받는다. 진행 변경은 모두 메타 요청이다(직접 저장 없음).
+    /// 정산·강화·부활·광고 카운터는 그 요청의 같은 응답에 더해진다(<see cref="MvQuestBackend.Contributor"/>, 저장 1번).
+    /// 클라이언트에서만 생기는 값(런 안 계단·벽, 모드 클리어)만 <see cref="RecordRun"/>·<see cref="RecordModeClear"/>로 기록 요청을 보낸다.
+    /// 읽기(<see cref="Board"/>)는 저장소 컨테이너 <c>mvQuest</c>만 읽는다(서버 전환 때 같은 모양 캐시).
     /// Boot 연결: 메타를 만들 때마다 <c>MvQuest.Install(meta)</c> 한 줄.
     /// </summary>
     public sealed class MvQuest : IDisposable
@@ -61,6 +82,7 @@ namespace MV.Content
         static void ResetStatics() => Current = null;
 
         readonly MvMeta _meta;
+        readonly Action<MvMetaRequest, MvMetaResponse> _contributor;
         bool _disposed;
 
         public MvMeta Meta => _meta;
@@ -75,15 +97,17 @@ namespace MV.Content
         public MvQuest(MvMeta meta)
         {
             _meta = meta ?? throw new ArgumentNullException(nameof(meta));
+            // 설치(로컬 백엔드 처리기·응답 보탬 등록). 서버 백엔드면 서버 함수가 같은 일을 한다. 화면 읽기는 Local을 쓰지 않는다.
             MvQuestBackend.Register(meta.Local, meta.IsOpen);
-            meta.Applied += OnApplied;
+            _contributor = MvQuestBackend.Contributor(meta.Local);
+            meta.Local.RegisterContributor(_contributor);
         }
 
         public void Dispose()
         {
             if (_disposed) return;
             _disposed = true;
-            _meta.Applied -= OnApplied;
+            _meta.Local.UnregisterContributor(_contributor);
             if (ReferenceEquals(Current, this)) Current = null;
         }
 
@@ -135,7 +159,7 @@ namespace MV.Content
 
         // ───────── 메타 요청 → 카운터 ─────────
 
-        /// <summary>성공한 메타 요청에서 셀 카운터(순수 함수, 시험용 공개).</summary>
+        /// <summary>성공한 메타 요청에서 셀 카운터(순수 함수). 응답 보탬이 쓴다.</summary>
         public static List<MvQuestEvent> EventsOf(MvMetaRequest request, MvMetaResponse response)
         {
             var list = new List<MvQuestEvent>();
@@ -178,13 +202,5 @@ namespace MV.Content
             }
         }
 
-        void OnApplied(MvMetaRequest request, MvMetaResponse response)
-        {
-            if (_disposed) return;
-            var events = EventsOf(request, response);
-            if (events.Count == 0) return;
-            var r = Record(events);
-            if (!r.Ok) Debug.LogWarning("[Quest] 카운터 기록 실패 " + r + " ← " + request.Name);
-        }
     }
 }
