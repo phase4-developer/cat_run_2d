@@ -30,13 +30,6 @@ namespace MV.Editor.Build
         public const int ExitAddressablesFailed = 4;
         public const int ExitPlayerSettingsWrong = 5;
 
-        /// <summary>개발 APK용 Addressables 프로필 이름. Remote 그룹도 APK 안(Local 경로)에 넣는다(잠정 결정 D-BUILD-REMOTE).</summary>
-        public const string DevApkProfileName = "DevApk";
-        public const string RemoteBuildPathVar = "Remote.BuildPath";
-        public const string RemoteLoadPathVar = "Remote.LoadPath";
-        public const string LocalBuildPathValue = "[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]";
-        public const string LocalLoadPathValue = "{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]";
-
         const string LogPrefix = "[MvBuild] ";
         const string ResolverTypeName = "GooglePlayServices.PlayServicesResolver";
         const string AdMobSettingsTypeName = "GoogleMobileAds.Editor.GoogleMobileAdsSettings";
@@ -96,49 +89,13 @@ namespace MV.Editor.Build
                 return ExitPlayerSettingsWrong;
             }
 
-            // 4. Addressables — 플레이어 빌드가 자동으로 콘텐츠를 빌드하지 않을 때만 한 번 빌드한다. 설정 자산은 바꾸지 않는다.
+            // 4. Addressables — 모든 그룹이 Local 경로라 APK 안에 들어간다(사용자 「원격 에셋은 안쓸거니 다 로컬로」). 플레이어 빌드가 자동으로 콘텐츠를 빌드하지 않을 때만 한 번 빌드한다. 설정 자산은 바꾸지 않는다.
             var aaSettings = AddressableAssetSettingsDefaultObject.Settings;
             if (aaSettings == null)
             {
                 Debug.LogError(LogPrefix + "Addressables 설정이 없다.");
                 return ExitAddressablesFailed;
             }
-            // 원격 서버가 아직 없으므로 빌드하는 동안만 DevApk 프로필로 바꿔 Remote 그룹을 APK에 넣는다. 끝나면 원래 프로필로 돌린다.
-            var previousProfile = aaSettings.activeProfileId;
-            aaSettings.activeProfileId = EnsureDevApkProfile(aaSettings);
-            try
-            {
-                return BuildWithActiveProfile(aaSettings);
-            }
-            finally
-            {
-                aaSettings.activeProfileId = previousProfile;
-                EditorUtility.SetDirty(aaSettings);
-                AssetDatabase.SaveAssets();
-            }
-        }
-
-        /// <summary>64비트 전용 기기에서도 설치·실행되는 조합인지(IL2CPP, ARM64 포함).</summary>
-        public static bool IsDeviceReady(ScriptingImplementation backend, AndroidArchitecture architectures)
-        {
-            return backend == ScriptingImplementation.IL2CPP && (architectures & AndroidArchitecture.ARM64) != 0;
-        }
-
-        /// <summary>DevApk 프로필을 찾거나 만들고 Remote 경로를 Local 값으로 맞춘다. 프로필 id를 돌려준다.</summary>
-        static string EnsureDevApkProfile(AddressableAssetSettings aaSettings)
-        {
-            var profiles = aaSettings.profileSettings;
-            var id = profiles.GetProfileId(DevApkProfileName);
-            if (string.IsNullOrEmpty(id))
-                id = profiles.AddProfile(DevApkProfileName, aaSettings.activeProfileId);
-            profiles.SetValue(id, RemoteBuildPathVar, LocalBuildPathValue);
-            profiles.SetValue(id, RemoteLoadPathVar, LocalLoadPathValue);
-            Debug.Log(LogPrefix + "Addressables 프로필 " + DevApkProfileName + "로 빌드(Remote 그룹을 APK 안에 넣음, D-BUILD-REMOTE)");
-            return id;
-        }
-
-        static int BuildWithActiveProfile(AddressableAssetSettings aaSettings)
-        {
             var option = aaSettings.BuildAddressablesWithPlayerBuild;
             bool auto = BuildsAddressablesWithPlayer(option, EditorPrefs.GetBool(AddressablesPrefKey, true));
             Debug.Log(LogPrefix + "Addressables 플레이어 빌드 시 자동 빌드: " + option + " → " + (auto ? "자동" : "수동"));
@@ -174,6 +131,12 @@ namespace MV.Editor.Build
             var summary = report.summary;
             Debug.Log(LogPrefix + $"빌드 결과 {summary.result}, 오류 {summary.totalErrors}, 크기 {summary.totalSize}, 출력 {AndroidDevOutputPath}");
             return summary.result == BuildResult.Succeeded ? ExitSuccess : ExitBuildFailed;
+        }
+
+        /// <summary>64비트 전용 기기에서도 설치·실행되는 조합인지(IL2CPP, ARM64 포함).</summary>
+        public static bool IsDeviceReady(ScriptingImplementation backend, AndroidArchitecture architectures)
+        {
+            return backend == ScriptingImplementation.IL2CPP && (architectures & AndroidArchitecture.ARM64) != 0;
         }
 
         /// <summary>Addressables 4.0.1 AddressablesPlayerBuildProcessor.ShouldBuildAddressablesForPlayerBuild와 같은 판정.</summary>
