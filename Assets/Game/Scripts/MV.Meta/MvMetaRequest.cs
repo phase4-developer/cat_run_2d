@@ -71,6 +71,12 @@ namespace MV.Meta
         public const string QuestRecord = "meta.questRecord";
         /// <summary>퀘스트·업적 보상 받기. id = 413_repeatQuest 또는 420_achievement id.</summary>
         public const string QuestClaim = "meta.questClaim";
+
+        // 연구(08 §8.5.3, MV-META-RESEARCH). 판정은 <see cref="MvResearchRules"/>.
+        /// <summary>group = 계열. 비용을 먼저 내고 끝 시각을 저장한다.</summary>
+        public const string StartResearch = "meta.startResearch";
+        /// <summary>group = 계열. 끝 시각이 지났으면 단계 +1(수령 1번).</summary>
+        public const string ClaimResearch = "meta.claimResearch";
     }
 
     /// <summary>거절 코드(<c>NetworkRejection.Code</c> 자리).</summary>
@@ -95,6 +101,9 @@ namespace MV.Meta
         public const string NotDone = "meta.notDone";
         /// <summary>이미 받은 퀘스트·업적 단계(MV-META-QUEST).</summary>
         public const string AlreadyClaimed = "meta.alreadyClaimed";
+
+        /// <summary>다른 연구가 진행 중(저장 <c>mvResearch.run</c> 1칸).</summary>
+        public const string Busy = "meta.busy";
     }
 
     /// <summary>

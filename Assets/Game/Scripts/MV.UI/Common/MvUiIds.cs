@@ -29,6 +29,9 @@ namespace MV.UI
         public const string ContentMenu = "ContentMenu";
         /// <summary><c>UIPopup_Quest</c>(MV-META-QUEST).</summary>
         public const string Quest = "Quest";
+
+        /// <summary><c>UIPopup_Research</c>(MV-META-RESEARCH, 컨텐츠 메뉴 「성장」 탭).</summary>
+        public const string Research = "Research";
     }
 
     /// <summary>층 sortingOrder(05 §5.1.5). 각 화면 프리팹 루트의 Canvas(overrideSorting)에 넣는다.</summary>

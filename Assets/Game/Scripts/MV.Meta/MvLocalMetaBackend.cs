@@ -13,7 +13,7 @@ namespace MV.Meta
     /// 상태는 바꾸지 않는다 — 반영은 <see cref="MvMeta"/>가 한 번의 <c>ApplyAndSave</c>로 한다(09 원칙 3).
     /// Framework 대체: platform.network <c>INetworkLocalService</c> 자리. 서버가 생기면 같은 이름·파라미터를 서버 함수가 받는다.
     /// </summary>
-    public sealed class MvLocalMetaBackend : IMvMetaBackend
+    public sealed partial class MvLocalMetaBackend : IMvMetaBackend
     {
         private readonly Func<MvSaveStore> _store;
         private readonly Func<ResourceService> _resources;
@@ -63,6 +63,8 @@ namespace MV.Meta
                 case MvMetaRequestNames.RecordModePlay: return RecordModePlay(Str(p, "key"));
                 case MvMetaRequestNames.MarkSeen: return MarkSeen(p);
                 case MvMetaRequestNames.SetMuted: return SetMuted(p);
+                case MvMetaRequestNames.StartResearch: return StartResearch(p);
+                case MvMetaRequestNames.ClaimResearch: return ClaimResearch(p);
                 default:
                     if (_content.TryGetValue(request.Name, out var content)) return content(p);
                     return _debug.TryGetValue(request.Name, out var debug)

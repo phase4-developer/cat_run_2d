@@ -94,5 +94,9 @@ namespace MV.UI
         /// <summary>퀘스트(08 §8.5.1, MV-META-QUEST). 잠김 판정은 로비 버튼(<see cref="LobbyPresenter.QuestSideId"/>)이 한다.</summary>
         public static async UniTask<QuestPopup> OpenQuestAsync(QuestPopupData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.Quest, data ?? new QuestPopupData()) as QuestPopup;
+
+        /// <summary>연구 「고양이 공부방」(08 §8.5.3, MV-META-RESEARCH). 컨텐츠 메뉴 「성장」 탭(<c>05_contentOpen.key</c> research)이 연다.</summary>
+        public static async UniTask<ResearchPopup> OpenResearchAsync(MetaPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.Research, data ?? new MetaPopupData()) as ResearchPopup;
     }
 }
