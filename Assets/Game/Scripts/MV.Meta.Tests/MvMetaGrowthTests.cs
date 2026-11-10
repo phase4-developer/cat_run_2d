@@ -107,7 +107,7 @@ namespace MV.Meta.Tests
             Assert.That(first.AddedTier, Is.EqualTo(1));
             Assert.That(first.MergedTier, Is.EqualTo(0));
             Assert.That(Store.Lobby.Deck.Take(3), Is.EqualTo(new[] { 0, 2, 0 }));
-            Assert.That(Store.Lobby.Deck.Length, Is.EqualTo(Tables.WeaponTierMax() + 1), "덱 길이 = 103 active 상한 등급 + 1(MV-SPEC-02 Q-08)");
+            Assert.That(Store.Lobby.Deck.Count, Is.EqualTo(Tables.WeaponTierMax() + 1), "덱 길이 = 103 active 상한 등급 + 1(MV-SPEC-02 Q-08)");
 
             MvLobbyBuyResult second = Meta.BuyLobbyUp(MvMetaRules.LobbyWeapon);
             Assert.That(second.MergedTier, Is.EqualTo(2), "1등급 3장 → 2등급");
