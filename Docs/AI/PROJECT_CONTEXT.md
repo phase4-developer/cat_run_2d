@@ -56,28 +56,34 @@
 
 | 패키지 | 버전 | 저장소 안 tgz | Framework 스냅샷 | SHA-256 |
 |---|---|---|---|---|
-| `com.artress.managed-addressables` | 1.3.12-pre.10 | `Packages/Frozen/com.artress.managed-addressables-1.3.12-pre.10.tgz` | `20261107-managed-addressables-pre10` | `4190EDE4CAA6670CD42CE5F84E69226F5A738DF0EE3EA21D1E00460DE88B56A4` |
-| `com.jjevol.audio` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.audio-0.1.0-pre.3.tgz` | `20261109-bundle2` | `D68F43F9712A2C5FB19D4C929B3BEE6D33163C8555B2275AC79A6B18E87FB65A` |
+| `com.artress.managed-addressables` | 1.3.12-pre.17 | `Packages/Frozen/com.artress.managed-addressables-1.3.12-pre.17.tgz` | `20261110-bundle4` **베타** | `12062A9220B3A27C60A6DDBB02A3781CAB76B7D6549F9B2F6D9D187AAB285FCA` |
+| `com.jjevol.audio` | 0.1.0-pre.4 | `Packages/Frozen/com.jjevol.audio-0.1.0-pre.4.tgz` | `20261110-bundle4` **베타** | `823B407CDECB6E9212E69A0158F7D069F6A56DECF1043A6FBE60A5A1663AB606` |
 | `com.jjevol.audio.addressables` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.audio.addressables-0.1.0-pre.2.tgz` | `20261109-bundle2` | `CD9AE59072985A68029D11CA5A25E3C94292C24CA34E484AE32049B5309CC090` |
 | `com.jjevol.data` | 0.1.0-pre.1 | `Packages/Frozen/com.jjevol.data-0.1.0-pre.1.tgz` | `20261108-bundle1` | `8D584655A65D77F290ABAB59AA3231A30AD0F0BE48EF891A90261192C06D20DC` |
 | `com.jjevol.economy` | 0.1.0-pre.4 | `Packages/Frozen/com.jjevol.economy-0.1.0-pre.4.tgz` | `20261108-bundle1` | `EAC0A90BFE46E2751431BE41B5E006EE6FA63BFFDDA850628317FD55C7FEFE28` |
-| `com.jjevol.effects` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.effects-0.1.0-pre.2.tgz` | `20261108-bundle1` | `94975F2E324034262508D431267AB15B7DCB3ACCC5F46AF5521DD5C6CBA1AD05` |
+| `com.jjevol.effects` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.effects-0.1.0-pre.3.tgz` | `20261110-bundle4` **베타** | `0B2781102F8A663A7358579C1901789EEDCF9ABD1B2EFEBB551B62EDDCD797AE` |
 | `com.jjevol.effects.addressables` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.effects.addressables-0.1.0-pre.2.tgz` | `20261109-bundle2` | `540FB07D38E8CF8BB0A64B5F3331103E3D3796D9EDFE8C2EE80A8A2AD3155570` |
 | `com.jjevol.localization` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.localization-0.1.0-pre.3.tgz` | `20261108-bundle1` | `FFC2EB16164B7FB937663C32DFC210DCAC2ABCCE79CDD5EC401D5DE5B7CACC06` |
-| `com.jjevol.localization.authoring` | 0.1.0-pre.9 | `Packages/Frozen/com.jjevol.localization.authoring-0.1.0-pre.9.tgz` | `20261109-bundle2` | `A6540FDBA86B1D3BA79B7B56B7CD531068076E7D1F417DDBBA6DF645A4AD2D36` |
+| `com.jjevol.localization.authoring` | 0.1.0-pre.12 | `Packages/Frozen/com.jjevol.localization.authoring-0.1.0-pre.12.tgz` | `20261110-bundle4` **베타** | `14D4032F29CCB0186F561CFCB3A9380134FD831D2C5BAACC4D6CED7B2EFC011A` |
 | `com.jjevol.platform.core` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.platform.core-0.1.0-pre.2.tgz` | `20261108-bundle1` | `E6D79CF622F137FA623C9BEACB5E9149EC2747F941041BFE0D0112D7837B971B` |
 | `com.jjevol.platform.unity` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.platform.unity-0.1.0-pre.2.tgz` | `20261108-bundle1` | `A690C195CAC783DD55EA9C8DBF7C98C590708E7E7F79A55AE193139744A044AD` |
 | `com.jjevol.resources.addressables` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.resources.addressables-0.1.0-pre.3.tgz` | `20261108-bundle1` | `8FB6D140F0E1D7EF987F1AD369BC9C9436ED4F9BF869EB01E718D06EA0708540` |
-| `com.jjevol.save` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.save-0.1.0-pre.3.tgz` | `20261104-ae2-tables-candidate1` | `5BAEC760A19A6EEB3DF54E9E98840E7395454CB07084BAEDFF808C66A77478B0` |
+| `com.jjevol.save` | 0.1.0-pre.4 | `Packages/Frozen/com.jjevol.save-0.1.0-pre.4.tgz` | `20261110-bundle4` **베타** | `07E4C459ED61D62E0BDD8AB9F2B1F588AB1BEC32A514BE713F579E335DFB2007` |
 | `com.jjevol.scene` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.scene-0.1.0-pre.2.tgz` | `20261109-bundle2` | `8D98B251CF3DF979D81B5C563B7D3A762682F133DC29DA20FF6D6DD31DBC0AA5` |
 | `com.jjevol.scene.addressables` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.scene.addressables-0.1.0-pre.2.tgz` | `20261109-bundle2` | `B9FC0C1E73AD831D8F20204C1E615F79918111D69DFDA97B1B3533CC35A32738` |
 | `com.jjevol.scene.ui` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.scene.ui-0.1.0-pre.3.tgz` | `20261109-bundle2` | `7FDED5CC767F98FF31CE0BDD8C83FDEC0C3499FCFBD318556B1CD5118A213094` |
-| `com.jjevol.tables` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.tables-0.1.0-pre.2.tgz` | `20261108-bundle1` | `76F156FDE1BF8F85B5CE07907AE42FB35BD0869EC5EE3252EA95F515ABCC3A49` |
-| `com.jjevol.tables.authoring` | 0.1.0-pre.7 | `Packages/Frozen/com.jjevol.tables.authoring-0.1.0-pre.7.tgz` | `20261109-bundle2` | `A5C050317A92772562E74BC9DE676052A7C24A864B5CE96F4A87BCDB54BDA8B3` |
+| `com.jjevol.tables` | 0.1.0-pre.3 | `Packages/Frozen/com.jjevol.tables-0.1.0-pre.3.tgz` | `20261110-bundle4` **베타** | `16B7BD7F4703B9F4B7832B5AF20BEDC68EA9A81D98BBF6EB7BE875EE880809D9` |
+| `com.jjevol.tables.authoring` | 0.1.0-pre.10 | `Packages/Frozen/com.jjevol.tables.authoring-0.1.0-pre.10.tgz` | `20261110-bundle4` **베타** | `017472DB5B467528F148B82F4B5E4EAD5CBC04F3BFE3D433C097838C5B3736D9` |
 | `com.jjevol.ui` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.ui-0.1.0-pre.2.tgz` | `20261108-bundle1` | `18C30EA3731A47A1AB374546ABE9D9BB4C0AFD02F26E994A0DC5F8E84F3D8270` |
-| `com.jjevol.ui.addressables` | 0.1.0-pre.4 | `Packages/Frozen/com.jjevol.ui.addressables-0.1.0-pre.4.tgz` | `20261108-bundle1` | `169B5421A5CA0CF883DA133D71041B14F85E799CA82C4306C822AEC9BD31BFAF` |
+| `com.jjevol.ui.addressables` | 0.1.0-pre.5 | `Packages/Frozen/com.jjevol.ui.addressables-0.1.0-pre.5.tgz` | `20261110-bundle4` **베타** | `996595C96AE13F360C29E828484926E6FE52ED4788F8A9F9ED1BC12A3AB208C0` |
 | `com.jjevol.ui.economy` | 0.1.0-pre.5 | `Packages/Frozen/com.jjevol.ui.economy-0.1.0-pre.5.tgz` | `20261108-bundle1` | `93B39DEB04C7251B77525BFE5F0AA54EF22CB86B3BA5B79B8F9D9479F9A23E89` |
-| `com.jjevol.ui.urp` | 0.1.0-pre.6 | `Packages/Frozen/com.jjevol.ui.urp-0.1.0-pre.6.tgz` | `20261109-bundle2` | `888168B6FDEACE1113DD3BD9D03E6D10EDA8B273E93B07B3BA8546ED675B3E40` |
+| `com.jjevol.ui.urp` | 0.1.0-pre.7 | `Packages/Frozen/com.jjevol.ui.urp-0.1.0-pre.7.tgz` | `20261110-bundle4` **베타** | `DE1C96DAD1211CF4100ABB060AAF3242B07F6816EB521B202152655808A3A927` |
+| `com.jjevol.platform.network` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.platform.network-0.1.0-pre.2.tgz` | `20261110-bundle4` **베타** | `4672CCA4278125D69442E2257BBE905E997BB94981BEABB01BDA511513C8BAD5` |
+| `com.jjevol.platform.network.data` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.platform.network.data-0.1.0-pre.2.tgz` | `20261110-bundle4` **베타** | `92C8B4AC9FF8B053C8DABDB080DEE42DB3AD00953BF8E91AADE01495A186654E` |
+| `com.jjevol.platform.purchase.network` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.platform.purchase.network-0.1.0-pre.2.tgz` | `20261110-bundle4` **베타** | `36262D9EBCC4A0FB2D0321F75B5D4F53CB742CE6E2FE19FB19615E1B193C7C44` |
+| `com.jjevol.platform.push.firebase` | 0.1.0-pre.2 | `Packages/Frozen/com.jjevol.platform.push.firebase-0.1.0-pre.2.tgz` | `20261110-bundle4` **베타** | `EF8949D9D1DC9C13AF89ADCE9DAB468CB56C8F5E095195594D1DB753B5D0FB30` |
+
+4차 묶음(베타) 갱신: 2026-11-10, 계약 MV-00(작업 브랜치 `ai/MV-00-bundle4`), 사용자 원문(Framework 대화) 「유니티 내부 테스트만 진행하면 우선 게임에 적용가능하게 해주면 좋겠어 베타로는 내부테스트 끝난건 다 가져가서 쓰게 해주면 좋겠어」·「4번 진행」. Framework `Docs/Guide/Delivery.md` 「고정」 표(master `b6d846f`, 묶음 고정 `b3e6672`) `Snapshots/20261110-bundle4/`에서 위 표의 **베타** 13개를 바꿨다. 복사본 SHA-256은 모두 목록과 같다. 옛 tgz 13개는 쓰는 곳이 없어 지웠다. 위 표에 없던 `platform.network`·`.network.data`·`.purchase.network`·`.push.firebase`는 3차 묶음으로 연결한 것(원장 MV-00 bundle3 행)의 새 버전이다. 3차 묶음의 나머지 패키지는 그대로다. 4차 묶음에 처음 고정된 14개(`effects.spine`, `platform.network.http`, `platform.purchase.onestore`, `platform.login.google`·`.apple`, `platform.steam`, `platform.ads.adx`, `platform.analytics.appsflyer`·`.facebook`, `platform.review`·`.googleplay`, `genre.runner`·`.editor`·`.editor.addressables`)는 Framework 범위 밖이라 연결하지 않았다. 게임 코드 영향: network `SetResponseApplier`·`DefaultTimeout`, save `OriginalVersion`을 게임이 쓰지 않아 문서 주석 1곳만 고쳤다. 표 TSV 140개는 머리 행 중복·이름 없는 열·빈 행·짧은 행이 없다.
 
 외부 의존(2026-11-09 사용자 확인 「넣어」): `com.cysharp.unitask` Git `2e993ff18f28c931602a07292df0b0804eebef99`(2.5.11, Framework 검증 Host와 같음), `com.unity.addressables` 4.0.1, `com.unity.localization` 1.5.12, `com.unity.inputsystem` 1.18.0, `com.unity.nuget.newtonsoft-json` 3.2.2, `com.unity.render-pipelines.universal` 17.3.0, `com.unity.ugui` 2.0.0, `com.unity.test-framework` 1.6.0, IDE 연동 2개, 기본 모듈.
 

@@ -10,9 +10,9 @@ namespace MV.Platform.Net
     /// <summary>
     /// 로컬 백엔드(서버 없음). 요청 이름마다 처리기를 하나 등록하고, 처리기는 서버 함수와 같은 파라미터를 읽어
     /// 서버와 같은 응답 데이터 JSON을 돌려준다. 규칙 위반은 <see cref="NetworkRejection"/>(오류 코드)을 던진다.
-    /// 처리기는 상태를 바꾸지 않는다 — 반영은 <see cref="NetworkManager.SetResponseApplier"/>가 한다.
+    /// 처리기는 상태를 바꾸지 않는다 — 반영은 <see cref="NetworkManager.AddResponseApplier"/>로 등록한 반영기가 한다.
     /// 실제 요청 종류(정산·구매 등)는 각 기능 모듈이 자기 처리기를 <see cref="Register"/>로 더한다(MV.Platform은 게임 모듈을 참조하지 않는다).
-    /// platform.network 고정본(0.1.0-pre.1)의 <see cref="INetworkLocalService"/> 구현이다. 고정본의 기본 경로는 Server라
+    /// platform.network(0.1.0-pre.2)의 <see cref="INetworkLocalService"/> 구현이다. 고정본의 기본 경로는 Server라
     /// 서버가 없는 동안 게임 시작 코드가 <c>NetworkManager.DefaultRoute = NetworkRoute.Local</c>을 함께 건다.
     /// </summary>
     public sealed class MvLocalNetworkService : INetworkLocalService
