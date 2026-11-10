@@ -1,0 +1,12 @@
+﻿id	group	key	entryType	cardId	weight
+111001001	1	main	CommonActive		1
+111001002	1	main	GodCards		1
+111002001	2	defence	CommonActive		1
+111002002	2	defence	Exclude	110000004	1
+111002003	2	defence	Card	110000005	1
+111002004	2	defence	Card	110000006	1
+111002005	2	defence	Card	110000007	1
+111002006	2	defence	Card	110000008	1
+111002007	2	defence	GodCards		1
+111003001	3	rush	CommonActive		1
+111003002	3	rush	GodCards		1

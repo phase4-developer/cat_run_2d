@@ -27,21 +27,10 @@ namespace MV.Data
         }
 
         /// <summary>
-        /// 출시 경로는 TableBuilder 산출물(Resources, 암호화 끔). 에디터에서 산출물이 아직 없으면 TSV 폴더를 읽는다
-        /// (표 제작 창으로 반영하기 전 개발 대체, 07 §7.1.9).
+        /// TableBuilder 산출물(Resources, 암호화 끔)만 읽는다. 에디터에서도 TSV 폴더로 우회하지 않는다 — 산출물이 없으면 읽기 오류로 드러난다
+        /// (AGENTS.md Unity 절, 07 §7.1, 사용자 「앞으로 대체 경로로 읽지말고 Resources 산출물을 읽어」).
         /// </summary>
-        public static ITableSource DefaultSource()
-        {
-            var packaged = new PackagedTableSource(useEncrypt: false);
-#if UNITY_EDITOR
-            if (!packaged.HasTable(ConfigData.Table) && Directory.Exists(TsvDirectory))
-            {
-                Debug.LogWarning("[MvTableLoader] Resources 표 산출물이 없어 TSV 폴더를 읽습니다(에디터 전용). 표 제작 창으로 반영하세요.");
-                return new MvTsvDirectorySource(TsvDirectory);
-            }
-#endif
-            return packaged;
-        }
+        public static ITableSource DefaultSource() => new PackagedTableSource(useEncrypt: false);
 
         public static async Task<MvTables> LoadAsync(ITableSource source = null, MvValidationOptions options = null, Action<float> onProgress = null)
         {

@@ -1,0 +1,11 @@
+﻿id	key	rarity	statKey	baseValue	perLevel	maxLevel	unlockPriceType	unlockPriceId	unlockPriceValue	skillTrigger	skillEvery	skillDmgPct	skillTargets	levelPriceGroup	icon	portrait	active
+450001001	cheese	0	Dmg	5	1	30	1	1001010	20	1	10	80	1	302	UI_Icon_Friend_cheese	Portrait_Friend_cheese	1
+450001002	mackerel	0	Gold	8	2	30	1	1001010	20	1	10	80	1	302	UI_Icon_Friend_mackerel	Portrait_Friend_mackerel	1
+450001003	calico	1	Range	5	1	30	1	1001010	40	2	10	120	1	302	UI_Icon_Friend_calico	Portrait_Friend_calico	1
+450001004	tuxedo	1	CritChance	3	1	30	1	1001010	40	2	10	120	1	302	UI_Icon_Friend_tuxedo	Portrait_Friend_tuxedo	1
+450001005	cow	1	FireRate	5	1	30	1	1001010	40	2	10	120	1	302	UI_Icon_Friend_cow	Portrait_Friend_cow	1
+450001006	blackie	2	CritDmg	15	3	30	1	1001010	80	3	5000	180	2	302	UI_Icon_Friend_blackie	Portrait_Friend_blackie	1
+450001007	gray	2	Dmg	10	2	30	1	1001010	80	3	5000	180	2	302	UI_Icon_Friend_gray	Portrait_Friend_gray	1
+450001008	boss	3	Dmg	15	3	30	1	1001010	150	3	6000	250	3	302	UI_Icon_Friend_boss	Portrait_Friend_boss	1
+450001009	siamese	3	DoubleChance	5	1	30	1	1001010	150	3	6000	250	3	302	UI_Icon_Friend_siamese	Portrait_Friend_siamese	1
+450001010	persian	3	FireRate	12	2	30	1	1001010	150	3	6000	250	3	302	UI_Icon_Friend_persian	Portrait_Friend_persian	1
