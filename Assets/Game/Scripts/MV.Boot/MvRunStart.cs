@@ -18,14 +18,16 @@ namespace MV.Boot
         public int Area;
         public int Level = 1;
         public int Cp;
-        /// <summary>누적 생선(재화 <c>souls</c>).</summary>
+        /// <summary>누적 구출 고양이(재화 <c>rescueCat</c>, MV-SPEC-02 Q-34).</summary>
         public int Souls;
         public string God = "thunder";
         /// <summary>시작 덱 9칸(등급별 장수, 0번 미사용).</summary>
         public int[] Deck = new int[9];
         public int UpStair, UpWeapon, UpIncome;
-        public int AupRate, AupRange, AupClone, AupCrit, AupDbl;
-        public int PerkPower, PerkCrit, PerkObst, PerkDcap;
+        /// <summary>Area 강화 Lv(<c>13_areaUpgrade.key</c> → lv). 런 칸은 <see cref="MvRunStart.CreateContext"/>가 statKey로 고른다.</summary>
+        public Dictionary<string, int> AreaUps = new Dictionary<string, int>();
+        /// <summary>냥환생 영구 업그레이드 Lv(<c>14_rebirthPerk.key</c> → lv). 런 칸은 statKey로 고른다(MV-SPEC-02 Q-27).</summary>
+        public Dictionary<string, int> Perks = new Dictionary<string, int>();
         /// <summary>이 Area 벽 기록 <c>save.bars['A'+area]</c>: Floor별 칸 idx → 남은 HP. 없으면 null.</summary>
         public Dictionary<int, double>[] Bars;
         /// <summary>정산이 끝난 마지막 런 순번(시드 기준).</summary>
@@ -45,15 +47,8 @@ namespace MV.Boot
                 UpStair = store.Lobby.GetUp("stair"),
                 UpWeapon = store.Lobby.GetUp("weapon"),
                 UpIncome = store.Lobby.GetUp("income"),
-                AupRate = store.AreaUp.GetLevel("rate"),
-                AupRange = store.AreaUp.GetLevel("range"),
-                AupClone = store.AreaUp.GetLevel("clone"),
-                AupCrit = store.AreaUp.GetLevel("crit"),
-                AupDbl = store.AreaUp.GetLevel("dbl"),
-                PerkPower = store.Rebirth.GetPerk("power"),
-                PerkCrit = store.Rebirth.GetPerk("crit"),
-                PerkObst = store.Rebirth.GetPerk("obst"),
-                PerkDcap = store.Rebirth.GetPerk("dcap"),
+                AreaUps = Copy(store.AreaUp.Levels),
+                Perks = Copy(store.Rebirth.Perks),
                 LastSettledRunSeq = store.Progress.LastSettledRunSeq,
             };
             var deck = store.Lobby.Deck;
@@ -74,6 +69,13 @@ namespace MV.Boot
                     for (int i = 0; i < s.Deck.Length && i < config.StartDeck.Length; i++) s.Deck[i] = config.StartDeck[i];
             }
             return s;
+        }
+
+        static Dictionary<string, int> Copy(IReadOnlyDictionary<string, int> src)
+        {
+            var d = new Dictionary<string, int>(StringComparer.Ordinal);
+            if (src != null) foreach (var kv in src) d[kv.Key] = kv.Value;
+            return d;
         }
 
         /// <summary>
@@ -141,12 +143,11 @@ namespace MV.Boot
                 Souls = snap.Souls,
                 Cp = snap.Cp,
                 UpStair = snap.UpStair, UpWeapon = snap.UpWeapon, UpIncome = snap.UpIncome,
-                AupRate = snap.AupRate, AupRange = snap.AupRange, AupClone = snap.AupClone, AupCrit = snap.AupCrit, AupDbl = snap.AupDbl,
-                PerkPower = snap.PerkPower, PerkCrit = snap.PerkCrit, PerkObst = snap.PerkObst, PerkDcap = snap.PerkDcap,
                 God = string.IsNullOrEmpty(snap.God) ? "thunder" : snap.God,
                 Preset = DefaultPreset,
             };
             for (int i = 0; i < setup.Deck.Length && snap.Deck != null && i < snap.Deck.Length; i++) setup.Deck[i] = snap.Deck[i];
+            ApplyGrowth(setup, snap, tables);
             if (snap.Bars != null)
             {
                 var bars = new BarRecord(snap.Bars.Length);
@@ -157,5 +158,42 @@ namespace MV.Boot
             }
             return new RunContext { Tables = tables, Snapshot = setup, MetaModifiers = RunModifiers.Zero };
         }
+
+        /// <summary>
+        /// Area 강화·냥환생 Lv을 표 행의 statKey로 RunSetup 칸에 옮긴다(MV-SPEC-02 Q-27·Q-28: 항목 이름을 코드에 두지 않는다).
+        /// 런 규칙이 아직 없는 statKey(GoldCap·StartGold·StartDia·DiaPerLevel·GoldPerLevel)는 옮기지 않는다.
+        /// </summary>
+        static void ApplyGrowth(RunSetup setup, MvRunSnapshot snap, MvTables tables)
+        {
+            foreach (var a in tables.AreaUpgrade.Datas)
+            {
+                int lv = Lv(snap.AreaUps, a.key);
+                switch (a.statKey)
+                {
+                    case AreaStatKey.FireRate: setup.AupRate = lv; break;
+                    case AreaStatKey.Range: setup.AupRange = lv; break;
+                    case AreaStatKey.Clone: setup.AupClone = lv; break;
+                    case AreaStatKey.CritChance: setup.AupCrit = lv; break;
+                    case AreaStatKey.DoubleChance: setup.AupDbl = lv; break;
+                    case AreaStatKey.PierceChance: setup.AupPierce = lv; break;
+                }
+            }
+            foreach (var p in tables.RebirthPerk.Datas)
+            {
+                int lv = Lv(snap.Perks, p.key);
+                switch (p.statKey)
+                {
+                    case RebirthStatKey.DmgMul: setup.PerkPower = lv; break;
+                    case RebirthStatKey.CritMul: setup.PerkCrit = lv; break;
+                    case RebirthStatKey.ObstMul: setup.PerkObst = lv; break;
+                    case RebirthStatKey.DiaCap: setup.PerkDcap = lv; break;
+                    case RebirthStatKey.CraftDouble: setup.PerkCraftDbl = lv; break;
+                    case RebirthStatKey.StairDouble: setup.PerkStairDbl = lv; break;
+                }
+            }
+        }
+
+        static int Lv(Dictionary<string, int> levels, string key) =>
+            levels != null && !string.IsNullOrEmpty(key) && levels.TryGetValue(key, out int v) ? Math.Max(0, v) : 0;
     }
 }

@@ -14,6 +14,8 @@ namespace MV.Run
         ClimbStart, ClimbStepShown, ClimbLap, ClimbTierUp, ClimbWarpStage, ClimbEnd,
         RouletteStart, RouletteFlip, RouletteChosen, RouletteFly, CardApplied, RouletteEnd,
         Toast, Banner, RunFinished, CompanionShot,
+        /// <summary>지팡이 스택이 가득 차 공방 지급이 거절됨(MV-SPEC-02 6-3, Q-17). A=거절 장 수, B=tier.</summary>
+        WeaponRejected,
     }
 
     /// <summary>

@@ -78,8 +78,9 @@ namespace MV.Run.Tests
         public void Climb_KCompressionAndTiers()
         {
             var t = RunTestTables.Load(); var c = t.Climb.Config();
-            Assert.AreEqual(60, ClimbK(c, 60)); Assert.AreEqual(61, ClimbK(c, 61)); Assert.AreEqual(149, ClimbK(c, 327)); Assert.AreEqual(150, ClimbK(c, 330)); Assert.AreEqual(150, ClimbK(c, 1000));
-            Assert.AreEqual(1.6 + 0.05 * 10, ClimbT(c, 10), 1e-12); Assert.AreEqual(9, ClimbT(c, 150), 1e-12);
+            // MV-SPEC-02 6-5d·e(Q-07): N ≤ 30 그대로, 31~99 C 4, 100~149 C 5 …, T = min(1.5, 0.5 + 0.1(K − 1)).
+            Assert.AreEqual(30, ClimbK(c, 30)); Assert.AreEqual(31, ClimbK(c, 31)); Assert.AreEqual(48, ClimbK(c, 99)); Assert.AreEqual(44, ClimbK(c, 100)); Assert.AreEqual(152, ClimbK(c, 1000));
+            Assert.AreEqual(0.5, ClimbT(c, 1), 1e-12); Assert.AreEqual(1.4, ClimbT(c, 10), 1e-12); Assert.AreEqual(1.5, ClimbT(c, 150), 1e-12);
             void Tiers(int n, params int[] e) => Assert.AreEqual(e, ClimbTiers(t, n).ToArray(), $"n={n}");
             Tiers(4); Tiers(5, 0); Tiers(74, 3); Tiers(75, 4); Tiers(80, 4, 0); Tiers(150, 4, 4); Tiers(200, 4, 4, 3); Tiers(225, 4, 4, 4); Tiers(400, 4, 4, 4);
         }
@@ -117,7 +118,7 @@ namespace MV.Run.Tests
         public void Wall_BlocksAndFinishes()
         {
             var sim = Sim(new HandLevel().Wall(0, 5, 99999));
-            Run(sim, 120);
+            Run(sim, 60 * 6); // MV-SPEC-02 6-8: 막힌 뒤 STUCK_END_SEC초 뒤 종료
             var s = sim.State;
             Assert.IsTrue(s.Fin);
             Assert.AreEqual(FinishReason.Wall, s.Result.Reason);

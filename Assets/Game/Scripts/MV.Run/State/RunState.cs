@@ -99,7 +99,9 @@ namespace MV.Run
         public int N, K;
         public double Pw, Z0, ZEnd, DH, T;
         public double Time;
-        public double Pos, Rise;
+        public double Pos;
+        /// <summary>칸 생성 간격(MV-SPEC-02 6-5e, <see cref="RunFormulas.ClimbStepEvery"/>).</summary>
+        public double StepEvery;
         public int Shown;
         public int Tier = -1;
         public int Lap;
@@ -152,6 +154,9 @@ namespace MV.Run
             ulong seed = setup?.Seed ?? 0;
             ModeRng = new Pcg32Rng(seed, RunRngStreams.Mode);
             CompanionRng = new Pcg32Rng(seed, RunRngStreams.Companion);
+            // 크기는 표에서(MV-SPEC-02 Q-08·Q-09): 지팡이 단계 = 켜진 103_item tier 최대, 사격 유닛 = 본체 + 분신 상한.
+            W = new int[RunFormulas.WeaponTierMax(tables) + 1];
+            FireT = new double[1 + (tables != null ? RunFormulas.CloneCap(tables) : 0)];
         }
 
         // ---- 주입 ----
@@ -211,8 +216,8 @@ namespace MV.Run
         public double GaugeFill;
         /// <summary>공방 지급 등급 `R.bt`.</summary>
         public int Bt = 1;
-        /// <summary>등급별 무기 장수 `R.w[0..8]`(0 미사용).</summary>
-        public readonly int[] W = new int[9];
+        /// <summary>등급별 무기 장수 `R.w[0..최고 단계]`(0 미사용). 길이 = 103_item 켜진 tier 최대 + 1.</summary>
+        public readonly int[] W;
         public int Clones;
         /// <summary>출전 신(113)과 속성 `R.el`(bolt/fire).</summary>
         public GodData God;
@@ -224,7 +229,8 @@ namespace MV.Run
         public readonly List<int> CardOrder = new List<int>();
 
         // ---- 사격 ----
-        public readonly double[] FireT = new double[5];
+        /// <summary>유닛별 다음 발사까지 남은 시간. 길이 = 1 + 분신 상한(<see cref="RunFormulas.CloneCap"/>).</summary>
+        public readonly double[] FireT;
         public int Vol;
 
         // ---- 계단·게이트 ----
@@ -239,6 +245,12 @@ namespace MV.Run
         public int Souls;
         public int Dia;
         public int Walls;
+        /// <summary>결계에 막혀 있는 연속 시간(MV-SPEC-02 6-8, Q-13). 막히지 않은 프레임에 0.</summary>
+        public double StuckT;
+        /// <summary>공방 지급이 지팡이 스택 칸 수(WEAPON_STACK_MAX)에 막혀 거절된 장수(MV-SPEC-02 6-3, Q-17).</summary>
+        public int WeaponRejected;
+        /// <summary>계단 오르기로 앞으로 민 거리 합(ShiftWorld L 합). 템플릿 기준 z = P.Z − Base − ShiftSum.</summary>
+        public double ShiftSum;
         /// <summary>런 안 재화 외 보상(정산 대기, 07 §7.9). 지급은 MV.Meta.</summary>
         public readonly List<ConsumeData> PendingSettle = new List<ConsumeData>();
 
@@ -298,7 +310,7 @@ namespace MV.Run
         /// <summary>장착 최고 등급 `eqTier()`.</summary>
         public int EqTier()
         {
-            for (int t = 8; t >= 1; t--) if (W[t] > 0) return t;
+            for (int t = W.Length - 1; t >= 1; t--) if (W[t] > 0) return t;
             return 1;
         }
 
