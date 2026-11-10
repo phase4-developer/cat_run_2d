@@ -165,7 +165,7 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
   2. G7 모드(`IModeRule`): alleyWar·rapidRush·churuRush(08 §8.4.5~8.4.7, 402·401). 시작은 `ContentMenuData.StartModeHandler`에 연결.
   3. 패키지: 사용자 허용으로 17개 + purchasing 연결 완료(`d0491cb`). 남은 3개는 Firebase 13.17.0·AdMob 10.7.0 SDK 내려받기 사용자 확인 뒤.
   3-1. MV-VIEW 3차(칸 d) 보고를 받아 병합(그룹 끝이 아니어도 `MvGameLoop`·월드 프리팹을 건드리므로 dev 전체 확인 후).
-  3-2. 테스트 폴더 관찰(2026-11-10): 사용자가 Unity로 연 뒤 그림 `.meta` 약 3,150개에 Android 플랫폼 설정 줄이 붙었고 `Assets/TextMesh Pro/`가 새로 생겼다(사용자 작업 사본, 총괄은 건드리지 않음). TMP Essentials(D-PI2-2)·Android 플랫폼 전환을 dev에 넣을지 사용자에게 묻는다.
+  3-2. 사용자 「dev에 넣기」로 TMP Essential Resources(82파일)와 그림 `.meta` 3,149개 Android 덮어쓰기 블록을 dev `8bf1ab3`에 Commit, 전체 확인 `4f7cc6b6d7c6` PASS(EditMode 489, PlayMode 7). D-PI2-2의 TMP Settings 없음은 해결, 한글 글꼴은 남음.
   4. TMP Essential Resources·한글 글꼴(D-PI2-2), MV-UI-FX2, MV-TOOL-ART-5-1(배치 모드 `MvArtSetup.RequestEnsure` 쓰기 — 계약서만 있음, 그 영역은 mv-process-improve 세션과 겹치는지 먼저 본다).
   5. G8: MV-QA-HARNESS Unity 쪽, MV-QA-ACCEPT(D-87).
 - 기대 시험 목록 `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`은 새 시험이 들어오면 갱신한다(담당 근거 `EditMode.xml`의 fullname을 더함). Addressables 항목 추가는 그룹 파일 `  m_ReadOnly: 0
