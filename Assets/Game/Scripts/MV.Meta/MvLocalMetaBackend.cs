@@ -46,6 +46,15 @@ namespace MV.Meta
 
         public MvMetaResponse Handle(MvMetaRequest request)
         {
+            MvMetaResponse response = Dispatch(request);
+            // 콘텐츠 진행(퀘스트 카운터 등)은 원래 요청의 같은 응답 Data에 더한다(저장 1번). 진행 초기화 응답은 건드리지 않는다.
+            if (response.Ok && !response.ResetProgress)
+                foreach (var contribute in _contributors) contribute(request, response);
+            return response;
+        }
+
+        private MvMetaResponse Dispatch(MvMetaRequest request)
+        {
             if (request == null) throw new ArgumentNullException(nameof(request));
             MvSaveStore s = S;
             if (s == null || s.IsDisposed || Res == null || Res.IsDisposed) return MvMetaResponse.Reject(MvMetaErrors.NoStore);
@@ -66,6 +75,7 @@ namespace MV.Meta
                 case MvMetaRequestNames.StartResearch: return StartResearch(p);
                 case MvMetaRequestNames.ClaimResearch: return ClaimResearch(p);
                 default:
+                    if (_content.TryGetValue(request.Name, out var content)) return content(p);
                     return _debug.TryGetValue(request.Name, out var debug)
                         ? debug(p)
                         : MvMetaResponse.Reject(MvMetaErrors.UnknownRequest, request.Name);
@@ -609,5 +619,41 @@ namespace MV.Meta
                 return true;
             }
         }
+
+        // ───────── G7 콘텐츠 처리기(MV.Content가 등록) ─────────
+        // 콘텐츠 규칙은 MV.Content에 있고 MV.Meta는 MV.Content를 참조하지 않으므로(10 §10 의존 방향), 콘텐츠가 처리기를 여기에 넣는다.
+        // 처리기도 상태를 바꾸지 않고 새 값만 돌려준다(반영은 MvMeta). 서버 전환 때 같은 이름의 서버 함수가 받는다.
+
+        private readonly Dictionary<string, Func<JObject, MvMetaResponse>> _content = new Dictionary<string, Func<JObject, MvMetaResponse>>();
+
+        /// <summary>콘텐츠 요청 처리기 등록(같은 이름은 바꾼다). 기존 요청 이름은 덮지 않는다(switch가 먼저).</summary>
+        public void RegisterContent(string name, Func<JObject, MvMetaResponse> handler)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("요청 이름이 필요합니다.", nameof(name));
+            _content[name] = handler ?? throw new ArgumentNullException(nameof(handler));
+        }
+
+        private readonly List<Action<MvMetaRequest, MvMetaResponse>> _contributors = new List<Action<MvMetaRequest, MvMetaResponse>>();
+
+        /// <summary>
+        /// 성공 응답 보탬 등록(G7 콘텐츠). 처리기가 판정한 뒤 같은 응답의 <see cref="MvMetaResponse.Data"/>에 콘텐츠 컨테이너 값을 더한다
+        /// (예: 정산 응답에 퀘스트 카운터). 성공 알림(<see cref="MvMeta.Applied"/>) 안에서 요청을 다시 보내지 않기 위한 자리다.
+        /// </summary>
+        public void RegisterContributor(Action<MvMetaRequest, MvMetaResponse> contribute)
+        {
+            if (contribute == null) throw new ArgumentNullException(nameof(contribute));
+            if (!_contributors.Contains(contribute)) _contributors.Add(contribute);
+        }
+
+        public void UnregisterContributor(Action<MvMetaRequest, MvMetaResponse> contribute) => _contributors.Remove(contribute);
+
+        public bool HasContentHandler(string name) => name != null && _content.ContainsKey(name);
+
+        /// <summary>콘텐츠 처리기가 읽는 현재 값(읽기 전용으로만 쓴다).</summary>
+        public MvSaveStore Store => S;
+        public ResourceService Resources => Res;
+        public MvTables Tables => _t;
+        /// <summary>백엔드 시계(개발 빌드 <c>debug.addTime</c> 보정 포함).</summary>
+        public IMvClock Clock => _clock;
     }
 }

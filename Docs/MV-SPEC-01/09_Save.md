@@ -119,7 +119,7 @@
 |---|---|---|
 | `mvPlayRes` | `{resourceKey: {n, at}}` | `02_playResource` key별 보유 `n`, 마지막 충전 기준 시각 `at`(ms). 읽을 때 `(now − at) / 주기`만큼 충전(최대치까지)하고 `at`을 그만큼 앞으로 |
 | `mvMode` | `{contentKey: {best, first: int[]}}` | 최고 도달 단계 `best`, 첫 클리어 보상 받은 단계 목록 `first` |
-| `mvQuest` | `{daily:{period, cnt:{}, got:[]}, weekly:{…}, achieve:{cnt:{}, got:[]}, attend:{period, days, lastDay}, pass:{}}` | `period` = 기간 시작 날짜 문자열(일간 `YYYY-MM-DD`, 주간 그 주 월요일). 기간이 바뀌면 그 묶음만 비움. 하루 기준은 9.3.4와 같다 |
+| `mvQuest` | `{daily:{period, cnt:{}, got:[], claims:{}}, monthly:{period, cnt:{}, got:[], claims:{}}, achieve:{cnt:{}, got:[]}, attend:{period, days, lastDay}, pass:{}}` | 기간 종류마다 자기 칸(08 §8.5.1: 일일·월간·업적). `period` = 기간 키(일일 UTC `YYYY-MM-DD`, 월간 UTC `yyyyMM`, D-77 A UTC 0시). `cnt` = 카운터(`"{clearType}"` 전체, `"{clearType}:{cond}"` 조건별), `got` = 받은 1회형 id, `claims` = 반복형 받은 횟수 `{id: n}`. 퀘스트 상태를 쓰는 모든 요청은 쓰기 전에 기간을 굴려(바뀐 칸만 비움) 같은 응답으로 저장한다. 읽기도 굴린 결과로 계산한다. 옛 `weekly` 칸은 정규화에서 버린다 |
 | `mvResearch` | `{lv:{key: int}, run:{key, finishAt}}` | 진행 중 연구 1개(08 규칙), 끝 시각 ms. 앱을 다시 켜면 `now ≥ finishAt`이면 완료 처리 |
 | `mvShop` | `{buys:{productKey:{n, at}}, guarantee:{guaranteeId: int}}` | 구매 횟수·마지막 시각. 결제는 스텁이지만 기록 형식은 지금 정한다. `guarantee` = 천장 셈 값(키 `804_randomGuarantee` id, [07 §7.9.3](07_Tables.md)). 1차는 행이 없어 비어 있다 |
 

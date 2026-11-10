@@ -87,7 +87,7 @@ namespace MV.UI
                 var c = Side(b.Id);
                 c.Button.gameObject.SetActive(b.Visible);
                 if (!b.Visible) continue;
-                c.Title.text = b.Title;
+                c.Title.text = b.Dot ? b.Title + " <color=#ff4d4d>●</color>" : b.Title;
                 c.Sub.text = b.Sub;
                 c.Bg.color = b.Locked ? LockedBg : SideBg;
                 c.Button.interactable = b.Enabled;

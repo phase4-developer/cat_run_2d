@@ -37,6 +37,8 @@ namespace MV.UI
         public bool Enabled = true;
         /// <summary>해금 키(<c>05_contentOpen.key</c>). 없으면 null.</summary>
         public string UnlockKey;
+        /// <summary>빨간 점(받을 것 있음, 05 §5.16 탭 점과 같은 뜻).</summary>
+        public bool Dot;
 
         public LobbySideButton(string id) { Id = id; }
     }

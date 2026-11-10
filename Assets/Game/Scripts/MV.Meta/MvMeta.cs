@@ -396,6 +396,11 @@ namespace MV.Meta
             return Send(new MvMetaRequest(MvMetaRequestNames.MarkSeen, p));
         }
 
+        // ═════════ G7 콘텐츠 ═════════
+
+        /// <summary>로컬 백엔드(콘텐츠 처리기 등록 <see cref="MvLocalMetaBackend.RegisterContent"/>·읽기용). 서버 백엔드를 넣어도 읽기는 이것으로 한다.</summary>
+        public MvLocalMetaBackend Local => _local;
+
         // ═════════ 연구(08 §8.5.3, MV-META-RESEARCH) ═════════
 
         /// <summary>연구 단계 올리기 시작(비용 먼저, 끝 시각 저장). 판정은 로컬 백엔드 <see cref="MvResearchRules"/>.</summary>

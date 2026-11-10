@@ -69,6 +69,7 @@ namespace MV.Boot
         public static void Detach()
         {
             MvSave.CurrentChanged -= OnSaveChanged;
+            MV.Content.MvQuest.Current?.Dispose();
             MvMeta.Current = null;
             _tables = null;
         }
@@ -77,6 +78,7 @@ namespace MV.Boot
         {
             if (store == null || store.IsDisposed || _tables == null || MvMeta.Current != null) return;
             MvMeta.Current = new MvMeta(() => MvSave.Current, () => MvBootSave.Resources, _tables);
+            MV.Content.MvQuest.Install(MvMeta.Current); // 퀘스트 처리기·응답 보탬 등록(MV-META-QUEST)
         }
     }
 }

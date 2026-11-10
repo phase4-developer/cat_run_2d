@@ -365,11 +365,14 @@ namespace MV.Boot
 
         // ═════════ 결과 ═════════
 
+        RunResult _questRun;
+
         void FinishRun()
         {
             Phase = MvLoopPhase.Result;
             RunsFinished++;
             var r = _sim.State.Result;
+            _questRun = r; // 정산 성공 뒤 런 안 퀘스트 카운터(계단·벽) 기록
             LastFinishReason = r != null ? r.Reason.ToString() : "None";
             if (r == null)
             {
@@ -424,6 +427,13 @@ namespace MV.Boot
                 _loop.SettleCount++;
                 var r = _inner.Settle(outcome, mul);
                 _loop.LastSettleOk = r != null && r.Ok;
+                if (_loop.LastSettleOk && _loop._questRun != null)
+                {
+                    // 본편 런에서만 생기는 값(계단·벽)은 정산 응답에 없어 기록 요청으로 보낸다(정산 카운터는 정산 응답에 함께 저장됨).
+                    var q = MV.Content.MvQuest.Current?.RecordRun(_loop._questRun);
+                    if (q != null && !q.Ok) Debug.LogWarning("[MvGameLoop] 퀘스트 런 기록 실패 " + q);
+                    _loop._questRun = null;
+                }
                 return r;
             }
         }
