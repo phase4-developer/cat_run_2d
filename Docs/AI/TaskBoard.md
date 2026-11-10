@@ -33,6 +33,7 @@
 | MV-VIEW 3차 고양이·충돌 연출 | 진행(칸 d) | — | 사용자 문의 「캐릭터가 안 보이고 충돌 처리 덜 됨」 확인: 런 화면에 플레이어·친구 고양이 그리기 코드 없음(그림은 `Atlas_World_Cat_T1~T5`에 있음), 충돌은 소리·이펙트만. 계약 `MV-VIEW-4.md`. 에뮬레이터 확인 NOT_RUN(AI Unity 권한에 Android 빌드 없음) |
 | MV-CONTENT-* (G7) | 준비 완료 | asmdef `14db621` | MV.Content 참조(Save·Tables·Data·Economy·UniTask), MV.UI→MV.Content, `MV.Content.Tests` asmdef. 계약서 작성됨(미배정): `G7-common.md`, `MV-META-RESEARCH-1.md`(칸 b), `MV-META-QUEST-1.md`(칸 c) — `<DEV>`를 배정 시 dev SHA로 바꾼다 |
 | MV-QA-ACCEPT (G8) | 대기 | — | D-87 기준 |
+| MV-NET-SERVER 서버 전환 | 보류(서버 붙일 때, 사용자 「응 그렇게 진행해」 2026-11-10) | — | ① network.firebase 연결·Firebase SDK(App·Functions) — 칸 f `ai/MV-00-sdk`에서 사용자 허용으로 진행 중 ② 부팅에서 `NetworkManager.SetServerProvider(new FirebaseNetworkProvider(...))` 1번, 로그인 패키지와 같은 FirebaseApp ③ `NetworkManager.DefaultRoute = Server` 1줄(지금 GameBootstrap이 Local 고정), setter가 대기 요청 취소·캐시 비움이라 요청 전 1번만 ④ `DefaultTimeout`을 null로 끄지 않고 경로 바꿀 때 시간 제한도 함께 설정 ⑤ `SetResponseApplier`는 한 슬롯 — `NetworkDataBinding.Connect`와 게임 자체 반영(MvMeta 등) 충돌 먼저 확인 ⑥ 로컬·서버 응답 동일성 시험 + DefaultRoute만 바꿔도 요청 클래스가 도는 회귀 시험, 서버 함수 없는 동안 가짜 `INetworkProvider`로 시험 틀 먼저. 출처: mv-process-improve 소스 정리(컴파일 미확인) |
 
 ## 담당표
 
@@ -72,6 +73,7 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 ## 열린 결정 (권장안으로 진행, 교체 가능)
 
 D-27 실기 FIELD, D-68 출시 저장 키, D-08 서버 공급자, D-40·41·42(VIEW 권장안, 42는 Linear 유지), D-MVDATA-PET `Atlas_World_Pet`, 450 portrait 접두, 802401001 행·480 statKey·413 step·701 active 0, 막힘 종료 사유, Friend_T 아틀라스 2페이지, `Tex_God_*` 위치, ConsumeType 생성(Framework 요청), D-META-01~04, D-RULE-01~05, D-NET-1(공용 시계 MV.Core `IClock`)·D-NET-2, D-ADS-1·2, D-LOGIN-1·2, D-SND-2(Steal kindId), D-ART-01~06, D-45~49(FX 권장안), D-FX-1(이펙트 그림 층은 MV.UI). D-72 부속(304 6~15 lineKind 정본 deco 규칙 유지), 400 `dailyLimit` 모두 0. 3차 표 교체 MV-TABLE-SWAP 병합, dev `b9182cb` 전체 확인 `c0fcbf8e461f` PASS(EditMode 426, PlayMode 7)(viewShape·304 소품·줄·04 part·dailyLimit). bumpH 1줄은 MV-META 3차에서 끝. 결정 후보(SWAP): 길가 소품은 정본 deco 문턱 우선·목록만으로 고르려면 가중치 열, 원소 when은 bolt 아니면 fire(god.blast key null만 옛 색과 다름), 400에 없는 key는 한도 없음. 후속 계약: MV-UI-FX2(덱 머지·해금 오버레이·화면 전환 연출).
+- Framework 요청 후보(공개 API 변경, 사용자 결정 대기): platform.network ① 기본 경로 선언 설정 ② 로컬 경로별 시간 제한 ③ 응답 반영기 여러 개 등록.
 - 미해결(사용자): 없음.
 
 ## 총괄 인계 (2026-11-10, 3번째 총괄 대화 마감)
