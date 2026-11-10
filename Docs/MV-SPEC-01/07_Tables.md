@@ -66,7 +66,7 @@
 | 빈칸 | 열마다 기본값(각 표 정의에 적음). consumeData 열이 비면 「보상 없음」 |
 | 리스트 | 한 칸 안 여러 값은 `/` (Framework `GetIntList`·`GetFloatList` 구분자). **consumeData만 `;`** |
 | 원본 | 구글 시트 「moonVillage_Table」(내 드라이브, 2026-11-10 생성, 링크는 원장 「표 구글 시트」 행)에서 TSV로 내보낸다. 시트 서식은 §7.1.1a. 정본은 저장소의 TSV. 시트 머리는 JJEvol 표 규격 v1 §4: 1줄 설명(뜻·참조 표·단위·숫자 코드 뜻) → 2줄 형식(`int`·`long`·`string`·`bool(0/1)`·`consume`) → 3줄 열 이름 → 데이터. **내보내기 도구가 열 이름 줄 위 2줄과 `#` 열을 빼고** TSV 첫 줄을 열 이름으로 만든다(Framework `tables.authoring`에는 시트 입력이 없다) |
-| 반영 경로(필수) | TSV → Framework `TableBuilder`(표 제작 창) → Resources 산출물. 빌드 때 `TableAuthoringOptions.ValidateTables` 콜백에 게임 검증기 `MvTableValidator`(§7.13)를 등록해 **오류면 반영을 막는다**. 이 경로를 거치지 않은 TSV 복사·직접 편집은 금지(개발용 덮어쓰기 §7.1.9 제외) |
+| 반영 경로(필수) | TSV → Framework `TableBuilder`(표 제작 창) → Resources 산출물. 빌드 때 `TableAuthoringOptions.ValidateTables` 콜백에 게임 검증기 `MvTableValidator`(§7.13)를 등록해 **오류면 반영을 막는다**. 이 경로를 거치지 않은 TSV 복사·직접 편집은 금지(개발용 덮어쓰기 §7.1.9 제외). **게임은 에디터에서도 Resources 산출물만 읽는다** — 산출물이 없을 때 TSV 폴더를 읽는 대체 경로를 두지 않고 오류로 드러낸다(2026-11-10 사용자 원문 「앞으로 대체 경로로 읽지말고 Resources 산출물을 읽어 그런 우회로 처리하니까 문제야 이건 패키지 프로젝트에도 전달하면서 규칙에 추가하라해 필요하면 전체 규칙으로 설정도하고」). 산출물은 저장소에 Commit하고, Android 빌드 메서드(`MvBuild`)도 빌드 직전에 TableBuilder로 다시 만든다 |
 
 ### 7.1.1a 구글 시트 서식 (표 사용 시 시트 규칙)
 
