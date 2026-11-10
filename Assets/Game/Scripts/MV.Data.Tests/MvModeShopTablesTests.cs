@@ -25,7 +25,7 @@ namespace MV.Data.Tests
             var war = t.Content.ByKey("alleyWar");
             Assert.That(war.hudId, Is.EqualTo("Defence"));
             Assert.That(war.spendResource.Single().TypeId, Is.EqualTo((int)ConsumeType.PlayResource));
-            Assert.That(war.spendResource.Single().Id, Is.EqualTo(101));
+            Assert.That(war.spendResource.Single().Id, Is.EqualTo(2001001));
             Assert.That(t.Content.ByKey("bigMouse").active, Is.False); // 2차.
 
             Assert.That(t.ModeStage.LastStage(1), Is.EqualTo(16));
@@ -213,7 +213,7 @@ namespace MV.Data.Tests
         public void Shop_PriceTypeNotAllowed_IsError()
         {
             var text = TsvFixture.Set(TsvFixture.Read("701_product"), "701006001", "priceType", "3");
-            text = TsvFixture.Set(text, "701006001", "priceId", "101");
+            text = TsvFixture.Set(text, "701006001", "priceId", "2001001");
             AssertError(TsvFixture.Validate(("701_product", text)), "701_product", "priceType 3");
         }
 

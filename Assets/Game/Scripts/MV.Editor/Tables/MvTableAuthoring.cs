@@ -99,11 +99,14 @@ namespace MV.Editor.Tables
 
     /// <summary>
     /// 시트 → TSV 내보내기(07 §7.1.1). 시트 머리(JJEvol 표 규격 v1 §4)는 1줄 설명 → 2줄 형식 → 3줄 열 이름 → 데이터다.
-    /// 열 이름 줄 위 2줄과 `#` 열을 빼고, 줄바꿈 LF·BOM 없음으로 쓴다. 출력은 TableBuilder로 반영한다(직접 Resources 복사 금지).
+    /// 열 이름 줄 위 2줄과 `#` 열을 빼고, 줄바꿈 LF·BOM 없음으로 쓴다.
+    /// 맨 앞 id 입력 열 `table`·`category`·`index`(07 §7.1.1a)도 뺀다. id 칸은 시트 수식의 계산값이 그대로 내려온다. 출력은 TableBuilder로 반영한다(직접 Resources 복사 금지).
     /// </summary>
     public static class MvSheetTsvExporter
     {
         public const int HumanHeaderLines = 2;
+        /// <summary>시트 전용 id 입력 열(07 §7.1.1a). 열 이름 줄의 맨 앞 3칸이 정확히 이 순서일 때만 뺀다.</summary>
+        public static readonly string[] IdInputColumns = { "table", "category", "index" };
 
         /// <summary>시트에서 복사한 TSV 원문을 표 TSV로 바꾼다.</summary>
         public static string Convert(string sheetText)
@@ -115,7 +118,8 @@ namespace MV.Editor.Tables
             if (lines.Count <= HumanHeaderLines) throw new FormatException("시트에 열 이름 줄이 없습니다(설명·형식 2줄 다음이 열 이름)");
 
             var header = lines[HumanHeaderLines].Split('\t');
-            var keep = Enumerable.Range(0, header.Length).Where(i => header[i].Length > 0 && !header[i].StartsWith("#")).ToArray();
+            int skip = header.Length > IdInputColumns.Length && IdInputColumns.Select((n, i) => header[i] == n).All(x => x) ? IdInputColumns.Length : 0;
+            var keep = Enumerable.Range(skip, header.Length - skip).Where(i => header[i].Length > 0 && !header[i].StartsWith("#")).ToArray();
             var outLines = new List<string>();
             for (int l = HumanHeaderLines; l < lines.Count; l++)
             {

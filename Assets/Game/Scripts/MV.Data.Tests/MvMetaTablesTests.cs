@@ -145,7 +145,7 @@ namespace MV.Data.Tests
 
             var day6 = T.Attendance.Datas.Single(a => a.day == 6);
             Assert.That(day6.reward.Select(x => x.Type), Is.All.EqualTo(ConsumeType.PlayResource));
-            Assert.That(day6.reward.Select(x => x.Id), Is.EqualTo(new[] { 101, 102, 103 }));
+            Assert.That(day6.reward.Select(x => x.Id), Is.EqualTo(new[] { 2001001, 2001002, 2001003 }));
             var day7 = T.Attendance.Datas.Single(a => a.day == 7);
             Assert.That(day7.reward.Count, Is.EqualTo(2));
             Assert.That((day7.reward[1].Id, day7.reward[1].Value), Is.EqualTo((1001015, 1.0)));
@@ -337,7 +337,7 @@ namespace MV.Data.Tests
             var on = Set(BlessingData.Table, "480001003", "active", "1");
             AssertError(TsvFixture.Validate((BlessingData.Table, on)), BlessingData.Table, "D-79");
 
-            var stamina = Set(PlayResourceData.Table, "105", "active", "1");
+            var stamina = Set(PlayResourceData.Table, "2001005", "active", "1");
             AssertNoError(TsvFixture.Validate((BlessingData.Table, on), (PlayResourceData.Table, stamina)), BlessingData.Table, "D-79");
         }
 

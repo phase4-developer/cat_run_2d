@@ -1695,7 +1695,7 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 
 | 열 | 타입 | 뜻 |
 |---|---|---|
-| id | int | 101~ |
+| id | int | 2001001~(표 번호 2 × 1,000,000 + 분류 1 × 1,000 + 순번, §7.1.1a. 2026-11-10 101~105에서 바꿈, 저장은 key라 이관 없음) |
 | key | string | `ticket.alleyWar` … |
 | type | string | 자원 종류 |
 | chargeType | int | 1 시간 회복 / 2 일일 초기화 |
@@ -1705,7 +1705,7 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | sort, active | int | |
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
 
-행은 [08 §8.7.2](08_Content.md)(101~105).
+행은 [08 §8.7.2](08_Content.md)(골목 수비전 입장권(2001001)~기운(2001005)).
 
 ### 7.8.12 07_consumeType — 보상·비용 종류 정의
 
@@ -2268,7 +2268,7 @@ id	group	floor	h0	h1	rows	souls	cellMode
 
 ### 7.15.2 다른 문서에 넘기는 가정
 
-- **08**: 4xx·7xx 표 열 정의는 08이 정본이고 이 문서는 목록·관계(§7.2, §7.9)만 가진다. 08의 consumeType(610·620·621·622·630), 16_levelPrice 그룹(301 이상), `01_wealth` 5~17, `02_playResource` 101~105, `05_contentOpen` 5001001~018, `08_adPlacement` 모드·상점·축복 행을 이 문서 표에 그대로 받는다. 600번대 type을 메타 보상에 쓰지 않는다(608·609·630 제외).
+- **08**: 4xx·7xx 표 열 정의는 08이 정본이고 이 문서는 목록·관계(§7.2, §7.9)만 가진다. 08의 consumeType(610·620·621·622·630), 16_levelPrice 그룹(301 이상), `01_wealth` 5~17, `02_playResource` 2001001~2001005, `05_contentOpen` 5001001~018, `08_adPlacement` 모드·상점·축복 행을 이 문서 표에 그대로 받는다. 600번대 type을 메타 보상에 쓰지 않는다(608·609·630 제외).
 - **05**: `09_uiResource` 행과 `ui.*` 문구는 05가 늘린다. 화면은 `08_adPlacement.key`로 광고 자리를 찾는다.
 - **02·06**: `300_runConfig` 그룹 001~008(95키)과 `04_effect` 행·`320_camera` 열은 02·06이 정본이다.
 - **03**: `03_sound` 33행, 아틀라스 이름, `sprite_catalog.tsv` 형식은 03이 정본이다. 이 문서는 열 정의와 검증 규칙만 가진다.
