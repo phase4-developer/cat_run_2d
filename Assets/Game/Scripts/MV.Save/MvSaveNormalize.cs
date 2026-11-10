@@ -185,7 +185,7 @@ namespace MV.Save
         internal static JObject Quest(JObject v) => new JObject
         {
             ["daily"] = QuestPeriod(v["daily"] as JObject ?? new JObject()),
-            ["weekly"] = QuestPeriod(v["weekly"] as JObject ?? new JObject()),
+            ["monthly"] = QuestPeriod(v["monthly"] as JObject ?? new JObject()), // 08 §8.5.1 월간(yyyyMM). 옛 weekly 칸은 쓰지 않아 버린다.
             ["achieve"] = new JObject { ["cnt"] = R.IntMap((v["achieve"] as JObject)?["cnt"]), ["got"] = R.KeyList((v["achieve"] as JObject)?["got"]) },
             ["attend"] = Attend(v["attend"] as JObject ?? new JObject()),
             ["pass"] = R.Object(v["pass"]),
@@ -196,6 +196,7 @@ namespace MV.Save
             ["period"] = R.Str(v["period"], ""),
             ["cnt"] = R.IntMap(v["cnt"]),
             ["got"] = R.KeyList(v["got"]),
+            ["claims"] = R.IntMap(v["claims"]), // 반복형 받은 횟수 {questId: n}
         };
 
         private static JObject Attend(JObject v) => new JObject

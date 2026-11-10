@@ -27,6 +27,9 @@ namespace MV.UI
         public const string FakeAd = "FakeAd";
         /// <summary><c>UIPopup_ContentMenu</c>(MV-UI-CONTENT).</summary>
         public const string ContentMenu = "ContentMenu";
+        /// <summary><c>UIPopup_Quest</c>(MV-META-QUEST).</summary>
+        public const string Quest = "Quest";
+
         /// <summary><c>UIPopup_Research</c>(MV-META-RESEARCH, 컨텐츠 메뉴 「성장」 탭).</summary>
         public const string Research = "Research";
     }

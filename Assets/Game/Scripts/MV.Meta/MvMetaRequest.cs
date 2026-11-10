@@ -66,6 +66,12 @@ namespace MV.Meta
             DebugGrant, DebugLevelUp, DebugReset, DebugOpenRebirth, DebugClearCooldown, DebugUnlockAll, DebugResetDaily, DebugAddTime,
         };
 
+        // G7 퀘스트(MV-META-QUEST). 처리기는 MV.Content <c>MvQuestBackend</c>가 <see cref="MvLocalMetaBackend.RegisterContent"/>로 등록한다.
+        /// <summary>퀘스트 카운터 더하기. ev = [{t: clearType, c: clearCondition(0 = 전체), v: 양}].</summary>
+        public const string QuestRecord = "meta.questRecord";
+        /// <summary>퀘스트·업적 보상 받기. id = 413_repeatQuest 또는 420_achievement id.</summary>
+        public const string QuestClaim = "meta.questClaim";
+
         // 연구(08 §8.5.3, MV-META-RESEARCH). 판정은 <see cref="MvResearchRules"/>.
         /// <summary>group = 계열. 비용을 먼저 내고 끝 시각을 저장한다.</summary>
         public const string StartResearch = "meta.startResearch";
@@ -91,10 +97,13 @@ namespace MV.Meta
         public const string AdNotWatched = "meta.adNotWatched";
         public const string NoReward = "meta.noReward";
         public const string SaveFailed = "meta.saveFailed";
+        /// <summary>퀘스트 목표 미달(MV-META-QUEST).</summary>
+        public const string NotDone = "meta.notDone";
+        /// <summary>이미 받은 퀘스트·업적 단계(MV-META-QUEST).</summary>
+        public const string AlreadyClaimed = "meta.alreadyClaimed";
+
         /// <summary>다른 연구가 진행 중(저장 <c>mvResearch.run</c> 1칸).</summary>
         public const string Busy = "meta.busy";
-        /// <summary>진행 중 연구가 없거나 끝 시각 전.</summary>
-        public const string NotDone = "meta.notDone";
     }
 
     /// <summary>
