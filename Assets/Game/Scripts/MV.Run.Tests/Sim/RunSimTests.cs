@@ -67,7 +67,8 @@ namespace MV.Run.Tests
         {
             var s = NewState();
             var t = s.Tables;
-            Assert.AreEqual(11.4, Threshold(t.ChargeGate.ByKey("sgate"), 0, s.Bal, s.ZoneHp), 1e-9);
+            // MV-SPEC-02: sgate는 107 mul1·useAreaHp0·diffMul0 + 지역 sgateM
+            Assert.AreEqual(5.7, Threshold(t.ChargeGate.ByKey("sgate"), 0, s.Bal, s.ZoneHp), 1e-9);
             var cg = t.ChargeGate.ByKey("cgate");
             Assert.AreEqual(new[] { 5.7, 17.1, 28.5, 39.9 }, Enumerable.Range(0, 4).Select(k => System.Math.Round(Threshold(cg, k, s.Bal, s.ZoneHp), 9)).ToArray());
             var need = Enumerable.Range(1, 7).Select(lv => System.Math.Round(GaugeNeed(s, lv), 2)).ToArray();
@@ -107,11 +108,12 @@ namespace MV.Run.Tests
         {
             var sim = Sim(new HandLevel());
             sim.Tick(0.05, RunInput.Drag(9));
-            Assert.AreEqual(3.2, sim.State.P.Tx, 1e-12);
-            Assert.AreEqual(3.2 * 0.7, sim.State.P.X, 1e-12);
+            // MV-SPEC-02: LANE_X_MAX 3.5, MOVE_FOLLOW_K 10 → 한 틱 추종 0.05 × 10
+            Assert.AreEqual(3.5, sim.State.P.Tx, 1e-12);
+            Assert.AreEqual(3.5 * 0.5, sim.State.P.X, 1e-12);
             Assert.AreEqual(0.2, sim.State.P.Z, 1e-12);
             sim.Tick(1.0, RunInput.Key(-1)); // dt 상한 0.05
-            Assert.AreEqual(3.2 - 0.05 * 9, sim.State.P.Tx, 1e-12);
+            Assert.AreEqual(3.5 - 0.05 * 9, sim.State.P.Tx, 1e-12);
         }
 
         [Test]

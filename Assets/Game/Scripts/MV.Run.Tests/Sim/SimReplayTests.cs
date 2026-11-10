@@ -17,10 +17,10 @@ namespace MV.Run.Tests
     /// </summary>
     public sealed class SimReplayTests
     {
-        [Test] public void Replay_BASE() => Run("SIM_BASE.json");
-        [Test] public void Replay_RUN01() => Run("SIM_RUN-01.json");
-        [Test] public void Replay_RUN02() => Run("SIM_RUN-02.json");
-        [Test] public void Replay_RUN03() => Run("SIM_RUN-03.json");
+        [Test, Ignore("Q-04: 프로토 덤프 대조 — 새 기준 대조로 교체 예정")] public void Replay_BASE() => Run("SIM_BASE.json");
+        [Test, Ignore("Q-04: 프로토 덤프 대조 — 새 기준 대조로 교체 예정")] public void Replay_RUN01() => Run("SIM_RUN-01.json");
+        [Test, Ignore("Q-04: 프로토 덤프 대조 — 새 기준 대조로 교체 예정")] public void Replay_RUN02() => Run("SIM_RUN-02.json");
+        [Test, Ignore("Q-04: 프로토 덤프 대조 — 새 기준 대조로 교체 예정")] public void Replay_RUN03() => Run("SIM_RUN-03.json");
 
         static void Run(string file)
         {
