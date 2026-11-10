@@ -55,6 +55,16 @@
         "com.unity.nuget.newtonsoft-json": "3.2.2"
       }
     },
+    "com.jjevol.economy.drop": {
+      "version": "file:Frozen/com.jjevol.economy.drop-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.economy": "0.1.0-pre.4",
+        "com.jjevol.tables": "0.1.0-pre.2",
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
     "com.jjevol.effects": {
       "version": "file:Frozen/com.jjevol.effects-0.1.0-pre.2.tgz",
       "depth": 0,
@@ -73,6 +83,17 @@
       "dependencies": {
         "com.jjevol.effects": "0.1.0-pre.2",
         "com.unity.addressables": "4.0.1"
+      }
+    },
+    "com.jjevol.effects.ui": {
+      "version": "file:Frozen/com.jjevol.effects.ui-0.1.0-pre.3.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.effects": "0.1.0-pre.2",
+        "com.jjevol.ui.addressables": "0.1.0-pre.4",
+        "com.unity.ugui": "2.0.0",
+        "com.cysharp.unitask": "2.5.11"
       }
     },
     "com.jjevol.localization": {
@@ -98,11 +119,136 @@
         "com.unity.nuget.newtonsoft-json": "3.2.2"
       }
     },
+    "com.jjevol.platform.ads": {
+      "version": "file:Frozen/com.jjevol.platform.ads-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.core": "0.1.0-pre.2"
+      }
+    },
+    "com.jjevol.platform.analytics": {
+      "version": "file:Frozen/com.jjevol.platform.analytics-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.core": "0.1.0-pre.2"
+      }
+    },
+    "com.jjevol.platform.analytics.firebase": {
+      "version": "file:Frozen/com.jjevol.platform.analytics.firebase-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.analytics": "0.1.0-pre.1"
+      }
+    },
     "com.jjevol.platform.core": {
       "version": "file:Frozen/com.jjevol.platform.core-0.1.0-pre.2.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
+    },
+    "com.jjevol.platform.localnotifications": {
+      "version": "file:Frozen/com.jjevol.platform.localnotifications-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.core": "0.1.0-pre.2"
+      }
+    },
+    "com.jjevol.platform.localnotifications.unity": {
+      "version": "file:Frozen/com.jjevol.platform.localnotifications.unity-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.localnotifications": "0.1.0-pre.1",
+        "com.unity.mobile.notifications": "2.4.0"
+      }
+    },
+    "com.jjevol.platform.login": {
+      "version": "file:Frozen/com.jjevol.platform.login-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.core": "0.1.0-pre.2"
+      }
+    },
+    "com.jjevol.platform.network": {
+      "version": "file:Frozen/com.jjevol.platform.network-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "com.jjevol.platform.network.data": {
+      "version": "file:Frozen/com.jjevol.platform.network.data-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.data": "0.1.0-pre.1",
+        "com.jjevol.platform.network": "0.1.0-pre.1",
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "com.jjevol.platform.purchase": {
+      "version": "file:Frozen/com.jjevol.platform.purchase-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.core": "0.1.0-pre.2"
+      }
+    },
+    "com.jjevol.platform.purchase.network": {
+      "version": "file:Frozen/com.jjevol.platform.purchase.network-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.purchase": "0.1.0-pre.1",
+        "com.jjevol.platform.network": "0.1.0-pre.1",
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "com.jjevol.platform.purchase.unityiap": {
+      "version": "file:Frozen/com.jjevol.platform.purchase.unityiap-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.purchase": "0.1.0-pre.1",
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "com.jjevol.platform.push": {
+      "version": "file:Frozen/com.jjevol.platform.push-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.core": "0.1.0-pre.2"
+      }
+    },
+    "com.jjevol.platform.push.firebase": {
+      "version": "file:Frozen/com.jjevol.platform.push.firebase-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.push": "0.1.0-pre.1"
+      }
+    },
+    "com.jjevol.platform.tracking": {
+      "version": "file:Frozen/com.jjevol.platform.tracking-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
+    "com.jjevol.platform.tracking.apple": {
+      "version": "file:Frozen/com.jjevol.platform.tracking.apple-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.tracking": "0.1.0-pre.1",
+        "com.unity.ads.ios-support": "1.0.1"
+      }
     },
     "com.jjevol.platform.unity": {
       "version": "file:Frozen/com.jjevol.platform.unity-0.1.0-pre.2.tgz",
@@ -233,6 +379,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.ads.ios-support": {
+      "version": "1.0.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.burst": {
       "version": "1.8.28",
       "depth": 2,
@@ -306,6 +459,15 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.mobile.notifications": {
+      "version": "2.4.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.androidjni": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.6",
       "depth": 3,
@@ -325,6 +487,19 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.purchasing": {
+      "version": "5.3.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.services.core": "1.14.0",
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
@@ -374,6 +549,17 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.core": {
+      "version": "1.16.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
