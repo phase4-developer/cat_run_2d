@@ -216,7 +216,7 @@ namespace MV.Run.Tests
 
         [TestCase(0, 100, true)]
         [TestCase(50, 100, false)]
-        public void MidZone_SlowsForwardSpeed(double from, double to, bool inside)
+        public void MidZone_SlowsForwardSpeed(int from, int to, bool inside)
         {
             var tsv = RunTestTables.ReadTsv("310_template");
             tsv = SetCell(SetCell(tsv, "key", "tpl1", "midFromZ", from.ToString(System.Globalization.CultureInfo.InvariantCulture)),
