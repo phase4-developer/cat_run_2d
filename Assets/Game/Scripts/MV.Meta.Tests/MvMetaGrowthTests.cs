@@ -12,7 +12,8 @@ namespace MV.Meta.Tests
         static readonly int[] Weapon = { 30, 31, 33, 34, 36, 37, 39, 40, 42, 44, 46 };
         static readonly int[] Income = { 28, 36, 44, 52, 60, 68, 76, 84, 92, 100, 108 };
         static readonly int[] RateRange = { 40, 64, 102, 164, 262, 419, 671, 1074, 1718, 2749 };
-        static readonly int[] Clone = { 100, 160, 256, 410 };
+        // MV-SPEC-02 Q-09: 분신 max 30, 16_levelPrice group 13(100 × 1.6^(P))
+        static readonly int[] Clone = { 100, 160, 256, 410, 655, 1049, 1678, 2684, 4295, 6872, 10995, 17592, 28147, 45036, 72058, 115292, 184467, 295148, 472237, 755579, 1208926, 1934281, 3094850, 4951760, 7922816, 12676506, 20282410, 32451855, 51922969, 83076750 };
         static readonly int[] CritDbl = { 80, 128, 205, 328, 524, 839, 1342, 2147, 3436, 5498 };
         static readonly int[] PowerCrit = { 50, 75, 113, 169, 253, 380, 570, 854, 1281, 1922, 2883 };
         static readonly int[] Obst = { 60, 90, 135, 203, 304, 456, 683, 1025, 1538, 2307 };
@@ -65,7 +66,7 @@ namespace MV.Meta.Tests
             BuyCostsMatch(MvGrowth.AreaUp, "clone", MvWealthIds.Dia, Clone, true);
             BuyCostsMatch(MvGrowth.AreaUp, "crit", MvWealthIds.Dia, CritDbl, true);
             BuyCostsMatch(MvGrowth.AreaUp, "dbl", MvWealthIds.Dia, CritDbl, true);
-            Assert.That(Meta.AreaUpValue("clone"), Is.EqualTo(4).Within(1e-9));
+            Assert.That(Meta.AreaUpValue("clone"), Is.EqualTo(30).Within(1e-9));
             Assert.That(Meta.AreaUpValue("rate"), Is.EqualTo(1.0).Within(1e-9));
         }
 
@@ -106,6 +107,7 @@ namespace MV.Meta.Tests
             Assert.That(first.AddedTier, Is.EqualTo(1));
             Assert.That(first.MergedTier, Is.EqualTo(0));
             Assert.That(Store.Lobby.Deck.Take(3), Is.EqualTo(new[] { 0, 2, 0 }));
+            Assert.That(Store.Lobby.Deck.Count, Is.EqualTo(Tables.WeaponTierMax() + 1), "덱 길이 = 103 active 상한 등급 + 1(MV-SPEC-02 Q-08)");
 
             MvLobbyBuyResult second = Meta.BuyLobbyUp(MvMetaRules.LobbyWeapon);
             Assert.That(second.MergedTier, Is.EqualTo(2), "1등급 3장 → 2등급");
@@ -118,10 +120,28 @@ namespace MV.Meta.Tests
             Assert.That(eighth.LvAfter, Is.EqualTo(2));
             Assert.That(Meta.WeaponLevel().Lv, Is.EqualTo(2));
             // 8번째까지 1등급 8장(+시작 1장) → 3등급 1장. 9번째는 2등급 카드.
-            Assert.That(Store.Lobby.Deck, Is.EqualTo(new[] { 0, 0, 0, 1, 0, 0, 0, 0, 0 }));
+            Assert.That(Store.Lobby.Deck, Is.EqualTo(new[] { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
             MvLobbyBuyResult ninth = Meta.BuyLobbyUp(MvMetaRules.LobbyWeapon);
             Assert.That(ninth.AddedTier, Is.EqualTo(2));
-            Assert.That(Store.Lobby.Deck, Is.EqualTo(new[] { 0, 0, 1, 1, 0, 0, 0, 0, 0 }));
+            Assert.That(Store.Lobby.Deck, Is.EqualTo(new[] { 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
+        }
+
+        [Test]
+        public void Weapon_TierMaxFromActiveItemRows_MergesIntoLastTier()
+        {
+            // MV-SPEC-02 Q-08: 상한 등급은 103 active 행 tier 최대(표 설정만으로 12등급).
+            int max = Tables.WeaponTierMax();
+            Assert.That(max, Is.EqualTo(Tables.Item.Datas.Where(i => i.active).Max(i => i.tier)));
+            Assert.That(max, Is.EqualTo(Tables.WeaponLevel.Datas.Max(r => r.lv)), "12_weaponLevel 행 수 = 103 상한 등급");
+            var deck = new int[max + 1];
+            deck[max - 1] = 2;
+            Assert.That(MvMetaRules.DeckAdd(deck, max - 1), Is.EqualTo(max), "상한 직전 3장 → 상한 등급");
+            Assert.That(deck[max], Is.EqualTo(1));
+            deck[max] = 2;
+            Assert.That(MvMetaRules.DeckAdd(deck, max), Is.EqualTo(0), "상한 등급은 더 머지하지 않는다");
+            Assert.That(deck[max], Is.EqualTo(3));
+            // 저장 덱이 상한보다 짧아도 MAX 등급까지 산다: 무기 Level 마지막 = 상한.
+            Assert.That(MvMetaRules.WeaponLevel(Tables, Tables.LobbyUpgrade.ByKey("weapon").max).Lv, Is.EqualTo(max));
         }
 
         [Test]

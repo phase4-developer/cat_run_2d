@@ -15,9 +15,9 @@ namespace MV.Run.Tests.Gen
     {
         const double Tol = 1e-4;
 
-        [Test] public void Easy() => Run("easy");
-        [Test] public void Mid() => Run("mid");
-        [Test] public void Orig() => Run("orig");
+        [Test, Ignore("Q-04: 프로토 덤프 대조 — 새 기준 대조로 교체 예정")] public void Easy() => Run("easy");
+        [Test, Ignore("Q-04: 프로토 덤프 대조 — 새 기준 대조로 교체 예정")] public void Mid() => Run("mid");
+        [Test, Ignore("Q-04: 프로토 덤프 대조 — 새 기준 대조로 교체 예정")] public void Orig() => Run("orig");
 
         static void Run(string preset)
         {

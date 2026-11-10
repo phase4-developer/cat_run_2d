@@ -25,6 +25,13 @@ namespace MV.Run
         StormPick = 2167,
         StormJitter = 2168,
         CardDraw = 2301,
+        // MV-SPEC-02 새 규칙(정본 HTML에 없음 → 정본 줄 번호 대신 9000번대). 확률이 0이면 뽑지 않는다.
+        /// <summary>계단 게이트 충전 2배(6-2d).</summary>
+        StairDouble = 9001,
+        /// <summary>공방 카드 2장 생산(냥환생 지팡이 제작 2배).</summary>
+        CraftDouble = 9002,
+        /// <summary>탄 관통 +1(Area 강화 관통 확률).</summary>
+        PierceChance = 9003,
         /// <summary>모드 규칙 줄기(ModeRng). 정본 경로에서는 뽑지 않는다(04 §4.20.1).</summary>
         Mode = 0,
     }

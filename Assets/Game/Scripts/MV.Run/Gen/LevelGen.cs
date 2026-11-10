@@ -39,19 +39,11 @@ namespace MV.Run
             return id != 0 ? t.HpRule.Get(id) : null;
         }
 
-        /// <summary>obstMul() = max(floor, base + perLv·obst) — 14_rebirthPerk[obst].</summary>
-        public static double ObstMul(MvTables t, int obst)
-        {
-            var p = t.RebirthPerk.ByKey("obst");
-            return Math.Max(p.floor ?? double.NegativeInfinity, p.@base + p.perLv * obst);
-        }
+        /// <summary>obstMul() = max(floor, base + perLv·obst) — 14_rebirthPerk statKey ObstMul.</summary>
+        public static double ObstMul(MvTables t, int obst) => RunFormulas.ObstMul(t, obst);
 
-        /// <summary>diaCap() = base + perLv·dcap — 14_rebirthPerk[dcap].</summary>
-        public static double DiaCap(MvTables t, int dcap)
-        {
-            var p = t.RebirthPerk.ByKey("dcap");
-            return p.@base + p.perLv * dcap;
-        }
+        /// <summary>diaCap() = base + perLv·dcap — 14_rebirthPerk statKey DiaCap.</summary>
+        public static double DiaCap(MvTables t, int dcap) => RunFormulas.DiaCap(t, dcap);
 
         /// <summary>
         /// 처음 체력(114). AreaHpMul = round(zoneHp × mul [× scale]), Fixed = fixed [× scale]. useObstMul이면 max(1, round(v × obstMul)).

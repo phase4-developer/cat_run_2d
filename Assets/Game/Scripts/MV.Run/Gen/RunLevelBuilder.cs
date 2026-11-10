@@ -46,7 +46,7 @@ namespace MV.Run
             BuildCardPool(s);
 
             // 공방 지급 등급·시작 덱
-            if (setup.FixedWeaponTier >= 1 && setup.FixedWeaponTier <= 8)
+            if (setup.FixedWeaponTier >= 1 && setup.FixedWeaponTier < s.W.Length)
             {
                 s.Bt = setup.FixedWeaponTier;
                 Array.Clear(s.W, 0, s.W.Length);
@@ -65,7 +65,7 @@ namespace MV.Run
             int gaugeMax = well != null && well.cap > 0 ? well.cap : int.MaxValue;
             s.GaugeFill = lv < gaugeMax && need > 0 ? (step / (double)need) * GaugeNeed(s, well, lv) : 0;
 
-            s.Clones = Math.Min(t.RunConfig.I(RunConfigKeys.MAX_CLONES), setup.AupClone);
+            s.Clones = Math.Min(RunFormulas.CloneCap(t), setup.AupClone);
             var phase = t.RunConfig.List(RunConfigKeys.FIRE_PHASE);
             for (int i = 0; i < s.FireT.Length; i++) s.FireT[i] = i < phase.Count ? phase[i] : 0;
             s.P.X = s.P.Z = s.P.Tx = 0;

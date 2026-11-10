@@ -9,6 +9,8 @@ namespace MV.Run
     public sealed partial class RunSim
     {
         RunParams _p;
+        /// <summary>이 런 Area의 계단 게이트 M 표(302_area.sgateM). 없으면 null(107 base).</summary>
+        IReadOnlyList<double> _sgateM;
         readonly List<MvDropResult> _dropBuf = new List<MvDropResult>();
 
         RunState S => State;
@@ -17,6 +19,7 @@ namespace MV.Run
         partial void OnCreated()
         {
             _p = RunParams.From(T);
+            foreach (var a in T.Area.Datas) if (a.areaNo == S.Area + 1) { _sgateM = a.sgateM; break; }
             S.Emit(new RunEvent(RunEventType.RunStarted, a: S.Area, b: S.Level, c: S.Tpl));
             S.Emit(new RunEvent(RunEventType.WeaponHandReset, ids: (int[])S.W.Clone()));
         }
@@ -68,7 +71,7 @@ namespace MV.Run
             }
             if (P.Z > s.Gz) { Finish(FinishReason.Gate); return; }
             // 3 계단(OnArrive StartClimb)
-            double nz = P.Z + (s.Setup.ForwardSpeed ?? _p.RunSpeed) * dt;
+            double nz = P.Z + (s.Setup.ForwardSpeed ?? RunSpeedAt(s)) * dt;
             foreach (var o in s.Objs)
             {
                 if (o.Receive == null || o.Receive.type != ReceiveType.OnArrive || o.Receive.arriveAction != ArriveAction.StartClimb) continue;
@@ -101,9 +104,7 @@ namespace MV.Run
                 if (w.T <= 0 && !w.Done)
                 {
                     w.Done = true;
-                    int total = w.N * s.Setup.CraftPerMade;
-                    for (int k = 0; k < total; k++) AddWeapon(s.Bt);
-                    s.Emit(new RunEvent(RunEventType.WeaponDeliver, a: total, b: s.Bt));
+                    DeliverWeapons(w.N * s.Setup.CraftPerMade);
                 }
             }
             s.PendingW.RemoveAll(w => w.Done);
@@ -112,15 +113,20 @@ namespace MV.Run
                 if (!o.Dead && o.Move != null && o.Move.type == MoveAiType.Chase) StepChase(o, dt);
             // 8 가라앉기(그림)
             foreach (var o in s.Objs) if (o.Sink > 0 && o.Sink < 1) o.Sink = Math.Min(1, o.Sink + dt);
-            // 9 막힘 종료
+            // 9 막힘 종료(MV-SPEC-02 6-8, Q-13): 전진만 멈추고 계속 쏜다. 연속 STUCK_END_SEC초 막히면 종료(0이면 닿는 프레임에 종료).
             if (blocked != null)
             {
-                s.Emit(new RunEvent(RunEventType.Blocked, objId: blocked.Id, x: P.X, z: P.Z));
-                var (a, t) = RunParams.Shake(T, "shake.blocked");
-                Shake(a, t);
+                if (s.StuckT <= 0)
+                {
+                    s.Emit(new RunEvent(RunEventType.Blocked, objId: blocked.Id, x: P.X, z: P.Z));
+                    var (a, t) = RunParams.Shake(T, "shake.blocked");
+                    Shake(a, t);
+                }
                 s.HitWall = blocked;
-                if (s.Setup.FailOnWall) { Finish(FinishReason.Wall); return; }
+                s.StuckT += dt;
+                if (s.Setup.FailOnWall && s.StuckT >= _p.StuckEndSec) { Finish(FinishReason.Wall); return; }
             }
+            else s.StuckT = 0;
             // 10 사격
             int vol0 = s.Vol;
             Shoot(dt);
@@ -180,7 +186,7 @@ namespace MV.Run
             o.Done = true;
             bool inGate = Math.Abs(s.P.X - o.X) < o.Hw + o.Receive.margin;
             bool stair = o.Reaction != null && o.Reaction.type == HitReactionType.ChargeStairGate;
-            int amount = stair ? o.N : o.Made;
+            int amount = stair ? o.N : o.Made + o.Extra;
             if (inGate)
             {
                 s.Emit(new RunEvent(RunEventType.GateTake, objId: o.Id, kindId: o.Kind.id, a: amount));
@@ -199,11 +205,42 @@ namespace MV.Run
             else if (amount > 0) s.Emit(new RunEvent(RunEventType.GateMiss, objId: o.Id, kindId: o.Kind.id, a: amount));
         }
 
-        void AddWeapon(int t)
+        /// <summary>
+        /// 지팡이 1장을 스택에 넣고 같은 단계 MERGE_N장을 윗단계로 머지한다. 최고 단계 = W 길이 − 1(103_item, MV-SPEC-02 Q-08).
+        /// 스택 칸 수 WEAPON_STACK_MAX(Q-17, 0 = 상한 없음)가 차 있으면 거절하고 false.
+        /// </summary>
+        bool AddWeapon(int t)
         {
             var W = S.W;
+            t = Math.Max(1, Math.Min(W.Length - 1, t));
+            if (_p.WeaponStackMax > 0)
+            {
+                int held = 0;
+                for (int i = 1; i < W.Length; i++) held += W[i];
+                if (held >= _p.WeaponStackMax) { S.WeaponRejected++; return false; }
+            }
             W[t]++;
-            while (t < 8 && W[t] >= _p.MergeN) { W[t] -= _p.MergeN; t++; W[t]++; }
+            while (t < W.Length - 1 && W[t] >= _p.MergeN) { W[t] -= _p.MergeN; t++; W[t]++; }
+            return true;
+        }
+
+        /// <summary>공방 지급 n장(WeaponDeliver A = 실제로 들어간 장 수, 거절이 있으면 WeaponRejected).</summary>
+        void DeliverWeapons(int n)
+        {
+            var s = S;
+            int got = 0;
+            for (int k = 0; k < n; k++) if (AddWeapon(s.Bt)) got++;
+            s.Emit(new RunEvent(RunEventType.WeaponDeliver, a: got, b: s.Bt));
+            if (got < n) s.Emit(new RunEvent(RunEventType.WeaponRejected, a: n - got, b: s.Bt));
+        }
+
+        /// <summary>전진 속도: 템플릿 중간 구역(310 midFromZ~midToZ, 템플릿 기준 z)이면 RUN_SPEED_MID(MV-SPEC-02 4-1, Q-15).</summary>
+        double RunSpeedAt(RunState s)
+        {
+            var tpl = T.Template.Get(s.Tpl);
+            if (tpl == null || !tpl.midFromZ.HasValue || !tpl.midToZ.HasValue) return _p.RunSpeed;
+            double tz = s.P.Z - s.Base - s.ShiftSum;
+            return tz >= tpl.midFromZ.Value && tz < tpl.midToZ.Value ? _p.RunSpeedMid : _p.RunSpeed;
         }
 
         // ================= 이동 AI Chase (§4.6.1) =================
@@ -236,6 +273,7 @@ namespace MV.Run
             int tier = s.EqTier();
             double crC = CritChance(s), dbC = DoubleChance(s);
             int pierce = (int)CardSum(s, CardEffectType.Pierce);
+            double pierceC = PierceChance(s);
             var (spearEff, spearN) = CardOf(s, CardEffectType.PierceEveryN);
             string el = MainElem();
             P.ThrowT = Math.Max(0, P.ThrowT - dt);
@@ -249,19 +287,21 @@ namespace MV.Run
                 s.FireT[i] += iv;
                 bool crit = s.Draw(RngUse.Crit) < crC;
                 double d = BaseDmg(s) * (crit ? CritMul(s) : 1);
+                // Area 강화 관통 확률(MV-SPEC-02 Q-28): 이 발사의 탄이 1개 더 뚫는다. 확률 0이면 뽑지 않는다.
+                int up = pierceC > 0 && s.Draw(RngUse.PierceChance) < pierceC ? 1 : 0;
                 if (i == 0) s.Vol++;
                 if (i == 0 && spearN > 0 && s.Vol % (int)spearEff.p1 == 0)
                 {
-                    AddProj(i, ux, uz, d * (1 + spearEff.p2 * spearN), crit, tier, (int)spearEff.p3, true, 0, el);
+                    AddProj(i, ux, uz, d * (1 + spearEff.p2 * spearN), crit, tier, (int)spearEff.p3 + up, true, 0, el);
                     P.ThrowT = _p.ThrowT;
                     continue;
                 }
                 if (s.Draw(RngUse.DoubleShot) < dbC)
                 {
-                    AddProj(i, ux - _p.DblShotDx, uz, d, crit, tier, pierce, false, -1, el);
-                    AddProj(i, ux + _p.DblShotDx, uz, d, crit, tier, pierce, false, 1, el);
+                    AddProj(i, ux - _p.DblShotDx, uz, d, crit, tier, pierce + up, false, -1, el);
+                    AddProj(i, ux + _p.DblShotDx, uz, d, crit, tier, pierce + up, false, 1, el);
                 }
-                else AddProj(i, ux, uz, d, crit, tier, pierce, false, 0, el);
+                else AddProj(i, ux, uz, d, crit, tier, pierce + up, false, 0, el);
                 if (i == 0) P.ThrowT = _p.ThrowT;
             }
         }
@@ -335,11 +375,19 @@ namespace MV.Run
                     break;
                 case HitReactionType.ChargeStairGate:
                 {
+                    // MV-SPEC-02 6-2(Q-06): M = Area × 계단 Lv 표, M마다 +Lv(냥환생 「계단 2배」 확률로 +2×Lv), 넘친 양 이월.
                     var g = o.Charge;
-                    double M = Threshold(g, 0, s.Bal, s.ZoneHp);
+                    double M = StairGateM(g, _sgateM, s.GaugeLv, s.Bal, s.ZoneHp);
                     o.F += dmg / (1 + o.N * (s.Bal.diff * g.diffMul));
+                    double dblC = StairDoubleChance(s);
                     int got = 0;
-                    while (o.F >= M) { o.F -= M; o.N += s.GaugeLv; got += s.GaugeLv; }
+                    while (o.F >= M)
+                    {
+                        o.F -= M;
+                        int add = s.GaugeLv;
+                        if (dblC > 0 && s.Draw(RngUse.StairDouble) < dblC) add *= 2;
+                        o.N += add; got += add;
+                    }
                     s.Emit(new RunEvent(RunEventType.GateFill, objId: o.Id, kindId: o.Kind.id, a: got, amount: Clamp(o.F / M, 0, 1), quiet: quiet || got == 0));
                     break;
                 }
@@ -347,11 +395,15 @@ namespace MV.Run
                 {
                     var g = o.Charge;
                     o.F += dmg;
+                    double dblC = CraftDoubleChance(s);
                     while (o.Made < g.cap && o.F >= Threshold(g, o.Made, s.Bal, s.ZoneHp))
                     {
                         o.F -= Threshold(g, o.Made, s.Bal, s.ZoneHp);
                         o.Made++;
-                        s.Emit(new RunEvent(RunEventType.GateFill, objId: o.Id, kindId: o.Kind.id, a: 1, amount: 0));
+                        // 냥환생 「지팡이 제작 2배」(Q-27): 이번 생산이 2장. 문턱 단계(Made)는 1만 오른다.
+                        int made = 1;
+                        if (dblC > 0 && s.Draw(RngUse.CraftDouble) < dblC) { o.Extra++; made = 2; }
+                        s.Emit(new RunEvent(RunEventType.GateFill, objId: o.Id, kindId: o.Kind.id, a: made, amount: 0));
                     }
                     if (o.Made >= g.cap) o.F = 0;
                     break;
@@ -666,8 +718,7 @@ namespace MV.Run
                     s.Emit(new RunEvent(RunEventType.StairsReceived, a: (int)r.Amount, b: s.Stairs));
                     break;
                 case ConsumeType.RunWeapon:
-                    for (int k = 0; k < (int)r.Amount * s.Setup.CraftPerMade; k++) AddWeapon(s.Bt);
-                    s.Emit(new RunEvent(RunEventType.WeaponDeliver, a: (int)r.Amount, b: s.Bt));
+                    DeliverWeapons((int)r.Amount * s.Setup.CraftPerMade);
                     break;
                 case ConsumeType.GaugeFill:
                     GaugeAdd(r.Amount, r.Charge ?? GaugeRow(T));
@@ -706,7 +757,7 @@ namespace MV.Run
             double pw = (double)n / k, z0 = o.Z + c["z0Gap"], zEnd = z0 + k * c["stepD"], dH = k * c["stepH"];
             s.Cliff = new RunCliff(zEnd, s.WorldY, s.WorldY + dH); s.HasCliff = true; // R.cliff(shiftWorld L2227), View용
             ShiftWorld(o.Z + c["shiftFrom"], k * c["stepD"] + c["shiftExtra"]);
-            s.Climb = new ClimbState { StairObjId = o.Id, N = n, K = k, Pw = pw, Z0 = z0, ZEnd = zEnd, DH = dH, T = ClimbT(c, k) };
+            s.Climb = new ClimbState { StairObjId = o.Id, N = n, K = k, Pw = pw, Z0 = z0, ZEnd = zEnd, DH = dH, T = ClimbT(c, k), StepEvery = ClimbStepEvery(c, k) };
             s.Emit(new RunEvent(RunEventType.ClimbStart, a: n, b: k, amount: pw, x: z0, z: zEnd, amount2: dH, amount3: s.Climb.T));
             return true;
         }
@@ -719,18 +770,22 @@ namespace MV.Run
             foreach (var o in s.Objs) o.Z += L;
             foreach (var g in s.Gates) g.Z += L;
             s.Gz += L;
+            s.ShiftSum += L;
         }
 
         void UpdClimb(double dt)
         {
             var s = S; var C = s.Climb; var c = _p.Climb; var P = s.P;
-            P.X += (0 - P.X) * Math.Min(1, dt * _p.ClimbXFollowK); P.Tx = P.X; P.Phase += dt * _p.PhaseClimb;
+            // MV-SPEC-02 4-1f·6-5l(Q-11): 오르는 중에도 좌우 조작을 멈추지 않는다(가운데로 당기지 않음, 이동 폭 안).
+            P.X += (P.Tx - P.X) * Math.Min(1, dt * _p.MoveFollowK);
+            P.X = Clamp(P.X, -_p.LaneXMax, _p.LaneXMax);
+            P.Phase += dt * _p.PhaseClimb;
             C.Time += dt;
             double accel = c["accelP"];
             double p = Math.Min(1, C.Time / C.T), e = p < accel ? p * p / (accel * 2) : p - accel / 2;
             C.Pos = Math.Min(C.K, e / (1 - accel / 2) * C.K);
-            C.Rise += dt * Math.Max(c["riseMin"], C.K * c["risePerK"]);
-            int show = (int)Math.Min(C.K, Math.Ceiling(C.Pos + c["riseAhead"] + C.Rise));
+            // 칸 생성: 0초에 1칸, 그 뒤 StepEvery마다 1칸(MV-SPEC-02 6-5e). 마지막 칸은 T − riseLead에 나온다.
+            int show = C.StepEvery > 0 ? (int)Math.Min(C.K, 1 + Math.Floor(C.Time / C.StepEvery + 1e-9)) : C.K;
             for (; C.StepsShown < show; C.StepsShown++) s.Emit(new RunEvent(RunEventType.ClimbStepShown, a: C.StepsShown));
             C.Shown = (int)Math.Min(C.N, Math.Floor(C.Pos * C.Pw + 0.0001));
             if (p >= 1) C.Shown = C.N;
@@ -768,7 +823,7 @@ namespace MV.Run
         {
             var s = S; var C = s.Climb;
             s.Climbed += C.N; s.LvClimbed += C.N; s.Climbs.Add(C.N);
-            s.P.Z = C.ZEnd + _p.Climb["landGap"]; s.P.Tx = s.P.X;
+            s.P.Z = C.ZEnd + _p.Climb["landGap"];
             s.WorldY += C.DH;
             s.Phase = RunPhase.Run;
             s.Climb = null;

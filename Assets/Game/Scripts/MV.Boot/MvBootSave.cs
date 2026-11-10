@@ -112,7 +112,7 @@ namespace MV.Boot
 
             return new MvSaveConfig
             {
-                StartDeck = config.startDeck.ToArray(),
+                StartDeck = PadStartDeck(config.startDeck, tables.WeaponTierMax()),
                 StartGodKey = config.startGodKey,
                 CpMax = tables.RunConfig.I(RunConfigKeys.CP_MAX),
                 FloorCount = tables.RunConfig.I(RunConfigKeys.FLOOR_COUNT),
@@ -120,6 +120,17 @@ namespace MV.Boot
                 DayUtcOffsetHour = config.adDayUtcOffsetHour,
                 AdDailyLimits = limits,
             };
+        }
+
+        /// <summary>
+        /// 시작 덱 = <c>00_config.startDeck</c>, 길이는 103 active 상한 등급 + 1까지 0으로 채운다(MV-SPEC-02 Q-08).
+        /// 등급 수가 표 설정만으로 바뀌어도 새 저장이 참조 정리(덱 길이)에 걸리지 않게 한다.
+        /// </summary>
+        static int[] PadStartDeck(IReadOnlyList<int> start, int tierMax)
+        {
+            var deck = new int[Math.Max(start.Count, tierMax + 1)];
+            for (int i = 0; i < start.Count; i++) deck[i] = start[i];
+            return deck;
         }
 
         /// <summary>참조 정리(09 §9.6) 대상 표 값.</summary>
@@ -139,7 +150,7 @@ namespace MV.Boot
             return new MvSaveReferenceCatalog
             {
                 GodKeys = KeySet(tables.God.Sorted.Select(row => row.key)),
-                MaxWeaponTier = tables.Item.Sorted.Count == 0 ? -1 : tables.Item.Sorted.Max(row => row.tier),
+                MaxWeaponTier = tables.Item.Sorted.Count == 0 ? -1 : tables.WeaponTierMax(), // 103 active 상한(MV-SPEC-02 Q-08)
                 MaxAreaIndex = tables.Area.Sorted.Count == 0 ? -1 : tables.Area.Sorted.Max(row => row.areaNo) - 1,
                 BarCellLimits = barLimits,
                 LobbyUpMax = tables.LobbyUpgrade.Sorted.ToDictionary(row => row.key, row => row.max, StringComparer.Ordinal),

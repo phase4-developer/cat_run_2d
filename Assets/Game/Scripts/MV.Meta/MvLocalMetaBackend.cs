@@ -227,7 +227,9 @@ namespace MV.Meta
                 case LobbyEffectType.DeckAdd:
                     int tier = MvMetaRules.WeaponLevel(_t, bought).Lv;
                     int[] deck = s.Lobby.Deck.ToArray();
-                    if (deck.Length <= tier) Array.Resize(ref deck, tier + 1);
+                    // 덱 길이 = 103 active 상한 등급 + 1(MV-SPEC-02 Q-08). 옛 9칸 저장도 늘려 상한까지 머지한다(저장 이전 없음).
+                    int len = Math.Max(_t.WeaponTierMax(), tier) + 1;
+                    if (deck.Length < len) Array.Resize(ref deck, len);
                     result["tier"] = tier;
                     result["merged"] = MvMetaRules.DeckAdd(deck, tier);
                     result["before"] = tier;

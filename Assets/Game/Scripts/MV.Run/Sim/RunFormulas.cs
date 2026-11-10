@@ -58,13 +58,65 @@ namespace MV.Run
 
         // ---------------- 스탯 ----------------
 
-        static double Perk(RunState s, string key, int lv)
+        /// <summary>냥환생 영구 업그레이드 행(14_rebirthPerk, statKey로 찾음 — 항목 이름을 코드에 두지 않는다, MV-SPEC-02 Q-27).</summary>
+        public static RebirthPerkData PerkRow(MvTables t, RebirthStatKey stat)
         {
-            var p = s.Tables.RebirthPerk.ByKey(key);
-            return p.@base + p.perLv * lv;
+            foreach (var p in t.RebirthPerk.Datas) if (p.statKey == stat) return p;
+            return null;
         }
 
-        static double Aup(RunState s, string key, int lv) => s.Tables.AreaUpgrade.ByKey(key).perLv * lv;
+        /// <summary>Area 강화 행(13_areaUpgrade, statKey로 찾음).</summary>
+        public static AreaUpgradeData AupRow(MvTables t, AreaStatKey stat)
+        {
+            foreach (var a in t.AreaUpgrade.Datas) if (a.statKey == stat) return a;
+            return null;
+        }
+
+        /// <summary>RunSetup의 냥환생 Lv(statKey별 칸).</summary>
+        public static int PerkLv(RunSetup st, RebirthStatKey stat)
+        {
+            switch (stat)
+            {
+                case RebirthStatKey.DmgMul: return st.PerkPower;
+                case RebirthStatKey.CritMul: return st.PerkCrit;
+                case RebirthStatKey.ObstMul: return st.PerkObst;
+                case RebirthStatKey.DiaCap: return st.PerkDcap;
+                case RebirthStatKey.CraftDouble: return st.PerkCraftDbl;
+                case RebirthStatKey.StairDouble: return st.PerkStairDbl;
+                default: return 0; // GoldCap·StartGold·StartDia: 런 규칙 미반영(뜻·적용 시점 기획 확인)
+            }
+        }
+
+        /// <summary>RunSetup의 Area 강화 Lv(statKey별 칸).</summary>
+        public static int AupLv(RunSetup st, AreaStatKey stat)
+        {
+            switch (stat)
+            {
+                case AreaStatKey.FireRate: return st.AupRate;
+                case AreaStatKey.Range: return st.AupRange;
+                case AreaStatKey.Clone: return st.AupClone;
+                case AreaStatKey.CritChance: return st.AupCrit;
+                case AreaStatKey.DoubleChance: return st.AupDbl;
+                case AreaStatKey.PierceChance: return st.AupPierce;
+                default: return 0; // DiaPerLevel·GoldPerLevel: 정산 규칙 미반영(기획 확인)
+            }
+        }
+
+        /// <summary>냥환생 값 = max(floor, base + perLv·lv). 행이 없으면 <paramref name="none"/>.</summary>
+        public static double PerkValue(MvTables t, RebirthStatKey stat, int lv, double none = 0)
+        {
+            var p = PerkRow(t, stat);
+            return p != null ? p.ValueAt(lv) : none;
+        }
+
+        static double Perk(RunState s, RebirthStatKey stat, double none) => PerkValue(s.Tables, stat, PerkLv(s.Setup, stat), none);
+
+        /// <summary>Area 강화 값 = perLv·lv. 행이 없으면 0.</summary>
+        static double Aup(RunState s, AreaStatKey stat)
+        {
+            var a = AupRow(s.Tables, stat);
+            return a != null ? a.perLv * AupLv(s.Setup, stat) : 0;
+        }
 
         /// <summary>무기 등급 피해 `wDmg(t)` = 103_item.dmg.</summary>
         public static double WeaponDmg(MvTables t, int tier)
@@ -73,26 +125,48 @@ namespace MV.Run
             return 0;
         }
 
-        /// <summary>baseDmg() = wDmg(eqTier) × Π(1+0.2·atk) × (1+0.15·power) × (1+Dmg/100).</summary>
-        public static double BaseDmg(RunState s) =>
-            WeaponDmg(s.Tables, s.EqTier()) * CardMul(s, CardEffectType.DmgMul) * Perk(s, "power", s.Setup.PerkPower) * (1 + s.Setup.Modifiers.Dmg / 100);
-
-        /// <summary>critMul() = 2.2 + 0.2·perk.crit + CritDmg/100.</summary>
-        public static double CritMul(RunState s) => Perk(s, "crit", s.Setup.PerkCrit) + s.Setup.Modifiers.CritDmg / 100;
-
-        /// <summary>obstMul() = max(0.5, 1 − 0.05·obst).</summary>
-        public static double ObstMul(MvTables t, int obst)
+        /// <summary>지팡이 최고 단계 = 켜진 103_item 행의 tier 최대(MV-SPEC-02 Q-08: 코드에 단계 수를 두지 않는다). 행이 없으면 1.</summary>
+        public static int WeaponTierMax(MvTables t)
         {
-            var p = t.RebirthPerk.ByKey("obst");
-            return Math.Max(p.floor ?? double.NegativeInfinity, p.@base + p.perLv * obst);
+            return t != null ? t.WeaponTierMax() : 1;
         }
 
-        /// <summary>diaCap() = 10 + 2·dcap.</summary>
-        public static double DiaCap(MvTables t, int dcap)
+        /// <summary>분신 상한 = min(MAX_CLONES, 314_spawnGroup clone 위치 수)(MV-SPEC-02 Q-09). 위치가 없는 분신은 만들지 않는다.</summary>
+        public static int CloneCap(MvTables t)
         {
-            var p = t.RebirthPerk.ByKey("dcap");
-            return p.@base + p.perLv * dcap;
+            int offs = 0;
+            foreach (var g in t.SpawnGroup.Sorted) if (g.key == "clone") offs++;
+            return Math.Max(0, Math.Min(t.RunConfig.I(RunConfigKeys.MAX_CLONES), offs));
         }
+
+        /// <summary>공격력 % 합 = 카드(DmgMul p1·n) + 냥환생 공격력(perLv·lv), 둘 다 %로 바꿔 모디파이어 Dmg와 합산(MV-SPEC-02 4-2, Q-12).</summary>
+        public static double AtkPct(RunState s)
+        {
+            var p = PerkRow(s.Tables, RebirthStatKey.DmgMul);
+            double perk = p != null ? p.perLv * PerkLv(s.Setup, RebirthStatKey.DmgMul) : 0;
+            return (CardSum(s, CardEffectType.DmgMul) + perk) * 100 + s.Setup.Modifiers.Dmg;
+        }
+
+        /// <summary>baseDmg() = 지팡이 단계 기본 피해 × (1 + 공격력%/100)(MV-SPEC-02 4-2, Q-12). 치명 배율은 호출 쪽에서 곱한다.</summary>
+        public static double BaseDmg(RunState s) => WeaponDmg(s.Tables, s.EqTier()) * (1 + AtkPct(s) / 100);
+
+        /// <summary>critMul() = 14_rebirthPerk[CritMul] 값 + CritDmg/100.</summary>
+        public static double CritMul(RunState s) => Perk(s, RebirthStatKey.CritMul, 1) + s.Setup.Modifiers.CritDmg / 100;
+
+        /// <summary>obstMul() = max(floor, base + perLv·obst).</summary>
+        public static double ObstMul(MvTables t, int obst) => PerkValue(t, RebirthStatKey.ObstMul, obst, 1);
+
+        /// <summary>diaCap() = base + perLv·dcap.</summary>
+        public static double DiaCap(MvTables t, int dcap) => PerkValue(t, RebirthStatKey.DiaCap, dcap);
+
+        /// <summary>계단 게이트 충전 2배 확률(냥환생 「계단 2배」, MV-SPEC-02 6-2d·Q-27).</summary>
+        public static double StairDoubleChance(RunState s) => Perk(s, RebirthStatKey.StairDouble, 0);
+
+        /// <summary>공방 게이트 카드 2장 생산 확률(냥환생 「지팡이 제작 2배」, MV-SPEC-02 Q-27).</summary>
+        public static double CraftDoubleChance(RunState s) => Perk(s, RebirthStatKey.CraftDouble, 0);
+
+        /// <summary>탄 관통 +1 확률(Area 강화 「관통 확률」, MV-SPEC-02 Q-28).</summary>
+        public static double PierceChance(RunState s) => Aup(s, AreaStatKey.PierceChance);
 
         /// <summary>goldMul() = (1 + 0.05·income) × Π(1+0.5·gold) × (1 + Gold/100).</summary>
         public static double GoldMul(RunState s) =>
@@ -102,20 +176,20 @@ namespace MV.Run
         public static double FireInterval(RunState s)
         {
             double rate = s.Setup.RateOverride ?? s.Bal.rate;
-            return 1 / (rate * CardMul(s, CardEffectType.FireRateMul) * (1 + Aup(s, "rate", s.Setup.AupRate)) * (1 + s.Setup.Modifiers.FireRate / 100));
+            return 1 / (rate * CardMul(s, CardEffectType.FireRateMul) * (1 + Aup(s, AreaStatKey.FireRate)) * (1 + s.Setup.Modifiers.FireRate / 100));
         }
 
         /// <summary>치명 확률 crC(상한 없음).</summary>
         public static double CritChance(RunState s) =>
-            CardSum(s, CardEffectType.CritChance) + Aup(s, "crit", s.Setup.AupCrit) + s.Setup.Modifiers.CritChance / 100;
+            CardSum(s, CardEffectType.CritChance) + Aup(s, AreaStatKey.CritChance) + s.Setup.Modifiers.CritChance / 100;
 
         /// <summary>2연발 확률 dbC = min(1, …).</summary>
         public static double DoubleChance(RunState s) =>
-            Math.Min(1, CardSum(s, CardEffectType.DoubleChance) + Aup(s, "dbl", s.Setup.AupDbl) + s.Setup.Modifiers.DoubleChance / 100);
+            Math.Min(1, CardSum(s, CardEffectType.DoubleChance) + Aup(s, AreaStatKey.DoubleChance) + s.Setup.Modifiers.DoubleChance / 100);
 
         /// <summary>사거리 RANGE = 22 × (1 + 0.1·aup.range) × (1 + Range/100).</summary>
         public static double ProjRange(RunState s) =>
-            s.Tables.RunConfig.D(RunConfigKeys.PROJ_RANGE) * (1 + Aup(s, "range", s.Setup.AupRange)) * (1 + s.Setup.Modifiers.Range / 100);
+            s.Tables.RunConfig.D(RunConfigKeys.PROJ_RANGE) * (1 + Aup(s, AreaStatKey.Range)) * (1 + s.Setup.Modifiers.Range / 100);
 
         // ---------------- 충전 게이트(107) ----------------
 
@@ -126,11 +200,27 @@ namespace MV.Run
         public static double Threshold(ChargeGateData g, int k, BalancePresetData bal, double zoneHp)
         {
             double v = g.growth == Growth.Add ? g.@base + g.step * k : g.growth == Growth.Pow ? g.@base * Math.Pow(g.step, k) : g.@base;
+            return ApplyGateFlags(g, v, bal, zoneHp);
+        }
+
+        /// <summary>문턱 기본값에 107 행 플래그를 순서대로 곱한다: scale → Area 체력 → gauge → mul.</summary>
+        public static double ApplyGateFlags(ChargeGateData g, double v, BalancePresetData bal, double zoneHp)
+        {
             if (g.useScale) v *= bal.scale;
             if (g.useAreaHp) v *= zoneHp / 100;
             if (g.useGauge) v *= bal.gauge;
             if (g.mul != 1) v *= g.mul;
             return v;
+        }
+
+        /// <summary>
+        /// 계단 게이트 1회 충전 필요 피해 M(MV-SPEC-02 6-2e, Q-06·Q-19): 기본값 = <c>302_area.sgateM</c>[계단 Lv − 1]
+        /// (Lv이 칸 수를 넘으면 마지막 칸 — Lv 상한은 표 칸 수), 칸이 비면 107 행 base. 그 뒤 107 행 플래그를 곱한다.
+        /// </summary>
+        public static double StairGateM(ChargeGateData g, IReadOnlyList<double> sgateM, int stairLv, BalancePresetData bal, double zoneHp)
+        {
+            double v = sgateM != null && sgateM.Count > 0 ? sgateM[Math.Min(sgateM.Count, Math.Max(1, stairLv)) - 1] : g.@base;
+            return ApplyGateFlags(g, v, bal, zoneHp);
         }
 
         /// <summary>게이지 행(107 gateType Well 첫 행).</summary>
@@ -145,16 +235,33 @@ namespace MV.Run
 
         // ---------------- 계단 ----------------
 
-        /// <summary>칸 수 k(§4.8.1): n ≤ 60 → n, 아니면 min(150, 60 + ceil((n−60)/3)).</summary>
+        /// <summary>
+        /// 표시 칸 수 K(MV-SPEC-02 6-5d, Q-07): N ≤ cmpFrom → N, 아니면 cmpFrom + ceil((N − cmpFrom) / C).
+        /// C = <c>cmpBandC</c>[i], i = <c>cmpBandFrom</c>[i] ≤ N인 마지막 칸(첫 칸보다 작으면 첫 칸). 상수는 모두 330_climb 설정 행.
+        /// </summary>
         public static int ClimbK(ClimbData c, int n)
         {
-            int direct = (int)c["kDirectMax"];
-            if (n <= direct) return n;
-            return (int)Math.Min(c["kMax"], direct + Math.Ceiling((n - direct) / c["kCompress"]));
+            int from = (int)c["cmpFrom"];
+            if (n <= from) return n;
+            return from + (int)Math.Ceiling((n - from) / (double)CompressC(c, n));
         }
 
-        /// <summary>오르는 시간 T = min(9, 1.6 + 0.05k).</summary>
-        public static double ClimbT(ClimbData c, int k) => Math.Min(c["tMax"], c["tBase"] + k * c["tPerStep"]);
+        /// <summary>압축 구간 C(N).</summary>
+        public static int CompressC(ClimbData c, int n)
+        {
+            var bf = c.cmpBandFrom; var bc = c.cmpBandC;
+            int count = Math.Min(bf?.Count ?? 0, bc?.Count ?? 0);
+            if (count == 0) return 1;
+            int pick = 0;
+            for (int i = 0; i < count; i++) if (n >= bf[i]) pick = i;
+            return Math.Max(1, bc[pick]);
+        }
+
+        /// <summary>오르는 시간 T = min(riseCap, riseBase + risePerStep·(K − 1))(MV-SPEC-02 6-5e, 약 1.5초 안).</summary>
+        public static double ClimbT(ClimbData c, int k) => Math.Min(c["riseCap"], c["riseBase"] + c["risePerStep"] * Math.Max(0, k - 1));
+
+        /// <summary>칸 생성 간격 = max(0, (T − riseLead) / max(1, K − 1))(MV-SPEC-02 6-5e). 0이면 모든 칸이 바로 보인다.</summary>
+        public static double ClimbStepEvery(ClimbData c, int k) => Math.Max(0, (ClimbT(c, k) - c["riseLead"]) / Math.Max(1, k - 1));
 
         /// <summary>남은 칸 rem의 카드 등급(115 need 이하 최고), 없으면 −1.</summary>
         public static int TierFor(MvTables t, int rem)

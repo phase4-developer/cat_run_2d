@@ -7,8 +7,12 @@ namespace MV.Run
     public sealed class RunParams
     {
         public double DtCap, HitStopScale;
-        public double LaneXMax, KeyMoveSpeed, MoveFollowK, RunSpeed, PhaseRun, PhaseBlocked, PhaseClimb, ClimbXFollowK;
+        public double LaneXMax, KeyMoveSpeed, MoveFollowK, RunSpeed, PhaseRun, PhaseBlocked, PhaseClimb;
         public double PlayerHalfW, WallFaceGap, WallFaceEps, WarnDist;
+        /// <summary>중간 구역 전진 속도(MV-SPEC-02 4-1, Q-15), 결계 막힘 뒤 종료 초(6-8, Q-13).</summary>
+        public double RunSpeedMid, StuckEndSec;
+        /// <summary>지팡이 스택 칸 수(6-3, Q-17). 0 = 상한 없음.</summary>
+        public int WeaponStackMax;
         public double[] FirePhase;
         public int MaxClones;
         public double CloneXMax, DblShotDx, ProjSpawnDz, ThrowT, ProjSpeed, DmgMin, DmgMax;
@@ -29,10 +33,12 @@ namespace MV.Run
                 LaneXMax = c.D(RunConfigKeys.LANE_X_MAX), KeyMoveSpeed = c.D(RunConfigKeys.KEY_MOVE_SPEED),
                 MoveFollowK = c.D(RunConfigKeys.MOVE_FOLLOW_K), RunSpeed = c.D(RunConfigKeys.RUN_SPEED),
                 PhaseRun = c.D(RunConfigKeys.PHASE_RUN), PhaseBlocked = c.D(RunConfigKeys.PHASE_BLOCKED),
-                PhaseClimb = c.D(RunConfigKeys.PHASE_CLIMB), ClimbXFollowK = c.D(RunConfigKeys.CLIMB_X_FOLLOW_K),
+                PhaseClimb = c.D(RunConfigKeys.PHASE_CLIMB),
                 PlayerHalfW = c.D(RunConfigKeys.PLAYER_HALF_W), WallFaceGap = c.D(RunConfigKeys.WALL_FACE_GAP),
                 WallFaceEps = c.D(RunConfigKeys.WALL_FACE_EPS), WarnDist = c.D(RunConfigKeys.WARN_DIST),
-                MaxClones = c.I(RunConfigKeys.MAX_CLONES), CloneXMax = c.D(RunConfigKeys.CLONE_X_MAX),
+                RunSpeedMid = c.D(RunConfigKeys.RUN_SPEED_MID), StuckEndSec = c.D(RunConfigKeys.STUCK_END_SEC),
+                WeaponStackMax = c.I(RunConfigKeys.WEAPON_STACK_MAX),
+                MaxClones = RunFormulas.CloneCap(t), CloneXMax = c.D(RunConfigKeys.CLONE_X_MAX),
                 DblShotDx = c.D(RunConfigKeys.DBL_SHOT_DX), ProjSpawnDz = c.D(RunConfigKeys.PROJ_SPAWN_DZ),
                 ThrowT = c.D(RunConfigKeys.THROW_T), ProjSpeed = c.D(RunConfigKeys.PROJ_SPEED),
                 DmgMin = c.D(RunConfigKeys.DMG_MIN), DmgMax = c.D(RunConfigKeys.DMG_MAX),

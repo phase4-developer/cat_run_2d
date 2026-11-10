@@ -50,6 +50,8 @@ namespace MV.Run
         public int N;
         /// <summary>cgate 완성 무기 수(`o.made`).</summary>
         public int Made;
+        /// <summary>cgate 「지팡이 제작 2배」로 더 만든 장 수(통과 지급 = Made + Extra, 문턱 단계는 Made만 센다).</summary>
+        public int Extra;
         /// <summary>통과 후 가라앉기(그림, 0이면 안 함).</summary>
         public double Sink;
 
@@ -114,6 +116,8 @@ namespace MV.Run
                 if (o.Enemy.hd.HasValue) o.Hd = o.Enemy.hd.Value;
                 o.DropGroup = o.Enemy.dropId;
             }
+            // 파괴 드롭 묶음(105.dropId, MV-SPEC-02 6-7 원석 10%·Q-16). 빈칸이면 102 하수인 드롭을 그대로 둔다.
+            if (kind.dropId != 0) o.DropGroup = kind.dropId;
             return o;
         }
     }

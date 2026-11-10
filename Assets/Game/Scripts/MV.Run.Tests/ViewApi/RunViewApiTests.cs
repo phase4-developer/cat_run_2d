@@ -39,9 +39,10 @@ namespace MV.Run.Tests
             const double stairZ = 3; const int n = 80;
             int k = RunFormulas.ClimbK(c, n);
             double zEnd = stairZ + c["z0Gap"] + k * c["stepD"], dH = k * c["stepH"];
-            Assert.AreEqual(67, k);
-            Assert.AreEqual(3 + 1.4 + 67 * 0.72, zEnd, Eps, "330_climb 정본 값");
-            Assert.AreEqual(67 * 0.42, dH, Eps, "330_climb 정본 값");
+            // MV-SPEC-02 6-5: 압축 단수 k, stepD 0.87·stepH 0.7
+            Assert.AreEqual(43, k);
+            Assert.AreEqual(3 + 1.4 + 43 * 0.87, zEnd, Eps, "330_climb 값");
+            Assert.AreEqual(43 * 0.7, dH, Eps, "330_climb 값");
 
             var sim = Sim(new HandLevel().Add("stair", 0, stairZ));
             sim.State.Stairs = n;

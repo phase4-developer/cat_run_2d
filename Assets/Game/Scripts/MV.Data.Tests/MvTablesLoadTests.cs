@@ -13,8 +13,8 @@ namespace MV.Data.Tests
         {
             ["00_config"] = 1, ["01_wealth"] = 18, ["02_playResource"] = 5, ["03_sound"] = 33, ["04_effect"] = 75,
             ["05_contentOpen"] = 18, ["06_balancePreset"] = 3, ["07_consumeType"] = 26, ["08_adPlacement"] = 7, ["09_uiResource"] = 12,
-            ["10_lobbyUpgrade"] = 3, ["11_stairLevel"] = 4, ["12_weaponLevel"] = 8, ["13_areaUpgrade"] = 8, ["14_rebirthPerk"] = 9,
-            ["16_levelPrice"] = 812,
+            ["10_lobbyUpgrade"] = 3, ["11_stairLevel"] = 4, ["12_weaponLevel"] = 12, ["13_areaUpgrade"] = 8, ["14_rebirthPerk"] = 9,
+            ["16_levelPrice"] = 917,
             ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 12, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,
             ["107_chargeGate"] = 3, ["108_receiveCondition"] = 7, ["109_moveAI"] = 3, ["110_card"] = 92, ["111_cardPool"] = 11,
             ["112_cardEffect"] = 26, ["113_god"] = 12, ["114_hpRule"] = 7, ["115_cardTier"] = 5,
@@ -69,7 +69,7 @@ namespace MV.Data.Tests
             var stair = t.LobbyUpgrade.ByKey("stair");
             Assert.That(stair.max, Is.EqualTo(30));
             Assert.That(stair.costBase, Is.EqualTo(25));
-            Assert.That(t.LobbyUpgrade.ByKey("weapon").max, Is.EqualTo(149));
+            Assert.That(t.LobbyUpgrade.ByKey("weapon").max, Is.EqualTo(254)); // MV-SPEC-02 Q-08: 12등급 Σneed(lv1~11) 194 + 60
             // 07 §7.8.4·7.8.5.
             Assert.That(t.AreaUpgrade.ByKey("rate").valueFormat, Is.EqualTo("{0}%"));
             Assert.That(t.RebirthPerk.ByKey("dcap").@base, Is.EqualTo(10));
@@ -86,7 +86,7 @@ namespace MV.Data.Tests
             Assert.That(t.Climb.Config()["lap"], Is.EqualTo(75));
             // 300 키 = 코드 상수.
             Assert.That(t.RunConfig.Datas.Count, Is.EqualTo(RunConfigKeys.All.Length));
-            Assert.That(t.RunConfig.I(RunConfigKeys.MAX_CLONES), Is.EqualTo(4));
+            Assert.That(t.RunConfig.I(RunConfigKeys.MAX_CLONES), Is.EqualTo(30)); // MV-SPEC-02 Q-09 분신 상한 30
             // 312 Level → 템플릿(정본 tplFor).
             Assert.That(t.TemplateCycle.TemplateFor(0, 1), Is.EqualTo(310000001));
             Assert.That(t.TemplateCycle.TemplateFor(0, 9), Is.EqualTo(310000003));

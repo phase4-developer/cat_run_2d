@@ -129,19 +129,23 @@ namespace MV.Run
         public int Area;
         public int Zone;
         public int Level = 1;
-        /// <summary>누적 생선(save.souls). 개방 판정(§4.11.1)에 쓴다.</summary>
+        /// <summary>누적 구출 고양이(재화 rescueCat, MV-SPEC-02 Q-34). 개방 판정(§4.11.1)에 쓴다.</summary>
         public int Souls;
         public int Cp;
         public BarRecord Bars;
 
         // 로비 강화 up.{stair, weapon, income}
         public int UpStair, UpWeapon, UpIncome;
-        /// <summary>시작 덱 save.deck[0..8] (등급별 장수, 0번 미사용).</summary>
+        /// <summary>시작 덱(등급별 장수, 0번 미사용). 기본 9칸은 빈 입력·시험용이고 MvRunStart가 저장 덱 길이로 바꾼다. 런 W 길이는 103_item에서 따로 잡는다.</summary>
         public int[] Deck = new int[9];
         // Area 강화 aup.{rate, range, clone, crit, dbl}
         public int AupRate, AupRange, AupClone, AupCrit, AupDbl;
+        /// <summary>Area 강화 관통 확률 Lv(13_areaUpgrade statKey PierceChance, MV-SPEC-02 Q-28).</summary>
+        public int AupPierce;
         // 부활 rb.perks.{power, crit, obst, dcap}
         public int PerkPower, PerkCrit, PerkObst, PerkDcap;
+        /// <summary>냥환생 「지팡이 제작 2배」·「계단 2배」 Lv(14_rebirthPerk statKey CraftDouble·StairDouble, MV-SPEC-02 Q-27).</summary>
+        public int PerkCraftDbl, PerkStairDbl;
         /// <summary>출전 신 `113_god.key`.</summary>
         public string God = "thunder";
         /// <summary>`06_balancePreset.key`(D-03 기본 easy).</summary>

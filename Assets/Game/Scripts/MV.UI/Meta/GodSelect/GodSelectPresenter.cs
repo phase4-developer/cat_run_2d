@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MV.Data;
 
 namespace MV.UI
@@ -20,10 +21,12 @@ namespace MV.UI
         protected override void Build(MetaPanelModel m, MvTables tables)
         {
             m.Title = "달의 야옹신"; // ui.god.title
-            var gods = tables.God.Sorted;
+            // 메뉴에 보이는 신만(113_god.showInMenu, MV-SPEC-02 Q-21: 10종, 11·12번은 데이터만).
+            var gods = new List<GodData>();
+            foreach (var g in tables.God.Sorted) if (g.showInMenu) gods.Add(g);
             if (gods.Count == 0) return;
             GodData view = tables.God.ByKey(Viewing);
-            if (view == null) { view = gods[0]; Viewing = view.key; }
+            if (view == null || !view.showInMenu) { view = gods[0]; Viewing = view.key; }
             string selected = Port.SelectedGod;
 
             foreach (var g in gods)
