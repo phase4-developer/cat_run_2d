@@ -38,10 +38,11 @@ namespace MV.Run.Tests.Gen
             // MV-SPEC-02 Q-09: 분신 상한 = min(MAX_CLONES 30, 314 위치 수) → aup.clone 9 그대로
             Assert.AreEqual(System.Math.Min(RunFormulas.CloneCap(t), setup.AupClone), s.Clones, "min(CloneCap, aup.clone)");
             Assert.AreEqual(9, s.Clones);
-            // FIRE_PHASE는 5칸, 나머지 분신 칸은 0(표에 위상 값 없음)
+            // FIRE_PHASE(300) 칸 = 1 + 분신 상한, 표 값 그대로(표에 없는 칸은 0)
             Assert.AreEqual(1 + RunFormulas.CloneCap(t), s.FireT.Length);
             CollectionAssert.AreEqual(new[] { 0, 0.13, 0.26, 0.07, 0.19 }, s.FireT.Take(5));
-            Assert.IsTrue(s.FireT.Skip(5).All(x => x == 0));
+            var phase = t.RunConfig.List(RunConfigKeys.FIRE_PHASE);
+            for (int i = 0; i < s.FireT.Length; i++) Assert.AreEqual(i < phase.Count ? phase[i] : 0, s.FireT[i], 1e-12, "FireT " + i);
             // MV-SPEC-02 Q-08: W 길이 = 103 active 상한 등급 + 1(12등급 → 13)
             Assert.AreEqual(RunFormulas.WeaponTierMax(t) + 1, s.W.Length);
             CollectionAssert.AreEqual(new[] { 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, s.W);
