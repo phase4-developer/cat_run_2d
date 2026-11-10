@@ -3,12 +3,12 @@
 <!-- jjevol-project-settings:start — 설정 화면(「프로젝트 설정」)이 만든 절. 고치려면 그 화면에서 고른다. -->
 ## 프로젝트 설정
 
-저장: 2026-11-11 05:29 KST, 사용자가 설정 화면에서 고름. 정본은 `Docs/AI/ProjectSettings.json`.
+저장: 2026-11-11 05:35 KST, 사용자가 설정 화면에서 고름. 정본은 `Docs/AI/ProjectSettings.json`.
 
 - Framework 연결 방식: 외부
 - 프로젝트 기본: 어떤 프로젝트인가 = 새 게임; 누구 프로젝트인가 = 회사
 - 게임 형태: 2D / 3D = 2.5D; 렌더 파이프라인 = URP Universal; Unity 버전 = 6000.3.9f1; 출시 플랫폼 = Android, iOS; 화면 방향 = 세로; 입력 = 터치; UI 방식 = uGUI
-- 기획과 데이터: 기획서 = 확정 기획서 있음; 기획서 위치 = Docs/MV-SPEC-02/README.md; 외부 원본 문서(URL) = https://docs.google.com/document/d/1R1DI7ckuu3zzKtwmAJ-7PD9MArLRYvfeO8MNY1n7RWo/edit?tab=t.0; 게임 수치를 고치는 곳(정본) = Framework 표(TSV, 표 제작 도구); 지원 언어 = 한국어, 영어; 저장 = 서버 저장; 수익 = 광고, 인앱 결제
+- 기획과 데이터: 기획서 = 확정 기획서 있음; 기획서 위치 = Docs/MV-SPEC-02/Source/README.md; 외부 원본 문서(URL) = https://docs.google.com/document/d/1R1DI7ckuu3zzKtwmAJ-7PD9MArLRYvfeO8MNY1n7RWo/edit?tab=t.0; 바꿀 게임 규칙 정리 위치 = Docs/MV-SPEC-02/DiffReport.md; 게임 수치를 고치는 곳(정본) = Framework 표(TSV, 표 제작 도구); 지원 언어 = 한국어, 영어; 저장 = 서버 저장; 수익 = 광고, 인앱 결제
 - 표·폴더 규칙: 표 규칙 = JJEvol 표 규격 v1; 쓸 보상 표 = Drop, 랜덤박스; 폴더 규칙 = JJEvol 폴더 규격 v1
 - Framework: Framework 사용 = 쓴다; Framework 연결 방식 = 외부; 영역: 콘텐츠 로드 = 쓴다; 영역: 씬 전환 = 쓴다; 영역: 화면·팝업 = 쓴다; 영역: 소리·연출 = 쓴다; 영역: 저장 = 쓴다; 영역: 표 읽기·제작 = 쓴다; 영역: 언어 읽기·제작 = 쓴다; 영역: 재화(돈·아이템) = 쓴다; 영역: 플랫폼 기본 = 쓴다; 같은 범위 안 버전 갱신 = AI에게 맡김
 - 더할 기능: 광고 = AdMob; 인앱 결제 = Unity 결제; 로그인 = Firebase 계정; 통계 = Firebase; 알림 = 원격 푸시, 로컬 알림; 스토어 리뷰·추적 동의 = iOS 추적 동의(ATT); 서버 통신 = 씀: Firebase 서버; 서버 기능을 지금 처리하는 곳 = 로컬 백엔드(서버 없음); 장르 기능 = 없음
@@ -23,7 +23,7 @@
 - 위 「Framework 범위」에 적힌 패키지는 사용자가 범위로 승인한 것이다. 연결할 때 설치 확인과 저장소 규칙의 「고정본만」 제한보다 이 범위가 먼저다. 「고정」 표시는(베타 고정본 포함) 그 고정 tgz를, 「베타」 표시는 Framework 최신 후보(외부 연결은 후보 tgz, 내부 연결은 폴더)를 연결하고 기준선에 「베타」와 SHA를 적는다. 고정본이 있다고 베타 표시 패키지를 고정본으로 바꾸거나 빼지 않는다.
 - Framework 연결이 먼저다: 범위에 아직 연결하지 않은 패키지가 있으면 기능 계약보다 먼저, 담당 한 명이 범위 전체를 한 번에 연결하고 compile·EditMode·PlayMode 한 바퀴로 확인한다. 하나씩 나눠 연결·검증하지 않는다. 범위가 바뀌거나 고정본이 새로 나오면 모아서 다시 한 번에 한다. 연결을 막는 도구 오류는 바로 막힘으로 신고한다. 단, 게임에 없는 외부 SDK가 있어야 컴파일되는 패키지 (`com.jjevol.platform.ads.admob`: GoogleMobileAds.Common.dll, GoogleMobileAds.Core.dll, GoogleMobileAds.Ump.dll, GoogleMobileAds.dll; `com.jjevol.platform.login.firebase`: Firebase.App.dll, Firebase.Auth.dll)는 그 SDK가 게임에 들어올 때까지 첫 묶음에서 빼고 나머지를 먼저 연결한다. 뺀 패키지는 SDK 설치 결정(외부 설치 승인)으로 원장에 남기고, 그 패키지가 필요한 계약만 기다린다. SDK가 들어오면 뺀 것을 한 번에 더 연결한다.
 - Android·iOS Player 빌드에 Firebase SDK 필요: `com.jjevol.platform.analytics.firebase`(Firebase Analytics), `com.jjevol.platform.push.firebase`(Firebase Messaging). Editor에서는 SDK 없이 컴파일되므로 첫 묶음에서 빼지 않는다. Player 빌드 전에 SDK 설치 결정(외부 설치 승인)을 원장에 남긴다.
-- 기획서 원본은 외부 문서(<https://docs.google.com/document/d/1R1DI7ckuu3zzKtwmAJ-7PD9MArLRYvfeO8MNY1n7RWo/edit?tab=t.0>)다. AI는 읽기만 하고 원본을 고치지 않는다. 변경 추적·비교는 저장소 사본 `Docs/MV-SPEC-02/README.md` 기준이다. 사본은 원본에서 다시 가져와 덮으므로 직접 고치지 않고, 기획서와 다른 결정은 원장에 남겨 원본 수정을 사용자에게 알린다.
+- 기획서 원본은 외부 문서(<https://docs.google.com/document/d/1R1DI7ckuu3zzKtwmAJ-7PD9MArLRYvfeO8MNY1n7RWo/edit?tab=t.0>)다. AI는 읽기만 하고 원본을 고치지 않는다. 변경 추적·비교는 저장소 사본 `Docs/MV-SPEC-02/Source/README.md` 기준이다. 사본은 원본에서 다시 가져와 덮으므로 직접 고치지 않고, 기획서와 다른 결정은 원장에 남겨 원본 수정을 사용자에게 알린다.
 - 검증을 통과한 자기 작업 브랜치 변경은 묻지 않고 Commit한다.
 - AI 결과는 `dev`에 병합한다. `main` 반영과 Push는 사용자가 그 회차에 직접 말할 때만 한다.
 - AI가 Unity로 돌리는 배치 실행은 EditMode, compile, PlayMode뿐이다(실행기가 그 밖은 거절한다).
