@@ -17,6 +17,52 @@
       "dependencies": {},
       "hash": "2e993ff18f28c931602a07292df0b0804eebef99"
     },
+    "com.google.external-dependency-manager": {
+      "version": "file:Vendor/com.google.external-dependency-manager-1.2.186.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
+    "com.google.firebase.analytics": {
+      "version": "file:Vendor/com.google.firebase.analytics-13.17.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "13.17.0"
+      }
+    },
+    "com.google.firebase.app": {
+      "version": "file:Vendor/com.google.firebase.app-13.17.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.external-dependency-manager": "1.2.186"
+      }
+    },
+    "com.google.firebase.auth": {
+      "version": "file:Vendor/com.google.firebase.auth-13.17.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "13.17.0"
+      }
+    },
+    "com.google.firebase.functions": {
+      "version": "file:Vendor/com.google.firebase.functions-13.17.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "13.17.0"
+      }
+    },
+    "com.google.firebase.messaging": {
+      "version": "file:Vendor/com.google.firebase.messaging-13.17.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "13.17.0"
+      }
+    },
     "com.jjevol.audio": {
       "version": "file:Frozen/com.jjevol.audio-0.1.0-pre.3.tgz",
       "depth": 0,
@@ -127,6 +173,14 @@
         "com.jjevol.platform.core": "0.1.0-pre.2"
       }
     },
+    "com.jjevol.platform.ads.admob": {
+      "version": "file:Frozen/com.jjevol.platform.ads.admob-0.1.0-pre.2.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.ads": "0.1.0-pre.1"
+      }
+    },
     "com.jjevol.platform.analytics": {
       "version": "file:Frozen/com.jjevol.platform.analytics-0.1.0-pre.1.tgz",
       "depth": 0,
@@ -174,6 +228,14 @@
         "com.jjevol.platform.core": "0.1.0-pre.2"
       }
     },
+    "com.jjevol.platform.login.firebase": {
+      "version": "file:Frozen/com.jjevol.platform.login.firebase-0.1.0-pre.4.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.platform.login": "0.1.0-pre.1"
+      }
+    },
     "com.jjevol.platform.network": {
       "version": "file:Frozen/com.jjevol.platform.network-0.1.0-pre.1.tgz",
       "depth": 0,
@@ -188,6 +250,15 @@
       "source": "local-tarball",
       "dependencies": {
         "com.jjevol.data": "0.1.0-pre.1",
+        "com.jjevol.platform.network": "0.1.0-pre.1",
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "com.jjevol.platform.network.firebase": {
+      "version": "file:Frozen/com.jjevol.platform.network.firebase-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
         "com.jjevol.platform.network": "0.1.0-pre.1",
         "com.unity.nuget.newtonsoft-json": "3.2.2"
       }
