@@ -6,6 +6,7 @@ using jjevol.Effect;
 using MV.Platform.Net;
 using MV.Save;
 using MV.Sound;
+using PlatformLibrary.Network;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -112,6 +113,7 @@ namespace MV.Boot
                 var store = MvSave.Current;
                 MvSound.Muted = store != null && !store.IsDisposed && store.Settings.Muted;
                 NetworkManager.SetLocalService(MvPingRequest.RegisterLocal(new MvLocalNetworkService(), new MvLocalServerClock()));
+                NetworkManager.DefaultRoute = NetworkRoute.Local;   // 고정본 기본은 Server. 서버가 생기면 공급자를 걸고 Server로 바꾼다(D-89).
                 ServicesReady = true;
 
                 // 10. 게임 씬. Boot 오브젝트는 이 전환에서 사라지므로 여기 뒤에서는 정적 상태만 쓴다.
