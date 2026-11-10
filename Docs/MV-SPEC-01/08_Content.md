@@ -180,7 +180,7 @@
 | 27 | 6 | 구름 다리 | snow | 40000 | 1545 | 1800,600000,14,18 [원작] | 600000,6000000,16,23 [원작] | 6000000,12000000,18,29 [원작] | 70 | 45 | 25 |
 | 28 | 6 | 달맞이 고개 | subway | 45000 | 1590 | 2160,720000,14,18 [원작] | 720000,7200000,16,23 [원작] | 7200000,14000000,18,29 [원작] | 70 | 45 | 25 |
 | 29 | 6 | 은하 골목 | snowday | 50000 | 1635 | 2600,864000,14,18 [원작] | 864000,8640000,16,23 [원작] | 8640000,17000000,18,29 [원작] | 70 | 45 | 25 |
-| 30 | 6 | 달의 문 | moonstair | 60000 | **1695 [창작]** (원값 1755) | 3200,1000000,14,18 [원작] | 1000000,10500000,16,23 [원작] | 10500000,21000000,18,29 [원작] | 70 | 60 | 10 |
+| 30 | 6 | 달의 문 | moonstair | 60000 | **1755** (MV-SPEC-02 값으로 원값 복귀, 이전 [창작] 1695) | 3200,1000000,14,18 [원작] | 1000000,10500000,16,23 [원작] | 10500000,21000000,18,29 [원작] | 70 | 60 | 10 |
 
 TSV 예(302·303 첫 행):
 ```
@@ -205,7 +205,7 @@ id	group	floor	h0	h1	rows	souls
 영향:
 - 개방은 **포털 도달 때 누적 생선 ≥ needSouls면 즉시**다(`finish` L2408~2410, `collect` L2430). 개방이 그때 바로 일어나므로 넘치는 양은 마지막 런에서 더 부순 만큼뿐이다. 결과적으로 Area마다 「생선 합 − 10~25개만 모으면 열린다」는 **여유분**으로 작동한다. 막히지 않는다.
 - 체크포인트(Floor 생선 전부 파괴, L2402)는 여유와 상관없이 Floor별로 동작한다.
-- **Area 30만 막힌다.** 원값 증가분 120 > 생선 합 70. Area 30에 들어올 때 누적이 1635 근처라 1755를 못 채우면 영원히 탈출할 수 없다.
+- (MV-SPEC-02 반영, MV-DATA-SPEC2: Area 30 needSouls 1755 원값 복귀, Floor 30 생선 합은 **더미** 33 / 43 / 54로 채워 막힘을 푼다. 검증기는 증가분 > Floor 생선 합이면 경고.) **Area 30만 막힌다(옛 값 기준).** 원값 증가분 120 > 생선 합 70. Area 30에 들어올 때 누적이 1635 근처라 1755를 못 채우면 영원히 탈출할 수 없다.
 
 권장 A: 정본·원작 값 유지, Area 30만 C6으로 `needSouls = 1695`. 선택지 비교는 8.9 D-70.
 
@@ -297,22 +297,24 @@ id	group	floor	h0	h1	rows	souls
 
 ### 8.3.2 113_god 12행
 
+> MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-34·Q-35): 신 이름은 별자리 12종, 신 3~12 key는 별자리 영문(아래 표 key 열). 출전 가능은 물병자리냥(113001001)만, 사자자리냥(113001002)과 그 해금(5001004)·카드(110 group 2)는 active 0. 쌍둥이자리냥(113001011)·게자리냥(113001012)은 `showInMenu 0`. element는 water·arrow·poison·war·light·earth·time·soul·spear·cosmic(3~12 순). 저장 이관 없음. 표 정본은 TSV `113_god`.
+
 [07](07_Tables.md)의 113_god 열(이름·속성·색·부제·순서·사용 여부)에 아래 **열 추가를 요청**한다: `unlockType`(0 무료 / 1 contentOpen / 2 구매), `openId`(05 id), `unlockPriceType/Id/Value`(consumeData), `passiveStat`·`passivePerLv`(8.3.5), `cardGroup`(110_card group), `gearSet`(1이면 장비 세트, 8.5.8), `portrait`(초상 스프라이트), `projTint`(투사체 색).
 
 | id | key | 이름 [프로토] | 부제 [프로토] | color [프로토] | element | unlockType | 해금 조건 | passiveStat / perLv [창작·HE임시] | gearSet | active(1차) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 113001001 | thunder | 달빛 야옹신 | 털실 · 정전기 · 냥냥펀치 | #9ab8ff | bolt [프로토] | 0 | 처음부터 | CritChance / 1 | 1 | 1 |
-| 113001002 | flame | 햇살 야옹신 | 햇살 · 범위 · 폭발 (메뉴 부제 「햇살 · 폭발」) | #ff8a3d | fire [프로토] | 1 | Area 4 도달(05 행 5001004) [창작, 지도 표시 근거] | Dmg / 2 | 1 | 1 |
-| 113001003 | wind | 바람 야옹신 | 회오리 돌진 | #9fe8c0 | wind [창작] | 2 | 방울 50 | FireRate / 2 | 1 | 0 |
-| 113001004 | snow | 눈꽃 야옹신 | 얼음 · 둔화 | #aee9ff | ice [창작] | 2 | 방울 50 | CritDmg / 5 | 1 | 0 |
-| 113001005 | cloud | 구름 야옹신 | 친구 강화 | #d6c0ff | cloud [창작] | 2 | 방울 80 | DoubleChance / 1 | 1 | 0 |
-| 113001006 | sea | 바다 야옹신 | 물결 방어막 | #5fa8f0 | water [창작] | 2 | 방울 80 | Range / 2 | 0 | 0 |
-| 113001007 | star | 별빛 야옹신 | 별똥별 | #ffe08a | star [창작] | 2 | 방울 120 | Gold / 5 | 0 | 0 |
-| 113001008 | forest | 숲 야옹신 | 덩굴 · 독 | #8ad06a | leaf [창작] | 2 | 방울 120 | Dmg / 3 | 0 | 0 |
-| 113001009 | shadow | 그림자 야옹신 | 관통 | #9a7ad6 | shadow [창작] | 2 | 방울 150 | CritDmg / 5 | 0 | 0 |
-| 113001010 | lightning | 번개 야옹신 | 유도 번개 | #ffd84a | spark [창작] | 2 | 방울 150 | FireRate / 3 | 0 | 0 |
-| 113001011 | earth | 흙 야옹신 | 바위 낙하 | #c49a62 | rock [창작] | 2 | 방울 200 | Dmg / 3 | 0 | 0 |
-| 113001012 | fish | 생선 야옹신 | 생선 보상 | #6ad0e8 | fish [창작] | 2 | 방울 200 | Gold / 8 | 0 | 0 |
+| 물병자리냥(113001001) | thunder | 물병자리냥 (옛 이름 달빛 야옹신) | 털실 · 정전기 · 냥냥펀치 | #9ab8ff | bolt [프로토] | 0 | 처음부터 | CritChance / 1 | 1 | 1 |
+| 사자자리냥(113001002) | flame | 사자자리냥 (옛 이름 햇살 야옹신) | 햇살 · 범위 · 폭발 (메뉴 부제 「햇살 · 폭발」) | #ff8a3d | fire [프로토] | 1 | Area 4 도달(05 행 5001004) [창작, 지도 표시 근거] | Dmg / 2 | 1 | 1 |
+| 물고기자리냥(113001003) | pisces | 물고기자리냥 (옛 이름 바람 야옹신) | 회오리 돌진 | #9fe8c0 | wind [창작] | 2 | 방울 50 | FireRate / 2 | 1 | 0 |
+| 사수자리냥(113001004) | sagittarius | 사수자리냥 (옛 이름 눈꽃 야옹신) | 얼음 · 둔화 | #aee9ff | ice [창작] | 2 | 방울 50 | CritDmg / 5 | 1 | 0 |
+| 전갈자리냥(113001005) | scorpio | 전갈자리냥 (옛 이름 구름 야옹신) | 친구 강화 | #d6c0ff | cloud [창작] | 2 | 방울 80 | DoubleChance / 1 | 1 | 0 |
+| 양자리냥(113001006) | aries | 양자리냥 (옛 이름 바다 야옹신) | 물결 방어막 | #5fa8f0 | water [창작] | 2 | 방울 80 | Range / 2 | 0 | 0 |
+| 처녀자리냥(113001007) | virgo | 처녀자리냥 (옛 이름 별빛 야옹신) | 별똥별 | #ffe08a | star [창작] | 2 | 방울 120 | Gold / 5 | 0 | 0 |
+| 황소자리냥(113001008) | taurus | 황소자리냥 (옛 이름 숲 야옹신) | 덩굴 · 독 | #8ad06a | leaf [창작] | 2 | 방울 120 | Dmg / 3 | 0 | 0 |
+| 천칭자리냥(113001009) | libra | 천칭자리냥 (옛 이름 그림자 야옹신) | 관통 | #9a7ad6 | shadow [창작] | 2 | 방울 150 | CritDmg / 5 | 0 | 0 |
+| 염소자리냥(113001010) | capricorn | 염소자리냥 (옛 이름 번개 야옹신) | 유도 번개 | #ffd84a | spark [창작] | 2 | 방울 150 | FireRate / 3 | 0 | 0 |
+| 쌍둥이자리냥(113001011) | gemini | 쌍둥이자리냥 (옛 이름 흙 야옹신) | 바위 낙하 | #c49a62 | rock [창작] | 2 | 방울 200 | Dmg / 3 | 0 | 0 |
+| 게자리냥(113001012) | cancer | 게자리냥 (옛 이름 생선 야옹신) | 생선 보상 | #6ad0e8 | fish [창작] | 2 | 방울 200 | Gold / 8 | 0 | 0 |
 
 - 「방울」 = `01_wealth` 8 godCoin(야옹신 방울). `unlockPriceType/Id/Value` = `1 / 8 / 50` 형식. 가격 [창작·HE임시](원작 저장소 임시 가격 50~200 곡선).
 - thunder 메뉴 항목에는 정본상 색·부제가 없다(L803). 색은 `GODS.thunder.c`, 부제는 `GODS.thunder.sub` [프로토].
@@ -349,6 +351,8 @@ id	group	floor	h0	h1	rows	souls
 | **DropBonus** | 벽·상자 파괴 때 p1 확률로 캣닢 `ceil(diaCap/2)`, 츄르 ×(1 + p2×n) | 0.08, 0.3 | 적 8% 캣닢 규칙 L1925~1927 응용 | **새 type [창작]** |
 
 ### 8.3.4 고유 카드 12종 × 7장 (110_card 행)
+
+> MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20): 신 3~12 카드 이름은 `<신 이름> <카드>`, 효과는 MV-SPEC-02 GodRefill 3~12대로 기존 `112_cardEffect` 행을 재사용(Orbit·CloneAdd·ChainSplash·Storm·Blast·FireRateMul·PierceEveryN·DoubleChance·ChainJump·Meteor·ProcBurn·DmgMul·ProcChill·Beam·Shield·DropBonus·ProcExtraHit·Pierce). 아래 표의 신 열은 옛 key이고, 이름·효과 정본은 TSV `110_card`.
 
 110_card의 신 카드 행은 `group` = 신 순번(1 thunder … 12 fish), `key` = 슬롯 key(orb…spear), id = `110{신 순번 3}{슬롯 순번 3}`(예 thunder orb 110001001). 공용 카드는 group 0. id 규칙이 07과 다르면 07을 따르고 이 표는 이름·tier·type을 정한다. `icon` = `Card_{신 key}_{슬롯 key}`(예 `Card_thunder_orb`, [03 §3.5.7](03_ResourcePipeline.md) `Card_` 접두, 아틀라스 `Atlas_UI_Card`).
 
@@ -1236,7 +1240,7 @@ JJEvol 표 규격 v1 §6~7 모양(열 정의 정본 [07 §7.9.3](07_Tables.md)).
 
 ### 8.7.1 01_wealth 행
 
-1~4는 정본 재화로 [07](07_Tables.md)이 정한다: 1 gold 츄르, 2 dia 캣닢, 3 souls 생선, 4 rbToken 목숨 조각. 이 문서는 5~17을 더한다. 열은 07의 01_wealth 열(`id, type, icon, maxValue, chargeShopSectionId` 등)을 따른다(아래 표의 key = `type` 열). 아이콘 이름 [창작], 그림은 [03](03_ResourcePipeline.md) 신규 목록.
+1~4는 정본 재화로 [07](07_Tables.md)이 정한다: 1 gold 츄르, 2 dia 캣닢, 3 rescueCat 구출 고양이(옛 souls), 4 goldenFish 황금 생선(옛 rbToken). 보라 마법석(1001018, purpleGem)은 MV-SPEC-02 Q-32. 이 문서는 5~17을 더한다. 열은 07의 01_wealth 열(`id, type, icon, maxValue, chargeShopSectionId` 등)을 따른다(아래 표의 key = `type` 열). 아이콘 이름 [창작], 그림은 [03](03_ResourcePipeline.md) 신규 목록.
 
 | id | key | 이름 [창작] | 얻는 곳 | 쓰는 곳 | chargeShopSectionId | 우선 |
 |---|---|---|---|---|---|---|

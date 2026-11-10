@@ -24,7 +24,7 @@
 
 | dataKey | 클래스 | 담는 것 | 부활 때 | 진행 초기화 때 |
 |---|---|---|---|---|
-| `wealthInfos` | Framework `WealthContainer` | 재화. Framework 형식 그대로 `01_wealth.type` 이름별 `{type, quantity}` 행 배열(`gold`·`dia`·`souls`·`rbToken` + 08의 5~17). 게임 코드는 재화 id로 묻고 `MvWealthIds`가 type으로 바꾼다(Boot가 표와 대조) | gold·souls 0, dia·rbToken 유지 | 전부 0 |
+| `wealthInfos` | Framework `WealthContainer` | 재화. Framework 형식 그대로 `01_wealth.type` 이름별 `{type, quantity}` 행 배열(`gold`·`dia`·`rescueCat`·`goldenFish` + 08의 5~17). 게임 코드는 재화 id로 묻고 `MvWealthIds`가 type으로 바꾼다(Boot가 표와 대조) | gold·souls 0, dia·rbToken 유지 | 전부 0 |
 | `mvProgress` | `MvProgressContainer` | Level, Area, 체크포인트, 벽 기록, 런 수, 최고 Area, 정산 순번 | level·runs·bestArea 유지, 나머지 기본 | 기본 |
 | `mvLobby` | `MvLobbyContainer` | 로비 강화 3종, 시작 덱 | 기본 | 기본 |
 | `mvAreaUp` | `MvAreaUpContainer` | Area 강화 5종 | 기본 | 기본 |
@@ -81,7 +81,7 @@
 | `mvGod.sel` | string | `00_config.startGodKey` = `thunder` | `save.god` |
 | `mvGod.gods` | `{key: {lv, shard}}` | `{}` | 없음, [08 §8.3](08_Content.md) |
 
-- 목숨 조각 보유량(`save.rb.tokens`)은 재화 `wealthInfos.rbToken`이다(consumeType 1, `01_wealth` 4).
+- 목숨 조각 보유량(`save.rb.tokens`)은 재화 `wealthInfos.goldenFish`이다(consumeType 1, `01_wealth` 4. MV-SPEC-02 Q-34로 옛 `rbToken`에서 이관 없이 바꿈).
 - 부활 해금(`save.rb.open`, DEF에 없고 L2431에서 생김)은 `mvUnlock.opened`에 `rebirth`로 넣는다([07 §7.8.9](07_Tables.md) `05_contentOpen[rebirth]` sticky).
 - 강화 키(`up`·`lv`·`perks`)는 표 key(`10_lobbyUpgrade`·`13_areaUpgrade`·`14_rebirthPerk`)다. 표에 없는 키는 버리고, 표 max를 넘으면 max로 자른다.
 
@@ -282,7 +282,7 @@ namespace MV.Save
 | 정본 | Unity |
 |---|---|
 | `level, area, cp, bars, runs, zoneClear, escaped` | `mvProgress` 같은 이름. `bestArea = area` |
-| `gold, souls, dia, rb.tokens` | `wealthInfos` `gold`·`souls`·`dia`·`rbToken`(gold는 floor) |
+| `gold, souls, dia, rb.tokens` | `wealthInfos` `gold`·`rescueCat`·`dia`·`goldenFish`(gold는 floor) |
 | `up`, `deck` | `mvLobby` |
 | `aup` | `mvAreaUp.lv` |
 | `rb.lv, pending, perks, cdUntil` | `mvRebirth` |
