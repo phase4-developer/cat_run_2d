@@ -1,0 +1,77 @@
+<linker>
+  <assembly fullname="JJEvol.UI.Addressables.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="jjevol.UIManager" preserve="all" />
+    <type fullname="jjevol.UIHudSettings" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="MV.Fx, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="MV.Fx.MvFxDriver" preserve="all" />
+  </assembly>
+  <assembly fullname="MV.UI, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="MV.UI.AreaUpgradePopup" preserve="all" />
+    <type fullname="MV.UI.ContentMenuPopup" preserve="all" />
+    <type fullname="MV.UI.DebugPopup" preserve="all" />
+    <type fullname="MV.UI.FakeAdPopup" preserve="all" />
+    <type fullname="MV.UI.FakeAdView" preserve="all" />
+    <type fullname="MV.UI.FeatureUnlockPopup" preserve="all" />
+    <type fullname="MV.UI.GodSelectPopup" preserve="all" />
+    <type fullname="MV.UI.LobbyScreen" preserve="all" />
+    <type fullname="MV.UI.LobbyView" preserve="all" />
+    <type fullname="MV.UI.MapPopup" preserve="all" />
+    <type fullname="MV.UI.MetaPanelView" preserve="all" />
+    <type fullname="MV.UI.RebirthPopup" preserve="all" />
+    <type fullname="MV.UI.ResultPopup" preserve="all" />
+    <type fullname="MV.UI.ResultView" preserve="all" />
+    <type fullname="MV.UI.RunHud" preserve="all" />
+    <type fullname="MV.UI.RunHudView" preserve="all" />
+    <type fullname="MV.UI.StageFitter" preserve="all" />
+  </assembly>
+  <assembly fullname="MV.View, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="MV.View.CameraRig" preserve="all" />
+    <type fullname="MV.View.CatView" preserve="all" />
+    <type fullname="MV.View.DepthSorter" preserve="all" />
+    <type fullname="MV.View.GroundStripMesh" preserve="all" />
+    <type fullname="MV.View.LobbyStage" preserve="all" />
+    <type fullname="MV.View.ObjectViewFactory" preserve="all" />
+    <type fullname="MV.View.PropStreamer" preserve="all" />
+    <type fullname="MV.View.ScreenRig" preserve="all" />
+    <type fullname="MV.View.TintLayer" preserve="all" />
+    <type fullname="MV.View.WorldView" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AtlasSpriteProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.IAssetBundleResource" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AudioClip" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Camera" preserve="all" />
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.Material" preserve="all" />
+    <type fullname="UnityEngine.MeshFilter" preserve="all" />
+    <type fullname="UnityEngine.MeshRenderer" preserve="all" />
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.RectTransform" preserve="all" />
+    <type fullname="UnityEngine.Shader" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+    <type fullname="UnityEngine.U2D.SpriteAtlas" preserve="all" />
+    <type fullname="UnityEngine.Events.PersistentCallGroup" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Events.UnityEvent`1" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.UI.CanvasScaler" preserve="all" />
+    <type fullname="UnityEngine.UI.GraphicRaycaster" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Canvas" preserve="all" />
+  </assembly>
+</linker>

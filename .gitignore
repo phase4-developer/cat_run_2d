@@ -49,3 +49,6 @@ crashlytics-build.properties
 *.apk
 *.aab
 *.unitypackage
+# Addressables platform build state (written by each player build)
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/Android/
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/Android.meta
