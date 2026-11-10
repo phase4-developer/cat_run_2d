@@ -28,6 +28,7 @@ namespace MV.Editor.Build
         public const int ExitWrongTarget = 2;
         public const int ExitResolverMissing = 3;
         public const int ExitAddressablesFailed = 4;
+        public const int ExitPlayerSettingsWrong = 5;
 
         const string LogPrefix = "[MvBuild] ";
         const string ResolverTypeName = "GooglePlayServices.PlayServicesResolver";
@@ -81,7 +82,14 @@ namespace MV.Editor.Build
             // 3. AdMob Android 앱 ID — 비어 있으면 GoogleMobileAds ManifestProcessor가 빌드를 멈춘다.
             EnsureAdMobAndroidAppId();
 
-            // 4. Addressables — 플레이어 빌드가 자동으로 콘텐츠를 빌드하지 않을 때만 한 번 빌드한다. 설정 자산은 바꾸지 않는다.
+            // 3b. 최신 Android(64비트 전용 기기)에서 돌도록 IL2CPP·ARM64인지 확인한다. 설정은 ProjectSettings가 정본이라 바꾸지 않는다.
+            if (!IsDeviceReady(PlayerSettings.GetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android), PlayerSettings.Android.targetArchitectures))
+            {
+                Debug.LogError(LogPrefix + "Android 설정이 IL2CPP·ARM64가 아니다: " + PlayerSettings.GetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android) + ", " + PlayerSettings.Android.targetArchitectures);
+                return ExitPlayerSettingsWrong;
+            }
+
+            // 4. Addressables — 모든 그룹이 Local 경로라 APK 안에 들어간다(사용자 「원격 에셋은 안쓸거니 다 로컬로」). 플레이어 빌드가 자동으로 콘텐츠를 빌드하지 않을 때만 한 번 빌드한다. 설정 자산은 바꾸지 않는다.
             var aaSettings = AddressableAssetSettingsDefaultObject.Settings;
             if (aaSettings == null)
             {
@@ -123,6 +131,12 @@ namespace MV.Editor.Build
             var summary = report.summary;
             Debug.Log(LogPrefix + $"빌드 결과 {summary.result}, 오류 {summary.totalErrors}, 크기 {summary.totalSize}, 출력 {AndroidDevOutputPath}");
             return summary.result == BuildResult.Succeeded ? ExitSuccess : ExitBuildFailed;
+        }
+
+        /// <summary>64비트 전용 기기에서도 설치·실행되는 조합인지(IL2CPP, ARM64 포함).</summary>
+        public static bool IsDeviceReady(ScriptingImplementation backend, AndroidArchitecture architectures)
+        {
+            return backend == ScriptingImplementation.IL2CPP && (architectures & AndroidArchitecture.ARM64) != 0;
         }
 
         /// <summary>Addressables 4.0.1 AddressablesPlayerBuildProcessor.ShouldBuildAddressablesForPlayerBuild와 같은 판정.</summary>

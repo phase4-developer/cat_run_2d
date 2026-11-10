@@ -108,7 +108,7 @@ namespace MV.Editor.Tests
         }
 
         [Test]
-        public void AddressableGroups_AreRemoteAndPackSeparately()
+        public void AddressableGroups_AreLocalAndPackSeparately()
         {
             var settings = AddressableAssetSettingsDefaultObject.Settings;
             Assert.That(settings, Is.Not.Null, "AddressableAssetSettings");
@@ -118,8 +118,8 @@ namespace MV.Editor.Tests
                 Assert.That(group, Is.Not.Null, name);
                 var bundled = group.GetSchema<BundledAssetGroupSchema>();
                 Assert.That(bundled, Is.Not.Null, name);
-                Assert.That(bundled.BuildPath.GetName(settings), Is.EqualTo(AddressableAssetSettings.kRemoteBuildPath), name);
-                Assert.That(bundled.LoadPath.GetName(settings), Is.EqualTo(AddressableAssetSettings.kRemoteLoadPath), name);
+                Assert.That(bundled.BuildPath.GetName(settings), Is.EqualTo(AddressableAssetSettings.kLocalBuildPath), name);
+                Assert.That(bundled.LoadPath.GetName(settings), Is.EqualTo(AddressableAssetSettings.kLocalLoadPath), name);
                 Assert.That(bundled.BundleMode, Is.EqualTo(BundledAssetGroupSchema.BundlePackingMode.PackSeparately), name);
                 Assert.That(bundled.IncludeInBuild, Is.True, name);
             }

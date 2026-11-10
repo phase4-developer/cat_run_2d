@@ -28,5 +28,22 @@ namespace MV.Editor.Tests
             Assert.That(scenes, Is.Not.Empty);
             Assert.That(scenes[0].EndsWith("/Boot.unity", StringComparison.Ordinal), Is.True, scenes[0]);
         }
+
+        [Test]
+        public void DeviceReady_NeedsIl2cppAndArm64()
+        {
+            Assert.That(MvBuild.IsDeviceReady(UnityEditor.ScriptingImplementation.IL2CPP, UnityEditor.AndroidArchitecture.ARM64), Is.True);
+            Assert.That(MvBuild.IsDeviceReady(UnityEditor.ScriptingImplementation.IL2CPP, UnityEditor.AndroidArchitecture.ARMv7 | UnityEditor.AndroidArchitecture.ARM64), Is.True);
+            Assert.That(MvBuild.IsDeviceReady(UnityEditor.ScriptingImplementation.Mono2x, UnityEditor.AndroidArchitecture.ARMv7), Is.False);
+            Assert.That(MvBuild.IsDeviceReady(UnityEditor.ScriptingImplementation.IL2CPP, UnityEditor.AndroidArchitecture.ARMv7), Is.False);
+        }
+
+        [Test]
+        public void ProjectAndroidSettings_AreDeviceReady()
+        {
+            var backend = UnityEditor.PlayerSettings.GetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android);
+            var arch = UnityEditor.PlayerSettings.Android.targetArchitectures;
+            Assert.That(MvBuild.IsDeviceReady(backend, arch), Is.True, backend + ", " + arch);
+        }
     }
 }
