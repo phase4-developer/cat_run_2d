@@ -49,11 +49,17 @@
     "com.jjevol.ui.addressables": "file:Frozen/com.jjevol.ui.addressables-0.1.0-pre.4.tgz",
     "com.jjevol.ui.economy": "file:Frozen/com.jjevol.ui.economy-0.1.0-pre.5.tgz",
     "com.jjevol.ui.urp": "file:Frozen/com.jjevol.ui.urp-0.1.0-pre.6.tgz",
+    "com.unity.2d.sprite": "1.0.0",
     "com.unity.addressables": "4.0.1",
     "com.unity.ide.rider": "3.0.39",
     "com.unity.ide.visualstudio": "2.0.27",
     "com.unity.inputsystem": "1.18.0",
     "com.unity.localization": "1.5.12",
+    "com.unity.nuget.newtonsoft-json": "3.2.2",
+    "com.unity.purchasing": "5.3.1",
+    "com.unity.render-pipelines.universal": "17.3.0",
+    "com.unity.test-framework": "1.6.0",
+    "com.unity.ugui": "2.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
@@ -71,11 +77,6 @@
     "com.unity.modules.unitywebrequest": "1.0.0",
     "com.unity.modules.unitywebrequestassetbundle": "1.0.0",
     "com.unity.modules.unitywebrequesttexture": "1.0.0",
-    "com.unity.modules.video": "1.0.0",
-    "com.unity.nuget.newtonsoft-json": "3.2.2",
-    "com.unity.purchasing": "5.3.1",
-    "com.unity.render-pipelines.universal": "17.3.0",
-    "com.unity.test-framework": "1.6.0",
-    "com.unity.ugui": "2.0.0"
+    "com.unity.modules.video": "1.0.0"
   }
 }
