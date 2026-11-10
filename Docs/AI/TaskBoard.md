@@ -172,6 +172,8 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 | 날짜 | 결정 | 원문 또는 출처 | 적용 범위 |
 |---|---|---|---|
+| 2026-11-11 | 기본 모드 남은 수치는 지금 표 값으로 확정, 이후 수치는 기획자가 표에서 직접 고침: 분신 5~30 발사 위상 `300_runConfig` FIRE_PHASE(0.13/0.26/0.07/0.19 반복), 지팡이 9~12단계 강화 need 24·28·32·37(`12_weaponLevel`), 무기 최대 레벨 254(`10_lobbyUpgrade`), `16_levelPrice` Lv150~254(30×1.043^(Lv−1)), 지팡이 스택 상한 WEAPON_STACK_MAX 0(상한 없음), Q-03 게이트 배율 `107_chargeGate` useScale 1(sgate·cgate). 시트 더미 색 표시는 기획자가 값을 고칠 때까지 둠 | 중계 경유 사용자 원문 「나머지는 우선 지금으로 확정하고 기획자가 직접 테이블 수정하도록할게」(문안 보고 「보내」) | MV-RUN-SPEC2·MV-DATA-SPEC2, dev `32b454d` |
+| 2026-11-11 | Q-04 프로토 덤프 대조 7건(GenDumpTests Easy·Mid·Orig, SimReplayTests BASE·RUN01~03)은 Q-04로 꺼 둠(Ignore), 새 기준 대조로 교체 예정. 이번 회차 EditMode 587 PASS·7 Ignore는 통과로 봄 | 사용자 「통과로 봐」, 중계 경유 같은 결정 | MV-RUN-SPEC2 시험, 실행기 SKIPPED_TESTS 표시 |
 | 2026-11-10 | D-27 닫음: 레벨 칸 sin 해시(`JsMath.Sin`)와 PC 골든 시험은 그대로, 폰 실기 FIELD 골든 대조는 하지 않음(NOT_RUN 아님, 사용자 방침으로 제외). 레벨링을 다시 짤 때 시드 정수 RNG(System.Random·xorshift)로 교체 가능, UnityEngine.Random은 전역 상태라 안 씀 | 중계 경유 「유니티 랜덤으로 대체 못해? 그리고 어차피 느낌 보고 레벨링 시스템은 다시 구성될거야」 | 04 §4.14.3·D-27 행, 13 §13.3.3 |
 | 2026-11-10 | AI Unity 실행에 빌드·기기·에뮬레이터 실행 허용(프로젝트 설정 저장 13:38, `00bfe28`). Android 빌드 메서드 계약 MV-BUILD-ANDROID | 중계 경유 카드 「허용 (권장)」 → 사용자가 설정 화면에서 저장, 이어서 「계약 만들기」 | `Docs/AI/PROJECT_CONTEXT.md`, 원장 MV-BUILD-ANDROID 행 |
 | 2026-11-10 | D-94 담당 운영: 컨텍스트 크기만 보고 담당을 끊지 않음, 같은 모듈 연속 계약은 같은 칸이 이어 받음, Unity 잡만 기다리면 독립 일·30분 넘으면 잡 ID 적고 닫음 | 「5번도 권고안대로한다해」 | 원장 「작업 순서 구조」 5, 중앙 `External.md` |
