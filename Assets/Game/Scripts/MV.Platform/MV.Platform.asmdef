@@ -2,6 +2,7 @@
     "name": "MV.Platform",
     "rootNamespace": "MV.Platform",
     "references": [
+        "PlatformLibrary.Network",
         "MV.Core",
         "PlatformLibrary.Core",
         "PlatformLibrary.UnityRuntime",
