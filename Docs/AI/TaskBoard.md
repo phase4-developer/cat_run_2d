@@ -126,7 +126,7 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 | D-LOGIN-2 | 게스트 id를 어디에 저장하나 | PlayerPrefs(서버 붙일 때 재검토) | 저장 파일·서버로 옮기면 저장 위치 이관 | 수고가 듦 — 출시 뒤 계정이 생기면 비쌈 | 보관 원장 MV-PLAT-LOGIN 줄 |
 | D-HUD-SORT | UI용 정렬 레이어 「UI」를 만들지 | 만들지 않음(정렬 레이어는 월드용 10개만) | 만들면 ProjectSettings(통합 Writer) 한 줄과 캔버스 설정 | 쉬움 | 원장 MV-UI-HUD 행, `ProjectSettings/TagManager.asset` |
 | D-PI2-1 | 가짜 광고를 여는 코드가 두 곳인 것 합치기 | 두 곳 그대로(로비 `FakeAdPopup.cs`, 메타 `MetaUiPort.cs`) | 합치면 한 곳만 고치면 됨 | 쉬움 | 원장 MV-PLAY-INT 2차 행 |
-| D-PI2-2 | TMP 기본 자원과 한글 TMP 글꼴을 넣을지(HUD 한글 글꼴 후보 합침) | 넣지 않음. 화면은 uGUI 내장 글꼴. 배치 PlayMode에서 로비가 1초를 넘으면 No graphic device 오류. 테스트 폴더에 사용자가 만든 `Assets/TextMesh Pro/`가 있으나 dev에는 없음 | 넣으면 뷰의 Text를 TextMeshProUGUI로 바꿈(컨트롤러 그대로) | 수고가 듦 — UI 겉 2차를 만들수록 비쌈 | 원장 MV-UI-HUD·MV-PLAY-INT 2차 행, 05 §5.1.7, `S/MV.UI/Common/MvUi.cs` |
+| D-PI2-2 | 한글 TMP 글꼴을 넣을지(HUD 한글 글꼴 후보 합침) | TMP 기본 자원은 사용자 「dev에 넣기」로 dev `8bf1ab3`에 들어옴. 한글 글꼴은 넣지 않음, 화면은 uGUI 내장 글꼴 | 넣으면 뷰의 Text를 TextMeshProUGUI로 바꿈(컨트롤러 그대로) | 수고가 듦 — UI 겉 2차를 만들수록 비쌈 | 원장 MV-UI-HUD·MV-PLAY-INT 2차 행, 05 §5.1.7, `S/MV.UI/Common/MvUi.cs` |
 | D-UIMETA-MAP | 지도에 어떤 기능 칸을 보일지 | `05_contentOpen.showOnMap`이 비어 있어 Area 조건(conditionType 1) 행을 모두 보임 | `showOnMap` 값을 채우면 표 값만 바뀜 | 쉬움 | 07 §7.8.9, 원장 MV-UI-META 행 |
 | D-UIMETA-CP | 지도 체크포인트 칸 문구 | 담당이 넣은 임시 문구 | 정식 문구로 바꾸면 문구 키만 | 쉬움 | 원장 MV-UI-META 행 |
 | D-UIMETA-OWN | 05 UI 클래스 표의 소유 계약 | 테스트 패널·메타 공통 틀을 MV-UI-META가 만든 대로 둠(표와 다름) | 표대로 하면 다른 계약으로 옮기거나 05 표를 고침 | 쉬움 — 문서 정리 | 05 §5.1.14 |
