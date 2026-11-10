@@ -395,5 +395,13 @@ namespace MV.Meta
             if (contentTab != null) p["contentTab"] = contentTab;
             return Send(new MvMetaRequest(MvMetaRequestNames.MarkSeen, p));
         }
+
+        // ═════════ 연구(08 §8.5.3, MV-META-RESEARCH) ═════════
+
+        /// <summary>연구 단계 올리기 시작(비용 먼저, 끝 시각 저장). 판정은 로컬 백엔드 <see cref="MvResearchRules"/>.</summary>
+        public MvMetaResponse StartResearch(int group) => Send(new MvMetaRequest(MvMetaRequestNames.StartResearch, new JObject { ["group"] = group }));
+
+        /// <summary>연구 완료 수령(끝 시각이 지났을 때 1번, 단계 +1).</summary>
+        public MvMetaResponse ClaimResearch(int group) => Send(new MvMetaRequest(MvMetaRequestNames.ClaimResearch, new JObject { ["group"] = group }));
     }
 }

@@ -90,5 +90,9 @@ namespace MV.UI
         /// <summary>로비 「컨텐츠」 메뉴(05 §5.15, MV-UI-CONTENT). 모드 시작은 <see cref="ContentMenuData.OnStartMode"/>.</summary>
         public static async UniTask<ContentMenuPopup> OpenContentMenuAsync(ContentMenuData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.ContentMenu, data ?? new ContentMenuData()) as ContentMenuPopup;
+
+        /// <summary>연구 「고양이 공부방」(08 §8.5.3, MV-META-RESEARCH). 컨텐츠 메뉴 「성장」 탭(<c>05_contentOpen.key</c> research)이 연다.</summary>
+        public static async UniTask<ResearchPopup> OpenResearchAsync(MetaPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.Research, data ?? new MetaPopupData()) as ResearchPopup;
     }
 }
