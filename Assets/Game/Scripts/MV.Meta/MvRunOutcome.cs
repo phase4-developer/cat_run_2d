@@ -15,10 +15,16 @@ namespace MV.Meta
         /// <summary><see cref="MvMeta.BeginRun"/>이 준 런 순번. 같은 순번은 한 번만 정산한다(09 §9.3.1 lastSettledRunSeq).</summary>
         public long RunSeq;
         public MvRunEnd End;
-        /// <summary>런 츄르(goldMul 반영 뒤 소수 가능). 지급은 <c>floor(gold × mul)</c>.</summary>
+        /// <summary>런 츄르 합계(시작 몫 포함, goldMul 반영 뒤 소수 가능). 지급은 <c>floor((gold − startGold) × mul + startGold)</c>(PC-15).</summary>
         public double Gold;
         public int Souls;
         public int Dia;
+        /// <summary>
+        /// <see cref="Gold"/>·<see cref="Dia"/> 중 런 시작 몫(302 startGold + 14 StartGold·StartDia). PC-15: 결과 광고 ×N은
+        /// 런에서 얻은 몫(합계 − 시작 몫)에만 적용하고 시작 몫은 ×1로 지급한다.
+        /// </summary>
+        public double StartGold;
+        public int StartDia;
         /// <summary>이번 런이 확보한 체크포인트(<c>R.cpRun</c>).</summary>
         public int CpRun;
         /// <summary>

@@ -40,8 +40,9 @@ namespace MV.Run
             s.ZoneHp = setup.ZoneHp ?? LevelGen.AreaRow(t, setup.Area).hp;
             s.StartLevel = setup.Level;
             // 시작 재화(302 startGold + 14 StartGold·StartDia, MV-SPEC2-FIX1). 표 값이 0이면 정본과 같다.
-            s.Gold = RunFormulas.StartGold(t, setup);
-            s.Dia = RunFormulas.StartDia(t, setup);
+            // PC-15: 시작 몫을 따로 둔다(훔치기·결과 광고 ×N은 얻은 몫에만). 합계(Gold·Dia)는 HUD·결과 표시 그대로.
+            s.Gold = s.StartGold = RunFormulas.StartGold(t, setup);
+            s.Dia = s.StartDia = RunFormulas.StartDia(t, setup);
 
             // 신·속성·카드 풀(setGodCards)
             s.God = t.God.ByKey(setup.God) ?? t.God.ByKey("thunder");

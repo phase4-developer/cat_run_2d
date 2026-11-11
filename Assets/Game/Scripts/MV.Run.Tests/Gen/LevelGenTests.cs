@@ -20,6 +20,9 @@ namespace MV.Run.Tests.Gen
             Assert.Greater(areaGold, 0, "Area 2 startGold(MV-SPEC-02 513)");
             Assert.AreEqual(areaGold + RunFormulas.PerkValue(t, RebirthStatKey.StartGold, 2), s.Gold, 1e-9);
             Assert.AreEqual((int)RunFormulas.PerkValue(t, RebirthStatKey.StartDia, 1), s.Dia);
+            Assert.AreEqual(s.Gold, s.StartGold, 1e-9, "PC-15: 시작 몫 기록");
+            Assert.AreEqual(s.Dia, s.StartDia, "PC-15: 시작 몫 기록");
+            Assert.AreEqual(0, s.EarnedGold, 1e-9);
             Assert.AreEqual(t.BalancePreset.Datas.Single(p => p.isDefault).id, s.Bal.id, "Preset null = isDefault 행");
         }
 
