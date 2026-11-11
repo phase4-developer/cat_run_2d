@@ -131,6 +131,37 @@ namespace MV.Meta.Tests
             Assert.That(r.ShowInterstitial, Is.False, "×3이면 전면 광고 없음");
         }
 
+        /// <summary>PC-15: 결과 광고 ×N은 런에서 얻은 몫에만. 시작 골드·블루 마법석은 ×1로 지급한다.</summary>
+        [Test]
+        public void Times3_SkipsStartShare_StartPaidOnce()
+        {
+            int mul = MvMetaRules.CollectAdMul(Tables);
+            var outcome = Outcome(Meta.BeginRun(), MvRunEnd.Wall, gold: 10.5, dia: 3);
+            outcome.StartGold = 4;
+            outcome.StartDia = 1;
+            MvSettleResult r = Meta.Settle(outcome, mul);
+
+            Assert.That(r.Ok, Is.True, r.Code);
+            Assert.That(W(MvWealthIds.Gold), Is.EqualTo((long)System.Math.Floor((10.5 - 4) * mul + 4)), "floor(얻은 몫 × mul + 시작 몫)");
+            Assert.That(W(MvWealthIds.Dia), Is.EqualTo((3 - 1) * mul + 1));
+            Assert.That(r.GoldGained, Is.EqualTo(W(MvWealthIds.Gold)));
+        }
+
+        /// <summary>PC-15: ×1 정산은 시작 몫을 포함한 합계를 그대로 지급한다.</summary>
+        [Test]
+        public void Times1_PaysStartShare()
+        {
+            var outcome = Outcome(Meta.BeginRun(), MvRunEnd.Wall, gold: 150.5, dia: 2);
+            outcome.StartGold = 150;
+            outcome.StartDia = 2;
+            Assert.That(MvMeta.CanCollectX3(outcome), Is.False, "얻은 몫이 없으면 ×N 버튼 꺼짐");
+            MvSettleResult r = Meta.Settle(outcome);
+
+            Assert.That(r.Ok, Is.True, r.Code);
+            Assert.That(W(MvWealthIds.Gold), Is.EqualTo(150));
+            Assert.That(W(MvWealthIds.Dia), Is.EqualTo(2));
+        }
+
         [Test]
         public void BadMul_IsRejected()
         {

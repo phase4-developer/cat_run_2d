@@ -244,6 +244,14 @@ namespace MV.Run
         public double Gold;
         public int Souls;
         public int Dia;
+        /// <summary>
+        /// <see cref="Gold"/>·<see cref="Dia"/> 중 런 시작에 받은 몫(302 startGold + 14 StartGold·StartDia). 런 안에서 바뀌지 않는다.
+        /// PC-15: 시작 재화는 하수인 훔치기·결과 광고 ×N 대상이 아니다(런에서 얻은 몫 = 합계 − 시작 몫에만 적용).
+        /// </summary>
+        public double StartGold;
+        public int StartDia;
+        /// <summary>런에서 얻은 골드(합계 − 시작 몫, PC-15). 훔치기는 이 몫만 가져간다.</summary>
+        public double EarnedGold => System.Math.Max(0, Gold - StartGold);
         public int Walls;
         /// <summary>결계에 막혀 있는 연속 시간(MV-SPEC-02 6-8, Q-13). 막히지 않은 프레임에 0.</summary>
         public double StuckT;

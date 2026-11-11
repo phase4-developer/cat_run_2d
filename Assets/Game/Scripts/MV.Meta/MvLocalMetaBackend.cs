@@ -96,6 +96,9 @@ namespace MV.Meta
             int souls = Math.Max(0, p.Value<int?>("souls") ?? 0);
             int dia = Math.Max(0, p.Value<int?>("dia") ?? 0);
             int cpRun = Math.Max(0, p.Value<int?>("cpRun") ?? 0);
+            // PC-15: 시작 골드·블루 마법석은 결과 광고 ×N 대상이 아니다. 얻은 몫(합계 − 시작 몫)에만 mul, 시작 몫은 ×1.
+            double startGold = Math.Min(gold, Math.Max(0, p.Value<double?>("startGold") ?? 0));
+            int startDia = Math.Min(dia, Math.Max(0, p.Value<int?>("startDia") ?? 0));
 
             int area = s.Progress.Area;
             bool gate = end == MvRunEnd.Gate;
@@ -106,8 +109,8 @@ namespace MV.Meta
             int tok = MvMetaRules.Tokens(_t, souls, gate, pass || zoneEnd);
 
             var wealth = new WealthDelta();
-            long goldGain = (long)Math.Floor(gold * mul);
-            long diaGain = (long)dia * mul;
+            long goldGain = (long)Math.Floor((gold - startGold) * mul + startGold);
+            long diaGain = (long)(dia - startDia) * mul + startDia;
             wealth.Gain(MvWealthIds.Gold, goldGain);
             wealth.Gain(MvWealthIds.Dia, diaGain);
             wealth.Gain(MvWealthIds.Souls, souls);

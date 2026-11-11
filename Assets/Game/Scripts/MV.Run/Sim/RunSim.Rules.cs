@@ -254,7 +254,8 @@ namespace MV.Run
                 o.Dead = true;
                 if (m.touchAction == TouchAction.Steal)
                 {
-                    double st = Math.Min(Math.Floor(s.Gold), m.stealBase + m.stealPerZone * s.Setup.Zone);
+                    // PC-15: 시작 골드는 훔치지 않는다. 런에서 얻은 몫(EarnedGold)만 가져간다.
+                    double st = Math.Min(Math.Floor(s.EarnedGold), m.stealBase + m.stealPerZone * s.Setup.Zone);
                     s.Gold -= st;
                     s.Emit(new RunEvent(RunEventType.Steal, objId: o.Id, a: (int)st, x: P.X, z: P.Z));
                     var (a, t) = RunParams.Shake(T, m.stealShake);

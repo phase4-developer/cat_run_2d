@@ -75,6 +75,7 @@ namespace MV.Run
                 Reason = reason, Souls = s.Souls,
                 Gold = s.Gold + RunFormulas.PerLevelReward(t, s.Setup, AreaStatKey.GoldPerLevel, s.Level),
                 Dia = s.Dia + (int)Math.Floor(RunFormulas.PerLevelReward(t, s.Setup, AreaStatKey.DiaPerLevel, s.Level)),
+                StartGold = s.StartGold, StartDia = s.StartDia, // PC-15: 시작 몫은 정산 ×1
                 ZoneEnd = gate && enough && last, Pass = gate && enough && !last,
                 CpRun = s.Setup.UseCheckpoint ? s.CpRun : 0, BarRec = s.Setup.KeepBars ? rec : null,
                 Climbed = s.Climbed, Walls = s.Walls, GaugeLv = s.GaugeLv, EqTier = s.EqTier(), Clones = s.Clones,

@@ -8,9 +8,14 @@ namespace MV.Run
     public sealed class RunResult
     {
         public FinishReason Reason;
+        /// <summary>런 골드 합계(시작 몫 포함).</summary>
         public double Gold;
         public int Souls;
+        /// <summary>런 블루 마법석 합계(시작 몫 포함).</summary>
         public int Dia;
+        /// <summary><see cref="Gold"/>·<see cref="Dia"/> 중 시작 몫(PC-15: 결과 광고 ×N 대상 아님, 정산 ×1).</summary>
+        public double StartGold;
+        public int StartDia;
         public int Tok;
         public bool Pass;
         public bool ZoneEnd;
