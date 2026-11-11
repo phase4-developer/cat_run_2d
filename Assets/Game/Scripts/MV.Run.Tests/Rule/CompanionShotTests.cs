@@ -15,7 +15,7 @@ namespace MV.Run.Tests.Rule
 
         static RunSetup Setup(params CompanionSpec[] comps)
         {
-            var s = new RunSetup();
+            var s = new RunSetup { Preset = "easy" }; // 발사 횟수 기준은 easy 연사 2.0(기본 행 변경과 무관하게)
             s.Deck[1] = 1;
             s.Companions.AddRange(comps);
             return s;

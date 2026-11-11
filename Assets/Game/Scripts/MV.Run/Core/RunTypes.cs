@@ -142,14 +142,18 @@ namespace MV.Run
         public int AupRate, AupRange, AupClone, AupCrit, AupDbl;
         /// <summary>Area 강화 관통 확률 Lv(13_areaUpgrade statKey PierceChance, MV-SPEC-02 Q-28).</summary>
         public int AupPierce;
+        /// <summary>Area 강화 「레벨당 블루 마법석·골드 획득량」 Lv(13_areaUpgrade statKey DiaPerLevel·GoldPerLevel). 런 종료 정산에서 쓴다(MV-SPEC2-FIX1).</summary>
+        public int AupDiaLv, AupGoldLv;
         // 부활 rb.perks.{power, crit, obst, dcap}
         public int PerkPower, PerkCrit, PerkObst, PerkDcap;
         /// <summary>냥환생 「지팡이 제작 2배」·「계단 2배」 Lv(14_rebirthPerk statKey CraftDouble·StairDouble, MV-SPEC-02 Q-27).</summary>
         public int PerkCraftDbl, PerkStairDbl;
+        /// <summary>냥환생 「시작 골드」·「시작 블루 마법석」 Lv(14_rebirthPerk statKey StartGold·StartDia, MV-SPEC2-FIX1).</summary>
+        public int PerkStartGold, PerkStartDia;
         /// <summary>출전 신 `113_god.key`.</summary>
         public string God = "thunder";
-        /// <summary>`06_balancePreset.key`(D-03 기본 easy).</summary>
-        public string Preset = "easy";
+        /// <summary>`06_balancePreset.key`. null이면 isDefault 행(기본 난이도는 표가 정한다, MV-SPEC2-FIX1).</summary>
+        public string Preset;
         /// <summary>디버그 발사 속도(DBG.rate). null이면 프리셋 rate.</summary>
         public double? RateOverride;
         /// <summary>디버그 배속 DBG.ts(정수 1~3).</summary>

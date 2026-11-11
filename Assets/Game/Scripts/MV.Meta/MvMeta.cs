@@ -109,7 +109,7 @@ namespace MV.Meta
         /// <summary>결과 ×3 버튼 활성(<c>R.gold ≥ 1 || R.dia > 0</c>).</summary>
         public static bool CanCollectX3(MvRunOutcome outcome) => outcome != null && (outcome.Gold >= 1 || outcome.Dia > 0);
 
-        /// <summary>정산 ×1 또는 ×<c>collectAdMul</c>(광고 본 뒤). 영속 반영은 이 한 번이다.</summary>
+        /// <summary>정산 ×1 또는 ×<see cref="MvMetaRules.CollectAdMul"/>(08 collect3.mul, 광고 본 뒤). 영속 반영은 이 한 번이다.</summary>
         public MvSettleResult Settle(MvRunOutcome outcome, int mul = 1)
         {
             if (outcome == null) throw new ArgumentNullException(nameof(outcome));
@@ -141,12 +141,11 @@ namespace MV.Meta
             return result;
         }
 
-        /// <summary>×3: 보상 광고(<c>collect3</c>)를 보고 끝까지 봤으면 ×mul 정산. 안 봤으면 정산하지 않고 <see cref="MvMetaErrors.AdNotWatched"/>.</summary>
+        /// <summary>결과 광고(<c>collect3</c>)를 보고 끝까지 봤으면 ×mul(08 collect3.mul) 정산. 안 봤으면 정산하지 않고 <see cref="MvMetaErrors.AdNotWatched"/>.</summary>
         public void SettleWithAd(MvRunOutcome outcome, Action<MvSettleResult> done)
         {
-            var row = Tables.AdPlacement.ByKey("collect3");
-            int mul = row != null && row.mul > 0 ? row.mul : Tables.Config.Value.collectAdMul;
-            WatchAd("collect3", watched =>
+            int mul = MvMetaRules.CollectAdMul(Tables);
+            WatchAd(MvMetaRules.CollectAdKey, watched =>
             {
                 if (!watched) { done?.Invoke(new MvSettleResult { Response = MvMetaResponse.Reject(MvMetaErrors.AdNotWatched), Mul = mul }); return; }
                 done?.Invoke(Settle(outcome, mul));

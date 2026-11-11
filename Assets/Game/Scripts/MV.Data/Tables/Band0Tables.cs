@@ -10,7 +10,7 @@ namespace MV.Data
     {
         public const string Table = "00_config";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().FreeIdRule().OneRow()
-            .Int("dataVersion", true).Ints("startDeck", true).FkKey("startGodKey", "113_god", true).Int("collectAdMul", true)
+            .Int("dataVersion", true).Ints("startDeck", true).FkKey("startGodKey", "113_god", true)
             .Int("interstitialMinArea", true).Float("rebirthArmSec", true).Int("rebirthCooldownSec", true)
             .Int("adDayUtcOffsetHour", true).Float("progressResetArmSec", true).Bool("defaultMute", true);
 
@@ -18,7 +18,6 @@ namespace MV.Data
         /// <summary>인덱스 = 무기 등급(0 미사용).</summary>
         public IReadOnlyList<int> startDeck { get; private set; }
         public string startGodKey { get; private set; }
-        public int collectAdMul { get; private set; }
         public int interstitialMinArea { get; private set; }
         public double rebirthArmSec { get; private set; }
         public int rebirthCooldownSec { get; private set; }
@@ -34,7 +33,6 @@ namespace MV.Data
             dataVersion = I(r, "dataVersion");
             startDeck = Ints(r, "startDeck");
             startGodKey = S(r, "startGodKey");
-            collectAdMul = I(r, "collectAdMul");
             interstitialMinArea = I(r, "interstitialMinArea");
             rebirthArmSec = D(r, "rebirthArmSec");
             rebirthCooldownSec = I(r, "rebirthCooldownSec");

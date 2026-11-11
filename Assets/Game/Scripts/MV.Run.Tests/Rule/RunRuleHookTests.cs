@@ -54,8 +54,8 @@ namespace MV.Run.Tests.Rule
             var lv = new HandLevel().Add("coin", 0, 20);
             var split = new SplitLevel(lv);
             var probe = new ProbeRule(split);
-            var snap = new RunSetup();
-            snap.Deck[1] = 1;
+            var snap = new RunSetup { Preset = "easy" };
+            snap.Deck[5] = 1; // 피해 10인 단계(103 더미 5단계, MV-SPEC2-FIX1)
             var ctx = new RunContext
             {
                 Tables = t, Snapshot = snap, MetaModifiers = new RunModifiers { Dmg = 10 },
@@ -69,7 +69,7 @@ namespace MV.Run.Tests.Rule
             Assert.AreEqual(1, sim.State.Setup.Companions.Count);
             Assert.AreEqual(0, snap.Companions.Count, "Build는 스냅숏을 바꾸지 않는다");
 
-            var main = RunSim.Create(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Modifiers = new RunModifiers { Dmg = 10 } },
+            var main = RunSim.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy", Modifiers = new RunModifiers { Dmg = 10 } },
                 t, new LoggingRng(new ConstRng(0.5)), lv);
             int frames = 0;
             while (!sim.State.Fin && frames < 600) { sim.Tick(1 / 60.0, RunInput.None); main.Tick(1 / 60.0, RunInput.None); frames++; }

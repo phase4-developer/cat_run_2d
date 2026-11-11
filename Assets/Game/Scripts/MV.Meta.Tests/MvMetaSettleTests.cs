@@ -115,12 +115,15 @@ namespace MV.Meta.Tests
         [Test]
         public void Times3_MultipliesGoldAndDiaOnly()
         {
+            // 배수는 08 collect3.mul 하나(MV-SPEC2-FIX1).
+            int mul = MvMetaRules.CollectAdMul(Tables);
+            Assert.That(mul, Is.GreaterThan(1), "08 collect3.mul");
             SetContainer(MvSaveKeys.Progress, "\"area\":3");
-            MvSettleResult r = Meta.Settle(Outcome(Meta.BeginRun(), MvRunEnd.Wall, gold: 10.5, souls: 4, dia: 3), 3);
+            MvSettleResult r = Meta.Settle(Outcome(Meta.BeginRun(), MvRunEnd.Wall, gold: 10.5, souls: 4, dia: 3), mul);
 
             Assert.That(r.Ok, Is.True, r.Code);
-            Assert.That(W(MvWealthIds.Gold), Is.EqualTo(31), "floor(10.5 × 3)");
-            Assert.That(W(MvWealthIds.Dia), Is.EqualTo(9));
+            Assert.That(W(MvWealthIds.Gold), Is.EqualTo((long)System.Math.Floor(10.5 * mul)), "floor(10.5 × mul)");
+            Assert.That(W(MvWealthIds.Dia), Is.EqualTo(3 * mul));
             Assert.That(W(MvWealthIds.Souls), Is.EqualTo(4), "생선은 배수 없음");
             Assert.That(r.Tokens, Is.EqualTo(2), "조각은 배수 없음");
             Assert.That(Store.Rebirth.Pending, Is.EqualTo(2));
@@ -131,7 +134,7 @@ namespace MV.Meta.Tests
         [Test]
         public void BadMul_IsRejected()
         {
-            MvSettleResult r = Meta.Settle(Outcome(Meta.BeginRun(), MvRunEnd.Wall, gold: 10), 2);
+            MvSettleResult r = Meta.Settle(Outcome(Meta.BeginRun(), MvRunEnd.Wall, gold: 10), MvMetaRules.CollectAdMul(Tables) + 1);
             Assert.That(r.Code, Is.EqualTo(MvMetaErrors.BadMul));
             Assert.That(W(MvWealthIds.Gold), Is.EqualTo(0));
             Assert.That(Store.Progress.Runs, Is.EqualTo(0));
@@ -154,9 +157,10 @@ namespace MV.Meta.Tests
             MvSettleResult done = null;
             Meta.SettleWithAd(outcome, r => done = r);
             Assert.That(done.Ok, Is.True, done.Code);
-            Assert.That(done.Mul, Is.EqualTo(3));
-            Assert.That(W(MvWealthIds.Gold), Is.EqualTo(6));
-            Assert.That(W(MvWealthIds.Dia), Is.EqualTo(3));
+            int mul = MvMetaRules.CollectAdMul(Tables);
+            Assert.That(done.Mul, Is.EqualTo(mul));
+            Assert.That(W(MvWealthIds.Gold), Is.EqualTo(2 * mul));
+            Assert.That(W(MvWealthIds.Dia), Is.EqualTo(1 * mul));
             Assert.That(Ads.LastPlacement, Is.EqualTo("result_x3"));
             Assert.That(Meta.AdsLeft("collect3"), Is.EqualTo(-1), "×3은 한도 없음");
         }

@@ -166,11 +166,7 @@ namespace MV.Meta
             return MvMetaResponse.Success(data, result);
         }
 
-        private int CollectAdMul()
-        {
-            var row = _t.AdPlacement.ByKey("collect3");
-            return row != null && row.mul > 0 ? row.mul : Config.collectAdMul;
-        }
+        private int CollectAdMul() => MvMetaRules.CollectAdMul(_t);
 
         /// <summary>D-24 전면 광고: <c>area ≥ minArea</c>(08 interstitial, 없으면 00_config). 광고 제거(noAds)면 건너뛴다.</summary>
         internal bool InterstitialDue(int areaAfter)

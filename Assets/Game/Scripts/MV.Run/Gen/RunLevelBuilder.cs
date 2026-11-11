@@ -39,6 +39,9 @@ namespace MV.Run
             s.ZoneIndex = setup.Zone;
             s.ZoneHp = setup.ZoneHp ?? LevelGen.AreaRow(t, setup.Area).hp;
             s.StartLevel = setup.Level;
+            // 시작 재화(302 startGold + 14 StartGold·StartDia, MV-SPEC2-FIX1). 표 값이 0이면 정본과 같다.
+            s.Gold = RunFormulas.StartGold(t, setup);
+            s.Dia = RunFormulas.StartDia(t, setup);
 
             // 신·속성·카드 풀(setGodCards)
             s.God = t.God.ByKey(setup.God) ?? t.God.ByKey("thunder");
@@ -183,10 +186,10 @@ namespace MV.Run
 
         // ---------------- newRun 보조 ----------------
 
-        /// <summary>06_balancePreset[key], 없으면 isDefault 행(D-03 easy).</summary>
+        /// <summary>06_balancePreset[key], key가 비었거나 없으면 isDefault 행(기본 난이도 = 표의 isDefault, MV-SPEC2-FIX1).</summary>
         public static BalancePresetData Preset(MvTables t, string key)
         {
-            var p = t.BalancePreset.ByKey(key);
+            var p = string.IsNullOrEmpty(key) ? null : t.BalancePreset.ByKey(key);
             if (p != null) return p;
             foreach (var row in t.BalancePreset.Sorted) if (row.isDefault) return row;
             throw new InvalidOperationException($"06_balancePreset: {key} 행과 기본 행이 없습니다");

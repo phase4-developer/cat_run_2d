@@ -249,8 +249,9 @@ namespace MV.Data.Tests
         [Test]
         public void Semantics_PairValueMismatch_IsWarning()
         {
-            var report = TsvFixture.Validate(("00_config", TsvFixture.Set(TsvFixture.Read("00_config"), TsvFixture.Read("00_config").Split('\n')[1].Split('\t')[0], "collectAdMul", "5")));
-            Assert.That(report.Contains(MvIssueLevel.Warning, "00_config", "collect3"), Is.True, report.Summary());
+            // 결과 광고 배수는 08 collect3.mul 하나만 둔다(00_config.collectAdMul 삭제, MV-SPEC2-FIX1). 남은 짝 값 108[sgatePass].delayMs ↔ 300 fly.removeMs로 본다.
+            var report = TsvFixture.Validate(("108_receiveCondition", TsvFixture.Set(TsvFixture.Read("108_receiveCondition"), "108001002", "delayMs", "999")));
+            Assert.That(report.Contains(MvIssueLevel.Warning, "108_receiveCondition", "sgatePass"), Is.True, report.Summary());
             Assert.That(report.HasError, Is.False, report.Summary());
         }
 

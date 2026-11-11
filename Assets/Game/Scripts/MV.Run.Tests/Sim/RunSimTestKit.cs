@@ -98,7 +98,7 @@ namespace MV.Run.Tests
         {
             var s = new RunState(setup, t, rng)
             {
-                Bal = t.BalancePreset.ByKey(setup.Preset), Area = setup.Area, ZoneIndex = setup.Zone, StartLevel = setup.Level, Cp = setup.Cp,
+                Bal = RunLevelBuilder.Preset(t, setup.Preset), Area = setup.Area, ZoneIndex = setup.Zone, StartLevel = setup.Level, Cp = setup.Cp,
             };
             foreach (var a in t.Area.Datas) if (a.areaNo == setup.Area + 1) s.ZoneHp = setup.ZoneHp ?? a.hp;
             s.God = t.God.ByKey(setup.God); s.El = s.God.element;

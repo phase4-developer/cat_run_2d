@@ -21,18 +21,22 @@ namespace MV.Run.Tests
         [Test]
         public void BaseDmg_TierAndModifier()
         {
-            Assert.AreEqual(10, BaseDmg(NewState()), 1e-12);
+            var d = NewState();
+            Assert.AreEqual(WeaponDmg(d.Tables, 1), BaseDmg(d), 1e-12, "장착 단계 103_item.dmg 그대로");
             var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Modifiers = new RunModifiers { Dmg = 10 } });
-            Assert.AreEqual(11, BaseDmg(s), 1e-9);
-            Assert.AreEqual(new[] { 10, 18, 32, 58, 105, 189, 340, 612 }, Enumerable.Range(1, 8).Select(i => (int)WeaponDmg(s.Tables, i)).ToArray());
+            Assert.AreEqual(System.Math.Floor(WeaponDmg(s.Tables, 1) * 1.1), BaseDmg(s), 1e-9, "공격력 정수 버림(MV-SPEC2-FIX1)");
+            // 103_item 더미(HE_07 전): 1 × 1.8^(단계−1) 반올림(MV-SPEC2-FIX1)
+            Assert.AreEqual(new[] { 1, 2, 3, 6, 10, 19, 34, 61 }, Enumerable.Range(1, 8).Select(i => (int)WeaponDmg(s.Tables, i)).ToArray());
         }
 
         [Test]
         public void FireInterval_EasyAndModifier()
         {
-            Assert.AreEqual(0.5, FireInterval(NewState()), 1e-12);
+            // 기본 연사는 06_balancePreset isDefault 행 rate(MV-SPEC-02 155 「기본 연사 0.95」, MV-SPEC2-FIX1). 값은 표에서 읽는다.
+            var d = NewState();
+            Assert.AreEqual(1 / d.Bal.rate, FireInterval(d), 1e-12);
             var s = NewState(new RunSetup { Modifiers = new RunModifiers { FireRate = 20 } });
-            Assert.AreEqual(1 / 2.4, FireInterval(s), 1e-12);
+            Assert.AreEqual(1 / (s.Bal.rate * 1.2), FireInterval(s), 1e-12);
         }
 
         [Test]
@@ -40,13 +44,14 @@ namespace MV.Run.Tests
         {
             var s = NewState();
             Assert.AreEqual(22, ProjRange(s), 1e-12);
-            Assert.AreEqual(2.2, CritMul(s), 1e-12);
+            double crit0 = PerkValue(s.Tables, RebirthStatKey.CritMul, 0); // 14 CritMul base(MV-SPEC-02 572 200%)
+            Assert.AreEqual(crit0, CritMul(s), 1e-12);
             Assert.AreEqual(1, GoldMul(s), 1e-12);
             Assert.AreEqual(0, CritChance(s), 1e-12);
             Assert.AreEqual(0, DoubleChance(s), 1e-12);
             var m = NewState(new RunSetup { Modifiers = new RunModifiers { Range = 10, CritDmg = 50, Gold = 10, CritChance = 5, DoubleChance = 10 } });
             Assert.AreEqual(24.2, ProjRange(m), 1e-9);
-            Assert.AreEqual(2.7, CritMul(m), 1e-9);
+            Assert.AreEqual(crit0 + 0.5, CritMul(m), 1e-9);
             Assert.AreEqual(1.1, GoldMul(m), 1e-9);
             Assert.AreEqual(0.05, CritChance(m), 1e-12);
             Assert.AreEqual(0.1, DoubleChance(m), 1e-12);
@@ -62,10 +67,21 @@ namespace MV.Run.Tests
             Assert.AreEqual(14, DiaCap(t, 2), 1e-12);
         }
 
+        /// <summary>런 종료 「레벨당 골드·블루 마법석 획득」 = 13 perLv × 강화 Lv × 런 Level(MV-SPEC-02 529~530, MV-SPEC2-FIX1).</summary>
+        [Test]
+        public void PerLevelReward_FromAreaUpgradeRows()
+        {
+            var t = RunTestTables.Load();
+            var st = new RunSetup { AupGoldLv = 2, AupDiaLv = 3 };
+            Assert.AreEqual(AupRow(t, AreaStatKey.GoldPerLevel).perLv * 2 * 4, PerLevelReward(t, st, AreaStatKey.GoldPerLevel, 4), 1e-12);
+            Assert.AreEqual(AupRow(t, AreaStatKey.DiaPerLevel).perLv * 3 * 4, PerLevelReward(t, st, AreaStatKey.DiaPerLevel, 4), 1e-12);
+            Assert.AreEqual(0, PerLevelReward(t, new RunSetup(), AreaStatKey.GoldPerLevel, 4), 1e-12, "Lv 0이면 0");
+        }
+
         [Test]
         public void ChargeThresholds_Area1Easy()
         {
-            var s = NewState();
+            var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Preset = "easy" }); // 기본 행이 바뀌어도 easy 값으로 본다
             var t = s.Tables;
             // MV-SPEC-02: sgate는 107 mul1·useAreaHp0·diffMul0 + 지역 sgateM
             Assert.AreEqual(5.7, Threshold(t.ChargeGate.ByKey("sgate"), 0, s.Bal, s.ZoneHp), 1e-9);
@@ -131,7 +147,8 @@ namespace MV.Run.Tests
         [Test]
         public void Box_HitRewardAndBreak()
         {
-            var sim = Sim(new HandLevel().Add("coin", 0, 30));
+            // 103 피해가 원작 단위(1단계 1)로 내려가 1단계로는 지나가기 전에 못 깬다 → 피해 10인 단계(103 더미 5단계)·easy 연사로 본다(MV-SPEC2-FIX1).
+            var sim = Sim(new HandLevel().Add("coin", 0, 30), new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" });
             Run(sim, 480);
             var s = sim.State;
             var box = s.Objs[0];
@@ -239,7 +256,8 @@ namespace MV.Run.Tests
             var t = RunTestTables.Load(new Dictionary<string, string> { ["105_objectKind"] = kinds });
             Assert.IsNotNull(t.ObjectKind.ByKey("fishCrate"));
             var lv = new HandLevel().Add("fishCrate", 0, 20);
-            var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } }, t, new ConstRng(0.5), lv);
+            // 피해 10인 단계(103 더미 5단계)·easy 연사(MV-SPEC2-FIX1: 1단계 피해 1).
+            var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" }, t, new ConstRng(0.5), lv);
             var o = sim.State.Objs[0];
             Assert.AreEqual(25, o.Hp, "bonus025: round(100 × 0.25)");
             for (int i = 0; i < 300; i++) sim.Tick(1 / 60.0, default);
