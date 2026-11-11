@@ -5,7 +5,7 @@ id	name	key	contentId	sort	active	icon	showConditionType	showConditionValue	cond
 5001004	사자자리냥 해금	god.flame	0	4	0				1	4		
 5001005	퀘스트 해금	quest	0	5	1				2	1		
 5001006	우다다 질주 해금	mode.rapidRush	400001002	6	1				1	4		
-5001007	츄르 털이 해금	mode.churuRush	400001003	7	1				1	5		
+5001007	츄르 털이 해금	mode.churuRush	400001003	7	0				1	5		
 5001008	대왕쥐 소탕 해금	mode.bigMouse	400001004	8	0				1	6		
 5001009	연구 해금	research	0	9	1				1	5		
 5001010	장비 해금	gear	0	10	0				1	3		

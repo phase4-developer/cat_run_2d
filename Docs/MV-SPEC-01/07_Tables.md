@@ -1952,7 +1952,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-16): 묶음 801002001 = 블루 마법석(604 
 | `102_enemy` | 102001002 | mouseDefence | hpRuleId modeStage, moveAiId advance, 보상 없음, sprite `World_Enemy_Mouse` |
 | `102_enemy` | 102001003 | bossMouse | hw 2.2, hd 1.2(102에 `hw`·`hd` 덮어쓰기 열 추가, 빈칸 = 105 값), sprite `World_Enemy_BigMouse`(03 신규), hpRuleId modeStage |
 | `105_objectKind` | 105001013 | cardbox | breakable 1, hittable Always, hpRule box06, receive onBreak, reward `601 / 0 / 1`(현재 풀 무작위 1장), sprite 08·03 |
-| `310_template` | 310000101, 310000102 | rush1, rush2 | 츄르 털이 전용(08 §8.4.7), 311 행 `311101xxx`·`311102xxx` |
+| `310_template` | 310000101, 310000102 | rush1, rush2 | 츄르 털이 전용(08 §8.4.7), 311 행 `311101xxx`·`311102xxx`. 모두 active 0([창작], 기획서 근거 없음 — 사용자 지시로 꺼 둠(2026-11-11)) |
 | `111_cardPool` | 111002xxx, 111003xxx | defence, rush | §7.7.4 |
 
 `102_enemy`에 열 추가: `hw`, `hd`(float, 빈칸 = 105 값), `scale`(그림 배율, 빈칸 = 1).
