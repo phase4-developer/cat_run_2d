@@ -53,6 +53,8 @@ namespace MV.UI
             if (all || s.WeaponTier != _last.WeaponTier || s.WeaponDmg != _last.WeaponDmg || s.WeaponName != _last.WeaponName
                 || s.LookName != _last.LookName || s.WeaponIcon != _last.WeaponIcon)
                 v.SetWeapon(s.WeaponTier, s.WeaponIcon, s.WeaponName ?? "", WeaponDmgText(s.WeaponDmg, s.LookName), MvUi.Hex(s.WeaponGradeColor));
+            if (all || s.MergeN != _last.MergeN)
+                v.SetMergeHint(MergeHintText(s.MergeN));
 
             _last = s;
             _drawn = true;
@@ -64,6 +66,8 @@ namespace MV.UI
         public static string SoulsText(int have, int need) => have + "/" + need; // fmt 아님
         public static string GaugeLvText(int lv) => "Lv " + lv;                   // ui.hud.gaugeLv
         public static string GaugePerText(int lv) => "칸당 +" + lv;               // ui.hud.gaugePer 「칸당 」 + 「+{0}」
+        /// <summary>머지 안내(장수 = 300 MERGE_N). 0 이하면 빈 문자열.</summary>
+        public static string MergeHintText(int mergeN) => mergeN > 0 ? "같은 무기 " + mergeN + "장 → 머지" : ""; // ui.hud.mergeHint
 
         public static string FloorText(RunHudState s)
         {

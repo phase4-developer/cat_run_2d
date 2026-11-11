@@ -32,8 +32,10 @@ namespace MV.UI
 
         /// <summary><c>R.gauge.lv</c>.</summary>
         public int GaugeLv;
-        /// <summary>0~1 채움(lv ≥ 8이면 1).</summary>
+        /// <summary>0~1 채움(lv ≥ 107[Well].cap이면 1).</summary>
         public float GaugeFill;
+        /// <summary>머지 장수(<c>300 MERGE_N</c>). 0이면 안내 문구를 비운다.</summary>
+        public int MergeN;
 
         /// <summary>장착 카드 등급(<c>103_item.tier</c>).</summary>
         public int WeaponTier;
@@ -71,5 +73,7 @@ namespace MV.UI
         void SetStairs(string text, bool flying);
         void SetGauge(string levelText, string perText, float fill01);
         void SetWeapon(int tier, string iconSprite, string name, string damageText, Color gradeColor);
+        /// <summary>무기 카드 아래 머지 안내 문구.</summary>
+        void SetMergeHint(string text);
     }
 }

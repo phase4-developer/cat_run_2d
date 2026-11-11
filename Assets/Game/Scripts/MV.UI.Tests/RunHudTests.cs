@@ -40,6 +40,7 @@ namespace MV.UI.Tests
             public void SetDia(string text) => Set("dia", text);
             public void SetStairs(string text, bool flying) { Flying = flying; Set("stairs", text); }
             public void SetGauge(string levelText, string perText, float fill01) { Fill = fill01; Text["per"] = perText; Set("gauge", levelText); }
+            public void SetMergeHint(string text) => Set("mergeHint", text);
             public void SetWeapon(int tier, string iconSprite, string name, string damageText, Color gradeColor)
             {
                 Tier = tier; Icon = iconSprite; Grade = gradeColor; Text["dmg"] = damageText; Set("weapon", name);

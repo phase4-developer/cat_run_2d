@@ -104,7 +104,8 @@ namespace MV.UI
         int ClaimAll()
         {
             int done = 0;
-            for (int pass = 0; pass < 8; pass++)
+            int passes = Quest.Groups().Count(); // 최대 묶음 수(410 묶음 수, 옛 상수 8)
+            for (int pass = 0; pass < passes; pass++)
             {
                 var ids = Quest.Groups().Where(g => g.Category == _tab && g.Open)
                     .SelectMany(g => g.Items).Where(i => i.State == QuestItemState.Claimable).Select(i => i.Id).ToList();
