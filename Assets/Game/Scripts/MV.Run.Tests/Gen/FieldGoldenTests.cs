@@ -23,10 +23,7 @@ namespace MV.Run.Tests.Gen
             var dump = LoadDump($"FIELD_{preset}.json");
             Assert.AreEqual(preset, (string)dump["preset"]);
             var bal = RunLevelBuilder.Preset(t, preset);
-            // 프로토 덤프의 scale로 ①~③(FieldGen 정본 일치)을 본다. 표 행이 새 기준으로 바뀐 프리셋(easy = 기본 난이도,
-            // MV-SPEC-02 Q-03·MV-SPEC2-FIX1: 0.95/10/0)은 ④ 표 구동 대조를 건너뛴다(덤프는 프로토 easy scale 3).
-            double dumpScale = Num(Obj(dump["bal"])["scale"]);
-            bool tableMatchesDump = dumpScale == bal.scale;
+            Assert.AreEqual(Num(Obj(dump["bal"])["scale"]), bal.scale, "06_balancePreset.scale");
             var g = t.FieldGen.ByKey("default");
             double diaCap = LevelGen.DiaCap(t, 0);
 
@@ -61,7 +58,7 @@ namespace MV.Run.Tests.Gen
                 {
                     H0 = Num(fin[0]), H1 = Num(fin[1]), Rows = Int(fin[2]), Souls = Int(fin[3]),
                     SeedArea = area - 1, Floor = floor - 1, ZoneIndex = t.ZoneIndexOfArea(area),
-                    Scale = dumpScale, DiaCap = diaCap, Mode = CellMode.Hash,
+                    Scale = bal.scale, DiaCap = diaCap, Mode = CellMode.Hash,
                 };
                 if (Num(f["seed"]) != (input.SeedArea + 1) * g.seedA + input.Floor * g.seedF + g.seedC) Fail($"{at} seed {Num(f["seed"])}");
                 var log = new FieldGen.HashLog();
@@ -99,7 +96,7 @@ namespace MV.Run.Tests.Gen
                 var areaRow = LevelGen.AreaRow(t, area - 1);
                 AreaFloorData row = null;
                 foreach (var r in t.AreaFloor.GetGroup(areaRow.floorGroup)) if (r.floor == floor) row = r;
-                if (tableMatchesDump && row != null && row.h0 == Num(fin[0]) && row.h1 == Num(fin[1]) && row.rows == Int(fin[2]) && row.souls == Int(fin[3]))
+                if (row != null && row.h0 == Num(fin[0]) && row.h1 == Num(fin[1]) && row.rows == Int(fin[2]) && row.souls == Int(fin[3]))
                 {
                     tableTried++;
                     string terr = CompareCells(want, RunLevelBuilder.FieldSpec(t, bal, 0, area - 1, floor - 1));
@@ -112,7 +109,7 @@ namespace MV.Run.Tests.Gen
                                   $"Baked {bakedOk}/{fields.Count}, 표 구동 {tableOk}/{tableTried}");
             Assert.AreEqual(90, fields.Count, "골든 칸 수(Area 30 × Floor 3)");
             Assert.IsNull(first, first);
-            Assert.AreEqual(tableMatchesDump ? 45 : 0, tableTried, "표 구동 대조 수(Area 1~15 × 3, 표 scale이 덤프와 다르면 0)");
+            Assert.AreEqual(45, tableTried, "표 구동 대조 수(Area 1~15 × 3)");
         }
 
         static string CompareCells(List<object> want, List<FieldCell> got)

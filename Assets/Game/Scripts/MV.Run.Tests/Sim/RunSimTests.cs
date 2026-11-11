@@ -21,10 +21,12 @@ namespace MV.Run.Tests
         [Test]
         public void BaseDmg_TierAndModifier()
         {
-            Assert.AreEqual(10, BaseDmg(NewState()), 1e-12);
+            var d = NewState();
+            Assert.AreEqual(WeaponDmg(d.Tables, 1), BaseDmg(d), 1e-12, "장착 단계 103_item.dmg 그대로");
             var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Modifiers = new RunModifiers { Dmg = 10 } });
-            Assert.AreEqual(11, BaseDmg(s), 1e-9);
-            Assert.AreEqual(new[] { 10, 18, 32, 58, 105, 189, 340, 612 }, Enumerable.Range(1, 8).Select(i => (int)WeaponDmg(s.Tables, i)).ToArray());
+            Assert.AreEqual(System.Math.Floor(WeaponDmg(s.Tables, 1) * 1.1), BaseDmg(s), 1e-9, "공격력 정수 버림(MV-SPEC2-FIX1)");
+            // 103_item 더미(HE_07 전): 1 × 1.8^(단계−1) 반올림(MV-SPEC2-FIX1)
+            Assert.AreEqual(new[] { 1, 2, 3, 6, 10, 19, 34, 61 }, Enumerable.Range(1, 8).Select(i => (int)WeaponDmg(s.Tables, i)).ToArray());
         }
 
         [Test]

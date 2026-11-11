@@ -151,8 +151,9 @@ namespace MV.Run
             return (CardSum(s, CardEffectType.DmgMul) + perk) * 100 + s.Setup.Modifiers.Dmg;
         }
 
-        /// <summary>baseDmg() = 지팡이 단계 기본 피해 × (1 + 공격력%/100)(MV-SPEC-02 4-2, Q-12). 치명 배율은 호출 쪽에서 곱한다.</summary>
-        public static double BaseDmg(RunState s) => WeaponDmg(s.Tables, s.EqTier()) * (1 + AtkPct(s) / 100);
+        /// <summary>baseDmg() = 지팡이 단계 기본 피해 × (1 + 공격력%/100)(MV-SPEC-02 4-2, Q-12). 치명 배율은 호출 쪽에서 곱한다.
+        /// 내부 공격력은 정수: 소수점은 버린다(MV-SPEC2-FIX1, 사용자 결정). 지팡이 피해는 장착 단계의 103_item.dmg 그대로.</summary>
+        public static double BaseDmg(RunState s) => Math.Floor(WeaponDmg(s.Tables, s.EqTier()) * (1 + AtkPct(s) / 100));
 
         /// <summary>critMul() = 14_rebirthPerk[CritMul] 값 + CritDmg/100.</summary>
         public static double CritMul(RunState s) => Perk(s, RebirthStatKey.CritMul, 1) + s.Setup.Modifiers.CritDmg / 100;

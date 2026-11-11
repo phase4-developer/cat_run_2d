@@ -28,11 +28,11 @@ namespace MV.Run.Tests.Rule
             var t = RunTestTables.Load();
             var z = State(RunModifiers.Zero);
             var power = t.RebirthPerk.ByKey("power");
-            double canon = RunFormulas.WeaponDmg(t, 1) * RunFormulas.CardMul(z, CardEffectType.DmgMul) * (power.@base + power.perLv * 0);
-            Same(canon, RunFormulas.BaseDmg(z), "Dmg 0");
+            // 내부 공격력은 정수(버림, MV-SPEC2-FIX1).
+            double raw = RunFormulas.WeaponDmg(t, 1) * RunFormulas.CardMul(z, CardEffectType.DmgMul) * (power.@base + power.perLv * 0);
+            Same(System.Math.Floor(raw), RunFormulas.BaseDmg(z), "Dmg 0");
             var m = State(new RunModifiers { Dmg = 10 });
-            Same(canon * (1 + 10 / 100.0), RunFormulas.BaseDmg(m), "Dmg 10 위치");
-            Assert.AreEqual(11, RunFormulas.BaseDmg(m), 1e-9);
+            Same(System.Math.Floor(raw * (1 + 10 / 100.0)), RunFormulas.BaseDmg(m), "Dmg 10 위치");
         }
 
         [Test]

@@ -251,7 +251,7 @@ namespace MV.Run.Tests
             var s = Sim(new HandLevel(), setup, t).State;
             double atk = p.perLv * 2 * 100 + 10;
             Assert.AreEqual(atk, AtkPct(s), 1e-9);
-            Assert.AreEqual(WeaponDmg(t, 1) * (1 + atk / 100), BaseDmg(s), 1e-9, "공격력 %는 곱하지 않고 합산");
+            Assert.AreEqual(System.Math.Floor(WeaponDmg(t, 1) * (1 + atk / 100)), BaseDmg(s), 1e-9, "공격력 %는 곱하지 않고 합산, 정수 버림(MV-SPEC2-FIX1)");
         }
 
         // ---------------- Q-28 관통 확률 / Q-16 원석 드롭 ----------------
