@@ -359,7 +359,7 @@ MvTables.Current = tables;
 | KEY_MOVE_SPEED | 9 | m/s | [프로토] L3833 | 키 이동 |
 | MOVE_FOLLOW_K | 10 | 1/s | MV-SPEC-02 Q-10 「감속 0.1초」(옛 [프로토] 14) | x 추종. `x += (tx − x) · min(1, dt·k)`라 시간상수 1/k = 0.1초 |
 | RUN_SPEED | 4 | m/s | [프로토] L2029 | 전진 |
-| RUN_SPEED_MID | 2.5 | m/s | MV-SPEC-02 4-1(Q-15) | 중간 구역 전진 속도. 구간 = `310_template.midFromZ·midToZ`. 런 적용은 MV-RUN-SPEC2 |
+| RUN_SPEED_MID | 2.5 | m/s | MV-SPEC-02 4-1(Q-15) | 중간 구역 전진 속도. 구간 = `310_template.midFromZ·midToZ`. 런 적용은 MV-RUN-SPEC2. **지금 쓰지 않음**: 중간 구역 = 계단 오르는 구간(임시 정의, 2026-11-11 사용자 결정, MV-RUN-MIDZONE), 평지 감속 없음(걷기 항상 `RUN_SPEED` 4). 계단 오르는 시간은 `330_climb` 표 그대로. 값은 보관 |
 | PHASE_RUN | 13 | 1/s | [프로토] L2029 | 달리기 위상(그림) |
 | PHASE_BLOCKED | 4 | 1/s | [프로토] L2029 | 막힘 위상 |
 | PHASE_CLIMB | 30 | 1/s | [프로토] L2264 | 계단 위상 |
@@ -1010,7 +1010,7 @@ key `mouse`는 정본 화면(L3117 `drawMouse`)과 맞춘 이름이다(정본 �
 | key | string | `tpl1`~`tpl8` |
 | sort, active | int | |
 | endZ | float | 템플릿 길이. 보너스 상자 줄 시작 z = base + endZ [프로토] L739 `TPL_END` |
-| midFromZ / midToZ | float | 중간 구역(감속 `RUN_SPEED_MID`) 시작·끝 z(MV-SPEC-02 4-1, Q-15). 빈칸 = 감속 구간 없음. 지금 값은 **더미**: 첫 계단 게이트 z ~ 계단① z(새 기준 9-2 공통 패턴 「계단 게이트 → (중간 구역) → 계단①」). 원작 위치를 받으면 바꾼다 |
+| midFromZ / midToZ | float | 중간 구역(감속 `RUN_SPEED_MID`) 시작·끝 z(MV-SPEC-02 4-1, Q-15). 빈칸 = 감속 구간 없음. **지금 모든 행 빈칸**(2026-11-11 사용자 결정 「중간 구역을 계단 올라가는 동안으로 일단 정의」·「걷기만 항상 4」, MV-RUN-MIDZONE): 중간 구역 = 계단 오르는 구간(임시 정의), 평지 감속 없음. 열과 감속 코드는 남긴다. 원작 위치를 받으면 다시 채운다(PC-10) |
 | #비고 | | |
 
 | id | key | endZ | 오브젝트 수 |
