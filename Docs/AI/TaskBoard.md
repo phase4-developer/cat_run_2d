@@ -211,6 +211,7 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 - 마감 사유: 압축 2회. 인계 뒤 같은 대화에서 사용자 직접 지시로 패키지 연결·MV-VIEW 3차 배정까지 했다. dev `14db621` 전체 확인 `7b472de116eb` PASS(compile, EditMode 478/478, PlayMode 7/7). 돌고 있는 담당·잡 없음.
 - 이 대화 병합: G3-INT(G3 끝), RUN-VIEWAPI, UI-HUD 1차, FX 1차, TOOL-SND 2차, VIEW 2차, PLAY-INT(플레이 가능 빌드, D-91), DATA 3차, UI-META 1차, TABLE-SWAP, META 3차, UI-LOBBY 1차, PLAY-INT 2차, G7 asmdef 준비·UI-CONTENT 1차. Addressables 그룹 Local_UI·Remote_UI·Remote_Effect·Remote_Audio_Sfx·Remote_Audio_Music·Remote_World·Dev_Debug는 총괄이 손으로 썼고 전체 확인을 통과했다.
 - 칸: a~e·g 비어 있음(detached, 깨끗). f는 `ai/MV-PLAT-IAP-stub` 체크아웃(깨끗, 병합 안 함 — D-88로 취소). `ai/MV-PLAT-ANALYTICS-stub`도 병합 안 함.
+- 2026-11-11 중복 브랜치 제외: `claude/project-setup-52bba1`의 `cd9e928b`(D-PI2-1 확정 행·계약 MV-FAKEAD-MERGE)는 병합하지 않는다. D-PI2-1은 dev 「확정 결정」에 이미 있고, 코드 통합은 별도 계약 없이 「이번 회차 범위」 보류의 로비 재계약에서 처리한다(사용자 「cd9e928b는 병합하지 마. 별도 MV-FAKEAD-MERGE 계약도 추가하지 말고, 기존 로비 재계약에서 처리하도록 유지해」).
 - 다음 순서:
   1. G7 메타 시스템: MV-META-RESEARCH(440, 1차 메타 능력치의 유일한 출처) → QUEST(410·413·420) 계약서 있음. 이어서 ATTENDANCE(485), SHOP(700·701·702, 결제 스텁) 계약서를 같은 형식으로 쓴다. 입장권 API(UI-CONTENT 요청)는 MV-META 계약에 넣는다.
   2. G7 모드(`IModeRule`): alleyWar·rapidRush·churuRush(08 §8.4.5~8.4.7, 402·401). 시작은 `ContentMenuData.StartModeHandler`에 연결.
