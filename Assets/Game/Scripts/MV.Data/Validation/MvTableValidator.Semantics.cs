@@ -409,11 +409,6 @@ namespace MV.Data
             if (climb != null && TryConfig(t, RunConfigKeys.FlyCard_RemoveMs, out double flyCard) && Math.Abs(climb["rlFlyMs"] - flyCard) > 1e-9)
                 r.Warn(ClimbData.Table, climb.id, "rlFlyMs", $"rlFlyMs {climb["rlFlyMs"]} ≠ 300_runConfig flyCard.removeMs {flyCard}");
 
-            var config = t.Config.Datas.FirstOrDefault();
-            var collect = t.AdPlacement.ByKey("collect3");
-            if (config != null && collect != null && config.collectAdMul != collect.mul)
-                r.Warn(ConfigData.Table, config.id, "collectAdMul", $"collectAdMul {config.collectAdMul} ≠ 08[collect3].mul {collect.mul}");
-
             var gate = t.ReceiveCondition.ByKey("sgatePass");
             if (gate != null && TryConfig(t, RunConfigKeys.Fly_RemoveMs, out double fly) && Math.Abs(gate.delayMs - fly) > 1e-9)
                 r.Warn(ReceiveConditionData.Table, gate.id, "delayMs", $"sgatePass delayMs {gate.delayMs} ≠ 300_runConfig fly.removeMs {fly}");

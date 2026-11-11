@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "saved_at": "2026-11-11T05:35:20+09:00",
+  "saved_at": "2026-11-11T10:59:58+09:00",
   "saved_by": "사용자(설정 화면)",
   "values": {
     "project_kind": "new",
@@ -91,17 +91,42 @@
     "headless": "on",
     "runner_register": "register",
     "brief_url": "https://docs.google.com/document/d/1R1DI7ckuu3zzKtwmAJ-7PD9MArLRYvfeO8MNY1n7RWo/edit?tab=t.0",
-    "rules_doc": "Docs/MV-SPEC-02/DiffReport.md"
+    "rules_doc": "Docs/MV-SPEC-02/DiffReport.md",
+    "fw_systems": [
+      "quest",
+      "badge"
+    ],
+    "fw_addons": [
+      "dotween",
+      "spine",
+      "coffee"
+    ],
+    "fw_beta": [
+      "com.jjevol.data",
+      "com.jjevol.economy",
+      "com.jjevol.platform.core",
+      "com.jjevol.platform.tracking",
+      "com.jjevol.platform.tracking.apple",
+      "com.jjevol.platform.unity",
+      "com.jjevol.scene",
+      "com.jjevol.scene.addressables",
+      "com.jjevol.scene.ui",
+      "com.jjevol.ui.economy"
+    ]
   },
   "framework_packages": [
     "com.artress.managed-addressables",
     "com.jjevol.audio",
     "com.jjevol.audio.addressables",
+    "com.jjevol.badge",
     "com.jjevol.data",
     "com.jjevol.economy",
     "com.jjevol.economy.drop",
     "com.jjevol.effects",
     "com.jjevol.effects.addressables",
+    "com.jjevol.effects.coffee",
+    "com.jjevol.effects.dotween-pro",
+    "com.jjevol.effects.spine",
     "com.jjevol.effects.ui",
     "com.jjevol.localization",
     "com.jjevol.localization.authoring",
@@ -124,6 +149,7 @@
     "com.jjevol.platform.tracking",
     "com.jjevol.platform.tracking.apple",
     "com.jjevol.platform.unity",
+    "com.jjevol.quest",
     "com.jjevol.resources.addressables",
     "com.jjevol.save",
     "com.jjevol.scene",
@@ -133,13 +159,13 @@
     "com.jjevol.tables.authoring",
     "com.jjevol.ui",
     "com.jjevol.ui.addressables",
+    "com.jjevol.ui.dotween-pro",
     "com.jjevol.ui.economy",
     "com.jjevol.ui.urp"
   ],
   "missing": [],
   "later": [
     "fw_skip_reason",
-    "fw_beta",
     "lead_tool",
     "worker_tool",
     "art_style",
@@ -152,7 +178,7 @@
     },
     {
       "level": "info",
-      "text": "외부 SDK가 있어야 컴파일되는 범위 패키지: com.jjevol.platform.ads.admob(GoogleMobileAds.Common.dll, GoogleMobileAds.Core.dll, GoogleMobileAds.Ump.dll, GoogleMobileAds.dll); com.jjevol.platform.login.firebase(Firebase.App.dll, Firebase.Auth.dll). 게임에 그 SDK가 없으면 첫 연결 묶음에서 빼고 SDK 설치 결정을 따로 묻는다"
+      "text": "외부 SDK가 있어야 컴파일되는 범위 패키지: com.jjevol.effects.dotween-pro(DOTween.Modules, DOTween.dll, DOTweenPro.Scripts, DOTweenPro.dll); com.jjevol.platform.ads.admob(GoogleMobileAds.Common.dll, GoogleMobileAds.Core.dll, GoogleMobileAds.Ump.dll, GoogleMobileAds.dll); com.jjevol.platform.login.firebase(Firebase.App.dll, Firebase.Auth.dll); com.jjevol.ui.dotween-pro(DOTween.Modules, DOTween.dll, DOTweenPro.Scripts, DOTweenPro.dll). 게임에 그 SDK가 없으면 첫 연결 묶음에서 빼고 SDK 설치 결정을 따로 묻는다"
     },
     {
       "level": "info",
@@ -161,6 +187,10 @@
     {
       "level": "info",
       "text": "서버 저장을 골랐다. 서버가 생기기 전에는 로컬 백엔드가 기기 안에 저장한다"
+    },
+    {
+      "level": "info",
+      "text": "외부 도구 연결(DOTween Pro, Coffee UI Particle, Spine)은 그 외부 도구가 게임에 있어야 컴파일된다. 설치는 게임이 직접 한다"
     },
     {
       "level": "info",

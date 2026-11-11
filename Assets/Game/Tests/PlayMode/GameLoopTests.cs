@@ -90,6 +90,17 @@ namespace MV.Tests
             Assert.Greater(loop.RunFrames, 0);
             Assert.AreEqual(1, loop.RunsFinished);
 
+            // 런 끝 순서(MV-SPEC-02 01 §12-3): 지도 → 결과. 지도가 열린 동안 결과는 아직 없다.
+            elapsed = 0f;
+            while (!loop.MapOpen && elapsed < TimeoutSeconds)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            Assert.IsTrue(loop.MapOpen, "런 끝 지도가 열리지 않았다");
+            Assert.IsFalse(loop.ResultOpen, "지도보다 결과가 먼저 열렸다");
+            Assert.IsTrue(loop.PressMapClose());
+
             elapsed = 0f;
             while (!loop.ResultOpen && elapsed < TimeoutSeconds)
             {

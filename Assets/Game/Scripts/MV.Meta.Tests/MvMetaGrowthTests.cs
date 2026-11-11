@@ -15,9 +15,11 @@ namespace MV.Meta.Tests
         // MV-SPEC-02 Q-09: 분신 max 30, 16_levelPrice group 13(100 × 1.6^(P))
         static readonly int[] Clone = { 100, 160, 256, 410, 655, 1049, 1678, 2684, 4295, 6872, 10995, 17592, 28147, 45036, 72058, 115292, 184467, 295148, 472237, 755579, 1208926, 1934281, 3094850, 4951760, 7922816, 12676506, 20282410, 32451855, 51922969, 83076750 };
         static readonly int[] CritDbl = { 80, 128, 205, 328, 524, 839, 1342, 2147, 3436, 5498 };
-        static readonly int[] PowerCrit = { 50, 75, 113, 169, 253, 380, 570, 854, 1281, 1922, 2883 };
+        // MV-SPEC-02 571~572 관측 「1→2단계 : 50」: 16021002·16022002 = 50(MV-SPEC2-FIX1), 나머지는 50 × 1.5^(L−1).
+        static readonly int[] PowerCrit = { 50, 50, 113, 169, 253, 380, 570, 854, 1281, 1922, 2883 };
         static readonly int[] Obst = { 60, 90, 135, 203, 304, 456, 683, 1025, 1538, 2307 };
-        static readonly int[] Dcap = { 60, 90, 135, 203, 304, 456, 683, 1025, 1538, 2307, 3460 };
+        // MV-SPEC-02 574: 블루 마법석 획득량 10 → 20 = base 10 + 2 × max 5(MV-SPEC2-FIX1).
+        static readonly int[] Dcap = { 60, 90, 135, 203, 304 };
 
         const long Plenty = 1_000_000_000L;
 
@@ -77,10 +79,11 @@ namespace MV.Meta.Tests
             BuyCostsMatch(MvGrowth.Perk, "power", MvWealthIds.RbToken, PowerCrit, false);
             BuyCostsMatch(MvGrowth.Perk, "crit", MvWealthIds.RbToken, PowerCrit, false);
             BuyCostsMatch(MvGrowth.Perk, "obst", MvWealthIds.RbToken, Obst, true);
-            BuyCostsMatch(MvGrowth.Perk, "dcap", MvWealthIds.RbToken, Dcap, false);
+            BuyCostsMatch(MvGrowth.Perk, "dcap", MvWealthIds.RbToken, Dcap, true);
             Assert.That(Meta.PerkValue("power"), Is.EqualTo(1 + 0.15 * 11).Within(1e-9));
             Assert.That(Meta.PerkValue("obst"), Is.EqualTo(0.5).Within(1e-9), "obst floor 0.5");
-            Assert.That(Meta.PerkValue("dcap"), Is.EqualTo(10 + 2 * 11).Within(1e-9));
+            Assert.That(Meta.PerkValue("dcap"), Is.EqualTo(10 + 2 * 5).Within(1e-9), "dcap 최대 20");
+            Assert.That(Meta.PerkValue("crit"), Is.EqualTo(2 + 0.2 * 11).Within(1e-9), "치명 피해 200% + 20%p × Lv");
         }
 
         [Test]

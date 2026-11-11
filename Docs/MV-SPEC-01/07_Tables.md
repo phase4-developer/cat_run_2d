@@ -296,7 +296,6 @@ MvTables.Current = tables;
 | dataVersion | int | 1 | [창작] | 표 묶음 버전. QA 캡처·오류 보고에 기록 |
 | startDeck | intList | `0/1/0/0/0/0/0/0/0` | [프로토] L844 DEF.deck | 새 저장의 시작 덱(인덱스 = 무기 등급, 0 미사용) |
 | startGodKey | string | `thunder` | [프로토] L844 | 새 저장의 출전 신(`113_god.key`) |
-| collectAdMul | int | 3 | [프로토] L2445 | 결과 「×3 받기」 표시 배율. 실제 배율 정본은 `08_adPlacement[collect3].mul`(다르면 검증 경고) |
 | interstitialMinArea | int | 3 | [프로토] L2444 | 「그냥 받기」(×1) 뒤 전면 광고 조건 `save.area ≥ 3`(0기반, 개방 반영 후, [04 D-24](04_GameRules.md)) |
 | rebirthArmSec | float | 2.5 | [프로토] L2576 | 부활 버튼 두 번 누름 허용 시간. 04의 `RB_ARM_SEC` |
 | rebirthCooldownSec | int | 21600 | [프로토] L2537 `RB_CD` 6시간 | 부활 쿨타임. 04의 `RB_CD_SEC` |
@@ -319,9 +318,10 @@ MvTables.Current = tables;
 
 | id | key | rate | scale | diff | gauge | isDefault | 이름(`name` 키 = id) | 근거 |
 |---|---|---|---|---|---|---|---|---|
-| 1 | easy | 2.0 | 3 | 0.02 | 1 | 1 | 쉬움(기본) | [프로토] L832~833, D-03 |
+| 1 | easy | 2.0 | 3 | 0.02 | 1 | 0 | 쉬움(기본)(name은 시트와 같게 둠) | [프로토] L832~833, D-03(밸런스 시험용으로 유지) |
 | 2 | mid | 1.4 | 5 | 0.01 | 1.4 | 0 | 임시 기본 | [프로토] L832 |
 | 3 | orig | 0.95 | 10 | 0 | 2 | 0 | 원작 근사 | [프로토] L832 |
+| 6001004 | base | 0.95 | 1 | 0 | 1 | 1 | 새 기준 기본 | MV-SPEC-02 01 155 「기본 연사 0.95」, scale 1(원작 피해 단위 1, 228), diff 0(MV-SPEC2-FIX1 사용자 결정). 기본 난이도 = 이 행 |
 
 - 릴리스는 isDefault 고정. 개발 빌드 디버그 패널만 바꾼다([05](05_Screens.md)). 디버그 연사 슬라이더(0.95~4, 0.05 간격, L717)는 디버그 UI 상수라 표에 두지 않는다.
 - 적용되는 곳·안 되는 곳은 [04 §4.15](04_GameRules.md).
@@ -600,7 +600,7 @@ zoneIndex(0기반, 보상 `ValuePerZone` 계산) = Zone을 sort 순으로 늘어
 | hp | int | | `R.Z.hp`. [프로토] L755 `AREA_HP` |
 | needSouls | int | | 다음 Area 개방 누적 생선. [프로토] L756 |
 | sgateM | floatList | | 계단 게이트 1회 충전 필요 피해 M, 계단 Lv 1부터(MV-SPEC-02 6-2, Q-06·Q-19). Area 1·6은 기획서 값, Area 6의 Lv 7·8과 Area 2~5(기하 보간)·7~30(Area 6 × hp 비)은 **더미**. 런 적용(107 `diffMul` 감쇠 제거 포함)은 MV-RUN-SPEC2 |
-| startGold | int | 0 | 이 Area 시작 골드(MV-SPEC-02 11-1, Q-31: Area 2부터 150). 적용은 MV-RUN-SPEC2 |
+| startGold | int | 0 | 이 Area 시작 골드(MV-SPEC-02 11-1, Q-31: Area 2부터 150). 런 시작 골드 = startGold + 14 StartGold 값(`RunFormulas.StartGold`, MV-SPEC2-FIX1) |
 | floorGroup | int | areaNo | `303_areaFloor.group`. **04 §4.19.4의 `floorSetId`와 같은 열**(이름은 08과 맞춰 `floorGroup`) |
 | fieldSeedArea | int | areaNo − 1 | fieldSpec 시드에 넣는 A(0기반). 정본은 「클램프 전 A」 = areaNo − 1 |
 | bgm | sound | 빈칸 | 비우면 Zone 값 |
@@ -800,7 +800,7 @@ public interface IRunRewardSink    { void Grant(IReadOnlyList<ConsumeData> rewar
 | rewardType / rewardId / rewardValue | consume | 빈칸 | 파괴(또는 receive 조건 성립) 보상. 블루 마법석 원석(플레이 구간)(105001007)은 MV-SPEC-02 Q-16으로 비움(드롭 `dropId`로 지급) |
 | rewardValuePerZone / rewardValueRule | §7.1.7 | 0 / Flat | |
 | hitRewardType / hitRewardId / hitRewardValue | consume | 빈칸 | **맞을 때마다** 보상(상자 타격당 츄르 1) |
-| dropId | fk 801 group | 0 | 파괴 보상 드롭 묶음(MV-SPEC-02 6-7 원석 10%, Q-16). 지금 `801002001`(10% 블루 마법석) 한 행만 씀. 원석(105001007)의 고정 reward는 비웠다(런 적용은 MV-RUN-SPEC2) |
+| dropId | fk 801 group | 0 | 파괴 보상 드롭 묶음(MV-SPEC-02 6-7 원석 10%, Q-16). 지금 `801002001`(10% 블루 마법석) 한 행만 씀. 원석(105001007·105001009)의 고정 reward와 타격 골드(hitReward)는 비웠다(MV-SPEC-02 321 「드롭 10%만」, MV-SPEC2-FIX1) |
 | sprite | res(`/` 변형) | | 본체 스프라이트. 기본 아틀라스 `@theme` |
 | viewShape | enum | Single | 그림 모양(MV.View 뷰 조립 방식): `Single`(스프라이트 1장) / `Junk`(잡동사니 칸) / `RollGate`(두루마리 관문) / `WarpGate`(아치) / `Well`(우물) / `Stair`(계단) / `CoinPile`(츄르 더미) / `CatnipPot`(캣닢 화분) / `Mouse`(쥐). 값 목록은 MV.View `ObjectShape`와 1:1 |
 | spritePick | enum | Single | `Single` / `JunkCycle`(wall: `v = (lane + row×2 + bar) % 3`로 목록에서 고르고 색 2종은 `idx % 2`, [03 §3.5.3](03_ResourcePipeline.md)) / `Anim`(프레임 접두 + 번호) |
@@ -840,9 +840,9 @@ public interface IRunRewardSink    { void Grant(IReadOnlyList<ConsumeData> rewar
 | cgate | — | — | `World_Obj_Gate_RollYarn_0/…_1/…_2/…_3` / Single, tint `#f08ab0` | CraftGate / `ui.run.label.cgate` | — / — | — | L1952~1956 |
 | stair | — | — | `World_Obj_Stair_Step_0/…_1/…_2` / Single | StairText / `ui.run.label.stair` | — / — | — | L1435, L2032 |
 | coin | 602 / 20 / 10 / Flat | 602 / 1 | `World_Item_Churu_0/…_1/…_2` / Single | BoxHp | — / coin | run.coinHit / run.coinBreak | L1960~1967 |
-| gem | 604 / 10 / 0 / DiaCap | 602 / 1 | `World_Item_CatnipPot` / Single | BoxHp | — / gem | run.coinHit / run.coinBreak | L1960~1967 |
+| gem | — (드롭 `801002001`) | — | `World_Item_CatnipPot` / Single | BoxHp | — / gem | run.coinHit / run.coinBreak | L1960~1967 |
 | coinBonus | 602 / 12 / 6 / Flat | 602 / 1 | coin과 같음 | BoxHp | — / coin | run.coinHit / run.coinBreak | L1788 |
-| gemBonus | 604 / 1 / 0 / Flat | 602 / 1 | gem과 같음 | BoxHp | — / gem | run.coinHit / run.coinBreak | L1788 |
+| gemBonus | — (드롭 `801002001`) | — | gem과 같음 | BoxHp | — / gem | run.coinHit / run.coinBreak | L1788 |
 | wall | (FieldCell) | — | `World_Obj_Junk_Parcel/World_Obj_Junk_Bag_Dark/World_Obj_Junk_Bag_Blue/World_Obj_Junk_Crate_Red/World_Obj_Junk_Crate_Blue` / JunkCycle, spriteSoul `World_Obj_Junk_FishBox` | WallCell | — / wood | run.wallHit / run.wallBreak | L1932~1941, L3610~3618 |
 | arch | — | — | `World_Obj_Arch_Post` / Single, tint 발판색 03 | Arch / `ui.run.floorN` | — | — | L1791 |
 | archGoal | — | — | `World_Obj_Arch_Post_Gold` / Single | Arch / `ui.run.areaGate` | — | — | L1801 |
@@ -1043,7 +1043,7 @@ key `mouse`는 정본 화면(L3117 `drawMouse`)과 맞춘 이름이다(정본 �
 | hpRuleId | fk 114 | 빈칸 = 종류 기본. 이 배치만 체력 규칙을 바꿀 때 |
 | reward 3열 | consume | 빈칸 = 종류 기본. 이 배치만 보상을 바꿀 때(덮어쓰기) |
 
-**초기 84행** [프로토] L738 `PLACE` (노트 B §1.1 원문). 정본 type 번호 → kindId: 7 tower 마법서 탑(105001001), 5 enemy 마녀의 하수인(105001002)(groupId 1 = mouse5. MV-SPEC-02 Q-14로 z 57.42 → 템플릿마다 `endZ − 12`: 새 기준 6-7·9-2 「계단② → 하수인 무리 → 보너스 오브젝트」, 무리 dz +6~+8.2가 템플릿 끝(보너스 줄·결계문 1) 3.8m 앞에서 끝나고 계단②와 모든 템플릿 오브젝트보다 뒤. 원작 z가 없어 **더미**. 츄르 털이 311101006 = 178, 311102007 = 218), 14 sgate 계단 게이트(105001003), 13 cgate 지팡이 공방 게이트(105001004), 15 stair 계단(105001005), 2 coin 금화 더미(플레이 구간)(105001006), 3 gem 블루 마법석 원석(플레이 구간)(105001007). 모든 z < endZ(검증됨).
+**초기 84행** [프로토] L738 `PLACE` (노트 B §1.1 원문). 정본 type 번호 → kindId: 7 tower 마법서 탑(105001001), 5 enemy 마녀의 하수인(105001002)(groupId 1 = mouse5. MV-SPEC-02 Q-14로 z 57.42 → 템플릿마다 `endZ − 12` → MV-SPEC2-FIX1(새 기준 469 「계단② → 하수인 무리 → 보너스 오브젝트」): 무리 dz +6~+8.2의 가운데가 계단②(또는 그 뒤 마지막 비보너스 오브젝트)와 첫 보너스 오브젝트(금화 더미·원석, 없으면 endZ) 사이 가운데에 오게 z를 정함(템플릿 1은 이미 사이라 177 유지). 원작 z가 없어 **더미**. 츄르 털이 311101006 = 178, 311102007 = 218), 14 sgate 계단 게이트(105001003), 13 cgate 지팡이 공방 게이트(105001004), 15 stair 계단(105001005), 2 coin 금화 더미(플레이 구간)(105001006), 3 gem 블루 마법석 원석(플레이 구간)(105001007). 모든 z < endZ(검증됨).
 
 ```tsv
 id	templateId	seq	kindId	x	z	groupId	active	#kind
@@ -1058,7 +1058,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311002001	310000002	1	105001001	0	17.17	0	1	tower
 311002002	310000002	2	105001003	-2.08	39.25	0	1	sgate
 311002003	310000002	3	105001007	2.39	55.67	0	1	gem
-311002004	310000002	4	105001002	0	191	1	1	enemy
+311002004	310000002	4	105001002	0	165.8	1	1	enemy
 311002005	310000002	5	105001005	0	66.5	0	1	stair
 311002006	310000002	6	105001004	-2.25	100.11	0	1	cgate
 311002007	310000002	7	105001004	2.25	122.77	0	1	cgate
@@ -1067,7 +1067,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311002010	310000002	10	105001006	1.48	188.3	0	1	coin
 311003001	310000003	1	105001001	0	17.17	0	1	tower
 311003002	310000003	2	105001003	-2.08	39.25	0	1	sgate
-311003003	310000003	3	105001002	0	212	1	1	enemy
+311003003	310000003	3	105001002	0	181.1	1	1	enemy
 311003004	310000003	4	105001004	2.25	62.45	0	1	cgate
 311003005	310000003	5	105001005	0	73.5	0	1	stair
 311003006	310000003	6	105001001	2.2	108.52	0	1	tower
@@ -1078,7 +1078,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311003011	310000003	11	105001007	-2.09	210.7	0	1	gem
 311004001	310000004	1	105001001	-2.17	17.17	0	1	tower
 311004002	310000004	2	105001001	0	39.43	0	1	tower
-311004003	310000004	3	105001002	0	212	1	1	enemy
+311004003	310000004	3	105001002	0	187.41	1	1	enemy
 311004004	310000004	4	105001003	2.25	62.4	0	1	sgate
 311004005	310000004	5	105001005	0	73.5	0	1	stair
 311004006	310000004	6	105001004	0	107.2	0	1	cgate
@@ -1089,7 +1089,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311004011	310000004	11	105001006	0	210.53	0	1	coin
 311005001	310000005	1	105001004	0	19.34	0	1	cgate
 311005002	310000005	2	105001001	-1.77	40.37	0	1	tower
-311005003	310000005	3	105001002	0	219	1	1	enemy
+311005003	310000005	3	105001002	0	180.01	1	1	enemy
 311005004	310000005	4	105001003	2.25	62.01	0	1	sgate
 311005005	310000005	5	105001005	0	73.5	0	1	stair
 311005006	310000005	6	105001004	-2.11	107.16	0	1	cgate
@@ -1100,7 +1100,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311005011	310000005	11	105001007	-1.91	215.46	0	1	gem
 311006001	310000006	1	105001001	-2.17	19.81	0	1	tower
 311006002	310000006	2	105001003	2.25	43.1	0	1	sgate
-311006003	310000006	3	105001002	0	212	1	1	enemy
+311006003	310000006	3	105001002	0	184.26	1	1	enemy
 311006004	310000006	4	105001003	-2.25	66.39	0	1	sgate
 311006005	310000006	5	105001005	0	80.5	0	1	stair
 311006006	310000006	6	105001004	-2.11	114.11	0	1	cgate
@@ -1111,7 +1111,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311006011	310000006	11	105001007	2.52	209.49	0	1	gem
 311007001	310000007	1	105001001	0	19.81	0	1	tower
 311007002	310000007	2	105001003	-2.25	43.99	0	1	sgate
-311007003	310000007	3	105001002	0	219	1	1	enemy
+311007003	310000007	3	105001002	0	180.68	1	1	enemy
 311007004	310000007	4	105001007	2.07	63.18	0	1	gem
 311007005	310000007	5	105001005	0	73.5	0	1	stair
 311007006	310000007	6	105001004	-2.25	107.12	0	1	cgate
@@ -1122,7 +1122,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 311007011	310000007	11	105001006	-2.11	216.46	0	1	coin
 311008001	310000008	1	105001001	0	19.81	0	1	tower
 311008002	310000008	2	105001003	2.25	43.62	0	1	sgate
-311008003	310000008	3	105001002	0	226	1	1	enemy
+311008003	310000008	3	105001002	0	186	1	1	enemy
 311008004	310000008	4	105001004	-2.25	67.13	0	1	cgate
 311008005	310000008	5	105001005	0	80.5	0	1	stair
 311008006	310000008	6	105001001	0	115.15	0	1	tower
@@ -1238,7 +1238,7 @@ consumeType 5(Item)의 id 표. 로비 시작 덱(`save.deck`)과 런 손패의 �
 | key | string | `w1`~`w8` |
 | tier | int | 1~8 |
 | sort, active | int | |
-| dmg | int | 기본 피해. 정본 `wDmg(t) = round(10 × 1.8^(t−1))`의 **반올림 결과를 저장** |
+| dmg | int | 기본 피해(정수). 런은 장착 단계의 이 값을 그대로 읽는다(코드에 공식 없음). 지금 값은 **더미** `round(1 × 1.8^(t−1))`(HE_07 확보 전, 원작 단위 1, MV-SPEC2-FIX1·PC-03) |
 | col | color | 3D 금속색(그림 보조) `WCOL` |
 | gradeCol | color | 등급색 `WGRADE`(손패 틀·팝업·「변신!」 색) |
 | spin | bool01 | 투사체 회전 그림 여부. 정본 `spin: !(t===4 \|\| t===7)` L2087 |
@@ -1250,15 +1250,15 @@ consumeType 5(Item)의 id 표. 로비 시작 덱(`save.deck`)과 런 손패의 �
 
 | id | tier | dmg | col | gradeCol | spin | 이름 | 외형(description) |
 |---|---|---|---|---|---|---|---|
-| 103001001 | 1 | 10 | #c08a52 | #9ea4ae | 1 | 털뭉치 | 방울 목걸이 |
-| 103001002 | 2 | 18 | #d6a56a | #46c35a | 1 | 솔방울 | 새싹 머리 |
-| 103001003 | 3 | 32 | #d9dde3 | #3a8ff0 | 1 | 병뚜껑 | 병뚜껑 모자 |
-| 103001004 | 4 | 58 | #a9bfd6 | #a65be8 | 0 | 깡통 | 깡통 투구 · 파란 목도리 |
-| 103001005 | 5 | 105 | #b4bac4 | #f08a24 | 1 | 생선뼈 | 해적 반다나 · 생선뼈 목걸이 |
-| 103001006 | 6 | 189 | #ece6d6 | #e8443a | 1 | 고무공 | 털모자 · 줄무늬 목도리 |
-| 103001007 | 7 | 340 | #cfe0ff | #1fc8c8 | 0 | 방울 장난감 | 방울 마법사 모자 · 망토 |
-| 103001008 | 8 | 612 | #ffe08a | #ffd23a | 1 | 황금 털뭉치 | 황금 왕관 · 빨간 망토 |
-| 103001009~012 | 9~12 | 1102 / 1984 / 3570 / 6427 | | | | w9~w12 | **더미**, active 0(MV-SPEC-02 Q-08 지팡이 12단계 준비. 그림·문구는 8단계 것 재사용) |
+| 103001001 | 1 | 1 | #c08a52 | #9ea4ae | 1 | 털뭉치 | 방울 목걸이 |
+| 103001002 | 2 | 2 | #d6a56a | #46c35a | 1 | 솔방울 | 새싹 머리 |
+| 103001003 | 3 | 3 | #d9dde3 | #3a8ff0 | 1 | 병뚜껑 | 병뚜껑 모자 |
+| 103001004 | 4 | 6 | #a9bfd6 | #a65be8 | 0 | 깡통 | 깡통 투구 · 파란 목도리 |
+| 103001005 | 5 | 10 | #b4bac4 | #f08a24 | 1 | 생선뼈 | 해적 반다나 · 생선뼈 목걸이 |
+| 103001006 | 6 | 19 | #ece6d6 | #e8443a | 1 | 고무공 | 털모자 · 줄무늬 목도리 |
+| 103001007 | 7 | 34 | #cfe0ff | #1fc8c8 | 0 | 방울 장난감 | 방울 마법사 모자 · 망토 |
+| 103001008 | 8 | 61 | #ffe08a | #ffd23a | 1 | 황금 털뭉치 | 황금 왕관 · 빨간 망토 |
+| 103001009~012 | 9~12 | 110 / 198 / 357 / 643 | | | | w9~w12 | **더미**, active 0(MV-SPEC-02 Q-08 지팡이 12단계 준비. 그림·문구는 8단계 것 재사용) |
 
 근거 [프로토] L769~772, L3264. 등급 9 이상을 만들려면 행 추가 + `12_weaponLevel` 행 + 손패 머지 상한(코드 상수 8 → `103_item` 최대 tier로 바뀜).
 
@@ -1575,9 +1575,9 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | id | key | max | base | perLv | floor | statKey | valueFormat | valueBase | valueStep | levelPriceGroup | costBase | 이름 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 14001001 | power | 20 | 1 | 0.15 | | DmgMul | {0}% | 0 | 15 | 21 | 50 | 공격력 |
-| 14001002 | crit | 20 | 2.2 | 0.2 | | CritMul | {0}% | 220 | 20 | 22 | 50 | 치명타 피해 |
+| 14001002 | crit | 40 | 2 | 0.2 | | CritMul | {0}% | 200 | 20 | 22 | 50 | 치명타 피해(MV-SPEC-02 572: 200% → 1,000%, MV-SPEC2-FIX1) |
 | 14001003 | obst | 10 | 1 | −0.05 | 0.5 | ObstMul | {0}% | 100 | −5 | 23 | 60 | 장애물 체력 |
-| 14001004 | dcap | 20 | 10 | 2 | | DiaCap | {0} | 10 | 2 | 24 | 60 | 캣닢 획득량 |
+| 14001004 | dcap | 5 | 10 | 2 | | DiaCap | {0} | 10 | 2 | 24 | 60 | 캣닢 획득량 |
 | 14001005 | gcap | 21 | 14 | 1 | | GoldCap | {0} | 14 | 1 | 25 | 60 | 골드 획득량 Money Capacity(**더미** 행) |
 | 14001006 | startGold | 20 | 0 | 500 | | StartGold | {0} | 0 | 500 | 26 | 60 | 시작 골드(**더미** 행) |
 | 14001007 | startDia | 20 | 0 | 500 | | StartDia | {0} | 0 | 500 | 27 | 60 | 시작 블루 마법석(**더미** 행) |
@@ -1602,7 +1602,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 |---|---|---|---|---|
 | 1 / 2 / 3 | 로비 stair / weapon / income | 츄르 `1 / 1` | 30 / 149 / 50 | 07 |
 | 11~18 | Area 강화 rate / range / clone / crit / dbl / pierce / diaLv / goldLv | 캣닢 `1 / 2` | 10 / 10 / 30 / 10 / 10 / 10 / 10 / 10 | 07. 그룹 13 Lv 5~30과 16~18은 **더미** 가격(분신 수 max 30) |
-| 21~29 | 부활 power / crit / obst / dcap / gcap / startGold / startDia / craftDbl / stairDbl | 목숨 조각 `1 / 4` | 20 / 20 / 10 / 20 / 21 / 20 / 20 / 20 / 20 | 07. 25~29는 **더미** |
+| 21~29 | 부활 power / crit / obst / dcap / gcap / startGold / startDia / craftDbl / stairDbl | 목숨 조각 `1 / 4` | 20 / 40 / 10 / 5 / 21 / 20 / 20 / 20 / 20 | 07. 25~29와 22의 Lv21~40은 **더미**. 24는 Lv6~20 행이 남아 있으나 max 5라 쓰지 않는다 |
 | 301 / 302 / 304 / 306~313 | 펫 / 친구 / 신 레벨 / 장비 | 08 정의 | 08 | [08](08_Content.md) |
 
 **행 생성 규칙**(도구 `MV/Tables/Generate Level Price`가 아래 공식으로 그룹 1~24 행을 다시 쓴다. 런타임은 행만 읽는다)
@@ -1625,7 +1625,9 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | 11, 12 | 40/64/102/164/262/419/671/1074/1718/2749 |
 | 13 | 100/160/256/410 |
 | 14, 15 | 80/128/205/328/524/839/1342/2147/3436/5498 |
-| 21, 22 | 50/75/113/169/253/380/570/854/1281/1922/2883/4325/6487/9731/14596/21895/32842/49263/73895/110842 |
+| 21 | 50/50/113/169/253/380/570/854/1281/1922/2883/4325/6487/9731/14596/21895/32842/49263/73895/110842 |
+| 22 | 50/50/113/169/253/380/570/854/1281/1922/2883/4325/6487/9731/14596/21895/32842/49263/73895/110842/166263/249394/374091/561137/841706/1262558/1893838/2840756/4261135/6391702/9587553/14381329/21571994/32357991/48536987/72805480/109208220/163812331/245718496/368577744 |
+|  | 16021002·16022002 = 50은 MV-SPEC-02 571~572 관측 「1→2단계 : 50」으로 손으로 고친 값(생성 도구 결과 75와 달라 검증 경고). 22의 Lv21~40은 같은 곡선의 **더미**(MV-SPEC2-FIX1) |
 | 23 | 60/90/135/203/304/456/683/1025/1538/2307 |
 | 24 | 60/90/135/203/304/456/683/1025/1538/2307/3460/5190/7785/11677/17516/26274/39410/59116/88674/133010 |
 
@@ -1666,7 +1668,7 @@ id	group	targetLevel	priceType	priceId	priceValue
 
 | id | key | adType | placement | dailyLimit | mul | minArea | adReward | 근거 |
 |---|---|---|---|---|---|---|---|---|
-| 8001001 | collect3 | Reward | result_x3 | 0 | 3 | 0 | — | [프로토] L2445, 한도 없음([04 §4.19.2](04_GameRules.md)) |
+| 8001001 | collect3 | Reward | result_x3 | 0 | 2 | 0 | — | [프로토] L2445, 한도 없음([04 §4.19.2](04_GameRules.md)) |
 | 8001002 | dia | Reward | basket_free_dia | 3 | 0 | 0 | `1 / 2 / 100` | [프로토] L2574 |
 | 8001003 | skip | Reward | rebirth_skip | 4 | 0 | 0 | `609 / 0 / 4200` | [프로토] L2575 (70분) |
 | 8001004 | interstitial | Interstitial | result_interstitial | 0 | 0 | 3 | — | [프로토] L2444(×1 수령 뒤), noAdsSkip 1 |
@@ -2196,7 +2198,7 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 | 08 | placement·key 유일, dailyLimit ≥ 0. 화면이 찾는 key(`dia`·`skip`·`collect3`·`interstitial`·`modeTicket`)가 있음 | 오류 |
 | 09 | key 유일, `atlas+sprite`와 `address` 중 하나만 채움 | 오류 |
 | 13·14 | valueFormat에 `{0}`가 정확히 1개 | 오류 |
-| 짝 값 | `330.rlFlyMs = flyCard.removeMs`, `00_config.collectAdMul = 08[collect3].mul`, `108[sgatePass].delayMs = fly.removeMs` | 경고 |
+| 짝 값 | `330.rlFlyMs = flyCard.removeMs`, `108[sgatePass].delayMs = fly.removeMs`(결과 광고 배수는 `08[collect3].mul` 하나, `00_config.collectAdMul` 삭제) | 경고 |
 
 ### 7.13.4 저장 참조(표가 바뀐 뒤 옛 저장을 읽을 때)
 

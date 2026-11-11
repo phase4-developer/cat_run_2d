@@ -9,6 +9,20 @@ namespace MV.Run.Tests.Gen
     /// <summary>tplFor·newRun 초기화·장애물 HP 지속·규칙 난수 사용(04 §4.14). 생성 결과 전체는 GenDumpTests가 본다.</summary>
     public sealed class LevelGenTests
     {
+        /// <summary>시작 재화·기본 난이도는 표 값(302 startGold + 14 StartGold·StartDia, 06 isDefault, MV-SPEC2-FIX1).</summary>
+        [Test]
+        public void NewRun_StartWealthAndDefaultPreset_FromTables()
+        {
+            var t = Tables();
+            var setup = new RunSetup { Area = 1, Zone = 0, Level = 1, PerkStartGold = 2, PerkStartDia = 1 };
+            var s = new RunLevelBuilder().NewRun(setup, t, new ConstRng(0.5));
+            double areaGold = LevelGen.AreaRow(t, 1).startGold;
+            Assert.Greater(areaGold, 0, "Area 2 startGold(MV-SPEC-02 513)");
+            Assert.AreEqual(areaGold + RunFormulas.PerkValue(t, RebirthStatKey.StartGold, 2), s.Gold, 1e-9);
+            Assert.AreEqual((int)RunFormulas.PerkValue(t, RebirthStatKey.StartDia, 1), s.Dia);
+            Assert.AreEqual(t.BalancePreset.Datas.Single(p => p.isDefault).id, s.Bal.id, "Preset null = isDefault 행");
+        }
+
         [Test]
         public void TplForFollowsTemplateCycle()
         {
@@ -77,7 +91,7 @@ namespace MV.Run.Tests.Gen
             bars.Set(0, 0, 0);
             bars.Set(0, 1, 2);
             bars.Set(0, 2, 999);
-            var setup = new RunSetup { Level = 1, Bars = bars };
+            var setup = new RunSetup { Level = 1, Bars = bars, Preset = "easy" }; // 장애물 HP 3칸(easy scale 3)으로 기록 지속을 본다
             var s = new RunLevelBuilder().NewRun(setup, t, new ConstRng(0.5));
             var walls = s.Objs.FindAll(o => o.IsField && o.Bar == 0);
             Assert.IsTrue(walls[0].Dead && walls[0].Pre, "기록 0 → 부서진 채 시작");

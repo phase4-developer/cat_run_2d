@@ -26,6 +26,18 @@ namespace MV.Meta
         public const string LobbyWeapon = "weapon";
         public const string LobbyIncome = "income";
         public const string RebirthKey = "rebirth";
+        /// <summary>결과 광고 자리 key(<c>08_adPlacement</c>, 07 §7.13.3 필수 key).</summary>
+        public const string CollectAdKey = "collect3";
+
+        /// <summary>
+        /// 결과 광고 배수 = <c>08_adPlacement[collect3].mul</c> 하나만 읽는다(00_config.collectAdMul 삭제, MV-SPEC2-FIX1).
+        /// 행이 없거나 mul ≤ 0이면 1(배수 없음 — 검증기가 행 없음을 오류로 막는다).
+        /// </summary>
+        public static int CollectAdMul(MvTables t)
+        {
+            var row = t?.AdPlacement.ByKey(CollectAdKey);
+            return row != null && row.mul > 0 ? row.mul : 1;
+        }
 
         /// <summary>JS <c>Math.round</c>(§4.0.2).</summary>
         public static double JsRound(double x) => Math.Floor(x + 0.5);

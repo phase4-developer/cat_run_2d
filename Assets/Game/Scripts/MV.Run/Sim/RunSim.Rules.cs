@@ -286,7 +286,7 @@ namespace MV.Run
                 if (s.FireT[i] > 0) continue;
                 s.FireT[i] += iv;
                 bool crit = s.Draw(RngUse.Crit) < crC;
-                double d = BaseDmg(s) * (crit ? CritMul(s) : 1);
+                double d = Math.Floor(BaseDmg(s) * (crit ? CritMul(s) : 1)); // 치명 배율 뒤 정수(버림, MV-SPEC2-FIX1)
                 // Area 강화 관통 확률(MV-SPEC-02 Q-28): 이 발사의 탄이 1개 더 뚫는다. 확률 0이면 뽑지 않는다.
                 int up = pierceC > 0 && s.Draw(RngUse.PierceChance) < pierceC ? 1 : 0;
                 if (i == 0) s.Vol++;
@@ -359,7 +359,7 @@ namespace MV.Run
             var s = S;
             bool wasDead = o.Dead;
             if (o.Chill > 0) { var (fe, fn) = CardOf(s, CardEffectType.ProcChill); if (fe != null) dmg *= 1 + fe.p3 * fn; }
-            dmg = Math.Min(_p.DmgMax, Math.Max(_p.DmgMin, JsRound(dmg)));
+            dmg = Math.Min(_p.DmgMax, Math.Max(_p.DmgMin, Math.Floor(dmg))); // 최종 피해 정수(버림) + 최소 DMG_MIN(MV-SPEC2-FIX1)
             double gm = GoldMul(s), hx = o.X, hz = o.Z - o.Hd;
             s.Emit(new RunEvent(RunEventType.Hit, objId: o.Id, kindId: o.Kind.id, x: hx, z: hz, amount: dmg, flag: crit, quiet: quiet, color: color));
             var type = o.Reaction?.type ?? HitReactionType.None;

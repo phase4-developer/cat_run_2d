@@ -2,6 +2,7 @@ using System;
 using MV.Data;
 using MV.Meta;
 using MV.Run;
+using MV.Save;
 using UnityEngine;
 
 namespace MV.UI
@@ -25,6 +26,8 @@ namespace MV.UI
         public double Gold;
         public int Dia;
         public int Tok;
+        /// <summary>재화 이름(<c>01_wealth</c>, <see cref="MvUiText.WealthName"/>): 골드·블루 마법석·황금 생선·구출 고양이.</summary>
+        public string GoldName, DiaName, TokName, SoulsName;
         /// <summary>통계 줄(<c>msg:result.stat1~4</c>). 1차는 짧은 요약.</summary>
         public string Stat;
         /// <summary>정산 명령에 넘길 값.</summary>
@@ -33,7 +36,7 @@ namespace MV.UI
         public Action<MvSettleResult> OnCollected;
         /// <summary>비우면 <see cref="MvMetaResultSettler"/>(<c>MvMeta.Current</c>).</summary>
         public IResultSettler Settler;
-        /// <summary>×3 광고(<c>08_adPlacement collect3</c>). 비우면 <see cref="MvMetaResultAd"/>(가짜 광고 팝업 경유).</summary>
+        /// <summary>결과 「×N 보상」 광고(<c>08_adPlacement collect3</c>, N은 그 행 mul). 비우면 <see cref="MvMetaResultAd"/>(가짜 광고 팝업 경유).</summary>
         public IResultAdWatcher AdWatcher;
 
         /// <summary>런 결과 → 결과 화면 값 + 정산 값(MV.Meta는 MV.Run을 모르므로 여기서 옮긴다).</summary>
@@ -43,6 +46,7 @@ namespace MV.UI
         {
             if (r == null) throw new ArgumentNullException(nameof(r));
             bool gate = r.Reason == FinishReason.Gate;
+            string soulsName = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.Souls));
             var d = new ResultViewData
             {
                 Kind = r.ZoneEnd ? ResultKind.ZoneClear : r.Pass ? ResultKind.AreaOpen : gate ? ResultKind.LevelDone : ResultKind.Fail,
@@ -51,7 +55,11 @@ namespace MV.UI
                 Gold = r.Gold,
                 Dia = r.Dia,
                 Tok = r.Tok,
-                Stat = "골목 " + r.Walls + " 파괴 · 계단 Lv " + r.GaugeLv + " · 생선 " + r.Souls, // msg:result.stat* 자리(1차 요약)
+                GoldName = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.Gold)),
+                DiaName = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.Dia)),
+                TokName = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.RbToken)),
+                SoulsName = soulsName,
+                Stat = "골목 " + r.Walls + " 파괴 · 계단 Lv " + r.GaugeLv + " · " + soulsName + " " + r.Souls, // msg:result.stat* 자리(1차 요약)
                 Outcome = new MvRunOutcome
                 {
                     RunSeq = runSeq,
@@ -95,18 +103,18 @@ namespace MV.UI
         }
     }
 
-    /// <summary>결과 ×3 광고 입구. 정산은 하지 않고 「끝까지 봤으면 배수」만 알린다(정산은 <see cref="IResultSettler"/> 1번).</summary>
+    /// <summary>결과 「×N 보상」 광고 입구. 정산은 하지 않고 「끝까지 봤으면 배수」만 알린다(정산은 <see cref="IResultSettler"/> 1번).</summary>
     public interface IResultAdWatcher
     {
-        /// <summary>false면 ×3 버튼을 막는다(메타 없음·자리 꺼짐).</summary>
+        /// <summary>false면 광고 버튼을 막는다(메타 없음·자리 꺼짐).</summary>
         bool Ready { get; }
-        /// <summary>×3 배수(<c>08_adPlacement collect3.mul</c>, 없으면 <c>00_config.collectAdMul</c>).</summary>
+        /// <summary>결과 광고 배수. 출처는 <c>08_adPlacement</c> 결과 광고 행(collect3)의 <c>mul</c> 한 곳(MV-SPEC-02 01 §10·§12-3).</summary>
         int Mul { get; }
         /// <summary>광고 1번. <paramref name="done"/>(배수, 안 봤으면 0)을 한 번 부른다.</summary>
         void WatchX3(Action<int> done);
     }
 
-    /// <summary>기본 ×3 입구: <see cref="MvMeta.Current"/> + <see cref="MvFakeAd.Watch"/>(공급자 없으면 가짜 광고 팝업).</summary>
+    /// <summary>기본 결과 광고 입구: <see cref="MvMeta.Current"/> + <see cref="MvFakeAd.Watch"/>(공급자 없으면 가짜 광고 팝업).</summary>
     public sealed class MvMetaResultAd : IResultAdWatcher
     {
         public const string Key = "collect3";
@@ -124,12 +132,8 @@ namespace MV.UI
 
         public int Mul => MulOf(MvMeta.Current?.Tables ?? MvTables.Current);
 
-        public static int MulOf(MvTables t)
-        {
-            var row = t?.AdPlacement.ByKey(Key);
-            if (row != null && row.mul > 0) return row.mul;
-            return t != null ? t.Config.Value.collectAdMul : 3;
-        }
+        /// <summary><c>08_adPlacement</c> 결과 광고 행의 <c>mul</c>. 행이 없으면 0(그때 버튼은 <see cref="Ready"/>로 막힌다).</summary>
+        public static int MulOf(MvTables t) => t?.AdPlacement.ByKey(Key)?.mul ?? 0;
 
         public void WatchX3(Action<int> done)
         {
@@ -139,10 +143,10 @@ namespace MV.UI
         }
     }
 
-    /// <summary>결과 겉의 ×3 광고 버튼 부분. 기존 <see cref="IResultView"/> 구현을 깨지 않도록 나눴다. 기본 겉 <see cref="ResultView"/>는 둘 다 구현한다.</summary>
+    /// <summary>결과 겉의 「×N 보상」 광고 버튼 부분. 기존 <see cref="IResultView"/> 구현을 깨지 않도록 나눴다. 기본 겉 <see cref="ResultView"/>는 둘 다 구현한다.</summary>
     public interface IResultAdView
     {
-        /// <summary>「▶ 광고 보고 ×3 받기」.</summary>
+        /// <summary>「×N 보상」(보상 광고, MV-SPEC-02 01 §12-3).</summary>
         event Action X3Pressed;
         void SetX3(string text, bool interactable);
     }
@@ -150,13 +154,21 @@ namespace MV.UI
     /// <summary>결과 겉(D-92). 컨트롤러 <see cref="ResultPopup"/>는 이 인터페이스로만 겉을 만진다.</summary>
     public interface IResultView
     {
-        /// <summary>「받기」(×1)를 눌렀다.</summary>
+        /// <summary>「괜찮아요」(×1 받기)를 눌렀다.</summary>
         event Action CollectPressed;
         void SetTitle(string text, Color color);
         void SetProgress(string left, string right, float fill01);
-        /// <summary>보상 3칸: 츄르·캣닢·목숨 조각(05 §5.6).</summary>
-        void SetRewards(string gold, string dia, string tok);
+        /// <summary>보상 3칸: 골드·블루 마법석·황금 생선(MV-SPEC-02 01 §12-3). 이름은 <c>01_wealth</c>에서.</summary>
+        void SetRewards(ResultRewardText gold, ResultRewardText dia, ResultRewardText tok);
         void SetStat(string text);
         void SetCollectInteractable(bool interactable);
+    }
+
+    /// <summary>보상 칸 1개의 글: 재화 이름 + 값.</summary>
+    public struct ResultRewardText
+    {
+        public string Name;
+        public string Value;
+        public ResultRewardText(string name, string value) { Name = name; Value = value; }
     }
 }

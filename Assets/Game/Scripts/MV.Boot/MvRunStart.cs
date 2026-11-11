@@ -123,9 +123,6 @@ namespace MV.Boot
     /// <summary>스냅숏 → <see cref="RunContext"/>(정본 <see cref="MainRunRule.Build"/>의 입력).</summary>
     public static class MvRunStart
     {
-        /// <summary>06_balancePreset 기본(D-03 easy).</summary>
-        public const string DefaultPreset = "easy";
-
         /// <summary>
         /// 본편 런 입력. 메타 능력치(펫·장비)와 동행은 아직 없어 <see cref="RunModifiers.Zero"/>·빈 목록이다
         /// (교체 지점: MV.Meta가 §4.20.4 합산·§4.20.5 동행 목록을 내면 여기서 넣는다).
@@ -144,7 +141,7 @@ namespace MV.Boot
                 Cp = snap.Cp,
                 UpStair = snap.UpStair, UpWeapon = snap.UpWeapon, UpIncome = snap.UpIncome,
                 God = string.IsNullOrEmpty(snap.God) ? "thunder" : snap.God,
-                Preset = DefaultPreset,
+                Preset = null, // 06_balancePreset isDefault 행(MV-SPEC2-FIX1)
             };
             // 덱 길이 = 스냅숏 덱 길이. 런 W는 103_item 단계 수로 따로 잡고 겹치는 칸만 옮긴다(RunLevelBuilder).
             if (snap.Deck != null && snap.Deck.Length > 0) setup.Deck = (int[])snap.Deck.Clone();
@@ -162,7 +159,7 @@ namespace MV.Boot
 
         /// <summary>
         /// Area 강화·냥환생 Lv을 표 행의 statKey로 RunSetup 칸에 옮긴다(MV-SPEC-02 Q-27·Q-28: 항목 이름을 코드에 두지 않는다).
-        /// 런 규칙이 아직 없는 statKey(GoldCap·StartGold·StartDia·DiaPerLevel·GoldPerLevel)는 옮기지 않는다.
+        /// 런 규칙이 아직 없는 statKey(GoldCap: 효과 뜻 [미확인])는 옮기지 않는다.
         /// </summary>
         static void ApplyGrowth(RunSetup setup, MvRunSnapshot snap, MvTables tables)
         {
@@ -177,6 +174,8 @@ namespace MV.Boot
                     case AreaStatKey.CritChance: setup.AupCrit = lv; break;
                     case AreaStatKey.DoubleChance: setup.AupDbl = lv; break;
                     case AreaStatKey.PierceChance: setup.AupPierce = lv; break;
+                    case AreaStatKey.DiaPerLevel: setup.AupDiaLv = lv; break;
+                    case AreaStatKey.GoldPerLevel: setup.AupGoldLv = lv; break;
                 }
             }
             foreach (var p in tables.RebirthPerk.Datas)
@@ -190,6 +189,8 @@ namespace MV.Boot
                     case RebirthStatKey.DiaCap: setup.PerkDcap = lv; break;
                     case RebirthStatKey.CraftDouble: setup.PerkCraftDbl = lv; break;
                     case RebirthStatKey.StairDouble: setup.PerkStairDbl = lv; break;
+                    case RebirthStatKey.StartGold: setup.PerkStartGold = lv; break;
+                    case RebirthStatKey.StartDia: setup.PerkStartDia = lv; break;
                 }
             }
         }

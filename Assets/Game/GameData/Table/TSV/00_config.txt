@@ -1,2 +1,2 @@
-id	name	dataVersion	startDeck	startGodKey	collectAdMul	interstitialMinArea	rebirthArmSec	rebirthCooldownSec	adDayUtcOffsetHour	progressResetArmSec	defaultMute
-1	앱 전역 설정	1	0/1/0/0/0/0/0/0/0	thunder	3	3	2.5	21600	0	2.5	0
+id	name	dataVersion	startDeck	startGodKey	interstitialMinArea	rebirthArmSec	rebirthCooldownSec	adDayUtcOffsetHour	progressResetArmSec	defaultMute
+1	앱 전역 설정	1	0/1/0/0/0/0/0/0/0	thunder	3	2.5	21600	0	2.5	0

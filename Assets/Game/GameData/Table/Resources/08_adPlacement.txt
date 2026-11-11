@@ -1,5 +1,5 @@
 ﻿id	name	key	sort	active	adType	placement	dailyLimit	chargeMax	chargeSec	mul	minArea	noAdsSkip	adRewardType	adRewardId	adRewardValue	icon
-8001001	결과 「×2 보상」 광고	collect3	1	1	Reward	result_x3	0	0	0	3	0	0				
+8001001	결과 「×2 보상」 광고	collect3	1	1	Reward	result_x3	0	0	0	2	0	0				
 8001002	광고로 블루 마법석 ×100	dia	2	1	Reward	basket_free_dia	3	3	7200	0	0	0	1	1001002	100	
 8001003	냥환생 쿨타임 광고 70분	skip	3	1	Reward	rebirth_skip	4	0	0	0	0	0	609	0	4200	
 8001004	결과 전면 광고	interstitial	4	1	Interstitial	result_interstitial	0	0	0	0	3	1				
