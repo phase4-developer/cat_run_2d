@@ -96,8 +96,10 @@ namespace MV.UI
             if (tables.AdPlacement.HasKey(AdTicketKey))
             {
                 int left = Port.AdsLeft(AdTicketKey);
+                double gain = 0; // 08[modeTicket].adRewardValue(옛 문구 「+1」 고정)
+                foreach (var r in tables.AdPlacement.ByKey(AdTicketKey).adReward) gain += r.Value;
                 m.Add(new MetaRow("adInfo", MetaRowKind.Text,
-                    "광고 보고 입장권 +1 · 오늘 " + (left < 0 ? "∞" : left.ToString(Inv)) + "회 남음")); // ui.content.adInfo
+                    "광고 보고 입장권 +" + gain.ToString("0.##", Inv) + " · 오늘 " + (left < 0 ? "∞" : left.ToString(Inv)) + "회 남음")); // ui.content.adInfo
             }
 
             foreach (var c in ModeRows(tables))

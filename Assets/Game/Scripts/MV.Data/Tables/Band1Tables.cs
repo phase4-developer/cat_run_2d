@@ -26,11 +26,12 @@ namespace MV.Data
     public sealed class LobbyUpgradeData : MvRow, ILevelPriced
     {
         public const string Table = "10_lobbyUpgrade";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active").Int("max", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active").Int("max")
             .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Enum<LobbyEffectType>("effectType", true)
             .Res("icon", MvAtlas.UiIcon).Res("facSprite", MvAtlas.WorldLobby)
             .Enum<CostFormula>("costFormula").Float("costBase").Float("costGrowth");
 
+        /// <summary>표의 max 칸. 계단(StartStairLv)·지팡이(DeckAdd)는 비워 두고(0) <see cref="MvTables.LevelMax"/>로 계산한다. 읽을 때는 항상 LevelMax.</summary>
         public int max { get; private set; }
         public int levelPriceGroup { get; private set; }
         public LobbyEffectType effectType { get; private set; }

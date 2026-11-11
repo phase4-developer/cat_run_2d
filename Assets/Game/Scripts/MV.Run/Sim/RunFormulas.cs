@@ -45,6 +45,15 @@ namespace MV.Run
         }
 
         /// <summary>효과 type을 가진 얻은 카드(첫 행)와 장수. 없으면 (null, 0).</summary>
+        /// <summary>그 효과 종류의 112 행: 손에 든 카드의 효과, 없으면 표의 첫 행(id 순). 표에도 없으면 null.</summary>
+        public static CardEffectData EffectRow(RunState s, CardEffectType type)
+        {
+            var (e, _) = CardOf(s, type);
+            if (e != null) return e;
+            foreach (var row in s.Tables.CardEffect.Datas) if (row.type == type) return row;
+            return null;
+        }
+
         public static (CardEffectData eff, int n) CardOf(RunState s, CardEffectType type)
         {
             foreach (var id in s.CardOrder)

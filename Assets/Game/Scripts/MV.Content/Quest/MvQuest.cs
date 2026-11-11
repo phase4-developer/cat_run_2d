@@ -55,7 +55,7 @@ namespace MV.Content
             {
                 if (request.Name == MvMetaRequestNames.QuestRecord || request.Name == MvMetaRequestNames.QuestClaim) return;
                 if (response.Data[MV.Save.MvSaveKeys.Quest] != null) return;
-                var events = MvQuest.EventsOf(request, response);
+                var events = MvQuest.EventsOf(backend.Tables, request, response);
                 long now = backend.Clock.NowMs;
                 if (events.Count == 0 && !MvQuestRules.Stale(backend.Store.Quest, now)) return;
                 var s = MvQuestRules.Read(backend.Store.Quest, now);
@@ -160,7 +160,7 @@ namespace MV.Content
         // ───────── 메타 요청 → 카운터 ─────────
 
         /// <summary>성공한 메타 요청에서 셀 카운터(순수 함수). 응답 보탬이 쓴다.</summary>
-        public static List<MvQuestEvent> EventsOf(MvMetaRequest request, MvMetaResponse response)
+        public static List<MvQuestEvent> EventsOf(MvTables tables, MvMetaRequest request, MvMetaResponse response)
         {
             var list = new List<MvQuestEvent>();
             if (request == null || response == null || !response.Ok) return list;
@@ -173,8 +173,8 @@ namespace MV.Content
                     list.Add(new MvQuestEvent(QuestClearType.SoulEarn, r.Value<long?>("souls") ?? 0));
                     if (r.Value<bool?>("pass") == true) list.Add(new MvQuestEvent(QuestClearType.AreaOpen, 1));
                     break;
-                case MvMetaRequestNames.BuyLobbyUp: // L2641, 조건 1 캣타워 / 2 스크래쳐 / 3 생선 건조대
-                    list.Add(new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, LobbyCondition(request.Params.Value<string>("key"))));
+                case MvMetaRequestNames.BuyLobbyUp: // L2641, 조건 = 10_lobbyUpgrade.sort(1 캣타워 / 2 스크래쳐 / 3 생선 건조대)
+                    list.Add(new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, LobbyCondition(tables, request.Params.Value<string>("key"))));
                     break;
                 case MvMetaRequestNames.BuyAreaUp: // L2530
                     list.Add(new MvQuestEvent(QuestClearType.AreaUpgrade, 1));
@@ -191,16 +191,8 @@ namespace MV.Content
             return list;
         }
 
-        public static int LobbyCondition(string key)
-        {
-            switch (key)
-            {
-                case MvMetaRules.LobbyStair: return 1;
-                case MvMetaRules.LobbyWeapon: return 2;
-                case MvMetaRules.LobbyIncome: return 3;
-                default: return 0;
-            }
-        }
+        /// <summary>로비 강화 퀘스트 조건 번호 = <c>10_lobbyUpgrade.sort</c>(08 §8.5.1 「1 캣타워 / 2 스크래쳐 / 3 생선 건조대」, 코드 번호 대신 표). 없으면 0.</summary>
+        public static int LobbyCondition(MvTables tables, string key) => tables?.LobbyUpgrade.ByKey(key)?.sort ?? 0;
 
     }
 }

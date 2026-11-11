@@ -83,7 +83,7 @@ namespace MV.Data.Tests
             var t = TsvFixture.LoadTables();
             Assert.That(t.ContentConfig.Datas.Count(x => !x.IsGroupName), Is.EqualTo(ContentConfigKeys.All.Length));
             Assert.That(t.ContentConfig.D(ContentConfigKeys.Mode_SweepChuruRatio), Is.EqualTo(0.8).Within(1e-9));
-            Assert.That(t.ContentConfig.I(ContentConfigKeys.Gear_MaxUpgrade), Is.EqualTo(GearRarityData.MaxLevel));
+            Assert.That(t.GearMaxLevel(), Is.EqualTo(30)); // 499 gear.maxUpgrade 하나만(옛 GearRarityData.MaxLevel 상수 삭제)
             Assert.That(t.ContentConfig.B(ContentConfigKeys.Energy_Enabled), Is.False); // D-79
             Assert.That(t.ContentConfig.B(ContentConfigKeys.Horde_Enabled), Is.False);  // D-78
             var price = t.ContentConfig.Consume(ContentConfigKeys.Pet_SummonPrice);
@@ -187,9 +187,9 @@ namespace MV.Data.Tests
         [Test]
         public void ContentConfig_UnknownKey_IsError()
         {
-            var report = With("499_contentConfig", x => TsvFixture.Set(x, "499001001", "key", "mode.foo"));
+            var report = With("499_contentConfig", x => TsvFixture.Set(x, "499001002", "key", "mode.foo"));
             AssertError(report, "499_contentConfig", "ContentConfigKeys");
-            AssertError(report, "499_contentConfig", ContentConfigKeys.Mode_AdTicketDaily);
+            AssertError(report, "499_contentConfig", ContentConfigKeys.Mode_SweepChuruRatio);
         }
 
         [Test]

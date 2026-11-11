@@ -285,7 +285,7 @@ namespace MV.Boot
         {
             var store = MvSave.Current;
             bool hasSave = store != null && !store.IsDisposed;
-            var snap = hasSave ? MvRunSnapshot.FromStore(store, _tables.RunConfig.I(RunConfigKeys.FLOOR_COUNT))
+            var snap = hasSave ? MvRunSnapshot.FromStore(store, _tables.FloorCount())
                 : MvRunSnapshot.Defaults(MvBootSave.CreateConfig(_tables));
             var meta = MvMeta.Current;
             _runSeq = meta != null && meta.IsReady ? meta.BeginRun() : snap.LastSettledRunSeq + 1;

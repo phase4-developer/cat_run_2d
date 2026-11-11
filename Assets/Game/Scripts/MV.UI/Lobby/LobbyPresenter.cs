@@ -237,7 +237,7 @@ namespace MV.UI
                 case LobbyEffectType.StartStairLv:
                 {
                     var k = MvMetaRules.StairStart(t, p);
-                    int maxLv = t.RunConfig.I(RunConfigKeys.LOBBY_STAIR_MAX_LV);
+                    int maxLv = t.StairMaxLv();
                     u.Icon = string.IsNullOrEmpty(row.icon) ? "" : row.icon + "_" + StageOf(t, LobbyEffectType.StartStairLv, p);
                     if (k.Lv >= maxLv)
                     {
@@ -283,12 +283,9 @@ namespace MV.UI
         /// <summary>아이콘 뒤 아지트 단계(정본 facIconURL(kind, azStages())).</summary>
         static int StageOf(MvTables t, LobbyEffectType effect, int p)
         {
-            if (effect == LobbyEffectType.StartStairLv)
-            {
-                int kl = MvMetaRules.StairStart(t, p).Lv;
-                return kl >= 4 ? 3 : kl >= 2 ? 2 : 1;
-            }
-            return p >= 15 ? 3 : p >= 5 ? 2 : 1;
+            // 문턱은 LobbyFacilities 한 곳(시설 단계와 같은 값).
+            if (effect == LobbyEffectType.StartStairLv) return LobbyFacilities.TowerStage(MvMetaRules.StairStart(t, p).Lv);
+            return LobbyFacilities.RackStage(p);
         }
 
         static ItemData WeaponItem(MvTables t, int tier)

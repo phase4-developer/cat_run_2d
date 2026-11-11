@@ -32,6 +32,10 @@ namespace MV.UI
         [SerializeField] AddressableImage weaponIcon;
         [SerializeField] Text weaponName;
         [SerializeField] Text weaponDmg;
+        [SerializeField] Text mergeHint;
+
+        /// <summary>무기 카드 바탕 그림 수(UI_Skin_WpnCard_G1~G8, 그림 개수 — 표 값 아님). 넘는 등급은 마지막 그림을 다시 쓴다.</summary>
+        const int WeaponCardSkinCount = 8;
 
         bool _built;
 
@@ -73,10 +77,16 @@ namespace MV.UI
             MvUi.SetFill(gaugeFill, fill01, true);
         }
 
+        public void SetMergeHint(string text)
+        {
+            EnsureBuilt();
+            if (mergeHint) mergeHint.text = text ?? "";
+        }
+
         public void SetWeapon(int tier, string iconSprite, string name, string damageText, Color gradeColor)
         {
             EnsureBuilt();
-            int g = Mathf.Clamp(tier, 1, 8);
+            int g = Mathf.Clamp(tier, 1, WeaponCardSkinCount);
             if (weaponCard) weaponCard.SetSprite("UI_Skin_WpnCard_G" + g);
             if (weaponIcon && !string.IsNullOrEmpty(iconSprite)) weaponIcon.SetSprite(iconSprite);
             weaponName.text = name;
@@ -173,8 +183,8 @@ namespace MV.UI
             MvUi.Place(weaponIcon.rectTransform, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -1.2f * U), new Vector2(10.5f * U, 10.5f * U));
             weaponName = Line(weaponCard.transform, "Name", 2.6f * U, Color.white, TextAnchor.UpperCenter, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -12 * U), 18 * U);
             weaponDmg = Line(weaponCard.transform, "Dmg", 2f * U, MvUi.InkDim, TextAnchor.UpperCenter, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -15.4f * U), 18 * U);
-            var hint = MvUi.Shadowed(Line(wpn, "Hint", 2.1f * U, MvUi.InkDim, TextAnchor.UpperRight, new Vector2(1, 1), new Vector2(1, 1), new Vector2(0, -20.2f * U), 25 * U));
-            hint.text = "같은 무기 3장 → 머지"; // ui.hud.mergeHint
+            mergeHint = MvUi.Shadowed(Line(wpn, "Hint", 2.1f * U, MvUi.InkDim, TextAnchor.UpperRight, new Vector2(1, 1), new Vector2(1, 1), new Vector2(0, -20.2f * U), 25 * U));
+            mergeHint.text = ""; // 장수는 표(300 MERGE_N) → SetMergeHint
         }
     }
 }

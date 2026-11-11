@@ -74,7 +74,7 @@ namespace MV.Content.Tests
                     StartDeck = config.startDeck.ToArray(),
                     StartGodKey = config.startGodKey,
                     CpMax = Tables.RunConfig.I(RunConfigKeys.CP_MAX),
-                    FloorCount = Tables.RunConfig.I(RunConfigKeys.FLOOR_COUNT),
+                    FloorCount = Tables.FloorCount(),
                     DayUtcOffsetHour = config.adDayUtcOffsetHour,
                 },
             });
@@ -231,7 +231,7 @@ namespace MV.Content.Tests
             Assert.That(Entry(413001004).Count, Is.EqualTo(settled.GoldGained), "goldEarn = 계정 츄르 증가분");
             Assert.That(Entry(MonthlySoul).Count, Is.EqualTo(4), "soulEarn");
 
-            Assert.That(MvQuest.LobbyCondition(MvMetaRules.LobbyIncome), Is.EqualTo(3), "생선 건조대 = 조건 3");
+            Assert.That(MvQuest.LobbyCondition(Tables, MvMetaRules.LobbyIncome), Is.EqualTo(3), "생선 건조대 = 조건 3");
             Assert.That(Quest.Record(new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, 3), new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, 1)).Ok, Is.True);
             Assert.That(Entry(MonthlyIncome).Count, Is.EqualTo(1), "조건 3만");
             Assert.That(Quest.LifetimeCount(QuestClearType.LobbyUpgrade), Is.EqualTo(2), "조건 0 = 전체");

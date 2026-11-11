@@ -52,24 +52,24 @@ namespace MV.Data
                     break;
                 }
 
-            var zones = t.Zone.Datas.OrderBy(z => z.areaFrom).ToList();
-            int expect = 1;
-            foreach (var z in zones)
-            {
-                if (z.areaFrom > z.areaTo) r.Error(ZoneData.Table, z.id, "areaTo", $"areaFrom {z.areaFrom} > areaTo {z.areaTo}입니다");
-                if (z.areaFrom < expect) r.Error(ZoneData.Table, z.id, "areaFrom", $"Zone 범위가 겹칩니다(areaFrom {z.areaFrom} < {expect})");
-                else if (z.areaFrom > expect) r.Error(ZoneData.Table, z.id, "areaFrom", $"Zone 범위에 빈틈이 있습니다(Area {expect}~{z.areaFrom - 1})");
-                expect = Math.Max(expect, z.areaTo + 1);
-            }
-            if (areas.Count > 0 && expect - 1 != areas[areas.Count - 1].areaNo)
-                r.Error(ZoneData.Table, null, "areaTo", $"Zone 범위 끝 {expect - 1}이 마지막 Area {areas[areas.Count - 1].areaNo}와 다릅니다");
-
+            // Zone 범위는 302 zoneId로 정한다(301 areaFrom·areaTo 열 삭제, 같은 값은 한 곳). Zone은 301 sort 순으로 Area를 이어서 덮어야 한다:
+            // Area를 areaNo 순으로 볼 때 zone이 sort 순으로만 바뀌고, 한 번 떠난 zone으로 돌아오지 않는다.
+            var zoneOrder = t.Zone.Sorted.Select((z, i) => (z.id, i)).ToDictionary(x => x.id, x => x.i);
+            int prevZone = -1;
+            var left = new HashSet<int>();
             foreach (var a in areas)
             {
-                var zone = t.Zone.Get(a.zoneId);
-                if (zone != null && (a.areaNo < zone.areaFrom || a.areaNo > zone.areaTo))
-                    r.Error(AreaData.Table, a.id, "zoneId", $"areaNo {a.areaNo}가 Zone {a.zoneId} 범위({zone.areaFrom}~{zone.areaTo}) 밖입니다");
+                if (!zoneOrder.TryGetValue(a.zoneId, out int zi)) continue; // 없는 zoneId는 FK 검사가 낸다.
+                if (zi == prevZone) continue;
+                if (left.Contains(zi) || zi < prevZone)
+                    r.Error(AreaData.Table, a.id, "zoneId", $"areaNo {a.areaNo}의 Zone {a.zoneId}가 301 sort 순으로 이어지지 않습니다(Zone 범위가 겹치거나 순서가 다름)");
+                else if (zi != prevZone + 1)
+                    r.Error(AreaData.Table, a.id, "zoneId", $"areaNo {a.areaNo} 앞에 Area가 없는 Zone이 있습니다(301 sort {prevZone + 2}번째)");
+                if (prevZone >= 0) left.Add(prevZone);
+                prevZone = zi;
             }
+            if (areas.Count > 0 && prevZone >= 0 && prevZone != zoneOrder.Count - 1)
+                r.Error(ZoneData.Table, null, "sort", $"Area가 없는 Zone이 있습니다(마지막 Area의 Zone은 301 sort {prevZone + 1}번째, Zone {zoneOrder.Count}개)");
 
             if (t.RunConfig.Has(RunConfigKeys.PLAYABLE_AREAS) && TryConfig(t, RunConfigKeys.PLAYABLE_AREAS, out double playable))
             {
@@ -91,11 +91,11 @@ namespace MV.Data
         static void CheckAreaFloor(MvTables t, MvValidationReport r)
         {
             const string name = AreaFloorData.Table;
-            int floorCount = TryConfig(t, RunConfigKeys.FLOOR_COUNT, out double fc) ? (int)fc : 0;
+            int floorCount = t.FloorCount(); // 302가 쓰는 묶음의 floor 최댓값(옛 FLOOR_COUNT)
             var field = t.FieldGen.ByKey("default") ?? t.FieldGen.Datas.FirstOrDefault();
             int soulMinIdx = field?.soulMinIdx ?? 0;
 
-            // Area가 쓰는 묶음은 floor 1~FLOOR_COUNT, 모드 전용 묶음(401만 씀, 901~)은 1부터 마지막 floor까지 빈틈 없이(08 §8.4.6).
+            // Area가 쓰는 묶음은 floor 1~Floor 수(모두 같은 수), 모드 전용 묶음(401만 씀, 901~)은 1부터 마지막 floor까지 빈틈 없이(08 §8.4.6).
             var areaGroups = new HashSet<int>(t.Area.Datas.Select(a => a.floorGroup));
             foreach (var g in t.AreaFloor.Groups)
             {
@@ -305,23 +305,24 @@ namespace MV.Data
             foreach (var (table, row) in priced)
             {
                 var have = new HashSet<int>(t.LevelPrice.GetGroup(row.levelPriceGroup).Select(x => x.targetLevel));
-                var missing = Enumerable.Range(1, Math.Max(0, row.max)).Where(l => !have.Contains(l)).ToList();
+                int max;
+                try { max = t.LevelMax(row); }
+                catch (Exception) { continue; } // WEAPON_EXTRA_BUYS 형식 오류는 CheckRunConfigKeys가 낸다.
+                var missing = Enumerable.Range(1, Math.Max(0, max)).Where(l => !have.Contains(l)).ToList();
                 if (missing.Count > 0)
                     r.Error(table, row.id, "levelPriceGroup",
-                        $"16_levelPrice 묶음 {row.levelPriceGroup}에 targetLevel {string.Join(",", missing.Take(5))}{(missing.Count > 5 ? "…" : "")}가 없습니다(1~{row.max})");
+                        $"16_levelPrice 묶음 {row.levelPriceGroup}에 targetLevel {string.Join(",", missing.Take(5))}{(missing.Count > 5 ? "…" : "")}가 없습니다(1~{max})");
             }
 
-            if (t.LobbyUpgrade.ByKey("stair") is { } stair && TryConfig(t, RunConfigKeys.LOBBY_STAIR_MAX_LV, out double stairMaxLv))
+            // 계단·지팡이 상한은 11·12 합계로 계산한다(사용자 결정 「행 수·합계로 계산되는 값은 계산」). 표 max 칸은 비워 두고, 그 밖 행은 1 이상.
+            foreach (var row in t.LobbyUpgrade.Datas)
             {
-                int sum = t.StairLevel.Datas.Where(x => x.lv < stairMaxLv).Sum(x => x.need);
-                if (stair.max != sum) r.Error(LobbyUpgradeData.Table, stair.id, "max", $"stair max {stair.max} ≠ Σ11.need(lv<{stairMaxLv}) = {sum}");
-            }
-            if (t.LobbyUpgrade.ByKey("weapon") is { } weapon && TryConfig(t, RunConfigKeys.WEAPON_EXTRA_BUYS, out double extra))
-            {
-                // 마지막 Level(12_weaponLevel lv 최대)에서는 게이지 대신 WEAPON_EXTRA_BUYS만큼 더 산다. 상한은 표 행 수에서 읽는다.
-                int lastLv = t.WeaponLevel.Datas.Count > 0 ? t.WeaponLevel.Datas.Max(x => x.lv) : 1;
-                int sum = t.WeaponLevel.Datas.Where(x => x.lv >= 1 && x.lv < lastLv).Sum(x => x.need) + (int)extra;
-                if (weapon.max != sum) r.Error(LobbyUpgradeData.Table, weapon.id, "max", $"weapon max {weapon.max} ≠ Σ12.need(lv 1~{lastLv - 1}) + WEAPON_EXTRA_BUYS = {sum}");
+                if (MvTables.IsComputedMax(row))
+                {
+                    if (row.max != 0)
+                        r.Error(LobbyUpgradeData.Table, row.id, "max", $"{row.key} max는 11·12 합계로 계산하므로 비워야 합니다(지금 {row.max})");
+                }
+                else if (row.max < 1) r.Error(LobbyUpgradeData.Table, row.id, "max", $"{row.key} max는 1 이상이어야 합니다");
             }
 
             List<MvLevelPriceGenerator.Row> generated;

@@ -1153,7 +1153,7 @@ JJEvol 표 규격 v1 §6~7 모양(열 정의 정본 [07 §7.9.3](07_Tables.md)).
 
 | key | value | unit | 태그 |
 |---|---|---|---|
-| mode.adTicketDaily | 3 | 회 | [창작·HE임시] |
+| ~~mode.adTicketDaily~~ | 삭제 | | 08_adPlacement[modeTicket].dailyLimit 하나만 쓴다(MV-HARDCODE-1b) |
 | mode.sweepChuruRatio | 0.8 | 배 | [창작] |
 | box.fallbackDia.paper / wood / gold | 20 / 60 / 150 | 캣닢 | [창작] |
 | pet.summonPrice | 1/2/100 | consumeData | [창작·HE임시] |
@@ -1162,7 +1162,7 @@ JJEvol 표 규격 v1 §6~7 모양(열 정의 정본 [07 §7.9.3](07_Tables.md)).
 | pet.cardsToUnlock | 2 | 장 | [창작·HE임시] |
 | pet.slots | 2 | 칸 | [창작·HE임시] |
 | pet.levelPct | 20 | % | [창작·HE임시] |
-| pet.buildSlotsMax / buildSlotEvery | 3 / 10 | 칸 / 레벨 | [창작·HE임시] |
+| pet.buildSlotEvery | 10 | 레벨 | [창작·HE임시]. 옵션 칸 상한은 buildCost 키 수로 계산(옛 buildSlotsMax 삭제, MV-HARDCODE-1b) |
 | pet.buildCost0 / 1 / 2 | 10 / 20 / 40 | 털실 | [창작·HE임시] |
 | friend.slotsMax / slotPriceDia | 3 / 200 | 칸 / 캣닢×현재 슬롯 | [창작·HE임시] |
 | friend.coinPerClear | 2 | 개 | [창작·HE임시] |

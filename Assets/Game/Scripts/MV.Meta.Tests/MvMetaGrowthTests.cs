@@ -1,4 +1,5 @@
 using System.Linq;
+using MV.Data;
 using MV.Save;
 using NUnit.Framework;
 
@@ -138,13 +139,13 @@ namespace MV.Meta.Tests
             Assert.That(max, Is.EqualTo(Tables.WeaponLevel.Datas.Max(r => r.lv)), "12_weaponLevel 행 수 = 103 상한 등급");
             var deck = new int[max + 1];
             deck[max - 1] = 2;
-            Assert.That(MvMetaRules.DeckAdd(deck, max - 1), Is.EqualTo(max), "상한 직전 3장 → 상한 등급");
+            Assert.That(MvMetaRules.DeckAdd(deck, max - 1, Tables.RunConfig.I(RunConfigKeys.MERGE_N)), Is.EqualTo(max), "상한 직전 3장 → 상한 등급");
             Assert.That(deck[max], Is.EqualTo(1));
             deck[max] = 2;
-            Assert.That(MvMetaRules.DeckAdd(deck, max), Is.EqualTo(0), "상한 등급은 더 머지하지 않는다");
+            Assert.That(MvMetaRules.DeckAdd(deck, max, Tables.RunConfig.I(RunConfigKeys.MERGE_N)), Is.EqualTo(0), "상한 등급은 더 머지하지 않는다");
             Assert.That(deck[max], Is.EqualTo(3));
             // 저장 덱이 상한보다 짧아도 MAX 등급까지 산다: 무기 Level 마지막 = 상한.
-            Assert.That(MvMetaRules.WeaponLevel(Tables, Tables.LobbyUpgrade.ByKey("weapon").max).Lv, Is.EqualTo(max));
+            Assert.That(MvMetaRules.WeaponLevel(Tables, Tables.LevelMax(Tables.LobbyUpgrade.ByKey("weapon"))).Lv, Is.EqualTo(max));
         }
 
         [Test]

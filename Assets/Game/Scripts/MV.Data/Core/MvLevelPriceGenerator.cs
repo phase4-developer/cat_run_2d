@@ -27,7 +27,8 @@ namespace MV.Data
             return list;
         }
 
-        public static long[] Prices(LobbyUpgradeData row) => Prices(row.costFormula, row.costBase, row.costGrowth, row.max);
+        /// <summary>로비 강화 행. 계단·지팡이 상한은 표에 적지 않고 <see cref="MvTables.LevelMax"/>로 계산한다.</summary>
+        public static long[] Prices(MvTables t, LobbyUpgradeData row) => Prices(row.costFormula, row.costBase, row.costGrowth, t.LevelMax(row));
         public static long[] Prices(AreaUpgradeData row) => Prices(CostFormula.Pow, row.costBase, row.costGrowth, row.max);
         public static long[] Prices(RebirthPerkData row) => Prices(CostFormula.Pow, row.costBase, row.costGrowth, row.max);
 
@@ -48,7 +49,7 @@ namespace MV.Data
         public static List<Row> Generate(MvTables t)
         {
             var rows = new List<Row>();
-            foreach (var r in t.LobbyUpgrade.Datas) Add(rows, r.levelPriceGroup, Gold, Prices(r));
+            foreach (var r in t.LobbyUpgrade.Datas) Add(rows, r.levelPriceGroup, Gold, Prices(t, r));
             foreach (var r in t.AreaUpgrade.Datas) Add(rows, r.levelPriceGroup, Dia, Prices(r));
             foreach (var r in t.RebirthPerk.Datas) Add(rows, r.levelPriceGroup, Token, Prices(r));
             rows.Sort((a, b) => a.Group != b.Group ? a.Group.CompareTo(b.Group) : a.TargetLevel.CompareTo(b.TargetLevel));
@@ -65,14 +66,8 @@ namespace MV.Data
 
         // ================= 08 메타 묶음(301 펫, 302 친구, 304 신 레벨, 306~313 장비) =================
 
-        /// <summary>08이 정한 메타 성장 묶음 번호(07 §7.8.6 그룹 배정).</summary>
-        public const int PetGroup = 301, FriendGroup = 302, GodGroup = 304, GearGroupFirst = 306, GearGroupLast = 313;
-
         /// <summary>D-80 재화 id: 6 사료, 11 공용 간식.</summary>
         public const int PetFood = 1001006, FriendUp = 1001011;
-
-        /// <summary>08 §8.5.2 펫 최대 Lv, §8.5.4 친구 maxLevel, §8.3.5 신 레벨 5, §8.5.8 장비 강화 상한.</summary>
-        public const int PetMaxLevel = 40, FriendMaxLevel = 30, GodMaxLevel = 5, GearMaxLevel = 30;
 
         /// <summary>08 §8.3.5 신 레벨 targetLevel 2~5 조각 수.</summary>
         static readonly long[] s_godShard = { 5, 10, 20, 40 };
@@ -99,34 +94,53 @@ namespace MV.Data
             public int Id => RowId(Group, TargetLevel);
         }
 
-        public static bool IsContentGroup(int group) =>
-            group == PetGroup || group == FriendGroup || group == GodGroup || (group >= GearGroupFirst && group <= GearGroupLast);
-
-        /// <summary>08 공식·표 값으로 만든 메타 묶음 전체(묶음, targetLevel 순).</summary>
-        public static List<ContentRow> GenerateContent()
+        /// <summary>
+        /// 08 공식·표 값으로 만든 메타 묶음 전체(묶음, targetLevel 순). 묶음 번호는 각 표 행의 <c>levelPriceGroup</c>,
+        /// 최대 Lv은 표에서 읽는다: 펫 = 16 묶음 targetLevel 최댓값(표 열 없음), 친구 = <c>450.maxLevel</c>, 신 = <c>495.level</c> 최댓값,
+        /// 장비 = <c>499 gear.maxUpgrade</c>. 가격 공식(조각·사료 구간, 신 조각, 장비 츄르)은 08 문장 그대로인 생성 도구 입력이고 정본은 16 행이다(검증기는 경고만).
+        /// </summary>
+        public static List<ContentRow> GenerateContent(MvTables t)
         {
+            if (t == null) throw new ArgumentNullException(nameof(t));
             var rows = new List<ContentRow>();
-            // 08 §8.5.2: targetLevel = 현재 Lv + 1(2~40). 카드 needPiece + 사료.
-            for (int level = 2; level <= PetMaxLevel; level++)
-            {
-                int c = level - 1;
-                rows.Add(new ContentRow(PetGroup, level, PetPiece(c), new ConsumeData(ConsumeType.Wealth, PetFood, PetFoodPrice(c))));
-            }
+            // 08 §8.5.2: targetLevel = 현재 Lv + 1(2~최대). 카드 needPiece + 사료.
+            foreach (int group in Distinct(t.Pet.Datas, x => x.levelPriceGroup))
+                for (int level = 2, max = t.LevelPriceMaxLevel(group); level <= max; level++)
+                {
+                    int c = level - 1;
+                    rows.Add(new ContentRow(group, level, PetPiece(c), new ConsumeData(ConsumeType.Wealth, PetFood, PetFoodPrice(c))));
+                }
             // 08 §8.5.4: 공용 간식 20 + 10c ; 전용 코인(621, id 0 = 이 친구) 2 + c, c = targetLevel − 1.
-            for (int level = 2; level <= FriendMaxLevel; level++)
+            foreach (int group in Distinct(t.Friend.Datas, x => x.levelPriceGroup))
             {
-                int c = level - 1;
-                rows.Add(new ContentRow(FriendGroup, level, 0,
-                    new ConsumeData(ConsumeType.Wealth, FriendUp, 20 + 10 * c), new ConsumeData(ConsumeType.FriendCoin, 0, 2 + c)));
+                int max = 0;
+                foreach (var f in t.Friend.Datas) if (f.levelPriceGroup == group && f.maxLevel > max) max = f.maxLevel;
+                for (int level = 2; level <= max; level++)
+                {
+                    int c = level - 1;
+                    rows.Add(new ContentRow(group, level, 0,
+                        new ConsumeData(ConsumeType.Wealth, FriendUp, 20 + 10 * c), new ConsumeData(ConsumeType.FriendCoin, 0, 2 + c)));
+                }
             }
-            // 08 §8.3.5: 622 GodShard, id 0 = 지금 올리는 신.
-            for (int level = 2; level <= GodMaxLevel; level++)
-                rows.Add(new ContentRow(GodGroup, level, 0, new ConsumeData(ConsumeType.GodShard, 0, s_godShard[level - 2])));
-            // 08 §8.5.8: 그룹 306 + 희귀도, 값 = upgradeGold × 목표 레벨(1~30).
-            for (int group = GearGroupFirst; group <= GearGroupLast; group++)
-                for (int level = 1; level <= GearMaxLevel; level++)
-                    rows.Add(new ContentRow(group, level, 0, new ConsumeData(ConsumeType.Wealth, Gold, s_gearUpgradeGold[group - GearGroupFirst] * level)));
+            // 08 §8.3.5: 622 GodShard, id 0 = 지금 올리는 신. 495 행 level마다(1레벨은 가격 없음).
+            foreach (var g in t.GodLevel.Datas)
+                if (g.level >= 2 && g.level - 2 < s_godShard.Length)
+                    rows.Add(new ContentRow(g.levelPriceGroup, g.level, 0, new ConsumeData(ConsumeType.GodShard, 0, s_godShard[g.level - 2])));
+            // 08 §8.5.8: 희귀도별 묶음(471.levelPriceGroup), 값 = upgradeGold × 목표 레벨(1~gear.maxUpgrade).
+            int gearMax = t.GearMaxLevel();
+            foreach (var x in t.GearRarity.Datas)
+                if (x.rarity >= 0 && x.rarity < s_gearUpgradeGold.Length)
+                    for (int level = 1; level <= gearMax; level++)
+                        rows.Add(new ContentRow(x.levelPriceGroup, level, 0, new ConsumeData(ConsumeType.Wealth, Gold, s_gearUpgradeGold[x.rarity] * level)));
+            rows.Sort((a, b) => a.Group != b.Group ? a.Group.CompareTo(b.Group) : a.TargetLevel.CompareTo(b.TargetLevel));
             return rows;
+        }
+
+        static List<int> Distinct<T>(IEnumerable<T> rows, Func<T, int> group)
+        {
+            var list = new List<int>();
+            foreach (var r in rows) { int g = group(r); if (!list.Contains(g)) list.Add(g); }
+            return list;
         }
 
         /// <summary>08 §8.5.2 카드: 현재 Lv 1~3 → 2, 4~8 → 3, 9~12 → 4, 13~17 → 5, 18~22 → 6, 23~27 → 7, 28~31 → 8, 32~36 → 9, 37~39 → 10.</summary>

@@ -9,9 +9,6 @@ namespace MV.UI
     /// </summary>
     public sealed class RunStateHudSource : IRunHudSource
     {
-        /// <summary>계단 게이지 최대 Lv(정본 <c>lv ≥ 8</c>이면 100%).</summary>
-        public const int GaugeMaxLv = 8;
-
         readonly Func<RunState> _state;
         readonly Func<int> _savedSouls;
 
@@ -51,6 +48,7 @@ namespace MV.UI
             else h.Stairs = s.Stairs;
 
             h.GaugeLv = s.GaugeLv;
+            h.MergeN = t != null ? t.RunConfig.I(RunConfigKeys.MERGE_N) : 0;
             h.GaugeFill = GaugeFill(s);
 
             int tier = s.EqTier();
@@ -71,7 +69,9 @@ namespace MV.UI
 
         static float GaugeFill(RunState s)
         {
-            if (s.GaugeLv >= GaugeMaxLv) return 1f;
+            // 게이지 최대 Lv = 107_chargeGate[Well].cap(옛 코드 상수 8).
+            var g = s.Tables != null ? RunFormulas.GaugeRow(s.Tables) : null;
+            if (g != null && s.GaugeLv >= g.cap) return 1f;
             double need = s.Tables != null ? RunFormulas.GaugeNeed(s, s.GaugeLv) : 0;
             if (need <= 0 || double.IsNaN(need)) return 0f;
             return (float)Math.Max(0, Math.Min(1, s.GaugeFill / need));

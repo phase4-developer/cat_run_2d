@@ -20,7 +20,8 @@ namespace MV.Boot
         public int Cp;
         /// <summary>누적 구출 고양이(재화 <c>rescueCat</c>, MV-SPEC-02 Q-34).</summary>
         public int Souls;
-        public string God = "thunder";
+        /// <summary>저장의 출전 신. 비면 null → 런이 <c>00_config.startGodKey</c>를 쓴다.</summary>
+        public string God;
         /// <summary>시작 덱(등급별 장수, 0번 미사용). 길이는 저장 덱·시작 덱 설정을 따른다(단계 수를 코드에 두지 않는다).</summary>
         public int[] Deck = Array.Empty<int>();
         public int UpStair, UpWeapon, UpIncome;
@@ -34,7 +35,7 @@ namespace MV.Boot
         public long LastSettledRunSeq;
 
         /// <summary>열린 저장에서 읽는다.</summary>
-        public static MvRunSnapshot FromStore(MvSaveStore store, int floorCount = 3)
+        public static MvRunSnapshot FromStore(MvSaveStore store, int floorCount)
         {
             if (store == null) throw new ArgumentNullException(nameof(store));
             var s = new MvRunSnapshot
@@ -140,7 +141,7 @@ namespace MV.Boot
                 Souls = snap.Souls,
                 Cp = snap.Cp,
                 UpStair = snap.UpStair, UpWeapon = snap.UpWeapon, UpIncome = snap.UpIncome,
-                God = string.IsNullOrEmpty(snap.God) ? "thunder" : snap.God,
+                God = string.IsNullOrEmpty(snap.God) ? null : snap.God, // null → 00_config.startGodKey(RunLevelBuilder)
                 Preset = null, // 06_balancePreset isDefault 행(MV-SPEC2-FIX1)
             };
             // 덱 길이 = 스냅숏 덱 길이. 런 W는 103_item 단계 수로 따로 잡고 겹치는 칸만 옮긴다(RunLevelBuilder).

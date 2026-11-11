@@ -74,7 +74,7 @@ namespace MV.UI
             if (skip != null)
                 foreach (var r in skip.adReward)
                     if (r.Type == ConsumeType.RebirthCooldownSec) return (long)Math.Round(r.Value / 60);
-            return 70;
+            return 0; // 08[skip] 보상 행이 없으면 0(옛 대체값 70 삭제, 값은 08 adRewardValue 한 곳)
         }
 
         protected override bool OnAction(string actionId)

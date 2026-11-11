@@ -54,7 +54,7 @@ namespace MV.Run
             if (s == null) throw new ArgumentNullException(nameof(s));
             if (builder == null) throw new ArgumentNullException(nameof(builder));
             var t = s.Tables;
-            var rec = s.SavedBars != null ? s.SavedBars.Clone() : new BarRecord();
+            var rec = s.SavedBars != null ? s.SavedBars.Clone() : new BarRecord(t.FloorCount());
             foreach (var o in s.Objs) if (o.IsField && o.Lvl == s.Level) rec.Set(o.Bar, o.Idx, Math.Max(0, o.Hp));
             int cpMax = t.RunConfig.I(RunConfigKeys.CP_MAX);
             int cpN = 0;

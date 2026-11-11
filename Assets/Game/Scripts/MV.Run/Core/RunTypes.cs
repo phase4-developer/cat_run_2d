@@ -76,13 +76,14 @@ namespace MV.Run
     }
 
     /// <summary>
-    /// 장애물 HP 기록 `save.bars['A'+area]`(04 §4.7.4). Floors[f][idx] = 남은 HP(0 이상). f = 0..2.
+    /// 장애물 HP 기록 `save.bars['A'+area]`(04 §4.7.4). Floors[f][idx] = 남은 HP(0 이상). f = 0..Floor 수 − 1.
+    /// Floor 수는 표에서 계산한다(<see cref="MV.Data.MvTables.FloorCount"/>, 옛 300 FLOOR_COUNT).
     /// </summary>
     public sealed class BarRecord
     {
         public readonly Dictionary<int, double>[] Floors;
 
-        public BarRecord(int floorCount = 3)
+        public BarRecord(int floorCount)
         {
             Floors = new Dictionary<int, double>[floorCount];
             for (int i = 0; i < floorCount; i++) Floors[i] = new Dictionary<int, double>();
@@ -150,8 +151,8 @@ namespace MV.Run
         public int PerkCraftDbl, PerkStairDbl;
         /// <summary>냥환생 「시작 골드」·「시작 블루 마법석」 Lv(14_rebirthPerk statKey StartGold·StartDia, MV-SPEC2-FIX1).</summary>
         public int PerkStartGold, PerkStartDia;
-        /// <summary>출전 신 `113_god.key`.</summary>
-        public string God = "thunder";
+        /// <summary>출전 신 `113_god.key`. null이면 <c>00_config.startGodKey</c>(기본 신은 표 한 곳).</summary>
+        public string God;
         /// <summary>`06_balancePreset.key`. null이면 isDefault 행(기본 난이도는 표가 정한다, MV-SPEC2-FIX1).</summary>
         public string Preset;
         /// <summary>디버그 발사 속도(DBG.rate). null이면 프리셋 rate.</summary>
@@ -176,16 +177,20 @@ namespace MV.Run
         public RunModifiers Modifiers;
         public List<CompanionSpec> Companions = new List<CompanionSpec>();
 
-        /// <summary>동행 최대 수(펫 2 + 친구 3, §4.20.5).</summary>
-        public const int MaxCompanions = 5;
-
-        /// <summary>모디파이어·동행 검증. 문제가 없으면 null(<see cref="RunSim.Create(RunSetup, MV.Data.MvTables, IRng, IRunLevelBuilder, IRunRule)"/>가 부른다).</summary>
-        public string Validate()
+        /// <summary>
+        /// 모디파이어·동행 검증. 문제가 없으면 null(<see cref="RunSim.Create(RunSetup, MV.Data.MvTables, IRng, IRunLevelBuilder, IRunRule)"/>가 부른다).
+        /// 동행 최대 수 = <c>499 pet.slots + friend.slotsMax</c>(<see cref="MV.Data.MvTables.MaxCompanions"/>, §4.20.5, 옛 상수 5).
+        /// </summary>
+        public string Validate(MV.Data.MvTables tables)
         {
             var err = Modifiers.Validate();
             if (err != null) return err;
             if (Companions == null) return null;
-            if (Companions.Count > MaxCompanions) return $"동행 {Companions.Count}개: 최대 {MaxCompanions}개";
+            if (Companions.Count > 0 && tables != null)
+            {
+                int maxCompanions = tables.MaxCompanions();
+                if (Companions.Count > maxCompanions) return $"동행 {Companions.Count}개: 최대 {maxCompanions}개";
+            }
             for (int i = 0; i < Companions.Count; i++)
             {
                 var c = Companions[i];

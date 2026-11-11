@@ -115,7 +115,7 @@ namespace MV.Boot
                 StartDeck = PadStartDeck(config.startDeck, tables.WeaponTierMax()),
                 StartGodKey = config.startGodKey,
                 CpMax = tables.RunConfig.I(RunConfigKeys.CP_MAX),
-                FloorCount = tables.RunConfig.I(RunConfigKeys.FLOOR_COUNT),
+                FloorCount = tables.FloorCount(), // 303 floor 최댓값(옛 FLOOR_COUNT)
                 TableVersion = config.dataVersion,
                 DayUtcOffsetHour = config.adDayUtcOffsetHour,
                 AdDailyLimits = limits,
@@ -153,7 +153,7 @@ namespace MV.Boot
                 MaxWeaponTier = tables.Item.Sorted.Count == 0 ? -1 : tables.WeaponTierMax(), // 103 active 상한(MV-SPEC-02 Q-08)
                 MaxAreaIndex = tables.Area.Sorted.Count == 0 ? -1 : tables.Area.Sorted.Max(row => row.areaNo) - 1,
                 BarCellLimits = barLimits,
-                LobbyUpMax = tables.LobbyUpgrade.Sorted.ToDictionary(row => row.key, row => row.max, StringComparer.Ordinal),
+                LobbyUpMax = tables.LobbyUpgrade.Sorted.ToDictionary(row => row.key, row => tables.LevelMax(row), StringComparer.Ordinal), // 계단·지팡이는 11·12 합계
                 AreaUpMax = tables.AreaUpgrade.Sorted.ToDictionary(row => row.key, row => row.max, StringComparer.Ordinal),
                 PerkMax = tables.RebirthPerk.Sorted.ToDictionary(row => row.key, row => row.max, StringComparer.Ordinal),
                 AdPlacementKeys = KeySet(tables.AdPlacement.Sorted.Select(row => row.key)),

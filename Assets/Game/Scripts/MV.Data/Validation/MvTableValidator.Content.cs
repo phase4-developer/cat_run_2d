@@ -95,7 +95,7 @@ namespace MV.Data
             foreach (var raw in t.LevelPrice.RawRows)
                 if (int.TryParse(raw.Get("id"), NumberStyles.Integer, C, out int id)) needPiece[id] = raw.Get("needPiece") ?? string.Empty;
 
-            var generated = MvLevelPriceGenerator.GenerateContent();
+            var generated = MvLevelPriceGenerator.GenerateContent(t);
             var expected = new HashSet<int>(generated.Select(g => g.Id));
             foreach (var group in generated.Select(g => g.Group).Distinct())
             {

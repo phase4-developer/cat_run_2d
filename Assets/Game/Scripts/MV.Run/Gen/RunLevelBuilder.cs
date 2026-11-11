@@ -45,7 +45,7 @@ namespace MV.Run
             s.Dia = s.StartDia = RunFormulas.StartDia(t, setup);
 
             // 신·속성·카드 풀(setGodCards)
-            s.God = t.God.ByKey(setup.God) ?? t.God.ByKey("thunder");
+            s.God = StartGod(t, setup.God);
             s.El = s.God?.element;
             BuildCardPool(s);
 
@@ -113,7 +113,7 @@ namespace MV.Run
             var wallKind = t.ObjectKind.Get(g.wallKindId);
             var wallRule = LevelGen.HpRuleOf(t, wallKind);
             double obst = wallRule != null && wallRule.useObstMul ? LevelGen.ObstMul(t, s.Setup.PerkObst) : 1;
-            int floors = t.RunConfig.I(RunConfigKeys.FLOOR_COUNT);
+            int floors = t.FloorCount(); // 303 floor 최댓값
             for (int f = cp; f < floors; f++)
             {
                 var arch = LevelGen.Spawn(s, archKind, 0, z);
@@ -196,10 +196,13 @@ namespace MV.Run
             throw new InvalidOperationException($"06_balancePreset: {key} 행과 기본 행이 없습니다");
         }
 
-        /// <summary>정본 `kegStart(P)`: 11_stairLevel.need로 Lv를 올린다(상한 LOBBY_STAIR_MAX_LV).</summary>
+        /// <summary>출전 신 행: key가 없거나 비면 <c>00_config.startGodKey</c>(기본 신은 표 한 곳).</summary>
+        public static GodData StartGod(MvTables t, string key) => t.God.ByKey(key) ?? t.God.ByKey(t.Config.Value?.startGodKey);
+
+        /// <summary>정본 `kegStart(P)`: 11_stairLevel.need로 Lv를 올린다(상한 = 11 lv 최댓값, <see cref="MvTables.StairMaxLv"/>).</summary>
         public static (int lv, int step, int need) KegStart(MvTables t, int purchases)
         {
-            int max = t.RunConfig.I(RunConfigKeys.LOBBY_STAIR_MAX_LV);
+            int max = t.StairMaxLv();
             int lv = 1, p = purchases;
             while (lv < max && p >= StairNeed(t, lv)) { p -= StairNeed(t, lv); lv++; }
             return (lv, p, StairNeed(t, lv));

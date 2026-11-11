@@ -28,7 +28,7 @@ namespace MV.UI
                     "ZONE " + z.sort + " · " + NameOf(z.id, "") + (z.active ? "" : " · 업데이트 예정")) // ui.map.zoneTag / soonSuffix
                 {
                     Icon = z.mapIcon,
-                    Locked = z.areaFrom > cur,
+                    Locked = tables.ZoneFirstArea(z.id) > cur, // Zone 첫 Area = 302 zoneId 행의 areaNo 최소
                 });
 
                 foreach (var a in AreasOf(tables, z.id))

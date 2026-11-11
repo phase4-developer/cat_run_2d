@@ -30,7 +30,7 @@ namespace MV.Meta.Tests
             Assert.That(Store.Progress.Cp, Is.EqualTo(1));
             Assert.That(Store.Progress.LastSettledRunSeq, Is.EqualTo(seq));
             Assert.That(Store.Progress.BarAreaKeys, Is.EqualTo(new[] { MvProgressContainer.BarKey(0) }));
-            Assert.That(r.ShowInterstitial, Is.False, "area 0 < interstitialMinArea");
+            Assert.That(r.ShowInterstitial, Is.False, "area 0 < 08[interstitial].minArea");
         }
 
         [Test]

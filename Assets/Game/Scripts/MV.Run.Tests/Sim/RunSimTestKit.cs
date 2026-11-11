@@ -141,7 +141,7 @@ namespace MV.Run.Tests
                 Bal = RunLevelBuilder.Preset(t, setup.Preset), Area = setup.Area, ZoneIndex = setup.Zone, StartLevel = setup.Level, Cp = setup.Cp,
             };
             foreach (var a in t.Area.Datas) if (a.areaNo == setup.Area + 1) s.ZoneHp = setup.ZoneHp ?? a.hp;
-            s.God = t.God.ByKey(setup.God); s.El = s.God.element;
+            s.God = RunLevelBuilder.StartGod(t, setup.God); s.El = s.God.element;
             var pool = new List<CardData>();
             foreach (var c in t.Card.Datas) if (c.active && (c.group == 0 || c.group == s.God.cardGroup)) pool.Add(c);
             pool.Sort((a, b) => a.group != b.group ? (a.group == 0 ? -1 : b.group == 0 ? 1 : a.group.CompareTo(b.group)) : a.sort.CompareTo(b.sort));

@@ -1,4 +1,4 @@
 ﻿id	name	key	sort	active	max	levelPriceGroup	effectType	icon	facSprite	costFormula	costBase	costGrowth
-10001001	계단 카운트	stair	1	1	30	1	StartStairLv			Pow	25	1.18
-10001002	지팡이 더하기	weapon	2	1	254	2	DeckAdd			Pow	30	1.043
+10001001	계단 카운트	stair	1	1		1	StartStairLv			Pow	25	1.18
+10001002	지팡이 더하기	weapon	2	1		2	DeckAdd			Pow	30	1.043
 10001003	수입 증가	income	3	1	50	3	GoldMul			LinearNext	20	8

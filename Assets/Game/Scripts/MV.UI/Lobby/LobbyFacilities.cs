@@ -33,7 +33,7 @@ namespace MV.UI
                 case Tower:
                 {
                     int kl = t != null ? MvMetaRules.StairStart(t, port.Level(MvGrowth.Lobby, MvMetaRules.LobbyStair)).Lv : 1;
-                    return kl >= 4 ? 3 : kl >= 2 ? 2 : 1;
+                    return TowerStage(kl);
                 }
                 case Scratch:
                 {
@@ -44,7 +44,7 @@ namespace MV.UI
                 {
                     int inc = port.Level(MvGrowth.Lobby, MvMetaRules.LobbyIncome);
                     extra = System.Math.Min(6, 1 + inc / 2);
-                    return inc >= 15 ? 3 : inc >= 5 ? 2 : 1;
+                    return RackStage(inc);
                 }
                 case Basket:
                 {
@@ -62,6 +62,12 @@ namespace MV.UI
                 default: return 0;
             }
         }
+
+        /// <summary>캣타워 단계(시작 계단 Lv 기준, 정본 문턱 — 표 열 없음). 로비 아이콘(LobbyPresenter)도 이것을 쓴다.</summary>
+        public static int TowerStage(int stairLv) => stairLv >= 4 ? 3 : stairLv >= 2 ? 2 : 1;
+
+        /// <summary>생선 건조대 단계(구매 수 기준, 정본 문턱 — 표 열 없음). 로비 아이콘(LobbyPresenter)도 이것을 쓴다.</summary>
+        public static int RackStage(int incomeBought) => incomeBought >= 15 ? 3 : incomeBought >= 5 ? 2 : 1;
 
         /// <summary>강화 효과 종류 → 구매 때 반짝일 시설(정본 L2644 <c>{stair:'tower', weapon:'scratch', income:'rack'}</c>).</summary>
         public static string OfEffect(LobbyEffectType effect)

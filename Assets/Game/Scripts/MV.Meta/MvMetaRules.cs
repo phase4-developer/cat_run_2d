@@ -48,11 +48,11 @@ namespace MV.Meta
 
         /// <summary>
         /// 캣타워 구매 수 → 런 시작 게이지(정본 <c>kegStart</c> L809~812). 단계 필요 수는 <c>11_stairLevel.need</c>,
-        /// 상한 Lv은 <c>300_runConfig.LOBBY_STAIR_MAX_LV</c>.
+        /// 상한 Lv은 <c>11_stairLevel</c> lv 최댓값(<see cref="MvTables.StairMaxLv"/>).
         /// </summary>
         public static MvStepLevel StairStart(MvTables t, int bought)
         {
-            int maxLv = t.RunConfig.I(RunConfigKeys.LOBBY_STAIR_MAX_LV);
+            int maxLv = t.StairMaxLv();
             return Climb(t.StairLevel.Datas.Select(r => (r.lv, r.need)), bought, maxLv);
         }
 
@@ -74,17 +74,18 @@ namespace MV.Meta
         }
 
         /// <summary>
-        /// 덱에 등급 카드 1장을 넣고 3장 머지(정본 <c>deckAdd</c> L819). 상한 등급 = 덱 길이 − 1(정본 8).
+        /// 덱에 등급 카드 1장을 넣고 <paramref name="mergeN"/>장 머지(정본 <c>deckAdd</c> L819, 장수 = <c>300 MERGE_N</c>). 상한 등급 = 덱 길이 − 1.
         /// 돌려주는 값은 마지막으로 머지되어 생긴 등급(없으면 0).
         /// </summary>
-        public static int DeckAdd(int[] deck, int tier)
+        public static int DeckAdd(int[] deck, int tier, int mergeN)
         {
             if (deck == null) throw new ArgumentNullException(nameof(deck));
             int top = deck.Length - 1;
             if (tier < 1 || tier > top) throw new ArgumentOutOfRangeException(nameof(tier));
+            if (mergeN < 1) throw new ArgumentOutOfRangeException(nameof(mergeN));
             deck[tier]++;
             int merged = 0;
-            while (tier < top && deck[tier] >= 3) { deck[tier] -= 3; tier++; deck[tier]++; merged = tier; }
+            while (tier < top && deck[tier] >= mergeN) { deck[tier] -= mergeN; tier++; deck[tier]++; merged = tier; }
             return merged;
         }
 

@@ -1,6 +1,5 @@
 ﻿id	name	key	value	unit
 499001000	모드 설정 묶음	mode		
-499001001	광고 입장권 하루 횟수	mode.adTicketDaily	3	회
 499001002	소탕 보상 비율	mode.sweepChuruRatio	0.8	배
 499002000	상자 설정 묶음	box		
 499002001	종이 상자 대체 블루 마법석	box.fallbackDia.paper	20	캣닢
@@ -13,7 +12,6 @@
 499003004	펫 해금 카드 수	pet.cardsToUnlock	2	장
 499003005	펫 칸 수	pet.slots	2	칸
 499003006	펫 레벨당 증가율	pet.levelPct	20	%
-499003007	펫 옵션 칸 상한	pet.buildSlotsMax	3	칸
 499003008	펫 옵션 칸 레벨 간격	pet.buildSlotEvery	10	레벨
 499003009	펫 옵션 비용 1	pet.buildCost0	10	털실
 499003010	펫 옵션 비용 2	pet.buildCost1	20	털실

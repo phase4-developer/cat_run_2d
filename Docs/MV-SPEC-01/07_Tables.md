@@ -296,7 +296,6 @@ MvTables.Current = tables;
 | dataVersion | int | 1 | [창작] | 표 묶음 버전. QA 캡처·오류 보고에 기록 |
 | startDeck | intList | `0/1/0/0/0/0/0/0/0` | [프로토] L844 DEF.deck | 새 저장의 시작 덱(인덱스 = 무기 등급, 0 미사용) |
 | startGodKey | string | `thunder` | [프로토] L844 | 새 저장의 출전 신(`113_god.key`) |
-| interstitialMinArea | int | 3 | [프로토] L2444 | 「그냥 받기」(×1) 뒤 전면 광고 조건 `save.area ≥ 3`(0기반, 개방 반영 후, [04 D-24](04_GameRules.md)) |
 | rebirthArmSec | float | 2.5 | [프로토] L2576 | 부활 버튼 두 번 누름 허용 시간. 04의 `RB_ARM_SEC` |
 | rebirthCooldownSec | int | 21600 | [프로토] L2537 `RB_CD` 6시간 | 부활 쿨타임. 04의 `RB_CD_SEC` |
 | adDayUtcOffsetHour | int | 0 | [프로토] L2423 `toISOString` | 광고 일일 횟수 초기화 시각대. 0 = UTC 0시([04 D-29](04_GameRules.md) 권장 A). 저장 형식은 [09](09_Save.md) |
@@ -402,7 +401,6 @@ MvTables.Current = tables;
 
 | key | value | unit | 근거 | 뜻 |
 |---|---|---|---|---|
-| FLOOR_COUNT | 3 | 개 | [프로토] L1790 | Area당 골목 수 |
 | CP_MAX | 2 | | [프로토] L2401 | 체크포인트 상한(골목 3은 항상 플레이) |
 | PLAYABLE_AREAS | 5 | 개 | [프로토] L757 `PROTO_AREAS` | 이 번호 Area가 마지막(zoneEnd). 결정 대기(D-63, 04 D-26) |
 | TOK_BASE | 1 | 개 | [프로토] L2407 | 목숨 조각 기본 |
@@ -410,7 +408,6 @@ MvTables.Current = tables;
 | TOK_GATE | 2 | 개 | [프로토] L2407 | Area 아치 도달 |
 | TOK_OPEN | 3 | 개 | [프로토] L2407 | 개방(pass·zoneEnd) |
 | FAIL_SFX_DELAY_MS | 350 | ms | [프로토] L2408 | 실패 소리 지연 |
-| LOBBY_STAIR_MAX_LV | 4 | Lv | [프로토] L810 `LOBBY_CANNON_MAX` | 캣타워로 올리는 시작 계단 Lv 상한 |
 | WEAPON_EXTRA_BUYS | 60 | 회 | [프로토] L818 | 무기 Lv 8 이후 추가 구매 수(16_levelPrice 행 생성에만) |
 | ARCH_LABEL_HIDE | 3 | m | [프로토] L1479 | 아치 글자판 숨김 거리(MV.View) |
 | MERGE_N | 3 | 장 | [프로토] L1166, L819 | 손패·덱 머지 장수(3장 → 다음 등급 1장) |
@@ -577,7 +574,6 @@ MV.View 소유. 열 정의와 값은 [02 §2.2.2](02_Visual.md)를 그대로 옮
 |---|---|---|---|
 | id | int | | `301001001`~`301001006` |
 | sort, active | int | | 지도 순서(아래 → 위), 1/0 |
-| areaFrom / areaTo | int | | `302_area.areaNo` 범위. 검증: Zone끼리 겹치지 않고 빈틈 없음 |
 | mapIcon | res | 공용 | 지도 Zone 머리 아이콘. 기본 아틀라스 `Atlas_UI_Lobby` |
 | mapCol1 / mapCol2 | color | | 지도 섹션 색. [프로토] L2580 `ZONE_COL`(Zone 1~3). [05](05_Screens.md)의 `mapColor1/mapColor2`가 이 열이다(이름은 행 정본인 08과 맞춤) |
 | bgm | sound | 빈칸 | 비우면 Area 값, 그것도 비면 `bgm_run` |
@@ -614,7 +610,7 @@ zoneIndex(0기반, 보상 `ValuePerZone` 계산) = Zone을 sort 순으로 늘어
 |---|---|---|---|
 | id | int | | `303{group 3}{floor 3}` (예 `303001002`). 모드용 묶음 901~ |
 | group | int | | `302_area.floorGroup` |
-| floor | int | | 1~3 (`FLOOR_COUNT`) |
+| floor | int | | 1~3. Area당 Floor 수는 302가 쓰는 묶음의 floor 최댓값으로 계산(옛 `FLOOR_COUNT` 삭제, MV-HARDCODE-1b) |
 | h0 / h1 | int | | 첫 줄 / 마지막 줄 칸 HP(scale 곱하기 전). [프로토] L761~767 `FINAL` |
 | rows | int | | 줄 수(한 줄 = 3칸) |
 | souls | int | | 그 Floor 생선 합 |
@@ -1486,7 +1482,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | 10001002 | weapon | 149 | 2 | DeckAdd | Pow | 30 | 1.043 | 스크래쳐 | [프로토] L824~826, `W_MAXP` L818 |
 | 10001003 | income | 50 | 3 | GoldMul | LinearNext | 20 | 8 | 생선 건조대 | [프로토] L827~828 |
 
-검증: `max(stair) = Σ 11_stairLevel.need(lv < LOBBY_STAIR_MAX_LV)` = 7+10+13 = 30. `max(weapon) = Σ 12_weaponLevel.need(lv 1~7) + WEAPON_EXTRA_BUYS` = 89 + 60 = 149.
+계산(MV-HARDCODE-1b, 표 칸은 비움): `max(stair) = Σ 11_stairLevel.need(lv < 11 lv 최댓값)` = 7+10+13 = 30. `max(weapon) = Σ 12_weaponLevel.need(lv 1~마지막−1) + WEAPON_EXTRA_BUYS` = 194 + 60 = 254.
 
 ### 7.8.2 11_stairLevel — 캣타워 단계
 
@@ -1503,7 +1499,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | 11001003 | 3 | 13 |
 | 11001004 | 4 | 16 |
 
-근거 [프로토] L809~812. Lv 4 행의 need 16은 표시(`step/need`)에만 쓴다(로비 상한 `LOBBY_STAIR_MAX_LV` = 4).
+근거 [프로토] L809~812. Lv 4 행의 need 16은 표시(`step/need`)에만 쓴다(로비 상한 = 11 lv 최댓값 4, 옛 `LOBBY_STAIR_MAX_LV` 삭제).
 
 ### 7.8.3 12_weaponLevel — 스크래쳐 단계
 
@@ -2174,8 +2170,8 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 
 | 표 | 규칙 | 등급 |
 |---|---|---|
-| 301·302 | areaNo 1부터 연속, Zone 범위 겹침·빈틈 없음, `PLAYABLE_AREAS ≤ active Area 수` | 오류 |
-| 303 | Area가 쓰는 floorGroup은 floor 1~FLOOR_COUNT 존재(모드 전용 묶음 901~은 floor 1부터 빈틈 없이), rows ≥ 1, h0 ≤ h1. Baked: soulCells·soulAmts 개수 같음, 합 = souls, 모든 idx < rows×3, 생선 idx ≥ soulMinIdx, 생선·캣닢 칸 겹침 없음 | 오류 |
+| 301·302 | areaNo 1부터 연속, 302 zoneId가 301 sort 순으로 이어짐(겹침·빈 Zone 없음), `PLAYABLE_AREAS ≤ active Area 수` | 오류 |
+| 303 | Area가 쓰는 floorGroup은 floor 1~(302가 쓰는 묶음의 floor 최댓값) 존재(모드 전용 묶음 901~은 floor 1부터 빈틈 없이), rows ≥ 1, h0 ≤ h1. Baked: soulCells·soulAmts 개수 같음, 합 = souls, 모든 idx < rows×3, 생선 idx ≥ soulMinIdx, 생선·캣닢 칸 겹침 없음 | 오류 |
 | 303 | 같은 Baked 묶음을 여러 Area가 공유 | 경고 |
 | 310·311 | 템플릿마다 stair ≥ 1, 모든 z < endZ, `|x| ≤ LANE_X_MAX + hw`, wall 종류 없음(blocks=1 종류는 템플릿 금지) | 오류 |
 | 312 | cycleGroup 0이 Level 1~∞를 빈틈·겹침 없이 덮음 | 오류 |
@@ -2187,7 +2183,7 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 | 109 | Chase면 speedMin ≤ speedMax, aggro > 0 | 오류 |
 | 110·111 | 카드 tier가 115에 있음, 풀마다 tier 0 카드 ≥ 1 | 오류 |
 | 115 | need 오름차순, 마지막 need = `330_climb.lap` | 오류 |
-| 10·13·14·16 | levelPriceGroup 행이 targetLevel 1~max 빈틈없이 있음. `10[stair].max = Σ11.need(lv<LOBBY_STAIR_MAX_LV)`, `10[weapon].max = Σ12.need(lv 1~7) + WEAPON_EXTRA_BUYS` | 오류 |
+| 10·13·14·16 | levelPriceGroup 행이 targetLevel 1~max 빈틈없이 있음. `10[stair]`·`10[weapon]` max 칸은 비움(코드가 Σ11.need·Σ12.need + WEAPON_EXTRA_BUYS로 계산), 그 밖 행 max ≥ 1 | 오류 |
 | 16 | 생성 도구 결과와 다름 | 경고 |
 | 801·802 | weight ≥ 0 정수, 묶음(802는 칸)마다 weight 합 > 0, dropGroup·group = 묶음 첫 행 id, 802 subGroup ≥ 1 | 오류 |
 | 801·802 | 꽝 행(rewardType 0)은 rewardId·rewardValue_min·_max가 모두 0. 그 밖 행은 0 < min ≤ max(rewardValueRule ≠ Flat이면 min·max 0) | 오류 |
@@ -2264,7 +2260,7 @@ id	templateId	seq	kindId	x	z	groupId	active	#kind
 |---|---|---|
 | 1 | `302_area` | 행 1개(themeId는 기존 테마 재사용 `moonstair`) |
 | 2 | `303_areaFloor` | 묶음 31의 Floor 3행 |
-| 3 | `301_zone` | Zone 6 `areaTo` 30 → 31 (또는 Zone 7 행 추가 + 지도 색) |
+| 3 | `301_zone` | 바꿀 것 없음(Zone 범위는 302 zoneId로 계산). Zone 7을 만들 때만 행 추가 + 지도 색 |
 | 4 | `300_runConfig` | `PLAYABLE_AREAS` 30 → 31(D-63). 08의 `openAreas`를 쓰면 그 값도 같이 |
 | 5 | 문구 | `name:302001031` 지역 이름 |
 | 6 | 검증 | §7.13.3: areaNo 연속, Zone 범위 빈틈 없음, `PLAYABLE_AREAS ≤ active Area 수`, 생선 여유(합 − 증가 ≥ 10) 경고 |

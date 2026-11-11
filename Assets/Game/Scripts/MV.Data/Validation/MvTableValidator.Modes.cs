@@ -209,8 +209,8 @@ namespace MV.Data
         static QuestGroupData CheckQuestRow(MvTables t, string table, QuestRowData q, MvValidationReport r, params QuestCategory[] categories)
         {
             if (!Enum.IsDefined(typeof(QuestClearType), q.clearType)) r.Error(table, q.id, "clearType", $"clearType {(int)q.clearType}는 QuestClearType에 없습니다");
-            else if (q.clearType == QuestClearType.LobbyUpgrade && (q.clearCondition < 0 || q.clearCondition > 3))
-                r.Error(table, q.id, "clearCondition", "lobbyUpgrade clearCondition은 0~3이어야 합니다");
+            else if (q.clearType == QuestClearType.LobbyUpgrade && q.clearCondition != 0 && !t.LobbyUpgrade.Datas.Any(x => x.sort == q.clearCondition))
+                r.Error(table, q.id, "clearCondition", $"lobbyUpgrade clearCondition {q.clearCondition}은 0(전체) 또는 10_lobbyUpgrade sort 값이어야 합니다");
             else if (q.clearType == QuestClearType.ModeClear && q.clearCondition != 0 && !t.Content.Datas.Any(c => (int)c.contentType == q.clearCondition))
                 r.Error(table, q.id, "clearCondition", $"modeClear clearCondition {q.clearCondition}인 contentType이 400_content에 없습니다");
             if (q.reward.Count == 0) r.Error(table, q.id, "rewardType", "보상이 비어 있습니다");

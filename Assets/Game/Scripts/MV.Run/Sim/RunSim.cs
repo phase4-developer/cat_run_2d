@@ -46,7 +46,7 @@ namespace MV.Run
             if (tables == null) throw new ArgumentNullException(nameof(tables));
             if (rng == null) throw new ArgumentNullException(nameof(rng));
             if (builder == null) throw new ArgumentNullException(nameof(builder));
-            var err = setup.Validate();
+            var err = setup.Validate(tables);
             if (err != null) throw new ArgumentException(err, nameof(setup));
             rule ??= new MainRunRule(builder);
 

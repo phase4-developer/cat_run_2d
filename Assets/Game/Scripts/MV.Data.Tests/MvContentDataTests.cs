@@ -100,7 +100,7 @@ namespace MV.Data.Tests
         {
             var t = TsvFixture.LoadTables();
             var needPiece = t.LevelPrice.RawRows.ToDictionary(r => r.Get("id"), r => r.Get("needPiece"));
-            var generated = MvLevelPriceGenerator.GenerateContent();
+            var generated = MvLevelPriceGenerator.GenerateContent(t);
             Assert.That(generated.Count, Is.EqualTo(39 + 29 + 4 + 8 * 30));
             foreach (var g in generated)
             {

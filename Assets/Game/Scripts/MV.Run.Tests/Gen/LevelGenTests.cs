@@ -90,7 +90,7 @@ namespace MV.Run.Tests.Gen
         public void SavedBarsKeepHpAndMarkBroken()
         {
             var t = RunTestTables.ProtoEasy(); // 표 easy는 scale 1(MV-SPEC2-FIX2) → 프로토 값 사본
-            var bars = new BarRecord();
+            var bars = new BarRecord(t.FloorCount());
             bars.Set(0, 0, 0);
             bars.Set(0, 1, 2);
             bars.Set(0, 2, 999);
