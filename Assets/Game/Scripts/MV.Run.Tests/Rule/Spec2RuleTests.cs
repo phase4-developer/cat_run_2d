@@ -206,6 +206,13 @@ namespace MV.Run.Tests
             int f = 0;
             while (Ev(sim, RunEventType.Blocked).Count == 0 && f++ < 600) sim.Tick(1 / 60.0, default);
             Assert.AreEqual(1, Ev(sim, RunEventType.Blocked).Count);
+            if (end <= 0)
+            {
+                // 13-2 현재 기준: 프로토 값 = 닿는 프레임에 즉시 종료(STUCK_END_SEC 0)
+                Assert.IsTrue(sim.State.Fin, "STUCK_END_SEC 0이면 닿는 프레임에 끝난다");
+                Assert.AreEqual(FinishReason.Wall, sim.State.Result.Reason);
+                return;
+            }
             int fires = Ev(sim, RunEventType.Fire).Count;
             Run(sim, (int)Math.Floor(end * 60) - 2);
             Assert.IsFalse(sim.State.Fin, "STUCK_END_SEC 전에는 끝나지 않는다");
