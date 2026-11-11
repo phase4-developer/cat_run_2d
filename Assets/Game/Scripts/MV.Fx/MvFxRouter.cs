@@ -93,8 +93,8 @@ namespace MV.Fx
                     {
                         if (clone)
                         {
-                            int gap = t.RunConfig.Has(RunConfigKeys.Fly_CloneGapMs) ? t.RunConfig.I(RunConfigKeys.Fly_CloneGapMs) : 70;
-                            for (int i = 0; i < Math.Min(e.A, 5); i++)
+                            int gap = t.RunConfig.I(RunConfigKeys.Fly_CloneGapMs), max = t.RunConfig.I(RunConfigKeys.CRAFT_ICON_MAX);
+                            for (int i = 0; i < Math.Min(e.A, max); i++)
                                 o.Flies.Add(new FlyRequest { Target = FlyTarget.Hand, World = V(ob.X + Rnd(-0.5f, 0.5f), 2 + wy, ob.Z), DelayMs = i * gap, Amount = 1 });
                         }
                         else o.Flies.Add(new FlyRequest { Target = FlyTarget.Stair, World = V(ob.X, 2 + wy, ob.Z), Amount = e.A });
@@ -189,7 +189,7 @@ namespace MV.Fx
                     for (int i = 0; i < 6; i++)
                     {
                         var c = FxSpawn.Of("fx.dust", V(e.X + Rnd(-2, 2), 7.5 + Rnd(-0.3f, 0.4f) + wy, e.Z + 1 + Rnd(-1, 1))).WithColor(C("#4a2418"));
-                        c.Variant = 1; c.Count = 1; c.Size = Rnd(2.6f, 3.8f); c.Life = (float)(e.Amount > 0 ? e.Amount : 1.7);
+                        c.Variant = 1; c.Count = 1; c.Size = Rnd(2.6f, 3.8f); c.Life = (float)(e.Amount > 0 ? e.Amount : t.RunConfig.D(RunConfigKeys.STORM_LIFE));
                         o.Spawns.Add(c);
                     }
                     break;
@@ -200,7 +200,7 @@ namespace MV.Fx
                 case RunEventType.GodBlast: // L2175~2183
                 {
                     PlayParts(t, Grp(t, o, "god.blast"), o, e.X, wy, e.Z, ElemFacts(e.Key), ElemColor(e.Key));
-                    o.Flashes.Add(new FlashRequest { Peak = Cfg(t, RunConfigKeys.Flash_GodBlast, 0.35f), HoldMs = (int)Cfg(t, RunConfigKeys.Flash_GodBlastMs, 60) });
+                    o.Flashes.Add(new FlashRequest { Peak = (float)t.RunConfig.D(RunConfigKeys.Flash_GodBlast), HoldMs = t.RunConfig.I(RunConfigKeys.Flash_GodBlastMs) });
                     break;
                 }
                 case RunEventType.Beam: // L2190~2201 (예약)
@@ -236,20 +236,24 @@ namespace MV.Fx
                 case RunEventType.ClimbLap: // L2275~2276: x 0, 꼭대기 칸
                 {
                     var grp = Grp(t, o, "climb.lap");
-                    int lap = ClimbCfg(t, "lap", 75), lapTier = ClimbCfg(t, "lapTier", 4);
+                    var cc = ClimbConfig(t);
+                    if (cc == null) break;
+                    int lap = Round(cc["lap"]), lapTier = Round(cc["lapTier"]);
                     int si = Math.Min(_climbK - 1, (int)Math.Ceiling(e.A * lap / _climbPw) - 1);
                     si = Math.Max(0, si);
-                    double y = (si + 1) * ClimbCfgD(t, "stepH", 0.42), z = _climbZ0 + si * ClimbCfgD(t, "stepD", 0.72);
+                    double y = (si + 1) * cc["stepH"], z = _climbZ0 + si * cc["stepD"];
                     PlayParts(t, grp, o, 0, y, z, s_none, TierColor(t, lapTier));   // 기준점 = 꼭대기 칸 위(x 0)
                     break;
                 }
                 case RunEventType.ClimbTierUp: // L2281~2283
                 {
                     var grp = Grp(t, o, "climb.tier");
+                    var cc = ClimbConfig(t);
+                    if (cc == null) break;
                     int si = Math.Max(0, Math.Min(_climbK - 1, (int)Math.Floor(e.B / _climbPw)));
-                    double y = (si + 1) * ClimbCfgD(t, "stepH", 0.42), z = _climbZ0 + si * ClimbCfgD(t, "stepD", 0.72);
+                    double y = (si + 1) * cc["stepH"], z = _climbZ0 + si * cc["stepD"];
                     PlayParts(t, grp, o, w?.PlayerX ?? 0, y, z, s_none, TierColor(t, e.A));   // 기준점 = 오른 칸 위
-                    o.Flashes.Add(new FlashRequest { Peak = Cfg(t, RunConfigKeys.Flash_ClimbTier, 0.25f), HoldMs = (int)Cfg(t, RunConfigKeys.Flash_ClimbTierMs, 90), Color = TierHex(t, e.A) });
+                    o.Flashes.Add(new FlashRequest { Peak = (float)t.RunConfig.D(RunConfigKeys.Flash_ClimbTier), HoldMs = t.RunConfig.I(RunConfigKeys.Flash_ClimbTierMs), Color = TierHex(t, e.A) });
                     break;
                 }
                 case RunEventType.ClimbEnd: // L2286
@@ -299,7 +303,7 @@ namespace MV.Fx
             }
             // 피해 숫자(quiet면 생략, 06 §6.7.1). 위치·크기는 hit() 종류별 pop 호출.
             if (e.Quiet) return;
-            int v = (int)Math.Min(99999, Math.Max(1, Math.Round(e.Amount)));
+            int v = (int)Math.Min(t.RunConfig.D(RunConfigKeys.DMG_MAX), Math.Max(t.RunConfig.D(RunConfigKeys.DMG_MIN), Math.Round(e.Amount)));
             bool crit = e.Flag;
             float y, size; float dx;
             switch (kk)
@@ -451,14 +455,14 @@ namespace MV.Fx
         {
             switch (c)
             {
-                case HitColor.Crit: return t.RunConfig.Has(RunConfigKeys.Pop_CritColor) ? t.RunConfig.Raw(RunConfigKeys.Pop_CritColor) : "#ff6a3d";
+                case HitColor.Crit: return t.RunConfig.Raw(RunConfigKeys.Pop_CritColor);
                 case HitColor.GodBolt: return "#bfeaff";
                 case HitColor.GodFire: return "#ffb36b";
                 case HitColor.Burn: return "#ff9a4a";
                 case HitColor.Beam: return "#ffe08a";
                 case HitColor.Meteor: return "#ffb36b";
                 case HitColor.Blast: return "#ffe08a";
-                default: return crit ? "#ff6a3d" : "#ffffff";
+                default: return crit ? t.RunConfig.Raw(RunConfigKeys.Pop_CritColor) : "#ffffff";
             }
         }
 
@@ -471,16 +475,14 @@ namespace MV.Fx
             return n.ToString("#,0", CultureInfo.InvariantCulture);
         }
 
-        static float Cfg(MvTables t, string key, float fallback) => t.RunConfig.Has(key) ? (float)t.RunConfig.D(key) : fallback;
+        static int Round(double v) => (int)Math.Round(v);
 
-        static int ClimbCfg(MvTables t, string col, int fallback) => (int)Math.Round(ClimbCfgD(t, col, fallback));
-
-        static double ClimbCfgD(MvTables t, string col, double fallback)
+        /// <summary>`330_climb` 설정 행(lap·lapTier·stepH·stepD). 없으면 오류 로그 후 null(대체값 없음).</summary>
+        static ClimbData ClimbConfig(MvTables t)
         {
             var c = t.Climb.Config();
-            if (c == null) return fallback;
-            try { return c[col]; }
-            catch (KeyNotFoundException) { return fallback; }
+            if (c == null) Debug.LogError("[MvFxRouter] 330_climb 설정(Config) 행이 없습니다.");
+            return c;
         }
 
         static Vector3 V(double x, double y, double z) => new Vector3((float)x, (float)y, (float)z);

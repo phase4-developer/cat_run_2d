@@ -9,8 +9,9 @@ namespace MV.Fx
     public static class MvFxClock
     {
         public static IMvFxWorld World;
-        public static double DtCap = 0.05;
-        public static double HitStopScale = 0.12;
+        /// <summary>`300_runConfig` time.dtCap·time.hitStopScale(<see cref="MvFxPlayer"/>가 표에서 채운다). 표를 읽기 전에는 자르지도 늦추지도 않는다.</summary>
+        public static double DtCap = double.PositiveInfinity;
+        public static double HitStopScale = 1;
 
         /// <summary>시험이 시간을 직접 넣을 때 쓴다(음수 = Unity 시간).</summary>
         public static float ForcedRealDt = -1f;

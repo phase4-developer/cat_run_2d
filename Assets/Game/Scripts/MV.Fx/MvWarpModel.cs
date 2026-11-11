@@ -18,24 +18,25 @@ namespace MV.Fx
         }
 
         public readonly List<Stage> Stages = new List<Stage>(4);
-        public double FadeIn = 0.35, VanishY = 0.2, StageNameSec = 1.8, OutSec = 0.7;
-        public int RoofCount = 9, StepCount = 16, SpeedLines = 18;
+        /// <summary>`300_runConfig` warp.* 값(<see cref="FromTables"/>가 채운다, 코드 기본값 없음).</summary>
+        public double FadeIn, VanishY, StageNameSec, OutSec;
+        public int RoofCount, StepCount, SpeedLines;
 
+        /// <summary>표에서 만든다. 표가 없거나 키가 없으면 예외(대체값 없음).</summary>
         public static MvWarpModel FromTables(MvTables t)
         {
+            if (t == null) throw new ArgumentNullException(nameof(t));
             var m = new MvWarpModel();
-            if (t == null) return m;
             foreach (var r in t.Climb.WarpStages())
                 m.Stages.Add(new Stage { At = r.at, Accent = r.accent, Sky1 = r.sky1, Sky2 = r.sky2, Sky3 = r.sky3, Night = r.night });
             var c = t.RunConfig;
-            double D(string k, double d) => c.Has(k) ? c.D(k) : d;
-            m.FadeIn = D(RunConfigKeys.Warp_FadeIn, 0.35);
-            m.VanishY = D(RunConfigKeys.Warp_VanishY, 0.2);
-            m.StageNameSec = D(RunConfigKeys.Warp_StageNameMs, 1800) / 1000.0;
-            m.OutSec = D(RunConfigKeys.Warp_OutMs, 700) / 1000.0;
-            m.RoofCount = (int)D(RunConfigKeys.Warp_RoofCount, 9);
-            m.StepCount = (int)D(RunConfigKeys.Warp_StepCount, 16);
-            m.SpeedLines = c.Has("warp.speedLines") ? c.I("warp.speedLines") : 18;
+            m.FadeIn = c.D(RunConfigKeys.Warp_FadeIn);
+            m.VanishY = c.D(RunConfigKeys.Warp_VanishY);
+            m.StageNameSec = c.D(RunConfigKeys.Warp_StageNameMs) / 1000.0;
+            m.OutSec = c.D(RunConfigKeys.Warp_OutMs) / 1000.0;
+            m.RoofCount = c.I(RunConfigKeys.Warp_RoofCount);
+            m.StepCount = c.I(RunConfigKeys.Warp_StepCount);
+            m.SpeedLines = c.I(RunConfigKeys.Warp_SpeedLines);
             return m;
         }
 

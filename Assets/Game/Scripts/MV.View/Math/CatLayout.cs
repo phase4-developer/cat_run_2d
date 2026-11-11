@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using MV.Data;
 
 namespace MV.View
@@ -15,12 +16,8 @@ namespace MV.View
     {
         /// <summary>프레임 묶음 길이(ph 0~2π를 12칸, 03 manifest `frames.count`).</summary>
         public const int Frames = 12;
-        /// <summary>플레이어 룩 단계 상한(`Atlas_World_Cat_T1~T8`), 친구 상한(`Atlas_World_Friend_T1~T6`).</summary>
-        public const int PlayerTierMax = 8, FriendTierMax = 6;
-        /// <summary>친구 무늬 번호(pat 1~4) = 친구 순번 + 1. 친구 위상 = ph + 순번·1.7(L3799).</summary>
+        /// <summary>친구 위상 = ph + 순번·1.7(L3799).</summary>
         public const double FriendPhaseStep = 1.7;
-
-        public const string PlayerAtlasPrefix = "Atlas_World_Cat_T", FriendAtlasPrefix = "Atlas_World_Friend_T";
 
         /// <summary>
         /// 그림 상태(정본 `cst = CN ? 'climb' : run ? 'run' : 'idle'`, run = 런 중이고 끝나지 않음).
@@ -43,29 +40,11 @@ namespace MV.View
             return (int)Math.Round(m / step) % Frames;
         }
 
-        /// <summary>플레이어 룩 t = max(1, 손패 최고 등급)(L3798), 1~8.</summary>
-        public static int PlayerTier(int handTop) => Math.Max(1, Math.Min(PlayerTierMax, handTop));
-
-        /// <summary>친구 룩 t = max(1, 손패 최고 − 2)(L3799), 1~6.</summary>
-        public static int FriendTier(int handTop) => Math.Max(1, Math.Min(FriendTierMax, handTop - 2));
-
-        public static string AtlasOf(int pat, int tier) => (pat == 0 ? PlayerAtlasPrefix : FriendAtlasPrefix) + tier;
-
         /// <summary>
-        /// 프레임 이름 접두(03 §3.4.1): `World_Cat_P{pat}_T{t}_Run_A_`·`_Run_B_`·`_Climb_` 뒤에 `00`~`11`, 정지는 `World_Cat_P{pat}_T{t}_Idle`(한 장).
-        /// 친구에게는 `_Run_B`가 없으므로 Throw는 Run으로 그린다.
+        /// 그림 번호 1..count. 플레이 값(단계·순번)이 그림 수보다 크면 마지막 그림을 다시 쓴다(2026-11-11 사용자 결정 「그림 개수는 이전꺼하고 같은걸로 채워」).
+        /// 그림 수가 플레이 값을 막지 않는다 — 자르는 것은 그림 고르기뿐이다.
         /// </summary>
-        public static string FrameName(int pat, int tier, CatAnim anim)
-        {
-            string head = "World_Cat_P" + pat + "_T" + tier;
-            switch (anim)
-            {
-                case CatAnim.Climb: return head + "_Climb_";
-                case CatAnim.Idle: return head + "_Idle";
-                case CatAnim.Throw: return pat == 0 ? head + "_Run_B_" : head + "_Run_A_";
-                default: return head + "_Run_A_";
-            }
-        }
+        public static int ArtIndex(int value, int count) => Math.Max(1, Math.Min(count, value));
 
         /// <summary>친구 자리 `CLONE_OFF`(L831) = `314_spawnGroup` key clone 행(dx, dz), 정렬 순서.</summary>
         public static void CloneOffsets(MvTables t, List<(double dx, double dz)> into)
@@ -100,6 +79,69 @@ namespace MV.View
             double sq = 1 + Math.Sin(nowSec * 2.2 + pat) * 0.015;
             sx = 1 / Math.Sqrt(sq);
             sy = sq;
+        }
+    }
+
+    /// <summary>
+    /// 런 고양이 그림 틀(`101_cat` key player·friend 행): 단계 수 `tierCount`, 친구 무늬 수 `patternCount`, 아틀라스 `atlasPattern`(`{t}`),
+    /// 프레임 접두 `spritePrefix`(`{p}`). 표를 읽은 뒤 한 번 만든다. 행이 없으면 예외(대체값 없음).
+    /// </summary>
+    public sealed class CatArt
+    {
+        public const string PlayerKey = "player", FriendKey = "friend";
+
+        public readonly int PlayerTiers, FriendTiers, FriendPatterns;
+        readonly string _playerAtlas, _friendAtlas, _playerPrefix, _friendPrefix;
+
+        public CatArt(CatData player, CatData friend)
+        {
+            if (player == null) throw new ArgumentNullException(nameof(player));
+            if (friend == null) throw new ArgumentNullException(nameof(friend));
+            PlayerTiers = player.tierCount;
+            FriendTiers = friend.tierCount;
+            FriendPatterns = friend.patternCount;
+            _playerAtlas = player.atlasPattern;
+            _friendAtlas = friend.atlasPattern;
+            _playerPrefix = player.spritePrefix;
+            _friendPrefix = friend.spritePrefix;
+        }
+
+        public static CatArt From(MvTables t)
+        {
+            if (t == null) throw new ArgumentNullException(nameof(t));
+            return new CatArt(Row(t, PlayerKey), Row(t, FriendKey));
+        }
+
+        static CatData Row(MvTables t, string key) => t.Cat.ByKey(key) ?? throw new KeyNotFoundException(CatData.Table + ": " + key);
+
+        /// <summary>플레이어 룩 t = max(1, 손패 최고 등급)(L3798). 그림은 1..tierCount, 넘으면 마지막 단계 그림.</summary>
+        public int PlayerTier(int handTop) => CatLayout.ArtIndex(handTop, PlayerTiers);
+
+        /// <summary>친구 룩 t = max(1, 손패 최고 − 2)(L3799). 그림은 1..tierCount, 넘으면 마지막 단계 그림.</summary>
+        public int FriendTier(int handTop) => CatLayout.ArtIndex(handTop - 2, FriendTiers);
+
+        /// <summary>친구 순번(0부터) → 무늬 번호 1..patternCount(= 순번 + 1). 무늬보다 친구가 많으면 마지막 무늬를 다시 쓴다.</summary>
+        public int FriendPattern(int friendIndex) => CatLayout.ArtIndex(friendIndex + 1, FriendPatterns);
+
+        /// <summary>아틀라스 이름: pat 0 = 플레이어 행, 그 밖 = 친구 행 `atlasPattern`의 `{t}`를 단계로.</summary>
+        public string AtlasOf(int pat, int tier) =>
+            (pat == 0 ? _playerAtlas : _friendAtlas).Replace("{t}", tier.ToString(CultureInfo.InvariantCulture));
+
+        /// <summary>
+        /// 프레임 이름 접두(03 §3.4.1): `{spritePrefix}_T{t}_Run_A_`·`_Run_B_`·`_Climb_` 뒤에 `00`~`11`, 정지는 `…_T{t}_Idle`(한 장).
+        /// 접두의 `{p}`는 무늬 번호. 친구에게는 `_Run_B`가 없으므로 Throw는 Run으로 그린다.
+        /// </summary>
+        public string FrameName(int pat, int tier, CatAnim anim)
+        {
+            string prefix = pat == 0 ? _playerPrefix : _friendPrefix.Replace("{p}", pat.ToString(CultureInfo.InvariantCulture));
+            string head = prefix + "_T" + tier.ToString(CultureInfo.InvariantCulture);
+            switch (anim)
+            {
+                case CatAnim.Climb: return head + "_Climb_";
+                case CatAnim.Idle: return head + "_Idle";
+                case CatAnim.Throw: return pat == 0 ? head + "_Run_B_" : head + "_Run_A_";
+                default: return head + "_Run_A_";
+            }
         }
     }
 }

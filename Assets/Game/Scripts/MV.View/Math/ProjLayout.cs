@@ -21,48 +21,44 @@ namespace MV.View
         public const double SpearTail = 2.8, SpearWide = 0.32, SpearCore = 0.08, SpearWideAlpha = 0.45;
         public const string SpearColorFire = "#ffb03a", SpearColorOther = "#ff3a4a", SpearCoreColor = "#ffffff";
         public const string SpearHeadFire = "World_Proj_SpearHead_Fire", SpearHeadBolt = "World_Proj_SpearHead_Bolt";
-        public const string ProjPrefix = "World_Proj_";
-        public const int MinTier = 1, MaxTier = 8;
-        /// <summary>회전 장난감 수·궤도(정본 rebuildUnits L1842 3개, syncScene L2765 반지름 1.5, 높이 1.0 ± sin(2a)·0.15).</summary>
-        public const int BladeCount = 3;
-        public const double BladeOrbitR = 1.5, BladeY = 1.0, BladeBob = 0.15;
-        /// <summary>`R.spinA` 증가 속도 rad/게임초(정본 updRun L2141 orb ×4, L2147 spin ×5).</summary>
-        public const double OrbSpinRate = 4, SpinSpinRate = 5;
+        public const int MinTier = 1;
+        /// <summary>회전 장난감 높이 1.0 ± sin(2a)·0.15(정본 syncScene L2765). 개수·반지름·각속도는 표(<see cref="OrbConfig"/>).</summary>
+        public const double BladeY = 1.0, BladeBob = 0.15;
 
         static readonly int[] s_bladeTiers = { 1, 6, 1 };
-        static readonly string[] s_defaultNames = BuildDefaultNames();
 
-        static string[] BuildDefaultNames()
-        {
-            var a = new string[MaxTier + 1];
-            for (int t = MinTier; t <= MaxTier; t++) a[t] = ProjPrefix + t;
-            return a;
-        }
-
-        /// <summary>정본 `b.t || 1`: 0 이하는 1. 8 초과는 8로 자른다([창작] drawProjShape에 분기 없음).</summary>
-        public static int ClampTier(int t) => t < MinTier ? MinTier : t > MaxTier ? MaxTier : t;
-
-        /// <summary>등급 → 그림 이름 표(인덱스 1..8). `103_item.projSprite`가 있으면 그 이름, 없으면 `World_Proj_{t}`.</summary>
+        /// <summary>
+        /// 등급 → 그림 이름 표(인덱스 1..`103_item` 최고 등급, 0은 비움). 등급 수는 표에서 읽는다.
+        /// `projSprite`가 빈 등급(또는 행이 없는 등급)은 바로 아래 등급 그림을 다시 쓴다(2026-11-11 사용자 결정). 표가 없으면 null.
+        /// </summary>
         public static string[] NamesByTier(MvTables tables)
         {
-            var a = (string[])s_defaultNames.Clone();
             var items = tables?.Item?.Sorted;
-            if (items == null) return a;
+            if (items == null) return null;
+            int max = 0;
+            for (int i = 0; i < items.Count; i++) if (items[i] != null && items[i].tier > max) max = items[i].tier;
+            var a = new string[max + 1];
             for (int i = 0; i < items.Count; i++)
             {
                 var it = items[i];
-                if (it == null || it.tier < MinTier || it.tier > MaxTier || string.IsNullOrEmpty(it.projSprite)) continue;
+                if (it == null || it.tier < MinTier || string.IsNullOrEmpty(it.projSprite)) continue;
                 a[it.tier] = it.projSprite;
             }
+            for (int t = MinTier + 1; t <= max; t++) if (string.IsNullOrEmpty(a[t])) a[t] = a[t - 1];
             return a;
         }
 
-        /// <summary>던진 장난감 그림 이름(등급은 <see cref="ClampTier"/>). 표가 없으면 기본 이름.</summary>
+        /// <summary>
+        /// 정본 `b.t || 1`: 0 이하는 1. 표 최고 등급보다 높으면 최고 등급 그림(그림 수가 등급을 막지 않는다).
+        /// <paramref name="byTier"/> = <see cref="NamesByTier"/>. 표가 없으면 1.
+        /// </summary>
+        public static int ArtTier(int tier, string[] byTier) => byTier == null || byTier.Length <= MinTier ? MinTier : CatLayout.ArtIndex(tier, byTier.Length - 1);
+
+        /// <summary>던진 장난감 그림 이름(등급은 <see cref="ArtTier"/>). 표가 없으면 null(그리지 않음).</summary>
         public static string ProjSpriteName(int tier, string[] byTier)
         {
-            int t = ClampTier(tier);
-            string s = byTier != null && t < byTier.Length ? byTier[t] : null;
-            return string.IsNullOrEmpty(s) ? s_defaultNames[t] : s;
+            if (byTier == null || byTier.Length <= MinTier) return null;
+            return byTier[ArtTier(tier, byTier)];
         }
 
         /// <summary>회전 장난감 i번째 등급: 불이면 8, 아니면 [1, 6, 1][i % 3](L3800).</summary>
@@ -93,13 +89,16 @@ namespace MV.View
         /// <summary>rad → 도(−180~180). 실시간이 커져도 float 정밀도를 잃지 않게 double에서 먼저 2π로 접는다.</summary>
         public static float ToDegrees(double rad) => (float)(Math.IEEERemainder(rad, Math.PI * 2) * (180.0 / Math.PI));
 
-        /// <summary>회전 장난감 i번째 위치(정본 syncScene L2765): a = spinA + i·2π/3, (px + cos a·1.5, 1.0 + sin 2a·0.15, pz + sin a·1.5).</summary>
-        public static void BladePos(double spinA, int i, double px, double pz, out double x, out double y, out double z)
+        /// <summary>
+        /// 회전 장난감 i번째 위치(정본 syncScene L2765): a = spinA + i·2π/n, (px + cos a·r, 1.0 + sin 2a·0.15, pz + sin a·r).
+        /// n = ORB_COUNT, r = ORB_RADIUS(<see cref="OrbConfig"/>).
+        /// </summary>
+        public static void BladePos(double spinA, int i, in OrbConfig orb, double px, double pz, out double x, out double y, out double z)
         {
-            double a = spinA + i * Math.PI * 2 / BladeCount;
-            x = px + Math.Cos(a) * BladeOrbitR;
+            double a = spinA + i * Math.PI * 2 / Math.Max(1, orb.Count);
+            x = px + Math.Cos(a) * orb.Radius;
             y = BladeY + Math.Sin(a * 2) * BladeBob;
-            z = pz + Math.Sin(a) * BladeOrbitR;
+            z = pz + Math.Sin(a) * orb.Radius;
         }
 
         /// <summary>얻은 카드에 효과 type이 있는가(표 `110_card.effectId` → `112_cardEffect.type`).</summary>
@@ -118,7 +117,31 @@ namespace MV.View
             return false;
         }
 
-        /// <summary>`R.spinA` 1 게임초당 증가(orb 4 + spin 5, 정본은 두 블록이 각각 더한다).</summary>
-        public static double SpinRate(bool orb, bool spin) => (orb ? OrbSpinRate : 0) + (spin ? SpinSpinRate : 0);
+        /// <summary>`R.spinA` 1 게임초당 증가(orb ORB_ANG_SPEED + spin BLADE_ANG_SPEED, 정본은 두 블록이 각각 더한다).</summary>
+        public static double SpinRate(bool orb, bool spin, in OrbConfig cfg) => (orb ? cfg.OrbAngSpeed : 0) + (spin ? cfg.BladeAngSpeed : 0);
+    }
+
+    /// <summary>
+    /// 회전 장난감 표 값(`300_runConfig` ORB_COUNT·ORB_RADIUS·ORB_ANG_SPEED·BLADE_ANG_SPEED, 정본 rebuildUnits L1842·syncScene L2765·updRun L2141/L2147).
+    /// 표를 읽은 뒤 한 번 만든다. 키가 없으면 예외(대체값 없음).
+    /// </summary>
+    public readonly struct OrbConfig
+    {
+        public readonly int Count;
+        public readonly double Radius, OrbAngSpeed, BladeAngSpeed;
+
+        public OrbConfig(int count, double radius, double orbAngSpeed, double bladeAngSpeed)
+        {
+            Count = count;
+            Radius = radius;
+            OrbAngSpeed = orbAngSpeed;
+            BladeAngSpeed = bladeAngSpeed;
+        }
+
+        public static OrbConfig From(RunConfigTable t)
+        {
+            if (t == null) throw new ArgumentNullException(nameof(t));
+            return new OrbConfig(t.I(RunConfigKeys.ORB_COUNT), t.D(RunConfigKeys.ORB_RADIUS), t.D(RunConfigKeys.ORB_ANG_SPEED), t.D(RunConfigKeys.BLADE_ANG_SPEED));
+        }
     }
 }

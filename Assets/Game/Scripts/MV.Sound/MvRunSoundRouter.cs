@@ -30,10 +30,6 @@ namespace MV.Sound
     /// </summary>
     public sealed class MvRunSoundRouter
     {
-        const int DefaultFailDelayMs = 350;
-        const int DefaultTickEvery = 4;
-        const int DefaultLapTier = 4;
-
         readonly Func<MvTables> _tables;
         int _fieldBreakObj;
         bool _hasFieldBreak;
@@ -97,13 +93,17 @@ namespace MV.Sound
                     break;
                 case RunEventType.ClimbStepShown: // L2270: i % 4 == 0
                 {
-                    int every = ClimbInt(t, "tickEvery", DefaultTickEvery);
+                    var c = ClimbConfig(t);
+                    int every = c != null ? Round(c["tickEvery"]) : 0;
                     if (every > 0 && e.A % every == 0) Add(cues, MvSoundKeys.Tick);
                     break;
                 }
-                case RunEventType.ClimbLap: // L2277 card(4)
-                    Add(cues, CardTierSound(t, ClimbInt(t, "lapTier", DefaultLapTier)));
+                case RunEventType.ClimbLap: // L2277 card(lapTier)
+                {
+                    var c = ClimbConfig(t);
+                    if (c != null) Add(cues, CardTierSound(t, Round(c["lapTier"])));
                     break;
+                }
                 case RunEventType.ClimbTierUp: // L2281 tierup(t)
                     Add(cues, MvSoundKeys.Variant(MvSoundKeys.Tierup, e.A));
                     break;
@@ -186,15 +186,16 @@ namespace MV.Sound
             return null;
         }
 
-        static int ClimbInt(MvTables t, string column, int fallback)
+        static int Round(double v) => (int)Math.Floor(v + 0.5);
+
+        /// <summary>`330_climb` 설정 행(tickEvery·lapTier). 없으면 오류 로그 후 null(대체값 없음).</summary>
+        static ClimbData ClimbConfig(MvTables t)
         {
             var c = t.Climb.Config();
-            if (c == null) return fallback;
-            try { return (int)Math.Floor(c[column] + 0.5); }
-            catch (KeyNotFoundException) { return fallback; }
+            if (c == null) UnityEngine.Debug.LogError("[MvRunSoundRouter] 330_climb 설정(Config) 행이 없습니다.");
+            return c;
         }
 
-        static int FailDelayMs(MvTables t) =>
-            t.RunConfig.Has("FAIL_SFX_DELAY_MS") ? t.RunConfig.I("FAIL_SFX_DELAY_MS") : DefaultFailDelayMs;
+        static int FailDelayMs(MvTables t) => t.RunConfig.I(RunConfigKeys.FAIL_SFX_DELAY_MS);
     }
 }

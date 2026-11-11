@@ -105,16 +105,42 @@ namespace MV.View.Tests
             Assert.That(CatLayout.AnimOf(false, true, 0.2, true), Is.EqualTo(CatAnim.Throw));
             Assert.That(CatLayout.AnimOf(false, true, 0.2, false), Is.EqualTo(CatAnim.Run), "친구는 thr 0");
             Assert.That(CatLayout.AnimOf(false, false, 0.2, true), Is.EqualTo(CatAnim.Idle), "런 끝(R.fin)·막힘 종료");
-            Assert.That(CatLayout.PlayerTier(0), Is.EqualTo(1));
-            Assert.That(CatLayout.PlayerTier(9), Is.EqualTo(8));
-            Assert.That(CatLayout.FriendTier(1), Is.EqualTo(1));
-            Assert.That(CatLayout.FriendTier(5), Is.EqualTo(3));
-            Assert.That(CatLayout.FriendTier(8), Is.EqualTo(6));
-            Assert.That(CatLayout.FrameName(0, 3, CatAnim.Throw), Is.EqualTo("World_Cat_P0_T3_Run_B_"));
-            Assert.That(CatLayout.FrameName(2, 1, CatAnim.Throw), Is.EqualTo("World_Cat_P2_T1_Run_A_"));
-            Assert.That(CatLayout.FrameName(2, 1, CatAnim.Idle), Is.EqualTo("World_Cat_P2_T1_Idle"));
-            Assert.That(CatLayout.AtlasOf(0, 7), Is.EqualTo("Atlas_World_Cat_T7"));
-            Assert.That(CatLayout.AtlasOf(3, 2), Is.EqualTo("Atlas_World_Friend_T2"));
+            var art = CatArt.From(ViewTestTables.Load());
+            Assert.That(art.PlayerTier(0), Is.EqualTo(1));
+            Assert.That(art.PlayerTier(9), Is.EqualTo(8));
+            Assert.That(art.PlayerTier(12), Is.EqualTo(8), "103 12등급 → 그림 8단계(101 tierCount) 재사용");
+            Assert.That(art.FriendTier(1), Is.EqualTo(1));
+            Assert.That(art.FriendTier(5), Is.EqualTo(3));
+            Assert.That(art.FriendTier(8), Is.EqualTo(6));
+            Assert.That(art.FriendTier(12), Is.EqualTo(6));
+            Assert.That(art.FrameName(0, 3, CatAnim.Throw), Is.EqualTo("World_Cat_P0_T3_Run_B_"));
+            Assert.That(art.FrameName(2, 1, CatAnim.Throw), Is.EqualTo("World_Cat_P2_T1_Run_A_"));
+            Assert.That(art.FrameName(2, 1, CatAnim.Idle), Is.EqualTo("World_Cat_P2_T1_Idle"));
+            Assert.That(art.AtlasOf(0, 7), Is.EqualTo("Atlas_World_Cat_T7"));
+            Assert.That(art.AtlasOf(3, 2), Is.EqualTo("Atlas_World_Friend_T2"));
+        }
+
+        [TestCase(0, 1)]
+        [TestCase(3, 4)]
+        [TestCase(4, 4)]
+        [TestCase(29, 4)]
+        public void FriendPattern_ReusesLastPatternBeyondArt(int friendIndex, int pattern)
+        {
+            // 101 friend patternCount 4: 친구 5번째부터 마지막 무늬(그림 수가 분신 수를 막지 않는다)
+            Assert.That(CatArt.From(ViewTestTables.Load()).FriendPattern(friendIndex), Is.EqualTo(pattern));
+        }
+
+        [Test]
+        public void CatArt_FollowsCatTableCounts()
+        {
+            var t = ViewTestTables.WithCell(CatData.Table, "friend", "patternCount", "2");
+            t.BuildIndexes();
+            var art = CatArt.From(t);
+            Assert.That(art.FriendPatterns, Is.EqualTo(2));
+            Assert.That(art.FriendPattern(2), Is.EqualTo(2), "표만 바꿔 무늬 수가 따라 바뀐다");
+            t = ViewTestTables.WithCell(CatData.Table, "player", "tierCount", "5");
+            t.BuildIndexes();
+            Assert.That(CatArt.From(t).PlayerTier(8), Is.EqualTo(5));
         }
 
         /// <summary>코드가 고르는 모든 프레임 이름이 그림 목록(`sprite_catalog.tsv`)에 같은 아틀라스로 있다.</summary>
@@ -129,13 +155,14 @@ namespace MV.View.Tests
                 if (cells.Length >= 2) atlasOf[cells[1]] = cells[0];
             }
             int checkedN = 0;
-            for (int pat = 0; pat <= CatView.MaxFriends; pat++)
+            var art = CatArt.From(ViewTestTables.Load());
+            for (int pat = 0; pat <= art.FriendPatterns; pat++)
             {
-                int tMax = pat == 0 ? CatLayout.PlayerTierMax : CatLayout.FriendTierMax;
+                int tMax = pat == 0 ? art.PlayerTiers : art.FriendTiers;
                 for (int t = 1; t <= tMax; t++)
                     foreach (CatAnim a in Enum.GetValues(typeof(CatAnim)))
                     {
-                        string atlas = CatLayout.AtlasOf(pat, t), name = CatLayout.FrameName(pat, t, a);
+                        string atlas = art.AtlasOf(pat, t), name = art.FrameName(pat, t, a);
                         var names = a == CatAnim.Idle ? new[] { name } : Enumerable.Range(0, CatLayout.Frames).Select(i => name + i.ToString("00")).ToArray();
                         foreach (var n in names)
                         {
@@ -159,7 +186,8 @@ namespace MV.View.Tests
             _made.Add(go);
             var view = go.AddComponent<CatView>();
             view.Init(t, cfg, null, null);
-            for (int i = 0; i <= CatView.MaxFriends; i++)
+            Assert.That(view.FriendSlots, Is.EqualTo(30), "친구 자리 = 314 clone 행 수(MAX_CLONES 30)");
+            for (int i = 0; i <= view.FriendSlots; i++)
             {
                 var ds = view.CatObject(i).GetComponent<DepthSortable>();
                 Assert.That(ds.Rank, Is.EqualTo(DepthMath.RankUnit), "순위 " + i);
@@ -177,6 +205,9 @@ namespace MV.View.Tests
             s.Fin = true;
             view.Sync(s, 0);
             Assert.That(view.SpriteNameOf(0), Is.EqualTo("World_Cat_P0_T1_Idle"), "런이 끝나면 정지 그림");
+            s.Clones = 6;
+            view.Sync(s, 0);
+            Assert.That(view.SpriteNameOf(6), Is.EqualTo("World_Cat_P4_T1_Idle"), "친구 6번째 = 마지막 무늬(4) 재사용");
             view.Sync(null, 0);
             Assert.That(view.VisibleCount, Is.EqualTo(0));
         }

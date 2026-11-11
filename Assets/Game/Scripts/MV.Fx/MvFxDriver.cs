@@ -17,10 +17,10 @@ namespace MV.Fx
         const int MaxParts = 96;
         /// <summary>살아 있는 점 입자 전체(06 §6.14 sparks 상한 판정).</summary>
         public static int LiveParticles { get; private set; }
-        public static int SparkCapThreshold = 700, SparkCapCount = 4;
+        /// <summary>sparks 상한(`300_runConfig` fx.sparkCapThreshold·fx.sparkCapCount, <see cref="MvFxPlayer"/>가 표에서 채운다). 표를 읽기 전에는 상한 없음.</summary>
+        public static int SparkCapThreshold = int.MaxValue, SparkCapCount = int.MaxValue;
         /// <summary>빌보드 축 카메라. 없으면 Camera.main.</summary>
         public static Camera ViewCamera;
-        static readonly Color32 Olc = new Color32(0x4a, 0x34, 0x46, 255); // 정본 OLC L2804
 
         [Header("종류·기본값(04_effect 그룹 001, 06 §6.3)")]
         public FxKind kind;
