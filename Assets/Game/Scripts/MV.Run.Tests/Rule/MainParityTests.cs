@@ -11,7 +11,7 @@ namespace MV.Run.Tests.Rule
     /// <summary>
     /// 본편 동일 시험(04 §4.20.6-1). Area 1~5 × Level 1·8·15를 같은 시드·같은 입력으로 돌려
     /// RunResult·RunEvent 열·RunRng 소비 횟수와 순서를 확장 지점을 넣기 전 커밋(dev 1ad0b23)의 골든 요약과 맞춘다.
-    /// 골든 = 「프레임 수 / 이벤트 수 / RunRng 소비 수 / 종료 사유 / SHA256 앞 16자」(커밋 c2a69fa에서 기록, 잡 43876e9a0589. MV-SPEC2-FIX1에서 다시 기록: 103 피해 원작 단위·내부 피해 버림 정수·Area 시작 골드·하수인 무리 z·원석 타격 골드 제거·치명 피해 base 2, 잡 533b045164ab의 실제 값. MV-RUN-STARTCUR에서 Area 2~5 9개 다시 기록: PC-15 하수인 훔치기가 시작 골드를 남김 — 프레임·이벤트·난수 수는 같고 골드·훔친 양만 다름, 잡 a45c76f7a8fc의 실제 값).
+    /// 골든 = 「프레임 수 / 이벤트 수 / RunRng 소비 수 / 종료 사유 / SHA256 앞 16자」(커밋 c2a69fa에서 기록, 잡 43876e9a0589. MV-SPEC2-FIX1에서 다시 기록: 103 피해 원작 단위·내부 피해 버림 정수·Area 시작 골드·하수인 무리 z·원석 타격 골드 제거·치명 피해 base 2, 잡 533b045164ab의 실제 값. MV-RUN-STARTCUR에서 Area 2~5 9개 다시 기록: PC-15 하수인 훔치기가 시작 골드를 남김 — 프레임·이벤트·난수 수는 같고 골드·훔친 양만 다름, 잡 a45c76f7a8fc의 실제 값. MV-RUN-SPLITREWARD에서 15개 다시 기록: 금화 더미 타격당 골드 → 피해 비율 10등분 지급 — 프레임·난수 수·종료 사유는 같고 Gain 이벤트 수·골드만 다름, 잡 356c29aac6b4의 실제 값).
     /// 두 경로를 다 본다: 기존 진입점 <c>RunSim.Create(setup, …)</c>(규칙 생략 = MainRunRule)과
     /// <c>RunSim.Create(RunContext, MainRunRule, …)</c>(① Build → ② BuildCourse, 모디파이어 0·동행 없음).
     /// </summary>
@@ -20,21 +20,21 @@ namespace MV.Run.Tests.Rule
         /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["A1L1"] = "f3255 e425 r245 Wall 678fec1ebdd323d6",
-            ["A1L8"] = "f4353 e551 r323 Wall fecc6199dccfd03a",
-            ["A1L15"] = "f3959 e497 r295 Wall 2b729c4f669c2099",
-            ["A2L1"] = "f3470 e477 r257 Wall 9d85f6db05b29cec",
-            ["A2L8"] = "f4349 e539 r321 Wall 135c3b379fcb9137",
-            ["A2L15"] = "f3959 e516 r295 Wall fecdf66ca2e32b68",
-            ["A3L1"] = "f3486 e913 r509 Wall 40655a545931c67e",
-            ["A3L8"] = "f4221 e1057 r625 Wall 84ecdad35b0bd10a",
-            ["A3L15"] = "f4184 e1053 r613 Wall c4dcb73a47901ea3",
-            ["A4L1"] = "f3284 e883 r487 Wall c3cba2bdfc1b8ab8",
-            ["A4L8"] = "f4221 e1078 r625 Wall 503f6717bbdeaea5",
-            ["A4L15"] = "f4120 e1044 r605 Wall 9a36dc0d1bc055e3",
-            ["A5L1"] = "f3258 e916 r483 Wall f5503d322da359d4",
-            ["A5L8"] = "f4221 e1100 r625 Wall 3ee1a2c85282362e",
-            ["A5L15"] = "f4093 e985 r601 Wall 7041b7cdae5d11e2",
+            ["A1L1"] = "f3255 e418 r245 Wall 9d7527fea82a6ff0",
+            ["A1L8"] = "f4353 e545 r323 Wall 4a30cac26d155d09",
+            ["A1L15"] = "f3959 e484 r295 Wall b2886c9f24206891",
+            ["A2L1"] = "f3470 e467 r257 Wall 3c501fe89fa21770",
+            ["A2L8"] = "f4349 e526 r321 Wall 039e891e275cfdb7",
+            ["A2L15"] = "f3959 e500 r295 Wall cbdf3a9936065514",
+            ["A3L1"] = "f3486 e896 r509 Wall 8324d748014a688c",
+            ["A3L8"] = "f4221 e1025 r625 Wall dc5b2d312fa33a9a",
+            ["A3L15"] = "f4184 e1031 r613 Wall a287c82136dc0539",
+            ["A4L1"] = "f3284 e865 r487 Wall 14334adcf83f6513",
+            ["A4L8"] = "f4221 e1057 r625 Wall 8584c122b3115c23",
+            ["A4L15"] = "f4120 e1027 r605 Wall a363de527198fbd2",
+            ["A5L1"] = "f3258 e900 r483 Wall bf1aa162dca2c937",
+            ["A5L8"] = "f4221 e1085 r625 Wall 742bf8ea270a9e83",
+            ["A5L15"] = "f4093 e968 r601 Wall 3f285cb75d1d767a",
         };
 
         [Test] public void Area1() => Check(0);

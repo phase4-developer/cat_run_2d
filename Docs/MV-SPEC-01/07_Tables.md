@@ -743,7 +743,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2): Area 30 묶음(group 30) `souls` 33 / 43 / 54�
    ├─ receiveId       → 108_receiveCondition IReceiveCondition 보상·충전을 언제 받나(파괴·통과·묶음·도착·접촉)
    ├─ moveAiId        → 109_moveAI        IMoveAi          움직임·접촉 행동
    ├─ enemyId         → 102_enemy         (적이면 체력·이동·보상·그림을 102 행이 덮어씀)
-   └─ reward*/hitReward* consumeData      IRunRewardSink   보상 지급
+   └─ reward* consumeData + rewardShares  IRunRewardSink   보상 지급(피해 비율 등분)
 ```
 
 **인터페이스(MV.Run, 확정 이름)**
@@ -798,8 +798,8 @@ public interface IRunRewardSink    { void Grant(IReadOnlyList<ConsumeData> rewar
 | rewardSource | enum | Row | `Row` = 이 행의 reward 열 / `FieldCell` = 필드 칸의 보상(wall, §7.6.4) / `Enemy` = 102 행 |
 | rewardType / rewardId / rewardValue | consume | 빈칸 | 파괴(또는 receive 조건 성립) 보상. 블루 마법석 원석(플레이 구간)(105001007)은 MV-SPEC-02 Q-16으로 비움(드롭 `dropId`로 지급) |
 | rewardValuePerZone / rewardValueRule | §7.1.7 | 0 / Flat | |
-| hitRewardType / hitRewardId / hitRewardValue | consume | 빈칸 | **맞을 때마다** 보상(상자 타격당 츄르 1) |
-| dropId | fk 801 group | 0 | 파괴 보상 드롭 묶음(MV-SPEC-02 6-7 원석 10%, Q-16). 지금 `801002001`(10% 블루 마법석) 한 행만 씀. 원석(105001007·105001009)의 고정 reward와 타격 골드(hitReward)는 비웠다(MV-SPEC-02 321 「드롭 10%만」, MV-SPEC2-FIX1) |
+| dropId | fk 801 group | 0 | 파괴 보상 드롭 묶음(MV-SPEC-02 6-7 원석 10%, Q-16). 지금 `801002001`(10% 블루 마법석) 한 행만 씀. 원석(105001007·105001009)의 고정 reward는 비웠다(MV-SPEC-02 321 「드롭 10%만」, MV-SPEC2-FIX1). 추첨은 그 행의 마지막 몫(= 파괴) 때 1번 |
+| rewardShares | int(필수, ≥ 1) | 빈칸 금지 | **보상 등분 수**(2026-11-11 사용자 결정, MV-RUN-SPLITREWARD, [MV-SPEC-02 DiffReport](../MV-SPEC-02/DiffReport.md) 「등분 지급」). 보상 총량(`rewardValue` + `rewardValuePerZone`×zone, 규칙 반영)을 N등분하고, 누적 피해가 체력의 k/N을 넘을 때마다 k번째 몫을 준다(한 타격이 문턱 여럿을 넘으면 모두). 몫 = floor(총량/N), 나머지는 마지막 몫에 더해 합 = 총량. 획득 특성(goldMul·DiaCap)은 몫마다 붙는다. 1 = 부술 때 한 번(지금까지의 파괴 보상과 같음). 금화 더미(105001006·105001008) 10, 나머지 행 1. 맞을 때마다 따로 주는 보상 열(hitReward*)은 이 열로 대체해 없앴다 |
 | sprite | res(`/` 변형) | | 본체 스프라이트. 기본 아틀라스 `@theme` |
 | viewShape | enum | Single | 그림 모양(MV.View 뷰 조립 방식): `Single`(스프라이트 1장) / `Junk`(잡동사니 칸) / `RollGate`(두루마리 관문) / `WarpGate`(아치) / `Well`(우물) / `Stair`(계단) / `CoinPile`(츄르 더미) / `CatnipPot`(캣닢 화분) / `Mouse`(쥐). 값 목록은 MV.View `ObjectShape`와 1:1 |
 | spritePick | enum | Single | `Single` / `JunkCycle`(wall: `v = (lane + row×2 + bar) % 3`로 목록에서 고르고 색 2종은 `idx % 2`, [03 §3.5.3](03_ResourcePipeline.md)) / `Anim`(프레임 접두 + 번호) |
@@ -831,25 +831,25 @@ public interface IRunRewardSink    { void Grant(IReadOnlyList<ConsumeData> rewar
 
 (표의 컴포넌트 칸은 읽기 쉽게 key로 적었다. TSV에는 해당 표의 id를 쓴다. 예 `chargeWell` → `106001007`.)
 
-| key | reward (Type / Value / PerZone / Rule) | hitReward | sprite / spritePick | labelKind / labelKey | hitSound / breakSound | hitEffect / breakEffect | 근거 |
+| key | reward (Type / Value / PerZone / Rule) | rewardShares | sprite / spritePick | labelKind / labelKey | hitSound / breakSound | hitEffect / breakEffect | 근거 |
 |---|---|---|---|---|---|---|---|
-| tower | — | — | `World_Obj_Well_Mouth` / Single | WellText / `ui.run.label.tower` | clank / — | run.towerHit / — | L1910~1913 |
-| enemy | (102) | — | (102) | EnemyHp | (102) | (102) | L1921~1929 |
-| sgate | — | — | `World_Obj_Gate_RollPaper` / Single, tint `#6fd27a` | StairGate / `ui.run.label.sgate` | — / — | — / — (통과 이펙트는 108) | L1945~1951, L3634 |
-| cgate | — | — | `World_Obj_Gate_RollYarn_0/…_1/…_2/…_3` / Single, tint `#f08ab0` | CraftGate / `ui.run.label.cgate` | — / — | — | L1952~1956 |
-| stair | — | — | `World_Obj_Stair_Step_0/…_1/…_2` / Single | StairText / `ui.run.label.stair` | — / — | — | L1435, L2032 |
-| coin | 602 / 20 / 10 / Flat | 602 / 1 | `World_Item_Churu_0/…_1/…_2` / Single | BoxHp | — / coin | run.coinHit / run.coinBreak | L1960~1967 |
-| gem | — (드롭 `801002001`) | — | `World_Item_CatnipPot` / Single | BoxHp | — / gem | run.coinHit / run.coinBreak | L1960~1967 |
-| coinBonus | 602 / 12 / 6 / Flat | 602 / 1 | coin과 같음 | BoxHp | — / coin | run.coinHit / run.coinBreak | L1788 |
-| gemBonus | — (드롭 `801002001`) | — | gem과 같음 | BoxHp | — / gem | run.coinHit / run.coinBreak | L1788 |
-| wall | (FieldCell) | — | `World_Obj_Junk_Parcel/World_Obj_Junk_Bag_Dark/World_Obj_Junk_Bag_Blue/World_Obj_Junk_Crate_Red/World_Obj_Junk_Crate_Blue` / JunkCycle, spriteSoul `World_Obj_Junk_FishBox` | WallCell | — / wood | run.wallHit / run.wallBreak | L1932~1941, L3610~3618 |
-| arch | — | — | `World_Obj_Arch_Post` / Single, tint 발판색 03 | Arch / `ui.run.floorN` | — | — | L1791 |
-| archGoal | — | — | `World_Obj_Arch_Post_Gold` / Single | Arch / `ui.run.areaGate` | — | — | L1801 |
+| tower | — | 1 | `World_Obj_Well_Mouth` / Single | WellText / `ui.run.label.tower` | clank / — | run.towerHit / — | L1910~1913 |
+| enemy | (102) | 1 | (102) | EnemyHp | (102) | (102) | L1921~1929 |
+| sgate | — | 1 | `World_Obj_Gate_RollPaper` / Single, tint `#6fd27a` | StairGate / `ui.run.label.sgate` | — / — | — / — (통과 이펙트는 108) | L1945~1951, L3634 |
+| cgate | — | 1 | `World_Obj_Gate_RollYarn_0/…_1/…_2/…_3` / Single, tint `#f08ab0` | CraftGate / `ui.run.label.cgate` | — / — | — | L1952~1956 |
+| stair | — | 1 | `World_Obj_Stair_Step_0/…_1/…_2` / Single | StairText / `ui.run.label.stair` | — / — | — | L1435, L2032 |
+| coin | 602 / 20 / 10 / Flat | 10 | `World_Item_Churu_0/…_1/…_2` / Single | BoxHp | — / coin | run.coinHit / run.coinBreak | L1960~1967 |
+| gem | — (드롭 `801002001`) | 1 | `World_Item_CatnipPot` / Single | BoxHp | — / gem | run.coinHit / run.coinBreak | L1960~1967 |
+| coinBonus | 602 / 12 / 6 / Flat | 10 | coin과 같음 | BoxHp | — / coin | run.coinHit / run.coinBreak | L1788 |
+| gemBonus | — (드롭 `801002001`) | 1 | gem과 같음 | BoxHp | — / gem | run.coinHit / run.coinBreak | L1788 |
+| wall | (FieldCell) | 1 | `World_Obj_Junk_Parcel/World_Obj_Junk_Bag_Dark/World_Obj_Junk_Bag_Blue/World_Obj_Junk_Crate_Red/World_Obj_Junk_Crate_Blue` / JunkCycle, spriteSoul `World_Obj_Junk_FishBox` | WallCell | — / wood | run.wallHit / run.wallBreak | L1932~1941, L3610~3618 |
+| arch | — | 1 | `World_Obj_Arch_Post` / Single, tint 발판색 03 | Arch / `ui.run.floorN` | — | — | L1791 |
+| archGoal | — | 1 | `World_Obj_Arch_Post_Gold` / Single | Arch / `ui.run.areaGate` | — | — | L1801 |
 
 - `viewShape` 값: tower `Well`, enemy `Mouse`, sgate·cgate `RollGate`, stair `Stair`, coin·coinBonus `CoinPile`, gem·gemBonus `CatnipPot`, wall `Junk`, arch·archGoal `WarpGate`, cardbox `Single`. 지금 MV.View `ObjectViewFactory.ShapeOf`가 key·컴포넌트로 고르는 분기를 그대로 옮긴 것이다(새 종류는 코드 없이 이 열로 모양을 고른다).
 - 파괴 보상 소리: wall은 보상 종류에 따라 `soul`/`gem`/`coin` 소리를 더 낸다(L1937~1941). 이것은 `07_consumeType.gainSound`(§7.8.12)로 정한다 — 종류별 「얻음」 소리는 consumeType 행이 가진다.
 - `gem` 행의 `rewardValue = 10`은 `DiaCap` 규칙이라 무시되지만 `14_rebirthPerk[dcap].base`와 같게 적는다(다르면 검증 경고).
-- 츄르(602)는 지급 때 `goldMul()`이 곱해진다(타격당 1 포함, [04 §4.3.3](04_GameRules.md)).
+- 츄르(602)는 지급 때 `goldMul()`이 곱해진다(등분 몫마다, [04 §4.3.3](04_GameRules.md)). cardbox(105001013)도 rewardShares 1.
 - `arch`·`archGoal`의 hw 4.6은 기둥 위치(±4.6, 그림)다. hittable Never라 판정에 쓰지 않는다.
 - `stair`는 정본에서 피격 소리 코드(L1919)가 있으나 hittable이 아니어서 울리지 않는다(잔재, [04 §4.16](04_GameRules.md)).
 
@@ -2241,8 +2241,8 @@ id	key	type	aggro	speedMin	speedMax	xFollow	touchX	touchZ	touchAction	stealBase	
 ```
 
 ```tsv
-id	key	sort	active	hw	hd	hittable	breakable	blocks	hpRuleId	hitReactionId	chargeGateId	receiveId	moveAiId	enemyId	rewardSource	rewardType	rewardId	rewardValue	rewardValuePerZone	rewardValueRule	hitRewardType	hitRewardId	hitRewardValue	sprite	spritePick	labelKind	hitSound	breakSound	hitEffect	breakEffect
-105001014	mouseHole	14	1	0.8	0.5	Always	1	0	114001008	106001004	0	108001001	109001004	0	Row	602	0	5	3	Flat				World_Obj_Trap_MouseHole	Single	BoxHp		wood	run.coinHit	run.wallBreak
+id	key	sort	active	hw	hd	hittable	breakable	blocks	hpRuleId	hitReactionId	chargeGateId	receiveId	moveAiId	enemyId	rewardSource	rewardType	rewardId	rewardValue	rewardValuePerZone	rewardValueRule	rewardShares	sprite	spritePick	labelKind	hitSound	breakSound	hitEffect	breakEffect
+105001014	mouseHole	14	1	0.8	0.5	Always	1	0	114001008	106001004	0	108001001	109001004	0	Row	602	0	5	3	Flat	1	World_Obj_Trap_MouseHole	Single	BoxHp		wood	run.coinHit	run.wallBreak
 ```
 
 ```tsv

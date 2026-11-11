@@ -234,7 +234,7 @@ const dcol = opts.col || (crit ? '#ff6a3d' : '#ffffff');
 | 쥐 캣닢 8%, 양 ceil(diaCap/2) | 0.08 | `102_enemy[mouse]` `dropId`=`801_drop.dropGroup`(consumeType 50 Drop. 묶음 801001001 = 보상 행 weight 800(rewardType 604 RunDia) + 꽝 행 weight 9200, 양 = `801_drop.rewardValueRule=HalfDiaCapCeil`, 07 §7.9.3 확정. 균등 난수 1개로 판정해 정본 `Math.random() < 0.08`과 같음) |
 | 상자 보상 20 + 10×zone (× goldMul) | 20 / 10 | `105_objectKind[coin]` rewardType 602, rewardValue 20, rewardValuePerZone 10 |
 | 캣닢 화분 diaCap() | 10 + 2·dcap | `105_objectKind[gem]` rewardType 604, rewardValue 10(= diaCap 기본, 부활 dcap 가산은 `14_rebirthPerk[dcap]`) |
-| 상자 타격당 츄르 1 × goldMul | 1 | `105_objectKind[coin/gem]` `hitRewardType`=602, `hitRewardValue`=1 (07 §7.5.2 확정) |
+| 상자 타격당 츄르 1 × goldMul | 1 | **2026-11-11 대체**(MV-RUN-SPLITREWARD): 타격당 보상 열(hitReward*)을 없애고 `105_objectKind.rewardShares` 등분 지급(금화 더미 10, 원석 1 = 파괴 때)으로 바꿨다. 총량은 아래 reward 그대로, 피해 비율 k/N마다 몫 지급(07 §7.5.2) |
 | 보너스 상자 12 + 6×zone / 캣닢 1 | 12 / 6 / 1 | `105_objectKind[coinBonus]` 602·12·perZone 6, `105_objectKind[gemBonus]` 604·1 |
 | goldMul 적용 | RunGold 보상만 | 코드 규칙: consumeType 602 보상은 지급 시 × goldMul(). 604·603은 배수 없음 |
 | 히트스톱 0.03 / 0.06 / 0.03 | | `300_runConfig.hitstop.enemyKill / hitstop.wallBreak / hitstop.coinBreak` |

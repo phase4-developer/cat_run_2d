@@ -371,8 +371,8 @@ namespace MV.Run
                     break;
                 case HitReactionType.Damage:
                     if (o.HasHp) o.Hp -= dmg;
-                    foreach (var hr in o.Kind.hitReward) Grant(hr.Type, hr.Id, hr.Value, gm, o);
                     if (o.HasHp && o.Hp <= 0) Break(o, gm);
+                    else if (o.HasHp) PayShares(o, SharesDue(o.Max - o.Hp, o.Max, o.Shares), gm);
                     break;
                 case HitReactionType.ChargeStairGate:
                 {
@@ -423,15 +423,35 @@ namespace MV.Run
             var r = o.Reaction;
             switch (r.breakStat) { case BreakStat.Walls: s.Walls++; break; }
             s.Emit(new RunEvent(RunEventType.Break, objId: o.Id, kindId: o.Kind.id, x: o.X, z: o.Z, a: o.IsField ? (int)o.Rew : -1));
-            if (o.RewardType != ConsumeType.None) Grant(o.RewardType, o.RewardId, o.RewardAmount, gm, o);
-            if (o.DropGroup != 0)
-            {
-                _dropBuf.Clear();
-                (T.Drops ?? new MvDropRoller(T)).RollDrop(o.DropGroup, () => s.Draw(RngUse.EnemyDrop), _dropBuf);
-                foreach (var d in _dropBuf) Grant(d.Type, d.Id, DropValue(d), gm, o);
-            }
+            PayShares(o, Math.Max(1, o.Shares), gm);
             if (!string.IsNullOrEmpty(r.breakShake)) { var (a, t) = RunParams.Shake(T, r.breakShake); Shake(a, t); }
             if (!string.IsNullOrEmpty(r.breakHitstop)) Hitstop(T.RunConfig.D(r.breakHitstop));
+        }
+
+        /// <summary>
+        /// 보상 등분 지급(2026-11-11 사용자 결정, MV-RUN-SPLITREWARD). 이미 준 몫 다음부터 upTo번째 몫까지 준다(한 번에 문턱 여럿을 넘으면 모두).
+        /// 몫마다 Grant를 불러 획득 특성(goldMul·DiaCap)이 몫마다 붙는다. dropId 추첨은 마지막 몫(= 파괴) 때 1번.
+        /// </summary>
+        void PayShares(RunObject o, int upTo, double gm)
+        {
+            var s = S;
+            int n = Math.Max(1, o.Shares);
+            upTo = Math.Min(n, upTo);
+            while (o.SharesPaid < upTo)
+            {
+                o.SharesPaid++;
+                if (o.RewardType != ConsumeType.None)
+                {
+                    double v = RewardShare(o.RewardAmount, n, o.SharesPaid);
+                    if (v > 0 || o.SharesPaid == n) Grant(o.RewardType, o.RewardId, v, gm, o); // 0인 중간 몫은 건너뜀, 마지막 몫은 지금까지처럼 항상
+                }
+                if (o.SharesPaid == n && o.DropGroup != 0)
+                {
+                    _dropBuf.Clear();
+                    (T.Drops ?? new MvDropRoller(T)).RollDrop(o.DropGroup, () => s.Draw(RngUse.EnemyDrop), _dropBuf);
+                    foreach (var d in _dropBuf) Grant(d.Type, d.Id, DropValue(d), gm, o);
+                }
+            }
         }
 
         double DropValue(MvDropResult d)

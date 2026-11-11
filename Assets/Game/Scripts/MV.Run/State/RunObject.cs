@@ -70,6 +70,10 @@ namespace MV.Run
         public double RewardAmount;
         /// <summary>파괴 시 추가 추첨 묶음(801_drop.dropGroup, 쥐 8% 캣닢). 0이면 없음.</summary>
         public int DropGroup;
+        /// <summary>보상 등분 수(105.rewardShares). 누적 피해가 체력의 k/N을 넘을 때마다 k번째 몫을 준다(MV-RUN-SPLITREWARD).</summary>
+        public int Shares = 1;
+        /// <summary>이미 지급한 몫 수(0..Shares).</summary>
+        public int SharesPaid;
 
         // ---- 골목 장애물 칸 ----
         /// <summary>골목 번호 0..2(`o.bar`). 필드 칸이 아니면 −1.</summary>
@@ -101,7 +105,7 @@ namespace MV.Run
     {
         public static RunObject Create(MvTables t, ObjectKindData kind, double x, double z)
         {
-            var o = new RunObject { Kind = kind, X = x, Z = z, Hw = kind.hw, Hd = kind.hd };
+            var o = new RunObject { Kind = kind, X = x, Z = z, Hw = kind.hw, Hd = kind.hd, Shares = kind.rewardShares };
             o.Enemy = kind.enemyId != 0 ? t.Enemy.Get(kind.enemyId) : null;
             o.Reaction = kind.hitReactionId != 0 ? t.HitReaction.Get(kind.hitReactionId) : null;
             o.Charge = kind.chargeGateId != 0 ? t.ChargeGate.Get(kind.chargeGateId) : null;

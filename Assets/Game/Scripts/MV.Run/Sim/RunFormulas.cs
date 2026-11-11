@@ -194,6 +194,24 @@ namespace MV.Run
             return a != null ? a.perLv * AupLv(st, stat) * Math.Max(0, level) : 0;
         }
 
+        /// <summary>
+        /// 보상 k번째 몫(1..n, MV-RUN-SPLITREWARD): floor(총량/n), 마지막 몫은 총량 − 앞 몫 합(나머지를 마지막에 더해 합이 총량과 같다).
+        /// </summary>
+        public static double RewardShare(double total, int n, int k)
+        {
+            if (n <= 1) return total;
+            double per = Math.Floor(total / n);
+            return k >= n ? total - per * (n - 1) : per;
+        }
+
+        /// <summary>누적 피해 dealt가 체력 max의 k/n 문턱을 몇 개 넘었나(0..n). max ≤ 0이면 0(파괴 때만 지급).</summary>
+        public static int SharesDue(double dealt, double max, int n)
+        {
+            if (max <= 0 || n < 1 || dealt <= 0) return 0;
+            if (dealt >= max) return n;
+            return Math.Min(n, (int)Math.Floor(dealt * n / max));
+        }
+
         /// <summary>탄 관통 +1 확률(Area 강화 「관통 확률」, MV-SPEC-02 Q-28).</summary>
         public static double PierceChance(RunState s) => Aup(s, AreaStatKey.PierceChance);
 

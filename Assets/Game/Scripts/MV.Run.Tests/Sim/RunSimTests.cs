@@ -15,6 +15,28 @@ namespace MV.Run.Tests
             return RunSim.Create(setup ?? new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } }, t, new ConstRng(0.5), lv ?? new HandLevel()).State;
         }
 
+        [TestCase(20, 10)]
+        [TestCase(12, 10)]
+        [TestCase(7, 3)]
+        [TestCase(5, 1)]
+        public void RewardShare_SumIsTotalRemainderLast(int total, int n)
+        {
+            double sum = 0;
+            for (int k = 1; k <= n; k++) sum += RewardShare(total, n, k);
+            Assert.AreEqual(total, sum, 1e-12);
+            Assert.AreEqual(System.Math.Floor((double)total / n), RewardShare(total, n, 1), 1e-12);
+            Assert.AreEqual(total - System.Math.Floor((double)total / n) * (n - 1), RewardShare(total, n, n), 1e-12);
+        }
+
+        [TestCase(0, 100, 10, 0)]
+        [TestCase(9, 100, 10, 0)]
+        [TestCase(10, 100, 10, 1)]
+        [TestCase(35, 100, 10, 3)]
+        [TestCase(99, 100, 10, 9)]
+        [TestCase(100, 100, 10, 10)]
+        [TestCase(50, 100, 1, 0)]
+        public void SharesDue_ThresholdsCrossed(int dealt, int max, int n, int expect) => Assert.AreEqual(expect, SharesDue(dealt, max, n));
+
         [Test]
         public void JsRound_HalfUp() { Assert.AreEqual(3, JsRound(2.5)); Assert.AreEqual(1, JsRound(0.5)); Assert.AreEqual(2, JsRound(2.4999)); }
 
@@ -149,20 +171,103 @@ namespace MV.Run.Tests
             Assert.AreEqual(1, Ev(sim, RunEventType.Blocked).Count);
         }
 
+        // 103 피해가 원작 단위(1단계 1)로 내려가 1단계로는 지나가기 전에 못 깬다 → 피해 10인 단계(103 더미 5단계)·easy 연사로 본다(MV-SPEC2-FIX1).
+        static RunSetup BoxSetup(RunModifiers mods = default, int perkDcap = 0) =>
+            new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy", Modifiers = mods, PerkDcap = perkDcap };
+
+        /// <summary>상자 시험: 프로토 easy 연사 표(MV-SPEC2-FIX2, RunTestTables.ProtoEasy).</summary>
+        static RunSim BoxSim(HandLevel lv, RunSetup setup, IRng rng = null) => RunSim.Create(setup, RunTestTables.ProtoEasy(), rng ?? new ConstRng(0.5), lv);
+
+        static List<RunEvent> Gains(RunSim sim, RunObject o) => Ev(sim, RunEventType.Gain).Where(e => e.ObjId == o.Id).ToList();
+
         [Test]
-        public void Box_HitRewardAndBreak()
+        public void Box_SharesSumToTotalAndBreak()
         {
-            // 103 피해가 원작 단위(1단계 1)로 내려가 1단계로는 지나가기 전에 못 깬다 → 피해 10인 단계(103 더미 5단계)·easy 연사로 본다(MV-SPEC2-FIX1).
-            var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" }, RunTestTables.ProtoEasy(), new ConstRng(0.5),
-                new HandLevel().Add("coin", 0, 30)); // 프로토 easy 연사(MV-SPEC2-FIX2)
+            // 2026-11-11 사용자 결정(MV-RUN-SPLITREWARD): 총량(rewardValue + perZone)을 rewardShares 등분해 피해 비율대로 준다. 타격·파괴 별도 보상 없음.
+            var sim = BoxSim(new HandLevel().Add("coin", 0, 30), BoxSetup());
             Run(sim, 480);
             var s = sim.State;
             var box = s.Objs[0];
             Assert.IsTrue(box.Dead);
-            int hits = Ev(sim, RunEventType.Hit).Count(e => e.ObjId == box.Id);
-            Assert.AreEqual(hits * 1 + 20, s.Gold, 1e-9, "타격당 츄르 1 + 파괴 20(zone 0)");
+            Assert.AreEqual(box.Kind.rewardShares, box.SharesPaid);
+            Assert.AreEqual(box.Kind.rewardShares, Gains(sim, box).Count, "몫마다 지급 1번(몫 > 0)");
+            Assert.AreEqual(box.RewardAmount, s.Gold, 1e-9, "몫 합 = 총량(goldMul 1)");
             Assert.AreEqual(1, Ev(sim, RunEventType.Break).Count);
             Assert.AreEqual(0.03, Ev(sim, RunEventType.Hitstop).First().Amount, 1e-12);
+        }
+
+        [Test]
+        public void Box_OneHitCrossingSeveralThresholdsPaysAll()
+        {
+            // 첫 타격 뒤 체력을 그 피해 × 2로 다시 맞추면, 다음 한 타격이 문턱 N/2개를 한 번에 넘는다.
+            var sim = BoxSim(new HandLevel().Add("coin", 0, 30), BoxSetup());
+            var box = sim.State.Objs[0];
+            int frames = 0;
+            while (Ev(sim, RunEventType.Hit).Count(e => e.ObjId == box.Id) == 0 && frames++ < 480) sim.Tick(1 / 60.0, default);
+            double dmg = Ev(sim, RunEventType.Hit).First(e => e.ObjId == box.Id).Amount;
+            Assert.IsFalse(box.Dead);
+            box.Max = box.Hp = dmg * 2; box.SharesPaid = 0; sim.State.Gold = 0;
+            int n = box.Kind.rewardShares;
+            int before = Gains(sim, box).Count;
+            while (Ev(sim, RunEventType.Hit).Count(e => e.ObjId == box.Id) < 2 && frames++ < 960) sim.Tick(1 / 60.0, default);
+            int due = RunFormulas.SharesDue(dmg, box.Max, n);
+            Assert.Greater(due, 1, "한 타격에 문턱 2개 이상");
+            Assert.AreEqual(due, box.SharesPaid);
+            Assert.AreEqual(due, Gains(sim, box).Count - before);
+            double expect = 0;
+            for (int k = 1; k <= due; k++) expect += RunFormulas.RewardShare(box.RewardAmount, n, k);
+            Assert.AreEqual(expect, sim.State.Gold, 1e-9);
+        }
+
+        [Test]
+        public void Box_RemainderOnLastShare()
+        {
+            // 보너스 금화 더미: zone 0 총량 12, 10등분 → 1 × 9 + 3.
+            var sim = BoxSim(new HandLevel().Add("coinBonus", 0, 30), BoxSetup());
+            Run(sim, 480);
+            var box = sim.State.Objs[0];
+            Assert.IsTrue(box.Dead);
+            var g = Gains(sim, box);
+            int n = box.Kind.rewardShares;
+            Assert.AreEqual(n, g.Count);
+            double per = System.Math.Floor(box.RewardAmount / n);
+            for (int i = 0; i < n - 1; i++) Assert.AreEqual(per, g[i].Amount, 1e-9);
+            Assert.AreEqual(box.RewardAmount - per * (n - 1), g[n - 1].Amount, 1e-9, "나머지는 마지막 몫");
+            Assert.AreEqual(box.RewardAmount, sim.State.Gold, 1e-9);
+        }
+
+        [Test]
+        public void Box_GoldPerkAppliedPerShare()
+        {
+            var sim = BoxSim(new HandLevel().Add("coin", 0, 30), BoxSetup(new RunModifiers { Gold = 10 }));
+            double gm = GoldMul(sim.State);
+            Run(sim, 480);
+            var box = sim.State.Objs[0];
+            Assert.IsTrue(box.Dead);
+            int n = box.Kind.rewardShares;
+            var g = Gains(sim, box);
+            Assert.AreEqual(n, g.Count);
+            for (int k = 1; k <= n; k++) Assert.AreEqual(RunFormulas.RewardShare(box.RewardAmount, n, k) * gm, g[k - 1].Amount, 1e-9, "몫마다 × goldMul");
+            Assert.AreEqual(box.RewardAmount * gm, sim.State.Gold, 1e-9);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Ore_OneShareOnBreakRollsDrop(bool dropped)
+        {
+            double roll = dropped ? 0.01 : 0.99; // 801002001 누적 비중: 보상 1000 / 꽝 9000
+            // 원석: rewardShares 1 = 부술 때 한 번. 그 몫에서 dropId(801002001, 10%) 추첨. 블루 마법석 획득량 특성(DiaCap)이 몫에 붙는다.
+            var sim = BoxSim(new HandLevel().Add("gem", 0, 30), BoxSetup(perkDcap: 2), new ConstRng(roll));
+            var ore = sim.State.Objs[0];
+            Assert.AreEqual(1, ore.Kind.rewardShares);
+            Run(sim, 480);
+            Assert.IsTrue(ore.Dead);
+            Assert.AreEqual(1, ore.SharesPaid);
+            var ev = sim.State.Events;
+            int breakAt = ev.FindIndex(e => e.Type == RunEventType.Break && e.ObjId == ore.Id);
+            Assert.IsFalse(ev.Take(breakAt).Any(e => e.Type == RunEventType.Gain && e.ObjId == ore.Id), "부수기 전에는 지급 없음");
+            Assert.AreEqual(dropped ? 1 : 0, Gains(sim, ore).Count);
+            Assert.AreEqual(dropped ? (int)DiaCap(sim.State.Tables, 2) : 0, sim.State.Dia);
         }
 
         [Test]
@@ -288,6 +393,7 @@ namespace MV.Run.Tests
             var kinds = RunTestTables.CloneRow(RunTestTables.ReadTsv("105_objectKind"), "coin", new Dictionary<string, string>
             {
                 ["id"] = "105001099", ["key"] = "fishCrate", ["hpRuleId"] = "114001004", ["rewardType"] = "603", ["rewardValue"] = "2", ["rewardValuePerZone"] = "0",
+                ["rewardShares"] = "2",
             });
             var t = RunTestTables.Load(RunTestTables.WithProtoEasy(new Dictionary<string, string> { ["105_objectKind"] = kinds })); // 프로토 easy 연사(MV-SPEC2-FIX2)
             Assert.IsNotNull(t.ObjectKind.ByKey("fishCrate"));
@@ -298,9 +404,9 @@ namespace MV.Run.Tests
             Assert.AreEqual(25, o.Hp, "bonus025: round(100 × 0.25)");
             for (int i = 0; i < 300; i++) sim.Tick(1 / 60.0, default);
             Assert.IsTrue(o.Dead);
-            Assert.AreEqual(2, sim.State.Souls);
-            int hits = sim.State.Events.Count(e => e.Type == RunEventType.Hit && e.ObjId == o.Id);
-            Assert.AreEqual(hits, sim.State.Gold, 1e-9, "hitReward(타격당 츄르 1)는 복사한 행 그대로");
+            Assert.AreEqual(2, sim.State.Souls, "행에 적은 2등분 몫 합 = 총량");
+            Assert.AreEqual(2, o.SharesPaid);
+            Assert.AreEqual(0, sim.State.Gold, 1e-9, "타격 보상 열 없음(등분 지급만)");
         }
 
         [Test]

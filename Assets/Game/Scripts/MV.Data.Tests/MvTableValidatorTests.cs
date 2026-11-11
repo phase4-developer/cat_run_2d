@@ -41,8 +41,8 @@ namespace MV.Data.Tests
                 R("id", "key", "type", "aggro", "speedMin", "speedMax", "xFollow", "touchX", "touchZ", "touchAction", "stealBase", "stealPerZone", "stealShake", "stealSound", "stealEffect", "despawnBehind"),
                 R("109001004", "mouseHole", "Static", "", "", "", "", "0.9", "0.5", "Steal", "3", "2", "shake.steal", "steal", "run.steal", "0"));
             var kind = TsvFixture.Append(TsvFixture.Read("105_objectKind"),
-                R("id", "key", "sort", "active", "hw", "hd", "hittable", "breakable", "blocks", "hpRuleId", "hitReactionId", "chargeGateId", "receiveId", "moveAiId", "enemyId", "rewardSource", "rewardType", "rewardId", "rewardValue", "rewardValuePerZone", "rewardValueRule", "hitRewardType", "hitRewardId", "hitRewardValue", "sprite", "spritePick", "labelKind", "hitSound", "breakSound", "hitEffect", "breakEffect"),
-                R("105001014", "mouseHole", "14", "1", "0.8", "0.5", "Always", "1", "0", "114001008", "106001004", "0", "108001001", "109001004", "0", "Row", "602", "0", "5", "3", "Flat", "", "", "", "World_Obj_Trap_MouseHole", "Single", "BoxHp", "", "wood", "run.coinHit", "run.wallBreak"));
+                R("id", "key", "sort", "active", "hw", "hd", "hittable", "breakable", "blocks", "hpRuleId", "hitReactionId", "chargeGateId", "receiveId", "moveAiId", "enemyId", "rewardSource", "rewardType", "rewardId", "rewardValue", "rewardValuePerZone", "rewardValueRule", "rewardShares", "sprite", "spritePick", "labelKind", "hitSound", "breakSound", "hitEffect", "breakEffect"),
+                R("105001014", "mouseHole", "14", "1", "0.8", "0.5", "Always", "1", "0", "114001008", "106001004", "0", "108001001", "109001004", "0", "Row", "602", "0", "5", "3", "Flat", "1", "World_Obj_Trap_MouseHole", "Single", "BoxHp", "", "wood", "run.coinHit", "run.wallBreak"));
             var placed = TsvFixture.Append(TsvFixture.Read("311_templateObject"),
                 R("id", "templateId", "seq", "kindId", "x", "z", "groupId", "active", "#kind"),
                 R("311003012", "310000003", "12", "105001014", "0", "120", "0", "1", "mouseHole"));
