@@ -106,8 +106,9 @@ namespace MV.Meta
             return _issuedRunSeq;
         }
 
-        /// <summary>결과 ×3 버튼 활성(<c>R.gold ≥ 1 || R.dia > 0</c>).</summary>
-        public static bool CanCollectX3(MvRunOutcome outcome) => outcome != null && (outcome.Gold >= 1 || outcome.Dia > 0);
+        /// <summary>결과 ×N 버튼 활성(<c>R.gold ≥ 1 || R.dia > 0</c>). PC-15: 배수가 붙는 얻은 몫(합계 − 시작 몫)으로 본다.</summary>
+        public static bool CanCollectX3(MvRunOutcome outcome) =>
+            outcome != null && (outcome.Gold - outcome.StartGold >= 1 || outcome.Dia - outcome.StartDia > 0);
 
         /// <summary>정산 ×1 또는 ×<see cref="MvMetaRules.CollectAdMul"/>(08 collect3.mul, 광고 본 뒤). 영속 반영은 이 한 번이다.</summary>
         public MvSettleResult Settle(MvRunOutcome outcome, int mul = 1)
@@ -117,6 +118,7 @@ namespace MV.Meta
             {
                 ["runSeq"] = outcome.RunSeq, ["end"] = outcome.End.ToString(), ["mul"] = mul,
                 ["gold"] = outcome.Gold, ["souls"] = outcome.Souls, ["dia"] = outcome.Dia, ["cpRun"] = outcome.CpRun,
+                ["startGold"] = outcome.StartGold, ["startDia"] = outcome.StartDia,
             };
             if (outcome.Bars != null) p["bars"] = BarsJson(outcome.Bars);
             if (outcome.PendingSettle != null && outcome.PendingSettle.Count > 0)

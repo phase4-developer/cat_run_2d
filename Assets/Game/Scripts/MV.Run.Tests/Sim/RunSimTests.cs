@@ -183,6 +183,36 @@ namespace MV.Run.Tests
             Assert.AreEqual(12.7 - 5, sim.State.Gold, 1e-9);
         }
 
+        /// <summary>PC-15: 훔치기는 런에서 얻은 몫(합계 − 시작 골드)만 가져간다. 시작 골드는 남는다.</summary>
+        [TestCase(10.0, 12.0, 10.0)]
+        [TestCase(10.0, 10.7, 10.7)]
+        [TestCase(10.0, 10.0, 10.0)]
+        public void Enemy_StealSkipsStartGold(double start, double total, double after)
+        {
+            var sim = Sim(new HandLevel().Add("enemy", 3.0, 3, o => { o.HasHp = true; o.Hp = 99999; }));
+            sim.State.StartGold = start;
+            sim.State.Gold = total;
+            Run(sim, 120, RunInput.Drag(3.2));
+            Assert.AreEqual(1, Ev(sim, RunEventType.Steal).Count);
+            Assert.AreEqual(after, sim.State.Gold, 1e-9);
+            Assert.GreaterOrEqual(sim.State.Gold, start);
+        }
+
+        /// <summary>PC-15: 정산 결과에 시작 몫을 따로 싣는다(합계에는 포함).</summary>
+        [Test]
+        public void Settlement_CarriesStartShare()
+        {
+            var sim = Sim(new HandLevel());
+            var s = sim.State;
+            s.StartGold = 7; s.Gold = 20;
+            s.StartDia = 2; s.Dia = 5;
+            var r = RunSettlement.Main(s, FinishReason.Wall, new RunLevelBuilder());
+            Assert.AreEqual(7, r.StartGold, 1e-9);
+            Assert.AreEqual(2, r.StartDia);
+            Assert.GreaterOrEqual(r.Gold, 20);
+            Assert.GreaterOrEqual(r.Dia, 5);
+        }
+
         [Test]
         public void Climb_RouletteAppliesCards()
         {

@@ -67,6 +67,8 @@ namespace MV.UI
                     Gold = r.Gold,
                     Souls = r.Souls,
                     Dia = r.Dia,
+                    StartGold = r.StartGold, // PC-15: 시작 몫은 광고 ×N 대상 아님
+                    StartDia = r.StartDia,
                     CpRun = r.CpRun,
                     Bars = r.BarRec?.Floors,
                     PendingSettle = r.PendingSettle,
