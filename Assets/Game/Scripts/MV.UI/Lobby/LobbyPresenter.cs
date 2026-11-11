@@ -132,7 +132,7 @@ namespace MV.UI
             var quest = Add(QuestSideId, "퀘스트", "", ready); // name:<05_contentOpen 5001005>
             quest.UnlockKey = QuestUnlockKey;
             ApplyLock(quest, t);
-            if (quest.Locked) quest.Sub = "잠김"; // 해금 조건은 런 1번(conditionType 2)
+            if (quest.Locked) quest.Sub = "잠김"; // 해금 조건은 05_contentOpen[quest]
             quest.Dot = !quest.Locked && QuestClaimable();
 
             Add(LobbySideIds.Sound, "♪", Muted ? "꺼짐" : "", true);
@@ -146,19 +146,23 @@ namespace MV.UI
             return b;
         }
 
-        /// <summary>해금 행이 꺼져 있으면 숨김, 아직 안 열렸으면 잠김 표시(SoftLock).</summary>
+        /// <summary>
+        /// 해금 단계(<see cref="MvUnlockRules"/>): 행이 꺼져 있거나 잠금 표시 조건 전이면 숨김, 아직 사용 가능 전이면 잠김 표시(SoftLock).
+        /// </summary>
         void ApplyLock(LobbySideButton b, MvTables t)
         {
             var row = t?.ContentOpen.ByKey(b.UnlockKey);
             if (row == null) return;
             if (!row.active) { b.Visible = false; return; }
-            b.Locked = !Port.IsOpen(b.UnlockKey);
+            var state = Port.UnlockState(b.UnlockKey);
+            if (Port.Ready && state == MvUnlockState.Hidden) { b.Visible = false; return; }
+            b.Locked = state != MvUnlockState.Open;
         }
 
-        static string LockSub(MvTables t, string key)
+        string LockSub(MvTables t, string key)
         {
-            var row = t?.ContentOpen.ByKey(key);
-            return row != null && row.conditionType == 1 ? "Area " + row.conditionValue + " 해금" : "잠김";
+            string need = MvUnlockText.Need(t?.ContentOpen.ByKey(key), Port.UnlockState(key));
+            return need.Length > 0 ? need + " 해금" : "잠김";
         }
 
         int OpenModes(MvTables t)
@@ -184,13 +188,12 @@ namespace MV.UI
             return true;
         }
 
-        static string LockedToast(MvTables t, LobbySideButton b)
+        string LockedToast(MvTables t, LobbySideButton b)
         {
-            var row = t?.ContentOpen.ByKey(b.UnlockKey);
-            int area = row != null && row.conditionType == 1 ? row.conditionValue : 0;
-            if (b.Id == LobbySideIds.Rebirth) return "부활은 Area " + area + "를 열면 해금됩니다"; // toastMessage:rbLocked
-            if (b.Id == QuestSideId && row != null && row.conditionType == 2) return "달리기를 " + row.conditionValue + "번 마치면 열려요"; // toastMessage:questLocked
-            return "Area " + area + "에서 열려요";                                              // toastMessage:contentLocked
+            string need = MvUnlockText.Need(t?.ContentOpen.ByKey(b.UnlockKey), Port.UnlockState(b.UnlockKey));
+            if (need.Length == 0) return "아직 열리지 않았어요";
+            if (b.Id == LobbySideIds.Rebirth) return "부활은 " + need + " 달성 시 해금됩니다"; // toastMessage:rbLocked
+            return need + " 달성 시 열려요";                                                   // toastMessage:contentLocked·questLocked
         }
 
         // ───────── 강화 버튼 3종(05 §5.5.1) ─────────

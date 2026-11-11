@@ -19,8 +19,13 @@ namespace MV.Run.Tests.Gen
 
         static void Run(string preset)
         {
-            var t = Tables();
             var dump = LoadDump($"FIELD_{preset}.json");
+            // 골든은 프로토 프리셋 값으로 기록됐다. 그 key 행을 덤프의 bal 값으로 바꾼 사본으로 본다(표 easy는 기획서 값, MV-SPEC2-FIX2).
+            var bv = Obj(dump["bal"]);
+            var t = RunTestTables.Load(RunTestTables.WithPresetValues(null, preset, new Dictionary<string, string>
+            {
+                ["rate"] = Show(Num(bv["rate"])), ["scale"] = Show(Num(bv["scale"])), ["diff"] = Show(Num(bv["diff"])), ["gauge"] = Show(Num(bv["gauge"])),
+            }));
             Assert.AreEqual(preset, (string)dump["preset"]);
             var bal = RunLevelBuilder.Preset(t, preset);
             Assert.AreEqual(Num(Obj(dump["bal"])["scale"]), bal.scale, "06_balancePreset.scale");

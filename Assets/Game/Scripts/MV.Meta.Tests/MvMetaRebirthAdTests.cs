@@ -12,25 +12,40 @@ namespace MV.Meta.Tests
     {
         const long CooldownMs = 21600L * 1000L;
 
-        /// <summary>Area 2(0기반 2) 진행 중인 저장: 부활 열림.</summary>
+        /// <summary>Area 2(0기반 2)·부활 사용 Level 진행 중인 저장: 부활 열림.</summary>
         void ArrangeMidGame()
         {
             SetWealth((MvWealthIds.Gold, 500), (MvWealthIds.Souls, 70), (MvWealthIds.Dia, 40), (MvWealthIds.RbToken, 1), (MvWealthIds.Medal, 5));
-            SetContainer(MvSaveKeys.Progress, "\"area\":2,\"level\":7,\"runs\":5,\"cp\":1,\"lastSettledRunSeq\":12,\"bars\":{\"A2\":[[1]]}");
+            SetContainer(MvSaveKeys.Progress, "\"area\":2,\"level\":" + RebirthUseLevel + ",\"runs\":5,\"cp\":1,\"lastSettledRunSeq\":12,\"bars\":{\"A2\":[[1]]}");
             SetContainer(MvSaveKeys.Rebirth, "\"pending\":9,\"perks\":{\"power\":2}");
             SetContainer(MvSaveKeys.Lobby, "\"up\":{\"stair\":3},\"deck\":[0,2,1,0,0,0,0,0,0]");
             SetContainer(MvSaveKeys.AreaUp, "\"lv\":{\"rate\":2}");
             Assert.That(Store.God.Selected, Is.EqualTo("thunder"), "시작 신(00_config.startGodKey)");
         }
 
+        /// <summary>
+        /// 냥환생 해금 2단계(MV-SPEC-02 01_코어게임루프 11-3 「해금 조건」): Area 2가 열리면 잠금 표시, Level 15에서 사용 가능.
+        /// 표 값(<c>05_contentOpen[rebirth]</c>)이 기획서 값과 같은지도 본다.
+        /// </summary>
         [Test]
-        public void Rebirth_LockedAtArea0()
+        public void Rebirth_ShownAtArea2_UsableAtLevel15()
         {
+            const int SpecArea = 2, SpecLevel = 15;
+            Assert.That(Meta.UnlockState(MvMetaRules.RebirthKey), Is.EqualTo(MvUnlockState.Hidden), "Area 1은 숨김");
             Assert.That(Meta.RebirthOpen, Is.False);
             Assert.That(Meta.Rebirth().Code, Is.EqualTo(MvMetaErrors.Locked));
             Assert.That(Meta.PressRebirth().Code, Is.EqualTo(MvMetaErrors.Locked));
-            SetContainer(MvSaveKeys.Progress, "\"area\":1");
-            Assert.That(Meta.RebirthOpen, Is.True, "rbOpen = area ≥ 1");
+
+            SetContainer(MvSaveKeys.Progress, "\"area\":" + (SpecArea - 1) + ",\"level\":" + (SpecLevel - 1));
+            Assert.That(Meta.UnlockState(MvMetaRules.RebirthKey), Is.EqualTo(MvUnlockState.Locked), "Area 2 = 잠금 표시");
+            Assert.That(Meta.Rebirth().Code, Is.EqualTo(MvMetaErrors.Locked), "Level 15 전에는 사용 불가");
+
+            SetContainer(MvSaveKeys.Progress, "\"level\":" + SpecLevel);
+            Assert.That(Meta.UnlockState(MvMetaRules.RebirthKey), Is.EqualTo(MvUnlockState.Open), "Level 15 = 사용 가능");
+            Assert.That(Meta.RebirthOpen, Is.True);
+
+            SetContainer(MvSaveKeys.Progress, "\"area\":" + (SpecArea - 2));
+            Assert.That(Meta.UnlockState(MvMetaRules.RebirthKey), Is.EqualTo(MvUnlockState.Hidden), "Level만으로는 잠금 표시 조건(Area 2)을 넘지 못한다");
         }
 
         [Test]
@@ -51,7 +66,7 @@ namespace MV.Meta.Tests
             Assert.That(Store.Progress.Area, Is.EqualTo(0));
             Assert.That(Store.Progress.Cp, Is.EqualTo(0));
             Assert.That(Store.Progress.BarAreaKeys, Is.Empty);
-            Assert.That(Store.Progress.Level, Is.EqualTo(7), "Level 유지(D-25 정본)");
+            Assert.That(Store.Progress.Level, Is.EqualTo(RebirthUseLevel), "Level 유지(D-25 정본)");
             Assert.That(Store.Progress.Runs, Is.EqualTo(5));
             Assert.That(Store.Progress.LastSettledRunSeq, Is.EqualTo(12), "D-META-01 정산 순번 유지");
             Assert.That(Store.Progress.BestArea, Is.EqualTo(2));

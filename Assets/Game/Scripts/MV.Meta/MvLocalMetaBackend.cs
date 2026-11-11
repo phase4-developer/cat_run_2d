@@ -130,9 +130,10 @@ namespace MV.Meta
 
             int areaAfter = pass ? area + 1 : area;
             int runsAfter = s.Progress.Runs + 1;
+            int levelAfter = s.Progress.Level + 1;
             var progress = new JObject
             {
-                ["level"] = s.Progress.Level + 1,
+                ["level"] = levelAfter,
                 ["runs"] = runsAfter,
                 ["lastSettledRunSeq"] = seq,
                 ["cp"] = pass ? 0 : Math.Max(s.Progress.Cp, cpRun),
@@ -156,7 +157,7 @@ namespace MV.Meta
                 data[MvSaveKeys.AreaUp] = new JObject { ["lv"] = null };
             }
 
-            IReadOnlyList<string> newly = WriteUnlocks(data, area, s.Progress.Runs, areaAfter, runsAfter);
+            IReadOnlyList<string> newly = WriteUnlocks(data, UnlockProgress(), new MvUnlockProgress(areaAfter, runsAfter, levelAfter));
             var result = new JObject
             {
                 ["areaBefore"] = area, ["areaAfter"] = areaAfter, ["pass"] = pass, ["zoneEnd"] = zoneEnd, ["mul"] = mul,
@@ -183,12 +184,21 @@ namespace MV.Meta
 
         // ───────── 해금(07 §7.8.9) ─────────
 
-        /// <summary>열림 = sticky 기록 또는 조건 성립.</summary>
-        internal bool IsOpen(ContentOpenData row, int area, int runs, IReadOnlyCollection<string> opened)
-            => row != null && row.active && ((row.sticky && opened.Contains(row.key)) || MvMetaRules.ConditionMet(row, area, runs));
+        /// <summary>지금 저장의 해금 진행 값(Area·런 정산 수·Level).</summary>
+        internal MvUnlockProgress UnlockProgress()
+        {
+            var p = S.Progress;
+            return new MvUnlockProgress(p.Area, p.Runs, p.Level);
+        }
+
+        /// <summary>해금 단계(판정은 <see cref="MvUnlockRules"/> 한 곳).</summary>
+        internal MvUnlockState UnlockState(ContentOpenData row) => MvUnlockRules.State(row, UnlockProgress(), S.Unlock.Opened);
+
+        /// <summary>사용 가능 = sticky 기록 또는 조건 성립(<see cref="MvUnlockRules"/>).</summary>
+        internal bool IsOpen(ContentOpenData row) => UnlockState(row) == MvUnlockState.Open;
 
         /// <summary>조건이 성립한 sticky 행을 opened에 넣고, 이전에 닫혀 있다가 새로 열린 key를 돌려준다.</summary>
-        private IReadOnlyList<string> WriteUnlocks(JObject data, int areaBefore, int runsBefore, int areaAfter, int runsAfter)
+        private IReadOnlyList<string> WriteUnlocks(JObject data, MvUnlockProgress progressBefore, MvUnlockProgress progressAfter)
         {
             var opened = S.Unlock.Opened.ToList();
             var newly = new List<string>();
@@ -196,8 +206,8 @@ namespace MV.Meta
             foreach (var row in _t.ContentOpen.Sorted)
             {
                 if (string.IsNullOrEmpty(row.key)) continue;
-                bool before = IsOpen(row, areaBefore, runsBefore, opened);
-                bool after = IsOpen(row, areaAfter, runsAfter, opened);
+                bool before = MvUnlockRules.IsOpen(row, progressBefore, opened);
+                bool after = MvUnlockRules.IsOpen(row, progressAfter, opened);
                 if (row.sticky && after && !opened.Contains(row.key)) { opened.Add(row.key); changed = true; }
                 if (after && !before) newly.Add(row.key);
             }
@@ -281,8 +291,7 @@ namespace MV.Meta
 
         internal bool RebirthOpen()
         {
-            var row = _t.ContentOpen.ByKey(MvMetaRules.RebirthKey);
-            return IsOpen(row, S.Progress.Area, S.Progress.Runs, S.Unlock.Opened);
+            return IsOpen(_t.ContentOpen.ByKey(MvMetaRules.RebirthKey));
         }
 
         internal long RebirthCooldownLeftMs() => Math.Max(0, S.Rebirth.CdUntil - _clock.NowMs);
@@ -312,7 +321,7 @@ namespace MV.Meta
             };
             if (!wealth.TryWrite(Res, data, out string fail)) return MvMetaResponse.Reject(MvMetaErrors.NotEnough, fail);
             // 지금 열려 있는 sticky 기능은 Area가 0으로 돌아가도 열린 채 둔다(rb.open 대응).
-            WriteUnlocks(data, s.Progress.Area, s.Progress.Runs, s.Progress.Area, s.Progress.Runs);
+            WriteUnlocks(data, UnlockProgress(), UnlockProgress());
             return MvMetaResponse.Success(data, new JObject { ["got"] = got, ["lv"] = s.Rebirth.Lv + 1 });
         }
 
@@ -325,8 +334,7 @@ namespace MV.Meta
             {
                 case 0: return true;
                 case 1:
-                    var open = _t.ContentOpen.Get(god.openId);
-                    return IsOpen(open, S.Progress.Area, S.Progress.Runs, S.Unlock.Opened);
+                    return IsOpen(_t.ContentOpen.Get(god.openId));
                 default: return S.God.GodKeys.Contains(god.key); // 2 구매: 08 신 시스템(MV-META-god)이 mvGod.gods에 넣는다.
             }
         }
@@ -495,11 +503,14 @@ namespace MV.Meta
             return MvMetaResponse.Success(data, new JObject { ["wealthId"] = id, ["amount"] = amount });
         }
 
-        /// <summary>Level +1(정본 lvUp L3865).</summary>
+        /// <summary>Level +1(정본 lvUp L3865). Level 조건(07 §7.8.9)으로 열리는 sticky 기능은 정산과 같이 기록한다.</summary>
         private MvMetaResponse DebugLevelUp()
         {
-            int level = S.Progress.Level + 1;
-            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Progress] = new JObject { ["level"] = level } }, new JObject { ["level"] = level });
+            MvUnlockProgress before = UnlockProgress();
+            int level = before.Level + 1;
+            var data = new JObject { [MvSaveKeys.Progress] = new JObject { ["level"] = level } };
+            IReadOnlyList<string> newly = WriteUnlocks(data, before, new MvUnlockProgress(before.Area, before.Runs, level));
+            return MvMetaResponse.Success(data, new JObject { ["level"] = level, ["newlyOpened"] = new JArray(newly.Cast<object>().ToArray()) });
         }
 
         /// <summary>부활 바로 열기(정본 rbOpen L3866: 열림 + 쌓인 조각 +10). 열림은 sticky 기록(<c>mvUnlock.opened</c>)으로 남긴다.</summary>
@@ -524,30 +535,28 @@ namespace MV.Meta
         }
 
         /// <summary>
-        /// 전부 해금([창작]): 열림 조건(07 §7.8.9)은 그대로 두고, active 행이 모두 열리도록 Area(마지막 Area까지)·런 정산 수를 올린다.
-        /// sticky 기록·새로 열린 key는 정산과 같은 <see cref="WriteUnlocks"/>로 계산한다. Area가 바뀌면 cp는 새 Area 기준 0.
+        /// 전부 해금([창작]): 열림 조건(07 §7.8.9)은 그대로 두고, active 행이 모두 열리도록 Area(마지막 Area까지)·런 정산 수·Level을
+        /// <see cref="MvUnlockRules.Raise"/>로 올린다. sticky 기록·새로 열린 key는 정산과 같은 <see cref="WriteUnlocks"/>로 계산한다.
+        /// Area가 바뀌면 cp는 새 Area 기준 0.
         /// </summary>
         private MvMetaResponse DebugUnlockAll()
         {
-            MvSaveStore s = S;
-            int area = s.Progress.Area, runs = s.Progress.Runs;
+            MvUnlockProgress before = UnlockProgress();
             int lastArea = Math.Max(0, _t.RunConfig.I(RunConfigKeys.PLAYABLE_AREAS) - 1);
-            int areaAfter = area, runsAfter = runs;
+            MvUnlockProgress after = before;
             foreach (var row in _t.ContentOpen.Sorted)
-            {
-                if (row == null || !row.active) continue;
-                if (row.conditionType == 1) areaAfter = Math.Max(areaAfter, Math.Min(lastArea, row.conditionValue - 1));
-                else if (row.conditionType == 2) runsAfter = Math.Max(runsAfter, row.conditionValue);
-            }
+                if (row != null && row.active) after = MvUnlockRules.Raise(row, after, lastArea);
             var data = new JObject();
             var progress = new JObject();
-            if (areaAfter != area) { progress["area"] = areaAfter; progress["cp"] = null; }
-            if (runsAfter != runs) progress["runs"] = runsAfter;
+            if (after.Area != before.Area) { progress["area"] = after.Area; progress["cp"] = null; }
+            if (after.Runs != before.Runs) progress["runs"] = after.Runs;
+            if (after.Level != before.Level) progress["level"] = after.Level;
             if (progress.HasValues) data[MvSaveKeys.Progress] = progress;
-            IReadOnlyList<string> newly = WriteUnlocks(data, area, runs, areaAfter, runsAfter);
+            IReadOnlyList<string> newly = WriteUnlocks(data, before, after);
             return MvMetaResponse.Success(data, new JObject
             {
-                ["areaAfter"] = areaAfter, ["runsAfter"] = runsAfter, ["newlyOpened"] = new JArray(newly.Cast<object>().ToArray()),
+                ["areaAfter"] = after.Area, ["runsAfter"] = after.Runs, ["levelAfter"] = after.Level,
+                ["newlyOpened"] = new JArray(newly.Cast<object>().ToArray()),
             });
         }
 

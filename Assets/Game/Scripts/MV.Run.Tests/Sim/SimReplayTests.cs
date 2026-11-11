@@ -25,7 +25,7 @@ namespace MV.Run.Tests
         static void Run(string file)
         {
             var dump = SimReplay.Load(file);
-            var r = SimReplay.Play(RunTestTables.Load(), dump);
+            var r = SimReplay.Play(RunTestTables.ProtoEasy(), dump); // 프로토 덤프 = 프로토 easy 값(MV-SPEC2-FIX2)
             UnityEngine.Debug.Log($"[SIM] {file}: 프레임 일치 {r.Matched}/{r.Total}" + (r.FirstMismatch != null ? $", 첫 불일치 {r.FirstMismatch}" : ""));
             Assert.IsNull(r.FirstMismatch, $"{file} 프레임 일치 {r.Matched}/{r.Total}. 첫 불일치 {r.FirstMismatch}");
             Assert.AreEqual(r.Total, r.Matched);

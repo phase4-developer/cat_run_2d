@@ -27,6 +27,7 @@ namespace MV.Data.Tests
             Assert.That(war.spendResource.Single().TypeId, Is.EqualTo((int)ConsumeType.PlayResource));
             Assert.That(war.spendResource.Single().Id, Is.EqualTo(2001001));
             Assert.That(t.Content.ByKey("bigMouse").active, Is.False); // 2차.
+            Assert.That(t.Content.ByKey("churuRush").active, Is.False); // [창작], 사용자 지시로 꺼 둠(2026-11-11).
 
             Assert.That(t.ModeStage.LastStage(1), Is.EqualTo(16));
             Assert.That(t.ModeStage.LastStage(2), Is.EqualTo(15));

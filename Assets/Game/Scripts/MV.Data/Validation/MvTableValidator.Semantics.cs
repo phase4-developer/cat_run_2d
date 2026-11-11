@@ -23,6 +23,7 @@ namespace MV.Data
             CheckCards(t, r);
             CheckLevelPrices(t, r);
             CheckAdPlacement(t, r);
+            CheckContentOpen(t, r);
             CheckUiResource(t, r);
             CheckValueFormats(t, r);
             CheckPairValues(t, r);
@@ -350,6 +351,28 @@ namespace MV.Data
             }
             foreach (var key in s_requiredAdKeys)
                 if (!t.AdPlacement.HasKey(key)) r.Error(name, null, "key", $"화면이 찾는 key `{key}` 행이 없습니다");
+        }
+
+        /// <summary>05_contentOpen 조건 목록(07 §7.13.3): 종류·값 개수 같음, 종류는 <see cref="UnlockConditionType"/> 값, 값 0 이상.</summary>
+        static void CheckContentOpen(MvTables t, MvValidationReport r)
+        {
+            const string name = ContentOpenData.Table;
+            foreach (var o in t.ContentOpen.Datas.OrderBy(x => x.id))
+            {
+                CheckUnlockConditions(name, o.id, "showCondition", o.showConditionType, o.showConditionValue, r);
+                CheckUnlockConditions(name, o.id, "condition", o.conditionType, o.conditionValue, r);
+            }
+        }
+
+        static void CheckUnlockConditions(string table, int id, string prefix, IReadOnlyList<int> types, IReadOnlyList<int> values, MvValidationReport r)
+        {
+            if (types.Count != values.Count)
+                r.Error(table, id, prefix + "Value", $"{prefix}Type {types.Count}개와 {prefix}Value {values.Count}개의 개수가 다릅니다");
+            foreach (int type in types)
+                if (!Enum.IsDefined(typeof(UnlockConditionType), type))
+                    r.Error(table, id, prefix + "Type", $"조건 종류 {type}는 UnlockConditionType 값이 아닙니다");
+            foreach (int value in values)
+                if (value < 0) r.Error(table, id, prefix + "Value", $"조건 값 {value}는 0 이상이어야 합니다");
         }
 
         static void CheckUiResource(MvTables t, MvValidationReport r)

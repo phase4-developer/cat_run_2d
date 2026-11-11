@@ -250,16 +250,12 @@ namespace MV.UI
 
         bool IsLocked(ContentOpenData open) => open != null && !Port.IsOpen(open.key);
 
-        /// <summary>잠금 문구(<c>ui.content.lockAt</c>·<c>toastMessage:contentLocked</c>). 조건 0 항상 / 1 Area / 2 런 정산 수.</summary>
+        /// <summary>잠금 문구(<c>ui.content.lockAt</c>·<c>toastMessage:contentLocked</c>). 조건 문구는 <see cref="MvUnlockText"/>.</summary>
         public static string LockText(ContentOpenData open)
         {
             if (open == null) return "";
-            switch (open.conditionType)
-            {
-                case 1: return "Area " + open.conditionValue.ToString(Inv) + "에서 열려요";
-                case 2: return "런 " + open.conditionValue.ToString(Inv) + "번 뒤 열려요";
-                default: return "업데이트 예정";
-            }
+            string need = MvUnlockText.Need(open);
+            return need.Length > 0 ? need + " 달성 시 열려요" : "업데이트 예정";
         }
 
         void SaveSeen()

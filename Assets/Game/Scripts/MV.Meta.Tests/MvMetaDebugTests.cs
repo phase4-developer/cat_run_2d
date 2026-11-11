@@ -120,7 +120,7 @@ namespace MV.Meta.Tests
         [Test]
         public void DisarmRebirth_ClearsConfirmWait()
         {
-            SetContainer(MvSaveKeys.Progress, "\"area\":1");
+            SetContainer(MvSaveKeys.Progress, "\"area\":1,\"level\":" + RebirthUseLevel);
             Assert.That(Meta.PressRebirth(), Is.Null, "첫 누름 = 확인 대기");
             Assert.That(Meta.RebirthArmed, Is.True);
             Meta.DisarmRebirth();

@@ -100,15 +100,20 @@ namespace MV.Run.Tests
             Assert.AreEqual(0, PerLevelReward(t, new RunSetup(), AreaStatKey.GoldPerLevel, 4), 1e-12, "Lv 0이면 0");
         }
 
+        /// <summary>
+        /// Area 1 기본 난이도(06 easy = isDefault, scale 1·gauge 1, MV-SPEC2-FIX2). MV-SPEC-02 247 「임계값 T는 첫 장 1.9, 다음 5.7」,
+        /// 479 「게이트 충전·탑 게이지는 Area 단계를 따른다」.
+        /// </summary>
         [Test]
-        public void ChargeThresholds_Area1Easy()
+        public void ChargeThresholds_Area1Default()
         {
-            var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Preset = "easy" }); // 기본 행이 바뀌어도 easy 값으로 본다
+            var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } });
             var t = s.Tables;
-            // MV-SPEC-02: sgate는 107 mul1·useAreaHp0·diffMul0 + 지역 sgateM
-            Assert.AreEqual(5.7, Threshold(t.ChargeGate.ByKey("sgate"), 0, s.Bal, s.ZoneHp), 1e-9);
+            Assert.AreEqual(1, s.Bal.scale, "기본 난이도 scale 1");
+            // MV-SPEC-02: sgate는 107 mul1·useAreaHp0·diffMul0 + 지역 sgateM. 표가 비었을 때 107 base 1.9.
+            Assert.AreEqual(1.9, Threshold(t.ChargeGate.ByKey("sgate"), 0, s.Bal, s.ZoneHp), 1e-9);
             var cg = t.ChargeGate.ByKey("cgate");
-            Assert.AreEqual(new[] { 5.7, 17.1, 28.5, 39.9 }, Enumerable.Range(0, 4).Select(k => System.Math.Round(Threshold(cg, k, s.Bal, s.ZoneHp), 9)).ToArray());
+            Assert.AreEqual(new[] { 1.9, 5.7, 9.5, 13.3 }, Enumerable.Range(0, 4).Select(k => System.Math.Round(Threshold(cg, k, s.Bal, s.ZoneHp), 9)).ToArray());
             var need = Enumerable.Range(1, 7).Select(lv => System.Math.Round(GaugeNeed(s, lv), 2)).ToArray();
             Assert.AreEqual(new[] { 150, 240, 384, 614.4, 983.04, 1572.86, 2516.58 }, need);
         }
@@ -170,13 +175,16 @@ namespace MV.Run.Tests
         static RunSetup BoxSetup(RunModifiers mods = default, int perkDcap = 0) =>
             new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy", Modifiers = mods, PerkDcap = perkDcap };
 
+        /// <summary>상자 시험: 프로토 easy 연사 표(MV-SPEC2-FIX2, RunTestTables.ProtoEasy).</summary>
+        static RunSim BoxSim(HandLevel lv, RunSetup setup, IRng rng = null) => RunSim.Create(setup, RunTestTables.ProtoEasy(), rng ?? new ConstRng(0.5), lv);
+
         static List<RunEvent> Gains(RunSim sim, RunObject o) => Ev(sim, RunEventType.Gain).Where(e => e.ObjId == o.Id).ToList();
 
         [Test]
         public void Box_SharesSumToTotalAndBreak()
         {
             // 2026-11-11 사용자 결정(MV-RUN-SPLITREWARD): 총량(rewardValue + perZone)을 rewardShares 등분해 피해 비율대로 준다. 타격·파괴 별도 보상 없음.
-            var sim = Sim(new HandLevel().Add("coin", 0, 30), BoxSetup());
+            var sim = BoxSim(new HandLevel().Add("coin", 0, 30), BoxSetup());
             Run(sim, 480);
             var s = sim.State;
             var box = s.Objs[0];
@@ -192,7 +200,7 @@ namespace MV.Run.Tests
         public void Box_OneHitCrossingSeveralThresholdsPaysAll()
         {
             // 첫 타격 뒤 체력을 그 피해 × 2로 다시 맞추면, 다음 한 타격이 문턱 N/2개를 한 번에 넘는다.
-            var sim = Sim(new HandLevel().Add("coin", 0, 30), BoxSetup());
+            var sim = BoxSim(new HandLevel().Add("coin", 0, 30), BoxSetup());
             var box = sim.State.Objs[0];
             int frames = 0;
             while (Ev(sim, RunEventType.Hit).Count(e => e.ObjId == box.Id) == 0 && frames++ < 480) sim.Tick(1 / 60.0, default);
@@ -215,7 +223,7 @@ namespace MV.Run.Tests
         public void Box_RemainderOnLastShare()
         {
             // 보너스 금화 더미: zone 0 총량 12, 10등분 → 1 × 9 + 3.
-            var sim = Sim(new HandLevel().Add("coinBonus", 0, 30), BoxSetup());
+            var sim = BoxSim(new HandLevel().Add("coinBonus", 0, 30), BoxSetup());
             Run(sim, 480);
             var box = sim.State.Objs[0];
             Assert.IsTrue(box.Dead);
@@ -231,7 +239,7 @@ namespace MV.Run.Tests
         [Test]
         public void Box_GoldPerkAppliedPerShare()
         {
-            var sim = Sim(new HandLevel().Add("coin", 0, 30), BoxSetup(new RunModifiers { Gold = 10 }));
+            var sim = BoxSim(new HandLevel().Add("coin", 0, 30), BoxSetup(new RunModifiers { Gold = 10 }));
             double gm = GoldMul(sim.State);
             Run(sim, 480);
             var box = sim.State.Objs[0];
@@ -248,7 +256,7 @@ namespace MV.Run.Tests
         public void Ore_OneShareOnBreakRollsDrop(double roll, bool dropped)
         {
             // 원석: rewardShares 1 = 부술 때 한 번. 그 몫에서 dropId(801002001, 10%) 추첨. 블루 마법석 획득량 특성(DiaCap)이 몫에 붙는다.
-            var sim = Sim(new HandLevel().Add("gem", 0, 30), BoxSetup(perkDcap: 2), new ConstRng(roll));
+            var sim = BoxSim(new HandLevel().Add("gem", 0, 30), BoxSetup(perkDcap: 2), new ConstRng(roll));
             var ore = sim.State.Objs[0];
             Assert.AreEqual(1, ore.Kind.rewardShares);
             Run(sim, 480);
@@ -386,7 +394,7 @@ namespace MV.Run.Tests
                 ["id"] = "105001099", ["key"] = "fishCrate", ["hpRuleId"] = "114001004", ["rewardType"] = "603", ["rewardValue"] = "2", ["rewardValuePerZone"] = "0",
                 ["rewardShares"] = "2",
             });
-            var t = RunTestTables.Load(new Dictionary<string, string> { ["105_objectKind"] = kinds });
+            var t = RunTestTables.Load(RunTestTables.WithProtoEasy(new Dictionary<string, string> { ["105_objectKind"] = kinds })); // 프로토 easy 연사(MV-SPEC2-FIX2)
             Assert.IsNotNull(t.ObjectKind.ByKey("fishCrate"));
             var lv = new HandLevel().Add("fishCrate", 0, 20);
             // 피해 10인 단계(103 더미 5단계)·easy 연사(MV-SPEC2-FIX1: 1단계 피해 1).

@@ -374,11 +374,11 @@ namespace MV.Meta
         // ═════════ 해금(07 §7.8.9) ═════════
 
         /// <summary>기능 열림(sticky 기록 또는 조건 성립). 모르는 key는 false.</summary>
-        public bool IsOpen(string key)
-        {
-            if (!IsReady) return false;
-            return _local.IsOpen(Tables.ContentOpen.ByKey(key), Store.Progress.Area, Store.Progress.Runs, Store.Unlock.Opened);
-        }
+        public bool IsOpen(string key) => UnlockState(key) == MvUnlockState.Open;
+
+        /// <summary>해금 단계(숨김·잠금 표시·사용 가능, <see cref="MvUnlockRules"/>). 준비 전·모르는 key는 숨김.</summary>
+        public MvUnlockState UnlockState(string key)
+            => IsReady ? _local.UnlockState(Tables.ContentOpen.ByKey(key)) : MvUnlockState.Hidden;
 
         /// <summary>해금 연출 대상: 열림 && 연출 안 봄.</summary>
         public IReadOnlyList<string> PendingUnlockShows()

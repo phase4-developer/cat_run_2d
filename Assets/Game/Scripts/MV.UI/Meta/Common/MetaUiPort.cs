@@ -84,6 +84,8 @@ namespace MV.UI
         void WatchAdForReward(string key, Action<MetaResult> done);
 
         bool IsOpen(string key);
+        /// <summary>해금 단계(<see cref="MvUnlockRules"/>). 기본 구현은 열림/잠김만 본다(시험 가짜가 고치지 않아도 되게).</summary>
+        MvUnlockState UnlockState(string key) => IsOpen(key) ? MvUnlockState.Open : MvUnlockState.Locked;
         IReadOnlyList<string> PendingUnlockShows();
         MetaResult MarkUnlockSeen(string key);
 
@@ -209,6 +211,7 @@ namespace MV.UI
         public MetaResult SetMuted(bool muted) => Ready ? Of(M.SetMuted(muted)) : MetaResult.Fail(MvMetaErrors.NoStore);
 
         public bool IsOpen(string key) => Ready && M.IsOpen(key);
+        public MvUnlockState UnlockState(string key) => Ready ? M.UnlockState(key) : MvUnlockState.Hidden;
         public IReadOnlyList<string> PendingUnlockShows() => Ready ? M.PendingUnlockShows() : Array.Empty<string>();
         public MetaResult MarkUnlockSeen(string key) => Ready ? Of(M.MarkSeen(new[] { key })) : MetaResult.Fail(MvMetaErrors.NoStore);
 

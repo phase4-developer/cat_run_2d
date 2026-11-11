@@ -53,10 +53,11 @@ namespace MV.UI
             var port = data?.Port ?? MvMetaUiPort.Instance;
             if (port.Ready && !port.RebirthOpen)
             {
-                // 해금 Area는 05_contentOpen 행 한 곳에서 읽는다(코드에 기본 Area를 두지 않는다).
-                var row = port.Tables?.ContentOpen.ByKey(MV.Meta.MvMetaRules.RebirthKey);
-                if (row != null) MvUiToast.Show("Area " + row.conditionValue + " 개방 시 해금"); // ui.rb.goLocked
-                else UnityEngine.Debug.LogError("[MvUiNav] 05_contentOpen에 `" + MV.Meta.MvMetaRules.RebirthKey + "` 행이 없습니다.");
+                // 해금 조건은 05_contentOpen 행 한 곳에서 읽는다(코드에 기본값을 두지 않는다). 문구는 공용 MvUnlockText.
+                string key = MV.Meta.MvMetaRules.RebirthKey;
+                var row = port.Tables?.ContentOpen.ByKey(key);
+                if (row != null) MvUiToast.Show(MvUnlockText.Need(row, port.UnlockState(key)) + " 달성 시 해금"); // ui.rb.goLocked
+                else UnityEngine.Debug.LogError("[MvUiNav] 05_contentOpen에 `" + key + "` 행이 없습니다.");
                 return null;
             }
             return await Ui.SpawnUIPopupAsync(MvUiIds.Rebirth, data ?? new MetaPopupData()) as RebirthPopup;
