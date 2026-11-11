@@ -57,12 +57,13 @@ namespace MV.Fx
         readonly List<int> _order;
         readonly Stack<int> _free;
         public readonly int Max;
-        public float Life = 0.8f, Rise = 1.4f, ScaleIn = 0.15f, ScaleBoost = 3f, FadeFrom = 0.6f, FontU = 4.2f;
+        /// <summary>`300_runConfig` pop.*(<see cref="FromTables"/>가 채운다, 코드 기본값 없음).</summary>
+        public float Life, Rise, ScaleIn, ScaleBoost, FadeFrom, FontU;
 
         public IMvPopView View;
         public IMvScreenProjector Projector;
 
-        public MvPopPool(int max = 61)
+        public MvPopPool(int max)
         {
             Max = Mathf.Max(1, max);
             _items = new Entry[Max];
@@ -71,16 +72,17 @@ namespace MV.Fx
             for (int i = Max - 1; i >= 0; i--) _free.Push(i);
         }
 
+        /// <summary>표에서 만든다. 표가 없거나 키가 없으면 예외(대체값 없음).</summary>
         public static MvPopPool FromTables(MvTables t)
         {
-            var c = t?.RunConfig;
-            float F(string k, float d) => c != null && c.Has(k) ? (float)c.D(k) : d;
-            var p = new MvPopPool(c != null && c.Has(RunConfigKeys.Pop_Max) ? c.I(RunConfigKeys.Pop_Max) : 61)
+            if (t == null) throw new System.ArgumentNullException(nameof(t));
+            var c = t.RunConfig;
+            float F(string k) => (float)c.D(k);
+            return new MvPopPool(c.I(RunConfigKeys.Pop_Max))
             {
-                Life = F(RunConfigKeys.Pop_Life, 0.8f), Rise = F(RunConfigKeys.Pop_Rise, 1.4f), ScaleIn = F(RunConfigKeys.Pop_ScaleIn, 0.15f),
-                ScaleBoost = F(RunConfigKeys.Pop_ScaleBoost, 3f), FadeFrom = F(RunConfigKeys.Pop_FadeFrom, 0.6f), FontU = F(RunConfigKeys.Pop_FontU, 4.2f),
+                Life = F(RunConfigKeys.Pop_Life), Rise = F(RunConfigKeys.Pop_Rise), ScaleIn = F(RunConfigKeys.Pop_ScaleIn),
+                ScaleBoost = F(RunConfigKeys.Pop_ScaleBoost), FadeFrom = F(RunConfigKeys.Pop_FadeFrom), FontU = F(RunConfigKeys.Pop_FontU),
             };
-            return p;
         }
 
         public int ActiveCount => _order.Count;

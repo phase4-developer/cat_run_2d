@@ -24,12 +24,37 @@ namespace MV.View.Tests
         [TestCase(6, 6)]
         [TestCase(8, 8)]
         [TestCase(9, 8)]
-        public void ProjSpriteName_ReadsItemTableAndClampsTier(int tier, int drawn)
+        [TestCase(12, 8)]
+        [TestCase(13, 8)]
+        public void ProjSpriteName_ReadsItemTable_ReusesLastArtAboveArtCount(int tier, int drawn)
         {
-            string expected = "World_Proj_" + drawn;
+            // 103은 12등급, 그림은 8장: 9~12등급은 표 projSprite가 8단계 그림, 표 최고 등급 위는 최고 등급 그림.
             var names = ProjLayout.NamesByTier(ViewTestTables.Load());
-            Assert.That(ProjLayout.ProjSpriteName(tier, names), Is.EqualTo(expected));
-            Assert.That(ProjLayout.ProjSpriteName(tier, null), Is.EqualTo(expected), "표 없음 = 기본 이름");
+            Assert.That(names.Length - 1, Is.EqualTo(12), "등급 수는 103 행에서");
+            Assert.That(ProjLayout.ProjSpriteName(tier, names), Is.EqualTo("World_Proj_" + drawn));
+            Assert.That(ProjLayout.ProjSpriteName(tier, null), Is.Null, "표 없음 = 그리지 않음(대체 이름 없음)");
+        }
+
+        [Test]
+        public void NamesByTier_EmptyProjSprite_ReusesPreviousTierArt()
+        {
+            var t = ViewTestTables.WithCell("103_item", "w10", "projSprite", "");
+            t.BuildIndexes();
+            var names = ProjLayout.NamesByTier(t);
+            Assert.That(names[10], Is.EqualTo(names[9]), "빈 그림은 바로 아래 등급 그림");
+        }
+
+        [Test]
+        public void OrbConfig_ReadsRunConfigTable()
+        {
+            var orb = OrbConfig.From(ViewTestTables.Load().RunConfig);
+            Assert.That(orb.Count, Is.EqualTo(3));
+            Assert.That(orb.Radius, Is.EqualTo(1.5).Within(1e-12));
+            Assert.That(ProjLayout.SpinRate(true, false, orb), Is.EqualTo(4).Within(1e-12), "ORB_ANG_SPEED");
+            Assert.That(ProjLayout.SpinRate(true, true, orb), Is.EqualTo(9).Within(1e-12), "+ BLADE_ANG_SPEED");
+            var t = ViewTestTables.WithCell("300_runConfig", "ORB_COUNT", "value", "5");
+            t.BuildIndexes();
+            Assert.That(OrbConfig.From(t.RunConfig).Count, Is.EqualTo(5), "표만 바꿔 개수가 따라 바뀐다");
         }
 
         [Test]
@@ -67,9 +92,10 @@ namespace MV.View.Tests
                 { 0.5, 1, -0.9809789648991944, 0.8667023477486399, 10.780444034819785 },
                 { 7.25, 2, 0.9432702959232617, 0.8837768561168614, 8.644934198504442 },
             };
+            var orb = OrbConfig.From(ViewTestTables.Load().RunConfig);
             for (int r = 0; r < g.GetLength(0); r++)
             {
-                ProjLayout.BladePos(g[r, 0], (int)g[r, 1], 0.3, 10, out double x, out double y, out double z);
+                ProjLayout.BladePos(g[r, 0], (int)g[r, 1], orb, 0.3, 10, out double x, out double y, out double z);
                 Assert.That(x, Is.EqualTo(g[r, 2]).Within(1e-12), "x " + r);
                 Assert.That(y, Is.EqualTo(g[r, 3]).Within(1e-12), "y " + r);
                 Assert.That(z, Is.EqualTo(g[r, 4]).Within(1e-12), "z " + r);
