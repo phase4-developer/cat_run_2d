@@ -318,10 +318,9 @@ MvTables.Current = tables;
 
 | id | key | rate | scale | diff | gauge | isDefault | 이름(`name` 키 = id) | 근거 |
 |---|---|---|---|---|---|---|---|---|
-| 1 | easy | 2.0 | 3 | 0.02 | 1 | 0 | 쉬움(기본)(name은 시트와 같게 둠) | [프로토] L832~833, D-03(밸런스 시험용으로 유지) |
+| 1 | easy | 0.95 | 1 | 0 | 1 | 1 | 쉬움(기본) | MV-SPEC2-FIX2(2026-11-11 사용자 「쉬움값 기획서 대로」): MV-SPEC-02 01 155 「기본 연사 0.95」, 479 「오브젝트 체력·게이트 충전·탑 게이지는 Area 단계를 따른다」→ scale 1·gauge 1, 636(13-2) 계단 게이트 D(n) 「원작 M 표만 적용」→ diff 0. 기본 난이도 = 이 행. 예전 프로토 값(2.0·3·0.02·1, L832~833)은 프로토 덤프 대조 시험 안에서만 쓴다 |
 | 2 | mid | 1.4 | 5 | 0.01 | 1.4 | 0 | 임시 기본 | [프로토] L832 |
 | 3 | orig | 0.95 | 10 | 0 | 2 | 0 | 원작 근사 | [프로토] L832 |
-| 6001004 | base | 0.95 | 1 | 0 | 1 | 1 | 새 기준 기본 | MV-SPEC-02 01 155 「기본 연사 0.95」, scale 1(원작 피해 단위 1, 228), diff 0(MV-SPEC2-FIX1 사용자 결정). 기본 난이도 = 이 행 |
 
 - 릴리스는 isDefault 고정. 개발 빌드 디버그 패널만 바꾼다([05](05_Screens.md)). 디버그 연사 슬라이더(0.95~4, 0.05 간격, L717)는 디버그 UI 상수라 표에 두지 않는다.
 - 적용되는 곳·안 되는 곳은 [04 §4.15](04_GameRules.md).
@@ -475,7 +474,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2): 그룹 101 `RUN_SPEED_MID`, 104 `WEAPON_STACK_
 | `WELL_BRICK_FLY` / `FLY_MS` | `108_receiveCondition[wellGauge]`·`[sgatePass]`.`delayMs`(규칙) + `fly.removeMs`(그림) | 규칙 지연은 108이 정본. 그림 값이 다르면 검증 경고 |
 | `CRAFT_ICON_GAP_MS` | `fly.cloneGapMs` | 06 정본 |
 | `FOG_START`/`FOG_LEN` | `view.fogStart`/`view.fogRange` | 02 정본 |
-| `RB_OPEN_AREA` | `05_contentOpen[rebirth]`(conditionType 1 = areaNo 2, sticky) | 해금은 해금 표 한 곳에서(§7.8.9) |
+| `RB_OPEN_AREA` | `05_contentOpen[rebirth]`(잠금 표시 Area 2, 사용 Level 15, sticky. §7.8.9) | 해금은 해금 표 한 곳에서(§7.8.9) |
 | `RB_ARM_SEC` / `RB_CD_SEC` | `00_config.rebirthArmSec` / `rebirthCooldownSec` | 메타 상수(04 §4.19.4 요청) |
 | `RL_*` 8개 | `330_climb` 설정 행의 `rl*` 열 | 04 §4.19.4 요청 |
 | `GAUGE_MAX` / `CRAFT_CAP` | `107_chargeGate[well].cap` / `[cgate].cap` | 컴포넌트 값 |
@@ -1691,16 +1690,29 @@ id	group	targetLevel	priceType	priceId	priceValue
 | contentId | int | 모드 행이면 `400_content.id`, 메타 시스템이면 0 |
 | sort, active | int | active 0 = 지도에 「업데이트 예정」 |
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
-| conditionType | int | 0 항상 / 1 Area 도달(`areaNo ≥ conditionValue`, 즉 `save.area + 1 ≥ value`) / 2 본편 런 정산 수 ≥ value |
-| conditionValue | int | |
+| showConditionType | intList | **잠금 표시**(보이지만 잠김) 조건 종류 목록(`/` 구분, 모두 성립). 비면 늘 보인다(잠긴 채). 종류 값은 아래 「조건 종류」 |
+| showConditionValue | intList | 짝 값 목록. 개수는 showConditionType과 같아야 한다 |
+| conditionType | intList | **사용 가능** 조건 종류 목록(`/` 구분, 모두 성립). 사용 가능은 잠금 표시 조건도 함께 성립해야 한다 |
+| conditionValue | intList | 짝 값 목록. 개수는 conditionType과 같아야 한다 |
 | sticky | bool01 | 1이면 한 번 열리면 유지(부활로 Area가 1로 돌아가도). 저장 `mvUnlock.opened`([09 §9.3.3](09_Save.md)) |
 | showOnMap | bool01 | 지도 Area 칸에 표시(정본 `MAP_FEATS` 대체) |
 
+조건 종류(`UnlockConditionType`, MV.Data). 새 종류는 값 1개 + 판정 `MvUnlockRules.Met` 한 줄 + 문구 `MvUnlockText.Phrase` 한 줄(MV-UNLOCK-1):
+
+| 값 | 이름 | 성립 |
+|---|---|---|
+| 0 | Always | 항상 |
+| 1 | Area | `areaNo ≥ value`, 즉 `save.area + 1 ≥ value` |
+| 2 | Runs | 본편 런 정산 수 ≥ value |
+| 3 | Level | `mvProgress.level ≥ value`(런 1회 = Level +1, 부활해도 유지) |
+
+판정은 `MV.Meta.MvUnlockRules` 한 곳이 한다(숨김 `Hidden` / 잠금 표시 `Locked` / 사용 가능 `Open`). active 0 또는 잠금 표시 조건 전 = 숨김. sticky 기록(`mvUnlock.opened`)이 있으면 진행이 되돌아가도 사용 가능. 지도 칸은 잠금 표시 조건, 없으면 사용 가능 조건의 첫 Area 조건 값(`MvUnlockRules.MapArea`). 검증(§7.13.3): 종류·값 개수 같음, 종류는 정의된 값, 값 0 이상.
+
 정본 대응 행:
 
-| id | key | conditionType / Value | sticky | 근거 |
-|---|---|---|---|---|
-| 5001001 | rebirth | 1 / 2 | 1 | [프로토] `rbOpen = rb.open \|\| area ≥ 1` L2536. `rb.open`이 sticky다. 04의 `RB_OPEN_AREA`는 이 행 |
+| id | key | showCondition Type / Value | condition Type / Value | sticky | 근거 |
+|---|---|---|---|---|---|
+| 5001001 | rebirth | 1 / 2 | 3 / 15 | 1 | MV-SPEC-02 01_코어게임루프 11-3 「해금 조건」(546~550줄): Area 2 개방 시 로비 버튼 노출(잠금), Level 15 도달 시 사용 가능 **[원작]**. 프로토의 「Area 2 즉시 사용」(`rbOpen` L2536)을 2단계로 고친다. `rb.open`이 sticky다. 04의 `RB_OPEN_AREA`는 이 행 |
 
 - 정본 지도의 「레이스」(Area 7, L2585)는 행을 만들지 않는다(사용자 제외 지시, D-64).
 - MV-SPEC-02 반영(MV-DATA-SPEC2, Q-21): 사자자리냥 해금(5001004)은 active 0.
@@ -1939,7 +1951,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-16): 묶음 801002001 = 블루 마법석(604 
 | `102_enemy` | 102001002 | mouseDefence | hpRuleId modeStage, moveAiId advance, 보상 없음, sprite `World_Enemy_Mouse` |
 | `102_enemy` | 102001003 | bossMouse | hw 2.2, hd 1.2(102에 `hw`·`hd` 덮어쓰기 열 추가, 빈칸 = 105 값), sprite `World_Enemy_BigMouse`(03 신규), hpRuleId modeStage |
 | `105_objectKind` | 105001013 | cardbox | breakable 1, hittable Always, hpRule box06, receive onBreak, reward `601 / 0 / 1`(현재 풀 무작위 1장), sprite 08·03 |
-| `310_template` | 310000101, 310000102 | rush1, rush2 | 츄르 털이 전용(08 §8.4.7), 311 행 `311101xxx`·`311102xxx` |
+| `310_template` | 310000101, 310000102 | rush1, rush2 | 츄르 털이 전용(08 §8.4.7), 311 행 `311101xxx`·`311102xxx`. 모두 active 0([창작], 기획서 근거 없음 — 사용자 지시로 꺼 둠(2026-11-11)) |
 | `111_cardPool` | 111002xxx, 111003xxx | defence, rush | §7.7.4 |
 
 `102_enemy`에 열 추가: `hw`, `hd`(float, 빈칸 = 105 값), `scale`(그림 배율, 빈칸 = 1).
@@ -2292,7 +2304,7 @@ id	group	floor	h0	h1	rows	souls	cellMode
 |---|---|---|
 | 04 `floorSetId` | `302_area.floorGroup` | 08과 같은 이름 |
 | 04 `RL_*` 8개 | `330_climb` 설정 행(`330000001`)의 `rl*` 열 | 워프 행과 rowType으로 구분 |
-| 04 `RB_OPEN_AREA` | `05_contentOpen[rebirth]` conditionType 1 = areaNo(2), sticky | |
+| 04 `RB_OPEN_AREA` | `05_contentOpen[rebirth]` 잠금 표시 showConditionType 1 = areaNo(2), 사용 conditionType 3 = Level(15), sticky | |
 | 04 `RB_ARM_SEC`·`RB_CD_SEC` | `00_config.rebirthArmSec`·`rebirthCooldownSec` | |
 | 04 `DT_CAP`·`HITSTOP_*`·`SHAKE_*`·`FOG_*`·`WELL_FLUSH_SEC`·`CRAFT_ICON_GAP_MS` | 02·06 키(`time.*`·`hitstop.*`·`shake.*`·`view.fog*`·`fx.brickFlushInterval`·`fly.cloneGapMs`) | §7.3.3 대응표 |
 | 04 카드 효과 이름 AddClone·Proc·Chain·Spear·DoubleShot·Blade·Chill | CloneAdd·ProcExtraHit/ProcBurn·ChainJump/ChainSplash·PierceEveryN·DoubleChance·Spin·ProcChill | §7.7.5 |

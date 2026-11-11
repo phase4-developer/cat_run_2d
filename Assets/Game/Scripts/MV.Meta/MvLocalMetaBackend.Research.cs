@@ -18,11 +18,7 @@ namespace MV.Meta
             return MvResearchRules.TryParseKey(r.RunningKey, out int group) ? new MvResearchRun(group, r.RunningFinishAt) : MvResearchRun.None;
         }
 
-        internal bool ResearchOpen()
-        {
-            MvSaveStore s = S;
-            return IsOpen(_t.ContentOpen.ByKey(MvResearchRules.UnlockKey), s.Progress.Area, s.Progress.Runs, s.Unlock.Opened);
-        }
+        internal bool ResearchOpen() => IsOpen(_t.ContentOpen.ByKey(MvResearchRules.UnlockKey));
 
         static bool TryGroup(JObject p, out int group)
         {

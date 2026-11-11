@@ -107,6 +107,10 @@ namespace MV.Meta.Tests
 
         protected long W(int id) => Res.GetRaw(id);
 
+        /// <summary>부활이 사용 가능해지는 Level(표 <c>05_contentOpen[rebirth]</c> 조건을 <see cref="MvUnlockRules.Raise"/>로 읽음).</summary>
+        protected int RebirthUseLevel
+            => MvUnlockRules.Raise(Tables.ContentOpen.ByKey(MvMetaRules.RebirthKey), new MvUnlockProgress(0, 0, 0), int.MaxValue).Level;
+
         protected static MvRunOutcome Outcome(long seq, MvRunEnd end, double gold = 0, int souls = 0, int dia = 0, int cpRun = 0,
             IReadOnlyList<IReadOnlyDictionary<int, double>> bars = null, IReadOnlyList<MV.Data.ConsumeData> pending = null)
             => new MvRunOutcome { RunSeq = seq, End = end, Gold = gold, Souls = souls, Dia = dia, CpRun = cpRun, Bars = bars, PendingSettle = pending };

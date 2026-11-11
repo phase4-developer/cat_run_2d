@@ -50,7 +50,7 @@ namespace MV.Run.Tests.Rule
         [Test]
         public void ModeClear_HooksInOrder_NoRunRngFromHooks()
         {
-            var t = RunTestTables.Load();
+            var t = RunTestTables.ProtoEasy(); // 프로토 easy 연사로 상자를 깬다(MV-SPEC2-FIX2)
             var lv = new HandLevel().Add("coin", 0, 20);
             var split = new SplitLevel(lv);
             var probe = new ProbeRule(split);

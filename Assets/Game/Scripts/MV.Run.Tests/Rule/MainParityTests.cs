@@ -45,7 +45,7 @@ namespace MV.Run.Tests.Rule
 
         static void Check(int area)
         {
-            var t = RunTestTables.Load();
+            var t = RunTestTables.ProtoEasy(); // 골든은 프로토 easy 값으로 기록됨(MV-SPEC2-FIX2: 표 easy는 기획서 값)
             var bad = new List<string>();
             foreach (int level in ParityRun.Levels)
             {

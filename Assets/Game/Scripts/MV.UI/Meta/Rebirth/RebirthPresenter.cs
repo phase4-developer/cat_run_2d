@@ -56,7 +56,7 @@ namespace MV.UI
 
             int pending = Port.RebirthPending;
             if (!Port.RebirthOpen)
-                m.Confirm = new MetaAction(GoId, "Area " + OpenArea(tables) + " 개방 시 해금", false); // ui.rb.goLocked
+                m.Confirm = new MetaAction(GoId, LockedText(tables), false); // ui.rb.goLocked
             else if (cd > 0)
                 m.Confirm = new MetaAction(GoId, "쿨타임 " + Hms(cd), false); // ui.rb.goCd
             else if (Port.RebirthArmed)
@@ -65,7 +65,9 @@ namespace MV.UI
                 m.Confirm = new MetaAction(GoId, "부활 · 조각 +" + pending, true); // ui.rb.goBase
         }
 
-        static int OpenArea(MvTables tables) => tables.ContentOpen.ByKey(MvMetaRules.RebirthKey)?.conditionValue ?? 2;
+        /// <summary>잠김 문구: 표 <c>05_contentOpen[rebirth]</c>의 남은 조건(<see cref="MvUnlockText"/>).</summary>
+        string LockedText(MvTables tables)
+            => MvUnlockText.Need(tables.ContentOpen.ByKey(MvMetaRules.RebirthKey), Port.UnlockState(MvMetaRules.RebirthKey)) + " 달성 시 해금";
 
         static long SkipMinutes(AdPlacementData skip)
         {

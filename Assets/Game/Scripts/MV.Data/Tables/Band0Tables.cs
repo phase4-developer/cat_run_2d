@@ -190,17 +190,60 @@ namespace MV.Data
 
     // ---------------- 05_contentOpen ----------------
 
+    /// <summary>
+    /// 해금 조건 종류(07 §7.8.9). 표 값(int)이 곧 enum 값이다. 새 종류 = 여기에 값 1개 + 판정 <c>MvUnlockRules.Met</c> 한 줄
+    /// (+ 화면 문구 <c>MvUnlockText.Phrase</c> 한 줄). 검증기는 정의되지 않은 값을 오류로 막는다.
+    /// </summary>
+    public enum UnlockConditionType
+    {
+        /// <summary>항상 성립.</summary>
+        Always = 0,
+        /// <summary>Area 도달: areaNo(= <c>save.area + 1</c>) ≥ 값.</summary>
+        Area = 1,
+        /// <summary>본편 런 정산 수 ≥ 값.</summary>
+        Runs = 2,
+        /// <summary>Level(<c>mvProgress.level</c>, 런 1회 = Level +1) ≥ 값.</summary>
+        Level = 3,
+    }
+
+    /// <summary>해금 조건 1개(종류 + 값).</summary>
+    public readonly struct UnlockCondition
+    {
+        public readonly UnlockConditionType type;
+        public readonly int value;
+
+        public UnlockCondition(UnlockConditionType type, int value)
+        {
+            this.type = type;
+            this.value = value;
+        }
+
+        public override string ToString() => type + "≥" + value;
+    }
+
+    /// <summary>
+    /// 05_contentOpen — 해금 행(07 §7.8.9). 행 1개 = 기능 key 1개. 조건은 두 단계이고 단계마다 여러 개(`/` 목록, 모두 성립해야 함):
+    /// <c>showCondition*</c> = 잠금 표시(보이지만 잠김), <c>condition*</c> = 사용 가능. 판정은 <c>MV.Meta.MvUnlockRules</c> 한 곳.
+    /// </summary>
     public sealed class ContentOpenData : MvRow
     {
         public const string Table = "05_contentOpen";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Fk("contentId", ContentData.Table).Int("sort").Bool("active")
-            .Res("icon", MvAtlas.UiIcon).Int("conditionType", true).Int("conditionValue").Bool("sticky").Bool("showOnMap");
+            .Res("icon", MvAtlas.UiIcon).Ints("showConditionType").Ints("showConditionValue").Ints("conditionType", true).Ints("conditionValue")
+            .Bool("sticky").Bool("showOnMap");
 
         public int contentId { get; private set; }
         public string icon { get; private set; }
-        /// <summary>0 항상 / 1 Area 도달(areaNo ≥ 값) / 2 본편 런 정산 수 ≥ 값.</summary>
-        public int conditionType { get; private set; }
-        public int conditionValue { get; private set; }
+        /// <summary>잠금 표시 조건 종류 목록(원문). 비면 늘 보인다(잠긴 채).</summary>
+        public IReadOnlyList<int> showConditionType { get; private set; }
+        public IReadOnlyList<int> showConditionValue { get; private set; }
+        /// <summary>사용 가능 조건 종류 목록(원문, <see cref="UnlockConditionType"/> 값).</summary>
+        public IReadOnlyList<int> conditionType { get; private set; }
+        public IReadOnlyList<int> conditionValue { get; private set; }
+        /// <summary>잠금 표시 조건(종류·값 짝). 값 칸이 짧으면 0.</summary>
+        public IReadOnlyList<UnlockCondition> showConditions { get; private set; }
+        /// <summary>사용 가능 조건(종류·값 짝). 사용 가능은 잠금 표시 조건도 함께 성립해야 한다.</summary>
+        public IReadOnlyList<UnlockCondition> openConditions { get; private set; }
         public bool sticky { get; private set; }
         public bool showOnMap { get; private set; }
 
@@ -211,10 +254,22 @@ namespace MV.Data
             base.Init(r);
             contentId = I(r, "contentId");
             icon = S(r, "icon");
-            conditionType = I(r, "conditionType");
-            conditionValue = I(r, "conditionValue");
+            showConditionType = Ints(r, "showConditionType");
+            showConditionValue = Ints(r, "showConditionValue");
+            conditionType = Ints(r, "conditionType");
+            conditionValue = Ints(r, "conditionValue");
+            showConditions = Pair(showConditionType, showConditionValue);
+            openConditions = Pair(conditionType, conditionValue);
             sticky = Bool(r, "sticky");
             showOnMap = Bool(r, "showOnMap");
+        }
+
+        static IReadOnlyList<UnlockCondition> Pair(IReadOnlyList<int> types, IReadOnlyList<int> values)
+        {
+            var list = new List<UnlockCondition>(types.Count);
+            for (int i = 0; i < types.Count; i++)
+                list.Add(new UnlockCondition((UnlockConditionType)types[i], i < values.Count ? values[i] : 0));
+            return list;
         }
     }
 

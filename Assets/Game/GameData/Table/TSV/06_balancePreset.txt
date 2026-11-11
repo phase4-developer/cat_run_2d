@@ -1,5 +1,4 @@
 id	name	key	sort	active	rate	scale	diff	gauge	isDefault
-6001001	쉬움(기본)	easy	1	1	2.0	3	0.02	1	0
+6001001	쉬움(기본)	easy	1	1	0.95	1	0	1	1
 6001002	임시 기본	mid	2	1	1.4	5	0.01	1.4	0
 6001003	원작 근사	orig	3	1	0.95	10	0	2	0
-6001004	새 기준 기본	base	4	1	0.95	1	0	1	1
