@@ -45,7 +45,7 @@ namespace MV.Run
             s.Dia = s.StartDia = RunFormulas.StartDia(t, setup);
 
             // 신·속성·카드 풀(setGodCards)
-            s.God = t.God.ByKey(setup.God) ?? t.God.ByKey(t.Config.Value?.startGodKey); // 기본 신 = 00_config.startGodKey
+            s.God = StartGod(t, setup.God);
             s.El = s.God?.element;
             BuildCardPool(s);
 
@@ -195,6 +195,9 @@ namespace MV.Run
             foreach (var row in t.BalancePreset.Sorted) if (row.isDefault) return row;
             throw new InvalidOperationException($"06_balancePreset: {key} 행과 기본 행이 없습니다");
         }
+
+        /// <summary>출전 신 행: key가 없거나 비면 <c>00_config.startGodKey</c>(기본 신은 표 한 곳).</summary>
+        public static GodData StartGod(MvTables t, string key) => t.God.ByKey(key) ?? t.God.ByKey(t.Config.Value?.startGodKey);
 
         /// <summary>정본 `kegStart(P)`: 11_stairLevel.need로 Lv를 올린다(상한 = 11 lv 최댓값, <see cref="MvTables.StairMaxLv"/>).</summary>
         public static (int lv, int step, int need) KegStart(MvTables t, int purchases)
