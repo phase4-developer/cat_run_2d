@@ -239,7 +239,7 @@ namespace MV.Meta
                     int len = Math.Max(_t.WeaponTierMax(), tier) + 1;
                     if (deck.Length < len) Array.Resize(ref deck, len);
                     result["tier"] = tier;
-                    result["merged"] = MvMetaRules.DeckAdd(deck, tier);
+                    result["merged"] = MvMetaRules.DeckAdd(deck, tier, _t.RunConfig.I(RunConfigKeys.MERGE_N));
                     result["before"] = tier;
                     result["after"] = MvMetaRules.WeaponLevel(_t, bought + 1).Lv;
                     container["deck"] = new JArray(deck.Cast<object>().ToArray());

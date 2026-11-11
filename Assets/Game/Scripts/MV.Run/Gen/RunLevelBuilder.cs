@@ -45,7 +45,7 @@ namespace MV.Run
             s.Dia = s.StartDia = RunFormulas.StartDia(t, setup);
 
             // 신·속성·카드 풀(setGodCards)
-            s.God = t.God.ByKey(setup.God) ?? t.God.ByKey("thunder");
+            s.God = t.God.ByKey(setup.God) ?? t.God.ByKey(t.Config.Value?.startGodKey); // 기본 신 = 00_config.startGodKey
             s.El = s.God?.element;
             BuildCardPool(s);
 

@@ -642,8 +642,10 @@ namespace MV.Run
             {
                 var j = s.Storms[i];
                 j.K += dt;
-                var (st, _) = CardOf(s, CardEffectType.Storm);
-                int strikes = st != null ? (int)st.p4 : 4;
+                // 손에 카드가 없을 때도 112 Storm 행 값(p3 배율·p4 횟수)을 쓴다(코드 대체값 없음).
+                var st = EffectRow(s, CardEffectType.Storm);
+                if (st == null) { j.Finished = true; continue; }
+                int strikes = (int)st.p4;
                 int due = Math.Min(strikes, (int)Math.Floor((j.K - _p.StormK0) / _p.StormDk) + 1);
                 while (j.Done < due)
                 {
@@ -654,7 +656,7 @@ namespace MV.Run
                     double x = t0 != null ? t0.X + (-_p.StormJitTarget + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitTarget)) : j.Cx + (-_p.StormJitFree + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitFree));
                     double z = t0 != null ? t0.Z - t0.Hd : j.Cz + (-_p.StormJitFree + s.Draw(RngUse.StormJitter) * (2 * _p.StormJitFree));
                     s.Emit(new RunEvent(RunEventType.GodStormStrike, x: x, z: z, key: s.El));
-                    double mul = st != null ? st.p3 : 1.5;
+                    double mul = st.p3;
                     foreach (var u in s.Objs)
                         if (Breakable(u) && Math.Abs(u.X - x) < _p.StormBox + u.Hw && Math.Abs(u.Z - z) < _p.StormBox + u.Hd)
                             Hit(u, BaseDmg(s) * mul * j.N, false, false, true, GodColor, HitSource.Storm);
@@ -668,11 +670,12 @@ namespace MV.Run
                 m.T += dt;
                 if (m.T < _p.MeteorFall) continue;
                 m.Finished = true;
-                var (me, _) = CardOf(s, CardEffectType.Meteor);
+                var me = EffectRow(s, CardEffectType.Meteor); // 112 Meteor 행 p4 배율(코드 대체값 없음)
                 s.Emit(new RunEvent(RunEventType.MeteorImpact, x: m.X, z: m.Z));
+                if (me == null) continue;
                 foreach (var u in s.Objs)
                     if (Breakable(u) && Math.Abs(u.X - m.X) < _p.MeteorBox + u.Hw && Math.Abs(u.Z - m.Z) < _p.MeteorBox + u.Hd)
-                        Hit(u, BaseDmg(s) * (me != null ? me.p4 : 5) * m.N, false, false, false, HitColor.Meteor, HitSource.Meteor);
+                        Hit(u, BaseDmg(s) * me.p4 * m.N, false, false, false, HitColor.Meteor, HitSource.Meteor);
             }
             s.Meteors.RemoveAll(m => m.Finished);
             foreach (var r in s.PendingReceives)
