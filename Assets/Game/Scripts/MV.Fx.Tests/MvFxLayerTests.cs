@@ -48,7 +48,7 @@ namespace MV.Fx.Tests
         [Test]
         public void PopCurvesMatchCanon()
         {
-            var pool = new MvPopPool();
+            var pool = MvPopPool.FromTables(FxTestTables.Load());
             Assert.AreEqual(1.45f, pool.ScaleAt(0), 1e-5f);
             Assert.AreEqual(1f, pool.ScaleAt(0.15f), 1e-5f);
             Assert.AreEqual(1f, pool.AlphaAt(0.6f), 1e-5f);

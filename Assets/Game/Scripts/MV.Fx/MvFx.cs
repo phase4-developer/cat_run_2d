@@ -89,8 +89,9 @@ namespace MV.Fx
         public MvFlyLayer Flies;
         public MvWarpOverlay Warp;
         public IMvFlashView FlashView;
-        public int MaxHandles = 120;
-        public float TrailInterval = 0.03f;
+        /// <summary>`300_runConfig` fx.maxHandles·fx.trailInterval(생성 때 표에서 채운다, 코드 기본값 없음).</summary>
+        public int MaxHandles;
+        public float TrailInterval;
         /// <summary>시험·하네스용: 마지막 라우팅 결과.</summary>
         public MvFxOutput LastOutput => _out;
         public int ActiveHandles => _handles;
@@ -105,16 +106,18 @@ namespace MV.Fx
             _onEnded = _ => _handles = Math.Max(0, _handles - 1);
             MvFxClock.World = world;
             var t = _tables();
-            if (t != null)
+            if (t == null)
             {
-                var c = t.RunConfig;
-                if (c.Has(RunConfigKeys.Time_HitStopScale)) MvFxClock.HitStopScale = c.D(RunConfigKeys.Time_HitStopScale);
-                if (c.Has(RunConfigKeys.Time_DtCap)) MvFxClock.DtCap = c.D(RunConfigKeys.Time_DtCap);
-                if (c.Has(RunConfigKeys.Fx_MaxHandles)) MaxHandles = c.I(RunConfigKeys.Fx_MaxHandles);
-                if (c.Has(RunConfigKeys.Fx_TrailInterval)) TrailInterval = (float)c.D(RunConfigKeys.Fx_TrailInterval);
-                if (c.Has(RunConfigKeys.Fx_SparkCapThreshold)) MvFxDriver.SparkCapThreshold = c.I(RunConfigKeys.Fx_SparkCapThreshold);
-                if (c.Has(RunConfigKeys.Fx_SparkCapCount)) MvFxDriver.SparkCapCount = c.I(RunConfigKeys.Fx_SparkCapCount);
+                Debug.LogError("[MvFxPlayer] 표(MvTables)가 없어 연출 값을 읽지 못했습니다. 이펙트를 재생하지 않습니다.");
+                return;
             }
+            var c = t.RunConfig;
+            MvFxClock.HitStopScale = c.D(RunConfigKeys.Time_HitStopScale);
+            MvFxClock.DtCap = c.D(RunConfigKeys.Time_DtCap);
+            MaxHandles = c.I(RunConfigKeys.Fx_MaxHandles);
+            TrailInterval = (float)c.D(RunConfigKeys.Fx_TrailInterval);
+            MvFxDriver.SparkCapThreshold = c.I(RunConfigKeys.Fx_SparkCapThreshold);
+            MvFxDriver.SparkCapCount = c.I(RunConfigKeys.Fx_SparkCapCount);
         }
 
         /// <summary>비행 도착(HUD 숫자 올리기·게이지 깜빡임은 UI가 구독).</summary>

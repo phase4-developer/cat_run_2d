@@ -15,7 +15,6 @@ namespace MV.Fx
     {
         static readonly string[] Walls = { "#f0e4d0", "#e8d0c0", "#d8e0e8", "#f4e8c8" };
         static readonly string[] Roofs = { "#d0704a", "#5a7ab8", "#6a9a7a", "#a87a6a" };
-        const string Olc = "#4a3446";
 
         [SerializeField] Material _normal;
         [SerializeField] Material _add;

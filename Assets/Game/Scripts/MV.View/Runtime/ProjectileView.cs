@@ -9,7 +9,7 @@ namespace MV.View
     /// <summary>
     /// 런 투사체 뷰(02 §2.1.4 「던진 장난감 L3804, 회전 장난감 L3800」·「창 궤적 L3802~3803」 행, 정본 `draw2D` L3800~3804).
     /// 던진 장난감 = 빌보드 1장(`World_Proj_{t}`, 테마 아틀라스, 로컬 z 회전 −(ms/110 + sz)), 창 = 월드 선 메쉬 2겹 + 머리 빌보드
-    /// (`World_Proj_SpearHead_Fire`/`_Bolt`, `Atlas_Fx_Common`), 회전 장난감 = 플레이어 둘레 3개 빌보드(orb 카드).
+    /// (`World_Proj_SpearHead_Fire`/`_Bolt`, `Atlas_Fx_Common`), 회전 장난감 = 플레이어 둘레 ORB_COUNT개 빌보드(orb 카드).
     /// 정렬: 순위 Unit, 탐침 = 위치(오프셋 0), 편향 sort.proj / sort.blade, 안개 알파 없음(02 §2.3.1 7·8행, §2.4.1 대상 아님).
     /// 틴트는 화면 전체 곱하기 층(<see cref="TintLayer"/>)이 덮으므로 따로 하지 않는다.
     /// 풀: 투사체 `Id`로 묶고 최대 <see cref="MaxProjs"/>개([창작], 정본·표에 상한 없음). 넘는 것은 그리지 않는다.
@@ -38,8 +38,9 @@ namespace MV.View
         readonly Dictionary<int, Item> _active = new Dictionary<int, Item>(MaxProjs);
         readonly Stack<Item> _free = new Stack<Item>(MaxProjs);
         readonly List<int> _drop = new List<int>(MaxProjs);
-        readonly Item[] _blades = new Item[ProjLayout.BladeCount];
-        readonly Sprite[] _projSprites = new Sprite[ProjLayout.MaxTier + 1];
+        Item[] _blades = System.Array.Empty<Item>();
+        Sprite[] _projSprites = System.Array.Empty<Sprite>();
+        OrbConfig _orb;
         Sprite _headFire, _headBolt;
         Mesh _lineFire, _lineOther;
 
@@ -74,10 +75,21 @@ namespace MV.View
             if (_spriteMaterial == null) _spriteMaterial = fallbackMaterial;
             if (_lineMaterial == null) _lineMaterial = _spriteMaterial;
             _names = ProjLayout.NamesByTier(tables);
-            var c = tables?.Climb.Config();
+            _projSprites = new Sprite[_names?.Length ?? 0];
+            _orb = OrbConfig.From(tables.RunConfig);
+            var c = tables.Climb.Config();
             _stepH = c != null ? c["stepH"] : 0;
             _stepD = c != null ? c["stepD"] : 1;
-            _bump = ViewConfig.ClimbBumpOf(tables?.Climb);
+            _bump = ViewConfig.ClimbBumpOf(tables.Climb);
+            if (_blades.Length != _orb.Count)
+            {
+                for (int i = 0; i < _blades.Length; i++)
+                {
+                    if (_blades[i] == null) continue;
+                    if (Application.isPlaying) Destroy(_blades[i].Go); else DestroyImmediate(_blades[i].Go);
+                }
+                _blades = new Item[System.Math.Max(0, _orb.Count)];
+            }
             for (int i = 0; i < _blades.Length; i++)
                 if (_blades[i] == null) _blades[i] = Make("Blade" + i, (float)cfg.SortBlade);
             _ready = true;
@@ -244,7 +256,7 @@ namespace MV.View
                     continue;
                 }
                 if (it.Sr.sprite != sprite) it.Sr.sprite = sprite;
-                ProjLayout.BladePos(spinA, i, px, pz, out double x, out double y, out double z);
+                ProjLayout.BladePos(spinA, i, _orb, px, pz, out double x, out double y, out double z);
                 it.Go.transform.position = new Vector3((float)x, (float)(wy + y), (float)z);
                 it.Spin.localRotation = Quaternion.Euler(0f, 0f, ProjLayout.ToDegrees(ProjLayout.BladeAngle(nowSec, i)));
                 float k = (float)(ProjLayout.BladeRadius / ProjLayout.BakedRadius);
@@ -270,14 +282,15 @@ namespace MV.View
             }
             double dt = s.Time - _spinLastTime;
             _spinLastTime = s.Time;
-            if (dt > 0) _spinLocal += dt * ProjLayout.SpinRate(orb, spin);
+            if (dt > 0) _spinLocal += dt * ProjLayout.SpinRate(orb, spin, _orb);
             if (s.SpinA != 0) _simSpins = true;
             return _simSpins ? s.SpinA : _spinLocal;
         }
 
         Sprite ProjSprite(int tier)
         {
-            int t = ProjLayout.ClampTier(tier);
+            if (_projSprites.Length == 0) return null;
+            int t = ProjLayout.ArtTier(tier, _names);
             var sp = _projSprites[t];
             if (sp != null) return sp;
             if (_sprites == null || !_sprites.IsLoaded(_themeAtlas)) return null;

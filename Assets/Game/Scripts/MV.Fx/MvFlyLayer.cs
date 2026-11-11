@@ -13,16 +13,26 @@ namespace MV.Fx
 
         public MvCubicBezier(float x1, float y1, float x2, float y2) { X1 = x1; Y1 = y1; X2 = x2; Y2 = y2; }
 
-        /// <summary>표 값 `.5/0/.8/.6`(또는 쉼표) 해석. 실패하면 fallback.</summary>
-        public static MvCubicBezier Parse(string s, MvCubicBezier fallback)
+        /// <summary>표 값 `.5/0/.8/.6`(또는 쉼표) 해석. 형식이 틀리면 false.</summary>
+        public static bool TryParse(string s, out MvCubicBezier curve)
         {
-            if (string.IsNullOrEmpty(s)) return fallback;
+            curve = default;
+            if (string.IsNullOrEmpty(s)) return false;
             var p = s.Split('/', ',');
-            if (p.Length != 4) return fallback;
+            if (p.Length != 4) return false;
             var v = new float[4];
             for (int i = 0; i < 4; i++)
-                if (!float.TryParse(p[i].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out v[i])) return fallback;
-            return new MvCubicBezier(v[0], v[1], v[2], v[3]);
+                if (!float.TryParse(p[i].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out v[i])) return false;
+            curve = new MvCubicBezier(v[0], v[1], v[2], v[3]);
+            return true;
+        }
+
+        /// <summary>표 키 값을 해석한다. 키가 없으면 예외, 형식이 틀리면 오류 로그(대체 곡선 없음).</summary>
+        public static MvCubicBezier FromConfig(RunConfigTable c, string key)
+        {
+            string raw = c.Raw(key);
+            if (!TryParse(raw, out var curve)) Debug.LogError($"[MvFlyLayer] 300_runConfig {key} 곡선 형식이 틀립니다: {raw}");
+            return curve;
         }
 
         static float B(float a, float b, float t)
@@ -103,11 +113,11 @@ namespace MV.Fx
         readonly List<Job> _jobs = new List<Job>(32);
         int _nextId = 1;
 
-        public float Time = 0.55f, RemoveSec = 0.56f, StartScale = 1.3f, EndScale = 0.6f, EndAlpha = 0.4f;
-        public float CardTime = 0.6f, CardRemoveSec = 0.62f;
-        public MvCubicBezier Curve = new MvCubicBezier(0.5f, 0, 0.8f, 0.6f);
-        public MvCubicBezier CardCurve = new MvCubicBezier(0.55f, 0, 0.75f, 0.4f);
-        /// <summary>동시 비행 상한(06 §6.14, 24). 넘으면 그림 없이 도착 시점만 지킨다.</summary>
+        /// <summary>`300_runConfig` fly.*·flyCard.*(<see cref="FromTables"/>가 채운다, 코드 기본값 없음).</summary>
+        public float Time, RemoveSec, StartScale, EndScale, EndAlpha;
+        public float CardTime, CardRemoveSec;
+        public MvCubicBezier Curve, CardCurve;
+        /// <summary>동시 비행 상한(06 §6.14, 24, 표 키 없음). 넘으면 그림 없이 도착 시점만 지킨다.</summary>
         public int MaxIcons = 24;
 
         public IMvFlyView View;
@@ -119,22 +129,24 @@ namespace MV.Fx
 
         public int ActiveCount => _jobs.Count;
 
+        /// <summary>표에서 만든다. 표가 없거나 키가 없으면 예외(대체값 없음).</summary>
         public static MvFlyLayer FromTables(MvTables t)
         {
-            var l = new MvFlyLayer();
-            var c = t?.RunConfig;
-            if (c == null) return l;
-            float F(string k, float d) => c.Has(k) ? (float)c.D(k) : d;
-            l.Time = F(RunConfigKeys.Fly_Time, 0.55f);
-            l.RemoveSec = F(RunConfigKeys.Fly_RemoveMs, 560) / 1000f;
-            l.StartScale = F(RunConfigKeys.Fly_StartScale, 1.3f);
-            l.EndScale = F(RunConfigKeys.Fly_EndScale, 0.6f);
-            l.EndAlpha = F(RunConfigKeys.Fly_EndAlpha, 0.4f);
-            l.CardTime = F(RunConfigKeys.FlyCard_Time, 0.6f);
-            l.CardRemoveSec = F(RunConfigKeys.FlyCard_RemoveMs, 620) / 1000f;
-            if (c.Has(RunConfigKeys.Fly_Bezier)) l.Curve = MvCubicBezier.Parse(c.Raw(RunConfigKeys.Fly_Bezier), l.Curve);
-            if (c.Has(RunConfigKeys.FlyCard_Bezier)) l.CardCurve = MvCubicBezier.Parse(c.Raw(RunConfigKeys.FlyCard_Bezier), l.CardCurve);
-            return l;
+            if (t == null) throw new ArgumentNullException(nameof(t));
+            var c = t.RunConfig;
+            float F(string k) => (float)c.D(k);
+            return new MvFlyLayer
+            {
+                Time = F(RunConfigKeys.Fly_Time),
+                RemoveSec = F(RunConfigKeys.Fly_RemoveMs) / 1000f,
+                StartScale = F(RunConfigKeys.Fly_StartScale),
+                EndScale = F(RunConfigKeys.Fly_EndScale),
+                EndAlpha = F(RunConfigKeys.Fly_EndAlpha),
+                CardTime = F(RunConfigKeys.FlyCard_Time),
+                CardRemoveSec = F(RunConfigKeys.FlyCard_RemoveMs) / 1000f,
+                Curve = MvCubicBezier.FromConfig(c, RunConfigKeys.Fly_Bezier),
+                CardCurve = MvCubicBezier.FromConfig(c, RunConfigKeys.FlyCard_Bezier),
+            };
         }
 
         /// <summary>정본 `flyTo(world, target)`.</summary>
