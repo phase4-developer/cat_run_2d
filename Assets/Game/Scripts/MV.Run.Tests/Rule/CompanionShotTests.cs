@@ -15,7 +15,7 @@ namespace MV.Run.Tests.Rule
 
         static RunSetup Setup(params CompanionSpec[] comps)
         {
-            var s = new RunSetup { Preset = "easy" }; // 발사 횟수 기준은 easy 연사 2.0(기본 행 변경과 무관하게)
+            var s = new RunSetup { Preset = "easy" }; // 발사 횟수 기준은 프로토 easy 연사 2.0(RunTestTables.ProtoEasy, MV-SPEC2-FIX2)
             s.Deck[1] = 1;
             s.Companions.AddRange(comps);
             return s;
@@ -29,7 +29,7 @@ namespace MV.Run.Tests.Rule
             // 벽 앞면 z = 40 − 0.55. 사거리 22라 P.z가 17.45를 넘는 프레임(약 4.4초)부터 대상이 생긴다.
             var lv = new HandLevel().Wall(3.2, 40, 1e9);
             var sim = RunSim.Create(Setup(new CompanionSpec(430001, CompanionTrigger.Seconds, 0.5, 100, 1)),
-                RunTestTables.Load(), new ConstRng(0.5), lv);
+                RunTestTables.ProtoEasy(), new ConstRng(0.5), lv);
             var s = sim.State;
             var wall = s.Objs[0];
             double range = RunFormulas.ProjRange(s);
@@ -64,7 +64,7 @@ namespace MV.Run.Tests.Rule
             var lv = new HandLevel().Wall(3.2, 15, 1e9);
             var setup = Setup(new CompanionSpec(450001, CompanionTrigger.Hits, 3, 50, 1));
             setup.ForwardSpeed = 0; // 제자리(벽이 계속 사거리 안)
-            var sim = RunSim.Create(setup, RunTestTables.Load(), new ConstRng(0.5), lv);
+            var sim = RunSim.Create(setup, RunTestTables.ProtoEasy(), new ConstRng(0.5), lv);
             var s = sim.State;
             GiveCard(s, SpearCardId);
             int shots = 0, spearShots = 0;
@@ -106,7 +106,7 @@ namespace MV.Run.Tests.Rule
             var setup = companion ? Setup(new CompanionSpec(450002, CompanionTrigger.Chance, 0.5, 100, 2)) : Setup();
             setup.ForwardSpeed = 0;
             var rng = new LoggingRng(new Pcg32Rng(4242));
-            var sim = RunSim.Create(setup, RunTestTables.Load(), rng, lv);
+            var sim = RunSim.Create(setup, RunTestTables.ProtoEasy(), rng, lv);
             var s = sim.State;
             int buildDraws = rng.Values.Count;
             GiveCard(s, ProcCardId);

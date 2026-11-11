@@ -38,6 +38,46 @@ namespace MV.Run.Tests
         public static string ReadTsv(string table) =>
             File.ReadAllText(Path.Combine(MvTableLoader.TsvDirectory, table + ".txt"), new UTF8Encoding(false));
 
+        static MvTables _protoEasy;
+
+        /// <summary>
+        /// 프로토 easy 값(L832~833: rate 2.0, scale 3, diff 0.02, gauge 1). 06_balancePreset easy 행은 기획서 값(MV-SPEC2-FIX2)이라
+        /// 프로토 덤프 대조·프로토 발사 횟수에 기대는 시험만 이 사본을 쓴다(표 파일·행 수는 바꾸지 않는다).
+        /// </summary>
+        public static readonly Dictionary<string, string> ProtoEasyValues = new Dictionary<string, string>
+        {
+            ["rate"] = "2", ["scale"] = "3", ["diff"] = "0.02", ["gauge"] = "1",
+        };
+
+        /// <summary>06 easy 행만 <see cref="ProtoEasyValues"/>로 바꾼 표(공유, 읽기 전용).</summary>
+        public static MvTables ProtoEasy() => _protoEasy ??= Load(WithProtoEasy(null));
+
+        /// <summary>override 묶음에 06 easy 행 프로토 값을 더한다.</summary>
+        public static Dictionary<string, string> WithProtoEasy(Dictionary<string, string> overrides) =>
+            WithPresetValues(overrides, "easy", ProtoEasyValues);
+
+        /// <summary>override 묶음에 06 key 행 값 바꾸기를 더한다(시험 안에서만, 행 추가 없음).</summary>
+        public static Dictionary<string, string> WithPresetValues(Dictionary<string, string> overrides, string key, IReadOnlyDictionary<string, string> values)
+        {
+            var o = overrides != null ? new Dictionary<string, string>(overrides) : new Dictionary<string, string>();
+            string text = o.TryGetValue("06_balancePreset", out var cur) ? cur : ReadTsv("06_balancePreset");
+            var lines = new List<string>(text.Replace("\r\n", "\n").TrimEnd('\n').Split('\n'));
+            var header = lines[0].Split('\t');
+            int ki = Array.IndexOf(header, "key");
+            bool found = false;
+            for (int i = 1; i < lines.Count; i++)
+            {
+                var c = lines[i].Split('\t');
+                if (c.Length <= ki || c[ki] != key) continue;
+                foreach (var kv in values) c[Array.IndexOf(header, kv.Key)] = kv.Value;
+                lines[i] = string.Join("\t", c);
+                found = true;
+            }
+            if (!found) throw new ArgumentException("06_balancePreset에 key `" + key + "` 행이 없습니다");
+            o["06_balancePreset"] = string.Join("\n", lines) + "\n";
+            return o;
+        }
+
         /// <summary>key 행을 복사해 열 값을 바꾼 새 행을 끝에 붙인다.</summary>
         public static string CloneRow(string tsv, string srcKey, Dictionary<string, string> set)
         {

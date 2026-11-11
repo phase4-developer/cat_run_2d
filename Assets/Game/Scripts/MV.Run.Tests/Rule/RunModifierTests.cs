@@ -14,7 +14,7 @@ namespace MV.Run.Tests.Rule
         {
             var setup = new RunSetup { Area = 0, Zone = 0, Level = 1, Preset = "easy", Modifiers = m, RateOverride = rate };
             setup.Deck[1] = 1;
-            return new RunLevelBuilder().NewRun(setup, RunTestTables.Load(), new ConstRng(0.5));
+            return new RunLevelBuilder().NewRun(setup, RunTestTables.ProtoEasy(), new ConstRng(0.5)); // 정본 대조는 프로토 easy 값(MV-SPEC2-FIX2)
         }
 
         static long Bits(double v) => BitConverter.DoubleToInt64Bits(v);

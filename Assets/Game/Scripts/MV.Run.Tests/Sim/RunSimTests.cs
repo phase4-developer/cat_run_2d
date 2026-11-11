@@ -78,15 +78,20 @@ namespace MV.Run.Tests
             Assert.AreEqual(0, PerLevelReward(t, new RunSetup(), AreaStatKey.GoldPerLevel, 4), 1e-12, "Lv 0이면 0");
         }
 
+        /// <summary>
+        /// Area 1 기본 난이도(06 easy = isDefault, scale 1·gauge 1, MV-SPEC2-FIX2). MV-SPEC-02 247 「임계값 T는 첫 장 1.9, 다음 5.7」,
+        /// 479 「게이트 충전·탑 게이지는 Area 단계를 따른다」.
+        /// </summary>
         [Test]
-        public void ChargeThresholds_Area1Easy()
+        public void ChargeThresholds_Area1Default()
         {
-            var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Preset = "easy" }); // 기본 행이 바뀌어도 easy 값으로 본다
+            var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } });
             var t = s.Tables;
-            // MV-SPEC-02: sgate는 107 mul1·useAreaHp0·diffMul0 + 지역 sgateM
-            Assert.AreEqual(5.7, Threshold(t.ChargeGate.ByKey("sgate"), 0, s.Bal, s.ZoneHp), 1e-9);
+            Assert.AreEqual(1, s.Bal.scale, "기본 난이도 scale 1");
+            // MV-SPEC-02: sgate는 107 mul1·useAreaHp0·diffMul0 + 지역 sgateM. 표가 비었을 때 107 base 1.9.
+            Assert.AreEqual(1.9, Threshold(t.ChargeGate.ByKey("sgate"), 0, s.Bal, s.ZoneHp), 1e-9);
             var cg = t.ChargeGate.ByKey("cgate");
-            Assert.AreEqual(new[] { 5.7, 17.1, 28.5, 39.9 }, Enumerable.Range(0, 4).Select(k => System.Math.Round(Threshold(cg, k, s.Bal, s.ZoneHp), 9)).ToArray());
+            Assert.AreEqual(new[] { 1.9, 5.7, 9.5, 13.3 }, Enumerable.Range(0, 4).Select(k => System.Math.Round(Threshold(cg, k, s.Bal, s.ZoneHp), 9)).ToArray());
             var need = Enumerable.Range(1, 7).Select(lv => System.Math.Round(GaugeNeed(s, lv), 2)).ToArray();
             Assert.AreEqual(new[] { 150, 240, 384, 614.4, 983.04, 1572.86, 2516.58 }, need);
         }
@@ -148,7 +153,8 @@ namespace MV.Run.Tests
         public void Box_HitRewardAndBreak()
         {
             // 103 피해가 원작 단위(1단계 1)로 내려가 1단계로는 지나가기 전에 못 깬다 → 피해 10인 단계(103 더미 5단계)·easy 연사로 본다(MV-SPEC2-FIX1).
-            var sim = Sim(new HandLevel().Add("coin", 0, 30), new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" });
+            var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" }, RunTestTables.ProtoEasy(), new ConstRng(0.5),
+                new HandLevel().Add("coin", 0, 30)); // 프로토 easy 연사(MV-SPEC2-FIX2)
             Run(sim, 480);
             var s = sim.State;
             var box = s.Objs[0];
@@ -253,7 +259,7 @@ namespace MV.Run.Tests
             {
                 ["id"] = "105001099", ["key"] = "fishCrate", ["hpRuleId"] = "114001004", ["rewardType"] = "603", ["rewardValue"] = "2", ["rewardValuePerZone"] = "0",
             });
-            var t = RunTestTables.Load(new Dictionary<string, string> { ["105_objectKind"] = kinds });
+            var t = RunTestTables.Load(RunTestTables.WithProtoEasy(new Dictionary<string, string> { ["105_objectKind"] = kinds })); // 프로토 easy 연사(MV-SPEC2-FIX2)
             Assert.IsNotNull(t.ObjectKind.ByKey("fishCrate"));
             var lv = new HandLevel().Add("fishCrate", 0, 20);
             // 피해 10인 단계(103 더미 5단계)·easy 연사(MV-SPEC2-FIX1: 1단계 피해 1).
