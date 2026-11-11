@@ -80,8 +80,9 @@ namespace MV.UI
             if (!open)
             {
                 var unlock = tables.ContentOpen.ByKey(MvResearchRules.UnlockKey);
-                m.Add(new MetaRow(LockedId, MetaRowKind.Text, unlock != null && unlock.conditionType == 1
-                    ? "Area " + unlock.conditionValue + "에서 열려요" : "아직 열리지 않았어요")); // toastMessage:contentLocked
+                string need = MvUnlockText.Need(unlock, Port.UnlockState(MvResearchRules.UnlockKey));
+                m.Add(new MetaRow(LockedId, MetaRowKind.Text, need.Length > 0
+                    ? need + " 달성 시 열려요" : "아직 열리지 않았어요")); // toastMessage:contentLocked
             }
 
             int group = _group;

@@ -475,7 +475,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2): 그룹 101 `RUN_SPEED_MID`, 104 `WEAPON_STACK_
 | `WELL_BRICK_FLY` / `FLY_MS` | `108_receiveCondition[wellGauge]`·`[sgatePass]`.`delayMs`(규칙) + `fly.removeMs`(그림) | 규칙 지연은 108이 정본. 그림 값이 다르면 검증 경고 |
 | `CRAFT_ICON_GAP_MS` | `fly.cloneGapMs` | 06 정본 |
 | `FOG_START`/`FOG_LEN` | `view.fogStart`/`view.fogRange` | 02 정본 |
-| `RB_OPEN_AREA` | `05_contentOpen[rebirth]`(conditionType 1 = areaNo 2, sticky) | 해금은 해금 표 한 곳에서(§7.8.9) |
+| `RB_OPEN_AREA` | `05_contentOpen[rebirth]`(잠금 표시 Area 2, 사용 Level 15, sticky. §7.8.9) | 해금은 해금 표 한 곳에서(§7.8.9) |
 | `RB_ARM_SEC` / `RB_CD_SEC` | `00_config.rebirthArmSec` / `rebirthCooldownSec` | 메타 상수(04 §4.19.4 요청) |
 | `RL_*` 8개 | `330_climb` 설정 행의 `rl*` 열 | 04 §4.19.4 요청 |
 | `GAUGE_MAX` / `CRAFT_CAP` | `107_chargeGate[well].cap` / `[cgate].cap` | 컴포넌트 값 |
@@ -1689,16 +1689,29 @@ id	group	targetLevel	priceType	priceId	priceValue
 | contentId | int | 모드 행이면 `400_content.id`, 메타 시스템이면 0 |
 | sort, active | int | active 0 = 지도에 「업데이트 예정」 |
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
-| conditionType | int | 0 항상 / 1 Area 도달(`areaNo ≥ conditionValue`, 즉 `save.area + 1 ≥ value`) / 2 본편 런 정산 수 ≥ value |
-| conditionValue | int | |
+| showConditionType | intList | **잠금 표시**(보이지만 잠김) 조건 종류 목록(`/` 구분, 모두 성립). 비면 늘 보인다(잠긴 채). 종류 값은 아래 「조건 종류」 |
+| showConditionValue | intList | 짝 값 목록. 개수는 showConditionType과 같아야 한다 |
+| conditionType | intList | **사용 가능** 조건 종류 목록(`/` 구분, 모두 성립). 사용 가능은 잠금 표시 조건도 함께 성립해야 한다 |
+| conditionValue | intList | 짝 값 목록. 개수는 conditionType과 같아야 한다 |
 | sticky | bool01 | 1이면 한 번 열리면 유지(부활로 Area가 1로 돌아가도). 저장 `mvUnlock.opened`([09 §9.3.3](09_Save.md)) |
 | showOnMap | bool01 | 지도 Area 칸에 표시(정본 `MAP_FEATS` 대체) |
 
+조건 종류(`UnlockConditionType`, MV.Data). 새 종류는 값 1개 + 판정 `MvUnlockRules.Met` 한 줄 + 문구 `MvUnlockText.Phrase` 한 줄(MV-UNLOCK-1):
+
+| 값 | 이름 | 성립 |
+|---|---|---|
+| 0 | Always | 항상 |
+| 1 | Area | `areaNo ≥ value`, 즉 `save.area + 1 ≥ value` |
+| 2 | Runs | 본편 런 정산 수 ≥ value |
+| 3 | Level | `mvProgress.level ≥ value`(런 1회 = Level +1, 부활해도 유지) |
+
+판정은 `MV.Meta.MvUnlockRules` 한 곳이 한다(숨김 `Hidden` / 잠금 표시 `Locked` / 사용 가능 `Open`). active 0 또는 잠금 표시 조건 전 = 숨김. sticky 기록(`mvUnlock.opened`)이 있으면 진행이 되돌아가도 사용 가능. 지도 칸은 잠금 표시 조건, 없으면 사용 가능 조건의 첫 Area 조건 값(`MvUnlockRules.MapArea`). 검증(§7.13.3): 종류·값 개수 같음, 종류는 정의된 값, 값 0 이상.
+
 정본 대응 행:
 
-| id | key | conditionType / Value | sticky | 근거 |
-|---|---|---|---|---|
-| 5001001 | rebirth | 1 / 2 | 1 | [프로토] `rbOpen = rb.open \|\| area ≥ 1` L2536. `rb.open`이 sticky다. 04의 `RB_OPEN_AREA`는 이 행 |
+| id | key | showCondition Type / Value | condition Type / Value | sticky | 근거 |
+|---|---|---|---|---|---|
+| 5001001 | rebirth | 1 / 2 | 3 / 15 | 1 | MV-SPEC-02 01_코어게임루프 11-3 「해금 조건」(546~550줄): Area 2 개방 시 로비 버튼 노출(잠금), Level 15 도달 시 사용 가능 **[원작]**. 프로토의 「Area 2 즉시 사용」(`rbOpen` L2536)을 2단계로 고친다. `rb.open`이 sticky다. 04의 `RB_OPEN_AREA`는 이 행 |
 
 - 정본 지도의 「레이스」(Area 7, L2585)는 행을 만들지 않는다(사용자 제외 지시, D-64).
 - MV-SPEC-02 반영(MV-DATA-SPEC2, Q-21): 사자자리냥 해금(5001004)은 active 0.
@@ -2290,7 +2303,7 @@ id	group	floor	h0	h1	rows	souls	cellMode
 |---|---|---|
 | 04 `floorSetId` | `302_area.floorGroup` | 08과 같은 이름 |
 | 04 `RL_*` 8개 | `330_climb` 설정 행(`330000001`)의 `rl*` 열 | 워프 행과 rowType으로 구분 |
-| 04 `RB_OPEN_AREA` | `05_contentOpen[rebirth]` conditionType 1 = areaNo(2), sticky | |
+| 04 `RB_OPEN_AREA` | `05_contentOpen[rebirth]` 잠금 표시 showConditionType 1 = areaNo(2), 사용 conditionType 3 = Level(15), sticky | |
 | 04 `RB_ARM_SEC`·`RB_CD_SEC` | `00_config.rebirthArmSec`·`rebirthCooldownSec` | |
 | 04 `DT_CAP`·`HITSTOP_*`·`SHAKE_*`·`FOG_*`·`WELL_FLUSH_SEC`·`CRAFT_ICON_GAP_MS` | 02·06 키(`time.*`·`hitstop.*`·`shake.*`·`view.fog*`·`fx.brickFlushInterval`·`fly.cloneGapMs`) | §7.3.3 대응표 |
 | 04 카드 효과 이름 AddClone·Proc·Chain·Spear·DoubleShot·Blade·Chill | CloneAdd·ProcExtraHit/ProcBurn·ChainJump/ChainSplash·PierceEveryN·DoubleChance·Spin·ProcChill | §7.7.5 |

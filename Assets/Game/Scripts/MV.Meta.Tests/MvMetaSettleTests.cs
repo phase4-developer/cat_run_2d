@@ -67,7 +67,8 @@ namespace MV.Meta.Tests
             SetWealth((MvWealthIds.Souls, 45), (MvWealthIds.Gold, 7), (MvWealthIds.Dia, 3));
             SetContainer(MvSaveKeys.Lobby, "\"up\":{\"stair\":3,\"income\":2},\"deck\":[0,2,1,0,0,0,0,0,0]");
             SetContainer(MvSaveKeys.AreaUp, "\"lv\":{\"rate\":2}");
-            SetContainer(MvSaveKeys.Progress, "\"cp\":2,\"bars\":{\"A0\":[[1,2]]}");
+            // 정산으로 Level +1 → 부활 사용 Level에 닿는다(05_contentOpen[rebirth]).
+            SetContainer(MvSaveKeys.Progress, "\"cp\":2,\"level\":" + (RebirthUseLevel - 1) + ",\"bars\":{\"A0\":[[1,2]]}");
             Assert.That(Meta.IsOpen(MvMetaRules.RebirthKey), Is.False);
 
             MvSettleResult r = Meta.Settle(Outcome(Meta.BeginRun(), MvRunEnd.Gate, gold: 1, souls: 5, cpRun: 1, bars: OneBar()));

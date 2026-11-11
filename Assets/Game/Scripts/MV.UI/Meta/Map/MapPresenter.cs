@@ -34,13 +34,13 @@ namespace MV.UI
                 {
                     foreach (var f in tables.ContentOpen.Sorted)
                     {
-                        if (f.conditionType != 1 || f.conditionValue != a.areaNo) continue;
+                        if (MV.Meta.MvUnlockRules.MapArea(f) != a.areaNo) continue;
                         bool open = Port.IsOpen(f.key);
                         m.Add(new MetaRow("feat:" + f.key, MetaRowKind.Row, NameOf(f.id, f.key))
                         {
                             Icon = f.icon,
                             // ui.map.featOn / featSoon / featAt
-                            Value = open ? "해금됨" : !f.active ? "New Feature · 업데이트 예정" : "Area " + f.conditionValue + " 개방 시 해금",
+                            Value = open ? "해금됨" : !f.active ? "New Feature · 업데이트 예정" : "Area " + a.areaNo + " 개방 시 해금",
                             Desc = DescOf(f.id),
                             Highlight = open,
                         });

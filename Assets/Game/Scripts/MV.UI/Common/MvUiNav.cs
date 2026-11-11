@@ -53,8 +53,8 @@ namespace MV.UI
             var port = data?.Port ?? MvMetaUiPort.Instance;
             if (port.Ready && !port.RebirthOpen)
             {
-                int area = port.Tables?.ContentOpen.ByKey(MV.Meta.MvMetaRules.RebirthKey)?.conditionValue ?? 2;
-                MvUiToast.Show("Area " + area + " 개방 시 해금"); // ui.rb.goLocked
+                string key = MV.Meta.MvMetaRules.RebirthKey;
+                MvUiToast.Show(MvUnlockText.Need(port.Tables?.ContentOpen.ByKey(key), port.UnlockState(key)) + " 달성 시 해금"); // ui.rb.goLocked
                 return null;
             }
             return await Ui.SpawnUIPopupAsync(MvUiIds.Rebirth, data ?? new MetaPopupData()) as RebirthPopup;

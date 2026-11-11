@@ -1195,6 +1195,9 @@ JJEvol 표 규격 v1 §6~7 모양(열 정의 정본 [07 §7.9.3](07_Tables.md)).
 | 1 | Area 도달 | `save.area ≥ conditionValue` (정본 지도 `MAP_FEATS` 기준 L2581~2586) |
 | 2 | 본편 런 수 | 본편 `collect` 누적 ≥ conditionValue |
 | 0 | 항상 열림 | — |
+| 3 | Level 도달 | `mvProgress.level ≥ conditionValue` (MV-UNLOCK-1) |
+
+조건은 `/` 목록으로 여러 개(모두 성립)이고, 잠금 표시 단계(`showConditionType`·`showConditionValue`)와 사용 가능 단계(`conditionType`·`conditionValue`)를 나눈다. 열 정의·판정은 07 §7.8.9.
 
 잠긴 항목의 버튼은 보이되 회색 + 자물쇠, 누르면 토스트 「Area {n}에서 열려요」(문구 키 `toastMessage.contentLocked`). 열리는 순간 1회 연출 「새 콘텐츠가 열렸어요!」 + 로비 「컨텐츠」 버튼 빨간 점. 해금 판정은 `MV.Meta`가 Area 개방·런 정산 직후 한 번 한다.
 
@@ -1202,7 +1205,7 @@ JJEvol 표 규격 v1 §6~7 모양(열 정의 정본 [07 §7.9.3](07_Tables.md)).
 
 | id | key | contentId | 조건 | 근거 | 우선 |
 |---|---|---|---|---|---|
-| 5001001 | rebirth | 0 | 1 / 2 | [프로토] `rbOpen` L2516, 지도 Area 2 「아홉 목숨」 | 1차(정본) |
+| 5001001 | rebirth | 0 | 잠금 표시 1 / 2, 사용 3 / 15 | MV-SPEC-02 01 11-3: Area 2 노출 → Level 15 사용(07 §7.8.9). 지도 Area 2 「아홉 목숨」 | 1차(정본) |
 | 5001002 | attendance | 0 | 2 / 1 | [창작] | 1차 |
 | 5001003 | contentMenu | 0 | 1 / 3 | [프로토] 지도 Area 3 「도전」 | 1차 |
 | 5001004 | god.flame | 0 | 1 / 4 | [프로토] 지도 Area 4 「야옹신 추가」 | 1차 |

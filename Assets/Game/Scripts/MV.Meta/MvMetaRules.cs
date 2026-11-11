@@ -101,21 +101,5 @@ namespace MV.Meta
 
         /// <summary>Zone 0기반 위치(<c>302_area.zoneId</c> → 301 sort 순).</summary>
         public static int ZoneIndex(MvTables t, int area) => t.ZoneIndexOfArea(area + 1);
-
-        /// <summary>
-        /// 해금 조건(07 §7.8.9): 0 항상 / 1 Area 도달(<c>area + 1 ≥ value</c>) / 2 본편 런 정산 수 ≥ value.
-        /// active 0 행은 열리지 않는다(지도 「업데이트 예정」). sticky 기록은 호출자가 따로 본다.
-        /// </summary>
-        public static bool ConditionMet(ContentOpenData row, int area, int runs)
-        {
-            if (row == null || !row.active) return false;
-            switch (row.conditionType)
-            {
-                case 0: return true;
-                case 1: return area + 1 >= row.conditionValue;
-                case 2: return runs >= row.conditionValue;
-                default: return false;
-            }
-        }
     }
 }
