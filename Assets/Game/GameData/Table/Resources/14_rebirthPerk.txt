@@ -1,8 +1,8 @@
 ﻿id	name	key	sort	active	max	base	perLv	floor	statKey	valueFormat	valueBase	valueStep	levelPriceGroup	icon	costBase	costGrowth
 14001001	공격력 Power	power	1	1	20	1	0.15		DmgMul	{0}%	0	15	21		50	1.5
-14001002	치명 피해 Crit Damage	crit	2	1	20	2.2	0.2		CritMul	{0}%	220	20	22		50	1.5
+14001002	치명 피해 Crit Damage	crit	2	1	40	2	0.2		CritMul	{0}%	200	20	22		50	1.5
 14001003	결계 약화 Weaker Obstacles	obst	3	1	10	1	-0.05	0.5	ObstMul	{0}%	100	-5	23		60	1.5
-14001004	블루 마법석 획득량 Diamond Capacity	dcap	4	1	20	10	2		DiaCap	{0}	10	2	24		60	1.5
+14001004	블루 마법석 획득량 Diamond Capacity	dcap	4	1	5	10	2		DiaCap	{0}	10	2	24		60	1.5
 14001005	골드 획득량 Money Capacity	gcap	5	1	21	14	1		GoldCap	{0}	14	1	25		60	1.5
 14001006	시작 골드	startGold	6	1	20	0	500		StartGold	{0}	0	500	26		60	1.5
 14001007	시작 블루 마법석	startDia	7	1	20	0	500		StartDia	{0}	0	500	27		60	1.5
