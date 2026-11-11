@@ -27,7 +27,7 @@ namespace MV.Boot
     }
 
     /// <summary>
-    /// Game 씬 게임 루프(10 §10.3, MV-PLAY-INT): 로비 → 런 → 결과 → 로비를 한 씬에서 돈다.
+    /// Game 씬 게임 루프(10 §10.3, MV-PLAY-INT): 로비 → 런 → 지도 → 결과 → 로비를 한 씬에서 돈다(런 끝 순서 MV-SPEC-02 01 §12-3).
     /// <see cref="GameInitializer"/>가 붙이고 <see cref="InitAsync"/>를 기다린다. 씬 파일은 바꾸지 않고 `WorldRoot`·`LobbyStage`를
     /// Addressables로 만들어 이 오브젝트 아래에 둔다.
     /// 런 프레임: 입력 → <see cref="RunSim.Tick"/> → <see cref="RunSim.DrainEvents"/> 한 번 → 같은 목록을 소리·이펙트·월드 뷰에 넘긴다. HUD는 상태를 직접 읽는다.
@@ -76,6 +76,7 @@ namespace MV.Boot
         MvRunInputReader _input;
         LobbyScreen _lobbyScreen;
         ResultPopup _resultPopup;
+        MapPopup _mapPopup;
         RunSim _sim;
         long _runSeq;
         int _savedArea, _savedSouls;
@@ -222,6 +223,7 @@ namespace MV.Boot
             _sim = null;
             _viewSource.Run = null;
             _resultPopup = null;
+            _mapPopup = null;
             await ApplyThemeAsync(CurrentArea());
 
             _world.gameObject.SetActive(false);
@@ -385,7 +387,41 @@ namespace MV.Boot
             var meta = MvMeta.Current;
             data.Settler = new CountingSettler(this, meta != null && meta.IsReady ? null : NoSaveSettler.Instance);
             data.OnCollected = OnCollected;
-            OpenResultAsync(data).Forget(Debug.LogException);
+            OpenMapThenResultAsync(data).Forget(Debug.LogException);
+        }
+
+        /// <summary>
+        /// 런 끝 흐름(MV-SPEC-02 01 §12-3 [원작], Q-24): ① 지도 → ② 결과 → ③ 로비(<see cref="OnCollected"/>).
+        /// 지도(<see cref="MapPopup"/>)를 닫으면 결과를 연다. 지도를 열지 못하면 결과로 바로 간다.
+        /// </summary>
+        async UniTask OpenMapThenResultAsync(ResultViewData data)
+        {
+            bool resultOpened = false;
+            void OpenResult()
+            {
+                if (resultOpened || Phase != MvLoopPhase.Result) return;
+                resultOpened = true;
+                _mapPopup = null;
+                OpenResultAsync(data).Forget(Debug.LogException);
+            }
+
+            _mapPopup = await MvUiNav.OpenMapAsync(new MetaPopupData { OnClosed = OpenResult }, playClick: false);
+            if (_mapPopup == null)
+            {
+                Debug.LogWarning("[MvGameLoop] 지도를 열지 못했습니다. 결과로 바로 갑니다.");
+                OpenResult();
+            }
+        }
+
+        /// <summary>런 끝 지도가 열려 있다(결과 전, 시험용).</summary>
+        public bool MapOpen => Phase == MvLoopPhase.Result && _mapPopup != null;
+
+        /// <summary>런 끝 지도 닫기(시험용). 닫으면 결과가 열린다.</summary>
+        public bool PressMapClose()
+        {
+            if (!MapOpen) return false;
+            _mapPopup.Presenter.PressClose();
+            return true;
         }
 
         async UniTask OpenResultAsync(ResultViewData data)
