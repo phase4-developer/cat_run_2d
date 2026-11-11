@@ -26,14 +26,18 @@ namespace MV.UI.Tests
         sealed class FakeView : IResultView
         {
             public event Action CollectPressed;
-            public string Title, Left, Right, Gold, Dia, Tok, Stat;
+            public string Title, Left, Right, Gold, Dia, Tok, Stat, GoldName, DiaName, TokName;
             public Color TitleColor;
             public float Fill;
             public bool Interactable = true;
             public void Press() => CollectPressed?.Invoke();
             public void SetTitle(string text, Color color) { Title = text; TitleColor = color; }
             public void SetProgress(string left, string right, float fill01) { Left = left; Right = right; Fill = fill01; }
-            public void SetRewards(string gold, string dia, string tok) { Gold = gold; Dia = dia; Tok = tok; }
+            public void SetRewards(ResultRewardText gold, ResultRewardText dia, ResultRewardText tok)
+            {
+                Gold = gold.Value; Dia = dia.Value; Tok = tok.Value;
+                GoldName = gold.Name; DiaName = dia.Name; TokName = tok.Name;
+            }
             public void SetStat(string text) => Stat = text;
             public void SetCollectInteractable(bool interactable) => Interactable = interactable;
         }
@@ -101,14 +105,18 @@ namespace MV.UI.Tests
             var p = new ResultPresenter();
             var view = new FakeView();
             p.SetView(view);
-            p.Open(Data(new CountingSettler()));
+            var d = Data(new CountingSettler());
+            p.Open(d);
             Assert.AreEqual("Area 2 개방!", view.Title);
-            Assert.AreEqual("Area 2 개방까지 생선", view.Left);
+            Assert.AreEqual("Area 2 개방까지 " + d.SoulsName, view.Left);
             Assert.AreEqual("80 / 100", view.Right);
             Assert.AreEqual(0.8f, view.Fill, 1e-5f);
             Assert.AreEqual("+1,234", view.Gold);
             Assert.AreEqual("+2", view.Dia);
             Assert.AreEqual("+1", view.Tok);
+            Assert.AreEqual(d.GoldName, view.GoldName);
+            Assert.AreEqual(d.DiaName, view.DiaName);
+            Assert.AreEqual(d.TokName, view.TokName);
             Assert.IsTrue(view.Interactable);
         }
 

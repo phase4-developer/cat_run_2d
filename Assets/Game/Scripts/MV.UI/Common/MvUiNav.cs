@@ -5,7 +5,7 @@ using jjevol;
 namespace MV.UI
 {
     /// <summary>
-    /// 로비→런→결과→로비 화면 전환 묶음. 게임 루프(MV-PLAY-INT)가 부른다. UIManager가 시작된 뒤에만 쓴다.
+    /// 로비→런→지도→결과→로비 화면 전환 묶음(런 끝 순서 MV-SPEC-02 01 §12-3). 게임 루프(MV-PLAY-INT)가 부른다. UIManager가 시작된 뒤에만 쓴다.
     /// 로비: Screen(풀링). 런 HUD: hudManager에 직접 켬(로비 화면은 KeepPrevious라 건드리지 않음). 결과: Popup(ForceHide로 HUD 숨김).
     /// </summary>
     public static class MvUiNav
@@ -53,17 +53,22 @@ namespace MV.UI
             var port = data?.Port ?? MvMetaUiPort.Instance;
             if (port.Ready && !port.RebirthOpen)
             {
-                int area = port.Tables?.ContentOpen.ByKey(MV.Meta.MvMetaRules.RebirthKey)?.conditionValue ?? 2;
-                MvUiToast.Show("Area " + area + " 개방 시 해금"); // ui.rb.goLocked
+                // 해금 Area는 05_contentOpen 행 한 곳에서 읽는다(코드에 기본 Area를 두지 않는다).
+                var row = port.Tables?.ContentOpen.ByKey(MV.Meta.MvMetaRules.RebirthKey);
+                if (row != null) MvUiToast.Show("Area " + row.conditionValue + " 개방 시 해금"); // ui.rb.goLocked
+                else UnityEngine.Debug.LogError("[MvUiNav] 05_contentOpen에 `" + MV.Meta.MvMetaRules.RebirthKey + "` 행이 없습니다.");
                 return null;
             }
             return await Ui.SpawnUIPopupAsync(MvUiIds.Rebirth, data ?? new MetaPopupData()) as RebirthPopup;
         }
 
-        /// <summary>지도(05 §5.10).</summary>
-        public static async UniTask<MapPopup> OpenMapAsync(MetaPopupData data = null)
+        /// <summary>
+        /// 지도(05 §5.10). 로비 버튼은 열 때 소리 click. 런 끝 흐름(MV-SPEC-02 01 §12-3: 지도 → 결과)은 버튼이 아니라
+        /// <paramref name="playClick"/> false로 열고, <see cref="MetaPopupData.OnClosed"/>에서 결과를 연다.
+        /// </summary>
+        public static async UniTask<MapPopup> OpenMapAsync(MetaPopupData data = null, bool playClick = true)
         {
-            MV.Sound.MvSound.PlayUi(MV.Sound.MvUiSound.ButtonClick); // 열 때 소리 click
+            if (playClick) MV.Sound.MvSound.PlayUi(MV.Sound.MvUiSound.ButtonClick); // 열 때 소리 click
             return await Ui.SpawnUIPopupAsync(MvUiIds.Map, data ?? new MetaPopupData()) as MapPopup;
         }
 

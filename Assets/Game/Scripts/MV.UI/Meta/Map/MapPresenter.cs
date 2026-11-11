@@ -20,6 +20,7 @@ namespace MV.UI
             int cur = Port.AreaIndex + 1;
             int cp = Port.Cp;
             long souls = Port.Wealth(MvWealthIds.Souls);
+            string soulsName = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.Souls)); // 01_wealth 구출 고양이
 
             foreach (var z in tables.Zone.Sorted)
             {
@@ -52,7 +53,7 @@ namespace MV.UI
                     m.Add(new MetaRow(AreaPrefix + a.areaNo, MetaRowKind.Banner, "AREA " + a.areaNo + " · " + NameOf(a.id, ""))
                     {
                         Icon = a.mapIcon,
-                        Value = (need <= 0 ? "시작" : "생선 " + need) + (here ? " · 현재 위치" : ""), // ui.map.start / need / here
+                        Value = (need <= 0 ? "시작" : soulsName + " " + need) + (here ? " · 현재 위치" : ""), // ui.map.start / need / here
                         Highlight = here,
                         Locked = locked,
                     });
@@ -64,7 +65,7 @@ namespace MV.UI
                     {
                         string state = !a.active ? "업데이트 예정"                                  // ui.map.soon
                             : a.areaNo < cur || (here && i < cp) ? "완료"                         // ui.map.cpDone
-                            : here ? "생선 " + MvUiFormat.Fmt(souls) + "/" + a.needSouls          // ui.map.cpSouls
+                            : here ? soulsName + " " + MvUiFormat.Fmt(souls) + "/" + a.needSouls          // ui.map.cpSouls
                             : "체크포인트";                                                         // ui.map.cpBase
                         m.Add(new MetaRow("cp:" + a.areaNo + ":" + floors[i].floor, MetaRowKind.Grid, "골목 " + (i + 1)) // ui.map.cp
                         {
@@ -78,7 +79,7 @@ namespace MV.UI
 
             var curArea = AreaByNo(tables, cur);
             string zoneName = curArea != null ? NameOf(curArea.zoneId, "") : "";
-            m.Sub = zoneName + " · Area " + cur + " · 생선 " + MvUiFormat.Fmt(souls) + "/" + (curArea?.needSouls ?? 0); // ui.map.cur
+            m.Sub = zoneName + " · Area " + cur + " · " + soulsName + " " + MvUiFormat.Fmt(souls) + "/" + (curArea?.needSouls ?? 0); // ui.map.cur
         }
 
         static List<AreaData> AreasOf(MvTables tables, int zoneId)
