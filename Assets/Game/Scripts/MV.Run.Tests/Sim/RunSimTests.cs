@@ -81,7 +81,7 @@ namespace MV.Run.Tests
         [Test]
         public void ChargeThresholds_Area1Easy()
         {
-            var s = NewState();
+            var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Preset = "easy" }); // 기본 행이 바뀌어도 easy 값으로 본다
             var t = s.Tables;
             // MV-SPEC-02: sgate는 107 mul1·useAreaHp0·diffMul0 + 지역 sgateM
             Assert.AreEqual(5.7, Threshold(t.ChargeGate.ByKey("sgate"), 0, s.Bal, s.ZoneHp), 1e-9);
@@ -147,7 +147,8 @@ namespace MV.Run.Tests
         [Test]
         public void Box_HitRewardAndBreak()
         {
-            var sim = Sim(new HandLevel().Add("coin", 0, 30));
+            // 103 피해가 원작 단위(1단계 1)로 내려가 1단계로는 지나가기 전에 못 깬다 → 피해 10인 단계(103 더미 5단계)·easy 연사로 본다(MV-SPEC2-FIX1).
+            var sim = Sim(new HandLevel().Add("coin", 0, 30), new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" });
             Run(sim, 480);
             var s = sim.State;
             var box = s.Objs[0];
@@ -255,7 +256,8 @@ namespace MV.Run.Tests
             var t = RunTestTables.Load(new Dictionary<string, string> { ["105_objectKind"] = kinds });
             Assert.IsNotNull(t.ObjectKind.ByKey("fishCrate"));
             var lv = new HandLevel().Add("fishCrate", 0, 20);
-            var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } }, t, new ConstRng(0.5), lv);
+            // 피해 10인 단계(103 더미 5단계)·easy 연사(MV-SPEC2-FIX1: 1단계 피해 1).
+            var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" }, t, new ConstRng(0.5), lv);
             var o = sim.State.Objs[0];
             Assert.AreEqual(25, o.Hp, "bonus025: round(100 × 0.25)");
             for (int i = 0; i < 300; i++) sim.Tick(1 / 60.0, default);

@@ -91,7 +91,7 @@ namespace MV.Run.Tests.Gen
             bars.Set(0, 0, 0);
             bars.Set(0, 1, 2);
             bars.Set(0, 2, 999);
-            var setup = new RunSetup { Level = 1, Bars = bars };
+            var setup = new RunSetup { Level = 1, Bars = bars, Preset = "easy" }; // 장애물 HP 3칸(easy scale 3)으로 기록 지속을 본다
             var s = new RunLevelBuilder().NewRun(setup, t, new ConstRng(0.5));
             var walls = s.Objs.FindAll(o => o.IsField && o.Bar == 0);
             Assert.IsTrue(walls[0].Dead && walls[0].Pre, "기록 0 → 부서진 채 시작");

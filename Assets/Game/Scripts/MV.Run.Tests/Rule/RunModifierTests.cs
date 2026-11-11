@@ -67,7 +67,7 @@ namespace MV.Run.Tests.Rule
             Same(canon, RunFormulas.CritMul(State(RunModifiers.Zero)), "CritDmg 0");
             var m = State(new RunModifiers { CritDmg = 50 });
             Same(canon + 50 / 100.0, RunFormulas.CritMul(m), "CritDmg 50 위치");
-            Assert.AreEqual(2.7, RunFormulas.CritMul(m), 1e-12);
+            Assert.AreEqual(crit.@base + 0.5, RunFormulas.CritMul(m), 1e-12);
         }
 
         [Test]

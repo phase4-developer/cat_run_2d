@@ -12,7 +12,7 @@ namespace MV.Data.Tests
         static readonly Dictionary<string, int> s_rowCounts = new Dictionary<string, int>
         {
             ["00_config"] = 1, ["01_wealth"] = 18, ["02_playResource"] = 5, ["03_sound"] = 33, ["04_effect"] = 75,
-            ["05_contentOpen"] = 18, ["06_balancePreset"] = 3, ["07_consumeType"] = 26, ["08_adPlacement"] = 7, ["09_uiResource"] = 12,
+            ["05_contentOpen"] = 18, ["06_balancePreset"] = 4, ["07_consumeType"] = 26, ["08_adPlacement"] = 7, ["09_uiResource"] = 12,
             ["10_lobbyUpgrade"] = 3, ["11_stairLevel"] = 4, ["12_weaponLevel"] = 12, ["13_areaUpgrade"] = 8, ["14_rebirthPerk"] = 9,
             ["16_levelPrice"] = 917,
             ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 12, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,

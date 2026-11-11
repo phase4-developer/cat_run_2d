@@ -11,7 +11,7 @@ namespace MV.Run.Tests.Rule
     /// <summary>
     /// 본편 동일 시험(04 §4.20.6-1). Area 1~5 × Level 1·8·15를 같은 시드·같은 입력으로 돌려
     /// RunResult·RunEvent 열·RunRng 소비 횟수와 순서를 확장 지점을 넣기 전 커밋(dev 1ad0b23)의 골든 요약과 맞춘다.
-    /// 골든 = 「프레임 수 / 이벤트 수 / RunRng 소비 수 / 종료 사유 / SHA256 앞 16자」(커밋 c2a69fa에서 기록, 잡 43876e9a0589).
+    /// 골든 = 「프레임 수 / 이벤트 수 / RunRng 소비 수 / 종료 사유 / SHA256 앞 16자」(커밋 c2a69fa에서 기록, 잡 43876e9a0589. MV-SPEC2-FIX1에서 다시 기록: 103 피해 원작 단위·내부 피해 버림 정수·Area 시작 골드·하수인 무리 z·원석 타격 골드 제거·치명 피해 base 2, 잡 533b045164ab의 실제 값).
     /// 두 경로를 다 본다: 기존 진입점 <c>RunSim.Create(setup, …)</c>(규칙 생략 = MainRunRule)과
     /// <c>RunSim.Create(RunContext, MainRunRule, …)</c>(① Build → ② BuildCourse, 모디파이어 0·동행 없음).
     /// </summary>
@@ -20,21 +20,21 @@ namespace MV.Run.Tests.Rule
         /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["A1L1"] = "f3361 e479 r252 Wall 730bd5e4ef509555",
-            ["A1L8"] = "f4886 e875 r358 Wall db1f19a2eb976b72",
-            ["A1L15"] = "f4038 e537 r300 Wall af2a98d2eec0462f",
-            ["A2L1"] = "f3623 e598 r265 Wall fb7ae4d52c00bba1",
-            ["A2L8"] = "f4456 e601 r326 Wall a31e8f7e5422cc3a",
-            ["A2L15"] = "f3976 e528 r296 Wall 8fb93b76d75960a3",
-            ["A3L1"] = "f3687 e1120 r612 Wall f8850c8a9d60480f",
-            ["A3L8"] = "f4302 e1114 r635 Wall 77d0b2d4039d1dfd",
-            ["A3L15"] = "f4364 e1276 r715 Wall c0cf43a53fc378f7",
-            ["A4L1"] = "f3626 e1135 r580 Wall 4964625dfcfd0220",
-            ["A4L8"] = "f4316 e1144 r637 Wall 8946c2b81f1fa4d2",
-            ["A4L15"] = "f4301 e1186 r652 Wall 9ec49718f5037b62",
-            ["A5L1"] = "f3381 e962 r497 Wall 07adf3314886de24",
-            ["A5L8"] = "f4349 e1160 r641 Wall a97cee622ef9919a",
-            ["A5L15"] = "f4366 e1165 r696 Wall a42ab35ead644b76",
+            ["A1L1"] = "f3255 e425 r245 Wall 678fec1ebdd323d6",
+            ["A1L8"] = "f4353 e551 r323 Wall fecc6199dccfd03a",
+            ["A1L15"] = "f3959 e497 r295 Wall 2b729c4f669c2099",
+            ["A2L1"] = "f3470 e477 r257 Wall 4111c708319c7050",
+            ["A2L8"] = "f4349 e539 r321 Wall 135c3b379fcb9137",
+            ["A2L15"] = "f3959 e516 r295 Wall a0503527362cc501",
+            ["A3L1"] = "f3486 e913 r509 Wall e49d87f4f47ac4cc",
+            ["A3L8"] = "f4221 e1057 r625 Wall 84ecdad35b0bd10a",
+            ["A3L15"] = "f4184 e1053 r613 Wall 308002ecb9b35f39",
+            ["A4L1"] = "f3284 e883 r487 Wall c3cba2bdfc1b8ab8",
+            ["A4L8"] = "f4221 e1078 r625 Wall 5ebefe4e9df6d2f5",
+            ["A4L15"] = "f4120 e1044 r605 Wall dbbf637eb0535867",
+            ["A5L1"] = "f3258 e916 r483 Wall efa83a2da8ce067b",
+            ["A5L8"] = "f4221 e1100 r625 Wall aa06e31dcf27d84b",
+            ["A5L15"] = "f4093 e985 r601 Wall 39ad864b05b36f2a",
         };
 
         [Test] public void Area1() => Check(0);
