@@ -48,11 +48,11 @@ namespace MV.Meta
 
         /// <summary>
         /// 캣타워 구매 수 → 런 시작 게이지(정본 <c>kegStart</c> L809~812). 단계 필요 수는 <c>11_stairLevel.need</c>,
-        /// 상한 Lv은 <c>300_runConfig.LOBBY_STAIR_MAX_LV</c>.
+        /// 상한 Lv은 <c>11_stairLevel</c> lv 최댓값(<see cref="MvTables.StairMaxLv"/>).
         /// </summary>
         public static MvStepLevel StairStart(MvTables t, int bought)
         {
-            int maxLv = t.RunConfig.I(RunConfigKeys.LOBBY_STAIR_MAX_LV);
+            int maxLv = t.StairMaxLv();
             return Climb(t.StairLevel.Datas.Select(r => (r.lv, r.need)), bought, maxLv);
         }
 

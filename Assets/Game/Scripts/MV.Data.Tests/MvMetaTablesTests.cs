@@ -162,9 +162,8 @@ namespace MV.Data.Tests
 
         // ================= 16_levelPrice 범위 =================
 
-        [TestCase(PetData.Table, "430001001", 2, PetData.MaxLevel)]
         [TestCase(FriendData.Table, "450001001", 2, 30)]
-        [TestCase(GearRarityData.Table, "471001001", 1, GearRarityData.MaxLevel)]
+        [TestCase(GearRarityData.Table, "471001001", 1, 30)]
         [TestCase(GodLevelData.Table, "495001001", 2, 5)]
         public void LevelPriceGroup_MustCoverAllTargetLevels(string table, string id, int from, int to)
         {
@@ -172,6 +171,16 @@ namespace MV.Data.Tests
             AssertNoError(TsvFixture.Validate((LevelPriceData.Table, WithPriceGroup(399, from, to)), (table, row)), table, "묶음 399에 targetLevel");
             AssertError(TsvFixture.Validate((LevelPriceData.Table, WithPriceGroup(399, from, to - 1)), (table, row)), table,
                 $"묶음 399에 targetLevel {to}가 없습니다");
+        }
+
+        [Test]
+        public void Pet_LevelPriceGroup_GapIsError()
+        {
+            // 펫 최대 Lv은 표 열이 없어 16 묶음 targetLevel 최댓값으로 정한다. 2~최댓값 사이 빈틈은 오류.
+            var row = Set(PetData.Table, "430001001", "levelPriceGroup", "399");
+            AssertNoError(TsvFixture.Validate((LevelPriceData.Table, WithPriceGroup(399, 2, 40)), (PetData.Table, row)), PetData.Table, "묶음 399에 targetLevel");
+            var gap = TsvFixture.Remove(WithPriceGroup(399, 2, 40), "16399020");
+            AssertError(TsvFixture.Validate((LevelPriceData.Table, gap), (PetData.Table, row)), PetData.Table, "묶음 399에 targetLevel 20가 없습니다");
         }
 
         // ================= 430·431 =================
@@ -351,8 +360,9 @@ namespace MV.Data.Tests
                 AttendanceData.Table, "day 3 행이 없습니다");
             AssertError(TsvFixture.Validate((AttendanceData.Table, Set(AttendanceData.Table, "485001004", "day", "3"))),
                 AttendanceData.Table, "day 3가 중복됩니다");
+            // 한 바퀴 일수 = day 최댓값(표 행으로 계산). 7 → 8로 바꾸면 day 7이 빈다.
             AssertError(TsvFixture.Validate((AttendanceData.Table, Set(AttendanceData.Table, "485001007", "day", "8"))),
-                AttendanceData.Table, "day 8는 1~7 밖");
+                AttendanceData.Table, "day 7 행이 없습니다");
 
             var text = TsvFixture.Read(AttendanceData.Table);
             foreach (var c in new[] { "rewardType", "rewardId", "rewardValue" }) text = TsvFixture.Set(text, "485001001", c, "");

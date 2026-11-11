@@ -71,20 +71,19 @@ namespace MV.Data.Tests
             floor = TsvFixture.Append(floor, floorHeader, R("303031001", "31", "1", "3700", "1200000", "14", "18", "Hash"));
             floor = TsvFixture.Append(floor, floorHeader, R("303031002", "31", "2", "1200000", "12000000", "16", "23", "Hash"));
             floor = TsvFixture.Append(floor, floorHeader, R("303031003", "31", "3", "12000000", "24000000", "18", "29", "Hash"));
-            var zone = TsvFixture.Set(TsvFixture.Read("301_zone"), "301001006", "areaTo", "31");
+            // Zone 범위는 302 zoneId로 계산하므로 301은 고치지 않는다(옛 areaTo 열 삭제).
             // PLAYABLE_AREAS는 그대로 둔다: Area 17~30이 active 0(D-71 대기)이라 31로 올리면 `≤ active Area 수` 규칙에 걸린다.
-            AssertNoErrors(TsvFixture.Validate(("302_area", area), ("303_areaFloor", floor), ("301_zone", zone)));
+            AssertNoErrors(TsvFixture.Validate(("302_area", area), ("303_areaFloor", floor)));
         }
 
         [Test]
-        public void Extension_Area31_WithoutZoneChange_ReportsZoneGap()
+        public void Extension_Area31_InEarlierZone_ReportsZoneOrder()
         {
+            // Zone은 301 sort 순으로 Area를 이어서 덮는다. 마지막 Area를 첫 Zone에 넣으면 Zone 범위가 겹친다.
             var area = TsvFixture.Append(TsvFixture.Read("302_area"),
                 R("id", "areaNo", "zoneId", "sort", "active", "themeId", "hp", "needSouls", "floorGroup"),
-                R("302001031", "31", "301001006", "31", "1", "304001015", "69000", "1755", "1"));
-            var report = TsvFixture.Validate(("302_area", area));
-            AssertError(report, "301_zone", "Zone 범위 끝");
-            AssertError(report, "302_area", "밖입니다");
+                R("302001031", "31", "301001001", "31", "1", "304001015", "69000", "1755", "1"));
+            AssertError(TsvFixture.Validate(("302_area", area)), "302_area", "301 sort 순으로 이어지지 않습니다");
         }
 
         // ---------------- 형식·참조 ----------------
@@ -227,9 +226,10 @@ namespace MV.Data.Tests
                 "10_lobbyUpgrade", "targetLevel 2");
 
         [Test]
-        public void Semantics_StairMaxMismatch_IsError() =>
-            AssertError(TsvFixture.Validate(("11_stairLevel", TsvFixture.Set(TsvFixture.Read("11_stairLevel"), "11001001", "need", "1"))),
-                "10_lobbyUpgrade", "stair max");
+        public void Semantics_StairMaxFilled_IsError() =>
+            // 계단 max는 Σ11.need로 계산하므로 표 칸은 비운다(사용자 결정 「행 수·합계로 계산되는 값은 계산」).
+            AssertError(TsvFixture.Validate(("10_lobbyUpgrade", TsvFixture.Set(TsvFixture.Read("10_lobbyUpgrade"), "10001001", "max", "30"))),
+                "10_lobbyUpgrade", "stair max는 11·12 합계로 계산");
 
         [Test]
         public void Semantics_MissingAdKey_IsError() =>

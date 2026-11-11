@@ -209,14 +209,14 @@ namespace MV.Meta
         public bool IsMax(MvGrowth growth, string key)
         {
             var row = Row(growth, key);
-            return row == null || Level(growth, key) >= row.max || NextPrice(growth, key) == null;
+            return row == null || Level(growth, key) >= Tables.LevelMax(row) || NextPrice(growth, key) == null;
         }
 
         /// <summary>다음 구매 비용(<c>16_levelPrice[group][P+1]</c>). MAX면 null.</summary>
         public IReadOnlyList<MvConsume> NextPrice(MvGrowth growth, string key)
         {
             var row = Row(growth, key);
-            if (row == null || Level(growth, key) >= row.max) return null;
+            if (row == null || Level(growth, key) >= Tables.LevelMax(row)) return null;
             return MvMetaRules.NextPrice(Tables, row.levelPriceGroup, Level(growth, key));
         }
 

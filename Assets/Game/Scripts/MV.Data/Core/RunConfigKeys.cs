@@ -132,7 +132,6 @@ namespace MV.Data
         public const string WELL_BRICK_LIFE = "WELL_BRICK_LIFE";
         public const string ORE_ICON_GAP_MS = "ORE_ICON_GAP_MS";
         public const string CRAFT_ICON_MAX = "CRAFT_ICON_MAX";
-        public const string FLOOR_COUNT = "FLOOR_COUNT";
         public const string CP_MAX = "CP_MAX";
         public const string PLAYABLE_AREAS = "PLAYABLE_AREAS";
         public const string TOK_BASE = "TOK_BASE";
@@ -140,7 +139,6 @@ namespace MV.Data
         public const string TOK_GATE = "TOK_GATE";
         public const string TOK_OPEN = "TOK_OPEN";
         public const string FAIL_SFX_DELAY_MS = "FAIL_SFX_DELAY_MS";
-        public const string LOBBY_STAIR_MAX_LV = "LOBBY_STAIR_MAX_LV";
         public const string WEAPON_EXTRA_BUYS = "WEAPON_EXTRA_BUYS";
         public const string ARCH_LABEL_HIDE = "ARCH_LABEL_HIDE";
         public const string MERGE_N = "MERGE_N";
@@ -181,7 +179,7 @@ namespace MV.Data
         public const string Ui_Hand_AfterMax = "ui.hand.afterMax";
         public const string Ui_Hand_AfterMul = "ui.hand.afterMul";
 
-        /// <summary>모든 키(166개: 02·06 그룹 001~008 95개 + 07 그룹 101~106 71개).</summary>
+        /// <summary>모든 키(164개: 02·06 그룹 001~008 95개 + 07 그룹 101~106 69개. FLOOR_COUNT·LOBBY_STAIR_MAX_LV는 표 행으로 계산 — MvTables.FloorCount·StairMaxLv).</summary>
         public static readonly string[] All =
         {
             Time_DtCap,
@@ -311,7 +309,6 @@ namespace MV.Data
             WELL_BRICK_LIFE,
             ORE_ICON_GAP_MS,
             CRAFT_ICON_MAX,
-            FLOOR_COUNT,
             CP_MAX,
             PLAYABLE_AREAS,
             TOK_BASE,
@@ -319,7 +316,6 @@ namespace MV.Data
             TOK_GATE,
             TOK_OPEN,
             FAIL_SFX_DELAY_MS,
-            LOBBY_STAIR_MAX_LV,
             WEAPON_EXTRA_BUYS,
             ARCH_LABEL_HIDE,
             MERGE_N,

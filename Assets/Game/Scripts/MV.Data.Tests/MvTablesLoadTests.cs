@@ -18,11 +18,11 @@ namespace MV.Data.Tests
             ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 12, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,
             ["107_chargeGate"] = 3, ["108_receiveCondition"] = 7, ["109_moveAI"] = 3, ["110_card"] = 92, ["111_cardPool"] = 11,
             ["112_cardEffect"] = 26, ["113_god"] = 12, ["114_hpRule"] = 7, ["115_cardTier"] = 5,
-            ["300_runConfig"] = 171, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15,
+            ["300_runConfig"] = 169, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15,
             ["310_template"] = 10, ["311_templateObject"] = 123, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
             ["314_spawnGroup"] = 35, ["320_camera"] = 3, ["330_climb"] = 5,
             ["400_content"] = 5, ["401_modeStage"] = 53, ["402_modeRule"] = 4, ["410_questGroup"] = 14, ["413_repeatQuest"] = 16,
-            ["414_passQuest"] = 60, ["420_achievement"] = 19, ["499_contentConfig"] = 42,
+            ["414_passQuest"] = 60, ["420_achievement"] = 19, ["499_contentConfig"] = 40,
             ["700_productTab"] = 6, ["701_product"] = 29, ["702_shopSection"] = 4,
             ["430_pet"] = 16, ["431_petBuild"] = 16, ["440_research"] = 25, ["450_friend"] = 10, ["451_friendPower"] = 3,
             ["460_rune"] = 4, ["470_gearPart"] = 7, ["471_gearRarity"] = 8, ["480_blessing"] = 4, ["485_attendance"] = 7,
@@ -67,9 +67,9 @@ namespace MV.Data.Tests
             Assert.That(t.Wealth.Get(MvLevelPriceGenerator.Gold), Is.Not.Null);
             // 07 §7.8.1 로비 강화.
             var stair = t.LobbyUpgrade.ByKey("stair");
-            Assert.That(stair.max, Is.EqualTo(30));
+            Assert.That(t.LevelMax(stair), Is.EqualTo(30)); // Σ11.need(lv<4) = 7+10+13, 표 칸은 비움
             Assert.That(stair.costBase, Is.EqualTo(25));
-            Assert.That(t.LobbyUpgrade.ByKey("weapon").max, Is.EqualTo(254)); // MV-SPEC-02 Q-08: 12등급 Σneed(lv1~11) 194 + 60
+            Assert.That(t.LevelMax(t.LobbyUpgrade.ByKey("weapon")), Is.EqualTo(254)); // MV-SPEC-02 Q-08: 12등급 Σneed(lv1~11) 194 + 60
             // 07 §7.8.4·7.8.5.
             Assert.That(t.AreaUpgrade.ByKey("rate").valueFormat, Is.EqualTo("{0}%"));
             Assert.That(t.RebirthPerk.ByKey("dcap").@base, Is.EqualTo(10));

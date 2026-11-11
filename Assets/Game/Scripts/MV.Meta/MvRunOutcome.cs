@@ -56,7 +56,7 @@ namespace MV.Meta
         public int Tokens;
         /// <summary>이번 정산으로 새로 열린 <c>05_contentOpen.key</c>(해금 연출 대상).</summary>
         public IReadOnlyList<string> NewlyOpened = new string[0];
-        /// <summary>전면 광고를 띄울지(D-24, <c>mul == 1 && area ≥ interstitialMinArea</c>, 광고 제거면 false).</summary>
+        /// <summary>전면 광고를 띄울지(D-24, <c>mul == 1 && area ≥ 08[interstitial].minArea</c>, 광고 제거면 false).</summary>
         public bool ShowInterstitial;
         /// <summary>정산하지 못한 정산 대기 항목(종류 미구현).</summary>
         public IReadOnlyList<MvConsume> Unsettled = new MvConsume[0];

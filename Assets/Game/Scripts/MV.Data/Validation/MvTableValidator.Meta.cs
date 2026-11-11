@@ -44,7 +44,8 @@ namespace MV.Data
                 if (p.rarity < 0 || p.rarity > 4) r.Error(name, p.id, "rarity", $"rarity {p.rarity}는 0~4 밖입니다");
                 if (p.skillEveryMs <= 0) r.Error(name, p.id, "skillEveryMs", "skillEveryMs는 1 이상이어야 합니다");
                 if (p.skillTargets < 1) r.Error(name, p.id, "skillTargets", "skillTargets는 1 이상이어야 합니다");
-                CheckLevelPriceRange(t, r, covered, name, p.id, p.levelPriceGroup, 2, PetData.MaxLevel);
+                // 펫 최대 Lv = 16 묶음 targetLevel 최댓값(표에 따로 열 없음). 2~최대 빈틈만 본다.
+                CheckLevelPriceRange(t, r, covered, name, p.id, p.levelPriceGroup, 2, t.LevelPriceMaxLevel(p.levelPriceGroup));
             }
         }
 
@@ -174,7 +175,7 @@ namespace MV.Data
             foreach (var x in rows)
             {
                 if (x.sellPrice.Count == 0) r.Error(name, x.id, "sellPrice", "판매 가격(sellPrice)이 비었습니다");
-                CheckLevelPriceRange(t, r, covered, name, x.id, x.levelPriceGroup, 1, GearRarityData.MaxLevel);
+                CheckLevelPriceRange(t, r, covered, name, x.id, x.levelPriceGroup, 1, t.GearMaxLevel()); // 499 gear.maxUpgrade
             }
         }
 
@@ -199,15 +200,17 @@ namespace MV.Data
         static void CheckAttendance(MvTables t, MvValidationReport r)
         {
             const string name = AttendanceData.Table;
+            // 한 바퀴 일수 = day 최댓값(표 행으로 계산, 옛 상수 7). 1~최댓값 빈틈 없이.
+            int cycle = t.AttendanceCycleDays();
             var seen = new HashSet<int>();
             foreach (var a in t.Attendance.Datas.OrderBy(x => x.id))
             {
-                if (a.day < 1 || a.day > AttendanceData.CycleDays)
-                    r.Error(name, a.id, "day", $"day {a.day}는 1~{AttendanceData.CycleDays} 밖입니다");
+                if (a.day < 1)
+                    r.Error(name, a.id, "day", $"day {a.day}는 1 이상이어야 합니다");
                 else if (!seen.Add(a.day)) r.Error(name, a.id, "day", $"day {a.day}가 중복됩니다");
                 if (a.reward.Count == 0) r.Error(name, a.id, "reward", "보상이 비었습니다");
             }
-            for (int d = 1; d <= AttendanceData.CycleDays; d++)
+            for (int d = 1; d <= cycle; d++)
                 if (!seen.Contains(d)) r.Error(name, null, "day", $"day {d} 행이 없습니다");
         }
 

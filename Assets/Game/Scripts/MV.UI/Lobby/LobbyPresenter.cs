@@ -237,7 +237,7 @@ namespace MV.UI
                 case LobbyEffectType.StartStairLv:
                 {
                     var k = MvMetaRules.StairStart(t, p);
-                    int maxLv = t.RunConfig.I(RunConfigKeys.LOBBY_STAIR_MAX_LV);
+                    int maxLv = t.StairMaxLv();
                     u.Icon = string.IsNullOrEmpty(row.icon) ? "" : row.icon + "_" + StageOf(t, LobbyEffectType.StartStairLv, p);
                     if (k.Lv >= maxLv)
                     {

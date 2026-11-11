@@ -74,7 +74,7 @@ namespace MV.Content.Tests
                     StartDeck = config.startDeck.ToArray(),
                     StartGodKey = config.startGodKey,
                     CpMax = Tables.RunConfig.I(RunConfigKeys.CP_MAX),
-                    FloorCount = Tables.RunConfig.I(RunConfigKeys.FLOOR_COUNT),
+                    FloorCount = Tables.FloorCount(),
                     DayUtcOffsetHour = config.adDayUtcOffsetHour,
                 },
             });

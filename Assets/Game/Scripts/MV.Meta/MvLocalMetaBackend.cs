@@ -172,14 +172,13 @@ namespace MV.Meta
 
         private int CollectAdMul() => MvMetaRules.CollectAdMul(_t);
 
-        /// <summary>D-24 전면 광고: <c>area ≥ minArea</c>(08 interstitial, 없으면 00_config). 광고 제거(noAds)면 건너뛴다.</summary>
+        /// <summary>D-24 전면 광고: <c>area ≥ 08[interstitial].minArea</c>(값은 08 한 곳, 00_config.interstitialMinArea 삭제). 행이 없거나 꺼지면 띄우지 않는다. 광고 제거(noAds)면 건너뛴다.</summary>
         internal bool InterstitialDue(int areaAfter)
         {
             var row = _t.AdPlacement.ByKey("interstitial");
-            if (row != null && !row.active) return false;
-            int minArea = row?.minArea ?? Config.interstitialMinArea;
-            if (areaAfter < minArea) return false;
-            return !(row != null && row.noAdsSkip && Res.GetRaw(MvWealthIds.NoAds) > 0);
+            if (row == null || !row.active) return false;
+            if (areaAfter < row.minArea) return false;
+            return !(row.noAdsSkip && Res.GetRaw(MvWealthIds.NoAds) > 0);
         }
 
         // ───────── 해금(07 §7.8.9) ─────────
@@ -271,7 +270,7 @@ namespace MV.Meta
 
         private MvMetaResponse Buy(ILevelPriced row, int bought, string containerKey, JObject container, JObject result)
         {
-            if (bought >= row.max) return MvMetaResponse.Reject(MvMetaErrors.Max, row.key);
+            if (bought >= _t.LevelMax(row)) return MvMetaResponse.Reject(MvMetaErrors.Max, row.key);
             var price = MvMetaRules.NextPrice(_t, row.levelPriceGroup, bought);
             if (price == null) return MvMetaResponse.Reject(MvMetaErrors.Max, row.key);
             // Framework 대체: 07 §7.8.7의 LocalRewardService.PrepareMutation/Commit 대신 ResourceService.Get 확인 + 단계와 같은

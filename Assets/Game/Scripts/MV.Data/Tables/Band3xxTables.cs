@@ -60,11 +60,10 @@ namespace MV.Data
     {
         public const string Table = "301_zone";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("sort").Bool("active")
-            .Int("areaFrom", true).Int("areaTo", true).Res("mapIcon", MvAtlas.UiLobby).Color("mapCol1").Color("mapCol2")
+            .Res("mapIcon", MvAtlas.UiLobby).Color("mapCol1").Color("mapCol2")
             .Sound("bgm").Str("weaponLookSet");
 
-        public int areaFrom { get; private set; }
-        public int areaTo { get; private set; }
+        // Zone의 Area 범위는 302_area.zoneId로 계산한다(MvTables.ZoneFirstArea·ZoneLastArea, 옛 areaFrom·areaTo 열 삭제).
         public string mapIcon { get; private set; }
         public string mapCol1 { get; private set; }
         public string mapCol2 { get; private set; }
@@ -77,8 +76,6 @@ namespace MV.Data
         public override void Init(TSVRow r)
         {
             base.Init(r);
-            areaFrom = I(r, "areaFrom");
-            areaTo = I(r, "areaTo");
             mapIcon = S(r, "mapIcon");
             mapCol1 = S(r, "mapCol1");
             mapCol2 = S(r, "mapCol2");

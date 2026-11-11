@@ -151,14 +151,109 @@ namespace MV.Data
         /// <summary>801·802 추첨·확률 표시. <see cref="BuildIndexes"/>가 만든다(D-85: 패키지가 나오면 MvDropSource로 교체).</summary>
         public IMvDropSource Drops { get; private set; }
 
-        /// <summary>Zone 순서(0기반 zoneIndex, 07 §7.4.1) — sort 순 위치.</summary>
+        /// <summary>Zone 순서(0기반 zoneIndex, 07 §7.4.1) — 그 Area 행의 <c>302_area.zoneId</c>가 301 sort 순에서 몇 번째인지. 없으면 -1.</summary>
         public int ZoneIndexOfArea(int areaNo)
         {
+            int zoneId = 0;
+            foreach (var a in Area.Datas) if (a.areaNo == areaNo) { zoneId = a.zoneId; break; }
+            if (zoneId == 0) return -1;
             var zones = Zone.Sorted;
             for (int i = 0; i < zones.Count; i++)
-                if (areaNo >= zones[i].areaFrom && areaNo <= zones[i].areaTo) return i;
+                if (zones[i].id == zoneId) return i;
             return -1;
         }
+
+        /// <summary>Zone의 첫 Area 번호 = <c>302_area</c>에서 그 zoneId 행의 areaNo 최소(301 areaFrom 열 대신 계산). 행이 없으면 0.</summary>
+        public int ZoneFirstArea(int zoneId)
+        {
+            int first = 0;
+            foreach (var a in Area.Datas)
+                if (a.zoneId == zoneId && (first == 0 || a.areaNo < first)) first = a.areaNo;
+            return first;
+        }
+
+        /// <summary>Zone의 마지막 Area 번호 = <c>302_area</c>에서 그 zoneId 행의 areaNo 최대(301 areaTo 열 대신 계산). 행이 없으면 0.</summary>
+        public int ZoneLastArea(int zoneId)
+        {
+            int last = 0;
+            foreach (var a in Area.Datas)
+                if (a.zoneId == zoneId && a.areaNo > last) last = a.areaNo;
+            return last;
+        }
+
+        /// <summary>
+        /// Area당 Floor 수 = 302가 쓰는 <c>303_areaFloor</c> 묶음의 floor 최댓값(옛 300 FLOOR_COUNT를 계산으로 바꿈).
+        /// 모드 전용 묶음(302가 쓰지 않는 묶음)은 세지 않는다. 행이 없으면 1.
+        /// </summary>
+        public int FloorCount()
+        {
+            var groups = new HashSet<int>();
+            foreach (var a in Area.Datas) groups.Add(a.floorGroup);
+            int max = 0;
+            foreach (var f in AreaFloor.Datas)
+                if (groups.Contains(f.group) && f.floor > max) max = f.floor;
+            return Math.Max(1, max);
+        }
+
+        /// <summary>로비 캣타워로 올리는 시작 계단 Lv 상한 = <c>11_stairLevel</c> lv 최댓값(옛 300 LOBBY_STAIR_MAX_LV를 계산으로 바꿈). 행이 없으면 1.</summary>
+        public int StairMaxLv()
+        {
+            int max = 0;
+            foreach (var r in StairLevel.Datas) if (r.lv > max) max = r.lv;
+            return Math.Max(1, max);
+        }
+
+        /// <summary>
+        /// 성장 행의 최대 구매 수. 로비 강화 계단(StartStairLv)·지팡이(DeckAdd)는 표에 적지 않고 계산한다(사용자 결정 「행 수·합계로 계산되는 값은 계산」):
+        /// 계단 = Σ<c>11_stairLevel.need</c>(lv &lt; 상한 Lv), 지팡이 = Σ<c>12_weaponLevel.need</c>(lv &lt; 마지막 lv) + <c>WEAPON_EXTRA_BUYS</c>.
+        /// 그 밖 행은 표의 <c>max</c> 열.
+        /// </summary>
+        public int LevelMax(ILevelPriced row)
+        {
+            if (row is LobbyUpgradeData lobby)
+            {
+                if (lobby.effectType == LobbyEffectType.StartStairLv)
+                {
+                    int top = StairMaxLv(), sum = 0;
+                    foreach (var r in StairLevel.Datas) if (r.lv < top) sum += r.need;
+                    return sum;
+                }
+                if (lobby.effectType == LobbyEffectType.DeckAdd)
+                {
+                    int last = 0, sum = 0;
+                    foreach (var r in WeaponLevel.Datas) if (r.lv > last) last = r.lv;
+                    foreach (var r in WeaponLevel.Datas) if (r.lv >= 1 && r.lv < last) sum += r.need;
+                    return sum + RunConfig.I(RunConfigKeys.WEAPON_EXTRA_BUYS);
+                }
+            }
+            return row?.max ?? 0;
+        }
+
+        /// <summary>로비 강화 행이 최대 구매 수를 계산하는지(계단·지팡이). 이 행의 <c>max</c> 칸은 비운다.</summary>
+        public static bool IsComputedMax(LobbyUpgradeData row) =>
+            row != null && (row.effectType == LobbyEffectType.StartStairLv || row.effectType == LobbyEffectType.DeckAdd);
+
+        /// <summary><c>16_levelPrice</c> 묶음의 targetLevel 최댓값(펫 최대 Lv처럼 표에 따로 열이 없는 상한). 행이 없으면 0.</summary>
+        public int LevelPriceMaxLevel(int group)
+        {
+            int max = 0;
+            foreach (var r in LevelPrice.GetGroup(group)) if (r.targetLevel > max) max = r.targetLevel;
+            return max;
+        }
+
+        /// <summary>출석 한 바퀴 일수 = <c>485_attendance</c> day 최댓값(옛 코드 상수 7). 행이 없으면 0.</summary>
+        public int AttendanceCycleDays()
+        {
+            int max = 0;
+            foreach (var r in Attendance.Datas) if (r.day > max) max = r.day;
+            return max;
+        }
+
+        /// <summary>장비 강화 상한 = <c>499_contentConfig gear.maxUpgrade</c>(옛 코드 상수 30).</summary>
+        public int GearMaxLevel() => ContentConfig.I(ContentConfigKeys.Gear_MaxUpgrade);
+
+        /// <summary>런 동행 최대 수 = <c>499 pet.slots</c> + <c>friend.slotsMax</c>(04 §4.20.5 「펫 2 + 친구 3」, 옛 코드 상수 5).</summary>
+        public int MaxCompanions() => ContentConfig.I(ContentConfigKeys.Pet_Slots) + ContentConfig.I(ContentConfigKeys.Friend_SlotsMax);
 
         /// <summary>
         /// 무기 상한 등급 = <c>103_item</c> active 행의 tier 최대(MV-SPEC-02 Q-08). 런 W·덱 길이 = 이 값 + 1.

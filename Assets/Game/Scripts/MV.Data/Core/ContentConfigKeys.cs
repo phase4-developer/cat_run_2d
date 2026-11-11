@@ -4,7 +4,6 @@ namespace MV.Data
     /// <summary>`499_contentConfig` 키 상수. 코드는 이 상수로만 키를 쓴다(묶음 이름 행은 넣지 않는다).</summary>
     public static class ContentConfigKeys
     {
-        public const string Mode_AdTicketDaily = "mode.adTicketDaily";
         public const string Mode_SweepChuruRatio = "mode.sweepChuruRatio";
         public const string Box_FallbackDia_Paper = "box.fallbackDia.paper";
         public const string Box_FallbackDia_Wood = "box.fallbackDia.wood";
@@ -15,7 +14,6 @@ namespace MV.Data
         public const string Pet_CardsToUnlock = "pet.cardsToUnlock";
         public const string Pet_Slots = "pet.slots";
         public const string Pet_LevelPct = "pet.levelPct";
-        public const string Pet_BuildSlotsMax = "pet.buildSlotsMax";
         public const string Pet_BuildSlotEvery = "pet.buildSlotEvery";
         public const string Pet_BuildCost0 = "pet.buildCost0";
         public const string Pet_BuildCost1 = "pet.buildCost1";
@@ -37,10 +35,9 @@ namespace MV.Data
         public const string Energy_Enabled = "energy.enabled";
         public const string Horde_Enabled = "horde.enabled";
 
-        /// <summary>모든 값 키(31개).</summary>
+        /// <summary>모든 값 키(29개). 모드 광고 입장권 하루 횟수는 08 modeTicket.dailyLimit 하나, 펫 옵션 칸 상한은 buildCost 키 수로 계산(사용자 결정 「같은 값은 한 곳」).</summary>
         public static readonly string[] All =
         {
-            Mode_AdTicketDaily,
             Mode_SweepChuruRatio,
             Box_FallbackDia_Paper,
             Box_FallbackDia_Wood,
@@ -51,7 +48,6 @@ namespace MV.Data
             Pet_CardsToUnlock,
             Pet_Slots,
             Pet_LevelPct,
-            Pet_BuildSlotsMax,
             Pet_BuildSlotEvery,
             Pet_BuildCost0,
             Pet_BuildCost1,

@@ -19,9 +19,6 @@ namespace MV.Data
     public sealed class PetData : MvRow
     {
         public const string Table = "430_pet";
-        /// <summary>최대 레벨(08 §8.5.2). 16_levelPrice 묶음은 targetLevel 2~MaxLevel을 덮어야 한다.</summary>
-        public const int MaxLevel = 40;
-
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("rarity", true).Enum<MetaStat>("statKey", true)
             .Float("value", true).Int("skillEveryMs", true).Float("skillDmgPct", true).Int("skillTargets", true).Float("skillLevelPct")
             .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon).Res("sprite", MvAtlas.WorldPet).Bool("active");
@@ -268,9 +265,6 @@ namespace MV.Data
     public sealed class GearRarityData : MvRow
     {
         public const string Table = "471_gearRarity";
-        /// <summary>강화 상한(08 §8.5.8, 499 `gear.maxUpgrade`). 16_levelPrice 묶음은 targetLevel 1~MaxLevel을 덮어야 한다.</summary>
-        public const int MaxLevel = 30;
-
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("rarity", true).Color("color", true).Float("value", true)
             .Consume("sellPrice").FkGroup("levelPriceGroup", LevelPriceData.Table, true).Str("frame");
 
@@ -337,9 +331,6 @@ namespace MV.Data
     public sealed class AttendanceData : MvRow
     {
         public const string Table = "485_attendance";
-        /// <summary>한 바퀴 일수(08 §8.5.10: 7일째 뒤 1일째).</summary>
-        public const int CycleDays = 7;
-
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("day", true).Consume("reward").Res("icon", MvAtlas.UiIcon);
 
         public int day { get; private set; }

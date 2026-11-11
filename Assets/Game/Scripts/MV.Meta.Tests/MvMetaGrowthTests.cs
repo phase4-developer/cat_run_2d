@@ -144,7 +144,7 @@ namespace MV.Meta.Tests
             Assert.That(MvMetaRules.DeckAdd(deck, max), Is.EqualTo(0), "상한 등급은 더 머지하지 않는다");
             Assert.That(deck[max], Is.EqualTo(3));
             // 저장 덱이 상한보다 짧아도 MAX 등급까지 산다: 무기 Level 마지막 = 상한.
-            Assert.That(MvMetaRules.WeaponLevel(Tables, Tables.LobbyUpgrade.ByKey("weapon").max).Lv, Is.EqualTo(max));
+            Assert.That(MvMetaRules.WeaponLevel(Tables, Tables.LevelMax(Tables.LobbyUpgrade.ByKey("weapon"))).Lv, Is.EqualTo(max));
         }
 
         [Test]
