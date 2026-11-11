@@ -10,12 +10,42 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "com.coffee.ui-particle": {
+      "version": "https://github.com/mob-sakai/ParticleEffectForUGUI.git#c54f63cb18a22382215b142b63e232f0f86fff58",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.particlesystem": "1.0.0"
+      },
+      "hash": "c54f63cb18a22382215b142b63e232f0f86fff58"
+    },
     "com.cysharp.unitask": {
       "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2e993ff18f28c931602a07292df0b0804eebef99",
       "depth": 0,
       "source": "git",
       "dependencies": {},
       "hash": "2e993ff18f28c931602a07292df0b0804eebef99"
+    },
+    "com.esotericsoftware.spine.spine-csharp": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#b81e5a58ed38704aee4f866f0e0ac672623ce914",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "b81e5a58ed38704aee4f866f0e0ac672623ce914"
+    },
+    "com.esotericsoftware.spine.spine-unity": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-unity/Assets/Spine#b81e5a58ed38704aee4f866f0e0ac672623ce914",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.esotericsoftware.spine.spine-csharp": "4.2.0"
+      },
+      "hash": "b81e5a58ed38704aee4f866f0e0ac672623ce914"
     },
     "com.google.external-dependency-manager": {
       "version": "file:Vendor/com.google.external-dependency-manager-1.2.186.tgz",
@@ -140,6 +170,36 @@
       "dependencies": {
         "com.jjevol.effects": "0.1.0-pre.2",
         "com.unity.addressables": "4.0.1"
+      }
+    },
+    "com.jjevol.effects.coffee": {
+      "version": "file:Frozen/com.jjevol.effects.coffee-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.coffee.ui-particle": "4.11.3",
+        "com.cysharp.unitask": "2.5.11",
+        "com.unity.ugui": "2.0.0"
+      }
+    },
+    "com.jjevol.effects.dotween-pro": {
+      "version": "file:Frozen/com.jjevol.effects.dotween-pro-0.1.0-pre.2.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.effects": "0.1.0-pre.2",
+        "com.unity.ugui": "2.0.0"
+      }
+    },
+    "com.jjevol.effects.spine": {
+      "version": "file:Frozen/com.jjevol.effects.spine-0.1.0-pre.3.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.effects": "0.1.0-pre.2",
+        "com.esotericsoftware.spine.spine-csharp": "4.2.37",
+        "com.esotericsoftware.spine.spine-unity": "4.2.120",
+        "com.unity.ugui": "2.0.0"
       }
     },
     "com.jjevol.effects.ui": {
@@ -438,6 +498,14 @@
         "com.unity.inputsystem": "1.18.0",
         "com.unity.addressables": "4.0.1",
         "com.cysharp.unitask": "2.5.11"
+      }
+    },
+    "com.jjevol.ui.dotween-pro": {
+      "version": "file:Frozen/com.jjevol.ui.dotween-pro-0.1.0-pre.2.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.ui": "0.1.0-pre.2"
       }
     },
     "com.jjevol.ui.economy": {
