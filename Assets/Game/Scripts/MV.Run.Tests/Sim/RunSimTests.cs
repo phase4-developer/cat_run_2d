@@ -202,11 +202,11 @@ namespace MV.Run.Tests
         [Test]
         public void Settlement_CarriesStartShare()
         {
-            var sim = Sim(new HandLevel());
-            var s = sim.State;
+            var b = new RunLevelBuilder();
+            var s = b.NewRun(Setup(), RunTestTables.Load(), new ConstRng(0.5));
             s.StartGold = 7; s.Gold = 20;
             s.StartDia = 2; s.Dia = 5;
-            var r = RunSettlement.Main(s, FinishReason.Wall, new RunLevelBuilder());
+            var r = RunSettlement.Main(s, FinishReason.Wall, b);
             Assert.AreEqual(7, r.StartGold, 1e-9);
             Assert.AreEqual(2, r.StartDia);
             Assert.GreaterOrEqual(r.Gold, 20);
