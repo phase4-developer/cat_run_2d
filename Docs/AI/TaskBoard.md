@@ -101,79 +101,7 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 | 번호 | 요지 | 따르는 권장안 | 바꾸면 달라지는 것 | 되돌리기 | 정본 위치 |
 |---|---|---|---|---|---|
-| D-RUN-BLOCK | 런이 막혀 끝날 때 끝난 이유를 정본처럼 나눌지 | 막힘은 모두 `FinishReason.Wall` 하나 | 정본 `blocked.k` 이름별로 나누면 종료 사유 값이 늘고 결과 문구·퀘스트 판정이 갈림 | 쉬움 — 결과 문구·퀘스트가 사유를 쓰기 전까지 | `S/MV.Run/Core/RunTypes.cs`, 보관 원장 MV-RUN-SIM 행 |
-| D-RULE-01 | 동행 고양이 사격의 기본 성질 | 우물·게이트를 채우지 않음, 즉시 명중(그림만 날아감), 모드 런의 메타 능력치는 402 `useMetaStats`(D-76), 발사 주기에 FireRate를 곱하지 않음 | 채우거나 FireRate를 곱하면 계단·무기 경제와 밸런스가 바뀜, 투사체로 하면 충돌 판정이 늘어남 | 쉬움 — G7 동행·모드 밸런스를 잡기 전까지 | 04 §4.20.7 |
-| D-RULE-02 | 대상이 없는 동안 「초 단위」 동행이 기다린 만큼 몰아 쏘는지 | 몰아 쏘지 않음. 타이머 `c.t`를 0에 두고 대상이 생기면 1발 | 몰아 쏘면 대상이 나타나는 순간 피해가 몰림 | 쉬움 | 04 §4.20.7 |
-| D-RULE-03 | 동행이 쏘지 않을 대상(우물·게이트)을 고르는 기준 | 105 `chargeGateId` ≠ 0인 오브젝트를 뺌(종류 이름으로 고르지 않음) | 종류 이름으로 고르면 새 오브젝트마다 코드를 고침 | 쉬움 | 04 §4.20.7 |
-| D-RULE-04 | 배속(ts > 1)일 때 규칙 훅을 몇 번 부를지 | updRun마다(배속 수만큼) `Tick`·`CheckEnd` | 프레임당 1번이면 배속 때 동행·모드 판정이 느려짐 | 쉬움 | 04 §4.20.7 |
-| D-RULE-05 | 확률형·명중 횟수형 동행의 난수와 횟수 규칙 | Chance는 명중마다 `CompanionRng`, Hits는 `round(Every)`번째 명중마다 | 본편 난수열을 같이 쓰면 본편 결과가 흔들려 골든 시험을 다시 기록 | 쉬움 — 골든 파일만 다시 기록 | 04 §4.20, 보관 원장 MV-RUN-RULE 행 |
-| D-META-01 | 부활할 때 「마지막으로 정산한 런 번호」를 지울지 | 유지(`lastSettledRunSeq`) — 부활 뒤에도 같은 런 중복 정산을 막음 | 지우면 부활 직후 옛 런 결과가 다시 정산될 수 있음 | 쉬움 | 보관 원장 「칸별 상태」 MV-META, `S/MV.Meta/` |
-| D-META-02 | 런 정산 때 통과·구역 끝·목숨 조각을 누가 판정하나 | 런이 보낸 값을 그대로 믿지 않고 Meta가 다시 판정 | 런 값을 그대로 쓰면 코드는 줄지만 서버 전환 때 검증 자리가 없음 | 쉬움 — 서버 전환(MV-NET-SERVER) 전까지 | 보관 원장 MV-META, `S/MV.Meta/MvMetaRules.cs` |
-| D-META-03 | 성장 구매를 Framework 보상 처리로 할지 | Framework `LocalRewardService.Commit` 대신 `ResourceService.Get` + `ApplyAndSave` 한 번(`// Framework 대체:` 표시) | Framework 방식으로 바꾸면 구매 코드 교체와 Meta 시험 다시 | 쉬움 — 표시한 자리만 바꿈 | 보관 원장 MV-META, `S/MV.Meta/MvMeta.cs` |
-| D-META-04 | 런이 끝나기 전 쌓아 두는 미정산 보상에 무엇을 담나 | 재화와 608(목숨 조각 적립 대기)만 | 다른 보상(카드·상자 등)도 담으면 저장 칸과 정산 규칙이 늘어남 | 수고가 듦 — 출시 뒤 저장 데이터가 생기면 이관 필요 | 보관 원장 MV-META, `S/MV.Meta/MvRunOutcome.cs` |
-| D-META3-1 | 테스트 패널 「모두 열기」가 무엇을 바꾸나(개발 빌드 전용) | Area·런 수를 올려서 열림 조건을 채움 | 기능별 열림 값을 직접 쓰면 실제 진행 경로를 거치지 않음 | 쉬움 | 원장 MV-META 행, `S/MV.Meta/MvMetaRequest.cs` |
-| D-META3-2 | 테스트 패널 「시간 더하기」를 저장할지(개발 빌드 전용) | 저장하지 않음(앱을 다시 켜면 사라짐) | 저장하면 쿨타임·하루 초기화 시험이 재시작 뒤에도 이어짐 | 쉬움 | 원장 MV-META 행 |
-| D-META3-3 | 테스트 패널의 부활 해제를 어떤 길로 부르나 | `RebirthPresenter`를 직접 부름. 메타 입구(port)에는 자리만 둠 | port로 옮기면 화면이 Meta를 직접 부르지 않게 정리됨 | 쉬움 | 원장 MV-META 행, `S/MV.UI/Meta/` |
-| D-MVDATA-RES | 표가 가리키는 그림이 아직 없을 때 오류로 볼지 | 아직 안 뽑은 그림·그림 없음은 경고 목록, 이름 틀림·주소 없음은 오류 | 모두 오류로 하면 임시 아트를 다 만들 때까지 시험이 FAIL | 쉬움 | 07 §7.10.5 (현재 원장 「열린 결정」에는 없고 보관 원장에만 있음) |
-| D-DATA-CTYPE | 재화 종류 enum을 Framework 생성기로 만들지 | 손으로 쓴 `MV.Data.ConsumeType` 유지. 고정본 0.1.0-pre.7 생성기는 손 enum과 충돌해 옮길 길이 없음 → Framework 요청 | Framework가 고치면 생성 코드로 바꾸고 손 enum을 지움 | 쉬움 | `S/MV.Data/Core/ConsumeType.cs`, `S/MV.Editor/Tables/MvConsumeTypeCodegen.cs`, 07 §7.8.12 |
-| D-DATA-802401 | 수비전 택배 상자(카드 등급 뽑기) 상자 행을 지금 넣을지 | 행을 넣지 않음(802 표에 없음). [추정] 카드 종류 601의 id는 카드 행 id라 「등급」을 적을 방법이 없음 | 넣으려면 등급을 적을 보상 종류나 열을 새로 정함 | 쉬움 — 수비전 모드(G7) 전까지 | 08 §8.5.12, `Assets/Game/GameData/Table/TSV/802_randomBox.txt` |
-| D-DATA-480KEY | 축복 표(480)에 능력치 키 열을 둘지 | 열 없음. 장비 축복은 효과 종류 4 = Dmg로 정함 | 열을 두면 다른 성장 표처럼 statKey로 합산 | 쉬움 — 2차 표라 아직 안 씀 | 08 §8.5.9, 04 §4.20.4, `480_blessing.txt` |
-| D-DATA-413STEP | 반복 퀘스트 표(413)에 단계(step) 열을 둘지 | 열 없음. 순서는 `sort`, 단계별 목표 증가는 `clearValueStep` | 열을 넣으면 단계형 퀘스트 규칙과 표 검증을 더함 | 쉬움 — QUEST 계약(G7) 전까지 | 08 §8.5.1, `413_repeatQuest.txt` |
-| D-DATA-701OFF | 2차 상점 상품을 표에 둘지 | 2차 상품 행은 넣되 `active 0`(지금 20행 꺼짐, 9행 켜짐) | 지우면 2차 때 행을 다시 씀, 켜면 결제 스텁과 화면이 필요 | 쉬움 | 08 §8.5.7·§8.6.2, `701_product.txt` |
-| D-DATA-450PORT | 친구 고양이 초상화 그림 이름 접두 | `Portrait_Friend_*` | 03 §3.4.1 규칙(`Tex_`)에 맞추면 표 값·그림 이름을 함께 바꿈 | 쉬움 — 그림이 들어오기 전까지 | 03 §3.4.1, 08 §8.5.4 `450_friend` |
-| D-72-LINE | Zone 2~6 테마(304 6~15행)의 빨랫줄·전구줄 종류 고르는 규칙 | 정본 규칙(`deco` 값)대로. 밤 테마도 빨랫줄 | 밤 테마를 전구줄로 바꾸면 `lineKind` 값만 고침(코드 수정 없음) | 쉬움 | 07 §7.4.4 |
-| D-400-LIMIT | 모드마다 하루 입장 횟수 한도를 따로 둘지 | 두지 않음(400 `dailyLimit` 모두 0, 입장권 하루 3장만) | 한도를 두면 열 값만 넣음 | 쉬움 | 07 §7.9.1 |
-| D-SWAP-1 | 길가 소품을 무엇으로 고르나 | 정본 `deco` 문턱 우선, `roadsideProps`는 이름 목록 | 목록만으로 고르려면 가중치 열을 더함 | 쉬움 | 07 §7.4.4, 원장 「열린 결정」 SWAP 줄 |
-| D-SWAP-2 | 이펙트 부품의 원소 조건 처리 | 번개(bolt)가 아니면 모두 불(fire). key가 비어 있는 `god.blast`만 예전 색과 다름 | 원소를 더 나누면 04_effect 행과 이펙트 그림이 늘어남 | 쉬움 | 06 §6.15, `04_effect.txt` |
-| D-SWAP-3 | 400 표에 없는 모드 key의 하루 한도 | 한도 없음 | 막으면 표에 없는 모드는 입장 못 함 | 쉬움 | `S/MV.Meta/`(`RecordModePlay`), 07 §7.9.1 |
-| D-MVDATA-PET | 펫 월드 그림을 어느 아틀라스에 넣나 | 새 아틀라스 `Atlas_World_Pet` | 다른 아틀라스면 03 §3.8.1 행·`MvArtRules` 라벨·`temp_art.mjs` 기본값을 함께 바꿈 | 쉬움 — 펫 그림이 들어오기 전까지 | 07 §7.10.3, 03 §3.8.1 |
-| D-ATLAS-FRIEND2 | 친구 고양이 아틀라스(Friend_T1~T6)가 한 장에 들어가는지 | 한 장 가정. 실측 패킹 NOT_RUN | 2장이면 `_2` 분할과 101 `atlasPattern`(MV-DATA) | 쉬움 | 보관 원장 MV-ART-ATLAS 행, 03 §3.8.1 |
-| D-ATLAS-GODTEX | 야옹신 큰 그림(`Tex_God_*`) 파일 위치 | `Art/Source/Texture`에 둔 채 주소만 붙임 | 03 §3.4.2대로 옮기면 파일 이동(GUID 유지) | 쉬움 | 03 §3.4.2, 보관 원장 MV-ART-ATLAS 행 |
-| D-ART-01 | 관문 금빛 기둥이 일반 기둥과 같은 그림일 때 합칠지 | 두 이름 그대로 둠(`Arch_Post_Gold` = `Arch_Post` 같은 바이트) | 합치면 그림 1장과 표·코드 참조 정리 | 쉬움 | 03 §3.5.3, 보관 원장 MV-TOOL-ART 행 |
-| D-ART-02 | 관문 왼쪽 기둥을 오른쪽 그림 뒤집기로 쓸지 | 뒤집기(flipX). 원근 기울기가 정본과 어긋날 수 있음 | 왼쪽을 따로 구우면 그림 1장 추가 | 쉬움 | 03 §3.5.3, `S/MV.View/Runtime/ObjectViewFactory.cs` |
-| D-ART-03 | 정본에 없는 `Crate_Blue_Fish` 그림 | 임시 아트(D-86) | 정식 그림이 오면 PNG만 바꿈 | 쉬움 | 03 §3.13, 보관 원장 MV-TOOL-ART 행 |
-| D-ART-04 | 계단 그림 기준점(피벗) | 추정값으로 둠(정본 확인 안 됨) | 화면 확인 뒤 피벗 값만 고침 | 쉬움 | 03 §3.5, 보관 원장 MV-TOOL-ART 행 |
-| D-ART-05 | 화면 비네트 그림 이름·묶음 | `Tex_UI_Vignette`, 상주 UI 라벨 `ui.core`. 09 9004001은 `Tex_Lobby_Vignette`라 03 §3.5.8과 다름 | 한쪽 이름으로 맞추면 표 행·라벨을 함께 고침 | 쉬움 | 03 §3.5.6·§3.5.8, `S/MV.Editor/Import/MvArtRules.cs` |
-| D-ART-06 | [추정] 크기와 다르게 구운 그림(예: `Fx_Stripe` 기획 16×64, 실제 64×16) | 구운 크기 유지, 03은 나중에 맞춤 | [추정] 크기로 다시 구우면 이펙트 크기 확인 다시 | 쉬움 | 03 §3.5.3(`Fx_Stripe` 16×64 [추정]), 보관 원장 MV-TOOL-ART 행 |
-| D-40 | 2.5D 화면을 Unity에서 어떻게 재현하나 | URP 원근 카메라 + 카메라 평면 빌보드 + 원근 메쉬 | 다른 방식이면 월드 렌더(MV-VIEW)를 새로 짬 | 수고가 듦 — VIEW 1·2차가 이 방식이라 지금도 비쌈 | 02 §2.1.3 |
-| D-41 | 긴 폰·태블릿 화면 처리(UI D-30과 짝) | 폭 1080 고정·세로로 늘림. renderScale 폭 1080 상한은 아직(URP 통합 Writer) | 9:16 고정이면 긴 폰에서 위아래 빈 띠, UI 배치 기준도 바뀜 | 수고가 듦 — UI 겉(2차)을 만든 뒤 비쌈 | 02 §2.7.2, 05 §5.1.2, 13 §13.3.2 |
-| D-42 | 색 공간(UI D-37과 짝) | Linear 유지(URP 기본). 기획서 권장은 Gamma, 캡처 대조로 확인 | Gamma로 바꾸면 색·블렌딩·셰이더를 다시 맞춤 | 수고가 듦 — 그림·셰이더·UI가 늘수록 비쌈 | 02 §2.x 의문점·결정 필요, 13 §13.3.3 |
-| D-VIEW-LABEL | 오브젝트 글자판(체력 숫자·이름) 위치 | VIEW 2차 담당이 정한 위치(정본 대조 전) | 화면 확인 뒤 위치 값만 고침 | 쉬움 | 원장 MV-VIEW 행, `S/MV.View/Runtime/ObjectViewFactory.cs` |
-| D-VIEW-FLOWER | 담장 꽃 장식을 좌우 뒤집을지 | 그림은 왼쪽 담장 기준 [추정], 오른쪽 담장은 뒤집기 | 반대면 뒤집기 조건 한 줄 | 쉬움 | `S/MV.View/Runtime/PropStreamer.cs`, 원장 MV-VIEW 행 |
-| D-VIEW-WELL | 우물 위 잡동사니 배치 | 정본은 매번 무작위, Unity는 결정적 해시로 매 런 같은 모양 | 무작위로 하면 런마다 모양이 달라지고 캡처 대조가 흔들림 | 쉬움 | `S/MV.View/Math/ObjectLayout.cs` |
-| D-45 | 월드 이펙트 구현 방식 | 혼합: C# 적분 + 이펙트마다 절차 메쉬 1개(`MvFxDriver`), 모양은 스프라이트·메쉬 | Shuriken 근사·스프라이트 풀로 바꾸면 이펙트 전체 재작업 | 수고가 듦 — FX 1차가 이 방식이라 지금도 비쌈 | 06 §6.15, §6.x |
-| D-46 | 정본에서 호출되지 않는 잔재 이펙트 | 만들지 않고 키만 예약(frost·flyToWorld 등) | 만들면 프리팹·표 행 추가(카드 공개 D-75 때) | 쉬움 | 06 §6.x |
-| D-47 | 이펙트·팝업의 시간 기준(D-22와 짝) | 정본대로: 이펙트만 히트스톱, 팝업·비행·배너·플래시는 실시간 | 전부 게임 시간이면 멈칫하는 손맛이 달라짐 | 쉬움 | 06 §6.x, 04 |
-| D-48 | 숫자 팝업·보상 비행을 그리는 층 | UGUI 오버레이 | 월드 TMP면 먼 숫자가 작아지고 어두워짐 | 쉬움 — UI 겉 2차 전까지 | 06 §6.7.2 |
-| D-49 | 정본의 2D 부산물(번개 세로 막대·약한 플래시 등, D-44와 짝) | 정본 그대로 유지 | 의도대로 고치면 번개·플래시가 세지고 QA 기준 화면을 다시 찍음 | 쉬움 | 06 §6.x, 02 |
-| D-FX-1 | 이펙트용 그림 층(팝업·비행 아이콘·플래시·단계 이름)을 누가 그리나 | MV.UI가 `IMvPopView`·`IMvFlyView`·`IMvHudAnchors`·`IMvFlashView`를 구현(asmdef 변경 없음) | MV.Fx가 직접 그리면 MV.Fx asmdef에 TMP·uGUI 참조 추가 | 쉬움 | 06 §6.15, 원장 MV-FX 행 |
-| D-SND-2 | 쥐가 훔칠 때 소리를 쥐 종류별로 낼지 | 종류 없이 한 소리. 종류 id(kindId)는 쥐 종류가 늘 때 MV-RUN에 요청 | 나누면 Steal 이벤트에 kindId 추가, 소리 행 추가 | 쉬움 | 보관 원장 MV-SND 줄 |
-| D-68 | 저장 파일 암호화 키를 어디에 두나 | 개발 빌드는 공개 고정 키, 출시 빌드는 키 공급자 교체 지점만(지금 출시 빌드는 저장을 못 엶). 권장: 빌드에 키 내장, 키 원본은 저장소 밖 설정 파일 | 서버에서 받거나 암호화를 끄면 Save 공급자·이관이 바뀜 | 수고가 듦 — 출시 뒤 저장이 생기면 키 교체에 옛 키 이관 코드 필요 | 09 §9.11, 13 §13.3.4 |
-| D-NET-1 | 여러 모듈이 같이 쓰는 시계를 둘지 | 지금은 모듈마다 따로(Meta `IMvClock`, Net `IServerClock`, Sound `IMvSoundClock`). 권장안(MV.Core `IClock` 하나)은 아직 안 함 | 하나로 합치면 Meta·Platform이 MV.Core 시계를 씀 | 쉬움 — 서버 시간 연결(MV-NET-SERVER) 전까지 | 보관 원장 MV-PLAT-NET 줄, `S/MV.Meta/MvMetaPorts.cs`, `S/MV.Platform/Net/IServerClock.cs` |
-| D-NET-2 | 통신 시험 어셈블리가 JSON 라이브러리(Newtonsoft)를 참조할지 | 참조하지 않음(`MV.Platform.Tests`는 nunit만) | 참조하면 시험이 응답 JSON을 직접 읽을 수 있음 | 쉬움 | `S/MV.Platform.Tests/`의 asmdef, 보관 원장 MV-PLAT-NET 줄 |
-| D-NETFW-1 | Framework 통신에 「기본 경로」를 설정으로 선언하는 기능을 요청할지 | 요청 안 함. 게임 부팅 코드가 `DefaultRoute`를 1번만 정함(지금 Local). Framework 평가(2026-11-10): 자동 Local은 **반대**(공급자 등록이 빠지면 출시 빌드가 조용히 로컬로 돔) → 경고 로그로 대체 예정 | 요청하면 Framework 공개 API가 바뀜(사용자 결정) | 쉬움 | 원장 「열린 결정」 Framework 요청 후보, MV-NET-SERVER 행 ③ |
-| D-NETFW-2 | 로컬 경로별 시간 제한을 Framework에 요청할지 | 요청 안 함. 경로를 바꿀 때 `DefaultTimeout`도 함께 설정. Framework 평가: 채택 예정(사용자가 시작하라고 할 때), 그 전 우회는 로컬 요청 `request.Timeout`을 길게 | 요청하면 Framework 공개 API가 바뀜 | 쉬움 | 같은 곳, MV-NET-SERVER 행 ④ |
-| D-NETFW-3 | 응답 반영기를 여러 개 등록하는 기능을 Framework에 요청할지 | 요청 안 함. `SetResponseApplier` 한 슬롯을 게임이 나눠 씀. Framework 평가: 채택 예정, 그 전 우회는 게임 반영기 안에서 `NetworkDataBinding.Apply(repository, request, result)` 직접 호출 | 요청하면 Framework 공개 API가 바뀜 | 쉬움 — 서버 전환 전까지 | 같은 곳, MV-NET-SERVER 행 ⑤ |
-| D-ADS-1 | 출시 빌드에서 광고를 못 띄울 때(SDK 없음) 처리 | Meta는 「안 봄」으로 처리(보상 없음), 화면은 광고 실패 토스트 | 보상을 주면 광고 없이 보상이 나감 | 쉬움 | 05 §5.12, 보관 원장 MV-PLAT-ADS 줄 |
-| D-ADS-2 (=D-LOBBY-AD) | 개발 빌드 가짜 광고를 어떻게 끝내나 | 지금 코드: 「광고 보기(가짜)」·닫기 버튼으로 끝냄. ADS 담당 권장과 정본은 닫기 버튼 없이 3초 뒤 자동 | 3초 자동으로 바꾸면 가짜 광고 팝업만 고침 | 쉬움 | 05 §5.12, `S/MV.UI/Lobby/FakeAdPopup.cs`, `S/MV.Platform/Ads/MvAdTypes.cs` |
-| D-LOGIN-1 | 로그아웃해도 기기의 게스트 id를 남길지 | 남김 | 지우면 로그아웃 뒤 새 게스트가 됨 | 수고가 듦 — 출시 뒤 계정이 생기면 비쌈. 지금은 LOGIN 미연결(D-90)이라 영향 없음 | 보관 원장 MV-PLAT-LOGIN 줄 |
-| D-LOGIN-2 | 게스트 id를 어디에 저장하나 | PlayerPrefs(서버 붙일 때 재검토) | 저장 파일·서버로 옮기면 저장 위치 이관 | 수고가 듦 — 출시 뒤 계정이 생기면 비쌈 | 보관 원장 MV-PLAT-LOGIN 줄 |
-| D-HUD-SORT | UI용 정렬 레이어 「UI」를 만들지 | 만들지 않음(정렬 레이어는 월드용 10개만) | 만들면 ProjectSettings(통합 Writer) 한 줄과 캔버스 설정 | 쉬움 | 원장 MV-UI-HUD 행, `ProjectSettings/TagManager.asset` |
 | D-PI2-1 | 가짜 광고를 여는 코드가 두 곳인 것 합치기 | 두 곳 그대로(로비 `FakeAdPopup.cs`, 메타 `MetaUiPort.cs`) | 합치면 한 곳만 고치면 됨 | 쉬움 | 원장 MV-PLAY-INT 2차 행 |
-| D-PI2-2 | 한글 TMP 글꼴을 넣을지(HUD 한글 글꼴 후보 합침) | TMP 기본 자원은 사용자 「dev에 넣기」로 dev `8bf1ab3`에 들어옴. 한글 글꼴은 넣지 않음, 화면은 uGUI 내장 글꼴 | 넣으면 뷰의 Text를 TextMeshProUGUI로 바꿈(컨트롤러 그대로) | 수고가 듦 — UI 겉 2차를 만들수록 비쌈 | 원장 MV-UI-HUD·MV-PLAY-INT 2차 행, 05 §5.1.7, `S/MV.UI/Common/MvUi.cs` |
-| D-UIMETA-MAP | 지도에 어떤 기능 칸을 보일지 | `05_contentOpen.showOnMap`이 비어 있어 Area 조건(conditionType 1) 행을 모두 보임 | `showOnMap` 값을 채우면 표 값만 바뀜 | 쉬움 | 07 §7.8.9, 원장 MV-UI-META 행 |
-| D-UIMETA-CP | 지도 체크포인트 칸 문구 | 담당이 넣은 임시 문구 | 정식 문구로 바꾸면 문구 키만 | 쉬움 | 원장 MV-UI-META 행 |
-| D-UIMETA-OWN | 05 UI 클래스 표의 소유 계약 | 테스트 패널·메타 공통 틀을 MV-UI-META가 만든 대로 둠(표와 다름) | 표대로 하면 다른 계약으로 옮기거나 05 표를 고침 | 쉬움 — 문서 정리 | 05 §5.1.14 |
-| D-LOBBY-AZSTAGE | 로비 아지트 시설이 커지는 단계 문턱을 표로 뺄지 | 코드 상수(정본 `azStages` L3469~3471) | 표로 빼면 MV-DATA 열 추가 | 쉬움 | `S/MV.UI/Lobby/LobbyFacilities.cs`, 원장 MV-UI-LOBBY 행 |
-| D-CONTENT-a | 모드 시작 연결이 아직 없는 모드를 눌렀을 때 | 「준비 중」 토스트만, 입장 기록(하루 한도) 안 남김 | 기록하면 하루 한도를 헛되이 씀 | 쉬움 | `S/MV.UI/Content/ContentMenuPresenter.cs`, 원장 MV-UI-CONTENT 행 |
-| D-CONTENT-b | 성장 탭 목록에 행 구분(묶음) 열을 둘지 | 열 없음. `05_contentOpen` key 순서대로 | 두면 MV-DATA 열 추가와 화면 구분선 | 쉬움 | 원장 MV-UI-CONTENT 행 |
-| D-PLAYINT-SEED | 런 시드를 어떻게 정하나 | 런 순번에서 결정적으로(같은 저장·같은 순번 = 같은 런) | 04 §4.17.2-3대로 Meta 무작위로 하면 시드를 저장해야 이어하기·재현이 됨 | 쉬움 — `SeedFor` 한 곳 | `S/MV.Boot/MvRunStart.cs`, 04 §4.17 |
-| D-PLAYINT-BOOT | 에디터에서 Game 씬을 바로 실행하면 | Boot 씬을 먼저 열어 돌려보냄 | Game 씬에서 자체 초기화하면 초기화 경로가 둘이 됨 | 쉬움 | `S/MV.Boot/GameInitializer.cs` |
-| D-PLAYINT-BARS | 벽 기록을 어떻게 읽나 | 저장 JSON을 거쳐 읽음(MV-SAVE에 `GetBars(area)` API 없음) | API를 만들면 MV-SAVE 변경 요청 | 쉬움 | `S/MV.Boot/MvRunStart.cs`, 원장 MV-PLAY-INT 행 |
-| D-BUILD-ID | 개발 APK 패키지 이름 | 템플릿 기본값 그대로(`com.UnityTechnologies.com.unity.template.urpblank`) | 출시 이름을 정하면 ProjectSettings·`google-services.json`·AdMob 앱이 그 이름에 묶임 | 쉬움 — 스토어 등록 전까지 | `ProjectSettings/ProjectSettings.asset`, 계약 MV-BUILD-ANDROID |
-| D-BUILD-ADMOBID | AdMob 앱 ID가 비어 있을 때 빌드 | Google 공개 시험 앱 ID로 채워 빌드(실제 ID가 있으면 그대로) | 실제 ID를 받으면 그 값으로 바꾸고 광고 단위도 실제로 | 쉬움 | `S/MV.Editor/Build/MvBuild.cs`, GoogleMobileAds 설정 자산 |
-| D-BUILD-DEV | AI가 만드는 Android 빌드의 형태 | 개발 빌드(IL2CPP·ARM64·Development·디버그 서명 APK, 2026-11-10 실기 실패로 Mono·ARMv7에서 바꿈) | 출시용은 IL2CPP·ARM64·AAB·keystore — ProjectSettings 변경과 서명 자료(사용자) 필요 | 쉬움 | `S/MV.Editor/Build/MvBuild.cs` |
-| D-BUILD-REMOTE | 개발 APK에서 Remote Addressables 그룹을 어떻게 읽나 | 개발 빌드 프로필은 Remote 그룹도 APK 안(Local 경로)에 넣음(통합 Writer: Addressables 프로필 1개) | 원격 서버 주소를 정하면 `Remote.LoadPath`·원격 카탈로그를 켜고 서버에 올리는 절차가 생김 | 쉬움 | Addressables 설정 자산, 원장 MV-BUILD-ANDROID 행 |
 
 ## 확정 결정
 
@@ -201,6 +129,78 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 | 2026-11-09 / 2026-11-10 | D-08 통신 공급자: 지금은 로컬 백엔드, 서버는 Firebase(`platform.network.firebase`). 전환 시점은 MV-NET-SERVER 보류를 따름 | 프로젝트 설정 「서버 통신 = 씀: Firebase 서버; 서버 기능을 지금 처리하는 곳 = 로컬 백엔드(서버 없음)」 + 위 「응 그렇게 진행해」 (원장 「열린 결정」에 있던 것) | `Docs/AI/PROJECT_CONTEXT.md`, 13 §13.2 D-08, MV-PLAT-NET |
 | 2026-11-11 | 츄르 입장권 02 2001003·485 출석 6일차 보상·102 대왕쥐 행은 지금 그대로 둠(출석을 다시 다룰 때 정리) | 중계 경유 「지금은 그대로」 | 원장 MV-UNLOCK-1 행 |
 | 2026-11-11 | 외부 도구 설치 허용: Spine 런타임·Coffee UI Particle, 기존 DOTween Pro asmdef 생성, Framework 4개 연결 | 「설치해」, 총괄 대화 「Yes, install」 | 원장 MV-00-bundle5b 행, PROJECT_CONTEXT 기준선 |
+| 2026-11-10 | D-RULE-01 동행 고양이 사격의 기본 성질 → 우물·게이트를 채우지 않음, 즉시 명중(그림만 날아감), 모드 런의 메타 능력치는 402 `useMetaStats`(D-76), 발사 주기에 FireRate를 곱하지 않음 | 현황판 「권장안 확정」 2026-11-10 17:55 | 04 §4.20.7 |
+| 2026-11-10 | D-RUN-BLOCK 런이 막혀 끝날 때 끝난 이유를 정본처럼 나눌지 → 막힘은 모두 `FinishReason.Wall` 하나 | 현황판 「권장안 확정」 2026-11-10 17:48 | `S/MV.Run/Core/RunTypes.cs`, 보관 원장 MV-RUN-SIM 행 |
+| 2026-11-10 | D-BUILD-REMOTE 개발 APK에서 Remote Addressables 그룹을 어떻게 읽나 → 개발 빌드 프로필은 Remote 그룹도 APK 안(Local 경로)에 넣음(통합 Writer: Addressables 프로필 1개) | 현황판 「권장안 확정」 2026-11-10 17:48 | Addressables 설정 자산, 원장 MV-BUILD-ANDROID 행 |
+| 2026-11-10 | D-BUILD-DEV AI가 만드는 Android 빌드의 형태 → 개발 빌드(Mono·ARMv7·Development·디버그 서명 APK) | 현황판 「권장안 확정」 2026-11-10 17:48 | `S/MV.Editor/Build/MvBuild.cs` |
+| 2026-11-10 | D-BUILD-ADMOBID AdMob 앱 ID가 비어 있을 때 빌드 → Google 공개 시험 앱 ID로 채워 빌드(실제 ID가 있으면 그대로) | 현황판 「권장안 확정」 2026-11-10 17:48 | `S/MV.Editor/Build/MvBuild.cs`, GoogleMobileAds 설정 자산 |
+| 2026-11-10 | D-BUILD-ID 개발 APK 패키지 이름 → 템플릿 기본값 그대로(`com.UnityTechnologies.com.unity.template.urpblank`) | 현황판 「권장안 확정」 2026-11-10 17:48 | `ProjectSettings/ProjectSettings.asset`, 계약 MV-BUILD-ANDROID |
+| 2026-11-10 | D-PLAYINT-BARS 벽 기록을 어떻게 읽나 → 저장 JSON을 거쳐 읽음(MV-SAVE에 `GetBars(area)` API 없음) | 현황판 「권장안 확정」 2026-11-10 17:48 | `S/MV.Boot/MvRunStart.cs`, 원장 MV-PLAY-INT 행 |
+| 2026-11-10 | D-PLAYINT-BOOT 에디터에서 Game 씬을 바로 실행하면 → Boot 씬을 먼저 열어 돌려보냄 | 현황판 「권장안 확정」 2026-11-10 17:48 | `S/MV.Boot/GameInitializer.cs` |
+| 2026-11-10 | D-PLAYINT-SEED 런 시드를 어떻게 정하나 → 런 순번에서 결정적으로(같은 저장·같은 순번 = 같은 런) | 현황판 「권장안 확정」 2026-11-10 17:48 | `S/MV.Boot/MvRunStart.cs`, 04 §4.17 |
+| 2026-11-10 | D-CONTENT-b 성장 탭 목록에 행 구분(묶음) 열을 둘지 → 열 없음. `05_contentOpen` key 순서대로 | 현황판 「권장안 확정」 2026-11-10 17:48 | 원장 MV-UI-CONTENT 행 |
+| 2026-11-10 | D-CONTENT-a 모드 시작 연결이 아직 없는 모드를 눌렀을 때 → 「준비 중」 토스트만, 입장 기록(하루 한도) 안 남김 | 현황판 「권장안 확정」 2026-11-10 17:48 | `S/MV.UI/Content/ContentMenuPresenter.cs`, 원장 MV-UI-CONTENT 행 |
+| 2026-11-10 | D-LOBBY-AZSTAGE 로비 아지트 시설이 커지는 단계 문턱을 표로 뺄지 → 코드 상수(정본 `azStages` L3469~3471) | 현황판 「권장안 확정」 2026-11-10 17:47 | `S/MV.UI/Lobby/LobbyFacilities.cs`, 원장 MV-UI-LOBBY 행 |
+| 2026-11-10 | D-UIMETA-OWN 05 UI 클래스 표의 소유 계약 → 테스트 패널·메타 공통 틀을 MV-UI-META가 만든 대로 둠(표와 다름) | 현황판 「권장안 확정」 2026-11-10 17:47 | 05 §5.1.14 |
+| 2026-11-10 | D-UIMETA-CP 지도 체크포인트 칸 문구 → 담당이 넣은 임시 문구 | 현황판 「권장안 확정」 2026-11-10 17:46 | 원장 MV-UI-META 행 |
+| 2026-11-10 | D-UIMETA-MAP 지도에 어떤 기능 칸을 보일지 → `05_contentOpen.showOnMap`이 비어 있어 Area 조건(conditionType 1) 행을 모두 보임 | 현황판 「권장안 확정」 2026-11-10 17:46 | 07 §7.8.9, 원장 MV-UI-META 행 |
+| 2026-11-10 | D-PI2-2 한글 TMP 글꼴을 넣을지(HUD 한글 글꼴 후보 합침) → TMP 기본 자원은 사용자 「dev에 넣기」로 dev `8bf1ab3`에 들어옴. 한글 글꼴은 넣지 않음, 화면은 uGUI 내장 글꼴 | 현황판 「권장안 확정」 2026-11-10 17:46 | 원장 MV-UI-HUD·MV-PLAY-INT 2차 행, 05 §5.1.7, `S/MV.UI/Common/MvUi.cs` |
+| 2026-11-10 | D-HUD-SORT UI용 정렬 레이어 「UI」를 만들지 → 만들지 않음(정렬 레이어는 월드용 10개만) | 현황판 「권장안 확정」 2026-11-10 17:45 | 원장 MV-UI-HUD 행, `ProjectSettings/TagManager.asset` |
+| 2026-11-10 | D-LOGIN-2 게스트 id를 어디에 저장하나 → PlayerPrefs(서버 붙일 때 재검토) | 현황판 「권장안 확정」 2026-11-10 17:45 | 보관 원장 MV-PLAT-LOGIN 줄 |
+| 2026-11-10 | D-LOGIN-1 로그아웃해도 기기의 게스트 id를 남길지 → 남김 | 현황판 「권장안 확정」 2026-11-10 17:45 | 보관 원장 MV-PLAT-LOGIN 줄 |
+| 2026-11-10 | D-ADS-2 (=D-LOBBY-AD) 개발 빌드 가짜 광고를 어떻게 끝내나 → 지금 코드: 「광고 보기(가짜)」·닫기 버튼으로 끝냄. ADS 담당 권장과 정본은 닫기 버튼 없이 3초 뒤 자동 | 현황판 「권장안 확정」 2026-11-10 17:45 | 05 §5.12, `S/MV.UI/Lobby/FakeAdPopup.cs`, `S/MV.Platform/Ads/MvAdTypes.cs` |
+| 2026-11-10 | D-NETFW-3 응답 반영기를 여러 개 등록하는 기능을 Framework에 요청할지 → 요청 안 함. `SetResponseApplier` 한 슬롯을 게임이 나눠 씀. Framework 평가: 채택 예정, 그 전 우회는 게임 반영기 안에서 `NetworkDataBinding.Apply(repository, request, result)` 직접 호출 | 현황판 「권장안 확정」 2026-11-10 17:45 | 같은 곳, MV-NET-SERVER 행 ⑤ |
+| 2026-11-10 | D-ADS-1 출시 빌드에서 광고를 못 띄울 때(SDK 없음) 처리 → Meta는 「안 봄」으로 처리(보상 없음), 화면은 광고 실패 토스트 | 현황판 「권장안 확정」 2026-11-10 17:45 | 05 §5.12, 보관 원장 MV-PLAT-ADS 줄 |
+| 2026-11-10 | D-NETFW-2 로컬 경로별 시간 제한을 Framework에 요청할지 → 요청 안 함. 경로를 바꿀 때 `DefaultTimeout`도 함께 설정. Framework 평가: 채택 예정(사용자가 시작하라고 할 때), 그 전 우회는 로컬 요청 `request.Timeout`을 길게 | 현황판 「권장안 확정」 2026-11-10 17:45 | 같은 곳, MV-NET-SERVER 행 ④ |
+| 2026-11-10 | D-NET-2 통신 시험 어셈블리가 JSON 라이브러리(Newtonsoft)를 참조할지 → 참조하지 않음(`MV.Platform.Tests`는 nunit만) | 현황판 「권장안 확정」 2026-11-10 17:44 | `S/MV.Platform.Tests/`의 asmdef, 보관 원장 MV-PLAT-NET 줄 |
+| 2026-11-10 | D-NETFW-1 Framework 통신에 「기본 경로」를 설정으로 선언하는 기능을 요청할지 → 요청 안 함. 게임 부팅 코드가 `DefaultRoute`를 1번만 정함(지금 Local). Framework 평가(2026-11-10): 자동 Local은 ＊＊반대＊＊(공급자 등록이 빠지면 출시 빌드가 조용히 로컬로 돔) → 경고 로그로 대체 예정 | 현황판 「권장안 확정」 2026-11-10 17:44 | 원장 「열린 결정」 Framework 요청 후보, MV-NET-SERVER 행 ③ |
+| 2026-11-10 | D-NET-1 여러 모듈이 같이 쓰는 시계를 둘지 → 지금은 모듈마다 따로(Meta `IMvClock`, Net `IServerClock`, Sound `IMvSoundClock`). 권장안(MV.Core `IClock` 하나)은 아직 안 함 | 현황판 「권장안 확정」 2026-11-10 17:44 | 보관 원장 MV-PLAT-NET 줄, `S/MV.Meta/MvMetaPorts.cs`, `S/MV.Platform/Net/IServerClock.cs` |
+| 2026-11-10 | D-68 저장 파일 암호화 키를 어디에 두나 → 개발 빌드는 공개 고정 키, 출시 빌드는 키 공급자 교체 지점만(지금 출시 빌드는 저장을 못 엶). 권장: 빌드에 키 내장, 키 원본은 저장소 밖 설정 파일 | 현황판 「권장안 확정」 2026-11-10 17:44 | 09 §9.11, 13 §13.3.4 |
+| 2026-11-10 | D-SND-2 쥐가 훔칠 때 소리를 쥐 종류별로 낼지 → 종류 없이 한 소리. 종류 id(kindId)는 쥐 종류가 늘 때 MV-RUN에 요청 | 현황판 「권장안 확정」 2026-11-10 17:44 | 보관 원장 MV-SND 줄 |
+| 2026-11-10 | D-FX-1 이펙트용 그림 층(팝업·비행 아이콘·플래시·단계 이름)을 누가 그리나 → MV.UI가 `IMvPopView`·`IMvFlyView`·`IMvHudAnchors`·`IMvFlashView`를 구현(asmdef 변경 없음) | 현황판 「권장안 확정」 2026-11-10 17:44 | 06 §6.15, 원장 MV-FX 행 |
+| 2026-11-10 | D-49 정본의 2D 부산물(번개 세로 막대·약한 플래시 등, D-44와 짝) → 정본 그대로 유지 | 현황판 「권장안 확정」 2026-11-10 17:44 | 06 §6.x, 02 |
+| 2026-11-10 | D-48 숫자 팝업·보상 비행을 그리는 층 → UGUI 오버레이 | 현황판 「권장안 확정」 2026-11-10 17:44 | 06 §6.7.2 |
+| 2026-11-10 | D-47 이펙트·팝업의 시간 기준(D-22와 짝) → 정본대로: 이펙트만 히트스톱, 팝업·비행·배너·플래시는 실시간 | 현황판 「권장안 확정」 2026-11-10 17:44 | 06 §6.x, 04 |
+| 2026-11-10 | D-46 정본에서 호출되지 않는 잔재 이펙트 → 만들지 않고 키만 예약(frost·flyToWorld 등) | 현황판 「권장안 확정」 2026-11-10 17:44 | 06 §6.x |
+| 2026-11-10 | D-45 월드 이펙트 구현 방식 → 혼합: C# 적분 + 이펙트마다 절차 메쉬 1개(`MvFxDriver`), 모양은 스프라이트·메쉬 | 현황판 「권장안 확정」 2026-11-10 17:44 | 06 §6.15, §6.x |
+| 2026-11-10 | D-VIEW-WELL 우물 위 잡동사니 배치 → 정본은 매번 무작위, Unity는 결정적 해시로 매 런 같은 모양 | 현황판 「권장안 확정」 2026-11-10 17:44 | `S/MV.View/Math/ObjectLayout.cs` |
+| 2026-11-10 | D-VIEW-FLOWER 담장 꽃 장식을 좌우 뒤집을지 → 그림은 왼쪽 담장 기준 ［추정］, 오른쪽 담장은 뒤집기 | 현황판 「권장안 확정」 2026-11-10 17:44 | `S/MV.View/Runtime/PropStreamer.cs`, 원장 MV-VIEW 행 |
+| 2026-11-10 | D-VIEW-LABEL 오브젝트 글자판(체력 숫자·이름) 위치 → VIEW 2차 담당이 정한 위치(정본 대조 전) | 현황판 「권장안 확정」 2026-11-10 17:44 | 원장 MV-VIEW 행, `S/MV.View/Runtime/ObjectViewFactory.cs` |
+| 2026-11-10 | D-42 색 공간(UI D-37과 짝) → Linear 유지(URP 기본). 기획서 권장은 Gamma, 캡처 대조로 확인 | 현황판 「권장안 확정」 2026-11-10 17:44 | 02 §2.x 의문점·결정 필요, 13 §13.3.3 |
+| 2026-11-10 | D-41 긴 폰·태블릿 화면 처리(UI D-30과 짝) → 폭 1080 고정·세로로 늘림. renderScale 폭 1080 상한은 아직(URP 통합 Writer) | 현황판 「권장안 확정」 2026-11-10 17:44 | 02 §2.7.2, 05 §5.1.2, 13 §13.3.2 |
+| 2026-11-10 | D-40 2.5D 화면을 Unity에서 어떻게 재현하나 → URP 원근 카메라 + 카메라 평면 빌보드 + 원근 메쉬 | 현황판 「권장안 확정」 2026-11-10 17:44 | 02 §2.1.3 |
+| 2026-11-10 | D-ART-06 ［추정］ 크기와 다르게 구운 그림(예: `Fx_Stripe` 기획 16×64, 실제 64×16) → 구운 크기 유지, 03은 나중에 맞춤 | 현황판 「권장안 확정」 2026-11-10 17:44 | 03 §3.5.3(`Fx_Stripe` 16×64 ［추정］), 보관 원장 MV-TOOL-ART 행 |
+| 2026-11-10 | D-ART-05 화면 비네트 그림 이름·묶음 → `Tex_UI_Vignette`, 상주 UI 라벨 `ui.core`. 09 9004001은 `Tex_Lobby_Vignette`라 03 §3.5.8과 다름 | 현황판 「권장안 확정」 2026-11-10 17:44 | 03 §3.5.6·§3.5.8, `S/MV.Editor/Import/MvArtRules.cs` |
+| 2026-11-10 | D-ART-04 계단 그림 기준점(피벗) → 추정값으로 둠(정본 확인 안 됨) | 현황판 「권장안 확정」 2026-11-10 17:44 | 03 §3.5, 보관 원장 MV-TOOL-ART 행 |
+| 2026-11-10 | D-ART-03 정본에 없는 `Crate_Blue_Fish` 그림 → 임시 아트(D-86) | 현황판 「권장안 확정」 2026-11-10 17:44 | 03 §3.13, 보관 원장 MV-TOOL-ART 행 |
+| 2026-11-10 | D-ART-02 관문 왼쪽 기둥을 오른쪽 그림 뒤집기로 쓸지 → 뒤집기(flipX). 원근 기울기가 정본과 어긋날 수 있음 | 현황판 「권장안 확정」 2026-11-10 17:44 | 03 §3.5.3, `S/MV.View/Runtime/ObjectViewFactory.cs` |
+| 2026-11-10 | D-ART-01 관문 금빛 기둥이 일반 기둥과 같은 그림일 때 합칠지 → 두 이름 그대로 둠(`Arch_Post_Gold` = `Arch_Post` 같은 바이트) | 현황판 「권장안 확정」 2026-11-10 17:44 | 03 §3.5.3, 보관 원장 MV-TOOL-ART 행 |
+| 2026-11-10 | D-ATLAS-GODTEX 야옹신 큰 그림(`Tex_God_＊`) 파일 위치 → `Art/Source/Texture`에 둔 채 주소만 붙임 | 현황판 「권장안 확정」 2026-11-10 17:44 | 03 §3.4.2, 보관 원장 MV-ART-ATLAS 행 |
+| 2026-11-10 | D-ATLAS-FRIEND2 친구 고양이 아틀라스(Friend_T1~T6)가 한 장에 들어가는지 → 한 장 가정. 실측 패킹 NOT_RUN | 현황판 「권장안 확정」 2026-11-10 17:44 | 보관 원장 MV-ART-ATLAS 행, 03 §3.8.1 |
+| 2026-11-10 | D-MVDATA-PET 펫 월드 그림을 어느 아틀라스에 넣나 → 새 아틀라스 `Atlas_World_Pet` | 현황판 「권장안 확정」 2026-11-10 17:44 | 07 §7.10.3, 03 §3.8.1 |
+| 2026-11-10 | D-SWAP-3 400 표에 없는 모드 key의 하루 한도 → 한도 없음 | 현황판 「권장안 확정」 2026-11-10 17:44 | `S/MV.Meta/`(`RecordModePlay`), 07 §7.9.1 |
+| 2026-11-10 | D-SWAP-2 이펙트 부품의 원소 조건 처리 → 번개(bolt)가 아니면 모두 불(fire). key가 비어 있는 `god.blast`만 예전 색과 다름 | 현황판 「권장안 확정」 2026-11-10 17:44 | 06 §6.15, `04_effect.txt` |
+| 2026-11-10 | D-SWAP-1 길가 소품을 무엇으로 고르나 → 정본 `deco` 문턱 우선, `roadsideProps`는 이름 목록 | 현황판 「권장안 확정」 2026-11-10 17:43 | 07 §7.4.4, 원장 「열린 결정」 SWAP 줄 |
+| 2026-11-10 | D-400-LIMIT 모드마다 하루 입장 횟수 한도를 따로 둘지 → 두지 않음(400 `dailyLimit` 모두 0, 입장권 하루 3장만) | 현황판 「권장안 확정」 2026-11-10 17:43 | 07 §7.9.1 |
+| 2026-11-10 | D-72-LINE Zone 2~6 테마(304 6~15행)의 빨랫줄·전구줄 종류 고르는 규칙 → 정본 규칙(`deco` 값)대로. 밤 테마도 빨랫줄 | 현황판 「권장안 확정」 2026-11-10 17:43 | 07 §7.4.4 |
+| 2026-11-10 | D-DATA-450PORT 친구 고양이 초상화 그림 이름 접두 → `Portrait_Friend_＊` | 현황판 「권장안 확정」 2026-11-10 17:43 | 03 §3.4.1, 08 §8.5.4 `450_friend` |
+| 2026-11-10 | D-DATA-701OFF 2차 상점 상품을 표에 둘지 → 2차 상품 행은 넣되 `active 0`(지금 20행 꺼짐, 9행 켜짐) | 현황판 「권장안 확정」 2026-11-10 17:43 | 08 §8.5.7·§8.6.2, `701_product.txt` |
+| 2026-11-10 | D-DATA-413STEP 반복 퀘스트 표(413)에 단계(step) 열을 둘지 → 열 없음. 순서는 `sort`, 단계별 목표 증가는 `clearValueStep` | 현황판 「권장안 확정」 2026-11-10 17:43 | 08 §8.5.1, `413_repeatQuest.txt` |
+| 2026-11-10 | D-DATA-480KEY 축복 표(480)에 능력치 키 열을 둘지 → 열 없음. 장비 축복은 효과 종류 4 = Dmg로 정함 | 현황판 「권장안 확정」 2026-11-10 17:43 | 08 §8.5.9, 04 §4.20.4, `480_blessing.txt` |
+| 2026-11-10 | D-DATA-802401 수비전 택배 상자(카드 등급 뽑기) 상자 행을 지금 넣을지 → 행을 넣지 않음(802 표에 없음). ［추정］ 카드 종류 601의 id는 카드 행 id라 「등급」을 적을 방법이 없음 | 현황판 「권장안 확정」 2026-11-10 17:43 | 08 §8.5.12, `Assets/Game/GameData/Table/TSV/802_randomBox.txt` |
+| 2026-11-10 | D-DATA-CTYPE 재화 종류 enum을 Framework 생성기로 만들지 → 손으로 쓴 `MV.Data.ConsumeType` 유지. 고정본 0.1.0-pre.7 생성기는 손 enum과 충돌해 옮길 길이 없음 → Framework 요청 | 현황판 「권장안 확정」 2026-11-10 17:43 | `S/MV.Data/Core/ConsumeType.cs`, `S/MV.Editor/Tables/MvConsumeTypeCodegen.cs`, 07 §7.8.12 |
+| 2026-11-10 | D-MVDATA-RES 표가 가리키는 그림이 아직 없을 때 오류로 볼지 → 아직 안 뽑은 그림·그림 없음은 경고 목록, 이름 틀림·주소 없음은 오류 | 현황판 「권장안 확정」 2026-11-10 17:43 | 07 §7.10.5 (현재 원장 「열린 결정」에는 없고 보관 원장에만 있음) |
+| 2026-11-10 | D-META3-3 테스트 패널의 부활 해제를 어떤 길로 부르나 → `RebirthPresenter`를 직접 부름. 메타 입구(port)에는 자리만 둠 | 현황판 「권장안 확정」 2026-11-10 17:43 | 원장 MV-META 행, `S/MV.UI/Meta/` |
+| 2026-11-10 | D-META3-2 테스트 패널 「시간 더하기」를 저장할지(개발 빌드 전용) → 저장하지 않음(앱을 다시 켜면 사라짐) | 현황판 「권장안 확정」 2026-11-10 17:42 | 원장 MV-META 행 |
+| 2026-11-10 | D-META3-1 테스트 패널 「모두 열기」가 무엇을 바꾸나(개발 빌드 전용) → Area·런 수를 올려서 열림 조건을 채움 | 현황판 「권장안 확정」 2026-11-10 17:42 | 원장 MV-META 행, `S/MV.Meta/MvMetaRequest.cs` |
+| 2026-11-10 | D-META-04 런이 끝나기 전 쌓아 두는 미정산 보상에 무엇을 담나 → 재화와 608(목숨 조각 적립 대기)만 | 현황판 「권장안 확정」 2026-11-10 17:42 | 보관 원장 MV-META, `S/MV.Meta/MvRunOutcome.cs` |
+| 2026-11-10 | D-META-03 성장 구매를 Framework 보상 처리로 할지 → Framework `LocalRewardService.Commit` 대신 `ResourceService.Get` + `ApplyAndSave` 한 번(`// Framework 대체:` 표시) | 현황판 「권장안 확정」 2026-11-10 17:42 | 보관 원장 MV-META, `S/MV.Meta/MvMeta.cs` |
+| 2026-11-10 | D-META-02 런 정산 때 통과·구역 끝·목숨 조각을 누가 판정하나 → 런이 보낸 값을 그대로 믿지 않고 Meta가 다시 판정 | 현황판 「권장안 확정」 2026-11-10 17:41 | 보관 원장 MV-META, `S/MV.Meta/MvMetaRules.cs` |
+| 2026-11-10 | D-META-01 부활할 때 「마지막으로 정산한 런 번호」를 지울지 → 유지(`lastSettledRunSeq`) — 부활 뒤에도 같은 런 중복 정산을 막음 | 현황판 「권장안 확정」 2026-11-10 17:41 | 보관 원장 「칸별 상태」 MV-META, `S/MV.Meta/` |
+| 2026-11-10 | D-RULE-05 확률형·명중 횟수형 동행의 난수와 횟수 규칙 → Chance는 명중마다 `CompanionRng`, Hits는 `round(Every)`번째 명중마다 | 현황판 「권장안 확정」 2026-11-10 17:40 | 04 §4.20, 보관 원장 MV-RUN-RULE 행 |
+| 2026-11-10 | D-RULE-04 배속(ts > 1)일 때 규칙 훅을 몇 번 부를지 → updRun마다(배속 수만큼) `Tick`·`CheckEnd` | 현황판 「권장안 확정」 2026-11-10 17:40 | 04 §4.20.7 |
+| 2026-11-10 | D-RULE-03 동행이 쏘지 않을 대상(우물·게이트)을 고르는 기준 → 105 `chargeGateId` ≠ 0인 오브젝트를 뺌(종류 이름으로 고르지 않음) | 현황판 「권장안 확정」 2026-11-10 17:40 | 04 §4.20.7 |
+| 2026-11-10 | D-RULE-02 대상이 없는 동안 「초 단위」 동행이 기다린 만큼 몰아 쏘는지 → 몰아 쏘지 않음. 타이머 `c.t`를 0에 두고 대상이 생기면 1발 | 현황판 「권장안 확정」 2026-11-10 17:39 | 04 §4.20.7 |
 
 ## 총괄 인계 (2026-11-10, 3번째 총괄 대화 마감)
 
