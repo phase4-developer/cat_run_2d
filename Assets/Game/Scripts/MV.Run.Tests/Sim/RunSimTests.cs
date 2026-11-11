@@ -19,13 +19,13 @@ namespace MV.Run.Tests
         [TestCase(12, 10)]
         [TestCase(7, 3)]
         [TestCase(5, 1)]
-        public void RewardShare_SumIsTotalRemainderLast(double total, int n)
+        public void RewardShare_SumIsTotalRemainderLast(int total, int n)
         {
             double sum = 0;
             for (int k = 1; k <= n; k++) sum += RewardShare(total, n, k);
             Assert.AreEqual(total, sum, 1e-12);
-            Assert.AreEqual(System.Math.Floor(total / n), RewardShare(total, n, 1), 1e-12);
-            Assert.AreEqual(total - System.Math.Floor(total / n) * (n - 1), RewardShare(total, n, n), 1e-12);
+            Assert.AreEqual(System.Math.Floor((double)total / n), RewardShare(total, n, 1), 1e-12);
+            Assert.AreEqual(total - System.Math.Floor((double)total / n) * (n - 1), RewardShare(total, n, n), 1e-12);
         }
 
         [TestCase(0, 100, 10, 0)]
@@ -35,7 +35,7 @@ namespace MV.Run.Tests
         [TestCase(99, 100, 10, 9)]
         [TestCase(100, 100, 10, 10)]
         [TestCase(50, 100, 1, 0)]
-        public void SharesDue_ThresholdsCrossed(double dealt, double max, int n, int expect) => Assert.AreEqual(expect, SharesDue(dealt, max, n));
+        public void SharesDue_ThresholdsCrossed(int dealt, int max, int n, int expect) => Assert.AreEqual(expect, SharesDue(dealt, max, n));
 
         [Test]
         public void JsRound_HalfUp() { Assert.AreEqual(3, JsRound(2.5)); Assert.AreEqual(1, JsRound(0.5)); Assert.AreEqual(2, JsRound(2.4999)); }
@@ -251,10 +251,11 @@ namespace MV.Run.Tests
             Assert.AreEqual(box.RewardAmount * gm, sim.State.Gold, 1e-9);
         }
 
-        [TestCase(0.01, true)]
-        [TestCase(0.99, false)]
-        public void Ore_OneShareOnBreakRollsDrop(double roll, bool dropped)
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Ore_OneShareOnBreakRollsDrop(bool dropped)
         {
+            double roll = dropped ? 0.01 : 0.99; // 801002001 누적 비중: 보상 1000 / 꽝 9000
             // 원석: rewardShares 1 = 부술 때 한 번. 그 몫에서 dropId(801002001, 10%) 추첨. 블루 마법석 획득량 특성(DiaCap)이 몫에 붙는다.
             var sim = BoxSim(new HandLevel().Add("gem", 0, 30), BoxSetup(perkDcap: 2), new ConstRng(roll));
             var ore = sim.State.Objs[0];
