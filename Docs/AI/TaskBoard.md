@@ -172,6 +172,7 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 
 | 날짜 | 결정 | 원문 또는 출처 | 적용 범위 |
 |---|---|---|---|
+| 2026-11-11 | Q-13 결계 막힘 종료 시간: 13-2 현재 기준(프로토 값 = 즉시 종료) `300_runConfig` STUCK_END_SEC 3(더미) → 0. 코드는 그대로(0이면 닿는 프레임에 종료), 3초 전제 시험만 0 기준으로. 구글 시트는 사용자가 직접 고침. MV-RUN-STUCK0 | 중계 경유 사용자 원문 「우선 0초로 다시 수정해줘 저값은 구글 시트는 내가 수정해둘게」, 근거 `Docs/MV-SPEC-02/Source/01_코어게임루프.md` 13-2 | 300 TSV·Resources, `Spec2RuleTests`, `RunSimTests`, 07 STUCK_END_SEC 행, DiffReport Q-13 |
 | 2026-11-11 | 화면 방향: 세로 정방향·역방향 자동 회전, 가로 끔(`defaultScreenOrientation` 4, Landscape 자동 회전 0). 프로젝트 생성 때부터 거꾸로 세로(1) 고정이었음. MV-ORIENT dev `c89bd8a`, compile PASS, APK 빌드 PASS(run 20261110T204450539688Z-366a1dcd94), 폰 회전 확인 NOT_RUN | 중계 경유 사용자 원문 「세로 화면 방향도 디폴트 방향 반대로 돌릴수있으면 돌려줘」 | `ProjectSettings/ProjectSettings.asset`(통합 Writer) |
 | 2026-11-11 | 기본 모드 남은 수치는 지금 표 값으로 확정, 이후 수치는 기획자가 표에서 직접 고침: 분신 5~30 발사 위상 `300_runConfig` FIRE_PHASE(0.13/0.26/0.07/0.19 반복), 지팡이 9~12단계 강화 need 24·28·32·37(`12_weaponLevel`), 무기 최대 레벨 254(`10_lobbyUpgrade`), `16_levelPrice` Lv150~254(30×1.043^(Lv−1)), 지팡이 스택 상한 WEAPON_STACK_MAX 0(상한 없음), Q-03 게이트 배율 `107_chargeGate` useScale 1(sgate·cgate). 시트 더미 색 표시는 기획자가 값을 고칠 때까지 둠 | 중계 경유 사용자 원문 「나머지는 우선 지금으로 확정하고 기획자가 직접 테이블 수정하도록할게」(문안 보고 「보내」) | MV-RUN-SPEC2·MV-DATA-SPEC2, dev `32b454d` |
 | 2026-11-11 | Q-04 프로토 덤프 대조 7건(GenDumpTests Easy·Mid·Orig, SimReplayTests BASE·RUN01~03)은 Q-04로 꺼 둠(Ignore), 새 기준 대조로 교체 예정. 이번 회차 EditMode 587 PASS·7 Ignore는 통과로 봄 | 사용자 「통과로 봐」, 중계 경유 같은 결정 | MV-RUN-SPEC2 시험, 실행기 SKIPPED_TESTS 표시 |

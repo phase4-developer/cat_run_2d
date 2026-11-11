@@ -120,7 +120,7 @@ namespace MV.Run.Tests
         public void Wall_BlocksAndFinishes()
         {
             var sim = Sim(new HandLevel().Wall(0, 5, 99999));
-            Run(sim, 60 * 6); // MV-SPEC-02 6-8: 막힌 뒤 STUCK_END_SEC초 뒤 종료
+            Run(sim, 60 * 6); // MV-SPEC-02 13-2 현재 기준: STUCK_END_SEC 0 = 닿는 프레임에 종료(값이 늘어도 6초 안)
             var s = sim.State;
             Assert.IsTrue(s.Fin);
             Assert.AreEqual(FinishReason.Wall, s.Result.Reason);
