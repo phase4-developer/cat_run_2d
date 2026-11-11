@@ -9,6 +9,20 @@ namespace MV.Run.Tests.Gen
     /// <summary>tplFor·newRun 초기화·장애물 HP 지속·규칙 난수 사용(04 §4.14). 생성 결과 전체는 GenDumpTests가 본다.</summary>
     public sealed class LevelGenTests
     {
+        /// <summary>시작 재화·기본 난이도는 표 값(302 startGold + 14 StartGold·StartDia, 06 isDefault, MV-SPEC2-FIX1).</summary>
+        [Test]
+        public void NewRun_StartWealthAndDefaultPreset_FromTables()
+        {
+            var t = Tables();
+            var setup = new RunSetup { Area = 1, Zone = 0, Level = 1, PerkStartGold = 2, PerkStartDia = 1 };
+            var s = new RunLevelBuilder().NewRun(setup, t, new ConstRng(0.5));
+            double areaGold = LevelGen.AreaRow(t, 1).startGold;
+            Assert.Greater(areaGold, 0, "Area 2 startGold(MV-SPEC-02 513)");
+            Assert.AreEqual(areaGold + RunFormulas.PerkValue(t, RebirthStatKey.StartGold, 2), s.Gold, 1e-9);
+            Assert.AreEqual((int)RunFormulas.PerkValue(t, RebirthStatKey.StartDia, 1), s.Dia);
+            Assert.AreEqual(t.BalancePreset.Datas.Single(p => p.isDefault).id, s.Bal.id, "Preset null = isDefault 행");
+        }
+
         [Test]
         public void TplForFollowsTemplateCycle()
         {

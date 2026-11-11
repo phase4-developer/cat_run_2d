@@ -83,7 +83,9 @@ namespace MV.Run
                 case RebirthStatKey.DiaCap: return st.PerkDcap;
                 case RebirthStatKey.CraftDouble: return st.PerkCraftDbl;
                 case RebirthStatKey.StairDouble: return st.PerkStairDbl;
-                default: return 0; // GoldCap·StartGold·StartDia: 런 규칙 미반영(뜻·적용 시점 기획 확인)
+                case RebirthStatKey.StartGold: return st.PerkStartGold;
+                case RebirthStatKey.StartDia: return st.PerkStartDia;
+                default: return 0; // GoldCap: 효과 뜻 [미확인](MV-SPEC-02 575) — 런 규칙 미반영
             }
         }
 
@@ -98,7 +100,9 @@ namespace MV.Run
                 case AreaStatKey.CritChance: return st.AupCrit;
                 case AreaStatKey.DoubleChance: return st.AupDbl;
                 case AreaStatKey.PierceChance: return st.AupPierce;
-                default: return 0; // DiaPerLevel·GoldPerLevel: 정산 규칙 미반영(기획 확인)
+                case AreaStatKey.DiaPerLevel: return st.AupDiaLv;
+                case AreaStatKey.GoldPerLevel: return st.AupGoldLv;
+                default: return 0;
             }
         }
 
@@ -164,6 +168,30 @@ namespace MV.Run
 
         /// <summary>공방 게이트 카드 2장 생산 확률(냥환생 「지팡이 제작 2배」, MV-SPEC-02 Q-27).</summary>
         public static double CraftDoubleChance(RunState s) => Perk(s, RebirthStatKey.CraftDouble, 0);
+
+        /// <summary>
+        /// 런 시작 골드 = 302_area.startGold(Area 2부터 150, MV-SPEC-02 513) + 냥환생 「시작 골드」 값(14 StartGold, 576). 모두 표 값.
+        /// </summary>
+        public static double StartGold(MvTables t, RunSetup st)
+        {
+            double area = 0;
+            foreach (var a in t.Area.Datas) if (a.areaNo == st.Area + 1) area = a.startGold;
+            return area + PerkValue(t, RebirthStatKey.StartGold, PerkLv(st, RebirthStatKey.StartGold));
+        }
+
+        /// <summary>런 시작 블루 마법석 = 냥환생 「시작 블루 마법석」 값(14 StartDia, MV-SPEC-02 577).</summary>
+        public static int StartDia(MvTables t, RunSetup st) =>
+            (int)Math.Floor(PerkValue(t, RebirthStatKey.StartDia, PerkLv(st, RebirthStatKey.StartDia)));
+
+        /// <summary>
+        /// 런 종료 「레벨당 획득」(13 DiaPerLevel·GoldPerLevel, MV-SPEC-02 529~530) = 강화 값(perLv × Lv) × 런 Level.
+        /// 행이 없거나 Lv 0이면 0.
+        /// </summary>
+        public static double PerLevelReward(MvTables t, RunSetup st, AreaStatKey stat, int level)
+        {
+            var a = AupRow(t, stat);
+            return a != null ? a.perLv * AupLv(st, stat) * Math.Max(0, level) : 0;
+        }
 
         /// <summary>탄 관통 +1 확률(Area 강화 「관통 확률」, MV-SPEC-02 Q-28).</summary>
         public static double PierceChance(RunState s) => Aup(s, AreaStatKey.PierceChance);

@@ -71,7 +71,10 @@ namespace MV.Run
             bool enough = s.Setup.Souls + s.Souls >= need;
             var r = new RunResult
             {
-                Reason = reason, Gold = s.Gold, Souls = s.Souls, Dia = s.Dia,
+                // 「레벨당 골드·블루 마법석 획득」(13 GoldPerLevel·DiaPerLevel)은 런 종료에 더한다(MV-SPEC-02 529~530).
+                Reason = reason, Souls = s.Souls,
+                Gold = s.Gold + RunFormulas.PerLevelReward(t, s.Setup, AreaStatKey.GoldPerLevel, s.Level),
+                Dia = s.Dia + (int)Math.Floor(RunFormulas.PerLevelReward(t, s.Setup, AreaStatKey.DiaPerLevel, s.Level)),
                 ZoneEnd = gate && enough && last, Pass = gate && enough && !last,
                 CpRun = s.Setup.UseCheckpoint ? s.CpRun : 0, BarRec = s.Setup.KeepBars ? rec : null,
                 Climbed = s.Climbed, Walls = s.Walls, GaugeLv = s.GaugeLv, EqTier = s.EqTier(), Clones = s.Clones,

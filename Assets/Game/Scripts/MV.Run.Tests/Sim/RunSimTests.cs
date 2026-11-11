@@ -30,9 +30,11 @@ namespace MV.Run.Tests
         [Test]
         public void FireInterval_EasyAndModifier()
         {
-            Assert.AreEqual(0.5, FireInterval(NewState()), 1e-12);
+            // 기본 연사는 06_balancePreset isDefault 행 rate(MV-SPEC-02 155 「기본 연사 0.95」, MV-SPEC2-FIX1). 값은 표에서 읽는다.
+            var d = NewState();
+            Assert.AreEqual(1 / d.Bal.rate, FireInterval(d), 1e-12);
             var s = NewState(new RunSetup { Modifiers = new RunModifiers { FireRate = 20 } });
-            Assert.AreEqual(1 / 2.4, FireInterval(s), 1e-12);
+            Assert.AreEqual(1 / (s.Bal.rate * 1.2), FireInterval(s), 1e-12);
         }
 
         [Test]
@@ -40,13 +42,14 @@ namespace MV.Run.Tests
         {
             var s = NewState();
             Assert.AreEqual(22, ProjRange(s), 1e-12);
-            Assert.AreEqual(2.2, CritMul(s), 1e-12);
+            double crit0 = PerkValue(s.Tables, RebirthStatKey.CritMul, 0); // 14 CritMul base(MV-SPEC-02 572 200%)
+            Assert.AreEqual(crit0, CritMul(s), 1e-12);
             Assert.AreEqual(1, GoldMul(s), 1e-12);
             Assert.AreEqual(0, CritChance(s), 1e-12);
             Assert.AreEqual(0, DoubleChance(s), 1e-12);
             var m = NewState(new RunSetup { Modifiers = new RunModifiers { Range = 10, CritDmg = 50, Gold = 10, CritChance = 5, DoubleChance = 10 } });
             Assert.AreEqual(24.2, ProjRange(m), 1e-9);
-            Assert.AreEqual(2.7, CritMul(m), 1e-9);
+            Assert.AreEqual(crit0 + 0.5, CritMul(m), 1e-9);
             Assert.AreEqual(1.1, GoldMul(m), 1e-9);
             Assert.AreEqual(0.05, CritChance(m), 1e-12);
             Assert.AreEqual(0.1, DoubleChance(m), 1e-12);
@@ -60,6 +63,17 @@ namespace MV.Run.Tests
             Assert.AreEqual(0.5, ObstMul(t, 10), 1e-12);
             Assert.AreEqual(10, DiaCap(t, 0), 1e-12);
             Assert.AreEqual(14, DiaCap(t, 2), 1e-12);
+        }
+
+        /// <summary>런 종료 「레벨당 골드·블루 마법석 획득」 = 13 perLv × 강화 Lv × 런 Level(MV-SPEC-02 529~530, MV-SPEC2-FIX1).</summary>
+        [Test]
+        public void PerLevelReward_FromAreaUpgradeRows()
+        {
+            var t = RunTestTables.Load();
+            var st = new RunSetup { AupGoldLv = 2, AupDiaLv = 3 };
+            Assert.AreEqual(AupRow(t, AreaStatKey.GoldPerLevel).perLv * 2 * 4, PerLevelReward(t, st, AreaStatKey.GoldPerLevel, 4), 1e-12);
+            Assert.AreEqual(AupRow(t, AreaStatKey.DiaPerLevel).perLv * 3 * 4, PerLevelReward(t, st, AreaStatKey.DiaPerLevel, 4), 1e-12);
+            Assert.AreEqual(0, PerLevelReward(t, new RunSetup(), AreaStatKey.GoldPerLevel, 4), 1e-12, "Lv 0이면 0");
         }
 
         [Test]

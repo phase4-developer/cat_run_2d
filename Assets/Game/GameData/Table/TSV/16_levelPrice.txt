@@ -434,7 +434,7 @@ id	name	group	targetLevel	priceType	priceId	priceValue	needPiece
 16018009	레벨당 골드 획득량 Lv9 가격	18	9	1	1001002	3436	
 16018010	레벨당 골드 획득량 Lv10 가격	18	10	1	1001002	5498	
 16021001	공격력 Power Lv1 가격	21	1	1	1001004	50	
-16021002	공격력 Power Lv2 가격	21	2	1	1001004	75	
+16021002	공격력 Power Lv2 가격	21	2	1	1001004	50	
 16021003	공격력 Power Lv3 가격	21	3	1	1001004	113	
 16021004	공격력 Power Lv4 가격	21	4	1	1001004	169	
 16021005	공격력 Power Lv5 가격	21	5	1	1001004	253	
@@ -454,7 +454,7 @@ id	name	group	targetLevel	priceType	priceId	priceValue	needPiece
 16021019	공격력 Power Lv19 가격	21	19	1	1001004	73895	
 16021020	공격력 Power Lv20 가격	21	20	1	1001004	110842	
 16022001	치명 피해 Crit Damage Lv1 가격	22	1	1	1001004	50	
-16022002	치명 피해 Crit Damage Lv2 가격	22	2	1	1001004	75	
+16022002	치명 피해 Crit Damage Lv2 가격	22	2	1	1001004	50	
 16022003	치명 피해 Crit Damage Lv3 가격	22	3	1	1001004	113	
 16022004	치명 피해 Crit Damage Lv4 가격	22	4	1	1001004	169	
 16022005	치명 피해 Crit Damage Lv5 가격	22	5	1	1001004	253	
@@ -473,6 +473,26 @@ id	name	group	targetLevel	priceType	priceId	priceValue	needPiece
 16022018	치명 피해 Crit Damage Lv18 가격	22	18	1	1001004	49263	
 16022019	치명 피해 Crit Damage Lv19 가격	22	19	1	1001004	73895	
 16022020	치명 피해 Crit Damage Lv20 가격	22	20	1	1001004	110842	
+16022021	치명 피해 Crit Damage Lv21 가격	22	21	1	1001004	166263	
+16022022	치명 피해 Crit Damage Lv22 가격	22	22	1	1001004	249394	
+16022023	치명 피해 Crit Damage Lv23 가격	22	23	1	1001004	374091	
+16022024	치명 피해 Crit Damage Lv24 가격	22	24	1	1001004	561137	
+16022025	치명 피해 Crit Damage Lv25 가격	22	25	1	1001004	841706	
+16022026	치명 피해 Crit Damage Lv26 가격	22	26	1	1001004	1262558	
+16022027	치명 피해 Crit Damage Lv27 가격	22	27	1	1001004	1893838	
+16022028	치명 피해 Crit Damage Lv28 가격	22	28	1	1001004	2840756	
+16022029	치명 피해 Crit Damage Lv29 가격	22	29	1	1001004	4261135	
+16022030	치명 피해 Crit Damage Lv30 가격	22	30	1	1001004	6391702	
+16022031	치명 피해 Crit Damage Lv31 가격	22	31	1	1001004	9587553	
+16022032	치명 피해 Crit Damage Lv32 가격	22	32	1	1001004	14381329	
+16022033	치명 피해 Crit Damage Lv33 가격	22	33	1	1001004	21571994	
+16022034	치명 피해 Crit Damage Lv34 가격	22	34	1	1001004	32357991	
+16022035	치명 피해 Crit Damage Lv35 가격	22	35	1	1001004	48536987	
+16022036	치명 피해 Crit Damage Lv36 가격	22	36	1	1001004	72805480	
+16022037	치명 피해 Crit Damage Lv37 가격	22	37	1	1001004	109208220	
+16022038	치명 피해 Crit Damage Lv38 가격	22	38	1	1001004	163812331	
+16022039	치명 피해 Crit Damage Lv39 가격	22	39	1	1001004	245718496	
+16022040	치명 피해 Crit Damage Lv40 가격	22	40	1	1001004	368577744	
 16023001	결계 약화 Weaker Obstacles Lv1 가격	23	1	1	1001004	60	
 16023002	결계 약화 Weaker Obstacles Lv2 가격	23	2	1	1001004	90	
 16023003	결계 약화 Weaker Obstacles Lv3 가격	23	3	1	1001004	135	

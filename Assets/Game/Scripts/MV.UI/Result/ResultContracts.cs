@@ -100,7 +100,7 @@ namespace MV.UI
     {
         /// <summary>false면 ×3 버튼을 막는다(메타 없음·자리 꺼짐).</summary>
         bool Ready { get; }
-        /// <summary>×3 배수(<c>08_adPlacement collect3.mul</c>, 없으면 <c>00_config.collectAdMul</c>).</summary>
+        /// <summary>결과 광고 배수(<c>08_adPlacement collect3.mul</c>).</summary>
         int Mul { get; }
         /// <summary>광고 1번. <paramref name="done"/>(배수, 안 봤으면 0)을 한 번 부른다.</summary>
         void WatchX3(Action<int> done);
@@ -124,12 +124,8 @@ namespace MV.UI
 
         public int Mul => MulOf(MvMeta.Current?.Tables ?? MvTables.Current);
 
-        public static int MulOf(MvTables t)
-        {
-            var row = t?.AdPlacement.ByKey(Key);
-            if (row != null && row.mul > 0) return row.mul;
-            return t != null ? t.Config.Value.collectAdMul : 3;
-        }
+        /// <summary>배수는 <c>08_adPlacement collect3.mul</c> 하나(<see cref="MvMetaRules.CollectAdMul"/>, MV-SPEC2-FIX1).</summary>
+        public static int MulOf(MvTables t) => MvMetaRules.CollectAdMul(t);
 
         public void WatchX3(Action<int> done)
         {
