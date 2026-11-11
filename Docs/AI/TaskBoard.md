@@ -40,6 +40,13 @@
 | 표 구글 시트 | 2차 완료(2026-11-10, 사용자 「컬럼명과 데이터는 구분되게 색상 정리 … 최상단에 각 컬럼 기능 설명, 별도 시트로 각 테이블 시트 설명 … 참고는 정크버스터 테이블로 … 테이블 사용시 시트 규칙에 추가」) | 시트 [moonVillage_Table](https://docs.google.com/spreadsheets/d/1f5D-B2bEbgKoqO2jHk_Ki5RU3vmlo_JlbU15cOcl4U8/edit) (내 드라이브, 링크 그대로) | 탭 71 = 「시트규칙」·「표목록」(표 69개의 이름·하는 일·정본 절·읽는 코드·열·행 수) + 표 69탭(이름 = `Assets/Game/GameData/Table/TSV/<이름>.txt`). 머리 3줄 색: 설명 회색 기울임 / 형식 하늘색 / 열 이름 노랑 굵게, 데이터 흰색, 위 3줄·첫 열 고정. 열 설명 844/844 채움(기획서 539 + 보강 305, 그중 「(추정)」 13: 410 selectionType·selectionCount, 701 popupType·banner·displayImage·badgeType·badgeValue·startTime·endTime, 702 sectionType·hideIfEmpty, 460 grade, 804 priority). 규칙은 기획서 07 §7.1.1a. 대조: 데이터 14,843칸 차이 0(118칸은 gviz가 비워 미확인). 정본은 저장소 TSV. 다시 만들기 `py -3 -I C:/Project/MoonVillage.wt/_notes/tools/make_table_xlsx.py <저장소> <출력.xlsx>`(입력 `coldesc.json`·`tabledesc.json`·`rules.tsv` 같은 폴더) → 「파일 → 가져오기 → 스프레드시트 바꾸기」 |
 | MV-BUILD-ANDROID 빌드 메서드 | 완료, 실기 실행 확인(2026-11-10) | `f2d802e`, 실기 수정 `b631b1e`·병합 (이 커밋 앞) | 갤럭시 S23 Ultra(Android 16)에 설치·실행, 30초 로그 E/Unity 0, 런 화면 캡처 정상(빌드 `b6051036c510`). 고친 것: Mono·ARMv7 → IL2CPP·ARM64(D-BUILD-DEV 변경), Addressables 그룹 전부 Local(사용자 「원격 에셋은 안쓸거니 다 로컬로」, `MvArtSetup`도), `Assets/Game/link.xml`(IL2CPP 코드 제거가 Framework 자동 등록을 지움), 빌드 전 TableBuilder로 Resources 표 산출물 생성·표 대체 경로 제거(사용자 「대체 경로로 읽지말고」). 전체 확인 `e6ba845508ef` PASS(EditMode 504, PlayMode 7). 체크리스트 `Docs/AI/ANDROID_BUILD_CHECKLIST.md`. 남음: 경고 `SpriteAtlasManager.atlasRequested`(Atlas_Fx_Common·테마), 라벨 키 그대로 표시(현지화 미연결), `google-services.json` 없음, 실행기 설치·실행 모드 없음(중앙 r-73959ba9f77b) |
 | MV-NET-SERVER 서버 전환 | 보류(서버 붙일 때, 사용자 「응 그렇게 진행해」 2026-11-10) | — | ① network.firebase 연결·Firebase SDK(App·Functions) — 완료(dev `b8fde6f`, 사용자 「SDK 내려받기 허용」) ② 부팅에서 `NetworkManager.SetServerProvider(new FirebaseNetworkProvider(...))` 1번, 로그인 패키지와 같은 FirebaseApp ③ `NetworkManager.DefaultRoute = Server` 1줄(지금 GameBootstrap이 Local 고정), setter가 대기 요청 취소·캐시 비움이라 요청 전 1번만 ④ `DefaultTimeout`을 null로 끄지 않고 경로 바꿀 때 시간 제한도 함께 설정 ⑤ `SetResponseApplier`는 한 슬롯 — `NetworkDataBinding.Connect`와 게임 자체 반영(MvMeta 등) 충돌 먼저 확인 (Framework 평가 2026-11-10, 중계 경유 사용자 「응 전달해」: ④ 로컬 시간 제한 채택 예정 — 지금 우회는 로컬 요청에 `request.Timeout`을 길게, ⑤ 반영기 여러 개 채택 예정 — 지금 우회는 게임 반영기 하나를 `SetResponseApplier`로 등록하고 그 안에서 `NetworkDataBinding.Apply(repository, request, result)`를 직접 불러 Connect와 게임 반영을 함께) ⑥ 로컬·서버 응답 동일성 시험 + DefaultRoute만 바꿔도 요청 클래스가 도는 회귀 시험, 서버 함수 없는 동안 가짜 `INetworkProvider`로 시험 틀 먼저. 출처: mv-process-improve 소스 정리(컴파일 미확인) ⑦ 서버 전환 때 확인: Framework가 로컬 응답의 시간 필드(TimeKey) 누락 결함을 고쳤는지(오류 코드 표는 게임 몫), 로컬·서버 동일성 시험 도구는 Framework가 서버 전환 때로 미룸 |
+| MV-RUN-STARTCUR 시작 재화 분리 | 완료(2026-11-11) | `d7140ba3` | PC-15 기획 확인. EditMode 225/232(Q-04 7 건너뜀) |
+| MV-00-bundle5 Framework 5차 | 완료(2026-11-11) | `a24de901` | quest·badge 연결만(사용처 없음). EditMode 589/596, PlayMode 7/7 |
+| MV-UNLOCK-1·MV-SPEC2-FIX2 | 완료(2026-11-11) | `440ba43f` | 단계별 해금 연출·지도 Level 문구 미구현, 04 745·843행 옛 문장. [창작] 모드 2개 표에서 꺼 둠 |
+| MV-RUN-SPLITREWARD 보너스 등분 | 완료(2026-11-11) | `f544040f` | 105 rewardShares(금화 10·나머지 1), hitReward 열 삭제. MainParity 15개 다시 기록 |
+| MV-HARDCODE-1a 화면·연출·소리 | 완료(2026-11-11) | `7e2a7c50` | 표 열 없는 그리기 상수 남김(PC-23), 친구 무늬(PC-22) |
+| MV-00-bundle5b 외부 도구 | 완료(2026-11-11) | `70aacce6` | Spine b81e5a58·Coffee 4.11.3·DOTween asmdef 3개, 4개 연결(사용처 없음). Spine Editor 라이선스 확인 필요 |
+| MV-HARDCODE-1b 규칙·표 중복 | 완료(2026-11-11) | `13c04949` | 남은 줄 PC-16~21, 115↔330 lap 중복(1a 쪽과 함께) |
 
 ## 이번 회차 범위 (2026-11-11 재정정: 새 기획 표·규칙으로 기본 모드)
 
@@ -192,6 +199,8 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
 | 2026-11-10 | 외부 SDK 내려받기 허용: Firebase 13.17.0, AdMob 10.7.0 SDK(남은 `ads.admob`·`login.firebase`·`network.firebase` 연결용) | 「SDK 내려받기 허용」 | 칸 f `ai/MV-00-sdk`, 원장 MV-00 bundle3 행 |
 | 2026-11-10 | MV-NET-SERVER 서버 전환은 서버를 붙일 때까지 보류(①~⑥ 순서 기록) | 「응 그렇게 진행해」 | 원장 MV-NET-SERVER 행 |
 | 2026-11-09 / 2026-11-10 | D-08 통신 공급자: 지금은 로컬 백엔드, 서버는 Firebase(`platform.network.firebase`). 전환 시점은 MV-NET-SERVER 보류를 따름 | 프로젝트 설정 「서버 통신 = 씀: Firebase 서버; 서버 기능을 지금 처리하는 곳 = 로컬 백엔드(서버 없음)」 + 위 「응 그렇게 진행해」 (원장 「열린 결정」에 있던 것) | `Docs/AI/PROJECT_CONTEXT.md`, 13 §13.2 D-08, MV-PLAT-NET |
+| 2026-11-11 | 츄르 입장권 02 2001003·485 출석 6일차 보상·102 대왕쥐 행은 지금 그대로 둠(출석을 다시 다룰 때 정리) | 중계 경유 「지금은 그대로」 | 원장 MV-UNLOCK-1 행 |
+| 2026-11-11 | 외부 도구 설치 허용: Spine 런타임·Coffee UI Particle, 기존 DOTween Pro asmdef 생성, Framework 4개 연결 | 「설치해」, 총괄 대화 「Yes, install」 | 원장 MV-00-bundle5b 행, PROJECT_CONTEXT 기준선 |
 
 ## 총괄 인계 (2026-11-10, 3번째 총괄 대화 마감)
 
