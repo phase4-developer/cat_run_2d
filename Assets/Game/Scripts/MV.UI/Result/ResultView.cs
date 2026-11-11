@@ -56,10 +56,11 @@ namespace MV.UI
 
         void BuildX3(RectTransform box)
         {
-            // 광고 버튼 AdButton 큰 모양(05 §5.6): 바탕 #ffd84a, 글 #2a1608. 「그냥 받기」 위.
-            x3Button = MvUi.Button(box, "X3", "▶ 광고 보고 ×3 받기", MvUi.Hex("#ffd84a"), MvUi.Hex("#2a1608"), 5.6f * U); // ui.result.adX3
+            // 광고 버튼 AdButton 큰 모양(05 §5.6): 바탕 #ffd84a, 글 #2a1608. 「괜찮아요」 위.
+            // 글 「×N 보상」은 ResultPresenter.Draw가 08_adPlacement mul로 채운다(여기서 배수를 박지 않는다).
+            x3Button = MvUi.Button(box, "X3", "", MvUi.Hex("#ffd84a"), MvUi.Hex("#2a1608"), 5.6f * U); // ui.result.adX3
             MvUi.Place((RectTransform)x3Button.transform, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -68 * U), new Vector2(70 * U, 10 * U));
-            // 「그냥 받기」는 아래로 내린다(밑줄 글 버튼 자리).
+            // 「괜찮아요」는 아래로 내린다(밑줄 글 버튼 자리).
             MvUi.Place((RectTransform)collectButton.transform, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -81 * U), new Vector2(40 * U, 8 * U));
         }
 
@@ -73,12 +74,12 @@ namespace MV.UI
             MvUi.SetFill(progressFill, fill01, false);
         }
 
-        public void SetRewards(string gold, string dia, string tok)
+        public void SetRewards(ResultRewardText gold, ResultRewardText dia, ResultRewardText tok)
         {
             EnsureBuilt();
-            goldText.text = "츄르\n" + gold;
-            diaText.text = "캣닢\n" + dia;
-            tokText.text = "목숨 조각\n" + tok;
+            goldText.text = gold.Name + "\n" + gold.Value;
+            diaText.text = dia.Name + "\n" + dia.Value;
+            tokText.text = tok.Name + "\n" + tok.Value;
         }
 
         public void SetStat(string text) { EnsureBuilt(); statText.text = text; }
@@ -116,7 +117,7 @@ namespace MV.UI
             statText = MvUi.Label(box, "Stat", 2.7f * U, MvUi.InkDim, TextAnchor.UpperCenter, FontStyle.Normal);
             MvUi.Place(statText.rectTransform, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -50 * U), new Vector2(80 * U, 16 * U));
 
-            collectButton = MvUi.Button(box, "Collect", "그냥 받기", MvUi.Gold, MvUi.Hex("#0b0b0e"), 4.4f * U); // ui.result.next
+            collectButton = MvUi.Button(box, "Collect", "괜찮아요", MvUi.Gold, MvUi.Hex("#0b0b0e"), 4.4f * U); // ui.result.next
             MvUi.Place((RectTransform)collectButton.transform, new Vector2(.5f, 1), new Vector2(.5f, 1), new Vector2(0, -72 * U), new Vector2(40 * U, 10 * U));
         }
 

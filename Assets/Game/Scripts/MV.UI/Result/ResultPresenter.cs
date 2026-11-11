@@ -16,12 +16,12 @@ namespace MV.UI
         public bool Collected { get; private set; }
         /// <summary>마지막 정산 결과(없거나 예외면 null).</summary>
         public MvSettleResult LastSettle { get; private set; }
-        /// <summary>×3 광고를 보는 중(그동안 두 버튼 모두 막음).</summary>
+        /// <summary>결과 광고를 보는 중(그동안 두 버튼 모두 막음).</summary>
         public bool AdPending { get; private set; }
 
         IResultAdWatcher Watcher => Data?.AdWatcher ?? MvMetaResultAd.Instance;
 
-        /// <summary>×3 버튼 켜짐: 아직 안 받음 && 광고 중 아님 && (츄르 ≥ 1 또는 캣닢 &gt; 0) && 광고 입구 준비(05 §5.6, 정본 L2414).</summary>
+        /// <summary>「×N 보상」 버튼 켜짐: 아직 안 받음 && 광고 중 아님 && (골드 ≥ 1 또는 블루 마법석 &gt; 0) && 광고 입구 준비(05 §5.6, 정본 L2414).</summary>
         public bool CanX3
         {
             get
@@ -51,14 +51,19 @@ namespace MV.UI
             v.SetTitle(TitleText(d), d.Kind == ResultKind.Fail ? MvUi.Hex("#ffb08a") : MvUi.Gold);
             v.SetProgress(ProgressLeft(d), d.SoulsHave + " / " + d.SoulsNeed,
                 d.SoulsNeed > 0 ? Mathf.Clamp01((float)d.SoulsHave / d.SoulsNeed) : 1f);
-            v.SetRewards("+" + MvUiFormat.Fmt(d.Gold), "+" + d.Dia, "+" + d.Tok);
+            v.SetRewards(new ResultRewardText(d.GoldName, "+" + MvUiFormat.Fmt(d.Gold)),
+                new ResultRewardText(d.DiaName, "+" + d.Dia),
+                new ResultRewardText(d.TokName, "+" + d.Tok));
             v.SetStat(d.Stat ?? "");
             v.SetCollectInteractable(!Collected && !AdPending);
-            (v as IResultAdView)?.SetX3("▶ 광고 보고 ×" + Watcher.Mul + " 받기", CanX3); // ui.result.adX3
+            (v as IResultAdView)?.SetX3(AdText(Watcher.Mul), CanX3);
         }
 
+        /// <summary>결과 광고 버튼 글 「×N 보상」(MV-SPEC-02 01 §12-3). N은 <c>08_adPlacement</c> 결과 광고 행 <c>mul</c>.</summary>
+        public static string AdText(int mul) => "×" + mul + " 보상"; // ui.result.adX3
+
         /// <summary>
-        /// 「▶ 광고 보고 ×3 받기」(05 §5.6·§5.12 collect3). 광고를 끝까지 봤으면 ×배수 정산 1번, 안 봤으면 정산 없이 다시 고를 수 있다.
+        /// 결과 「×N 보상」 광고(MV-SPEC-02 01 §12-3, 08_adPlacement collect3). 광고를 끝까지 봤으면 ×배수 정산 1번, 안 봤으면 정산 없이 다시 고를 수 있다.
         /// <paramref name="finished"/>(정산했는지)를 광고가 끝난 뒤 한 번 부른다. 광고를 시작했으면 true.
         /// </summary>
         public bool TryCollectX3(Action<bool> finished = null)
@@ -112,6 +117,6 @@ namespace MV.UI
 
         public static string ProgressLeft(ResultViewData d) =>
             d.Kind == ResultKind.ZoneClear ? "Zone " + d.ZoneNo + " · 업데이트 예정"  // ui.result.progZone
-                                           : "Area " + (d.AreaNo + 1) + " 개방까지 생선"; // ui.result.progNext
+                                           : "Area " + (d.AreaNo + 1) + " 개방까지 " + d.SoulsName; // ui.result.progNext
     }
 }

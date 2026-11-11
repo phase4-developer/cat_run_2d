@@ -1,7 +1,9 @@
 using System;
 using Cysharp.Threading.Tasks;
 using jjevol;
+using MV.Data;
 using MV.Meta;
+using MV.Save;
 using MV.Sound;
 using UnityEngine;
 
@@ -157,7 +159,7 @@ namespace MV.UI
             var data = new FakeAdPopupData
             {
                 Key = key,
-                Title = MvUiText.Name(row.id, TitleOf(key)),
+                Title = MvUiText.Name(row.id, TitleOf(row, meta.Tables)),
                 OnFinished = watched =>
                 {
                     if (watched) meta.WatchAd(key, done);
@@ -181,13 +183,19 @@ namespace MV.UI
             if (popup == null) data.Finish(false);
         }
 
-        /// <summary>문구 키 없을 때 정본 문구(<c>name:&lt;08_adPlacement id&gt;</c> 자리).</summary>
-        static string TitleOf(string key)
+        /// <summary>
+        /// 문구 키 없을 때 문구(<c>name:&lt;08_adPlacement id&gt;</c> 자리). 결과 광고는 배수 적용 재화(골드·블루 마법석, MV-SPEC-02 01 §10)
+        /// 이름을 <c>01_wealth</c>에서, 배수를 그 행 <c>mul</c>에서 읽는다.
+        /// </summary>
+        public static string TitleOf(AdPlacementData row, MvTables tables)
         {
-            switch (key)
+            if (row == null) return "보상 광고";
+            string gold = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.Gold));
+            string dia = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.Dia));
+            switch (row.key)
             {
-                case "collect3": return "보상 광고 · 츄르·캣닢 ×3";
-                case "dia": return "보상 광고 · 캣닢";
+                case MvMetaResultAd.Key: return "보상 광고 · " + gold + "·" + dia + " ×" + row.mul;
+                case "dia": return "보상 광고 · " + dia;
                 case "skip": return "보상 광고 · 부활 쿨타임 줄이기";
                 default: return "보상 광고";
             }
