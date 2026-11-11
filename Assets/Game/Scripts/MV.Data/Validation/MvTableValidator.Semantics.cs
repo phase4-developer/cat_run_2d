@@ -221,6 +221,7 @@ namespace MV.Data
                 if (k.enemyId != 0 && k.rewardSource != RewardSource.Enemy)
                     r.Error(name, k.id, "rewardSource", "enemyId가 있으면 rewardSource는 Enemy여야 합니다");
                 if (k.blocks && k.hpRuleId == 0) r.Error(name, k.id, "hpRuleId", "blocks=1이면 hpRuleId가 있어야 합니다");
+                if (k.rewardShares < 1) r.Error(name, k.id, "rewardShares", "rewardShares는 1 이상이어야 합니다(1 = 부술 때 한 번)");
                 if (k.hittable == Hittable.BeforePass && t.ReceiveCondition.Get(k.receiveId)?.type != ReceiveType.OnPass)
                     r.Error(name, k.id, "receiveId", "hittable BeforePass면 receive가 OnPass여야 합니다");
                 if (k.key == "gem" && dcap != null)

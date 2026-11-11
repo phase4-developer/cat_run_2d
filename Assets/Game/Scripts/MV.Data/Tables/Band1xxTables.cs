@@ -154,7 +154,7 @@ namespace MV.Data
             .Int("protoType").Float("hw", true).Float("hd", true).Enum<Hittable>("hittable").Bool("breakable").Bool("blocks")
             .Fk("hpRuleId", HpRuleData.Table).Fk("hitReactionId", HitReactionData.Table).Fk("chargeGateId", ChargeGateData.Table)
             .Fk("receiveId", ReceiveConditionData.Table).Fk("moveAiId", MoveAiData.Table).Fk("enemyId", EnemyData.Table)
-            .Enum<RewardSource>("rewardSource").Consume("reward", runExtension: true).FkGroup("dropId", DropData.Table).Consume("hitReward")
+            .Enum<RewardSource>("rewardSource").Consume("reward", runExtension: true).FkGroup("dropId", DropData.Table).Int("rewardShares", true)
             .Res("sprite", MvAtlas.Theme).Enum<SpritePick>("spritePick").Enum<ObjectViewShape>("viewShape").Res("spriteSoul", MvAtlas.Theme).Colors("tint").Str("gradeColorFrom")
             .Enum<LabelKind>("labelKind").Str("labelKey").Float("sortBias")
             .Sound("hitSound").Sound("breakSound").Effect("hitEffect").Effect("breakEffect");
@@ -173,7 +173,6 @@ namespace MV.Data
         public int enemyId { get; private set; }
         public RewardSource rewardSource { get; private set; }
         public IReadOnlyList<ConsumeData> reward { get; private set; }
-        public IReadOnlyList<ConsumeData> hitReward { get; private set; }
         /// <summary>변형은 `/` 목록.</summary>
         public IReadOnlyList<string> sprite { get; private set; }
         public SpritePick spritePick { get; private set; }
@@ -188,6 +187,11 @@ namespace MV.Data
         public string gradeColorFrom { get; private set; }
         /// <summary>파괴 보상 드롭 묶음(<c>801_drop</c>, MV-SPEC-02 6-7 원석 10%, Q-16). 0 = 없음. 런 적용은 MV-RUN-SPEC2(그때 reward를 비움).</summary>
         public int dropId { get; private set; }
+        /// <summary>
+        /// 보상 등분 수(2026-11-11 사용자 결정, MV-RUN-SPLITREWARD). 보상 총량(reward, zone 반영)을 N등분해 누적 피해가 체력의 k/N을 넘을 때마다 k번째 몫을 준다.
+        /// 몫 = floor(총량/N), 나머지는 마지막 몫에. 1 = 부술 때 한 번. dropId 추첨은 마지막 몫(파괴) 때. 1 이상.
+        /// </summary>
+        public int rewardShares { get; private set; }
         public LabelKind labelKind { get; private set; }
         public string labelKey { get; private set; }
         public double sortBias { get; private set; }
@@ -215,7 +219,6 @@ namespace MV.Data
             enemyId = I(r, "enemyId");
             rewardSource = E(r, "rewardSource", RewardSource.Row);
             reward = Consume(r, "reward");
-            hitReward = Consume(r, "hitReward");
             sprite = Strs(r, "sprite");
             spritePick = E(r, "spritePick", SpritePick.Single);
             viewShape = E(r, "viewShape", ObjectViewShape.Single);
@@ -223,6 +226,7 @@ namespace MV.Data
             tint = Strs(r, "tint");
             gradeColorFrom = S(r, "gradeColorFrom");
             dropId = I(r, "dropId");
+            rewardShares = I(r, "rewardShares");
             labelKind = E(r, "labelKind", LabelKind.None);
             labelKey = S(r, "labelKey");
             sortBias = D(r, "sortBias");
