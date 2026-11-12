@@ -33,7 +33,7 @@ namespace MV.Editor.Import
 
     /// <summary>
     /// 아틀라스·임포트·Addressables를 폴더 규칙에서 멱등으로 맞춘다(기획서 03 §3.2.8, §3.8). 제품 도구.
-    /// 1) 추출 PNG 임포트 값 2) `Art/(Source|Temp)/Sprite/Atlas_*` 폴더마다 SpriteAtlas v2 3) Remote_UIAtlas·Remote_WorldAtlas·Remote_Texture 그룹(이름만 Remote, 경로는 Local — 사용자 「원격 에셋은 안쓸거니 다 로컬로」)과 주소·라벨.
+    /// 1) 추출 PNG 임포트 값 2) `Art/(Source|Temp)/Sprite/Atlas_*` 폴더마다 SpriteAtlas v2 3) Local_UIAtlas·Local_WorldAtlas·Local_Texture 그룹(이름만 Remote, 경로는 Local — 사용자 「원격 에셋은 안쓸거니 다 로컬로」)과 주소·라벨.
     /// 같은 입력이면 아무것도 쓰지 않는다. 전역 설정(프로필·빌드 경로·카탈로그)과 Default Local Group은 건드리지 않는다.
     /// </summary>
     public static class MvArtSetup

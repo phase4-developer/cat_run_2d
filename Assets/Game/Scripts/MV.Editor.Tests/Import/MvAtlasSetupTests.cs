@@ -45,8 +45,8 @@ namespace MV.Editor.Tests
                 Assert.That(s.Tight, Is.EqualTo(row.tight), at);
                 Assert.That(s.Padding, Is.EqualTo(row.padding), at);
                 Assert.That(s.Label, Is.EqualTo(row.label), at);
-                Assert.That(s.AssetPath, Is.EqualTo((row.ui ? "Assets/Game/Addressables/Remote/UIAtlas/" : "Assets/Game/Addressables/Remote/WorldAtlas/") + at + ".spriteatlasv2"));
-                Assert.That(s.Group, Is.EqualTo(row.ui ? "Remote_UIAtlas" : "Remote_WorldAtlas"), at);
+                Assert.That(s.AssetPath, Is.EqualTo((row.ui ? "Assets/Game/Addressables/Local/UIAtlas/" : "Assets/Game/Addressables/Local/WorldAtlas/") + at + ".spriteatlasv2"));
+                Assert.That(s.Group, Is.EqualTo(row.ui ? "Local_UIAtlas" : "Local_WorldAtlas"), at);
             }
         }
 
@@ -85,7 +85,7 @@ namespace MV.Editor.Tests
         [Test]
         public void WorldThemeAtlas_ImporterValues()
         {
-            var importer = (SpriteAtlasImporter)AssetImporter.GetAtPath("Assets/Game/Addressables/Remote/WorldAtlas/Atlas_World_Theme_market.spriteatlasv2");
+            var importer = (SpriteAtlasImporter)AssetImporter.GetAtPath("Assets/Game/Addressables/Local/WorldAtlas/Atlas_World_Theme_market.spriteatlasv2");
             Assert.That(importer, Is.Not.Null);
             Assert.That(importer.includeInBuild, Is.False, "Include in Build 끔(Addressables가 로드)");
             Assert.That(importer.packingSettings.enableRotation, Is.False);
@@ -100,7 +100,7 @@ namespace MV.Editor.Tests
                 Assert.That(p.maxTextureSize, Is.EqualTo(2048), platform);
             }
 
-            var icon = (SpriteAtlasImporter)AssetImporter.GetAtPath("Assets/Game/Addressables/Remote/UIAtlas/Atlas_UI_Icon.spriteatlasv2");
+            var icon = (SpriteAtlasImporter)AssetImporter.GetAtPath("Assets/Game/Addressables/Local/UIAtlas/Atlas_UI_Icon.spriteatlasv2");
             Assert.That(icon, Is.Not.Null);
             Assert.That(icon.GetPlatformSettings("Android").format, Is.EqualTo(TextureImporterFormat.ASTC_4x4));
             Assert.That(icon.textureSettings.generateMipMaps, Is.False);

@@ -125,7 +125,7 @@ namespace MV.View.Tests
         [Test]
         public void LobbyStagePrefab_HasOrthoCameraAndMaterial()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Addressables/Remote/World/LobbyStage.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Addressables/Local/World/LobbyStage.prefab");
             Assert.That(prefab, Is.Not.Null);
             var so = new SerializedObject(prefab.GetComponent<LobbyStage>());
             var cam = so.FindProperty("_camera").objectReferenceValue as Camera;

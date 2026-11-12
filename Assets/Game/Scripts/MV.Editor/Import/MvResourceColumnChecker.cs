@@ -80,7 +80,7 @@ namespace MV.Editor.Import
         const string UnextractedListHeader = "kind\ttable\trowId\tcolumn\tvalue\tatlas";
 
         /// <summary>그림 파일을 찾는 폴더(추출 원본·임시 아트·Addressables 단독 텍스처).</summary>
-        static readonly string[] s_artFileRoots = { MvArtRules.ArtRoot, MvArtRules.AddressablesRemote };
+        static readonly string[] s_artFileRoots = { MvArtRules.ArtRoot, MvArtRules.AddressablesLocal };
 
         /// <summary>03 §3.8.1 아틀라스(+ `_2` 나눔) 와 D-MVDATA-PET `Atlas_World_Pet`. 이 밖의 아틀라스 이름은 오류.</summary>
         static readonly Regex s_ruleAtlas = new Regex(
