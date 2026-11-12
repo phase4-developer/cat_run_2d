@@ -1,18 +1,18 @@
 ﻿id	name	key	type	prefab	poolSize	blend	sortBias	color	count	speed	size	life	grav	radius	flag	children	y	when	dz	jx	jz	anchor	chance	shake	hitStop
-4001001	입자 불꽃	fx.sparks	particle	Fx/Sparks	24	add	-0.2		8	4	0.35	0.6	6												
-4001002	입자 파편	fx.debris	particle	Fx/Debris	16	normal	-0.1		6		0.22														
-4001003	입자 먼지	fx.dust	particle	Fx/Dust	16	normal	-0.2		6																
-4001004	입자 꼬리	fx.trail	particle	Fx/Trail	64	add	-0.2					0.3													
-4001005	입자 충격	fx.impact	shape	Fx/Impact	24	add	-0.2				1.0	0.08													
-4001006	입자 폭발	fx.boom	shape	Fx/Boom	12	add	-0.2							1.5											
-4001007	입자 번개	fx.bolt	shape	Fx/Bolt	8	add	-0.1					0.22													
-4001008	입자 불덩이	fx.fireball	shape	Fx/Fireball	8	add	-0.2				1.6	0.22													
-4001009	입자 발바닥	fx.paw	shape	Fx/Paw	8	normal	-0.4					0.55													
-4001010	입자 하악질	fx.hiss	shape	Fx/Hiss	4	normal	-0.4					0.7													
-4001011	입자 벽돌 조각	fx.brickChunk	particle	Fx/BrickChunk	16	normal	-0.15					0.26	14												
-4001012	입자 성스러운 광선	fx.holyBeam	shape	Fx/HolyBeam	0	add	-0.2																		
-4001013	입자 운석	fx.meteor	shape	Fx/Meteor	0	add	-0.2																		
-4001014	입자 서리	fx.frost	particle	Fx/Frost	0	add	-0.2																		
+4001001	입자 불꽃	fx.sparks	particle	Sparks	24	add	-0.2		8	4	0.35	0.6	6												
+4001002	입자 파편	fx.debris	particle	Debris	16	normal	-0.1		6		0.22														
+4001003	입자 먼지	fx.dust	particle	Dust	16	normal	-0.2		6																
+4001004	입자 꼬리	fx.trail	particle	Trail	64	add	-0.2					0.3													
+4001005	입자 충격	fx.impact	shape	Impact	24	add	-0.2				1.0	0.08													
+4001006	입자 폭발	fx.boom	shape	Boom	12	add	-0.2							1.5											
+4001007	입자 번개	fx.bolt	shape	Bolt	8	add	-0.1					0.22													
+4001008	입자 불덩이	fx.fireball	shape	Fireball	8	add	-0.2				1.6	0.22													
+4001009	입자 발바닥	fx.paw	shape	Paw	8	normal	-0.4					0.55													
+4001010	입자 하악질	fx.hiss	shape	Hiss	4	normal	-0.4					0.7													
+4001011	입자 벽돌 조각	fx.brickChunk	particle	BrickChunk	16	normal	-0.15					0.26	14												
+4001012	입자 성스러운 광선	fx.holyBeam	shape	HolyBeam	0	add	-0.2																		
+4001013	입자 운석	fx.meteor	shape	Meteor	0	add	-0.2																		
+4001014	입자 서리	fx.frost	particle	Frost	0	add	-0.2																		
 4002001	런 변신	run.transform	group					#fff3a0	22	4.5	0.5	0.8				fx.sparks	1.2								
 4002002	런 마법서 탑 타격	run.towerHit	group					#ffc27a	3	3	0.25	0.3				fx.sparks	1.2					obj	0.3		
 4002003	런 하수인 처치	run.enemyKill	group													run.enemyKill.debris/run.enemyKill.sparks/run.enemyKill.dust									hitstop.enemyKill
