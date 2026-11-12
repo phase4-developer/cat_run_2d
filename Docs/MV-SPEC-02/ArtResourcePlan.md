@@ -47,7 +47,7 @@
 | slot | 자리 순서. 플레이어 0, 분신은 종족 순서 1.. (분신 i번째 자리 = slot i 행, 없으면 마지막 slot) | 0 | 1 |
 | fromTier | 이 외형을 쓰기 시작하는 무기 등급(PDF: 세트 n = 등급 n+1부터). 같은 catId·slot 안에서 현재 등급 이하 중 가장 큰 행 | 1 | 1 |
 | prefab | Addressables 주소 | `Char_Cat` | `Char_Clone` |
-| atlas | 이 행 이미지가 든 SpriteAtlas 주소 | `atlas_cat_0` | `atlas_clone_siamese` |
+| atlas | 이 행 이미지가 든 SpriteAtlas 주소 | `atlas_player_0` | `atlas_clone_siamese` |
 | walkA / walkB | 왼발·오른발 | `cat_run_A_0` / `cat_run_B_0` | `cat_run_A_siamese` / `cat_run_B_siamese` |
 | atkA / atkB | A 차례·B 차례 공격 | `cat_run_C_0` / `cat_run_D_0` | `cat_run_C_siamese` / `cat_run_D_siamese` |
 | happy / stair | 기쁨·정산 포즈 | 더미 `cat_run_A_0` | 더미 `cat_run_A_siamese` |
@@ -148,6 +148,6 @@ MV.View/Character/
 
 | # | 내용 | 권장 |
 |---|---|---|
-| C-1 | 아틀라스 이름(PDF에 없음) | `atlas_<표 key>`(예: `atlas_cat_0`). 리소스와 같은 소문자 규칙 |
-| C-2 | PDF 분신 종족 표기 차이(표 「삼색」 ↔ 이름 `siamese`, `cat_run_B_siam` 오타) | Git 파일 이름(`siamese`)으로 연결. 디자이너에게 표기 확인 요청 |
+| C-1 | 아틀라스 이름(PDF에 없음) | **1단계 적용**: `atlas_<이미지 하위 폴더 소문자>_<파일 이름 마지막 토막>`(예: `atlas_player_0`, `atlas_clone_siamese`). 파일에서 자동으로 묶는다(`MvCharacterArt`) |
+| C-2 | PDF 분신 종족 표기 차이(표 「삼색」 ↔ 이름 `siamese`, `cat_run_B_siam` 오타) | **결정(사용자 2026-11-12 「pdf와 파일 이름이 틀리면 오타를 수정하고 둘다 오타면 우선 무시해서 사용해줘」)**: PDF·파일 대조 결과 다른 것은 PDF `cat_run_B_siam` 하나이고 파일(`cat_run_B_siamese`)이 규칙에 맞아 파일은 그대로. 바꾼 파일 없음 |
 | C-3 | 기쁨·정산 포즈 이미지가 오기 전 더미 | 걷기 A 이미지를 표에 더미로(R4) |

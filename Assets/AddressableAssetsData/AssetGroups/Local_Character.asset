@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Local_Character
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Local_Character
+  m_GUID: 2079f423c8939c748b6d518034f518c9
+  m_SerializeEntries:
+  - m_GUID: 09ece081e791fc24484f92e5c2eb2ab9
+    m_Address: atlas_player_0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11c49c99b43d44ec9b1ed9aa0e52e9e8
+    m_Address: Char_Clone
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4c2815f6e86705a4bbcaf72cb87b8745
+    m_Address: atlas_player_10
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4d4986f312913164fb0f4399e2ed8a68
+    m_Address: atlas_player_11
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7bad1d198b7c60947b27a9a3f3a98545
+    m_Address: atlas_clone_siamese
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8dbb7b3ec978ea4479b5b7ab501fb973
+    m_Address: atlas_player_8
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa9a1df6645d788418fdb3a0abf13ed9
+    m_Address: atlas_player_2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aeab0e6f7abd34a048cb8dc859b32cf9
+    m_Address: Char_Cat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b380fd306592a52418283901e5069d03
+    m_Address: atlas_player_7
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc67e00dc82ae294da5a38d2b82dfacb
+    m_Address: atlas_player_9
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: caaf23c3266a67b48b6617926a0a8af0
+    m_Address: atlas_player_5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e561f89a504e64348a9bcd9109d6b61c
+    m_Address: atlas_player_3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9a47ea59cfa82a428297575c583a8c8
+    m_Address: atlas_player_4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f24d489314b86254a9bc1f956be6a34f
+    m_Address: atlas_player_6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6512b2a4e89e3745b5b37953fa17e5d
+    m_Address: atlas_player_1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 53e13bf18e88d844d85cd1a008514e5c, type: 2}
+    - {fileID: 11400000, guid: 5a675a2d6f951ba46949c36961d6ab30, type: 2}
+    m_SchemaDisplayOrder:
+    - Local_Character_BundledAssetGroupSchema
+    - Local_Character_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1
