@@ -22,7 +22,7 @@
        ├─ Texture/<주소>.png
        └─ Audio/{Sfx,Music}/<주소>.wav
   └─ MV.Editor 임포터(AssetPostprocessor)가 manifest로 피벗·PPU·9-slice 경계 적용
-  └─ SpriteAtlas v2 (Addressables/Remote/UIAtlas, WorldAtlas) → Addressables 주소
+  └─ SpriteAtlas v2 (Addressables/Local/UIAtlas, WorldAtlas) → Addressables 주소
   └─ 표 열(스프라이트 이름·주소) → 런타임 해석(§3.8.6)
 ```
 
@@ -273,8 +273,8 @@ window.pj = (x, y, z) => {                    // three 좌표
 | 종류 | 파일 | Addressables 주소 |
 |---|---|---|
 | 아틀라스 스프라이트 | `Art/Source/Sprite/<Atlas>/<Name>.png` | 스프라이트는 주소 없음. **아틀라스 자산**이 주소를 가진다: 주소 = 아틀라스 이름(예: `Atlas_UI_Icon`) |
-| 단독 텍스처 | `Addressables/Remote/Texture/<Name>.png` | `<Name>`(예: `Tex_Lobby_Room`) |
-| 소리 | `Addressables/Remote/Audio/Sfx/<Name>.wav` | `<Name>`(예: `Sfx_Throw`) = `03_sound.soundName` |
+| 단독 텍스처 | `Addressables/Local/Texture/<Name>.png` | `<Name>`(예: `Tex_Lobby_Room`) |
+| 소리 | `Addressables/Local/Audio/Sfx/<Name>.wav` | `<Name>`(예: `Sfx_Throw`) = `03_sound.soundName` |
 
 ### 3.4.3 피벗 규칙(함수별 정본 앵커)
 
@@ -660,20 +660,22 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 
 Managed Addressables 폴더 규칙([10 §10.6](10_Architecture.md))에 맞춘다.
 
+> **갱신(2026-11-12, 사용자 결정)**: 이 게임은 원격 리소스 관리를 하지 않는다. 모든 그룹은 `Local/<Category>` 폴더·`Local_<Category>` 그룹으로 앱에 포함한다. 예외는 언어팩 하나: 언어팩은 로컬 기본본을 먼저 적용하고, 원격본이 있으면 원격으로 덧씌운다(사용자 원문 「이게임은 원격 리소스 관리 언어팩 말고 안할거야」, 「그 언어팩도 로컬과 원격 양쪽으로 관리되는건 알고있지? 로컬로 적용하고 원격있을때 원격으로 덧씌우기야」).
+
 | 그룹(폴더) | 내용 | 묶음 방식 | 라벨 | 로드 | 해제 |
 |---|---|---|---|---|---|
 | `Local/Font` | 타이틀 전용 Static 글꼴 | 함께 | `boot` | Boot | 안 함 |
-| `Remote/UIAtlas` | `Atlas_UI_Common`, `Atlas_UI_Hud`, `Atlas_UI_Icon` | 따로(아틀라스별) | `ui.core` | Boot 뒤 미리 로드 | 안 함(상주) |
+| `Local/UIAtlas` | `Atlas_UI_Common`, `Atlas_UI_Hud`, `Atlas_UI_Icon` | 따로(아틀라스별) | `ui.core` | Boot 뒤 미리 로드 | 안 함(상주) |
 | 〃 | `Atlas_UI_Lobby` | 따로 | `ui.lobby` | 로비 첫 진입 | 안 함(로비 왕복이 잦음) |
 | 〃 | `Atlas_UI_Card` | 따로 | `ui.card` | 신 선택·룰렛 첫 표시 | 안 함 |
-| `Remote/WorldAtlas` | `Atlas_World_Theme_<key>` | 따로 | `theme.<key>` | 런 시작 전(로비에서 현재 Area 테마를 미리 로드) | 다른 테마 Area로 바뀌고 런이 끝난 뒤 |
+| `Local/WorldAtlas` | `Atlas_World_Theme_<key>` | 따로 | `theme.<key>` | 런 시작 전(로비에서 현재 Area 테마를 미리 로드) | 다른 테마 Area로 바뀌고 런이 끝난 뒤 |
 | 〃 | `Atlas_World_Cat_T{n}`, `Atlas_World_Friend_T{n}` | 따로 | `cat` | 필요 룩만: 런 시작 시 손패 최고 t(플레이어)·t−2(친구), 손패 최고가 오르면 다음 t를 미리 | 최근 사용 3개(LRU)만 유지 |
 | 〃 | `Atlas_World_Lobby` | 따로 | `lobby` | 로비 첫 진입 | 안 함(상주) |
 | 〃 | `Atlas_Fx_Common` | 따로 | `fx` | Boot 뒤 | 안 함 |
-| `Remote/Texture` | `Tex_*` | 따로 | `lobby`/`ui.god` | 사용 화면 | 화면 닫을 때(AddressableTexture가 반환) |
-| `Remote/Audio/Sfx` | `Sfx_*` 30 | 함께 | `sfx` | Boot 뒤 전부 | 안 함 |
-| `Remote/Audio/Music` | `Bgm_Lobby`, `Bgm_Run` | 따로 | `bgm` | 로비 | 안 함(Streaming) |
-| `Remote/Theme/Update/<ThemeId>` | 추가 테마 팩(새 `Atlas_World_Theme_<key>`) | 따로 | `theme.<key>` | 그 테마 Area 개방 시 내려받기 | 같음 |
+| `Local/Texture` | `Tex_*` | 따로 | `lobby`/`ui.god` | 사용 화면 | 화면 닫을 때(AddressableTexture가 반환) |
+| `Local/Audio/Sfx` | `Sfx_*` 30 | 함께 | `sfx` | Boot 뒤 전부 | 안 함 |
+| `Local/Audio/Music` | `Bgm_Lobby`, `Bgm_Run` | 따로 | `bgm` | 로비 | 안 함(Streaming) |
+| `Local/Theme/Update/<ThemeId>` | 추가 테마 팩(새 `Atlas_World_Theme_<key>`) | 따로 | `theme.<key>` | 그 테마 Area 개방 시(앱 포함) | 같음 |
 
 로드 단위는 **Area(테마)와 고양이 룩**이다. 로비 자원은 상주한다(로비 ↔ 런 전환이 0프레임이라 [10 §10.3](10_Architecture.md), 다시 로드하면 끊김).
 
@@ -813,7 +815,7 @@ ASTC 6x6 2048² = 1.87 MB(밉 포함 2.49 MB), 4x4 1024² = 1.0 MB, 2048×1024 6
 |---|---|
 | 샘플레이트 | 44100 Hz |
 | 채널 | 모노(정본 발진기·잡음이 모노) |
-| 원본 | WAV 16bit PCM, `Addressables/Remote/Audio/Sfx·Music/<soundName>.wav`에 바로 쓴다. 해시 `Tools/MvExtract/sound/manifest.json` |
+| 원본 | WAV 16bit PCM, `Addressables/Local/Audio/Sfx·Music/<soundName>.wav`에 바로 쓴다. 해시 `Tools/MvExtract/sound/manifest.json` |
 | 빌드 안 형식 | **Unity 오디오 임포터가 Vorbis로 압축**(D-56). 효과음 Quality 70, Decompress On Load, Force To Mono, Preload; BGM Quality 60, **Streaming**, Load In Background |
 | 피치 무작위 | 정본에 없음 → `pitchRand = 0`. 굽지도, 재생 시 적용하지도 않음 |
 | 음 높이 인자 있는 소리 | `tierup(t)`, `card(t)`는 인자마다 따로 굽는다. 재생 피치로 바꾸면 길이도 바뀌어 정본과 달라진다 |
@@ -926,7 +928,7 @@ gapMs 출처: `GAP`(L1677) — throw 70, hit 35, crit 50, wood 50, coin 45, tick
 | SDF 설정 | Sampling 64 pt, Padding 6, SDF32, Atlas 1024×1024(예상 한글 600자 내외 [추정]) | Regular·ExtraBold 2048×1024, Bold 1024×1024 |
 | 메모리 | Alpha8 1 MB | 2 + 1 + 2 MB → 합 약 6~7 MB |
 | 합성 볼드 | 정본 `<b>` 안 Black Han Sans는 브라우저 합성 볼드(A 노트 §1). TMP `FontStyles.Bold` + 에셋 `boldStyle` 값으로 맞춘다(캡처 대조로 값 결정) | 900 요청 → ExtraBold |
-| 위치 | `Addressables/Remote/Font/`(게임용). 타이틀 전용 Static은 `Local/Font`([10 §10.6](10_Architecture.md)) | |
+| 위치 | `Addressables/Local/Font/`(게임용). 타이틀 전용 Static은 `Local/Font`([10 §10.6](10_Architecture.md)) | |
 
 라이선스 확인 항목(작업 계약 MV-UI-HUD 이전, 사람 확인):
 

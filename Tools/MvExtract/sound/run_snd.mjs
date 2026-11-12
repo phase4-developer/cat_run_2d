@@ -1,5 +1,5 @@
 // MV-TOOL-SND 굽기 진입점(03 §3.9). 사용: node sound/run_snd.mjs [--only <key|soundName>[,…]] [--out <폴더>] [-j <동시 수>]
-// --out이 없으면 snd.json outDir(Addressables/Remote/Audio/Sfx|Music)에 쓰고 sound/manifest.json을 갱신한다.
+// --out이 없으면 snd.json outDir(Addressables/Local/Audio/Sfx|Music)에 쓰고 sound/manifest.json을 갱신한다.
 // --out이 있으면 <폴더>/<Sfx|Music>/<soundName>.wav로만 쓴다(재실행 해시 대조용).
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';

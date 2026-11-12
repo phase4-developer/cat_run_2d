@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Remote_Audio_Music
+  m_Name: Local_Audio_Music
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Remote_Audio_Music
+  m_GroupName: Local_Audio_Music
   m_GUID: 9b4e084de1bb4d7395bcddc4978d462f
   m_SerializeEntries:
   - m_GUID: 9170934c2deca40479aff1be37a57814
@@ -34,7 +34,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 9d81a6cfc7c443b5a0d8b6eda9b65597, type: 2}
     - {fileID: 11400000, guid: 8d2360f383034677831cd1667cc51e97, type: 2}
     m_SchemaDisplayOrder:
-    - Remote_Audio_Music_BundledAssetGroupSchema
-    - Remote_Audio_Music_ContentUpdateGroupSchema
+    - Local_Audio_Music_BundledAssetGroupSchema
+    - Local_Audio_Music_ContentUpdateGroupSchema
   m_IncludeInBuild: 1
   m_IncludeInBuildMigrated: 1

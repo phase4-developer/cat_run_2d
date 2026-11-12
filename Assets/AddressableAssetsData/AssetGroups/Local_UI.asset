@@ -20,6 +20,78 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b929638f3fc4ad992156457a9d3f579
+    m_Address: UIScreen_Lobby
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b6c79e4e5ad1493ca46733a68fd41ebd
+    m_Address: UIPopup_Result
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: effc676ab419462983784dd973b3e58b
+    m_Address: UIHud_Run
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed83909a75354b9080e6885da6189cdf
+    m_Address: UIPopup_GodSelect
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a55d1029a3634806a1d8868fb07bce11
+    m_Address: UIPopup_AreaUpgrade
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 04a0cf3e966945508a6bc28e4fb3173e
+    m_Address: UIPopup_Quest
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e8ff0fa46c6d45598f6bf80e364d25a7
+    m_Address: UIPopup_Research
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80759d7e13e24fb68de84ec27cbb373d
+    m_Address: UIPopup_Rebirth
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5270b4af45784c259107a63e79e96c86
+    m_Address: UIPopup_Map
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 870ad349b2c74273b4583e90f7dabd48
+    m_Address: UIPopup_FeatureUnlock
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8eecd1828a4540fabed5f42cc964cc7d
+    m_Address: UIPopup_FakeAd
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d14420b94d8422dbecc8e0f8d784490
+    m_Address: UIPopup_ContentMenu
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
   m_SchemaSet:

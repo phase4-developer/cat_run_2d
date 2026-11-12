@@ -92,20 +92,20 @@ namespace MV.Editor.Import
         public const string CatalogPath = SourceRoot + "/sprite_catalog.tsv";
         public const string TempListPath = TempRoot + "/temp_art_list.tsv";
 
-        public const string AddressablesRemote = "Assets/Game/Addressables/Remote";
-        public const string UiAtlasFolder = AddressablesRemote + "/UIAtlas";
-        public const string WorldAtlasFolder = AddressablesRemote + "/WorldAtlas";
-        public const string TextureFolder = AddressablesRemote + "/Texture";
+        public const string AddressablesLocal = "Assets/Game/Addressables/Local";
+        public const string UiAtlasFolder = AddressablesLocal + "/UIAtlas";
+        public const string WorldAtlasFolder = AddressablesLocal + "/WorldAtlas";
+        public const string TextureFolder = AddressablesLocal + "/Texture";
         public const string AtlasExtension = ".spriteatlasv2";
 
-        /// <summary>Managed Addressables 폴더 규칙의 그룹 이름(`Remote/&lt;Category&gt;` → `Remote_&lt;Category&gt;`).</summary>
-        public const string UiAtlasGroup = "Remote_UIAtlas";
-        public const string WorldAtlasGroup = "Remote_WorldAtlas";
-        public const string TextureGroup = "Remote_Texture";
+        /// <summary>Managed Addressables 폴더 규칙의 그룹 이름(`Local/&lt;Category&gt;` → `Local_&lt;Category&gt;`).</summary>
+        public const string UiAtlasGroup = "Local_UIAtlas";
+        public const string WorldAtlasGroup = "Local_WorldAtlas";
+        public const string TextureGroup = "Local_Texture";
         public static readonly string[] OwnedGroups = { UiAtlasGroup, WorldAtlasGroup, TextureGroup, CharacterGroup };
 
         /// <summary>디자이너 캐릭터 리소스(디자이너 PDF 경로, MV-SPEC-02 ArtResourcePlan). 앱 포함(Local) 묶음.</summary>
-        public const string CharacterRoot = "Assets/Game/Addressables/Local/Character";
+        public const string CharacterRoot = AddressablesLocal + "/Character";
         public const string CharacterImageFolder = CharacterRoot + "/Image";
         public const string CharacterPrefabFolder = CharacterRoot + "/Prefab";
         public const string CharacterAtlasFolder = CharacterRoot + "/Atlas";

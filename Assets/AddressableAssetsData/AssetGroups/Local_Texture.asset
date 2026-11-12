@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Remote_Texture
+  m_Name: Local_Texture
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Remote_Texture
+  m_GroupName: Local_Texture
   m_GUID: 0b71b386cf59fe24db9706e12e529245
   m_SerializeEntries:
   - m_GUID: 9f88cafed6ab5864c83380eb7b6435c2
@@ -52,7 +52,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 784288ba4d2b27246903aeb76bd977b0, type: 2}
     - {fileID: 11400000, guid: b7f3f17ca08bf0447bb960abf3776ae5, type: 2}
     m_SchemaDisplayOrder:
-    - Remote_Texture_BundledAssetGroupSchema
-    - Remote_Texture_ContentUpdateGroupSchema
+    - Local_Texture_BundledAssetGroupSchema
+    - Local_Texture_ContentUpdateGroupSchema
   m_IncludeInBuild: 1
   m_IncludeInBuildMigrated: 1

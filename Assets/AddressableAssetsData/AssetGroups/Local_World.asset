@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Remote_World
+  m_Name: Local_World
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Remote_World
+  m_GroupName: Local_World
   m_GUID: eda7fe64af8b434dbf915665fec9eedb
   m_SerializeEntries:
   - m_GUID: 1bfde3064ddc4481bd35dba885ab668c
@@ -34,7 +34,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 0144b93be29e4b4d8aa07cc65f043215, type: 2}
     - {fileID: 11400000, guid: 23e002e1bb304acd99dc5c3664ac28bd, type: 2}
     m_SchemaDisplayOrder:
-    - Remote_World_BundledAssetGroupSchema
-    - Remote_World_ContentUpdateGroupSchema
+    - Local_World_BundledAssetGroupSchema
+    - Local_World_ContentUpdateGroupSchema
   m_IncludeInBuild: 1
   m_IncludeInBuildMigrated: 1

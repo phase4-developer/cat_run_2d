@@ -14,7 +14,7 @@ namespace MV.View.Tests
     /// </summary>
     public sealed class ObjectViewTests
     {
-        const string PrefabPath = "Assets/Game/Addressables/Remote/World/WorldRoot.prefab";
+        const string PrefabPath = "Assets/Game/Addressables/Local/World/WorldRoot.prefab";
         readonly List<GameObject> _made = new List<GameObject>();
 
         [TearDown]

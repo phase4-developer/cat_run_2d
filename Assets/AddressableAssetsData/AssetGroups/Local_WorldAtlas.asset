@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Remote_WorldAtlas
+  m_Name: Local_WorldAtlas
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Remote_WorldAtlas
+  m_GroupName: Local_WorldAtlas
   m_GUID: 515089c627c8b854aa2e05d8cce3b885
   m_SerializeEntries:
   - m_GUID: 00f7be53c3795824d849589323397b4b
@@ -214,7 +214,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 3104e1b2672fd924983b6c9627702eda, type: 2}
     - {fileID: 11400000, guid: 90e7b1b7849079b4eb6844c09b17d7b8, type: 2}
     m_SchemaDisplayOrder:
-    - Remote_WorldAtlas_BundledAssetGroupSchema
-    - Remote_WorldAtlas_ContentUpdateGroupSchema
+    - Local_WorldAtlas_BundledAssetGroupSchema
+    - Local_WorldAtlas_ContentUpdateGroupSchema
   m_IncludeInBuild: 1
   m_IncludeInBuildMigrated: 1

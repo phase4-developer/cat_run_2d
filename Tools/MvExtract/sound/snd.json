@@ -3,8 +3,8 @@
   "format": { "sampleRate": 44100, "channels": 1, "bitsPerSample": 16 },
   "trim": { "enabled": false, "dbfs": -90, "keepMs": 10, "_doc": "03 §3.9.1-7 뒤쪽 무음 정리. 켜면 wood 0.2860 s·land 0.2687 s로 짧아져 03 §3.9.3 표 L·11 완료 기준(길이 = 03 표)과 V6 길이 ±1 ms에 어긋난다. 잘리는 꼬리는 −90 dBFS 미만(16bit 1 LSB 이하)이라 들리는 차이 없음 → 표 길이를 따르고 끈다(보고에 결정 요청)" },
   "outDir": {
-    "Sfx": "../../../Assets/Game/Addressables/Remote/Audio/Sfx",
-    "Music": "../../../Assets/Game/Addressables/Remote/Audio/Music"
+    "Sfx": "../../../Assets/Game/Addressables/Local/Audio/Sfx",
+    "Music": "../../../Assets/Game/Addressables/Local/Audio/Music"
   },
   "sfx": [
     { "id": 3001001, "key": "throw", "soundName": "Sfx_Throw", "lib": "throw", "arg": null, "L": 0.12, "src": "L1649 · L2091" },

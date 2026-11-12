@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Remote_UIAtlas
+  m_Name: Local_UIAtlas
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Remote_UIAtlas
+  m_GroupName: Local_UIAtlas
   m_GUID: dc6b77afb964a0942b6b39dfaab84d79
   m_SerializeEntries:
   - m_GUID: 27e12e892c8064b46861bc91988ee057
@@ -52,7 +52,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 8ceeebdf813889c4b8a954d4cb83e5b2, type: 2}
     - {fileID: 11400000, guid: 47318ef1591c34346a96a46873ccbc25, type: 2}
     m_SchemaDisplayOrder:
-    - Remote_UIAtlas_BundledAssetGroupSchema
-    - Remote_UIAtlas_ContentUpdateGroupSchema
+    - Local_UIAtlas_BundledAssetGroupSchema
+    - Local_UIAtlas_ContentUpdateGroupSchema
   m_IncludeInBuild: 1
   m_IncludeInBuildMigrated: 1
