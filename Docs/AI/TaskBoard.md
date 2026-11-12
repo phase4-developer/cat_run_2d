@@ -46,6 +46,7 @@
 | MV-RUN-SPLITREWARD 보너스 등분 | 완료(2026-11-11) | `f544040f` | 105 rewardShares(금화 10·나머지 1), hitReward 열 삭제. MainParity 15개 다시 기록 |
 | MV-HARDCODE-1a 화면·연출·소리 | 완료(2026-11-11) | `7e2a7c50` | 표 열 없는 그리기 상수 남김(PC-23), 친구 무늬(PC-22) |
 | MV-00-bundle5b 외부 도구 | 완료(2026-11-11) | `70aacce6` | Spine b81e5a58·Coffee 4.11.3·DOTween asmdef 3개, 4개 연결(사용처 없음). Spine Editor 라이선스 확인 필요 |
+| MV-00-bundle6 프로젝트 설정 맞춤 | 완료(2026-11-12, 사용자 「프로젝트 설정 맞춰서 적용해줄래? 프레임워크」) | `ai/MV-00-bundle6-settings` | 설정 저장 11-12 18:20 범위대로 베타 고정본 갱신 12·추가 2(localization.tmp·ui.contracts)·network.firebase 제거, MV.UI.asmdef에 ui.contracts 참조. compile PASS, EditMode 573 PASS·7 Ignore(Q-04), PlayMode 7/7. 화면·기기 NOT_RUN. 기준선 PROJECT_CONTEXT 6차 |
 | MV-HARDCODE-1b 규칙·표 중복 | 완료(2026-11-11) | `13c04949` | 남은 줄 PC-16~21, 115↔330 lap 중복(1a 쪽과 함께) |
 | MV-RUN-MIDZONE 평지 감속 제거 | 완료(2026-11-11) | `1fb4a25f` | 310 midFromZ·midToZ 빈칸(걷기 항상 4), 중간 구역 = 계단 오르는 구간(임시, PC-10). 사람 확인: 사용자가 속도 4 확인 |
 

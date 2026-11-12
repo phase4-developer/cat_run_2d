@@ -8,6 +8,7 @@
         "MV.Meta",
         "JJEvol.UI.Runtime",
         "JJEvol.UI.Addressables.Runtime",
+        "JJEvol.UI.Contracts.Runtime",
         "JJEvol.UI.URP.Runtime",
         "JJEvol.UI.Economy.Runtime",
         "Unity.TextMeshPro",
