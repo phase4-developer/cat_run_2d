@@ -305,6 +305,18 @@
             "encrypted": false
         },
         {
+            "name": "116_charLook",
+            "hash": "ea5ff3b1f066975e16fc4367815f6f8df0c97b37a98f1dc3bba51e1f46585821",
+            "metaHash": "d0fe4c4f66d80e0ad1f92153c80ac3d8eec3943389290f492662be28c91108e4",
+            "guid": "ab7fc3705343498ba04be47834bd716b",
+            "plainHash": "d0c16f3ec9364510bb6beaf774e2cb773a9fd04f178243fd0bca40be7f58677c",
+            "sourceHash": "495c6c7946bdf9c324ab70fc9ea17ef60210302d7018ac019752a936ba7746ed",
+            "source": "Assets/Game/GameData/Table/TSV/116_charLook.txt",
+            "sourceKind": "LocalFile",
+            "codec": "",
+            "encrypted": false
+        },
+        {
             "name": "11_stairLevel",
             "hash": "f28d493bc290e2cd2ef8bc6cc9be9d3e993d285df768ece6d2a266a21658b82b",
             "metaHash": "fdf998c16d660a0aafa1f5978da6088ba5b422ffaedd562d30136691b587cf9e",
@@ -366,11 +378,11 @@
         },
         {
             "name": "300_runConfig",
-            "hash": "15eaf21314e708a473b4ddc63e4836766f98442b4a8dc57845c2511bd900d6b4",
+            "hash": "719ed93cab92eda430dfbfa4522f829ff01c581ef8643d6c5a2b1367ea5a534b",
             "metaHash": "8447714286a396f76c2abfa80ecf419319c749dc5460a6e79c87d856304f0c6b",
             "guid": "42d6790e615b413ca1882a44c1ec1c4a",
-            "plainHash": "f8a8261cd4284f09d9d69e74b332bf5e8f754a61bde9594854316bebe29f33cf",
-            "sourceHash": "dbc0000d983012c7f6a2887a244958688618d8f60ac9085075e5c01b65065ac2",
+            "plainHash": "2959f10fe20e3bcf0e4e6159cfab6bd8600fc1b70b3bfa039c47e6a0d49ad5e1",
+            "sourceHash": "26b269fbcea1cbe52d602e46a3a1388d70f2003a7013187151b83c460b927d37",
             "source": "Assets/Game/GameData/Table/TSV/300_runConfig.txt",
             "sourceKind": "LocalFile",
             "codec": "",

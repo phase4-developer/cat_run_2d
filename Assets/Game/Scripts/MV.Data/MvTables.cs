@@ -50,6 +50,7 @@ namespace MV.Data
         public MvTable<GodData> God { get; } = new MvTable<GodData>(GodData.Schema, r => new GodData(r));
         public MvTable<HpRuleData> HpRule { get; } = new MvTable<HpRuleData>(HpRuleData.Schema, r => new HpRuleData(r));
         public MvTable<CardTierData> CardTier { get; } = new MvTable<CardTierData>(CardTierData.Schema, r => new CardTierData(r));
+        public MvTable<CharLookData> CharLook { get; } = new MvTable<CharLookData>(CharLookData.Schema, r => new CharLookData(r));
 
         // 3xx
         public RunConfigTable RunConfig { get; } = new RunConfigTable();
@@ -110,7 +111,7 @@ namespace MV.Data
                 Config, Wealth, PlayResource, Sound, Effect, ContentOpen, BalancePreset, ConsumeType, AdPlacement, UiResource,
                 LobbyUpgrade, StairLevel, WeaponLevel, AreaUpgrade, RebirthPerk, LevelPrice,
                 Cat, Enemy, Item, ObjectKind, HitReaction, ChargeGate, ReceiveCondition, MoveAi, Card, CardPool, CardEffect,
-                God, HpRule, CardTier,
+                God, HpRule, CardTier, CharLook,
                 RunConfig, Zone, Area, AreaFloor, Theme, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup, Camera,
                 Climb,
                 Content, ModeStage, ModeRule, QuestGroup, RepeatQuest, PassQuest, Achievement, ContentConfig,

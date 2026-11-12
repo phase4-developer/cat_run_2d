@@ -88,6 +88,27 @@ namespace MV.Editor.Tests.Import
             Assert.That(failures, Is.Empty, string.Join("\n", failures));
         }
 
+        /// <summary>116_charLook의 프리팹·아틀라스·그림 이름이 등록된 캐릭터 리소스에 있다(그림은 그 행 아틀라스 묶음 안).</summary>
+        [Test]
+        public void CharLookRows_ReferenceRegisteredArt()
+        {
+            var tables = new MV.Data.MvTables();
+            tables.LoadAll(new MV.Data.MvTsvDirectorySource(MV.Data.MvTableLoader.TsvDirectory));
+            var sets = MvCharacterArt.FindAtlasSets();
+            var prefabs = MvCharacterArt.FindPrefabs();
+            var failures = new List<string>();
+            Assert.That(tables.CharLook.Datas, Is.Not.Empty, "116_charLook 행 없음");
+            foreach (var row in tables.CharLook.Datas)
+            {
+                if (!prefabs.ContainsKey(row.prefab)) failures.Add($"{row.id}: 프리팹 {row.prefab} 없음");
+                if (!sets.TryGetValue(row.atlas, out var pngs)) { failures.Add($"{row.id}: 아틀라스 {row.atlas} 없음"); continue; }
+                var names = new HashSet<string>(pngs.Select(Path.GetFileNameWithoutExtension));
+                foreach (var image in new[] { row.walkA, row.walkB, row.atkA, row.atkB, row.happy, row.stair })
+                    if (!names.Contains(image)) failures.Add($"{row.id}: 그림 {image}가 {row.atlas}에 없음");
+            }
+            Assert.That(failures, Is.Empty, string.Join("\n", failures));
+        }
+
         [Test]
         public void CharacterPrefabs_RootAtOrigin()
         {
