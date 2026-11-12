@@ -16,91 +16,91 @@ MonoBehaviour:
   m_GUID: e307695ea4b8436197c4f9a7cfde9322
   m_SerializeEntries:
   - m_GUID: 17f9ce0149554b82b3d22407e45f8ace
-    m_Address: Fx/Paw
+    m_Address: Paw
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2f5a8e821bc1476ebeb5ec94fb155e6d
-    m_Address: Fx/Bolt
+    m_Address: Bolt
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3019642a83ee40a5ba6feec71eb7128c
-    m_Address: Fx/Fireball
+    m_Address: Fireball
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 32d7b50a570c492599e328af0b45a5a9
-    m_Address: Fx/Debris
+    m_Address: Debris
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5e7ee1f5203746378778bc519754e67c
-    m_Address: Fx/HolyBeam
+    m_Address: HolyBeam
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 601855933db64e249795f87ef6be343d
-    m_Address: Fx/Meteor
+    m_Address: Meteor
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7ce4395e40c04b90a7246f2d435236af
-    m_Address: Fx/Trail
+    m_Address: Trail
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 88553e25d6a743e798c2848bab97dd9e
-    m_Address: Fx/Sparks
+    m_Address: Sparks
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a3ad1def1510419bafb53fb17597fcba
-    m_Address: Fx/Hiss
+    m_Address: Hiss
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c252c0c18f9c48a88acd8e9ac2f8c716
-    m_Address: Fx/Boom
+    m_Address: Boom
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c881bed29ea945b0b9ba0ba554fb41d9
-    m_Address: Fx/Dust
+    m_Address: Dust
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e6ec90810b324b2088f17460b80cb3ff
-    m_Address: Fx/BrickChunk
+    m_Address: BrickChunk
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f940b07d09c3418c80d86d58cf8ec148
-    m_Address: Fx/Impact
+    m_Address: Impact
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ad9f9cb996e64639b51df21bddbb6867
-    m_Address: Fx/Mat_Normal
+    m_Address: MV_FxNormal
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f001e692dd034c2c9d79a07d4ba1b09f
-    m_Address: Fx/Mat_Add
+    m_Address: MV_FxAdd
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx

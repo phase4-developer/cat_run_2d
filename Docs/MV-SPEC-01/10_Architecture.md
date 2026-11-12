@@ -128,8 +128,7 @@ Assets/Game/
     Local/
       UI/            UIManager, 로딩 화면, 타이틀(앱 포함 최소)
       Font/          타이틀 전용 Static TMP 폰트(Boot 전용, 게임 폰트와 분리)
-    Remote/
-      UI/            UIScreen_*, UIPopup_*, UIHud_* 프리팹
+      UI/<하위>/     UIScreen_*, UIPopup_*, UIHud_* 프리팹(하위 폴더는 정리용)
       UIAtlas/       UI 아틀라스(SpriteAtlas) — [03 §3.8]
       WorldAtlas/    월드 아틀라스(공용·테마별) — [03 §3.8]
       Texture/       AddressableTexture 단독 텍스처(아지트 배경 등)
@@ -137,7 +136,7 @@ Assets/Game/
       Audio/Music/   BGM
       Effect/        이펙트 프리팹
       Mode/          모드 씬·프리팹
-      Theme/Update/<ThemeId>/   테마 팩(추가 Area 테마를 Revision으로 배포)
+      Theme/Update/<ThemeId>/   테마 팩(앱에 넣음, 원격 배포 안 함 — 결정 2026-11-12)
   Art/Source/        추출 원본 PNG(아틀라스 입력, Addressables 밖)
   GameData/Table/TSV/        표 원본(편집 정본) — [07]
   GameData/Table/Resources/  tables.authoring 출력
@@ -146,6 +145,7 @@ Assets/Game/
 ```
 
 - 리소스는 **각 표의 리소스 열에서 설정한다**(정크버스터즈 방식, 2026-11-09 사용자 「리소스도 테이블에서 설정가능해야해」). `icon`·`sprite`·`bg`·`bgm`·`hitSound`·`hitEffect` 같은 열에 스프라이트 이름 또는 Addressables 주소를 직접 쓴다. 아틀라스는 행의 `atlas`/`iconAtlas` 열 → `07_consumeType.iconAtlas` → 표 정의의 기본 아틀라스 순으로 정한다. 월드 테마 변형은 스프라이트 이름은 같게 두고 `304_theme.worldAtlas`만 바꾼다. 규칙 전체는 [07 §7.10](07_Tables.md).
+- **Addressables 주소 = 파일 이름**(확장자 제외). 폴더 경로를 주소에 넣지 않는다. 그룹은 최상단 분류 폴더로 정하고(`Local/<분류>` → `Local_<분류>`), 하위 폴더는 정리용이라 주소에 영향을 주지 않는다. 같은 주소가 둘 생기면 경로로 구분하지 않고 파일 이름을 바꾼다(예 `Hooligan` 둘 → `Enemy_Hooligan`·`UI_Enemy_Hooligan`). 원격은 언어팩만 하고 나머지는 모두 `Local/`이다(로컬 기본본 적용 후 원격본이 있으면 덧씌움). [결정 2026-11-12 사용자: 정크버스터즈의 경로+파일 이름 혼재 대신 파일 이름 하나로 통일, 패키지 규칙도 같이 고침]
 - `UIManager` 프리팹 주소는 `UIManager`, 화면은 `UIScreen_{ID}` 등 Framework 규칙(`Features/UI.md`).
 
 ## 10.7 시작과 표 로딩 흐름

@@ -161,7 +161,7 @@ G8의 MV-QA-HARNESS(프로토 쪽)는 G0과 동시에 시작할 수 있다.
 |---|---|
 | 목표 | `RunEvent` → `EffectManager` 이펙트, 데미지 팝업 풀(최대 60), 히트스톱 표시 쪽, HUD 비행 연출, 우다다 연출([06](06_Effects.md)) |
 | 입력 | [06](06_Effects.md), [07 §7.11](07_Tables.md) |
-| 쓰기 | `S/MV.Fx/`, `A/Addressables/Remote/Effect/`, `A/GameData/Table/TSV/04_effect.txt`(행만) |
+| 쓰기 | `S/MV.Fx/`, `A/Addressables/Local/Effect/`, `A/GameData/Table/TSV/04_effect.txt`(행만) |
 | 선행 | MV-RUN-SIM(RunEvent), MV-VIEW(월드→화면 변환 API) |
 | 완료 | 06의 모든 이펙트 키가 재생되고 수량·수명·색이 06 표와 같음 |
 | 검증 | 12 §12.2의 FX 장면 캡처(연속 프레임) 대조, 파티클 수 예산 |
