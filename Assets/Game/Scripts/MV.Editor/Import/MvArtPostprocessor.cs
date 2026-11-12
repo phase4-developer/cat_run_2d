@@ -41,6 +41,7 @@ namespace MV.Editor.Import
                 if (p.StartsWith(MvArtRules.UiAtlasFolder + "/", StringComparison.Ordinal)) return true;
                 if (p.StartsWith(MvArtRules.WorldAtlasFolder + "/", StringComparison.Ordinal)) return true;
                 if (p.StartsWith(MvArtRules.TextureFolder + "/", StringComparison.Ordinal)) return true;
+                if (p.StartsWith(MvArtRules.CharacterRoot + "/", StringComparison.Ordinal)) return true;
             }
             return false;
         }

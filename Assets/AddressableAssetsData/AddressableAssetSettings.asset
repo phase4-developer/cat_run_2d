@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: b7aa880e95e49dc45a2965cbd78480c9
   m_currentHash:
     serializedVersion: 2
-    Hash: 9c296027a0f7c05958f77c22b75135c9
+    Hash: 00000000000000000000000000000000
   m_DisableWriteTypeTree: 0
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
@@ -70,6 +70,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c598259428fb6d14d851669a321b76be, type: 2}
   - {fileID: 11400000, guid: 79278f2f95c043ae958eedb2cc4a1378, type: 2}
   - {fileID: 11400000, guid: ee610b1b03ad40b8aa5874f670a39d2b, type: 2}
+  - {fileID: 11400000, guid: b5673ce9ba556024fbeb4e93cee938c7, type: 2}
   - {fileID: 11400000, guid: c054d0a0b1d548019ca2898c8fbd32c9, type: 2}
   - {fileID: 11400000, guid: bc2b58dd218de474798582b64c4b8d80, type: 2}
   - {fileID: 11400000, guid: 74db12505d754daf92b1c3437bb7847f, type: 2}
@@ -139,6 +140,7 @@ MonoBehaviour:
     - theme.stallnight
     - theme.subway
     - ui.god
+    - char
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 9ba2a4a8fa06a984a80fad0c85404714, type: 2}

@@ -90,6 +90,7 @@ namespace MV.Editor.Import
                 MvArtManifest.Invalidate();
                 EnsureImportSettings(r);
                 EnsureAtlases(r);
+                EnsureCharacterAtlases(r);
                 EnsureAddressables(r);
                 if (r.Changed) AssetDatabase.SaveAssets();
             }
@@ -209,12 +210,52 @@ namespace MV.Editor.Import
             }
         }
 
+        /// <summary>캐릭터 묶음마다 SpriteAtlas v2 1개(<see cref="MvCharacterArt.FindAtlasSets"/>). 묶을 것은 PNG 파일이다.</summary>
+        static void EnsureCharacterAtlases(MvEnsureResult r)
+        {
+            var sets = MvCharacterArt.FindAtlasSets();
+            if (sets.Count == 0) return;
+            if (!AssetDatabase.IsValidFolder(MvArtRules.CharacterAtlasFolder))
+                AssetDatabase.CreateFolder(MvArtRules.CharacterRoot, Path.GetFileName(MvArtRules.CharacterAtlasFolder));
+            foreach (var pair in sets)
+            {
+                var spec = MvArtRules.CharacterSpecFor(pair.Key);
+                var wanted = new HashSet<string>(pair.Value.Select(AssetDatabase.AssetPathToGUID).Where(g => !string.IsNullOrEmpty(g)), StringComparer.Ordinal);
+                if (wanted.Count != pair.Value.Count)
+                {
+                    r.Notes.Add($"{spec.Name}: PNG GUID 없음(임포트 전) — 다음 회차");
+                    continue;
+                }
+                if (!File.Exists(spec.AssetPath) || !ReadPackableGuids(spec.AssetPath).SetEquals(wanted))
+                {
+                    WriteAtlas(spec, pair.Value);
+                    r.AtlasesWritten++;
+                }
+                if (!(AssetImporter.GetAtPath(spec.AssetPath) is SpriteAtlasImporter importer))
+                {
+                    r.Notes.Add($"{spec.Name}: SpriteAtlasImporter 없음 — 다음 회차");
+                    continue;
+                }
+                if (AtlasDifferences(importer, spec).Count == 0) continue;
+                ApplyAtlas(importer, spec);
+                importer.SaveAndReimport();
+                r.AtlasSettingsFixed++;
+            }
+            if (Directory.Exists(MvArtRules.CharacterAtlasFolder))
+                foreach (var file in Directory.GetFiles(MvArtRules.CharacterAtlasFolder, "*" + MvArtRules.AtlasExtension))
+                {
+                    var name = Path.GetFileNameWithoutExtension(file);
+                    if (!sets.ContainsKey(name)) r.Notes.Add($"{name}: 그림 없는 캐릭터 아틀라스(지우지 않음)");
+                }
+        }
+
+        /// <summary>묶을 것(폴더 또는 PNG 경로)으로 아틀라스 파일을 새로 쓴다.</summary>
         static void WriteAtlas(MvAtlasSpec spec, List<string> folders)
         {
             var atlas = new SpriteAtlasAsset();
             try
             {
-                var packables = folders.Select(f => (Object)AssetDatabase.LoadAssetAtPath<DefaultAsset>(f)).Where(o => o != null).ToArray();
+                var packables = folders.Select(f => AssetDatabase.LoadAssetAtPath<Object>(f)).Where(o => o != null).ToArray();
                 atlas.Add(packables);
                 SpriteAtlasAsset.Save(atlas, spec.AssetPath);
             }
@@ -322,6 +363,19 @@ namespace MV.Editor.Import
                 var label = MvArtRules.TextureLabelFor(pair.Key);
                 if (label == null) notes?.Add($"{pair.Key}: 라벨 규칙 없음(03 §3.8.5)");
                 desired[MvArtRules.TextureGroup][guid] = (pair.Key, label);
+            }
+            foreach (var name in MvCharacterArt.FindAtlasSets().Keys)
+            {
+                var spec = MvArtRules.CharacterSpecFor(name);
+                var guid = AssetDatabase.AssetPathToGUID(spec.AssetPath);
+                if (string.IsNullOrEmpty(guid) || !File.Exists(spec.AssetPath)) { notes?.Add($"{name}: 캐릭터 아틀라스 자산 없음 — 주소 보류"); continue; }
+                desired[MvArtRules.CharacterGroup][guid] = (spec.Address, spec.Label);
+            }
+            foreach (var pair in MvCharacterArt.FindPrefabs())
+            {
+                var guid = AssetDatabase.AssetPathToGUID(pair.Value);
+                if (string.IsNullOrEmpty(guid)) { notes?.Add($"{pair.Key}: 프리팹 GUID 없음 — 주소 보류"); continue; }
+                desired[MvArtRules.CharacterGroup][guid] = (pair.Key, MvArtRules.CharacterLabel);
             }
             return desired;
         }
