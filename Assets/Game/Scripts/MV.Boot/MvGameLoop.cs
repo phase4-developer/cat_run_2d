@@ -56,8 +56,8 @@ namespace MV.Boot
         public ulong CurrentSeed { get; private set; }
         /// <summary>로비 트랙에 깐 오브젝트 수(시험·QA용).</summary>
         public int LobbyObjectCount => _lobbyObjs.Count;
-        /// <summary>로비 트랙 미리보기 런 상태(Tick하지 않는다, 시험·QA용).</summary>
-        public RunState LobbyState => _lobbySim?.State;
+        /// <summary>로비 트랙 미리보기 런의 프레임 수(Tick하지 않으니 0, 없으면 −1. 시험·QA용).</summary>
+        public long LobbyFrame => _lobbySim != null ? _lobbySim.State.Frame : -1;
         /// <summary>화면을 그리는 카메라가 월드 카메라인지(로비·런 같은 화면, 시험용).</summary>
         public bool WorldCameraActive => _world != null && _world.Rig.Cam.enabled && _world.gameObject.activeInHierarchy;
         /// <summary>파티클 머티리얼 2개(<see cref="MvFx.MatNormalAddress"/>·<see cref="MvFx.MatAddAddress"/>)를 읽었는지.</summary>
