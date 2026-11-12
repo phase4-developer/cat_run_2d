@@ -23,7 +23,8 @@ namespace MV.View
         [SerializeField] ObjectViewFactory _objects;
         [SerializeField] ScreenRig _screen;
         [SerializeField] Material _screenMultiply;
-        [SerializeField] CatView _cats;
+        /// <summary>런 캐릭터(플레이어·분신). 필드 이름은 예전 CatView 자리(프리팹 참조 유지).</summary>
+        [SerializeField] CharacterPresenter _cats;
         [SerializeField] ProjectileView _projs;
 
         readonly WorldSpriteCache _sprites = new WorldSpriteCache();
@@ -36,7 +37,7 @@ namespace MV.View
         public ObjectViewFactory Objects => _objects;
         public PropStreamer Props => _props;
         public ScreenRig Screen => _screen;
-        public CatView Cats => _cats;
+        public CharacterPresenter Cats => _cats;
         public ProjectileView Projectiles => _projs;
 
         public void Init(MvTables tables, IWorldViewSource source)
@@ -53,7 +54,7 @@ namespace MV.View
             {
                 var go = new GameObject("Cats");
                 go.transform.SetParent(transform, false);
-                _cats = go.AddComponent<CatView>();
+                _cats = go.AddComponent<CharacterPresenter>();
             }
             _cats.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null);
             if (_projs == null)   // 프리팹에 없으면 만든다
@@ -113,6 +114,7 @@ namespace MV.View
         public void OnRunEvents(System.Collections.Generic.IReadOnlyList<RunEvent> events)
         {
             if (_objects != null) _objects.OnRunEvents(events);
+            if (_cats != null) _cats.OnRunEvents(events, Time.realtimeSinceStartupAsDouble);
         }
 
         /// <summary>정본 `shake(a, t)`.</summary>

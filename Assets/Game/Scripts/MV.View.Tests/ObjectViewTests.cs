@@ -203,8 +203,22 @@ namespace MV.View.Tests
             foreach (var field in new[] { "_spriteMaterial", "_vertexColorMaterial" })
                 Assert.That(objs.FindProperty(field).objectReferenceValue, Is.Not.Null, "ObjectViewFactory." + field);
             Assert.That(prefab.GetComponentInChildren<GroundStripMesh>().GetComponent<MeshRenderer>().sharedMaterial, Is.Not.Null);
-            var cats = new SerializedObject(prefab.GetComponentInChildren<CatView>());
-            Assert.That(cats.FindProperty("_spriteMaterial").objectReferenceValue, Is.Not.Null, "CatView._spriteMaterial");
+            var cats = new SerializedObject(prefab.GetComponentInChildren<CharacterPresenter>());
+            Assert.That(cats.FindProperty("_spriteMaterial").objectReferenceValue, Is.Not.Null, "CharacterPresenter._spriteMaterial");
+        }
+
+        /// <summary>캐릭터 프리팹(MV-VIEW-CHAR-1): 루트에 CharacterRig, 몸 그림 연결, 기본 그림 직접 참조 없음(아틀라스 그림만 쓰므로 원본 PNG가 번들에 따로 들어가지 않게).</summary>
+        [TestCase("Assets/Game/Addressables/Local/Character/Prefab/Char_Cat.prefab")]
+        [TestCase("Assets/Game/Addressables/Local/Character/Prefab/Char_Clone.prefab")]
+        public void CharacterPrefab_HasRigWithBodyAndNoDefaultSprite(string path)
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            Assert.That(prefab, Is.Not.Null, path);
+            var rig = prefab.GetComponent<CharacterRig>();
+            Assert.That(rig, Is.Not.Null, "CharacterRig");
+            var body = new SerializedObject(rig).FindProperty("_body").objectReferenceValue as SpriteRenderer;
+            Assert.That(body, Is.Not.Null, "CharacterRig._body");
+            Assert.That(body.sprite, Is.Null, "기본 그림 직접 참조 없음");
         }
     }
 }

@@ -236,12 +236,6 @@ namespace MV.Editor.Import
             var raw = ctx.Row.Get(column);
             if (string.IsNullOrWhiteSpace(raw)) return;
 
-            if (column == "spritePrefix" && ctx.Row.Contains("atlasPattern"))
-            {
-                CheckSpritePrefix(ctx, raw.Trim());
-                return;
-            }
-
             if (defaultAtlas == MvAtlas.Address)
             {
                 // 이펙트 프리팹 주소(`Fx/Sparks`)처럼 `/`가 주소의 일부인 값은 나누지 않는다.
@@ -354,31 +348,6 @@ namespace MV.Editor.Import
                 return;
             }
             ctx.Add(MvResIssueKind.Error, column, address, MvAtlas.Address, hint);
-        }
-
-        /// <summary>101_cat: 접두 + atlasPattern(`{t}` = 1..tierCount), 접두의 `{p}` = 1..patternCount.</summary>
-        static void CheckSpritePrefix(Ctx ctx, string prefix)
-        {
-            var pattern = (ctx.Row.Get("atlasPattern") ?? "").Trim();
-            int tiers = ctx.Row.GetInt("tierCount", 0);
-            int patterns = Math.Max(1, ctx.Row.GetInt("patternCount", 1));
-            if (pattern.Length == 0 || tiers <= 0)
-            {
-                ctx.Add(MvResIssueKind.Error, "spritePrefix", prefix, pattern, "atlasPattern·tierCount 없음");
-                return;
-            }
-            for (int t = 1; t <= tiers; t++)
-            {
-                var atlas = pattern.Replace("{t}", t.ToString(CultureInfo.InvariantCulture));
-                var ps = prefix.Contains("{p}") ? Enumerable.Range(1, patterns).Select(p => prefix.Replace("{p}", p.ToString(CultureInfo.InvariantCulture))) : new[] { prefix };
-                foreach (var pre in ps)
-                {
-                    ctx.Report.Checked++;
-                    ctx.AtlasUsable("spritePrefix", pre, atlas);
-                    if (ctx.Catalog.HasPrefix(atlas, pre)) continue;
-                    ctx.Add(MvResIssueKind.Error, "spritePrefix", pre, atlas, ctx.Catalog.HasAtlasFolder(atlas) ? $"`{pre}_*` 프레임 없음" : $"아틀라스 {atlas} 그림 폴더 없음");
-                }
-            }
         }
 
         /// <summary>304_theme.roadsideProps: 그 테마 아틀라스에만 있으면 된다(03 §3.4.5).</summary>

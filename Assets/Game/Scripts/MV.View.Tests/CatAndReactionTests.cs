@@ -11,7 +11,7 @@ using Object = UnityEngine.Object;
 namespace MV.View.Tests
 {
     /// <summary>
-    /// 티켓 09: 런 고양이 표시(02 §2.1.4 고양이 행)와 오브젝트 맞음·막힘 반응(06 §6.13).
+    /// 티켓 09: 런 고양이 표시(02 §2.1.4 고양이 행, 그림은 MV-VIEW-CHAR-1 캐릭터 상태머신)와 오브젝트 맞음·막힘 반응(06 §6.13).
     /// 골든 값은 정본 `syncScene` L2763·`stairY` L2241·`mochiBack` L3682·`updObjMesh` L1464~1539·`drawRollGate` L3635 식을 Node(V8)로 돌린 결과다.
     /// 아틀라스를 로드하지 않으므로 스프라이트는 비어 있고 구조·계산만 본다.
     /// </summary>
@@ -76,140 +76,138 @@ namespace MV.View.Tests
             Assert.That(CatLayout.StairY(34, 20, 0.42, true), Is.EqualTo(0).Within(1e-12), "k 밖");
         }
 
-        [Test]
-        public void IdleBreath_MatchesProto()
-        {
-            CatLayout.IdleBreath(1.3, 2, out double sx, out double sy);
-            Assert.That(sx, Is.EqualTo(1.00750202340).Within(1e-9));
-            Assert.That(sy, Is.EqualTo(0.985163121088).Within(1e-9));
-            CatLayout.IdleBreath(10.25, 4, out sx, out sy);
-            Assert.That(sx, Is.EqualTo(0.992669624821).Within(1e-9));
-            Assert.That(sy, Is.EqualTo(1.01482354370).Within(1e-9));
-        }
+        // ───────── 캐릭터 상태머신(MV-VIEW-CHAR-1, 디자이너 PDF 재생 규칙) ─────────
 
-        [TestCase(0, 0)]
-        [TestCase(1, 1)]
-        [TestCase(2, 11)]
-        [TestCase(3, 0)]
-        [TestCase(4, 6)]
-        public void FrameIndex_NearestOfTwelvePerTurn(int c, int frame)
-        {
-            double[] ph = { 0, 0.27, -0.6, -0.1, Math.PI * 2 * 5 + Math.PI };
-            Assert.That(CatLayout.FrameIndex(ph[c]), Is.EqualTo(frame));
-        }
+        static CharAnimParams Anim() => CharAnimParams.From(ViewTestTables.Load());
 
         [Test]
-        public void AnimAndTier_FollowProtoRules()
-        {
-            Assert.That(CatLayout.AnimOf(true, true, 0.2, true), Is.EqualTo(CatAnim.Climb), "오르기가 먼저");
-            Assert.That(CatLayout.AnimOf(false, true, 0.2, true), Is.EqualTo(CatAnim.Throw));
-            Assert.That(CatLayout.AnimOf(false, true, 0.2, false), Is.EqualTo(CatAnim.Run), "친구는 thr 0");
-            Assert.That(CatLayout.AnimOf(false, false, 0.2, true), Is.EqualTo(CatAnim.Idle), "런 끝(R.fin)·막힘 종료");
-            var art = CatArt.From(ViewTestTables.Load());
-            Assert.That(art.PlayerTier(0), Is.EqualTo(1));
-            Assert.That(art.PlayerTier(9), Is.EqualTo(8));
-            Assert.That(art.PlayerTier(12), Is.EqualTo(8), "103 12등급 → 그림 8단계(101 tierCount) 재사용");
-            Assert.That(art.FriendTier(1), Is.EqualTo(1));
-            Assert.That(art.FriendTier(5), Is.EqualTo(3));
-            Assert.That(art.FriendTier(8), Is.EqualTo(6));
-            Assert.That(art.FriendTier(12), Is.EqualTo(6));
-            Assert.That(art.FrameName(0, 3, CatAnim.Throw), Is.EqualTo("World_Cat_P0_T3_Run_B_"));
-            Assert.That(art.FrameName(2, 1, CatAnim.Throw), Is.EqualTo("World_Cat_P2_T1_Run_A_"));
-            Assert.That(art.FrameName(2, 1, CatAnim.Idle), Is.EqualTo("World_Cat_P2_T1_Idle"));
-            Assert.That(art.AtlasOf(0, 7), Is.EqualTo("Atlas_World_Cat_T7"));
-            Assert.That(art.AtlasOf(3, 2), Is.EqualTo("Atlas_World_Friend_T2"));
-        }
-
-        [TestCase(0, 1)]
-        [TestCase(3, 4)]
-        [TestCase(4, 4)]
-        [TestCase(29, 4)]
-        public void FriendPattern_ReusesLastPatternBeyondArt(int friendIndex, int pattern)
-        {
-            // 101 friend patternCount 4: 친구 5번째부터 마지막 무늬(그림 수가 분신 수를 막지 않는다)
-            Assert.That(CatArt.From(ViewTestTables.Load()).FriendPattern(friendIndex), Is.EqualTo(pattern));
-        }
-
-        [Test]
-        public void CatArt_FollowsCatTableCounts()
-        {
-            var t = ViewTestTables.WithCell(CatData.Table, "friend", "patternCount", "2");
-            t.BuildIndexes();
-            var art = CatArt.From(t);
-            Assert.That(art.FriendPatterns, Is.EqualTo(2));
-            Assert.That(art.FriendPattern(2), Is.EqualTo(2), "표만 바꿔 무늬 수가 따라 바뀐다");
-            t = ViewTestTables.WithCell(CatData.Table, "player", "tierCount", "5");
-            t.BuildIndexes();
-            Assert.That(CatArt.From(t).PlayerTier(8), Is.EqualTo(5));
-        }
-
-        /// <summary>코드가 고르는 모든 프레임 이름이 그림 목록(`sprite_catalog.tsv`)에 같은 아틀라스로 있다.</summary>
-        [Test]
-        public void FrameNames_AllExistInSpriteCatalog()
-        {
-            string path = Path.Combine(Application.dataPath, "Game/Art/Source/sprite_catalog.tsv");
-            var atlasOf = new Dictionary<string, string>(StringComparer.Ordinal);
-            foreach (var line in File.ReadAllLines(path).Skip(1))
-            {
-                var cells = line.Split('\t');
-                if (cells.Length >= 2) atlasOf[cells[1]] = cells[0];
-            }
-            int checkedN = 0;
-            var art = CatArt.From(ViewTestTables.Load());
-            for (int pat = 0; pat <= art.FriendPatterns; pat++)
-            {
-                int tMax = pat == 0 ? art.PlayerTiers : art.FriendTiers;
-                for (int t = 1; t <= tMax; t++)
-                    foreach (CatAnim a in Enum.GetValues(typeof(CatAnim)))
-                    {
-                        string atlas = art.AtlasOf(pat, t), name = art.FrameName(pat, t, a);
-                        var names = a == CatAnim.Idle ? new[] { name } : Enumerable.Range(0, CatLayout.Frames).Select(i => name + i.ToString("00")).ToArray();
-                        foreach (var n in names)
-                        {
-                            Assert.That(atlasOf.TryGetValue(n, out var at), Is.True, n);
-                            Assert.That(at, Is.EqualTo(atlas), n);
-                            checkedN++;
-                        }
-                    }
-            }
-            Assert.That(checkedN, Is.GreaterThan(800));
-        }
-
-        // ───────── 고양이 뷰 구조 ─────────
-
-        [Test]
-        public void CatView_SortsAsUnitWithoutFog_AndHidesWithoutAtlas()
+        public void CharAnim_ReadsCharKeysFromRunConfig()
         {
             var t = ViewTestTables.Load();
-            var cfg = ViewTestTables.Config();
+            var p = CharAnimParams.From(t);
+            Assert.That(p.FrameSec, Is.EqualTo(t.RunConfig.D(RunConfigKeys.Char_FrameSec)));
+            Assert.That(p.DipAt, Is.EqualTo(t.RunConfig.D(RunConfigKeys.Char_DipAt)));
+            Assert.That(p.DipM, Is.EqualTo(t.RunConfig.D(RunConfigKeys.Char_DipM)));
+            Assert.That(p.AtkFrames, Is.EqualTo((int)t.RunConfig.D(RunConfigKeys.Char_AtkFrames)));
+        }
+
+        [Test]
+        public void Walk_AlternatesAAndBEachFrame_OffsetByUnit()
+        {
+            var p = Anim();
+            var sm = new CharStateMachine();
+            sm.Set(CharState.Walk, 0);
+            double f = p.FrameSec;
+            Assert.That(sm.Evaluate(p, f * 0.5, 0).Pose, Is.EqualTo(CharPose.WalkA));
+            Assert.That(sm.Evaluate(p, f * 1.5, 0).Pose, Is.EqualTo(CharPose.WalkB));
+            Assert.That(sm.Evaluate(p, f * 2.5, 0).Pose, Is.EqualTo(CharPose.WalkA));
+            Assert.That(sm.Evaluate(p, f * 0.5, 1).Pose, Is.EqualTo(CharPose.WalkB), "분신 1은 한 칸 어긋난다");
+        }
+
+        [Test]
+        public void Attack_ShowsCOnAAndDOnB_ForAtkFrames()
+        {
+            var p = Anim();
+            var sm = new CharStateMachine();
+            sm.Set(CharState.Walk, 0);
+            double f = p.FrameSec;
+            sm.Shot(f * 4.2);
+            Assert.That(sm.Evaluate(p, f * 4.3, 0).Pose, Is.EqualTo(CharPose.AtkA), "A 차례 → C");
+            Assert.That(sm.Evaluate(p, f * (4.2 + p.AtkFrames) + f * 0.01, 0).Pose, Is.Not.EqualTo(CharPose.AtkA).And.Not.EqualTo(CharPose.AtkB), "유지 칸이 지나면 걷기");
+            sm.Shot(f * 5.1);
+            Assert.That(sm.Evaluate(p, f * 5.2, 0).Pose, Is.EqualTo(CharPose.AtkB), "B 차례 → D");
+            Assert.That(sm.Evaluate(p, f * 5.0, 0).Pose, Is.EqualTo(CharPose.WalkB), "쏘기 전 시각은 걷기");
+        }
+
+        [Test]
+        public void Dip_PeaksAtDipAt_ZeroAtFrameEdges()
+        {
+            var p = Anim();
+            Assert.That(CharStateMachine.DipCurve(p.DipAt, p.DipAt), Is.EqualTo(1).Within(1e-12));
+            Assert.That(CharStateMachine.DipCurve(0, p.DipAt), Is.EqualTo(0));
+            Assert.That(CharStateMachine.DipCurve(0.999999, p.DipAt), Is.EqualTo(0).Within(1e-4));
+            var sm = new CharStateMachine();
+            sm.Set(CharState.Walk, 0);
+            Assert.That(sm.Evaluate(p, p.FrameSec * (3 + p.DipAt), 0).Dip, Is.EqualTo(p.DipM).Within(1e-9));
+        }
+
+        [Test]
+        public void StandAndHidden_ShowWalkAWithoutDip()
+        {
+            var p = Anim();
+            var sm = new CharStateMachine();
+            foreach (var st in new[] { CharState.Hidden, CharState.Stand })
+            {
+                sm.Set(st, 0);
+                sm.Shot(p.FrameSec * 1.1);
+                var fr = sm.Evaluate(p, p.FrameSec * (1 + p.DipAt), 0);
+                Assert.That(fr.Pose, Is.EqualTo(CharPose.WalkA), st.ToString());
+                Assert.That(fr.Dip, Is.EqualTo(0), st.ToString());
+            }
+        }
+
+        [Test]
+        public void SpriteOf_ReadsLookRowColumns()
+        {
+            var t = ViewTestTables.Load();
+            var row = t.CharLook.Datas[0];
+            Assert.That(CharStateMachine.SpriteOf(row, CharPose.WalkA), Is.EqualTo(row.walkA));
+            Assert.That(CharStateMachine.SpriteOf(row, CharPose.WalkB), Is.EqualTo(row.walkB));
+            Assert.That(CharStateMachine.SpriteOf(row, CharPose.AtkA), Is.EqualTo(row.atkA));
+            Assert.That(CharStateMachine.SpriteOf(row, CharPose.AtkB), Is.EqualTo(row.atkB));
+        }
+
+        // ───────── 캐릭터 뷰 구조 ─────────
+
+        [Test]
+        public void CharacterPresenter_PicksLookByTierAndSlot_StateByPhase_HidesWithoutArt()
+        {
+            var t = ViewTestTables.Load();
             var go = new GameObject("Cats");
             _made.Add(go);
-            var view = go.AddComponent<CatView>();
-            view.Init(t, cfg, null, null);
-            Assert.That(view.FriendSlots, Is.EqualTo(30), "친구 자리 = 314 clone 행 수(MAX_CLONES 30)");
-            for (int i = 0; i <= view.FriendSlots; i++)
-            {
-                var ds = view.CatObject(i).GetComponent<DepthSortable>();
-                Assert.That(ds.Rank, Is.EqualTo(DepthMath.RankUnit), "순위 " + i);
-                Assert.That(ds.SortOffsetY, Is.EqualTo((float)cfg.CatProbeY), "탐침 " + i);
-                Assert.That(ds.Bias, Is.EqualTo(0f));
-                Assert.That(ds.Fog, Is.False, "안개 알파 없음");
-            }
+            var view = go.AddComponent<CharacterPresenter>();
+            view.Init(t, ViewTestTables.Config(), null, null);
+            int cloneRows = t.SpawnGroup.Sorted.Count(g => g.key == "clone");
+            Assert.That(view.FriendSlots, Is.EqualTo(cloneRows), "분신 자리 = 314 clone 행 수");
+
             var s = new RunState(null, t, new Pcg32Rng(1));
             s.Clones = 2;
-            s.P.Phase = 0.27;
-            view.Sync(s, 0);
+            view.Sync(s, 0.1);
             Assert.That(view.VisibleCount, Is.EqualTo(0), "그림이 아직 없으면 그리지 않는다");
-            Assert.That(view.CatObject(0).activeSelf, Is.False);
+            int player = t.Cat.ByKey(CharacterPresenter.PlayerKey).id, friend = t.Cat.ByKey(CharacterPresenter.FriendKey).id;
+            int tier = s.EqTier();
+            Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, tier)));
+            Assert.That(view.LookOf(2), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, friend, 1, tier)), "분신 2번째 = slot 1(없으면 마지막 slot)");
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Walk), "런 중 걷기");
+            Assert.That(view.StateOf(3), Is.EqualTo(CharState.Hidden), "분신 수 밖 자리는 숨김");
+            Assert.That(view.SpriteNameOf(0), Is.Not.Empty);
+
             s.Phase = RunPhase.Result;
             s.Fin = true;
-            view.Sync(s, 0);
-            Assert.That(view.SpriteNameOf(0), Is.EqualTo("World_Cat_P0_T1_Idle"), "런이 끝나면 정지 그림");
-            s.Clones = 6;
-            view.Sync(s, 0);
-            Assert.That(view.SpriteNameOf(6), Is.EqualTo("World_Cat_P4_T1_Idle"), "친구 6번째 = 마지막 무늬(4) 재사용");
-            view.Sync(null, 0);
+            view.Sync(s, 0.2);
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Stand), "런이 끝나면 서 있음");
+            Assert.That(view.SpriteNameOf(0), Is.EqualTo(view.LookOf(0).walkA));
+            view.Sync(null, 0.3);
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Hidden));
             Assert.That(view.VisibleCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void CharacterPresenter_FireEventMarksShooterUnit()
+        {
+            var t = ViewTestTables.Load();
+            var go = new GameObject("Cats");
+            _made.Add(go);
+            var view = go.AddComponent<CharacterPresenter>();
+            view.Init(t, ViewTestTables.Config(), null, null);
+            var p = Anim();
+            var s = new RunState(null, t, new Pcg32Rng(1));
+            s.Clones = 1;
+            double at = p.FrameSec * 6.2;   // 칸 6: 플레이어(unit 0) A, 분신(unit 1) B
+            view.OnRunEvents(new[] { new RunEvent(RunEventType.Fire, a: 1) }, at);
+            view.Sync(s, at + p.FrameSec * 0.1);
+            Assert.That(view.SpriteNameOf(1), Is.EqualTo(view.LookOf(1).atkB), "쏜 분신은 공격 그림");
+            Assert.That(view.SpriteNameOf(0), Is.EqualTo(view.LookOf(0).walkA), "쏘지 않은 플레이어는 걷기");
         }
 
         // ───────── 오브젝트 반응 순수 계산 ─────────

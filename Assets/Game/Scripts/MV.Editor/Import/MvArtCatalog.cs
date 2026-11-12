@@ -73,10 +73,6 @@ namespace MV.Editor.Import
         public bool HasSprite(string atlas, string name) =>
             atlas != null && _sprites.TryGetValue(atlas, out var set) && (set.Contains(name) || set.Contains(name + "_00"));
 
-        /// <summary>접두 `prefix_`로 시작하는 이름이 하나라도 있는지(101_cat spritePrefix).</summary>
-        public bool HasPrefix(string atlas, string prefix) =>
-            atlas != null && _sprites.TryGetValue(atlas, out var set) && set.Any(n => n.StartsWith(prefix + "_", StringComparison.Ordinal));
-
         public IEnumerable<string> AtlasesContaining(string name) =>
             _sprites.Where(p => p.Value.Contains(name) || p.Value.Contains(name + "_00")).Select(p => p.Key);
 
