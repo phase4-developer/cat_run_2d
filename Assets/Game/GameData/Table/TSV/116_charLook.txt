@@ -1,14 +1,14 @@
-id	name	key	catId	slot	fromTier	prefab	atlas	walkA	walkB	atkA	atkB	happy	stair	scale
-116001001	플레이어 외형 세트 0	player_0	101001001	0	1	Char_Cat	atlas_player_0	cat_run_A_0	cat_run_B_0	cat_run_C_0	cat_run_D_0	cat_run_A_0	cat_run_A_0	1
-116001002	플레이어 외형 세트 1	player_1	101001001	0	2	Char_Cat	atlas_player_1	cat_run_A_1	cat_run_B_1	cat_run_C_1	cat_run_D_1	cat_run_A_1	cat_run_A_1	1
-116001003	플레이어 외형 세트 2	player_2	101001001	0	3	Char_Cat	atlas_player_2	cat_run_A_2	cat_run_B_2	cat_run_C_2	cat_run_D_2	cat_run_A_2	cat_run_A_2	1
-116001004	플레이어 외형 세트 3	player_3	101001001	0	4	Char_Cat	atlas_player_3	cat_run_A_3	cat_run_B_3	cat_run_C_3	cat_run_D_3	cat_run_A_3	cat_run_A_3	1
-116001005	플레이어 외형 세트 4	player_4	101001001	0	5	Char_Cat	atlas_player_4	cat_run_A_4	cat_run_B_4	cat_run_C_4	cat_run_D_4	cat_run_A_4	cat_run_A_4	1
-116001006	플레이어 외형 세트 5	player_5	101001001	0	6	Char_Cat	atlas_player_5	cat_run_A_5	cat_run_B_5	cat_run_C_5	cat_run_D_5	cat_run_A_5	cat_run_A_5	1
-116001007	플레이어 외형 세트 6	player_6	101001001	0	7	Char_Cat	atlas_player_6	cat_run_A_6	cat_run_B_6	cat_run_C_6	cat_run_D_6	cat_run_A_6	cat_run_A_6	1
-116001008	플레이어 외형 세트 7	player_7	101001001	0	8	Char_Cat	atlas_player_7	cat_run_A_7	cat_run_B_7	cat_run_C_7	cat_run_D_7	cat_run_A_7	cat_run_A_7	1
-116001009	플레이어 외형 세트 8	player_8	101001001	0	9	Char_Cat	atlas_player_8	cat_run_A_8	cat_run_B_8	cat_run_C_8	cat_run_D_8	cat_run_A_8	cat_run_A_8	1
-116001010	플레이어 외형 세트 9	player_9	101001001	0	10	Char_Cat	atlas_player_9	cat_run_A_9	cat_run_B_9	cat_run_C_9	cat_run_D_9	cat_run_A_9	cat_run_A_9	1
-116001011	플레이어 외형 세트 10	player_10	101001001	0	11	Char_Cat	atlas_player_10	cat_run_A_10	cat_run_B_10	cat_run_C_10	cat_run_D_10	cat_run_A_10	cat_run_A_10	1
-116001012	플레이어 외형 세트 11	player_11	101001001	0	12	Char_Cat	atlas_player_11	cat_run_A_11	cat_run_B_11	cat_run_C_11	cat_run_D_11	cat_run_A_11	cat_run_A_11	1
-116002001	분신 외형 샴	clone_siamese	101001002	0	1	Char_Clone	atlas_clone_siamese	cat_run_A_siamese	cat_run_B_siamese	cat_run_C_siamese	cat_run_D_siamese	cat_run_A_siamese	cat_run_A_siamese	0.82
+id	name	catId	slot	fromTier	prefab	atlas	walkA	walkB	atkA	atkB	happy	stair	scale
+116001001	플레이어 외형 세트 0	101001001	0	1	Char_Cat	atlas_player_0	cat_run_A_0	cat_run_B_0	cat_run_C_0	cat_run_D_0	cat_run_A_0	cat_run_A_0	1
+116001002	플레이어 외형 세트 1	101001001	0	2	Char_Cat	atlas_player_1	cat_run_A_1	cat_run_B_1	cat_run_C_1	cat_run_D_1	cat_run_A_1	cat_run_A_1	1
+116001003	플레이어 외형 세트 2	101001001	0	3	Char_Cat	atlas_player_2	cat_run_A_2	cat_run_B_2	cat_run_C_2	cat_run_D_2	cat_run_A_2	cat_run_A_2	1
+116001004	플레이어 외형 세트 3	101001001	0	4	Char_Cat	atlas_player_3	cat_run_A_3	cat_run_B_3	cat_run_C_3	cat_run_D_3	cat_run_A_3	cat_run_A_3	1
+116001005	플레이어 외형 세트 4	101001001	0	5	Char_Cat	atlas_player_4	cat_run_A_4	cat_run_B_4	cat_run_C_4	cat_run_D_4	cat_run_A_4	cat_run_A_4	1
+116001006	플레이어 외형 세트 5	101001001	0	6	Char_Cat	atlas_player_5	cat_run_A_5	cat_run_B_5	cat_run_C_5	cat_run_D_5	cat_run_A_5	cat_run_A_5	1
+116001007	플레이어 외형 세트 6	101001001	0	7	Char_Cat	atlas_player_6	cat_run_A_6	cat_run_B_6	cat_run_C_6	cat_run_D_6	cat_run_A_6	cat_run_A_6	1
+116001008	플레이어 외형 세트 7	101001001	0	8	Char_Cat	atlas_player_7	cat_run_A_7	cat_run_B_7	cat_run_C_7	cat_run_D_7	cat_run_A_7	cat_run_A_7	1
+116001009	플레이어 외형 세트 8	101001001	0	9	Char_Cat	atlas_player_8	cat_run_A_8	cat_run_B_8	cat_run_C_8	cat_run_D_8	cat_run_A_8	cat_run_A_8	1
+116001010	플레이어 외형 세트 9	101001001	0	10	Char_Cat	atlas_player_9	cat_run_A_9	cat_run_B_9	cat_run_C_9	cat_run_D_9	cat_run_A_9	cat_run_A_9	1
+116001011	플레이어 외형 세트 10	101001001	0	11	Char_Cat	atlas_player_10	cat_run_A_10	cat_run_B_10	cat_run_C_10	cat_run_D_10	cat_run_A_10	cat_run_A_10	1
+116001012	플레이어 외형 세트 11	101001001	0	12	Char_Cat	atlas_player_11	cat_run_A_11	cat_run_B_11	cat_run_C_11	cat_run_D_11	cat_run_A_11	cat_run_A_11	1
+116002001	분신 외형 샴	101001002	0	1	Char_Clone	atlas_clone_siamese	cat_run_A_siamese	cat_run_B_siamese	cat_run_C_siamese	cat_run_D_siamese	cat_run_A_siamese	cat_run_A_siamese	0.82

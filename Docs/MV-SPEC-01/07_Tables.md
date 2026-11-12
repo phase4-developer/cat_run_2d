@@ -125,6 +125,7 @@
 - **id**: 정수, 표 안에서 유일. 형식 `{표번호}{그룹 3자리}{순번 3자리}`. 예: `105_objectKind` 1번 그룹 3번째 = `105001003`. 표번호가 2자리면 `16001001`처럼 그대로 붙인다. 작은 정의 표는 1, 2, 3.
 - **name**: 모든 표의 2번째 열(키 열 바로 다음). 사람용 용어, 코드 미사용, 빈칸 금지(§7.1.1a). `410_questGroup`의 예전 `name` 열도 코드가 읽지 않으므로(작성용 필드만 있었고 쓰는 곳 없음, 2026-11-10 필드 삭제) 이 사람용 열로 2번째에 옮겼다.
 - **key**: 코드가 이름으로 찾아야 하는 행만 `key`(string, 표 안 유일, 영문 lowerCamel). **코드에서 id 숫자를 하드코딩하지 않는다.** 예: `MvTables.Current.ObjectKind.ByKey("tower")`.
+> 갱신(2026-11-13, MV-DATA-KEYTRIM): 코드·다른 표가 쓰지 않는 key 열을 뺐다 — `115_cardTier`·`116_charLook`·`430_pet`·`450_friend`·`470_gearPart`(사용자 「key는 덜어내기 해줘 … 사용처가 있는것들은 있어도 괜챃아」). key는 코드가 특정 행을 이름으로 찾거나 다른 표가 key 값으로 가리킬 때만 둔다.
 - **group**: 묶음 정수. 의미는 표마다 정의. `GroupedTable<int, T>`로 읽는다.
 - **sort**: 화면 정렬·선택 순서(오름차순). 같으면 id 순.
 - **active**: 1 사용, 0 미사용. 0인 행도 **로드는 한다**(다른 행·저장이 참조할 수 있음). 게임 로직이 고르지 않을 뿐. 「업데이트 예정」 표시 여부는 표마다 정의.
@@ -1262,20 +1263,19 @@ consumeType 5(Item)의 id 표. 로비 시작 덱(`save.deck`)과 런 손패의 �
 | 열 | 타입 | 뜻 |
 |---|---|---|
 | id | int | `115001001`~`005` |
-| key | string | `common`·`uncommon`·`rare`·`epic`·`legendary` |
 | tierIndex | int | 0~4 (`110_card.tier`, `330_climb.lapTier`가 이 값) |
 | need | int | 마지막 랩 나머지 계단 수 문턱 |
 | color | color | 등급색(룰렛·카드 틀·`$tier` 색 토큰) |
 | frameSprite | res | 카드 틀. 기본 아틀라스 `Atlas_UI_Card` |
 | cardSound | sound | 확정 소리 `card_{tierIndex}` |
 
-| id | key | tierIndex | need | color | 이름 | cardSound |
-|---|---|---|---|---|---|---|
-| 115001001 | common | 0 | 5 | #c9c2b4 | COMMON | card_0 |
-| 115001002 | uncommon | 1 | 10 | #6fd27a | UNCOMMON | card_1 |
-| 115001003 | rare | 2 | 20 | #58a6f0 | RARE | card_2 |
-| 115001004 | epic | 3 | 40 | #c07af0 | EPIC | card_3 |
-| 115001005 | legendary | 4 | 75 | #f2b33d | LEGENDARY | card_4 |
+| id | tierIndex | need | color | 이름 | cardSound |
+|---|---|---|---|---|---|
+| 115001001 | 0 | 5 | #c9c2b4 | COMMON | card_0 |
+| 115001002 | 1 | 10 | #6fd27a | UNCOMMON | card_1 |
+| 115001003 | 2 | 20 | #58a6f0 | RARE | card_2 |
+| 115001004 | 3 | 40 | #c07af0 | EPIC | card_3 |
+| 115001005 | 4 | 75 | #f2b33d | LEGENDARY | card_4 |
 
 근거 [프로토] L773~775. 검증: need 오름차순, 마지막 need = `330_climb.lap`.
 
