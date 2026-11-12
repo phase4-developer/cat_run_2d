@@ -179,3 +179,4 @@
 300107009	계단 정산 좌우 흔들림(오르는 중)	char.stairSwayM	0.06	m
 300107010	계단 정산 흔들림 각속도(오르기 전)	char.stairIdleRate	3	rad/s
 300107011	계단 정산 기울기 진폭(오르기 전)	char.stairIdleRockRad	0.05	rad
+300108001	로비 트랙에 까는 오브젝트 범위(시작점에서 z 거리)	lobby.objZMax	70	m
