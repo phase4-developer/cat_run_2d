@@ -66,6 +66,12 @@
 | `char.dipM` (300107003) | 0.07 (내려가는 깊이, m) | HTML `newCatDip·0.07` |
 | `char.atkFrames` (300107004) | 1 (공격 이미지 유지 칸 수) | PDF |
 | `char.happySpinSec` (300107005) | 0.55 (세로축 1바퀴) | HTML `paperSpin` |
+| `char.stairRate` (300107006) | 7.5 rad/s (오르는 중 흔들림 각속도) | HTML `drawClimbCat` `w8 = now*7.5` |
+| `char.stairRockRad` (300107007) | 0.17 rad (오르는 중 기울기) | HTML `Math.sin(w8)*0.17` |
+| `char.stairBobM` (300107008) | 0.12 m (오르는 중 위로 튐) | HTML `Math.abs(Math.sin(w8))*0.12` |
+| `char.stairSwayM` (300107009) | 0.06 m (오르는 중 좌우) | HTML `Math.sin(w8)*0.06` |
+| `char.stairIdleRate` (300107010) | 3 rad/s (오르기 전 흔들림 각속도) | HTML `Math.sin(now*3)` |
+| `char.stairIdleRockRad` (300107011) | 0.05 rad (오르기 전 기울기) | HTML `*0.05` |
 
 걷기 좌우 흔들림(HTML `sway`)은 PDF에 없어 넣지 않는다.
 
@@ -130,6 +136,12 @@ MV.View/Character/
 | Hidden | 분신 자리 비활성·정산 중 분신 | — | 풀에 반환 |
 
 상태 전환은 `RunEvent`(게이트 통과·계단 Lv·무기 획득·정산 시작/끝)만 보고 정한다. 런 규칙(`MV.Run`)은 고치지 않는다.
+
+단계 4 적용(MV-VIEW-CHAR-2):
+- Happy: `GateTake`(계단·공방 게이트 통과 = HTML 두 게이트의 `paperSpin`, 공방 게이트가 PDF 「무기 업그레이드」)와 `GaugeLevelUp`(계단 Lv 상승)에서 플레이어·분신 모두. 가로 배율 = cos(2π·(1−(1−k)³)), 루트에 걸어 무기도 함께 돈다. 뒷면 종이 텍스처는 아직 없어 앞면이 뒤집혀 보인다.
+- Stair: 오르기 단계(`RunPhase.Climb`)의 플레이어. `ClimbState.Pos > 0`이면 오르는 중 흔들림, 아니면 오르기 전 흔들림. 계단 기울기(HTML `slope*0.85`)·옆으로 뒤집기·0.86배는 카메라 궤도 회전과 함께 단계 5. 분신은 단계 5까지 지금 계단 위치에서 Walk.
+- 빌보드는 프리팹 루트에 붙이고, 몸은 루트 안에서 내려감·좌우·기울기를 받는다.
+- 로비 대기 걷기: 보류. MV-SPEC-02 01 「로비와 인게임이 같은 화면(트랙 위에 서 있다)」와 지금 Unity 로비(MV-SPEC-01 02 §2.9 아지트 방, 고양이 자리 없음)가 다르다. 사용자 결정 후보.
 
 ## 6. 단계
 
