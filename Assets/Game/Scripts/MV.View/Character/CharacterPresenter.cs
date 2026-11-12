@@ -14,7 +14,8 @@ namespace MV.View
     /// 외형은 `116_charLook`(<see cref="CharLookResolver"/>: catId·자리·무기 등급 → 행)이 정하고 코드에 그림·아틀라스 이름이 없다.
     /// 플레이어 = `101_cat` key player 행, 분신 = key friend 행, 분신 i번째(0부터) = slot i. 등급 = 장착 최고 등급(<see cref="RunState.EqTier"/>).
     /// 프리팹은 <see cref="CharacterPool"/>, 그림은 행 아틀라스(<see cref="WorldSpriteCache"/>)에서. 지금 행 + 다음 등급 행 아틀라스를 미리 읽고 캐릭터 묶음별 최근 3개만 둔다(03 §3.8.8).
-    /// 그림은 <see cref="CharStateMachine"/>이 고른다(런·오르기 중 Walk, 끝나면 Stand). 쏜 순간은 런 이벤트 Fire(a = 0 플레이어, 1.. 분신)로 받는다.
+    /// 그림은 <see cref="CharStateMachine"/>이 고른다: 런 중 Walk, 끝나면 Stand, 계단 정산(오르기 단계) 중 플레이어 Stair(분신은 Walk — 정산 중 분신 숨김은 카메라 궤도 회전과 함께 5단계).
+    /// 쏜 순간은 런 이벤트 Fire(a = 0 플레이어, 1.. 분신), 기쁨은 GateTake(계단·공방 게이트 통과)·GaugeLevelUp(계단 Lv 상승)으로 모두가 함께 돈다(웹 프로토 `paperSpin`).
     /// 위치(정본 syncScene): 런 = (P.x, WY, P.z), 오르기 = <see cref="CameraModel.ClimbPlayer"/>, 분신 y = <see cref="CatLayout.StairY"/>. 정렬: 순위 Unit, 탐침 +sort.catProbeY, 안개 없음.
     /// 프리팹·그림이 로드되기 전에는 그 캐릭터를 그리지 않는다.
     /// </summary>
@@ -32,6 +33,7 @@ namespace MV.View
             public CharLookData Row;
             public readonly CharStateMachine Sm = new CharStateMachine();
             public string SpriteName;
+            public CharState Shown;
         }
 
         readonly List<Unit> _units = new List<Unit>(32);
@@ -60,8 +62,8 @@ namespace MV.View
         public CharLookData LookOf(int index) => index >= 0 && index < _units.Count ? _units[index].Row : null;
         /// <summary>마지막으로 고른 그림 이름(그림이 아직 없어도 채운다). 시험·QA용.</summary>
         public string SpriteNameOf(int index) => index >= 0 && index < _units.Count ? _units[index].SpriteName : null;
-        /// <summary>순번의 상태(시험·QA용).</summary>
-        public CharState StateOf(int index) => index >= 0 && index < _units.Count ? _units[index].Sm.State : CharState.Hidden;
+        /// <summary>순번의 마지막 프레임 상태(기쁨 겹침 포함, 시험·QA용).</summary>
+        public CharState StateOf(int index) => index >= 0 && index < _units.Count ? _units[index].Shown : CharState.Hidden;
 
         public void Init(MvTables tables, ViewConfig cfg, WorldSpriteCache sprites, Material fallbackMaterial)
         {
@@ -89,7 +91,7 @@ namespace MV.View
 
         static int CatId(MvTables t, string key) => (t.Cat.ByKey(key) ?? throw new KeyNotFoundException(CatData.Table + ": " + key)).id;
 
-        /// <summary>새 인스턴스: 정렬(순위 Unit·탐침·안개 없음)·빌보드·재질을 붙인다. 프리팹에는 그림만 둔다.</summary>
+        /// <summary>새 인스턴스: 정렬(순위 Unit·탐침·안개 없음)·빌보드(루트: 세로축 회전·흔들림을 루트 안에서 한다)·재질을 붙인다. 프리팹에는 그림만 둔다.</summary>
         void Setup(CharacterRig rig)
         {
             var go = rig.gameObject;
@@ -102,12 +104,9 @@ namespace MV.View
             ds.Bias = 0f;
             ds.SortOffsetY = (float)_cfg.CatProbeY;
             ds.Fog = false;
+            if (go.GetComponent<Billboard>() == null) go.AddComponent<Billboard>();
             var body = rig.Body;
-            if (body != null)
-            {
-                if (body.GetComponent<Billboard>() == null) body.gameObject.AddComponent<Billboard>();
-                if (_spriteMaterial != null) body.sharedMaterial = _spriteMaterial;
-            }
+            if (body != null && _spriteMaterial != null) body.sharedMaterial = _spriteMaterial;
             ds.Refresh();
         }
 
@@ -120,19 +119,28 @@ namespace MV.View
         void Park(Unit u)
         {
             u.Sm.Set(CharState.Hidden, 0);
+            u.Shown = CharState.Hidden;
             if (u.Rig != null && u.Rig.gameObject.activeSelf) u.Rig.gameObject.SetActive(false);
         }
 
-        /// <summary>런 이벤트(같은 프레임 목록): Fire의 a = 쏜 자리(0 플레이어, 1.. 분신).</summary>
+        /// <summary>런 이벤트(같은 프레임 목록): Fire의 a = 쏜 자리(0 플레이어, 1.. 분신). GateTake·GaugeLevelUp = 모두 기쁨.</summary>
         public void OnRunEvents(IReadOnlyList<RunEvent> events, double nowSec)
         {
             if (!_ready || events == null) return;
             for (int i = 0; i < events.Count; i++)
             {
                 var e = events[i];
-                if (e.Type != RunEventType.Fire) continue;
-                int unit = e.A;
-                if (unit >= 0 && unit < _units.Count) _units[unit].Sm.Shot(nowSec);
+                switch (e.Type)
+                {
+                    case RunEventType.Fire:
+                        int unit = e.A;
+                        if (unit >= 0 && unit < _units.Count) _units[unit].Sm.Shot(nowSec);
+                        break;
+                    case RunEventType.GateTake:
+                    case RunEventType.GaugeLevelUp:
+                        for (int k = 0; k < _units.Count; k++) _units[k].Sm.Happy(nowSec);
+                        break;
+                }
             }
         }
 
@@ -144,12 +152,13 @@ namespace MV.View
             TrackSteps(C);
             bool walking = C != null || s.Phase == RunPhase.Run && !s.Fin;
             var state = walking ? CharState.Walk : CharState.Stand;
+            _units[0].Sm.Climbing = C != null && C.Pos > 0;
             int tier = s.EqTier();
 
             double px = s.P.X, pz = s.P.Z, py = 0, wy = s.WorldY;
             if (C != null) CameraModel.ClimbPlayer(C.Pos, C.K, C.Z0, _stepH, _stepD, _bump, out py, out pz);
             int visible = 0;
-            if (Place(0, _playerCat, 0, tier, state, px, wy + py, pz, nowSec)) visible++;
+            if (Place(0, _playerCat, 0, tier, C != null ? CharState.Stair : state, px, wy + py, pz, nowSec)) visible++;
 
             int slots = _units.Count - 1;
             int n = Math.Min(s.Clones, slots);
@@ -181,6 +190,7 @@ namespace MV.View
 
             u.Sm.Set(state, nowSec);
             var frame = u.Sm.Evaluate(_anim, nowSec, index);
+            u.Shown = frame.State;
             u.SpriteName = CharStateMachine.SpriteOf(row, frame.Pose);
 
             if (_sprites == null) return false;   // 그림 캐시가 없으면(시험) 프리팹도 읽지 않는다
@@ -196,7 +206,7 @@ namespace MV.View
                 if (u.Rig != null && u.Rig.gameObject.activeSelf) u.Rig.gameObject.SetActive(false);
                 return false;
             }
-            u.Rig.Apply(sprite, frame.Dip, row.scale);
+            u.Rig.Apply(sprite, frame, row.scale);
             u.Rig.transform.position = new Vector3((float)x, (float)y, (float)z);
             if (!u.Rig.gameObject.activeSelf) u.Rig.gameObject.SetActive(true);
             return true;

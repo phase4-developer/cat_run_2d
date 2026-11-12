@@ -188,6 +188,18 @@ namespace MV.Data
         public const string Char_AtkFrames = "char.atkFrames";
         /// <summary>기쁨 포즈 세로축 1바퀴 시간(s).</summary>
         public const string Char_HappySpinSec = "char.happySpinSec";
+        /// <summary>계단 정산 흔들림 각속도(rad/s, 오르는 중). 웹 프로토 `drawClimbCat` w8.</summary>
+        public const string Char_StairRate = "char.stairRate";
+        /// <summary>계단 정산 기울기 진폭(rad, 오르는 중).</summary>
+        public const string Char_StairRockRad = "char.stairRockRad";
+        /// <summary>계단 정산 위아래 튐(m, 오르는 중).</summary>
+        public const string Char_StairBobM = "char.stairBobM";
+        /// <summary>계단 정산 좌우 흔들림(m, 오르는 중).</summary>
+        public const string Char_StairSwayM = "char.stairSwayM";
+        /// <summary>계단 정산 흔들림 각속도(rad/s, 오르기 전).</summary>
+        public const string Char_StairIdleRate = "char.stairIdleRate";
+        /// <summary>계단 정산 기울기 진폭(rad, 오르기 전).</summary>
+        public const string Char_StairIdleRockRad = "char.stairIdleRockRad";
 
         /// <summary>모든 키(02·06 그룹 001~008 + 07 그룹 101~106 + 캐릭터 107. 개수는 이 배열 길이. FLOOR_COUNT·LOBBY_STAIR_MAX_LV는 표 행으로 계산 — MvTables.FloorCount·StairMaxLv).</summary>
         public static readonly string[] All =
@@ -366,6 +378,12 @@ namespace MV.Data
             Char_DipM,
             Char_AtkFrames,
             Char_HappySpinSec,
+            Char_StairRate,
+            Char_StairRockRad,
+            Char_StairBobM,
+            Char_StairSwayM,
+            Char_StairIdleRate,
+            Char_StairIdleRockRad,
         };
     }
 }

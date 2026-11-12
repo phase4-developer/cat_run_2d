@@ -155,6 +155,84 @@ namespace MV.View.Tests
             Assert.That(CharStateMachine.SpriteOf(row, CharPose.WalkB), Is.EqualTo(row.walkB));
             Assert.That(CharStateMachine.SpriteOf(row, CharPose.AtkA), Is.EqualTo(row.atkA));
             Assert.That(CharStateMachine.SpriteOf(row, CharPose.AtkB), Is.EqualTo(row.atkB));
+            Assert.That(CharStateMachine.SpriteOf(row, CharPose.Happy), Is.EqualTo(row.happy));
+            Assert.That(CharStateMachine.SpriteOf(row, CharPose.Stair), Is.EqualTo(row.stair));
+        }
+
+        // ───────── 기쁨·계단 상태(MV-VIEW-CHAR-2) ─────────
+
+        [Test]
+        public void CharAnim_ReadsHappyAndStairKeysFromRunConfig()
+        {
+            var t = ViewTestTables.Load();
+            var c = t.RunConfig;
+            var p = CharAnimParams.From(t);
+            Assert.That(p.HappySpinSec, Is.EqualTo(c.D(RunConfigKeys.Char_HappySpinSec)));
+            Assert.That(p.StairRate, Is.EqualTo(c.D(RunConfigKeys.Char_StairRate)));
+            Assert.That(p.StairRockRad, Is.EqualTo(c.D(RunConfigKeys.Char_StairRockRad)));
+            Assert.That(p.StairBobM, Is.EqualTo(c.D(RunConfigKeys.Char_StairBobM)));
+            Assert.That(p.StairSwayM, Is.EqualTo(c.D(RunConfigKeys.Char_StairSwayM)));
+            Assert.That(p.StairIdleRate, Is.EqualTo(c.D(RunConfigKeys.Char_StairIdleRate)));
+            Assert.That(p.StairIdleRockRad, Is.EqualTo(c.D(RunConfigKeys.Char_StairIdleRockRad)));
+        }
+
+        [Test]
+        public void Happy_SpinsHappyPoseOverWalk_ThenReturnsToWalk()
+        {
+            var p = Anim();
+            var sm = new CharStateMachine();
+            sm.Set(CharState.Walk, 0);
+            double t0 = 3.3;
+            sm.Happy(t0);
+            var start = sm.Evaluate(p, t0, 0);
+            Assert.That(start.State, Is.EqualTo(CharState.Happy));
+            Assert.That(start.Pose, Is.EqualTo(CharPose.Happy));
+            Assert.That(start.FlipX, Is.EqualTo(1).Within(1e-12), "시작은 앞면");
+            Assert.That(start.Dip, Is.EqualTo(0), "포즈 유지");
+            double half = 1 - Math.Pow(0.5, 1.0 / 3);   // e = 0.5(반 바퀴) 시점
+            Assert.That(sm.Evaluate(p, t0 + half * p.HappySpinSec, 0).FlipX, Is.EqualTo(-1).Within(1e-9), "반 바퀴면 뒷면");
+            var after = sm.Evaluate(p, t0 + p.HappySpinSec, 0);
+            Assert.That(after.State, Is.EqualTo(CharState.Walk), "1바퀴 뒤 걷기");
+            Assert.That(after.FlipX, Is.EqualTo(1));
+            Assert.That(sm.Evaluate(p, t0 - 0.01, 0).State, Is.EqualTo(CharState.Walk), "받기 전 시각은 걷기");
+            Assert.That(CharStateMachine.SpinFlip(0.999), Is.EqualTo(1).Within(1e-6), "끝에서 앞면으로 돌아온다");
+        }
+
+        [Test]
+        public void Happy_AlsoOverStand_NotOverStairOrHidden()
+        {
+            var p = Anim();
+            var sm = new CharStateMachine();
+            sm.Set(CharState.Stand, 0);
+            sm.Happy(1);
+            Assert.That(sm.Evaluate(p, 1.1, 0).State, Is.EqualTo(CharState.Happy));
+            sm.Set(CharState.Stair, 1);
+            Assert.That(sm.Evaluate(p, 1.1, 0).State, Is.EqualTo(CharState.Stair));
+            sm.Set(CharState.Hidden, 1);
+            Assert.That(sm.Evaluate(p, 1.1, 0).State, Is.EqualTo(CharState.Hidden));
+        }
+
+        [Test]
+        public void Stair_HoldsStairPose_ShakesWhileClimbing_RocksBeforeClimb()
+        {
+            var p = Anim();
+            var sm = new CharStateMachine();
+            sm.Set(CharState.Stair, 0);
+            sm.Shot(0.1);
+            double idleAt = Math.PI / 2 / p.StairIdleRate;
+            var idle = sm.Evaluate(p, idleAt, 0);
+            Assert.That(idle.Pose, Is.EqualTo(CharPose.Stair), "공격 그림이 겹치지 않는다");
+            Assert.That(idle.Roll, Is.EqualTo(p.StairIdleRockRad).Within(1e-9));
+            Assert.That(idle.Dip, Is.EqualTo(0));
+            Assert.That(idle.SwayX, Is.EqualTo(0));
+            sm.Climbing = true;
+            double at = Math.PI / 2 / p.StairRate;   // sin = 1
+            var up = sm.Evaluate(p, at, 0);
+            Assert.That(up.Pose, Is.EqualTo(CharPose.Stair));
+            Assert.That(up.Roll, Is.EqualTo(p.StairRockRad).Within(1e-9));
+            Assert.That(up.Dip, Is.EqualTo(-p.StairBobM).Within(1e-9), "위로 튐");
+            Assert.That(up.SwayX, Is.EqualTo(p.StairSwayM).Within(1e-9));
+            Assert.That(sm.Evaluate(p, at * 3, 0).Dip, Is.EqualTo(-p.StairBobM).Within(1e-9), "sin = −1에서도 위로");
         }
 
         // ───────── 캐릭터 뷰 구조 ─────────
@@ -208,6 +286,45 @@ namespace MV.View.Tests
             view.Sync(s, at + p.FrameSec * 0.1);
             Assert.That(view.SpriteNameOf(1), Is.EqualTo(view.LookOf(1).atkB), "쏜 분신은 공격 그림");
             Assert.That(view.SpriteNameOf(0), Is.EqualTo(view.LookOf(0).walkA), "쏘지 않은 플레이어는 걷기");
+        }
+
+        [TestCase(RunEventType.GateTake)]
+        [TestCase(RunEventType.GaugeLevelUp)]
+        public void CharacterPresenter_HappyEventSpinsEveryone(RunEventType type)
+        {
+            var t = ViewTestTables.Load();
+            var go = new GameObject("Cats");
+            _made.Add(go);
+            var view = go.AddComponent<CharacterPresenter>();
+            view.Init(t, ViewTestTables.Config(), null, null);
+            var p = Anim();
+            var s = new RunState(null, t, new Pcg32Rng(1));
+            s.Clones = 1;
+            view.OnRunEvents(new[] { new RunEvent(type) }, 2.0);
+            view.Sync(s, 2.0 + p.HappySpinSec * 0.5);
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Happy));
+            Assert.That(view.StateOf(1), Is.EqualTo(CharState.Happy));
+            Assert.That(view.SpriteNameOf(0), Is.EqualTo(view.LookOf(0).happy));
+            view.Sync(s, 2.0 + p.HappySpinSec);
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Walk), "1바퀴 뒤 걷기");
+        }
+
+        [Test]
+        public void CharacterPresenter_ClimbPhase_PlayerStair_ClonesWalk()
+        {
+            var t = ViewTestTables.Load();
+            var go = new GameObject("Cats");
+            _made.Add(go);
+            var view = go.AddComponent<CharacterPresenter>();
+            view.Init(t, ViewTestTables.Config(), null, null);
+            var s = new RunState(null, t, new Pcg32Rng(1));
+            s.Clones = 1;
+            s.Phase = RunPhase.Climb;
+            s.Climb = new ClimbState { N = 3, K = 3, Z0 = s.P.Z, ZEnd = s.P.Z + 3, T = 1 };
+            view.Sync(s, 1.0);
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Stair));
+            Assert.That(view.SpriteNameOf(0), Is.EqualTo(view.LookOf(0).stair));
+            Assert.That(view.StateOf(1), Is.EqualTo(CharState.Walk), "분신 숨김은 5단계(카메라 궤도 회전)");
         }
 
         // ───────── 오브젝트 반응 순수 계산 ─────────

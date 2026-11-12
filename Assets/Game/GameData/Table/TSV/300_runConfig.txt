@@ -173,3 +173,9 @@ id	name	key	value	unit
 300107003	걷기 내려감 깊이	char.dipM	0.07	m
 300107004	공격 그림 유지 칸 수	char.atkFrames	1	칸
 300107005	기쁨 세로축 1바퀴 시간	char.happySpinSec	0.55	s
+300107006	계단 정산 흔들림 각속도(오르는 중)	char.stairRate	7.5	rad/s
+300107007	계단 정산 기울기 진폭(오르는 중)	char.stairRockRad	0.17	rad
+300107008	계단 정산 위아래 튐(오르는 중)	char.stairBobM	0.12	m
+300107009	계단 정산 좌우 흔들림(오르는 중)	char.stairSwayM	0.06	m
+300107010	계단 정산 흔들림 각속도(오르기 전)	char.stairIdleRate	3	rad/s
+300107011	계단 정산 기울기 진폭(오르기 전)	char.stairIdleRockRad	0.05	rad
