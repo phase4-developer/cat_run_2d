@@ -41,10 +41,10 @@
 | 열 | 뜻 | 플레이어 예 | 분신 예 |
 |---|---|---|---|
 | id | `116001001`~ | 116001001 | 116002001 |
-| name | 표시용 | 냥법사 세트 0 | 분신 샴 |
-| key | | `cat_0` | `clone_siamese` |
+| name | 사람용 용어 | 플레이어 외형 세트 0 | 분신 외형 샴 |
+| key | | `player_0` | `clone_siamese` |
 | catId | `101_cat` 행 | 101001001 | 101001002 |
-| slot | 자리 순서. 플레이어 0, 분신은 종족 순서 1.. (분신 i번째 자리 = slot i 행, 없으면 마지막 slot) | 0 | 1 |
+| slot | 자리 순서. 캐릭터(catId)마다 0부터 연속. 분신 i번째(0부터) = slot i 행, 없으면 마지막 slot | 0 | 0 |
 | fromTier | 이 외형을 쓰기 시작하는 무기 등급(PDF: 세트 n = 등급 n+1부터). 같은 catId·slot 안에서 현재 등급 이하 중 가장 큰 행 | 1 | 1 |
 | prefab | Addressables 주소 | `Char_Cat` | `Char_Clone` |
 | atlas | 이 행 이미지가 든 SpriteAtlas 주소 | `atlas_player_0` | `atlas_clone_siamese` |
@@ -55,16 +55,17 @@
 
 - 플레이어 12행(세트 0~11, fromTier 1~12), 분신 1행(샴). `101_cat`의 `spritePrefix`·`atlasPattern`·`tierCount`·`patternCount`는 이 표로 옮겨지고 삭제 후보(행 수로 계산되는 값이라 표에 따로 두지 않는다).
 - 아틀라스 이름은 PDF에 없다. 위 `atlas_*`는 [결정 후보 C-1].
+- 단계 2 적용(MV-DATA-CHARLOOK): 그림 이름 확인은 에디터 시험 `CharLookRows_ReferenceRegisteredArt`(행 아틀라스 묶음 안에 그림이 있는지), 구조 검증은 `MvTableValidator.CheckCharLook`(slot 0부터 연속, slot마다 fromTier 1 행, fromTier 겹침 없음, scale > 0), 고르기는 `CharLookResolver`.
 
 ### 3.2 공통 재생 값 `300_runConfig` 키
 
 | 키 | 값 | 출처 |
 |---|---|---|
-| `CHAR_FRAME_SEC` | 0.25 | PDF 재생 규칙 |
-| `CHAR_DIP_AT` | 0.5 (한 칸 안 비율 → 0.125초) | PDF |
-| `CHAR_DIP_M` | 0.07 (내려가는 깊이, m) | HTML `newCatDip·0.07` |
-| `CHAR_ATK_FRAMES` | 1 (공격 이미지 유지 칸 수) | PDF |
-| `CHAR_HAPPY_SPIN_SEC` | 0.55 (세로축 1바퀴) | HTML `paperSpin` |
+| `char.frameSec` (300107001) | 0.25 | PDF 재생 규칙 |
+| `char.dipAt` (300107002) | 0.5 (한 칸 안 비율 → 0.125초) | PDF |
+| `char.dipM` (300107003) | 0.07 (내려가는 깊이, m) | HTML `newCatDip·0.07` |
+| `char.atkFrames` (300107004) | 1 (공격 이미지 유지 칸 수) | PDF |
+| `char.happySpinSec` (300107005) | 0.55 (세로축 1바퀴) | HTML `paperSpin` |
 
 걷기 좌우 흔들림(HTML `sway`)은 PDF에 없어 넣지 않는다.
 
@@ -122,9 +123,9 @@ MV.View/Character/
 
 | 상태 | 들어가는 조건 | 그림 | 움직임 |
 |---|---|---|---|
-| Walk | 런 진행 중 / 로비 대기 | A·B를 `CHAR_FRAME_SEC`마다 교대 | 칸 `CHAR_DIP_AT`에서 `CHAR_DIP_M`만큼 내려갔다 올라옴 |
-| Attack (Walk 위에 겹침) | 쏜 순간부터 `CHAR_ATK_FRAMES`칸 | A 차례면 atkA, B 차례면 atkB | Walk와 같음 |
-| Happy | 게이트 통과, 계단 Lv 상승, 무기 업그레이드 | happy(지금 더미) | 세로축 회전 `CHAR_HAPPY_SPIN_SEC`, 끝나면 Walk |
+| Walk | 런 진행 중 / 로비 대기 | A·B를 `char.frameSec`마다 교대 | 칸 `char.dipAt`에서 `char.dipM`만큼 내려갔다 올라옴 |
+| Attack (Walk 위에 겹침) | 쏜 순간부터 `char.atkFrames`칸 | A 차례면 atkA, B 차례면 atkB | Walk와 같음 |
+| Happy | 게이트 통과, 계단 Lv 상승, 무기 업그레이드 | happy(지금 더미) | 세로축 회전 `char.happySpinSec`, 끝나면 Walk |
 | Stair | 계단 정산 시작~끝 | stair(지금 더미) | 흔들림은 코드(PDF). 위치는 지금 계단 오르기 계산 그대로 |
 | Hidden | 분신 자리 비활성·정산 중 분신 | — | 풀에 반환 |
 

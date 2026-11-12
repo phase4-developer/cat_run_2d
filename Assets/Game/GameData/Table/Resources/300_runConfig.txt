@@ -168,3 +168,8 @@
 300106009	손패 모으기 이동 계수	ui.hand.moveMul	0.9	배
 300106010	손패 머지 뒤 쉼 상한	ui.hand.afterMax	0.04	s
 300106011	손패 머지 뒤 쉼 계수	ui.hand.afterMul	0.08	배
+300107001	캐릭터 그림 한 칸 시간(디자이너 PDF 재생 규칙)	char.frameSec	0.25	s
+300107002	걷기 내려감 시점(한 칸 안 비율)	char.dipAt	0.5	배
+300107003	걷기 내려감 깊이	char.dipM	0.07	m
+300107004	공격 그림 유지 칸 수	char.atkFrames	1	칸
+300107005	기쁨 세로축 1바퀴 시간	char.happySpinSec	0.55	s
