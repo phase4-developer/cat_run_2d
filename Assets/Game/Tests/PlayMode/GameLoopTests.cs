@@ -56,7 +56,7 @@ namespace MV.Tests
             Assert.AreEqual(BootState.Succeeded, GameBootstrap.State, GameBootstrap.LastError?.ToString());
             Assert.IsTrue(GameBootstrap.ServicesReady);
 
-            // 로비: Game 씬 초기화가 월드·로비 무대를 만들고 로비 화면을 열었다.
+            // 로비: Game 씬 초기화가 월드를 만들고 로비 화면을 열었다. 로비는 트랙 위 같은 화면(MV-SPEC-02 01 §3).
             var loop = MvGameLoop.Current;
             Assert.IsNotNull(loop, "Game 씬에 게임 루프가 없다");
             Assert.AreEqual(MvLoopPhase.Lobby, loop.Phase);
@@ -65,11 +65,11 @@ namespace MV.Tests
             long settledBefore = store.Progress.LastSettledRunSeq;
             Assert.IsTrue(loop.FxMaterialsLoaded, "이펙트 머티리얼(Fx/Mat_Normal·Fx/Mat_Add)을 읽지 못했다");
 
-            // 로비 시설 단계: 진입 때 넣고, 강화 반짝임(OnFacilityBump)이 다시 넣는다(로그 오류는 시험 실패).
-            Assert.Greater(loop.FacilityApplyCount, 0, "로비 진입이 시설 단계를 넣지 않았다");
-            int applied = loop.FacilityApplyCount;
-            loop.BumpFacility("tower");
-            Assert.AreEqual(applied + 1, loop.FacilityApplyCount, "강화 반짝임이 시설 단계를 다시 넣지 않았다");
+            // 로비 트랙: 월드 카메라가 그리고, 다음 런 배치의 앞부분이 깔려 있고, 미리보기 런은 Tick하지 않는다.
+            Assert.IsTrue(loop.WorldCameraActive, "로비가 월드 카메라로 그려지지 않는다");
+            Assert.Greater(loop.LobbyObjectCount, 0, "로비 트랙에 오브젝트가 없다");
+            Assert.IsNotNull(loop.LobbyState);
+            Assert.AreEqual(0L, loop.LobbyState.Frame, "로비 미리보기 런이 진행됐다");
 
             // 출발: 같은 프레임에 런이 시작된다. 스크립트 입력(좌우 드래그)으로 빠르게 돈다.
             loop.FixedDt = 0.05;
@@ -127,17 +127,9 @@ namespace MV.Tests
             Assert.AreEqual(1, loop.SettleCount);
             Assert.Greater(_prefs.Count, 0, "정산이 시험 메모리 저장소에 써지지 않았다");
 
-            // 로비에 있는 동안 주기(기본 1초)마다 시설 단계를 다시 넣는다(메타 팝업을 닫은 뒤 반영).
-            // 시험은 간격을 0으로 줄여 기다리지 않는다(로비에 1초 넘게 머물면 TMP 설정 없음 지연 창이 배치 모드 오류를 낸다).
-            loop.FacilityRefreshSec = 0f;
-            applied = loop.FacilityApplyCount;
-            elapsed = 0f;
-            while (loop.FacilityApplyCount == applied && elapsed < 3f)
-            {
-                elapsed += Time.unscaledDeltaTime;
-                yield return null;
-            }
-            Assert.Greater(loop.FacilityApplyCount, applied, "로비에서 시설 단계를 주기적으로 다시 넣지 않았다");
+            // 돌아온 로비도 트랙 위: 다음 순번 배치를 다시 깐다.
+            Assert.IsTrue(loop.WorldCameraActive, "돌아온 로비가 월드 카메라로 그려지지 않는다");
+            Assert.Greater(loop.LobbyObjectCount, 0, "돌아온 로비 트랙에 오브젝트가 없다");
         }
 
         /// <summary>저장의 벽 기록 JSON → Floor별 칸 HP. 빈 칸(null)·없는 Floor·다른 Area는 비운다. cells = 읽은 칸 합(−1 = 기록 없음).</summary>

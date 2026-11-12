@@ -44,7 +44,7 @@ namespace MV.UI
         /// <summary>강화·잠금·메타 화면 입구. 비우면 <see cref="MvMetaUiPort.Instance"/>(<c>MvMeta.Current</c>).</summary>
         public IMetaUiPort Port;
         /// <summary>
-        /// 강화 구매로 시설이 반짝일 때(시설 key, 정본 <c>AZ.bump</c>). 게임 루프가 시설 단계를 다시 넣고 <c>LobbyStage.Bump(key)</c>를 부른다.
+        /// 강화 구매로 시설이 반짝일 때(시설 key, 정본 <c>AZ.bump</c>). 로비 트랙 전환(MV-VIEW-LOBBY-TRACK) 뒤 게임 루프는 넘기지 않는다(null). 아지트 방 코드는 정리 대기.
         /// </summary>
         public Action<string> OnFacilityBump;
     }

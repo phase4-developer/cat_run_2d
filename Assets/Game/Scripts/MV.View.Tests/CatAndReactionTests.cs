@@ -327,6 +327,24 @@ namespace MV.View.Tests
             Assert.That(view.StateOf(1), Is.EqualTo(CharState.Walk), "분신 숨김은 5단계(카메라 궤도 회전)");
         }
 
+        // ───────── 로비 트랙(MV-VIEW-LOBBY-TRACK) ─────────
+
+        [Test]
+        public void LobbyTrack_KeepsObjectsWithinZMaxOfBase_InOrder()
+        {
+            var t = ViewTestTables.Load();
+            double zMax = t.RunConfig.D(RunConfigKeys.Lobby_ObjZMax);
+            const double baseZ = 12;
+            var objs = new List<RunObject>();
+            foreach (double z in new[] { baseZ, baseZ + zMax * 0.5, baseZ + zMax - 1e-6, baseZ + zMax, baseZ + zMax * 2 })
+                objs.Add(new RunObject { Z = z });
+            var picked = new List<RunObject> { new RunObject() };
+            LobbyTrack.Pick(objs, baseZ, zMax, picked);
+            Assert.That(picked, Is.EqualTo(objs.Take(3).ToList()), "시작점 + zMax 미만만, 순서 그대로");
+            LobbyTrack.Pick(null, baseZ, zMax, picked);
+            Assert.That(picked, Is.Empty);
+        }
+
         // ───────── 오브젝트 반응 순수 계산 ─────────
 
         [Test]

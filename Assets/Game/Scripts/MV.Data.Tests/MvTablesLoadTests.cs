@@ -18,7 +18,7 @@ namespace MV.Data.Tests
             ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 12, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,
             ["107_chargeGate"] = 3, ["108_receiveCondition"] = 7, ["109_moveAI"] = 3, ["110_card"] = 92, ["111_cardPool"] = 11,
             ["112_cardEffect"] = 26, ["113_god"] = 12, ["114_hpRule"] = 7, ["115_cardTier"] = 5, ["116_charLook"] = 13,
-            ["300_runConfig"] = 180, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15,
+            ["300_runConfig"] = 181, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15,
             ["310_template"] = 10, ["311_templateObject"] = 123, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
             ["314_spawnGroup"] = 35, ["320_camera"] = 3, ["330_climb"] = 5,
             ["400_content"] = 5, ["401_modeStage"] = 53, ["402_modeRule"] = 4, ["410_questGroup"] = 14, ["413_repeatQuest"] = 16,

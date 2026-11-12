@@ -200,8 +200,10 @@ namespace MV.Data
         public const string Char_StairIdleRate = "char.stairIdleRate";
         /// <summary>계단 정산 기울기 진폭(rad, 오르기 전).</summary>
         public const string Char_StairIdleRockRad = "char.stairIdleRockRad";
+        /// <summary>로비 트랙에 까는 오브젝트 범위(m, 시작점에서 z 거리). 정본 `toLobby` `makeObjs(...).filter(o =&gt; o.z &lt; 70)`(MV-SPEC-01 04 §4.13.1, MV-SPEC-02 01 「로비와 인게임이 같은 화면」).</summary>
+        public const string Lobby_ObjZMax = "lobby.objZMax";
 
-        /// <summary>모든 키(02·06 그룹 001~008 + 07 그룹 101~106 + 캐릭터 107. 개수는 이 배열 길이. FLOOR_COUNT·LOBBY_STAIR_MAX_LV는 표 행으로 계산 — MvTables.FloorCount·StairMaxLv).</summary>
+        /// <summary>모든 키(02·06 그룹 001~008 + 07 그룹 101~106 + 캐릭터 107 + 로비 108. 개수는 이 배열 길이. FLOOR_COUNT·LOBBY_STAIR_MAX_LV는 표 행으로 계산 — MvTables.FloorCount·StairMaxLv).</summary>
         public static readonly string[] All =
         {
             Time_DtCap,
@@ -384,6 +386,7 @@ namespace MV.Data
             Char_StairSwayM,
             Char_StairIdleRate,
             Char_StairIdleRockRad,
+            Lobby_ObjZMax,
         };
     }
 }
