@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.artress.managed-addressables": {
-      "version": "file:Frozen/com.artress.managed-addressables-1.3.12-pre.18.tgz",
+      "version": "file:Frozen/com.artress.managed-addressables-1.3.12-pre.19.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -153,7 +153,7 @@
       }
     },
     "com.jjevol.effects": {
-      "version": "file:Frozen/com.jjevol.effects-0.1.0-pre.3.tgz",
+      "version": "file:Frozen/com.jjevol.effects-0.1.0-pre.4.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -173,7 +173,7 @@
       }
     },
     "com.jjevol.effects.coffee": {
-      "version": "file:Frozen/com.jjevol.effects.coffee-0.1.0-pre.1.tgz",
+      "version": "file:Frozen/com.jjevol.effects.coffee-0.1.0-pre.2.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -203,37 +203,47 @@
       }
     },
     "com.jjevol.effects.ui": {
-      "version": "file:Frozen/com.jjevol.effects.ui-0.1.0-pre.3.tgz",
+      "version": "file:Frozen/com.jjevol.effects.ui-0.1.0-pre.4.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
         "com.jjevol.effects": "0.1.0-pre.2",
-        "com.jjevol.ui.addressables": "0.1.0-pre.4",
+        "com.jjevol.ui.addressables": "0.1.0-pre.6",
         "com.unity.ugui": "2.0.0",
         "com.cysharp.unitask": "2.5.11"
       }
     },
     "com.jjevol.localization": {
-      "version": "file:Frozen/com.jjevol.localization-0.1.0-pre.3.tgz",
+      "version": "file:Frozen/com.jjevol.localization-0.1.0-pre.5.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
         "com.jjevol.resources.addressables": "0.1.0-pre.3",
         "com.unity.localization": "1.5.12",
-        "com.unity.ugui": "2.0.0",
-        "com.unity.addressables": "4.0.1"
+        "com.unity.addressables": "4.0.1",
+        "com.cysharp.unitask": "2.5.11"
       }
     },
     "com.jjevol.localization.authoring": {
-      "version": "file:Frozen/com.jjevol.localization.authoring-0.1.0-pre.12.tgz",
+      "version": "file:Frozen/com.jjevol.localization.authoring-0.1.0-pre.14.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
-        "com.jjevol.localization": "0.1.0-pre.3",
+        "com.jjevol.localization": "0.1.0-pre.4",
         "com.jjevol.tables.authoring": "0.1.0-pre.10",
         "com.unity.localization": "1.5.12",
         "com.unity.addressables": "4.0.1",
         "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "com.jjevol.localization.tmp": {
+      "version": "file:Frozen/com.jjevol.localization.tmp-0.1.0-pre.1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.localization": "0.1.0-pre.4",
+        "com.unity.localization": "1.5.12",
+        "com.unity.ugui": "2.0.0"
       }
     },
     "com.jjevol.platform.ads": {
@@ -322,15 +332,6 @@
       "dependencies": {
         "com.jjevol.data": "0.1.0-pre.1",
         "com.jjevol.platform.network": "0.1.0-pre.2",
-        "com.unity.nuget.newtonsoft-json": "3.2.2"
-      }
-    },
-    "com.jjevol.platform.network.firebase": {
-      "version": "file:Frozen/com.jjevol.platform.network.firebase-0.1.0-pre.1.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.jjevol.platform.network": "0.1.0-pre.1",
         "com.unity.nuget.newtonsoft-json": "3.2.2"
       }
     },
@@ -452,14 +453,14 @@
       }
     },
     "com.jjevol.scene.ui": {
-      "version": "file:Frozen/com.jjevol.scene.ui-0.1.0-pre.3.tgz",
+      "version": "file:Frozen/com.jjevol.scene.ui-0.1.0-pre.4.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
         "com.jjevol.scene": "0.1.0-pre.2",
-        "com.jjevol.ui": "0.1.0-pre.2",
-        "com.jjevol.ui.addressables": "0.1.0-pre.4",
-        "com.jjevol.ui.urp": "0.1.0-pre.6",
+        "com.jjevol.ui": "0.1.0-pre.3",
+        "com.jjevol.ui.addressables": "0.1.0-pre.6",
+        "com.jjevol.ui.urp": "0.1.0-pre.8",
         "com.cysharp.unitask": "2.5.11"
       }
     },
@@ -478,20 +479,22 @@
       }
     },
     "com.jjevol.ui": {
-      "version": "file:Frozen/com.jjevol.ui-0.1.0-pre.2.tgz",
+      "version": "file:Frozen/com.jjevol.ui-0.1.0-pre.3.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
+        "com.jjevol.ui.contracts": "0.1.0-pre.1",
         "com.unity.ugui": "2.0.0",
-        "com.cysharp.unitask": "2.5.10"
+        "com.cysharp.unitask": "2.5.11"
       }
     },
     "com.jjevol.ui.addressables": {
-      "version": "file:Frozen/com.jjevol.ui.addressables-0.1.0-pre.5.tgz",
+      "version": "file:Frozen/com.jjevol.ui.addressables-0.1.0-pre.6.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
-        "com.jjevol.ui": "0.1.0-pre.2",
+        "com.jjevol.ui": "0.1.0-pre.3",
+        "com.jjevol.ui.contracts": "0.1.0-pre.1",
         "com.jjevol.resources.addressables": "0.1.0-pre.3",
         "com.jjevol.audio": "0.1.0-pre.3",
         "com.jjevol.effects": "0.1.0-pre.2",
@@ -500,29 +503,38 @@
         "com.cysharp.unitask": "2.5.11"
       }
     },
-    "com.jjevol.ui.dotween-pro": {
-      "version": "file:Frozen/com.jjevol.ui.dotween-pro-0.1.0-pre.2.tgz",
+    "com.jjevol.ui.contracts": {
+      "version": "file:Frozen/com.jjevol.ui.contracts-0.1.0-pre.1.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
-        "com.jjevol.ui": "0.1.0-pre.2"
+        "com.unity.addressables": "4.0.1"
+      }
+    },
+    "com.jjevol.ui.dotween-pro": {
+      "version": "file:Frozen/com.jjevol.ui.dotween-pro-0.1.0-pre.3.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.jjevol.ui": "0.1.0-pre.3"
       }
     },
     "com.jjevol.ui.economy": {
-      "version": "file:Frozen/com.jjevol.ui.economy-0.1.0-pre.5-beta.f39bd53.tgz",
+      "version": "file:Frozen/com.jjevol.ui.economy-0.1.0-pre.6.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
-        "com.jjevol.ui.addressables": "0.1.0-pre.4",
+        "com.jjevol.ui.addressables": "0.1.0-pre.6",
         "com.jjevol.economy": "0.1.0-pre.4"
       }
     },
     "com.jjevol.ui.urp": {
-      "version": "file:Frozen/com.jjevol.ui.urp-0.1.0-pre.7.tgz",
+      "version": "file:Frozen/com.jjevol.ui.urp-0.1.0-pre.8.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
-        "com.jjevol.ui.addressables": "0.1.0-pre.4",
+        "com.jjevol.ui.addressables": "0.1.0-pre.6",
+        "com.jjevol.ui.contracts": "0.1.0-pre.1",
         "com.unity.render-pipelines.universal": "17.3.0",
         "com.cysharp.unitask": "2.5.11"
       }
