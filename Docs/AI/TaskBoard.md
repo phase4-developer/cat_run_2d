@@ -12,7 +12,7 @@
 | MV-TOOL-ART 그림 | 완료(G2) | 3차 `72ba086`, 4차 `ce87826` | `UI_Skin_MapZone_Z4~Z6` 임시 아트, D-ART-01~06 |
 | MV-TOOL-SND 소리 굽기 | 완료(2차 tierup_0) | `922cad9` | 효과음 31·`03_sound` 33행, 청취 NOT_RUN. 오디오 Addressables 그룹 없음(33개 미등록) → PLAY-INT 통합 |
 | MV-ART-ATLAS 아틀라스 | 부분 완료 | `12f354d` | 실측 패킹·메모리 NOT_RUN, D-MVDATA-PET `Atlas_World_Pet` 규칙 행 |
-| MV-ART-CHAR 디자이너 리소스 적용 | 0단계(설계) 완료(2026-11-12) | 브랜치 `ai/MV-ART-CHAR-0-design` | 설계 `Docs/MV-SPEC-02/ArtResourcePlan.md` 단계 1~4 다음 계약(1 리소스 등록·Addressables는 총괄 단독), 5·6은 리소스 Git 도착 대기. 결정 후보 C-1~C-3 |
+| MV-ART-CHAR 디자이너 리소스 적용 | 0단계 설계 dev `9ed5148b`, 1단계 리소스 등록 완료(2026-11-12) | 1단계 브랜치 `ai/MV-ART-CHAR-1-register` 시험 PASS `c054e84e` | 1단계: PNG 52장 피벗 발 기준·PPU 161·원본 무압축, 아틀라스 13개(`atlas_player_0~11`, `atlas_clone_siamese`, ASTC 6x6 Tight), `Local_Character` 그룹(라벨 `char`)에 아틀라스·`Char_Cat`·`Char_Clone` 주소. 검증: compile·MV.Editor.Tests EditMode 32/32 PASS(잡 `7d6d777864df`). dev 전체 시험 NOT_RUN(확인 완화). 실측 패킹 크기 NOT_RUN. 다음: 2단계 `116_charLook` 표(MV-DATA-CHARLOOK). 프리팹이 기본 그림을 직접 참조해 번들 중복 가능 → 3단계에서 정리. 5·6단계는 리소스 Git 도착 대기 |
 | MV-QA-HARNESS | 프로토 쪽 완료 | `63c76dc` | Unity 쪽(VIEW 뒤, D-87로 참고 보고서) |
 | MV-RUN-SIM / GEN | 완료(G2·G3) | `23cec8a` | — |
 | MV-RUN-RULE 확장 지점 | 완료 | `cfe1f46` | 402 표 연결, G7 `IModeRule` |
