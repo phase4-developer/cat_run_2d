@@ -580,4 +580,52 @@ namespace MV.Data
             cardSound = S(r, "cardSound");
         }
     }
+
+    /// <summary>
+    /// 116_charLook — 캐릭터 외형(MV-SPEC-02 ArtResourcePlan §2, 디자이너 PDF 「(신작)배경 리소스 관리 예상」).
+    /// 캐릭터(catId)·자리(slot)·무기 등급(fromTier)마다 프리팹·아틀라스·포즈 그림 이름. 고르기는 <see cref="CharLookResolver"/>.
+    /// 그림 이름 확인은 에디터 시험(캐릭터 아틀라스 묶음)이 한다.
+    /// </summary>
+    public sealed class CharLookData : MvRow
+    {
+        public const string Table = "116_charLook";
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Fk("catId", CatData.Table, true).Int("slot", true).Int("fromTier", true)
+            .Str("prefab", true).Str("atlas", true).Str("walkA", true).Str("walkB", true).Str("atkA", true).Str("atkB", true)
+            .Str("happy", true).Str("stair", true).Float("scale", true);
+
+        public int catId { get; private set; }
+        /// <summary>자리 순서. 플레이어 0, 분신은 i번째 분신 = slot i(없으면 마지막 slot).</summary>
+        public int slot { get; private set; }
+        /// <summary>이 외형을 쓰기 시작하는 무기 등급.</summary>
+        public int fromTier { get; private set; }
+        public string prefab { get; private set; }
+        public string atlas { get; private set; }
+        public string walkA { get; private set; }
+        public string walkB { get; private set; }
+        public string atkA { get; private set; }
+        public string atkB { get; private set; }
+        public string happy { get; private set; }
+        public string stair { get; private set; }
+        /// <summary>리소스 크기에 곱하는 추가 배율.</summary>
+        public double scale { get; private set; }
+
+        public CharLookData(TSVRow r) : base(r) { }
+
+        public override void Init(TSVRow r)
+        {
+            base.Init(r);
+            catId = I(r, "catId");
+            slot = I(r, "slot");
+            fromTier = I(r, "fromTier");
+            prefab = S(r, "prefab");
+            atlas = S(r, "atlas");
+            walkA = S(r, "walkA");
+            walkB = S(r, "walkB");
+            atkA = S(r, "atkA");
+            atkB = S(r, "atkB");
+            happy = S(r, "happy");
+            stair = S(r, "stair");
+            scale = D(r, "scale");
+        }
+    }
 }

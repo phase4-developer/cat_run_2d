@@ -178,8 +178,18 @@ namespace MV.Data
         public const string Ui_Hand_MoveMul = "ui.hand.moveMul";
         public const string Ui_Hand_AfterMax = "ui.hand.afterMax";
         public const string Ui_Hand_AfterMul = "ui.hand.afterMul";
+        /// <summary>캐릭터 그림 한 칸 시간(디자이너 PDF 재생 규칙, MV-SPEC-02 ArtResourcePlan §3).</summary>
+        public const string Char_FrameSec = "char.frameSec";
+        /// <summary>걷기 내려감 시점(한 칸 안 비율).</summary>
+        public const string Char_DipAt = "char.dipAt";
+        /// <summary>걷기 내려감 깊이(m).</summary>
+        public const string Char_DipM = "char.dipM";
+        /// <summary>공격 그림(C·D) 유지 칸 수.</summary>
+        public const string Char_AtkFrames = "char.atkFrames";
+        /// <summary>기쁨 포즈 세로축 1바퀴 시간(s).</summary>
+        public const string Char_HappySpinSec = "char.happySpinSec";
 
-        /// <summary>모든 키(164개: 02·06 그룹 001~008 95개 + 07 그룹 101~106 69개. FLOOR_COUNT·LOBBY_STAIR_MAX_LV는 표 행으로 계산 — MvTables.FloorCount·StairMaxLv).</summary>
+        /// <summary>모든 키(02·06 그룹 001~008 + 07 그룹 101~106 + 캐릭터 107. 개수는 이 배열 길이. FLOOR_COUNT·LOBBY_STAIR_MAX_LV는 표 행으로 계산 — MvTables.FloorCount·StairMaxLv).</summary>
         public static readonly string[] All =
         {
             Time_DtCap,
@@ -351,6 +361,11 @@ namespace MV.Data
             Ui_Hand_MoveMul,
             Ui_Hand_AfterMax,
             Ui_Hand_AfterMul,
+            Char_FrameSec,
+            Char_DipAt,
+            Char_DipM,
+            Char_AtkFrames,
+            Char_HappySpinSec,
         };
     }
 }

@@ -30,6 +30,37 @@ namespace MV.Data
             CheckContentData(t, r);
             CheckMetaSystems(t, r);
             CheckModesAndShop(t, r);
+            CheckCharLook(t, r);
+        }
+
+        // ---------------- 116 ----------------
+
+        /// <summary>116_charLook: 캐릭터마다 slot 0부터 연속, (catId·slot)마다 fromTier 1 행, fromTier 겹침 없음, scale &gt; 0.</summary>
+        static void CheckCharLook(MvTables t, MvValidationReport r)
+        {
+            foreach (var row in t.CharLook.Datas)
+            {
+                if (row.scale <= 0) r.Error(CharLookData.Table, row.id, "scale", $"scale은 0보다 커야 합니다({row.scale})");
+                if (row.slot < 0) r.Error(CharLookData.Table, row.id, "slot", $"slot은 0 이상이어야 합니다({row.slot})");
+                if (row.fromTier < 1) r.Error(CharLookData.Table, row.id, "fromTier", $"fromTier는 1 이상이어야 합니다({row.fromTier})");
+            }
+            foreach (var cat in t.CharLook.Datas.GroupBy(x => x.catId))
+            {
+                var slots = cat.Select(x => x.slot).Distinct().OrderBy(x => x).ToList();
+                for (int i = 0; i < slots.Count; i++)
+                    if (slots[i] != i)
+                    {
+                        r.Error(CharLookData.Table, cat.First().id, "slot", $"catId {cat.Key}의 slot은 0부터 연속이어야 합니다({i}이 와야 하는데 {slots[i]})");
+                        break;
+                    }
+                foreach (var group in cat.GroupBy(x => x.slot))
+                {
+                    if (group.All(x => x.fromTier != 1))
+                        r.Error(CharLookData.Table, group.First().id, "fromTier", $"catId {cat.Key} slot {group.Key}에 fromTier 1 행이 없습니다");
+                    foreach (var dup in group.GroupBy(x => x.fromTier).Where(g => g.Count() > 1))
+                        r.Error(CharLookData.Table, dup.Skip(1).First().id, "fromTier", $"catId {cat.Key} slot {group.Key}의 fromTier {dup.Key}가 겹칩니다");
+                }
+            }
         }
 
         // ---------------- 06 ----------------
