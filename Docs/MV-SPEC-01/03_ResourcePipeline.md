@@ -315,6 +315,8 @@ manifest에는 화소 피벗을 0~1로 바꾼 값이 들어간다. 프레임 묶
 
 ### 3.5.1 캐릭터
 
+> 2026-11-12: 캐릭터 리소스는 디자이너 PDF 기준으로 바뀌었다. 이름·프리팹·표·재생 규칙은 [MV-SPEC-02/ArtResourcePlan.md](../MV-SPEC-02/ArtResourcePlan.md)를 따른다. 아래 표는 옛 정본 추출 기준(임시 명칭)이다.
+
 | 함수(줄) | 스프라이트 이름 | 종류 | 캔버스 | 피벗 | 프레임 | 테마 | 아틀라스 | 표·열 |
 |---|---|---|---|---|---|---|---|---|
 | `mochiBack` L3679 (플레이어 pat 0) | `World_Cat_P0_T{t}_Run_A_{00..11}` | World | 244×408(피벗 화소 122,344) | Feet | ph 0~2π, 12 | none | `Atlas_World_Cat_T{t}` | `101_cat.spritePrefix`[제안 열] = `World_Cat_P0` |

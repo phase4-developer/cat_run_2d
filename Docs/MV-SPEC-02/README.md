@@ -10,6 +10,7 @@
 | [DiffReport.md](DiffReport.md) | 차이 보고서: 분류별 개수, 사용자 결정 질문 Q-01~Q-35, 장별 대조표 |
 | [TermIdMap.md](TermIdMap.md) | 용어 ↔ 표 id 대조표(`마법서 탑(105001001)` 표기), 확신 없는 매칭 질문 T-Q1~T-Q4 |
 | [GodRefill.md](GodRefill.md) | 별자리냥 3~12번 다시 채우기 데이터 가안(Q-20) |
+| [ArtResourcePlan.md](ArtResourcePlan.md) | 디자이너 리소스 적용 설계(캐릭터 프리팹·풀·상태머신·`116_charLook`·단계 0~6), 2026-11-12 |
 
 ## 판 기록
 
