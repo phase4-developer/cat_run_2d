@@ -205,20 +205,20 @@
 
 | id | key | type | prefab | poolSize | blend | sortBias | 기본값 |
 |---|---|---|---|---|---|---|---|
-| 4001001 | fx.sparks | particle | Fx/Sparks | 24 | add | −0.2 | n 8, spd 4, size 0.35, life 0.6, grav 6 |
-| 4001002 | fx.debris | particle | Fx/Debris | 16 | normal | −0.1 | n 6, size 0.22 |
-| 4001003 | fx.dust | particle | Fx/Dust | 16 | normal | −0.2 | n 6 |
-| 4001004 | fx.trail | particle | Fx/Trail | 64 | add | −0.2 | life 0.3 |
-| 4001005 | fx.impact | shape | Fx/Impact | 24 | add | −0.2 | size 1.0, life 0.08 |
-| 4001006 | fx.boom | shape | Fx/Boom | 12 | add | −0.2 | radius 1.5, ring 1 |
-| 4001007 | fx.bolt | shape | Fx/Bolt | 8 | add | −0.1 | life 0.22 |
-| 4001008 | fx.fireball | shape | Fx/Fireball | 8 | add | −0.2 | size 1.6, life 0.22 |
-| 4001009 | fx.paw | shape | Fx/Paw | 8 | normal | −0.4 | life 0.55 |
-| 4001010 | fx.hiss | shape | Fx/Hiss | 4 | normal | −0.4 | life 0.7 |
-| 4001011 | fx.brickChunk | particle | Fx/BrickChunk | 16 | normal | −0.15 | life 0.26, grav 14 |
-| 4001012 | fx.holyBeam | shape | Fx/HolyBeam | 0 | add | −0.2 | 예약 |
-| 4001013 | fx.meteor | shape | Fx/Meteor | 0 | add | −0.2 | 예약 |
-| 4001014 | fx.frost | particle | Fx/Frost | 0 | add | −0.2 | 예약(D-46) |
+| 4001001 | fx.sparks | particle | Sparks | 24 | add | −0.2 | n 8, spd 4, size 0.35, life 0.6, grav 6 |
+| 4001002 | fx.debris | particle | Debris | 16 | normal | −0.1 | n 6, size 0.22 |
+| 4001003 | fx.dust | particle | Dust | 16 | normal | −0.2 | n 6 |
+| 4001004 | fx.trail | particle | Trail | 64 | add | −0.2 | life 0.3 |
+| 4001005 | fx.impact | shape | Impact | 24 | add | −0.2 | size 1.0, life 0.08 |
+| 4001006 | fx.boom | shape | Boom | 12 | add | −0.2 | radius 1.5, ring 1 |
+| 4001007 | fx.bolt | shape | Bolt | 8 | add | −0.1 | life 0.22 |
+| 4001008 | fx.fireball | shape | Fireball | 8 | add | −0.2 | size 1.6, life 0.22 |
+| 4001009 | fx.paw | shape | Paw | 8 | normal | −0.4 | life 0.55 |
+| 4001010 | fx.hiss | shape | Hiss | 4 | normal | −0.4 | life 0.7 |
+| 4001011 | fx.brickChunk | particle | BrickChunk | 16 | normal | −0.15 | life 0.26, grav 14 |
+| 4001012 | fx.holyBeam | shape | HolyBeam | 0 | add | −0.2 | 예약 |
+| 4001013 | fx.meteor | shape | Meteor | 0 | add | −0.2 | 예약 |
+| 4001014 | fx.frost | particle | Frost | 0 | add | −0.2 | 예약(D-46) |
 
 `fx.boom`의 링 없는 변형은 같은 행에 `flag = noRing`으로 호출한다(자식 행에서 지정). poolSize는 [창작] 초깃값 — §6.14 예산으로 검증 후 조정.
 
@@ -517,7 +517,7 @@ Unity: `WarpOverlay` = 하늘 그라데이션 쿼드 + 별·지붕·계단·집�
 |---|---|---|
 | D-45 점 입자 | 렌더 전용 `ParticleSystem` + C# 적분 | 같은 C# 적분이지만 그림은 이펙트마다 절차 메쉬 1개(`MvFxDriver`, 셰이더 `MV/FxShape`: 빛·사각형+OLC·타원 선·원, 머티리얼 일반/가산 2종). 모양 이펙트와 같은 경로라 재질 2종으로 묶인다 |
 | 프리팹 | 종류별 ParticleSystem·SpriteRenderer 묶음 | `Remote/Effect/<이름>.prefab` = `MvFxDriver` 1개(종류·04 기본값·고정 색·sortBias). 메쉬·`DepthSortable`(rank 3, 안개 끔)은 실행 때 붙인다. `fx.frost`는 D-46대로 프리팹 없음 |
-| `EffectRequest` | `effectType = 04_effect.key` | `effectType = 04_effect.prefab`(Addressables 주소 `Fx/…`). 호출 값(색·수·속도…)은 `skinIndex`에 토큰을 실어 드라이버가 받는다(Framework 요청에 사용자 값 칸이 없음) |
+| `EffectRequest` | `effectType = 04_effect.key` | `effectType = 04_effect.prefab`(Addressables 주소 = 파일 이름, 예 `Sparks`). 호출 값(색·수·속도…)은 `skinIndex`에 토큰을 실어 드라이버가 받는다(Framework 요청에 사용자 값 칸이 없음) |
 | 그룹 자식 값 | 자식 행마다 열 | 표에 자식별 열이 없어 자식 1개 그룹은 표 행 값, 여러 개 그룹은 정본 호출 인자를 `MvFxRouter` 코드에 둔다(MV-DATA 변경 요청 후보) |
 | `shake`·`hitStop` 열 | FxDirector가 적용 | MV.Run이 Shake·Hitstop 이벤트로 이미 내므로 Fx는 Shake 이벤트만 `CameraRig.Shake`로 넘기고 열 값으로 다시 내지 않는다(중복 방지). 히트스톱은 상태를 읽어 simDt 배율만 맞춘다 |
 | `run.wallHit` | 확률 없음 | 정본 L1933 `Math.random() < 0.3` → 표 `chance` 0.3 |

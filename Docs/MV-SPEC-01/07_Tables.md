@@ -2056,7 +2056,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-16): 묶음 801002001 = 블루 마법석(604 
 | id | int | `400{그룹 1}{순번 3}` 형식 7자리: 4001xxx 기본 종류(14), 4002xxx 런 사건(23), 4003xxx 신 연출, 4004xxx 우다다, 4005xxx 룰렛·UI, 4006xxx 묶음 자식(part, 28) |
 | key | string | `fx.sparks`, `run.wallBreak` … (다른 표의 이펙트 열 값) |
 | type | enum | `particle` / `shape` / `group`(children 묶음) / `part`(묶음 안 자식 1개의 인자 행) 등 06 정의 |
-| prefab | res | 프리팹 Addressables 주소(`Fx/Sparks`) |
+| prefab | res | 프리팹 Addressables 주소 = 파일 이름(`Sparks`). 폴더 경로를 넣지 않는다 |
 | poolSize | int | |
 | blend | enum | `add` / `normal` |
 | sortBias | float | 깊이 정렬 편향 |
