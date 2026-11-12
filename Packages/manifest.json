@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.artress.managed-addressables": "file:Frozen/com.artress.managed-addressables-1.3.12-pre.19.tgz",
+    "com.artress.managed-addressables": "file:Frozen/com.artress.managed-addressables-1.3.12-pre.20.tgz",
     "com.coffee.ui-particle": "https://github.com/mob-sakai/ParticleEffectForUGUI.git#c54f63cb18a22382215b142b63e232f0f86fff58",
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#2e993ff18f28c931602a07292df0b0804eebef99",
     "com.esotericsoftware.spine.spine-csharp": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#b81e5a58ed38704aee4f866f0e0ac672623ce914",
