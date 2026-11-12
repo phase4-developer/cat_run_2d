@@ -50,7 +50,7 @@ namespace MV.Data.Tests
         public void Pet_RepresentativeRows()
         {
             Assert.That(T.Pet.Datas.Count(), Is.EqualTo(16));
-            var p = T.Pet.ByKey("moonRabbit");
+            var p = T.Pet.Get(430001015);
             Assert.That(p.id, Is.EqualTo(430001015));
             Assert.That(p.rarity, Is.EqualTo(4));
             Assert.That(p.statKey, Is.EqualTo(MetaStat.CritDmg));
@@ -59,7 +59,7 @@ namespace MV.Data.Tests
             Assert.That(p.SkillPctAt(2), Is.EqualTo(103));
             Assert.That(p.levelPriceGroup, Is.EqualTo(301));
             Assert.That(p.icon, Is.EqualTo("UI_Icon_Pet_moonRabbit"));
-            Assert.That(T.Pet.ByKey("sparrow").skillDmgPct, Is.EqualTo(20));
+            Assert.That(T.Pet.Get(430001001).skillDmgPct, Is.EqualTo(20));
 
             var b = T.PetBuild.Get(431004003);
             Assert.That(b.tier, Is.EqualTo(3));
@@ -96,7 +96,7 @@ namespace MV.Data.Tests
         public void Friend_RepresentativeRows()
         {
             Assert.That(T.Friend.Datas.Count(), Is.EqualTo(10));
-            var f = T.Friend.ByKey("boss");
+            var f = T.Friend.Get(450001008);
             Assert.That(f.Trigger, Is.EqualTo(FriendSkillTrigger.Seconds));
             Assert.That((f.skillEvery, f.skillDmgPct, f.skillTargets), Is.EqualTo((6000, 250.0, 3)));
             Assert.That(f.maxLevel, Is.EqualTo(30));
@@ -104,7 +104,7 @@ namespace MV.Data.Tests
             Assert.That(f.unlockPrice[0].Value, Is.EqualTo(150));
             Assert.That(f.ValueAt(30), Is.EqualTo(15 + 3 * 29));
             Assert.That(f.levelPriceGroup, Is.EqualTo(302));
-            Assert.That(T.Friend.ByKey("calico").Trigger, Is.EqualTo(FriendSkillTrigger.Chance));
+            Assert.That(T.Friend.Get(450001003).Trigger, Is.EqualTo(FriendSkillTrigger.Chance));
 
             var power = T.FriendPower.Get(451001002);
             Assert.That(power.unlockLevel, Is.EqualTo(10));
@@ -121,7 +121,7 @@ namespace MV.Data.Tests
             Assert.That(rune.randomBoxRowId, Is.EqualTo(802460004));
 
             Assert.That(T.GearPart.Datas.Count(), Is.EqualTo(7));
-            Assert.That(T.GearPart.ByKey("cape").statKey, Is.EqualTo(MetaStat.DoubleChance));
+            Assert.That(T.GearPart.Get(470001007).statKey, Is.EqualTo(MetaStat.DoubleChance));
 
             var g = T.GearRarity.Get(471001008);
             Assert.That(g.rarity, Is.EqualTo(7));

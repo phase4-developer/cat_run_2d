@@ -19,7 +19,7 @@ namespace MV.Data
     public sealed class PetData : MvRow
     {
         public const string Table = "430_pet";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("rarity", true).Enum<MetaStat>("statKey", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("rarity", true).Enum<MetaStat>("statKey", true)
             .Float("value", true).Int("skillEveryMs", true).Float("skillDmgPct", true).Int("skillTargets", true).Float("skillLevelPct")
             .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon).Res("sprite", MvAtlas.WorldPet).Bool("active");
 
@@ -139,7 +139,7 @@ namespace MV.Data
     public sealed class FriendData : MvRow
     {
         public const string Table = "450_friend";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("rarity", true).Enum<MetaStat>("statKey", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("rarity", true).Enum<MetaStat>("statKey", true)
             .Float("baseValue", true).Float("perLevel", true).Int("maxLevel", true).Consume("unlockPrice")
             .Int("skillTrigger", true).Int("skillEvery", true).Float("skillDmgPct", true).Int("skillTargets", true)
             .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon).Res("portrait", MvAtlas.Address).Bool("active");
@@ -244,7 +244,7 @@ namespace MV.Data
     public sealed class GearPartData : MvRow
     {
         public const string Table = "470_gearPart";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Enum<MetaStat>("statKey", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Enum<MetaStat>("statKey", true)
             .Res("icon", MvAtlas.UiIcon).Int("sort");
 
         public MetaStat statKey { get; private set; }

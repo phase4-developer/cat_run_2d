@@ -551,7 +551,7 @@ namespace MV.Data
     public sealed class CardTierData : MvRow
     {
         public const string Table = "115_cardTier";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("tierIndex", true).Int("need", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("tierIndex", true).Int("need", true)
             .Color("color", true).Res("frameSprite", MvAtlas.UiCard).Sound("cardSound");
 
         public int tierIndex { get; private set; }
@@ -581,7 +581,7 @@ namespace MV.Data
     public sealed class CharLookData : MvRow
     {
         public const string Table = "116_charLook";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Fk("catId", CatData.Table, true).Int("slot", true).Int("fromTier", true)
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Fk("catId", CatData.Table, true).Int("slot", true).Int("fromTier", true)
             .Str("prefab", true).Str("atlas", true).Str("walkA", true).Str("walkB", true).Str("atkA", true).Str("atkB", true)
             .Str("happy", true).Str("stair", true).Float("scale", true);
 

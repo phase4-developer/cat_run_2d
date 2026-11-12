@@ -886,7 +886,7 @@ public interface IModeRule : IRunRule {
 - 자동 공격: 장착 펫이 `skillEveryMs`마다 앞쪽 가장 가까운 대상 `skillTargets`개에 `baseDmg × (skillDmgPct + skillLevelPct × (레벨−1)) / 100`. 새 런 동작 `CompanionShot`([04](04_GameRules.md) 요청). 펫 그림은 플레이어 뒤를 따라다닌다(`sprite` 열).
 - 빌드: 열린 칸 = `min(3, 1 + floor(레벨/10))`. 잠그지 않은 칸 전부 다시 굴림, 비용 털실(01_wealth 7) 10/20/40(잠금 0/1/2개). 칸마다 잠금 토글.
 
-**430_pet 열**: `id, key, rarity(0~4), statKey, value(Lv1 %), skillEveryMs, skillDmgPct, skillTargets, skillLevelPct, levelPriceGroup, icon, sprite, active`. 스킬 값은 등급별 [창작·HE임시]: 0 → 2000ms·20%, 1 → 1800·30, 2 → 1600·45, 3 → 1400·70, 4 → 1200·100, 대상 1, 레벨당 +3%p.
+**430_pet 열**: `id, rarity(0~4), statKey, value(Lv1 %), skillEveryMs, skillDmgPct, skillTargets, skillLevelPct, levelPriceGroup, icon, sprite, active`. 스킬 값은 등급별 [창작·HE임시]: 0 → 2000ms·20%, 1 → 1800·30, 2 → 1600·45, 3 → 1400·70, 4 → 1200·100, 대상 1, 레벨당 +3%p.
 
 | id | key | 이름 [창작] | rarity | statKey | value | 소환 weight(802) |
 |---|---|---|---|---|---|---|
@@ -957,7 +957,7 @@ id = `431{tier+1 3}{순번 3}`(순번 Dmg 1, CritChance 2, CritDmg 3, DoubleChan
 - 스킬: `skillTrigger` 1 Hits(본체 n번째 볼리마다) / 2 Chance(명중당 n% 확률) / 3 Seconds(n ms마다), 피해 `baseDmg × (skillDmgPct + 5 × (레벨−1)) / 100`, 대상 `skillTargets`개(앞쪽 가까운 순). 런 동작 `CompanionShot` 재사용.
 - 그림: 장착 친구는 HUD 초상만 1차 표시. 월드 동행은 2차 결정(정본 분신 자리 `CLONE_OFF` L831과 겹침).
 
-**450_friend 열**: `id, key, rarity, statKey, baseValue, perLevel, maxLevel, unlockPriceType, unlockPriceId, unlockPriceValue, skillTrigger, skillEvery, skillDmgPct, skillTargets, levelPriceGroup, icon, portrait, active`.
+**450_friend 열**: `id, rarity, statKey, baseValue, perLevel, maxLevel, unlockPriceType, unlockPriceId, unlockPriceValue, skillTrigger, skillEvery, skillDmgPct, skillTargets, levelPriceGroup, icon, portrait, active`.
 
 | id | key | 이름 [창작] | rarity | statKey | base + perLv [창작·HE임시] | 영입(간식) | 스킬 trigger / every / dmg% / 대상 [창작] |
 |---|---|---|---|---|---|---|---|
@@ -1064,7 +1064,7 @@ maxLevel 30 전부. icon `UI_Icon_Friend_{key}`, portrait `Portrait_Friend_{key}
 - 판매: `sellGold` 츄르(착용 중 불가). 합성: 같은 부위·같은 희귀도 미착용 3개 → 다음 희귀도 1개.
 - 장비가 꺼진 동안(1차) 상자는 캣닢으로 바뀐다(8.4.6).
 
-**470_gearPart** 열 `id, key, statKey, icon, sort`:
+**470_gearPart** 열 `id, statKey, icon, sort`:
 
 | id | key | 이름 [창작] | statKey |
 |---|---|---|---|
