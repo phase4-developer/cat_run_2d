@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "saved_at": "2026-11-11T10:59:58+09:00",
+  "saved_at": "2026-11-12T18:20:20+09:00",
   "saved_by": "사용자(설정 화면)",
   "values": {
     "project_kind": "new",
@@ -130,6 +130,7 @@
     "com.jjevol.effects.ui",
     "com.jjevol.localization",
     "com.jjevol.localization.authoring",
+    "com.jjevol.localization.tmp",
     "com.jjevol.platform.ads",
     "com.jjevol.platform.ads.admob",
     "com.jjevol.platform.analytics",
@@ -159,6 +160,7 @@
     "com.jjevol.tables.authoring",
     "com.jjevol.ui",
     "com.jjevol.ui.addressables",
+    "com.jjevol.ui.contracts",
     "com.jjevol.ui.dotween-pro",
     "com.jjevol.ui.economy",
     "com.jjevol.ui.urp"
