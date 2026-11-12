@@ -36,13 +36,9 @@ namespace MV.Data
     public sealed class CatData : MvRow
     {
         public const string Table = "101_cat";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Res("spritePrefix", MvAtlas.Theme)
-            .Str("atlasPattern").Int("tierCount", true).Int("patternCount", true).Res("lobbySprite", MvAtlas.WorldLobby);
+        /// <summary>런 그림(접두·아틀라스·단계·무늬 수)은 `116_charLook`으로 옮겼다(MV-SPEC-02 ArtResourcePlan §3.1, MV-VIEW-CHAR-1).</summary>
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Res("lobbySprite", MvAtlas.WorldLobby);
 
-        public string spritePrefix { get; private set; }
-        public string atlasPattern { get; private set; }
-        public int tierCount { get; private set; }
-        public int patternCount { get; private set; }
         public string lobbySprite { get; private set; }
 
         public CatData(TSVRow r) : base(r) { }
@@ -50,10 +46,6 @@ namespace MV.Data
         public override void Init(TSVRow r)
         {
             base.Init(r);
-            spritePrefix = S(r, "spritePrefix");
-            atlasPattern = S(r, "atlasPattern");
-            tierCount = I(r, "tierCount");
-            patternCount = I(r, "patternCount");
             lobbySprite = S(r, "lobbySprite");
         }
     }

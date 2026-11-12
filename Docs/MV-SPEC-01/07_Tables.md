@@ -1448,6 +1448,8 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 
 ### 7.7.7 101_cat — 플레이어·친구 고양이 그림
 
+> 갱신(2026-11-12, MV-VIEW-CHAR-1): 런 그림 열 `spritePrefix`·`atlasPattern`·`tierCount`·`patternCount`는 디자이너 리소스 표 `116_charLook`([MV-SPEC-02 ArtResourcePlan §3.1](../MV-SPEC-02/ArtResourcePlan.md))으로 옮기고 이 표에서 뺐다. 지금 열은 id·name·key·lobbySprite. 아래 표는 옛 기준 기록이다.
+
 | 열 | 타입 | 뜻 |
 |---|---|---|
 | id, key | | `101001001 player`, `101001002 friend` |
