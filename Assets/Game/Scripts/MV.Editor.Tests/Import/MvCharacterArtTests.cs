@@ -106,8 +106,7 @@ namespace MV.Editor.Tests.Import
                 foreach (var image in new[] { row.walkA, row.walkB, row.atkA, row.atkB, row.happy, row.stair })
                     if (!names.Contains(image)) failures.Add($"{row.id}: 그림 {image}가 {row.atlas}에 없음");
             }
-            Assert.That(failures, Is.Empty, string.Join("
-", failures));
+            Assert.That(failures, Is.Empty, string.Join("\n", failures));
         }
 
         [Test]
