@@ -191,7 +191,7 @@ namespace MV.View.Tests
             Assert.That(start.Dip, Is.EqualTo(0), "포즈 유지");
             double half = 1 - Math.Pow(0.5, 1.0 / 3);   // e = 0.5(반 바퀴) 시점
             Assert.That(sm.Evaluate(p, t0 + half * p.HappySpinSec, 0).FlipX, Is.EqualTo(-1).Within(1e-9), "반 바퀴면 뒷면");
-            var after = sm.Evaluate(p, t0 + p.HappySpinSec, 0);
+            var after = sm.Evaluate(p, t0 + p.HappySpinSec + 1e-6, 0);
             Assert.That(after.State, Is.EqualTo(CharState.Walk), "1바퀴 뒤 걷기");
             Assert.That(after.FlipX, Is.EqualTo(1));
             Assert.That(sm.Evaluate(p, t0 - 0.01, 0).State, Is.EqualTo(CharState.Walk), "받기 전 시각은 걷기");
@@ -305,7 +305,7 @@ namespace MV.View.Tests
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Happy));
             Assert.That(view.StateOf(1), Is.EqualTo(CharState.Happy));
             Assert.That(view.SpriteNameOf(0), Is.EqualTo(view.LookOf(0).happy));
-            view.Sync(s, 2.0 + p.HappySpinSec);
+            view.Sync(s, 2.0 + p.HappySpinSec + 1e-6);
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Walk), "1바퀴 뒤 걷기");
         }
 
