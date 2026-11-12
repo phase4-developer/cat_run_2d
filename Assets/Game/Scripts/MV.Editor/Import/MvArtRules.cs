@@ -62,8 +62,11 @@ namespace MV.Editor.Import
         public int ExpectedWidth { get; internal set; }
         public int ExpectedHeight { get; internal set; }
 
-        public string Group => IsUi ? MvArtRules.UiAtlasGroup : MvArtRules.WorldAtlasGroup;
-        public string Folder => IsUi ? MvArtRules.UiAtlasFolder : MvArtRules.WorldAtlasFolder;
+        /// <summary>디자이너 캐릭터 아틀라스(MV-SPEC-02 ArtResourcePlan §4.2). 폴더·그룹이 `Local/Character`.</summary>
+        public bool IsCharacter { get; internal set; }
+
+        public string Group => IsCharacter ? MvArtRules.CharacterGroup : IsUi ? MvArtRules.UiAtlasGroup : MvArtRules.WorldAtlasGroup;
+        public string Folder => IsCharacter ? MvArtRules.CharacterAtlasFolder : IsUi ? MvArtRules.UiAtlasFolder : MvArtRules.WorldAtlasFolder;
         public string AssetPath => Folder + "/" + Name + MvArtRules.AtlasExtension;
         /// <summary>Addressables 주소 = 아틀라스 이름(03 §3.4.2).</summary>
         public string Address => Name;
@@ -99,7 +102,19 @@ namespace MV.Editor.Import
         public const string UiAtlasGroup = "Remote_UIAtlas";
         public const string WorldAtlasGroup = "Remote_WorldAtlas";
         public const string TextureGroup = "Remote_Texture";
-        public static readonly string[] OwnedGroups = { UiAtlasGroup, WorldAtlasGroup, TextureGroup };
+        public static readonly string[] OwnedGroups = { UiAtlasGroup, WorldAtlasGroup, TextureGroup, CharacterGroup };
+
+        /// <summary>디자이너 캐릭터 리소스(디자이너 PDF 경로, MV-SPEC-02 ArtResourcePlan). 앱 포함(Local) 묶음.</summary>
+        public const string CharacterRoot = "Assets/Game/Addressables/Local/Character";
+        public const string CharacterImageFolder = CharacterRoot + "/Image";
+        public const string CharacterPrefabFolder = CharacterRoot + "/Prefab";
+        public const string CharacterAtlasFolder = CharacterRoot + "/Atlas";
+        /// <summary>`Local/&lt;Category&gt;` → `Local_&lt;Category&gt;`(기존 `Local_UI`와 같은 규칙).</summary>
+        public const string CharacterGroup = "Local_Character";
+        /// <summary>캐릭터 아틀라스·프리팹 Addressables 라벨.</summary>
+        public const string CharacterLabel = "char";
+        /// <summary>캐릭터 아틀라스 이름 접두(결정 후보 C-1). 이름 = 접두 + 이미지 하위 폴더(소문자) + `_` + 파일 이름 마지막 토막.</summary>
+        public const string CharacterAtlasPrefix = "atlas_";
 
         public const int MaxTextureSize = 2048;
         public const int WorldPpu = 128;
@@ -232,6 +247,27 @@ namespace MV.Editor.Import
             }
             else if (atlas.StartsWith(FriendAtlasPrefix, StringComparison.Ordinal)) spec.Label = "cat";
             return spec;
+        }
+
+        /// <summary>
+        /// 캐릭터 아틀라스 설정: 월드 고양이 아틀라스와 같은 값(ASTC 6x6, Tight, Mipmap, 패딩 8). 원본 PNG는 무압축이고 아틀라스가 압축한다.
+        /// </summary>
+        public static MvAtlasSpec CharacterSpecFor(string atlas)
+        {
+            if (string.IsNullOrEmpty(atlas)) throw new ArgumentException("atlas name required", nameof(atlas));
+            return new MvAtlasSpec
+            {
+                Name = atlas,
+                IsCharacter = true,
+                MaxSize = MaxTextureSize,
+                Format = TextureImporterFormat.ASTC_6x6,
+                Mipmap = true,
+                Tight = true,
+                Padding = 8,
+                Label = CharacterLabel,
+                ExpectedWidth = 1024,
+                ExpectedHeight = 1024,
+            };
         }
 
         /// <summary>단독 텍스처의 Android·iOS 형식(03 §3.8.3): 방 배경 6x6, 신 초상·비네트 등 4x4.</summary>
