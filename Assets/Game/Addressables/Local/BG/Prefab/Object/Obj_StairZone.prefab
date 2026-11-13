@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4548904408305026731}
   - component: {fileID: 1953649507313403240}
+  - component: {fileID: 4388570492713147952}
   m_Layer: 0
   m_Name: LanternGlow_R
   m_TagString: Untagged
@@ -101,6 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8781576390236638298}
   - component: {fileID: 6037913181572355018}
+  - component: {fileID: 2783216497630826781}
   m_Layer: 0
   m_Name: Lantern_L
   m_TagString: Untagged
@@ -192,6 +194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6207770968092735500}
   - component: {fileID: 1843431622244713491}
+  - component: {fileID: 3684516546756931136}
   m_Layer: 0
   m_Name: Glow
   m_TagString: Untagged
@@ -426,6 +429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4740215695330303407}
   - component: {fileID: 5816167995849600756}
+  - component: {fileID: 2151994142714813724}
   m_Layer: 0
   m_Name: Lantern_R
   m_TagString: Untagged
@@ -608,6 +612,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5630242926693639313}
   - component: {fileID: 3318411027845238758}
+  - component: {fileID: 2702139599929236830}
   m_Layer: 0
   m_Name: LanternGlow_L
   m_TagString: Untagged
@@ -689,3 +694,63 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &4388570492713147952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610165996420717488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &2783216497630826781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864172494692065973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &3684516546756931136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2829043501419516323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &2151994142714813724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6822136567137099832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &2702139599929236830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7996595804888116701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard

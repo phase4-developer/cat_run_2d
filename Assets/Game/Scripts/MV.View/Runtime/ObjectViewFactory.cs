@@ -83,7 +83,8 @@ namespace MV.View
         sealed class PrefabParts
         {
             public Vector3 InstScale = Vector3.one;
-            public Billboard Board;
+            /// <summary>프리팹에 붙어 있는 빌보드(카메라를 보는 이미지). 쓰러짐 기울기를 받는다.</summary>
+            public Billboard[] Boards;
             /// <summary>빛(수정탑·포탈·생선 비석 Glow)과 기본 색.</summary>
             public SpriteRenderer Glow;
             public Color GlowBase;
@@ -226,7 +227,9 @@ namespace MV.View
             if (!_prefabs.TryGetValue(v.Prefab, out var lease)) { Preload(v.Prefab); return; }
             if (lease == null || lease.Asset == null) return;
             v.Inst = Instantiate(lease.Asset, v.Go.transform, false);
-            if (v.Inst.GetComponent<Billboard>() == null) v.Inst.AddComponent<Billboard>();
+            // 빌보드는 프리팹이 정한다(카메라를 볼 이미지 자식에만 Billboard, 바닥에 까는 이미지는 없음). 코드는 붙이지 않는다.
+            if (v.Inst.GetComponentInChildren<Billboard>(true) == null && s_noBillboard.Add(v.Prefab))
+                Debug.LogError("[ObjectViewFactory] 오브젝트 프리팹에 Billboard가 없습니다(카메라를 볼 이미지 자식에 붙여야 함): " + v.Prefab);
             v.Rig = v.Inst.GetComponent<ObjectPrefabRig>();
             v.P = BuildParts(v);
             v.Ds.Refresh();
@@ -236,7 +239,7 @@ namespace MV.View
         PrefabParts BuildParts(View v)
         {
             var it = v.Inst.transform;
-            var p = new PrefabParts { InstScale = it.localScale, Board = v.Inst.GetComponent<Billboard>() };
+            var p = new PrefabParts { InstScale = it.localScale, Boards = v.Inst.GetComponentsInChildren<Billboard>(true) };
             var glow = it.Find("Glow");
             if (glow != null && glow.TryGetComponent(out p.Glow)) p.GlowBase = p.Glow.color;
             switch (v.Shape)
@@ -262,7 +265,7 @@ namespace MV.View
                 {
                     var c = it.Find("Curtain");
                     if (c != null && c.TryGetComponent(out p.Curtain)) p.CurtainBase = p.Curtain.color;
-                    p.Sparks = MakeSparks(it, ObjectReaction.GateSparks, Color.white, false);
+                    p.Sparks = MakeSparks(it, ObjectReaction.GateSparks, Color.white, true);
                     break;
                 }
                 case ObjectShape.Stair:
@@ -330,6 +333,7 @@ namespace MV.View
             _views.Clear();
         }
 
+        static readonly HashSet<string> s_noBillboard = new HashSet<string>();
         static readonly ObjectShape?[] s_shapeOfData = BuildShapeMap();
         static readonly HashSet<ObjectViewShape> s_warnedShapes = new HashSet<ObjectViewShape>();
 
@@ -524,7 +528,7 @@ namespace MV.View
             {
                 v.Inst.transform.localPosition = new Vector3(0, (float)hop, 0);
                 v.Inst.transform.localScale = Vector3.Scale(v.P.InstScale, new Vector3((float)sx, (float)sy, 1));
-                if (v.P.Board != null) v.P.Board.Roll = deg;
+                for (int i = 0; i < v.P.Boards.Length; i++) v.P.Boards[i].Roll = deg;
             }
             else
             {
@@ -547,7 +551,7 @@ namespace MV.View
             var p = v.P;
             if (p == null || v.Inst == null) return;
             v.Inst.transform.localScale = p.InstScale;
-            if (p.Board != null) p.Board.Roll = 0;
+            for (int i = 0; i < p.Boards.Length; i++) p.Boards[i].Roll = 0;
             if (p.Gone != null)
                 for (int i = 0; i < p.Gone.Length; i++) { p.Gone[i] = 0; p.Grow[i] = 1; p.Orbs[i].localScale = p.OrbScale[i]; }
         }

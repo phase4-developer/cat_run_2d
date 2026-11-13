@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8220572307993632496}
   - component: {fileID: 6516131230821299534}
+  - component: {fileID: 7269962327228180546}
   m_Layer: 0
   m_Name: Chest_0
   m_TagString: Untagged
@@ -148,6 +149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2820079577924729344}
   - component: {fileID: 3254005984675313110}
+  - component: {fileID: 8517156266279832728}
   m_Layer: 0
   m_Name: Chest_1
   m_TagString: Untagged
@@ -273,6 +275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5405276178266284649}
   - component: {fileID: 4311386451101281024}
+  - component: {fileID: 8548804064438290526}
   m_Layer: 0
   m_Name: Badge
   m_TagString: Untagged
@@ -364,6 +367,7 @@ GameObject:
   m_Component:
   - component: {fileID: 507384670126681369}
   - component: {fileID: 8770579857787556368}
+  - component: {fileID: 5037334480783548080}
   m_Layer: 0
   m_Name: Chest_2
   m_TagString: Untagged
@@ -445,3 +449,51 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &7269962327228180546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705787914975039448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &8517156266279832728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4761705689488577716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &8548804064438290526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5943619318379449588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &5037334480783548080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7888301709806718537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard

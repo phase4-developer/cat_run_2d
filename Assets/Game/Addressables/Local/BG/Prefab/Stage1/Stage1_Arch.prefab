@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4154193412637702643}
   - component: {fileID: 8324544524023492226}
+  - component: {fileID: 8878559932175942943}
   m_Layer: 0
   m_Name: Pillar_L
   m_TagString: Untagged
@@ -101,6 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 42792870559861388}
   - component: {fileID: 7457478012480201096}
+  - component: {fileID: 2692700660165719410}
   m_Layer: 0
   m_Name: Pillar_R
   m_TagString: Untagged
@@ -243,6 +245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8560328067075870444}
   - component: {fileID: 2369867697558763240}
+  - component: {fileID: 4352903208365459156}
   m_Layer: 0
   m_Name: Top_L
   m_TagString: Untagged
@@ -334,6 +337,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9048675326741386015}
   - component: {fileID: 27214985213627420}
+  - component: {fileID: 2647628342671002125}
   m_Layer: 0
   m_Name: Sign
   m_TagString: Untagged
@@ -425,6 +429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2111080792439057276}
   - component: {fileID: 363109853996177401}
+  - component: {fileID: 6898489822522022576}
   m_Layer: 0
   m_Name: Top_R
   m_TagString: Untagged
@@ -537,3 +542,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2086412007138448746}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8878559932175942943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718282248364569741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &2692700660165719410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3150975023143055795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &4352903208365459156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7034596117800475426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &2647628342671002125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7983910933015415886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &6898489822522022576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8131270110920100236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard

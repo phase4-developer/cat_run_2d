@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5983735632609133319}
   - component: {fileID: 3113566156414043420}
+  - component: {fileID: 3221979959103531597}
   m_Layer: 0
   m_Name: Pile_2
   m_TagString: Untagged
@@ -101,6 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1399490408955268680}
   - component: {fileID: 3577904274106386018}
+  - component: {fileID: 6413674513683747525}
   m_Layer: 0
   m_Name: Pile_1
   m_TagString: Untagged
@@ -192,6 +194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4443691135620130417}
   - component: {fileID: 7826244530602864523}
+  - component: {fileID: 5467340886089671940}
   m_Layer: 0
   m_Name: Pile_3
   m_TagString: Untagged
@@ -338,3 +341,39 @@ MonoBehaviour:
   - {fileID: 4740203938622926491}
   - {fileID: 1688558544924104894}
   - {fileID: 8339037712987626252}
+--- !u!114 &3221979959103531597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1688558544924104894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &6413674513683747525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4740203938622926491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &5467340886089671940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8339037712987626252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
