@@ -163,3 +163,15 @@ MV.View/Character/
 | C-1 | 아틀라스 이름(PDF에 없음) | **1단계 적용**: `atlas_<이미지 하위 폴더 소문자>_<파일 이름 마지막 토막>`(예: `atlas_player_0`, `atlas_clone_siamese`). 파일에서 자동으로 묶는다(`MvCharacterArt`) |
 | C-2 | PDF 분신 종족 표기 차이(표 「삼색」 ↔ 이름 `siamese`, `cat_run_B_siam` 오타) | **결정(사용자 2026-11-12 「pdf와 파일 이름이 틀리면 오타를 수정하고 둘다 오타면 우선 무시해서 사용해줘」)**: PDF·파일 대조 결과 다른 것은 PDF `cat_run_B_siam` 하나이고 파일(`cat_run_B_siamese`)이 규칙에 맞아 파일은 그대로. 바꾼 파일 없음 |
 | C-3 | 기쁨·정산 포즈 이미지가 오기 전 더미 | 걷기 A 이미지를 표에 더미로(R4) |
+
+## 8. 2차 갱신 (MV-ART-2, 2026-11-13)
+
+기준이 디자이너 PDF에서 노션 갱신본 세 페이지(「신작 캐릭터 리소스 관리」·「신작 배경 리소스 관리」·「신작 이펙트 리소스 관리」)로 바뀌었다. 사용자 원문(2026-11-13): 「노션 세페이지의 토클을 펼쳐서 내용을 모두 읽고 기존 리소스 작업에서 변경된 사항(추가 포함) 적용 작업을 해야해」. 원장 MV-ART-2 행.
+
+| 바뀐 것 | 적용 |
+|---|---|
+| 세트 그림 6장(happy·stair 실제 파일) + 뒷면 `cat_happy_back_n` | `116_charLook` happy·stair 더미 26칸을 실제 이름으로, 새 열 `happyBack`(분신은 A 그림 더미) |
+| 정산 바퀴 `cat_stair_wheel`, 계단 한 칸당 약 0.6바퀴 시계 방향 | 새 열 `wheel`·`wheelAtlas`(`atlas_player_wheel`, 분신 빈칸), 300 `char.wheelTurnsPerStep`(300107012) 0.6. 바퀴 PNG 피벗 = 바퀴 중심, `Char_Cat` `stair_wheel` 자식 위치로 보정 |
+| 분신 4종 프리팹 따로(`Char_Clone_calico/gray/siamese/tux`, 옛 `Char_Clone` 변형) | 116 분신 4행. 자리 순서 = 노션 표 순서(삼색·회색 줄무늬·흰 얼룩·턱시도, 사용자 카드 결정 2026-11-13). `Char_Clone`은 바탕 프리팹이라 남김 |
+| 배경 공통·스테이지1 오브젝트 프리팹, 맵 `Stage1` | `Local_BG` 그룹(주소 = 파일 이름). 연결은 MV-VIEW-STAGE·MV-VIEW-OBJ 단계 |
+| 투사체 `projectile.prefab` + `projectile_0~11` + `VFX_Tail_0~11`, 카드 효과 `Fx_Card_Lightning` | `Local_Projectile` 그룹, 이펙트는 `Local_Effect`. 연결은 MV-VIEW-PROJ-2 |

@@ -200,6 +200,8 @@ namespace MV.Data
         public const string Char_StairIdleRate = "char.stairIdleRate";
         /// <summary>계단 정산 기울기 진폭(rad, 오르기 전).</summary>
         public const string Char_StairIdleRockRad = "char.stairIdleRockRad";
+        /// <summary>계단 한 칸 오를 때 바퀴 회전 수(시계 방향). 노션 「신작 캐릭터 리소스 관리」 「계단 한칸당 약 0.6 바퀴」.</summary>
+        public const string Char_WheelTurnsPerStep = "char.wheelTurnsPerStep";
         /// <summary>로비 트랙에 까는 오브젝트 범위(m, 시작점에서 z 거리). 정본 `toLobby` `makeObjs(...).filter(o =&gt; o.z &lt; 70)`(MV-SPEC-01 04 §4.13.1, MV-SPEC-02 01 「로비와 인게임이 같은 화면」).</summary>
         public const string Lobby_ObjZMax = "lobby.objZMax";
 
@@ -386,6 +388,7 @@ namespace MV.Data
             Char_StairSwayM,
             Char_StairIdleRate,
             Char_StairIdleRockRad,
+            Char_WheelTurnsPerStep,
             Lobby_ObjZMax,
         };
     }

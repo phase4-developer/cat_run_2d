@@ -54,6 +54,7 @@ namespace MV.Data.Tests
         [TestCase("116001002", "fromTier", "1", "겹칩니다")]
         [TestCase("116002001", "slot", "1", "0부터 연속")]
         [TestCase("116001001", "scale", "0", "scale은 0보다")]
+        [TestCase("116001001", "wheelAtlas", "", "wheel과 wheelAtlas")]
         public void Validator_RejectsBrokenRows(string id, string column, string value, string fragment)
         {
             var report = TsvFixture.Validate((T, TsvFixture.Set(TsvFixture.Read(T), id, column, value)));
