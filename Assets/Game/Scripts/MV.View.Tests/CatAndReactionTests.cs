@@ -569,43 +569,56 @@ namespace MV.View.Tests
         }
 
         /// <summary>
-        /// 빌보드는 프리팹이 정한다(2026-11-14 사용자 「프리팹 통짜가 아니라 내부 적용해야될 이미지에만으로」): 오브젝트 프리팹마다 Billboard가 있고,
-        /// 루트에는 없으며, 바닥에 눕힌 이미지(로컬 회전이 있는 것)에는 없다.
+        /// 빌보드는 프리팹이 정한다(2026-11-14 사용자 「빌보드 적용할거는 묶어서 처리해야지 … 붙어서 보여야되는 하나의 오브젝트가 벌어져서 보이게돼」):
+        /// 오브젝트 프리팹마다 Billboard는 1개, 루트 바로 아래 묶음(루트 아님)에 있고, 모든 이미지는 그 묶음 아래이거나 눕힌 것(로컬 회전)이다.
         /// </summary>
         [Test]
-        public void ObjectPrefabs_BillboardOnUprightImagesOnly()
+        public void ObjectPrefabs_OneBillboardGroup_FlatImagesOutside()
         {
-            const string BillboardGuid = "b6073823855d4665867abbe603050885";
+            const string BillboardGuid = "b6073823855d4665867abbe603050885", Ident = "{x: 0, y: 0, z: 0, w: 1}";
             var t = ViewTestTables.Load();
             var addrs = new HashSet<string>();
             foreach (var k in t.ObjectKind.Datas) if (!string.IsNullOrEmpty(k.prefab)) addrs.Add(k.prefab);
             foreach (var s in t.StageObject.Datas) if (!string.IsNullOrEmpty(s.prefab)) addrs.Add(s.prefab);
             Assert.That(addrs, Is.Not.Empty);
             var dir = Path.Combine(Application.dataPath, "Game/Addressables/Local/BG/Prefab");
+            System.Text.RegularExpressions.Match M(string d, string pat) => System.Text.RegularExpressions.Regex.Match(d, pat);
             foreach (var a in addrs)
             {
                 var files = Directory.GetFiles(dir, a + ".prefab", SearchOption.AllDirectories);
                 Assert.AreEqual(1, files.Length, a + " 프리팹 파일");
                 var docs = System.Text.RegularExpressions.Regex.Split(File.ReadAllText(files[0]).Replace("\r\n", "\n"), @"\n(?=--- !u!)");
+                var trOfGo = new Dictionary<string, string>();
                 var rot = new Dictionary<string, string>();
                 var father = new Dictionary<string, string>();
                 var boards = new List<string>();
+                var images = new List<string>();
                 foreach (var d in docs)
                 {
-                    var go = System.Text.RegularExpressions.Regex.Match(d, @"m_GameObject: \{fileID: (\d+)");
-                    if (!go.Success) continue;
-                    if (d.StartsWith("--- !u!4 ") || d.StartsWith("!u!4 "))
+                    var head = M(d, @"^--- !u!(\d+) &(\d+)");
+                    var go = M(d, @"m_GameObject: \{fileID: (\d+)");
+                    if (!head.Success || !go.Success) continue;
+                    string type = head.Groups[1].Value, id = head.Groups[2].Value, g = go.Groups[1].Value;
+                    if (type == "4")
                     {
-                        rot[go.Groups[1].Value] = System.Text.RegularExpressions.Regex.Match(d, @"m_LocalRotation: (\{[^}]*\})").Groups[1].Value;
-                        father[go.Groups[1].Value] = System.Text.RegularExpressions.Regex.Match(d, @"m_Father: \{fileID: (\d+)").Groups[1].Value;
+                        trOfGo[g] = id;
+                        rot[id] = M(d, @"m_LocalRotation: (\{[^}]*\})").Groups[1].Value;
+                        father[id] = M(d, @"m_Father: \{fileID: (\d+)").Groups[1].Value;
                     }
-                    if (d.Contains(BillboardGuid)) boards.Add(go.Groups[1].Value);
+                    if (type == "212") images.Add(g);
+                    if (d.Contains(BillboardGuid)) boards.Add(g);
                 }
-                Assert.That(boards, Is.Not.Empty, a + ": Billboard 없음");
-                foreach (var b in boards)
+                Assert.AreEqual(1, boards.Count, a + ": Billboard 묶음은 1개");
+                string bt = trOfGo[boards[0]];
+                Assert.AreNotEqual("0", father[bt], a + ": 루트 통째 빌보드 금지(묶음은 루트 아래)");
+                Assert.AreEqual("0", father[father[bt]], a + ": 묶음은 루트 바로 아래");
+                foreach (var img in images)
                 {
-                    Assert.AreNotEqual("0", father[b], a + ": 루트 통째 빌보드 금지");
-                    Assert.AreEqual("{x: 0, y: 0, z: 0, w: 1}", rot[b], a + ": 눕힌 이미지에 빌보드");
+                    string tr = trOfGo[img];
+                    bool under = false;
+                    for (string x = tr; x != "0"; x = father[x]) if (x == bt) { under = true; break; }
+                    Assert.That(under || rot[tr] != Ident, a + ": 서 있는 이미지는 Billboard 묶음 아래");
+                    if (rot[tr] != Ident) Assert.IsFalse(under, a + ": 눕힌 이미지는 묶음 밖");
                 }
             }
         }
