@@ -401,7 +401,9 @@ namespace MV.View
             {
                 var o = objs[i];
                 if (o == null || o.Dead || o.Z < pz + _cfg.ObjDrawBack || o.Z > pz + _cfg.ObjDrawFront) continue;
-                if (!_views.TryGetValue(o.Id, out var v)) _views[o.Id] = v = Show(o, groundY);
+                // 오브젝트 번호는 런마다 1부터 다시 쓴다(로비 트랙·새 런). 번호가 같아도 다른 오브젝트면 이전 뷰를 돌려주고 새로 만든다.
+                if (_views.TryGetValue(o.Id, out var v) && v.Obj != o) { Release(v); v = null; }
+                if (v == null) _views[o.Id] = v = Show(o, groundY);
                 v.Stamp = _stamp;
                 v.Go.transform.position = new Vector3((float)o.X, (float)groundY, (float)o.Z);
                 Animate(v, nowMs, playerZ, dt);
@@ -573,6 +575,11 @@ namespace MV.View
 
         void Release(View v)
         {
+            // 돌려줄 때 동작을 처음으로(흔들림·번쩍·눌림·쓰러짐·빠진 구슬). 다시 꺼낼 때도 Show가 한 번 더 맞춘다.
+            v.Shake = v.Flash = 0;
+            ResetMotion(v);
+            if (v.Inst != null) v.Inst.transform.localPosition = Vector3.zero;
+            v.Ds.SetAlphaScale(1f);
             v.Go.SetActive(false);
             v.Obj = null;
             if (v.Prefab != null)
