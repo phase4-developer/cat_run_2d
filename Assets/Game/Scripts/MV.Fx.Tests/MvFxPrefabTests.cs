@@ -9,7 +9,7 @@ namespace MV.Fx.Tests
     /// <summary>이펙트 프리팹(13종) 직렬화 값이 04_effect 그룹 001 행·06 §6.3 고정 색과 같은지, 드라이버가 정본 개수·수명을 만드는지.</summary>
     public sealed class MvFxPrefabTests
     {
-        const string Dir = "Assets/Game/Addressables/Local/Effect/";
+        const string Dir = "Assets/Game/Addressables/Local/Effect/Prefab/";
 
         /// <summary>06 §6.3 표가 정한 종류별 고정 색(호출 색이 없을 때).</summary>
         static readonly Dictionary<string, string> FixedColor = new Dictionary<string, string>

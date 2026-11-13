@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MV.View
 {
     /// <summary>
-    /// 스테이지 맵 프리팹(`Stage_{n}`) 루트. 게임 루프가 지역(area)에 맞는 프리팹을 불러와 <see cref="Bind"/>한다.
+    /// 스테이지 맵 프리팹(`Stage{n}`, 주소 = 파일 이름) 루트. 게임 루프가 지역(area)에 맞는 프리팹을 불러와 <see cref="Bind"/>한다.
     /// 하는 일은 셋뿐이다.
     /// 1) Backdrop(하늘·원경)을 카메라 앞 먼 곳에 붙이고, 원경은 카메라 x를 따라 텍스처를 밀어 시차를 낸다.
     /// 2) Ground(바닥 판)를 카메라 z를 따라 <see cref="GroundSnap"/> 단위로 옮겨 끝없이 이어 보이게 한다(타일 반복 길이의 배수라 이음매가 안 보인다).
