@@ -31,7 +31,12 @@ namespace MV.View
         /// 등급 → 그림 이름 표(인덱스 1..`103_item` 최고 등급, 0은 비움). 등급 수는 표에서 읽는다.
         /// `projSprite`가 빈 등급(또는 행이 없는 등급)은 바로 아래 등급 그림을 다시 쓴다(2026-11-11 사용자 결정). 표가 없으면 null.
         /// </summary>
-        public static string[] NamesByTier(MvTables tables)
+        public static string[] NamesByTier(MvTables tables) => ColumnByTier(tables, it => it.projSprite);
+
+        /// <summary>등급 → 꼬리 프리팹 주소 표(`103_item.projTail`, 노션 「신작 이펙트 리소스 관리」). 빈 등급은 바로 아래 등급 꼬리. 고르는 등급은 <see cref="ArtTier"/>.</summary>
+        public static string[] TailsByTier(MvTables tables) => ColumnByTier(tables, it => it.projTail);
+
+        static string[] ColumnByTier(MvTables tables, Func<ItemData, string> column)
         {
             var items = tables?.Item?.Sorted;
             if (items == null) return null;
@@ -41,8 +46,10 @@ namespace MV.View
             for (int i = 0; i < items.Count; i++)
             {
                 var it = items[i];
-                if (it == null || it.tier < MinTier || string.IsNullOrEmpty(it.projSprite)) continue;
-                a[it.tier] = it.projSprite;
+                if (it == null || it.tier < MinTier) continue;
+                string v = column(it);
+                if (string.IsNullOrEmpty(v)) continue;
+                a[it.tier] = v;
             }
             for (int t = MinTier + 1; t <= max; t++) if (string.IsNullOrEmpty(a[t])) a[t] = a[t - 1];
             return a;

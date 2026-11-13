@@ -110,7 +110,7 @@ namespace MV.Data
         public const string Table = "103_item";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("tier", true).Int("sort").Bool("active")
             .Int("dmg", true).Color("col").Color("gradeCol").Bool("spin").Res("icon", MvAtlas.UiIcon)
-            .Res("projSprite", MvAtlas.Theme).Str("lookName");
+            .Res("projSprite", MvAtlas.Address).Res("projTail", MvAtlas.Address).Str("lookName");
 
         public int tier { get; private set; }
         public int dmg { get; private set; }
@@ -118,7 +118,10 @@ namespace MV.Data
         public string gradeCol { get; private set; }
         public bool spin { get; private set; }
         public string icon { get; private set; }
+        /// <summary>마법탄 그림 주소(`Local/Projectile/Image/projectile_n`, 노션 「신작 이펙트 리소스 관리」 무기 단계 표).</summary>
         public string projSprite { get; private set; }
+        /// <summary>마법탄 꼬리 프리팹 주소(`VFX_Tail_n`). 마법탄 프리팹 proj_Image 아래에 끼운다.</summary>
+        public string projTail { get; private set; }
         public string lookName { get; private set; }
 
         public ItemData(TSVRow r) : base(r) { }
@@ -133,6 +136,7 @@ namespace MV.Data
             spin = Bool(r, "spin");
             icon = S(r, "icon");
             projSprite = S(r, "projSprite");
+            projTail = S(r, "projTail");
             lookName = S(r, "lookName");
         }
     }

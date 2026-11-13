@@ -102,6 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1606828164665358771}
   - component: {fileID: 8996607505994137388}
+  - component: {fileID: 3581620000000000002}
   m_Layer: 0
   m_Name: projectile
   m_TagString: Untagged
@@ -139,6 +140,20 @@ SortingGroup:
   m_SortingOrder: 0
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
+--- !u!114 &3581620000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705315384112254637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79bc9457a2a64cf4938ecd2b6c6ce111, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _image: {fileID: 7236562879779471921}
+  _card: {fileID: 7704660676060173279}
 --- !u!1 &2069422366764753758
 GameObject:
   m_ObjectHideFlags: 0

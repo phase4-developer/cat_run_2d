@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using jjevol;
 using MV.Data;
 using MV.Run;
 using UnityEngine;
@@ -8,8 +11,11 @@ namespace MV.View
 {
     /// <summary>
     /// 런 투사체 뷰(02 §2.1.4 「던진 장난감 L3804, 회전 장난감 L3800」·「창 궤적 L3802~3803」 행, 정본 `draw2D` L3800~3804).
-    /// 던진 장난감 = 빌보드 1장(`World_Proj_{t}`, 테마 아틀라스, 로컬 z 회전 −(ms/110 + sz)), 창 = 월드 선 메쉬 2겹 + 머리 빌보드
-    /// (`World_Proj_SpearHead_Fire`/`_Bolt`, `Atlas_Fx_Common`), 회전 장난감 = 플레이어 둘레 ORB_COUNT개 빌보드(orb 카드).
+    /// 던진 장난감 = 마법탄 프리팹(`300 proj.prefab`, 노션 「신작 이펙트 리소스 관리」 투사체 프리팹 구조, <see cref="ProjectileRig"/>)을 빌보드에 세우고
+    /// proj_Image에 등급 그림(`103_item.projSprite` 단독 주소), 그 아래에 등급 꼬리(`103_item.projTail`)를 끼운다. 그림만 로컬 z 회전 −(ms/110 + sz). 크기는 프리팹 그대로.
+    /// 창 = 월드 선 메쉬 2겹 + 머리 빌보드
+    /// (`World_Proj_SpearHead_Fire`/`_Bolt`, `Atlas_Fx_Common`), 회전 장난감 = 플레이어 둘레 ORB_COUNT개 빌보드(orb 카드, 등급 그림만).
+    /// 그림·프리팹·꼬리는 Init 때 모두 읽기 시작하고, 읽히기 전에는 그 투사체를 그리지 않는다.
     /// 정렬: 순위 Unit, 탐침 = 위치(오프셋 0), 편향 sort.proj / sort.blade, 안개 알파 없음(02 §2.3.1 7·8행, §2.4.1 대상 아님).
     /// 틴트는 화면 전체 곱하기 층(<see cref="TintLayer"/>)이 덮으므로 따로 하지 않는다.
     /// 풀: 투사체 `Id`로 묶고 최대 <see cref="MaxProjs"/>개([창작], 정본·표에 상한 없음). 넘는 것은 그리지 않는다.
@@ -32,6 +38,8 @@ namespace MV.View
             public SpriteRenderer Sr;
             public GameObject Line;
             public MeshFilter LineMf;
+            public ProjectileRig Rig;
+            public bool Fresh;
             public int Stamp;
         }
 
@@ -40,6 +48,12 @@ namespace MV.View
         readonly List<int> _drop = new List<int>(MaxProjs);
         Item[] _blades = System.Array.Empty<Item>();
         Sprite[] _projSprites = System.Array.Empty<Sprite>();
+        readonly Dictionary<string, AddressableLease<Sprite>> _spriteLeases = new Dictionary<string, AddressableLease<Sprite>>(System.StringComparer.Ordinal);
+        readonly Dictionary<string, AddressableLease<GameObject>> _prefabLeases = new Dictionary<string, AddressableLease<GameObject>>(System.StringComparer.Ordinal);
+        readonly HashSet<string> _loading = new HashSet<string>(System.StringComparer.Ordinal);
+        readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        string _projPrefab;
+        string[] _tails;
         OrbConfig _orb;
         Sprite _headFire, _headBolt;
         Mesh _lineFire, _lineOther;
@@ -47,7 +61,7 @@ namespace MV.View
         MvTables _tables;
         ViewConfig _cfg;
         WorldSpriteCache _sprites;
-        string _fxAtlas, _themeAtlas;
+        string _fxAtlas;
         string[] _names;
         double _stepH, _stepD, _bump;
         int _made, _stamp;
@@ -75,7 +89,10 @@ namespace MV.View
             if (_spriteMaterial == null) _spriteMaterial = fallbackMaterial;
             if (_lineMaterial == null) _lineMaterial = _spriteMaterial;
             _names = ProjLayout.NamesByTier(tables);
+            _tails = ProjLayout.TailsByTier(tables);
             _projSprites = new Sprite[_names?.Length ?? 0];
+            _projPrefab = tables.RunConfig.Raw(RunConfigKeys.Proj_Prefab);
+            if (_sprites != null) LoadArt();
             _orb = OrbConfig.From(tables.RunConfig);
             var c = tables.Climb.Config();
             _stepH = c != null ? c["stepH"] : 0;
@@ -96,11 +113,75 @@ namespace MV.View
             Hide();
         }
 
-        /// <summary>테마 아틀라스(`304_theme.worldAtlas`, 미리 로드). 캐시한 그림을 비운다.</summary>
-        public void SetTheme(string worldAtlas)
+        /// <summary>마법탄 프리팹·등급 그림·등급 꼬리를 읽기 시작한다(같은 주소는 한 번). 그림 캐시가 없는 시험에서는 부르지 않는다.</summary>
+        void LoadArt()
         {
-            _themeAtlas = worldAtlas;
-            System.Array.Clear(_projSprites, 0, _projSprites.Length);
+            var ct = _cts.Token;
+            LoadPrefab(_projPrefab, ct);
+            if (_names != null) foreach (var n in _names) LoadSprite(n, ct);
+            if (_tails != null) foreach (var n in _tails) LoadPrefab(n, ct);
+        }
+
+        void LoadSprite(string address, CancellationToken ct)
+        {
+            if (string.IsNullOrEmpty(address) || _spriteLeases.ContainsKey(address) || !_loading.Add("s:" + address)) return;
+            LoadSpriteAsync(address, ct).Forget();
+        }
+
+        void LoadPrefab(string address, CancellationToken ct)
+        {
+            if (string.IsNullOrEmpty(address) || _prefabLeases.ContainsKey(address) || !_loading.Add("p:" + address)) return;
+            LoadPrefabAsync(address, ct).Forget();
+        }
+
+        async UniTaskVoid LoadSpriteAsync(string address, CancellationToken ct)
+        {
+            try
+            {
+                var lease = await AddressableScope.Get<Sprite>(address, ct);
+                if (this == null) { lease?.Dispose(); return; }
+                if (lease == null || lease.Asset == null) { Debug.LogError($"ProjectileView: 마법탄 그림 로드 실패 {address}"); lease?.Dispose(); return; }
+                _spriteLeases[address] = lease;
+                System.Array.Clear(_projSprites, 0, _projSprites.Length);
+            }
+            catch (System.OperationCanceledException)
+            {
+            }
+        }
+
+        async UniTaskVoid LoadPrefabAsync(string address, CancellationToken ct)
+        {
+            try
+            {
+                var lease = await AddressableScope.GetPrefab(address, ct);
+                if (this == null) { lease?.Dispose(); return; }
+                if (lease == null || lease.Asset == null) { Debug.LogError($"ProjectileView: 프리팹 로드 실패 {address}"); lease?.Dispose(); return; }
+                if (address == _projPrefab && lease.Asset.GetComponent<ProjectileRig>() == null)
+                {
+                    Debug.LogError($"ProjectileView: {address}에 {nameof(ProjectileRig)}가 없습니다");
+                    lease.Dispose();
+                    return;
+                }
+                _prefabLeases[address] = lease;
+            }
+            catch (System.OperationCanceledException)
+            {
+            }
+        }
+
+        GameObject Prefab(string address) => address != null && _prefabLeases.TryGetValue(address, out var l) ? l.Asset : null;
+
+        /// <summary>항목에 마법탄 프리팹 인스턴스를 붙인다(빌보드 아래, 처음 한 번). 프리팹이 아직 없으면 null.</summary>
+        ProjectileRig EnsureRig(Item it)
+        {
+            if (it.Rig != null) return it.Rig;
+            var prefab = Prefab(_projPrefab);
+            if (prefab == null) return null;
+            var go = Instantiate(prefab, it.Spin.parent, false);
+            go.name = _projPrefab;
+            it.Rig = go.GetComponent<ProjectileRig>();
+            if (it.Rig.Image != null && _spriteMaterial != null) it.Rig.Image.sharedMaterial = _spriteMaterial;
+            return it.Rig;
         }
 
         Item Make(string name, float bias)
@@ -176,6 +257,7 @@ namespace MV.View
                     {
                         it = Rent();
                         if (it == null) continue;   // 풀 최대치를 넘음
+                        it.Fresh = true;
                         _active[b.Id] = it;
                     }
                     it.Stamp = _stamp;
@@ -203,8 +285,9 @@ namespace MV.View
 
         bool PlaceProj(Item it, RunProjectile b, bool fire, double wy, double nowSec)
         {
+            if (!b.Spear) return PlaceToy(it, b, wy, nowSec);
+            if (it.Rig != null && it.Rig.gameObject.activeSelf) it.Rig.gameObject.SetActive(false);
             Sprite sprite;
-            if (b.Spear)
             {
                 sprite = SpearHead(fire);
                 var mesh = SpearLine(fire);
@@ -212,14 +295,6 @@ namespace MV.View
                 if (!it.Line.activeSelf) it.Line.SetActive(true);
                 it.Spin.localRotation = Quaternion.identity;
                 it.Spin.localScale = Vector3.one;
-            }
-            else
-            {
-                sprite = ProjSprite(b.Tier);
-                if (it.Line.activeSelf) it.Line.SetActive(false);
-                it.Spin.localRotation = Quaternion.Euler(0f, 0f, ProjLayout.ToDegrees(ProjLayout.ProjAngle(nowSec, b.Sz)));
-                float k = (float)(ProjLayout.ProjRadius / ProjLayout.BakedRadius);
-                it.Spin.localScale = new Vector3(k, k, 1f);
             }
             if (sprite == null)
             {
@@ -229,6 +304,33 @@ namespace MV.View
             if (it.Sr.sprite != sprite) it.Sr.sprite = sprite;
             it.Go.transform.position = new Vector3((float)b.X, (float)(wy + ProjLayout.ProjY), (float)b.Z);
             if (!it.Go.activeSelf) it.Go.SetActive(true);
+            return true;
+        }
+
+        /// <summary>던진 장난감: 마법탄 프리팹에 등급 그림·꼬리를 넣고 그림만 돌린다. 프리팹·그림이 아직 없으면 그리지 않는다.</summary>
+        bool PlaceToy(Item it, RunProjectile b, double wy, double nowSec)
+        {
+            if (it.Line.activeSelf) it.Line.SetActive(false);
+            if (it.Sr.sprite != null) it.Sr.sprite = null;
+            var rig = EnsureRig(it);
+            var sprite = ProjSprite(b.Tier);
+            if (rig == null || sprite == null)
+            {
+                if (it.Go.activeSelf) it.Go.SetActive(false);
+                return false;
+            }
+            if (!rig.gameObject.activeSelf) rig.gameObject.SetActive(true);
+            rig.SetSprite(sprite);
+            string tail = ProjLayout.ProjSpriteName(b.Tier, _tails);
+            rig.SetTail(tail, Prefab(tail));
+            rig.SetSpin(ProjLayout.ToDegrees(ProjLayout.ProjAngle(nowSec, b.Sz)));
+            it.Go.transform.position = new Vector3((float)b.X, (float)(wy + ProjLayout.ProjY), (float)b.Z);
+            if (!it.Go.activeSelf) it.Go.SetActive(true);
+            if (it.Fresh)
+            {
+                it.Fresh = false;
+                rig.ResetTrails();
+            }
             return true;
         }
 
@@ -250,6 +352,7 @@ namespace MV.View
             {
                 var it = _blades[i];
                 var sprite = ProjSprite(ProjLayout.BladeTier(i, fire));
+                if (it.Rig != null && it.Rig.gameObject.activeSelf) it.Rig.gameObject.SetActive(false);
                 if (sprite == null)
                 {
                     if (it.Go.activeSelf) it.Go.SetActive(false);
@@ -293,8 +396,9 @@ namespace MV.View
             int t = ProjLayout.ArtTier(tier, _names);
             var sp = _projSprites[t];
             if (sp != null) return sp;
-            if (_sprites == null || !_sprites.IsLoaded(_themeAtlas)) return null;
-            sp = _sprites.Get(_themeAtlas, ProjLayout.ProjSpriteName(t, _names));
+            string address = ProjLayout.ProjSpriteName(t, _names);
+            if (address == null || !_spriteLeases.TryGetValue(address, out var lease)) return null;
+            sp = lease.Asset;
             _projSprites[t] = sp;
             return sp;
         }
@@ -334,6 +438,12 @@ namespace MV.View
 
         void OnDestroy()
         {
+            _cts.Cancel();
+            _cts.Dispose();
+            foreach (var l in _spriteLeases.Values) l?.Dispose();
+            foreach (var l in _prefabLeases.Values) l?.Dispose();
+            _spriteLeases.Clear();
+            _prefabLeases.Clear();
             if (_lineFire != null) Destroy(_lineFire);
             if (_lineOther != null) Destroy(_lineOther);
         }

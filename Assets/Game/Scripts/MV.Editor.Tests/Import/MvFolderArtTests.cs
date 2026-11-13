@@ -46,6 +46,30 @@ namespace MV.Editor.Tests.Import
             Assert.That(failures, Is.Empty, string.Join("\n", failures));
         }
 
+        /// <summary>MV-VIEW-PROJ-2: 103_item projSprite·projTail과 300 proj.prefab이 투사체 그룹에 등록된 주소다.</summary>
+        [Test]
+        public void ProjectileTableColumns_ReferenceProjectileGroup()
+        {
+            var tables = new MV.Data.MvTables();
+            tables.LoadAll(new MV.Data.MvTsvDirectorySource(MV.Data.MvTableLoader.TsvDirectory));
+            var proj = MvFolderArt.ProjectileEntries();
+            var failures = new List<string>();
+            void Check(string where, string address)
+            {
+                if (string.IsNullOrEmpty(address)) failures.Add(where + ": 빈칸");
+                else if (!proj.ContainsKey(address)) failures.Add($"{where}: {address}가 투사체 폴더에 없음");
+            }
+            Assert.That(tables.Item.Datas, Is.Not.Empty, "103_item 행 없음");
+            foreach (var row in tables.Item.Datas)
+            {
+                Check(row.id + ".projSprite", row.projSprite);
+                Check(row.id + ".projTail", row.projTail);
+            }
+            Check("300 " + MV.Data.RunConfigKeys.Proj_Prefab, tables.RunConfig.Raw(MV.Data.RunConfigKeys.Proj_Prefab));
+            Assert.That(failures, Is.Empty, string.Join("
+", failures));
+        }
+
         /// <summary>Addressables 전체에서 같은 주소가 두 항목에 붙지 않는다(주소 = 파일 이름 규칙의 충돌 검사).</summary>
         [Test]
         public void AllAddresses_AreUnique()

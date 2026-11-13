@@ -80,7 +80,6 @@ namespace MV.View
             if (_tint != null) _tint.SetTheme(theme);
             if (_objects != null) _objects.SetTheme(theme);
             if (_screen != null) _screen.SetTheme(theme);
-            if (_projs != null) _projs.SetTheme(theme.worldAtlas);
             if (prev != null && prev != _themeAtlas) _sprites.ReleaseAtlas(prev);
             return ok;
         }
