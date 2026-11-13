@@ -41,6 +41,8 @@ namespace MV.UI.Tests
             public void SetStairs(string text, bool flying) { Flying = flying; Set("stairs", text); }
             public void SetGauge(string levelText, string perText, float fill01) { Fill = fill01; Text["per"] = perText; Set("gauge", levelText); }
             public void SetMergeHint(string text) => Set("mergeHint", text);
+            public float ClimbAlpha;
+            public void SetClimbCount(string text, float alpha) { ClimbAlpha = alpha; Set("climb", text); }
             public void SetWeapon(int tier, string iconSprite, string name, string damageText, Color gradeColor)
             {
                 Tier = tier; Icon = iconSprite; Grade = gradeColor; Text["dmg"] = damageText; Set("weapon", name);
@@ -180,6 +182,37 @@ namespace MV.UI.Tests
             {
                 Object.DestroyImmediate(go);
             }
+        }
+
+        [Test]
+        public void ClimbCount_ShowsShownOverTotal_AfterSideTurn()
+        {
+            var view = new FakeView();
+            var p = new RunHudPresenter();
+            p.SetView(view);
+            var s = Sample();
+            var src = new FakeSource { State = s };
+            p.Bind(src);
+            p.Tick();
+            Assert.AreEqual("", view.Text["climb"], "오르기 전에는 비움");
+            Assert.AreEqual(0f, view.ClimbAlpha);
+            s.ClimbShown = 12; s.ClimbN = 30; s.ClimbAlpha = 1f;
+            src.State = s;
+            p.Tick();
+            Assert.AreEqual("12 / 30 칸", view.Text["climb"], "새 HTML `${n} / ${N} 칸`");
+            Assert.AreEqual(1f, view.ClimbAlpha);
+        }
+
+        [Test]
+        public void ClimbAlpha_FollowsSideTurnSmoothstep()
+        {
+            var t = MV.UI.Tests.MetaUiTestKit.Base();
+            double turn = t.Camera.ByKey("side").turnSec;
+            Assert.AreEqual(0f, RunStateHudSource.ClimbAlpha(t, 0), "돌기 시작 전");
+            Assert.AreEqual(0f, RunStateHudSource.ClimbAlpha(t, turn * 0.5), 1e-6, "e = 0.5 ≤ 0.6");
+            Assert.AreEqual(1f, RunStateHudSource.ClimbAlpha(t, turn), 1e-6, "다 돌면 e = 1 → min(1, 0.4·3)");
+            double k = 0.8, e = k * k * (3 - 2 * k);
+            Assert.AreEqual((float)((e - 0.6) * 3), RunStateHudSource.ClimbAlpha(t, turn * k), 1e-5);
         }
     }
 }

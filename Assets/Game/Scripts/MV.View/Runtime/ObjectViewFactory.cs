@@ -29,6 +29,8 @@ namespace MV.View
         [SerializeField] Material _spriteMaterial;
         [SerializeField] Material _vertexColorMaterial;
         [SerializeField] Material _labelMaterial;
+        /// <summary>글자판 공유 TMP 머티리얼(계단 칸 번호도 같이 쓴다).</summary>
+        public Material LabelMaterial => _labelMaterial;
 
         /// <summary>글자판 문구 공급(UI·Localization 연결 지점). 없으면 <see cref="DefaultLabel"/>.</summary>
         public Func<RunObject, string> LabelText;

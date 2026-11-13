@@ -16,7 +16,7 @@ namespace MV.View
     /// 프리팹은 <see cref="CharacterPool"/>, 그림은 행 아틀라스(<see cref="WorldSpriteCache"/>)에서. 지금 행 + 다음 등급 행 아틀라스를 미리 읽고 캐릭터 묶음별 최근 3개만 둔다(03 §3.8.8).
     /// 그림은 <see cref="CharStateMachine"/>이 고른다: 런 중 Walk, 끝나면 Stand, 계단 정산(오르기 단계) 중 플레이어 Stair(분신은 Walk — 정산 중 분신 숨김은 카메라 궤도 회전과 함께 5단계).
     /// 쏜 순간은 런 이벤트 Fire(a = 0 플레이어, 1.. 분신), 기쁨은 GateTake(계단·공방 게이트 통과)·GaugeLevelUp(계단 Lv 상승)으로 모두가 함께 돈다(웹 프로토 `paperSpin`).
-    /// 위치(정본 syncScene): 런 = (P.x, WY, P.z), 오르기 = <see cref="CameraModel.ClimbPlayer"/>, 분신 y = <see cref="CatLayout.StairY"/>. 정렬: 순위 Unit, 탐침 +sort.catProbeY, 안개 없음.
+    /// 위치(정본 syncScene): 런 = (P.x, WY, P.z), 오르기 = <see cref="ClimbPath"/>(새 HTML climbCatPos), 분신 y = <see cref="CatLayout.StairY"/>. 정렬: 순위 Unit, 탐침 +sort.catProbeY, 안개 없음.
     /// 프리팹·그림이 로드되기 전에는 그 캐릭터를 그리지 않는다.
     /// </summary>
     [DefaultExecutionOrder(56)]
@@ -49,7 +49,8 @@ namespace MV.View
         ViewConfig _cfg;
         CharAnimParams _anim;
         int _playerCat, _friendCat;
-        double _xMax, _stepH, _stepD, _bump, _dropSec;
+        double _xMax, _stepH, _stepD, _dropSec;
+        ClimbPath _path;
         ClimbState _climbSeen;
         bool _ready;
 
@@ -81,7 +82,7 @@ namespace MV.View
             _stepH = c != null ? c["stepH"] : 0;
             _stepD = c != null ? c["stepD"] : 1;
             _dropSec = c != null ? c["dropSec"] : 0;
-            _bump = ViewConfig.ClimbBumpOf(tables.Climb);
+            _path = ClimbPath.From(tables.Climb);
             _pool?.Dispose();
             _pool = new CharacterPool(transform, Setup);
             while (_units.Count < 1 + _offsets.Count) _units.Add(new Unit());
@@ -158,7 +159,7 @@ namespace MV.View
             int tier = s.EqTier();
 
             double px = s.P.X, pz = s.P.Z, py = 0, wy = s.WorldY;
-            if (C != null) CameraModel.ClimbPlayer(C.Pos, C.K, C.Z0, _stepH, _stepD, _bump, out py, out pz);
+            if (C != null) _path.Cat(C.Pos, C.K, C.Z0, out py, out pz);
             int visible = 0;
             if (Place(0, _playerCat, 0, tier, C != null ? CharState.Stair : state, px, wy + py, pz, nowSec)) visible++;
 

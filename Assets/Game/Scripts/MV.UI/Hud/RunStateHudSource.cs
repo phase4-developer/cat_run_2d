@@ -44,6 +44,12 @@ namespace MV.UI
             {
                 h.Stairs = Math.Max(0, climb.N - climb.Shown);
                 h.Flying = s.Phase == RunPhase.Climb;
+                if (h.Flying)
+                {
+                    h.ClimbN = climb.N;
+                    h.ClimbShown = Math.Min(climb.N, climb.Shown);
+                    h.ClimbAlpha = ClimbAlpha(t, climb.Time);
+                }
             }
             else h.Stairs = s.Stairs;
 
@@ -65,6 +71,18 @@ namespace MV.UI
             }
             else h.WeaponName = "무기 " + tier;
             return true;
+        }
+
+        /// <summary>새 HTML 「n / N 칸」은 옆 시점 돌기 e(320 side.turnSec, smooth)가 ClimbTextFrom을 넘으면 ClimbTextRate 배로 나타난다.</summary>
+        public const double ClimbTextFrom = 0.6, ClimbTextRate = 3;
+
+        /// <summary>오르기 시작부터 time초 뒤 글자 알파. 카메라 돌기는 오르기와 함께 0에서 시작한다(<c>ORB.k += dt/dur</c>).</summary>
+        public static float ClimbAlpha(MvTables t, double time)
+        {
+            var side = t?.Camera.ByKey("side");
+            double turn = side != null ? side.turnSec : 0;
+            double k = turn > 0 ? Math.Max(0, Math.Min(1, time / turn)) : 1, e = k * k * (3 - 2 * k);
+            return e > ClimbTextFrom ? (float)Math.Min(1, (e - ClimbTextFrom) * ClimbTextRate) : 0f;
         }
 
         static float GaugeFill(RunState s)

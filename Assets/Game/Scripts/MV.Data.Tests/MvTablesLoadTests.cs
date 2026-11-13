@@ -20,7 +20,7 @@ namespace MV.Data.Tests
             ["112_cardEffect"] = 26, ["113_god"] = 12, ["114_hpRule"] = 7, ["115_cardTier"] = 5, ["116_charLook"] = 16,
             ["300_runConfig"] = 183, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15, ["305_stageObject"] = 5,
             ["310_template"] = 10, ["311_templateObject"] = 123, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
-            ["314_spawnGroup"] = 35, ["320_camera"] = 3, ["330_climb"] = 5,
+            ["314_spawnGroup"] = 35, ["320_camera"] = 4, ["330_climb"] = 5,
             ["400_content"] = 5, ["401_modeStage"] = 53, ["402_modeRule"] = 4, ["410_questGroup"] = 14, ["413_repeatQuest"] = 16,
             ["414_passQuest"] = 60, ["420_achievement"] = 19, ["499_contentConfig"] = 40,
             ["700_productTab"] = 6, ["701_product"] = 29, ["702_shopSection"] = 4,
@@ -102,9 +102,10 @@ namespace MV.Data.Tests
         public void Requests3_ColumnsAndRows_MatchSpec()
         {
             var t = TsvFixture.LoadTables();
-            // 02 §2.7.3 지면 끝, 330 출렁임(정본 L2758).
+            // 02 §2.7.3 지면 끝, 330 칸 위 고양이 높이(새 HTML climbCatPos 0.6)·칸 프리팹.
             Assert.That(t.RunConfig.D(RunConfigKeys.View_GroundFar), Is.EqualTo(120));
-            Assert.That(t.Climb.Config()["bumpH"], Is.EqualTo(0.12).Within(1e-9));
+            Assert.That(t.Climb.Config()["catLift"], Is.EqualTo(0.6).Within(1e-9));
+            Assert.That(t.Climb.Config().stepPrefab, Is.EqualTo("Obj_ClimbStep"));
             // 304: 길가 소품·줄 종류는 deco 규칙(정본 drawMoonProp L3572, drawClothes L3547) — 15행 모두.
             foreach (var th in t.Theme.Datas)
             {
