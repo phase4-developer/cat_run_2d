@@ -377,7 +377,33 @@ namespace MV.Editor.Import
                 if (string.IsNullOrEmpty(guid)) { notes?.Add($"{pair.Key}: 프리팹 GUID 없음 — 주소 보류"); continue; }
                 desired[MvArtRules.CharacterGroup][guid] = (pair.Key, MvArtRules.CharacterLabel);
             }
+            AddFolderEntries(desired[MvArtRules.BgGroup], MvFolderArt.BgEntries(notes), notes);
+            AddFolderEntries(desired[MvArtRules.ProjectileGroup], MvFolderArt.ProjectileEntries(notes), notes);
             return desired;
+        }
+
+        /// <summary>폴더 규칙 항목(주소 = 파일 이름, 라벨 없음)을 그룹 목록에 더한다.</summary>
+        static void AddFolderEntries(Dictionary<string, (string address, string label)> group, SortedDictionary<string, string> entries, List<string> notes)
+        {
+            foreach (var pair in entries)
+            {
+                var guid = AssetDatabase.AssetPathToGUID(pair.Value);
+                if (string.IsNullOrEmpty(guid)) { notes?.Add($"{pair.Key}: GUID 없음 — 주소 보류"); continue; }
+                group[guid] = (pair.Key, null);
+            }
+        }
+
+        /// <summary>이펙트 그룹에 더할 (guid → 주소). 이 그룹은 MvArtSetup 소유가 아니라 지우지 않고 더하기·주소 맞추기만 한다.</summary>
+        public static Dictionary<string, string> DesiredEffectEntries(List<string> notes = null)
+        {
+            var map = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (var pair in MvFolderArt.EffectPrefabEntries(notes))
+            {
+                var guid = AssetDatabase.AssetPathToGUID(pair.Value);
+                if (string.IsNullOrEmpty(guid)) { notes?.Add($"{pair.Key}: GUID 없음 — 주소 보류"); continue; }
+                map[guid] = pair.Key;
+            }
+            return map;
         }
 
         static void EnsureAddressables(MvEnsureResult r)
@@ -437,6 +463,30 @@ namespace MV.Editor.Import
                     if (changed) r.EntriesChanged++;
                 }
                 if (r.EntriesChanged > 0) EditorUtility.SetDirty(group);
+            }
+
+            var effectGroup = settings.FindGroup(MvArtRules.EffectGroup);
+            if (effectGroup == null) r.Notes.Add(MvArtRules.EffectGroup + " 그룹 없음 — 이펙트 프리팹 주소 보류");
+            else
+            {
+                int before = r.EntriesChanged;
+                foreach (var pair in DesiredEffectEntries(r.Notes).OrderBy(p => p.Value, StringComparer.Ordinal))
+                {
+                    var entry = settings.FindAssetEntry(pair.Key);
+                    bool changed = false;
+                    if (entry == null || entry.parentGroup != effectGroup)
+                    {
+                        entry = settings.CreateOrMoveEntry(pair.Key, effectGroup, false, false);
+                        changed = true;
+                    }
+                    if (entry.address != pair.Value)
+                    {
+                        entry.SetAddress(pair.Value, false);
+                        changed = true;
+                    }
+                    if (changed) r.EntriesChanged++;
+                }
+                if (r.EntriesChanged > before) EditorUtility.SetDirty(effectGroup);
             }
 
             if (settingsChanged || r.EntriesChanged > 0 || r.GroupsChanged > 0)

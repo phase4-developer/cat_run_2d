@@ -42,6 +42,10 @@ namespace MV.Editor.Import
                 if (p.StartsWith(MvArtRules.WorldAtlasFolder + "/", StringComparison.Ordinal)) return true;
                 if (p.StartsWith(MvArtRules.TextureFolder + "/", StringComparison.Ordinal)) return true;
                 if (p.StartsWith(MvArtRules.CharacterRoot + "/", StringComparison.Ordinal)) return true;
+                if (p.StartsWith(MvArtRules.BgPrefabFolder + "/", StringComparison.Ordinal)) return true;
+                if (p.StartsWith(MvArtRules.ProjectilePrefabFolder + "/", StringComparison.Ordinal)) return true;
+                if (p.StartsWith(MvArtRules.ProjectileImageFolder + "/", StringComparison.Ordinal)) return true;
+                if (p.StartsWith(MvArtRules.EffectPrefabFolder + "/", StringComparison.Ordinal)) return true;
             }
             return false;
         }

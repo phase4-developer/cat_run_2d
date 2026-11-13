@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Local_BG
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Local_BG
+  m_GUID: 9a1bbfd4527617948bb6d71ddbb563f0
+  m_SerializeEntries:
+  - m_GUID: 28b3601d9fb7f4bc8b9a09b6a650ea69
+    m_Address: Stage1_Block_Cat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2dfcdd0460c444532a5cc4d317c8ce24
+    m_Address: Obj_Tower
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3f79218b270a145a489535f1075638f2
+    m_Address: Stage1_Block_Blue
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50add1b2d87ae4d87b17e45fc2bf289d
+    m_Address: Stage1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62c6f0102a1ac4f9aab4907aab870f9a
+    m_Address: Stage1_Arch
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e0498ad17d11465ca28b2500c75f0d4
+    m_Address: Obj_CraftGate
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 82b86a882bbaf4fb195a935a2772886a
+    m_Address: Obj_GemRock
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 890efbb3bef3e4d7fabe66c569383a83
+    m_Address: Obj_CoinPile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a6e529cc742c645bb9a201758a85d9f5
+    m_Address: Stage1_Portal
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bd292f017983f44939e4fca12986d13a
+    m_Address: Obj_StairGate
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c41e399ea3e9f46269def3ac81956077
+    m_Address: Obj_StairZone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4e822753f919473f80f6748fc60d5b7
+    m_Address: Obj_ClimbStep
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eedfd2c4624f14f1883e5b2dedc08e21
+    m_Address: Stage1_Block_Gold
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: d5d18f40cc7d37e48add8461267d01fe, type: 2}
+    - {fileID: 11400000, guid: 5513b9144b48f1f4fb04db1938fce8c2, type: 2}
+    m_SchemaDisplayOrder:
+    - Local_BG_BundledAssetGroupSchema
+    - Local_BG_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

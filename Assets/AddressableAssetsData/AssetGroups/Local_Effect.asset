@@ -69,6 +69,17 @@ MonoBehaviour:
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad9f9cb996e64639b51df21bddbb6867
+    m_Address: MV_FxNormal
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c08ac448b34cc4026ad0e973ef0c61fa
+    m_Address: Fx_Card_Lightning
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c252c0c18f9c48a88acd8e9ac2f8c716
     m_Address: Boom
     m_ReadOnly: 0
@@ -87,20 +98,14 @@ MonoBehaviour:
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f940b07d09c3418c80d86d58cf8ec148
-    m_Address: Impact
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - fx
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ad9f9cb996e64639b51df21bddbb6867
-    m_Address: MV_FxNormal
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - fx
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f001e692dd034c2c9d79a07d4ba1b09f
     m_Address: MV_FxAdd
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f940b07d09c3418c80d86d58cf8ec148
+    m_Address: Impact
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx

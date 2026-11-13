@@ -102,7 +102,18 @@ namespace MV.Editor.Import
         public const string UiAtlasGroup = "Local_UIAtlas";
         public const string WorldAtlasGroup = "Local_WorldAtlas";
         public const string TextureGroup = "Local_Texture";
-        public static readonly string[] OwnedGroups = { UiAtlasGroup, WorldAtlasGroup, TextureGroup, CharacterGroup };
+        public static readonly string[] OwnedGroups = { UiAtlasGroup, WorldAtlasGroup, TextureGroup, CharacterGroup, BgGroup, ProjectileGroup };
+
+        /// <summary>디자이너 배경 리소스(노션 「신작 배경 리소스 관리」). 프리팹만 주소를 단다(그림·머티리얼은 프리팹이 직접 참조).</summary>
+        public const string BgPrefabFolder = AddressablesLocal + "/BG/Prefab";
+        public const string BgGroup = "Local_BG";
+        /// <summary>디자이너 투사체 리소스(노션 「신작 이펙트 리소스 관리」). 프리팹과 등급별 그림(`projectile_n`)에 주소를 단다.</summary>
+        public const string ProjectilePrefabFolder = AddressablesLocal + "/Projectile/Prefab";
+        public const string ProjectileImageFolder = AddressablesLocal + "/Projectile/Image";
+        public const string ProjectileGroup = "Local_Projectile";
+        /// <summary>이펙트 프리팹 폴더. `Local_Effect`에는 머티리얼 등 다른 항목도 있어 이 폴더 프리팹은 더하기만 하고 지우지 않는다.</summary>
+        public const string EffectPrefabFolder = AddressablesLocal + "/Effect/Prefab";
+        public const string EffectGroup = "Local_Effect";
 
         /// <summary>디자이너 캐릭터 리소스(디자이너 PDF 경로, MV-SPEC-02 ArtResourcePlan). 앱 포함(Local) 묶음.</summary>
         public const string CharacterRoot = AddressablesLocal + "/Character";
