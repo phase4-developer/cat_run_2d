@@ -482,6 +482,93 @@ namespace MV.View.Tests
         }
 
         [Test]
+        public void Hit_PunchFromTable_MatchesNewHtml()
+        {
+            var t = ViewTestTables.CodeShapes();
+            // 새 HTML hit(2026-11-13 연출 정본): o.punch 벽 1, 금화·원석 1, 게이트 0.5, 수정탑 0.6. 흔들림 벽·수정탑.
+            Assert.AreEqual(1, t.HitReaction.ByKey("damageWall").punch);
+            Assert.AreEqual(1, t.HitReaction.ByKey("damageBox").punch);
+            Assert.AreEqual(0.5, t.HitReaction.ByKey("chargeStairGate").punch);
+            Assert.AreEqual(0.5, t.HitReaction.ByKey("chargeCraftGate").punch);
+            Assert.AreEqual(0.6, t.HitReaction.ByKey("chargeWell").punch);
+            Assert.Greater(t.HitReaction.ByKey("chargeWell").objShake, 0);
+            Assert.Greater(t.HitReaction.ByKey("damageWall").objShake, 0);
+
+            var f = MakeFactory();
+            var objs = new List<RunObject> { Obj(t, "wall", 1, 15), Obj(t, "sgate", 2, 20) };
+            f.Sync(objs, 0, 0, 0);
+            f.OnRunEvents(new List<RunEvent>
+            {
+                new RunEvent(RunEventType.Hit, objId: 1, kindId: objs[0].Kind.id),
+                new RunEvent(RunEventType.Hit, objId: 2, kindId: objs[1].Kind.id),
+            });
+            Assert.That(f.TryMotion(1, out double p1, out double d1), Is.True);
+            Assert.AreEqual(objs[0].Reaction.punch, p1, "106 punch → 눌림 시작값");
+            Assert.AreEqual(-1, d1);
+            Assert.That(f.TryMotion(2, out double p2, out _), Is.True);
+            Assert.AreEqual(objs[1].Reaction.punch, p2);
+            f.Sync(objs, 0, 0, 0);
+            var s = f.ViewOf(1).transform.localScale;
+            Assert.Greater(s.x, 1f, "눌림: 가로로 넓어지고");
+            Assert.Less(s.y, 1f, "세로로 눌린다");
+        }
+
+        [Test]
+        public void Break_KeepsViewForPaperDie_ThenReleases()
+        {
+            var t = ViewTestTables.CodeShapes();
+            var f = MakeFactory();
+            var wall = Obj(t, "wall", 1, 15);
+            var objs = new List<RunObject> { wall };
+            f.Sync(objs, 0, 0, 0);
+            f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Break, objId: 1, kindId: wall.Kind.id) });
+            wall.Dead = true;
+            f.Sync(objs, 0, 0, 0);
+            Assert.That(f.ViewOf(1), Is.Not.Null, "죽어도 0.6초는 쓰러지는 그림이 남는다(paperDie)");
+            Assert.That(f.TryMotion(1, out _, out double die), Is.True);
+            Assert.GreaterOrEqual(die, 0);
+            // Sync의 dt는 실시간(한 번에 최대 0.1초)이라 0.6초가 지나도록 여러 번 부른다.
+            for (int i = 0; i < 12 && f.ViewOf(1) != null; i++)
+            {
+                System.Threading.Thread.Sleep(110);
+                f.Sync(objs, 0, 0, 0);
+            }
+            Assert.That(f.ViewOf(1), Is.Null, "다 쓰러지면 뷰를 돌려준다");
+        }
+
+        [Test]
+        public void ObjectReaction_NewHtmlMotionFormulas()
+        {
+            // paperDie(L3663): k = 0 그대로, k = 1/6 가장 높이(0.35), k = 1 사라짐·눌림 0.05·기울기 dir·0.5
+            ObjectReaction.DiePose(0, 1, out double hop, out double sx, out double sy, out double roll, out double a);
+            Assert.AreEqual(0, hop, 1e-9); Assert.AreEqual(1, sx, 1e-9); Assert.AreEqual(1, sy, 1e-9); Assert.AreEqual(0, roll, 1e-9); Assert.AreEqual(1, a, 1e-9);
+            ObjectReaction.DiePose(1 / 6.0, 1, out hop, out _, out _, out _, out _);
+            Assert.AreEqual(0.35, hop, 1e-9);
+            ObjectReaction.DiePose(1, -1, out hop, out sx, out sy, out roll, out a);
+            Assert.AreEqual(0, a, 1e-9); Assert.AreEqual(0.05, sy, 1e-9); Assert.AreEqual(-0.5, roll, 1e-9); Assert.AreEqual(Math.Cos(Math.PI * 1.5), sx, 1e-9);
+            // 눌림 초당 9
+            Assert.AreEqual(0.1, ObjectReaction.PunchStep(1, 0.1), 1e-9);
+            Assert.AreEqual(0, ObjectReaction.PunchStep(0.05, 0.1));
+            // 결계 블록 자리(L3677)
+            ObjectReaction.WallJitter(3, 2, out double jx, out double jz);
+            double hs = 3 * 7.13 + 2 * 3.1;
+            Assert.AreEqual((FieldGen.Hash(hs) - 0.5) * 0.35, jx, 1e-12);
+            Assert.AreEqual(-0.4 + (FieldGen.Hash(hs + 1) - 0.5) * 0.4, jz, 1e-12);
+            // 게이트 막·포탈 빛 비율
+            Assert.AreEqual(0.55 / 0.32, ObjectReaction.CurtainRatio(true), 1e-12);
+            Assert.AreEqual(1, ObjectReaction.CurtainRatio(false));
+            Assert.AreEqual(0.15 / 0.35, ObjectReaction.PortalGlowRatio(true), 1e-12);
+            for (int i = 0; i < ObjectReaction.GateSparks; i++)
+            {
+                double ph = ObjectReaction.GateSparkPhase(12.3, i);
+                Assert.That(ph, Is.InRange(0.0, 1.0));
+                Assert.That(ObjectReaction.GateSparkX(i, 40, 2), Is.InRange(-2.0, 2.0));
+            }
+            Assert.AreEqual(1, ObjectReaction.TowerGlowRatio(0), 1e-12);
+            Assert.AreEqual(0.85 + 0.15 * Math.Sin(6 * 2.0 + 3), ObjectReaction.OrbPulse(2, 3), 1e-12);
+        }
+
+        [Test]
         public void Hit_NoShakeWhenTableTurnsItOff()
         {
             var t = ViewTestTables.WithCell(HitReactionData.Table, "damageWall", "objShake", "0");

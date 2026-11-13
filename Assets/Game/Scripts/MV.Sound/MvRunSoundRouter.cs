@@ -107,13 +107,7 @@ namespace MV.Sound
                 case RunEventType.ClimbTierUp: // L2281 tierup(t)
                     Add(cues, MvSoundKeys.Variant(MvSoundKeys.Tierup, e.A));
                     break;
-                case RunEventType.ClimbWarpStage: // L3165: 단계 > 0이면 tierup(min(4, st+1)) = 330 워프 행 enterSound
-                    if (e.A > 0)
-                    {
-                        var stages = t.Climb.WarpStages();
-                        if (e.A < stages.Count) Add(cues, stages[e.A].enterSound);
-                    }
-                    break;
+                // ClimbWarpStage: 새 HTML 마나 정산에는 우다다 단계 소리가 없다(2026-11-14, 옛 L3165 tierup 제거).
                 case RunEventType.ClimbEnd: // L2286
                     Add(cues, MvSoundKeys.Land);
                     break;

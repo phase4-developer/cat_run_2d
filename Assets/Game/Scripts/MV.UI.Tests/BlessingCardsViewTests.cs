@@ -203,6 +203,58 @@ namespace MV.UI.Tests
             Assert.IsFalse(v.transform.Find("Buffs").gameObject.activeSelf, "런 없으면 가호 줄 숨김");
         }
 
+        // ---------------- 마나 정산 종이 막(새 HTML drawWipes) ----------------
+
+        [Test]
+        public void ClimbWipe_Span_FollowsHtmlTimeline()
+        {
+            const float W = 1000;
+            Assert.IsTrue(ClimbWipeView.Span(W, 0, -1, .12, -1, out float x0, out float x1));
+            Assert.AreEqual(W, x0, 1e-3, "시작: 오른쪽 밖");
+            Assert.IsTrue(ClimbWipeView.Span(W, .125, -1, .12, -1, out x0, out _));
+            Assert.AreEqual(W * .5f, x0, 1e-3, "smoothstep(0.5) = 0.5");
+            Assert.IsFalse(ClimbWipeView.Span(W, ClimbWipeView.SideIn, -1, .12, -1, out _, out _), "0.25초에 다 덮고 사라진다");
+            Assert.IsFalse(ClimbWipeView.Span(W, 3, -1, .12, -1, out _, out _), "오르는 동안은 막 없음(옆 시점 계단이 보임)");
+            Assert.IsTrue(ClimbWipeView.Span(W, 5.06, 5, .12, -1, out x0, out x1));
+            Assert.AreEqual(W * .5f, x0, 1e-2, "다 오른 뒤 sideOut 절반");
+            Assert.Greater(x1, W);
+            Assert.IsTrue(ClimbWipeView.Span(W, -1, -1, .12, ClimbWipeView.OutSec / 2, out x0, out x1));
+            Assert.AreEqual(W * .5f, x1, 1e-2, "끝: 왼쪽으로 빠짐");
+            Assert.Less(x0, 0);
+            Assert.IsFalse(ClimbWipeView.Span(W, -1, -1, .12, ClimbWipeView.OutSec, out _, out _));
+            Assert.AreEqual(0f, ClimbWipeView.Ease(0)); Assert.AreEqual(1f, ClimbWipeView.Ease(1)); Assert.AreEqual(.5f, ClimbWipeView.Ease(.5f));
+        }
+
+        [Test]
+        public void ClimbWipe_ShowsOnClimbStart_SlidesOutAfterEnd()
+        {
+            var s = NewState();
+            var go = new GameObject("Wipe", typeof(RectTransform));
+            _made.Add(go);
+            ((RectTransform)go.transform).sizeDelta = new Vector2(1000, 2000);
+            var v = go.AddComponent<ClimbWipeView>();
+            v.Bind(() => s);
+            v.Tick(0);
+            Assert.IsFalse(v.Shown, "달리는 중에는 없음");
+
+            s.Phase = RunPhase.Climb;
+            s.Climb = new ClimbState { Time = .1 };
+            v.Tick(0);
+            Assert.IsTrue(v.Shown);
+            Assert.AreEqual("마나 정산", v.Caption);
+            s.Climb.Time = 1;
+            v.Tick(0);
+            Assert.IsFalse(v.Shown);
+
+            s.Phase = RunPhase.Run;
+            s.Climb = null;
+            v.Tick(0);
+            Assert.IsTrue(v.Shown, "정산 끝: 덮은 막이 왼쪽으로 빠지기 시작");
+            Assert.AreEqual(1000, v.X1, 1e-2);
+            v.Tick(ClimbWipeView.OutSec);
+            Assert.IsFalse(v.Shown);
+        }
+
         [Test]
         public void CubicBezier_MatchesCssEndpointsAndEaseOut()
         {

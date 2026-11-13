@@ -90,8 +90,6 @@ namespace MV.Sound.Tests
             yield return S("L2408 게이트 도착 즉시 win", t => new[] { Ev(RunEventType.RunFinished, a: (int)FinishReason.Gate, flag: false) }, "win");
             yield return S("L2408 장애물 종료 350ms 뒤 fail", t => new[] { Ev(RunEventType.RunFinished, a: (int)FinishReason.Wall, flag: false) }, "fail@350ms");
             yield return S("L2408 pass·zoneEnd면 350ms 뒤 win", t => new[] { Ev(RunEventType.RunFinished, a: (int)FinishReason.Wall, flag: true) }, "win@350ms");
-            yield return S("L3165 워프 단계 >0 tierup(min(4, st+1))", t => Enumerable.Range(0, 4).Select(i => Ev(RunEventType.ClimbWarpStage, a: i)).ToArray(),
-                "tierup_2", "tierup_3", "tierup_4");
         }
 
         static List<string> Route(MvTables t, IEnumerable<RunEvent> events)
@@ -134,7 +132,7 @@ namespace MV.Sound.Tests
         {
             RunEventType.FloorEnter, RunEventType.Fire, RunEventType.ProjImpact, RunEventType.Hit, RunEventType.Break, RunEventType.Gain,
             RunEventType.GateTake, RunEventType.GaugeLevelUp, RunEventType.Steal, RunEventType.Blocked, RunEventType.ClimbStart,
-            RunEventType.ClimbStepShown, RunEventType.ClimbLap, RunEventType.ClimbTierUp, RunEventType.ClimbWarpStage, RunEventType.ClimbEnd,
+            RunEventType.ClimbStepShown, RunEventType.ClimbLap, RunEventType.ClimbTierUp, RunEventType.ClimbEnd,
             RunEventType.RouletteFlip, RunEventType.RouletteChosen, RunEventType.CardApplied, RunEventType.RunFinished,
         };
 

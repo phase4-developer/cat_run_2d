@@ -29,7 +29,7 @@ namespace MV.Fx
         public static void Install(MvFxPlayer player) => Player = player;
 
         /// <summary>
-        /// 기본 구성: Framework EffectManager(공급자는 Boot가 이미 Addressables로 설정) + 카메라 리그 흔들림 + 팝업·비행 풀 + 우다다 화면.
+        /// 기본 구성: Framework EffectManager(공급자는 Boot가 이미 Addressables로 설정) + 카메라 리그 흔들림 + 팝업·비행 풀.
         /// fxRoot는 월드 원점·회전 없음(게임 좌표 그대로, 06 §6.1). 그림 쪽(view·anchors·flash)은 UI가 나중에 꽂는다.
         /// </summary>
         public static MvFxPlayer InstallDefault(Transform fxRoot, CameraRig rig, Func<RunState> state, Material normal, Material add)
@@ -46,14 +46,9 @@ namespace MV.Fx
             var proj = new CameraScreenProjector(() => rig != null ? rig.Cam : Camera.main);
             p.Pops.Projector = proj;
             p.Flies.Projector = proj;
-            if (cam != null)
-            {
-                MvFxDriver.ViewCamera = cam;
-                var go = new GameObject("WarpOverlay");
-                var ov = go.AddComponent<MvWarpOverlay>();
-                ov.Init(cam, MvWarpModel.FromTables(t), normal, add);
-                p.Warp = ov;
-            }
+            // 옛 우다다 덮개(MvWarpOverlay)는 만들지 않는다: 새 HTML 마나 정산은 옆 시점 계단을 그대로 보이고
+            // 종이 막 전환(MV.UI ClimbWipeView)만 지나간다(2026-11-14 사용자 「계단 연출 횡으로 변경되면서 가는거잖아」).
+            if (cam != null) MvFxDriver.ViewCamera = cam;
             Install(p);
             MvFxRunner.Ensure();
             return p;
