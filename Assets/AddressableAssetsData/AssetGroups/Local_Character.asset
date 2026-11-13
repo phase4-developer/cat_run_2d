@@ -27,6 +27,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - char
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 16fec48c1b1f74aa1854d74d2ebf6853
+    m_Address: atlas_player_wheel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1d7e334cfd701474c83b3e00bfbba93b
     m_Address: Char_Clone_tux
     m_ReadOnly: 0
