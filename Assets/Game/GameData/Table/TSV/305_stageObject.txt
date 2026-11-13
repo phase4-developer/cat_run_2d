@@ -1,0 +1,6 @@
+id	name	stageMap	kind	reward	prefab
+305001001	1스테이지 결계문	Stage1	arch		Stage1_Arch
+305001002	1스테이지 마법진 포털	Stage1	archGoal		Stage1_Portal
+305001003	1스테이지 종이 결계 블록(골드)	Stage1	wall	Gold	Stage1_Block_Gold
+305001004	1스테이지 종이 결계 블록(블루 마법석)	Stage1	wall	Dia	Stage1_Block_Blue
+305001005	1스테이지 종이 결계 블록(구출 고양이)	Stage1	wall	Soul	Stage1_Block_Cat

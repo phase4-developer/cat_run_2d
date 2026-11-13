@@ -21,6 +21,32 @@ namespace MV.View.Tests
             return t;
         }
 
+        static MvTables _codeShapes;
+
+        /// <summary>
+        /// `105_objectKind.prefab`을 모두 비운 표(나머지는 저장소 TSV). 프리팹이 없을 때 쓰는 코드 모양(우물 벽돌·관문 등)을 보는 시험용.
+        /// </summary>
+        public static MvTables CodeShapes()
+        {
+            if (_codeShapes != null) return _codeShapes;
+            string text = File.ReadAllText(Path.Combine(MvTableLoader.TsvDirectory, ObjectKindData.Table + ".txt"), new UTF8Encoding(false));
+            string[] lines = text.Replace("\r\n", "\n").Split('\n');
+            int col = Array.IndexOf(lines[0].Split('\t'), "prefab");
+            Assert.That(col >= 0, Is.True, "105 prefab 열");
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] cells = lines[i].Split('\t');
+                if (cells.Length <= col) continue;
+                cells[col] = "";
+                lines[i] = string.Join("\t", cells);
+            }
+            var t = new MvTables();
+            t.LoadAll(new MvMemoryTableSource(new MvTsvDirectorySource(MvTableLoader.TsvDirectory)).Set(ObjectKindData.Table, string.Join("\n", lines)));
+            t.BuildIndexes();
+            _codeShapes = t;
+            return t;
+        }
+
         public static ViewConfig Config() => ViewConfig.From(Load().RunConfig);
 
         public static ThemeData Theme(string key) => Load().Theme.ByKey(key);

@@ -58,6 +58,7 @@ namespace MV.Data
         public MvTable<AreaData> Area { get; } = new MvTable<AreaData>(AreaData.Schema, r => new AreaData(r));
         public MvTable<AreaFloorData> AreaFloor { get; } = new MvTable<AreaFloorData>(AreaFloorData.Schema, r => new AreaFloorData(r), d => d.group);
         public MvTable<ThemeData> Theme { get; } = new MvTable<ThemeData>(ThemeData.Schema, r => new ThemeData(r));
+        public MvTable<StageObjectData> StageObject { get; } = new MvTable<StageObjectData>(StageObjectData.Schema, r => new StageObjectData(r));
         public MvTable<TemplateData> Template { get; } = new MvTable<TemplateData>(TemplateData.Schema, r => new TemplateData(r));
         public TemplateObjectTable TemplateObject { get; } = new TemplateObjectTable();
         public TemplateCycleTable TemplateCycle { get; } = new TemplateCycleTable();
@@ -112,7 +113,7 @@ namespace MV.Data
                 LobbyUpgrade, StairLevel, WeaponLevel, AreaUpgrade, RebirthPerk, LevelPrice,
                 Cat, Enemy, Item, ObjectKind, HitReaction, ChargeGate, ReceiveCondition, MoveAi, Card, CardPool, CardEffect,
                 God, HpRule, CardTier, CharLook,
-                RunConfig, Zone, Area, AreaFloor, Theme, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup, Camera,
+                RunConfig, Zone, Area, AreaFloor, Theme, StageObject, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup, Camera,
                 Climb,
                 Content, ModeStage, ModeRule, QuestGroup, RepeatQuest, PassQuest, Achievement, ContentConfig,
                 Pet, PetBuild, Research, Friend, FriendPower, Rune, GearPart, GearRarity, Blessing, Attendance, RoadMap, GodLevel,

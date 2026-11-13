@@ -179,6 +179,53 @@ namespace MV.Data
         }
     }
 
+    // ---------------- 305_stageObject ----------------
+
+    /// <summary>스테이지 오브젝트가 고르는 보상 종류(105 wall의 칸 보상). Any = 보상과 상관없음.</summary>
+    public enum StageObjectReward { Any, Gold, Soul, Dia }
+
+    /// <summary>
+    /// 스테이지(맵)마다 다른 오브젝트 프리팹(노션 「신작 배경 리소스 관리」 「스테이지 개별 디자인 오브젝트」, 사용자 카드 결정 2026-11-13).
+    /// 행 = 맵 주소(`302_area.stageMap`) + 105 종류 key + 보상 종류 → 프리팹 주소. 고를 때 이 표가 `105_objectKind.prefab`보다 먼저다.
+    /// </summary>
+    public sealed class StageObjectData : MvRow
+    {
+        public const string Table = "305_stageObject";
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Str("stageMap", true).FkKey("kind", ObjectKindData.Table, true)
+            .Enum<StageObjectReward>("reward").Res("prefab", MvAtlas.Address, true);
+
+        public string stageMap { get; private set; }
+        public string kind { get; private set; }
+        public StageObjectReward reward { get; private set; }
+        public string prefab { get; private set; }
+
+        public StageObjectData(TSVRow r) : base(r) { }
+
+        public override void Init(TSVRow r)
+        {
+            base.Init(r);
+            stageMap = S(r, "stageMap");
+            kind = S(r, "kind");
+            reward = E(r, "reward", StageObjectReward.Any);
+            prefab = S(r, "prefab");
+        }
+
+        /// <summary>맵·종류·보상에 맞는 행의 프리팹. 보상이 맞는 행이 Any 행보다 먼저. 없으면 null.</summary>
+        public static string Find(IReadOnlyList<StageObjectData> rows, string stageMap, string kind, StageObjectReward reward)
+        {
+            if (rows == null || string.IsNullOrEmpty(stageMap) || string.IsNullOrEmpty(kind)) return null;
+            string any = null;
+            for (int i = 0; i < rows.Count; i++)
+            {
+                var row = rows[i];
+                if (row == null || row.stageMap != stageMap || row.kind != kind) continue;
+                if (row.reward == reward && reward != StageObjectReward.Any) return row.prefab;
+                if (row.reward == StageObjectReward.Any && any == null) any = row.prefab;
+            }
+            return any;
+        }
+    }
+
     // ---------------- 304_theme ----------------
 
     public sealed class ThemeData : MvRow

@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using jjevol;
 using MV.Data;
 using MV.Run;
 using UnityEngine;
@@ -30,6 +33,9 @@ namespace MV.View
         /// <summary>글자판 문구 공급(UI·Localization 연결 지점). 없으면 <see cref="DefaultLabel"/>.</summary>
         public Func<RunObject, string> LabelText;
 
+        /// <summary>오브젝트 프리팹 로더(주소 → 임대). 기본은 Addressables. 시험은 로드 없이 뷰 구조만 보도록 바꾼다.</summary>
+        public Func<string, CancellationToken, UniTask<AddressableLease<GameObject>>> PrefabLoader = AddressableScope.GetPrefab;
+
         sealed class View
         {
             public GameObject Go;
@@ -53,6 +59,12 @@ namespace MV.View
             /// <summary>롤 관문 반지름(가로·세로 m).</summary>
             public double Rx, Ry;
             public bool Gold;
+            // ---- 프리팹 뷰(105.prefab · 305_stageObject) ----
+            /// <summary>프리팹 주소. null = 코드 모양(<see cref="Shape"/>)으로 그린다.</summary>
+            public string Prefab;
+            /// <summary>프리팹 인스턴스(로드 전에는 null, 로드되면 EnsureInstance가 만든다).</summary>
+            public GameObject Inst;
+            public ObjectPrefabRig Rig;
         }
 
         /// <summary>롤 관문 배경 높이(가운데 y = 1.4, 세로 반지름 1.4), 롤 반지름 0.25(L3633).</summary>
@@ -70,6 +82,13 @@ namespace MV.View
         readonly List<int> _drop = new List<int>(16);
         readonly List<WellBrick> _bricks = new List<WellBrick>(64);
         readonly MeshBuffer _mb = new MeshBuffer();
+
+        readonly Dictionary<string, Stack<View>> _prefabPool = new Dictionary<string, Stack<View>>();
+        readonly Dictionary<string, AddressableLease<GameObject>> _prefabs = new Dictionary<string, AddressableLease<GameObject>>();
+        readonly HashSet<string> _prefabLoading = new HashSet<string>();
+        readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        MvTables _tables;
+        string _stageMap;
 
         ViewConfig _cfg;
         Transform _cam;
@@ -95,6 +114,88 @@ namespace MV.View
         {
             _atlas = theme?.worldAtlas;
             Clear();
+        }
+
+        /// <summary>
+        /// 지금 스테이지 맵(`302_area.stageMap`). 오브젝트 프리팹은 `305_stageObject`(이 맵 행)가 먼저, 없으면 `105_objectKind.prefab`.
+        /// 쓸 프리팹을 미리 불러 두고 뷰는 다시 만든다.
+        /// </summary>
+        public void SetStage(MvTables tables, string stageMap)
+        {
+            _tables = tables;
+            _stageMap = stageMap;
+            Clear();
+            if (tables == null) return;
+            foreach (var k in tables.ObjectKind.Datas) Preload(k.prefab);
+            foreach (var s in tables.StageObject.Datas) if (s.stageMap == stageMap) Preload(s.prefab);
+        }
+
+        /// <summary>오브젝트의 프리팹 주소: `305_stageObject`(맵·종류·보상) → `105_objectKind.prefab`. 둘 다 없으면 null(코드 모양).</summary>
+        public static string PrefabFor(MvTables tables, string stageMap, RunObject o)
+        {
+            if (o?.Kind == null) return null;
+            string p = tables != null ? StageObjectData.Find(tables.StageObject.Datas, stageMap, o.Kind.key, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any) : null;
+            if (string.IsNullOrEmpty(p)) p = o.Kind.prefab;
+            return string.IsNullOrEmpty(p) ? null : p;
+        }
+
+        /// <summary>런 칸 보상 → 305 reward(이름 1:1). 이름이 없으면 Any.</summary>
+        public static StageObjectReward RewardOf(FieldReward r) => Enum.TryParse(r.ToString(), out StageObjectReward x) ? x : StageObjectReward.Any;
+
+        /// <summary>시험·QA: 오브젝트 뷰가 쓰는 프리팹 주소와 인스턴스(로드 전이면 null).</summary>
+        public bool TryPrefabView(int objId, out string address, out GameObject instance)
+        {
+            address = null;
+            instance = null;
+            if (!_views.TryGetValue(objId, out var v)) return false;
+            address = v.Prefab;
+            instance = v.Inst;
+            return true;
+        }
+
+        void Preload(string address)
+        {
+            if (string.IsNullOrEmpty(address) || _prefabs.ContainsKey(address) || _prefabLoading.Contains(address)) return;
+            _prefabLoading.Add(address);
+            LoadPrefabAsync(address, _cts.Token).Forget();
+        }
+
+        async UniTaskVoid LoadPrefabAsync(string address, CancellationToken ct)
+        {
+            AddressableLease<GameObject> lease = null;
+            try { lease = await PrefabLoader(address, ct); }
+            catch (OperationCanceledException) { }
+            if (this == null || ct.IsCancellationRequested) { lease?.Dispose(); return; }
+            _prefabLoading.Remove(address);
+            if (lease == null || lease.Asset == null)
+            {
+                // 실패는 다시 시도하지 않는다(표 주소 오류를 드러낸다). 그 오브젝트는 그리지 않는다.
+                Debug.LogError("[ObjectViewFactory] 오브젝트 프리팹 로드 실패: " + address);
+                lease?.Dispose();
+                _prefabs[address] = null;
+                return;
+            }
+            _prefabs[address] = lease;
+        }
+
+        /// <summary>프리팹이 로드됐으면 인스턴스를 뷰 루트 아래에 만든다(빌보드, 단계 그림 rig). 로드 전이면 아무것도 안 그린다.</summary>
+        void EnsureInstance(View v)
+        {
+            if (v.Inst != null || v.Prefab == null) return;
+            if (!_prefabs.TryGetValue(v.Prefab, out var lease)) { Preload(v.Prefab); return; }
+            if (lease == null || lease.Asset == null) return;
+            v.Inst = Instantiate(lease.Asset, v.Go.transform, false);
+            if (v.Inst.GetComponent<Billboard>() == null) v.Inst.AddComponent<Billboard>();
+            v.Rig = v.Inst.GetComponent<ObjectPrefabRig>();
+            v.Ds.Refresh();
+        }
+
+        void OnDestroy()
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            foreach (var l in _prefabs.Values) l?.Dispose();
+            _prefabs.Clear();
         }
 
         public void Clear()
@@ -233,6 +334,12 @@ namespace MV.View
         {
             v.Go.SetActive(false);
             v.Obj = null;
+            if (v.Prefab != null)
+            {
+                if (!_prefabPool.TryGetValue(v.Prefab, out var ps)) _prefabPool[v.Prefab] = ps = new Stack<View>();
+                ps.Push(v);
+                return;
+            }
             if (!_pool.TryGetValue(v.Shape, out var st)) _pool[v.Shape] = st = new Stack<View>();
             st.Push(v);
         }
@@ -240,15 +347,18 @@ namespace MV.View
         View Show(RunObject o, double groundY)
         {
             var shape = ShapeOf(o.Kind);
+            string prefab = PrefabFor(_tables, _stageMap, o);
             View v;
-            if (_pool.TryGetValue(shape, out var st) && st.Count > 0) v = st.Pop();
+            Stack<View> st;
+            bool pooled = prefab != null ? _prefabPool.TryGetValue(prefab, out st) : _pool.TryGetValue(shape, out st);
+            if (pooled && st.Count > 0) v = st.Pop();
             else
             {
-                var go = new GameObject(shape.ToString());
+                var go = new GameObject(prefab ?? shape.ToString());
                 go.transform.SetParent(transform, false);
                 var sg = go.AddComponent<SortingGroup>();
                 sg.sortingLayerName = WorldLayer;
-                v = new View { Go = go, Shape = shape, Ds = go.AddComponent<DepthSortable>() };
+                v = new View { Go = go, Shape = shape, Prefab = prefab, Ds = go.AddComponent<DepthSortable>() };
                 v.Ds.Rank = DepthMath.RankObject;
             }
             v.Obj = o;
@@ -260,7 +370,12 @@ namespace MV.View
             v.Go.transform.position = new Vector3((float)o.X, (float)groundY, (float)o.Z);
             for (int i = 0; i < v.Parts.Count; i++) v.Parts[i].gameObject.SetActive(false);
             v.Base.Clear();
-            Build(v, o);
+            if (v.Prefab != null)
+            {
+                EnsureInstance(v);
+                if (v.Inst != null) v.Inst.transform.localPosition = Vector3.zero;
+            }
+            else Build(v, o);
             BuildLabel(v, o);
             v.Go.SetActive(true);
             v.Ds.Refresh();
@@ -529,7 +644,8 @@ namespace MV.View
             double t = nowMs / 1000.0;
             if (v.Shake > 0) v.Shake = Math.Max(0, v.Shake - dt);
             if (v.Flash > 0) v.Flash = Math.Max(0, v.Flash - dt);
-            switch (v.Shape)
+            if (v.Prefab != null) AnimatePrefab(v, o, playerZ);
+            else switch (v.Shape)
             {
                 case ObjectShape.WarpGate:
                     bool shown = WarpGateLayout.Alpha(playerZ - o.Z, out double a);
@@ -604,6 +720,29 @@ namespace MV.View
             }
             if (v.Label != null && v.Label.gameObject.activeSelf && (o.Kind.labelKind == LabelKind.EnemyHp || o.Kind.labelKind == LabelKind.BoxHp))
                 v.Label.SetText(LabelText != null ? LabelText(o) : DefaultLabel(o));
+        }
+
+        /// <summary>
+        /// 프리팹 뷰: 로드되면 인스턴스를 만들고 코드 모양과 같은 규칙만 이어 쓴다. 맞음 흔들림(x), 결계문 플레이어 근처 흐려짐(WarpGate),
+        /// 관문 통과 뒤 가라앉기·숨김(RollGate), 체력 단계 그림(<see cref="ObjectPrefabRig"/>).
+        /// </summary>
+        void AnimatePrefab(View v, RunObject o, double playerZ)
+        {
+            EnsureInstance(v);
+            if (v.Inst == null) return;
+            float sx = v.Shake > 0 ? (float)ObjectReaction.WallShakeX(v.Shake) : 0f, dy = 0f;
+            if (v.Shape == ObjectShape.WarpGate)
+            {
+                bool shown = WarpGateLayout.Alpha(playerZ - o.Z, out double a);
+                v.Ds.SetAlphaScale(shown ? (float)a : 0f);
+            }
+            else if (v.Shape == ObjectShape.RollGate)
+            {
+                dy = (float)ObjectReaction.GateSinkY(o.Sink);
+                v.Ds.SetAlphaScale(ObjectReaction.GateHidden(o.Sink) ? 0f : 1f);
+            }
+            v.Inst.transform.localPosition = new Vector3(sx, dy, 0);
+            if (v.Rig != null) v.Rig.SetFill(o.HasHp ? o.Hp : 1, o.HasHp ? o.Max : 1);
         }
 
         static readonly string[] s_stringNames = { "String0", "String1", "String2" };

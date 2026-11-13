@@ -283,6 +283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2218799235433293714}
   - component: {fileID: 8659811705148741679}
+  - component: {fileID: 3581620000000000101}
   m_Layer: 0
   m_Name: Obj_CoinPile
   m_TagString: Untagged
@@ -321,3 +322,19 @@ SortingGroup:
   m_SortingOrder: 0
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
+--- !u!114 &3581620000000000101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8877599958285687923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1e6a0b3c7f4e8a9b2c4d6e8f0a1b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stages:
+  - {fileID: 4740203938622926491}
+  - {fileID: 1688558544924104894}
+  - {fileID: 8339037712987626252}

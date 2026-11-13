@@ -86,6 +86,34 @@ namespace MV.Data.Tests
             AssertError(TsvFixture.Validate(("302_area", area)), "302_area", "301 sort 순으로 이어지지 않습니다");
         }
 
+        // ---------------- 305 ----------------
+
+        [Test]
+        public void StageObject_UnknownStageMap_IsError()
+        {
+            var rows = TsvFixture.Append(TsvFixture.Read("305_stageObject"),
+                R("id", "stageMap", "kind", "reward", "prefab"), R("305009001", "Stage99", "arch", "", "Stage1_Arch"));
+            AssertError(TsvFixture.Validate(("305_stageObject", rows)), "305_stageObject", "302_area.stageMap에 없는 맵");
+        }
+
+        [Test]
+        public void StageObject_SameMapKindReward_IsError()
+        {
+            var rows = TsvFixture.Append(TsvFixture.Read("305_stageObject"),
+                R("id", "stageMap", "kind", "reward", "prefab"), R("305009001", "Stage1", "wall", "Gold", "Stage1_Block_Blue"));
+            AssertError(TsvFixture.Validate(("305_stageObject", rows)), "305_stageObject", "두 번 있습니다");
+        }
+
+        [Test]
+        public void StageObject_Find_PrefersRewardRowThenAnyRow()
+        {
+            var rows = TsvFixture.LoadTables().StageObject.Datas;
+            Assert.That(StageObjectData.Find(rows, "Stage1", "wall", StageObjectReward.Dia), Is.EqualTo("Stage1_Block_Blue"));
+            Assert.That(StageObjectData.Find(rows, "Stage1", "arch", StageObjectReward.Gold), Is.EqualTo("Stage1_Arch"));
+            Assert.That(StageObjectData.Find(rows, "Stage1", "tower", StageObjectReward.Any), Is.Null);
+            Assert.That(StageObjectData.Find(rows, "Stage2", "arch", StageObjectReward.Any), Is.Null);
+        }
+
         // ---------------- 형식·참조 ----------------
 
         /// <summary>사람용 name 열(07 §7.1.1a, JJEvol 표 규격 v1.1 §3.1): 없음·키 열 다음이 아님·빈칸은 오류, 있으면 모르는 열 경고 없음.</summary>
