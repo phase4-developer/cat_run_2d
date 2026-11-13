@@ -623,6 +623,33 @@ namespace MV.View.Tests
             }
         }
 
+        /// <summary>
+        /// 런마다 오브젝트 번호를 1부터 다시 쓴다. 같은 번호의 새 오브젝트가 이전 뷰의 흔들림·눌림·쓰러짐을 이어받지 않는다
+        /// (2026-11-14 사용자 「장애물 흔들림 처리가 오브젝트 재활용해서 스폰할때 살짝 보이는거 같아」).
+        /// </summary>
+        [Test]
+        public void SameIdNewObject_StartsWithoutPreviousMotion()
+        {
+            var t = ViewTestTables.CodeShapes();
+            var f = MakeFactory();
+            var oldWall = Obj(t, "wall", 1, 15);
+            f.Sync(new List<RunObject> { oldWall }, 0, 0, 0);
+            f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Hit, objId: 1, kindId: oldWall.Kind.id) });
+            Assert.That(f.TryReaction(1, out double shake0, out _), Is.True);
+            Assert.Greater(shake0, 0, "이전 런: 맞아서 흔들리는 중");
+
+            var newWall = Obj(t, "wall", 1, 18);   // 새 런, 같은 번호
+            f.Sync(new List<RunObject> { newWall }, 0, 0, 0);
+            Assert.That(f.TryReaction(1, out double shake, out double flash), Is.True);
+            Assert.AreEqual(0, shake, "새 오브젝트는 흔들림 없이 시작");
+            Assert.AreEqual(0, flash);
+            Assert.That(f.TryMotion(1, out double punch, out double die), Is.True);
+            Assert.AreEqual(0, punch);
+            Assert.AreEqual(-1, die);
+            Assert.AreEqual(Vector3.one, f.ViewOf(1).transform.localScale);
+            Assert.AreEqual(18f, f.ViewOf(1).transform.position.z, 1e-4f, "새 오브젝트 자리");
+        }
+
         [Test]
         public void Hit_NoShakeWhenTableTurnsItOff()
         {
