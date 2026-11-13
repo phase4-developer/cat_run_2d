@@ -86,6 +86,11 @@ namespace MV.Boot
         long _runSeq;
         int _savedArea, _savedSouls;
         int _themeId = int.MinValue;
+        /// <summary>스테이지 맵 프리팹 주소 = 접두사 + 지역 번호(1부터). 없으면 기존 지면만 쓴다.</summary>
+        public const string StageMapAddressPrefix = "Stage_";
+        int _stageArea = int.MinValue;
+        StageMap _stageMap;
+        readonly List<IDisposable> _stageLeases = new List<IDisposable>();
         CancellationToken _ct;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -96,6 +101,8 @@ namespace MV.Boot
         void OnDestroy()
         {
             if (Current == this) Current = null;
+            foreach (var d in _stageLeases) d?.Dispose();
+            _stageLeases.Clear();
             foreach (var d in _leases) d?.Dispose();
             _leases.Clear();
         }
@@ -201,6 +208,7 @@ namespace MV.Boot
 
         async UniTask ApplyThemeAsync(int area)
         {
+            await LoadStageMapAsync(area);
             AreaData row = null;
             foreach (var a in _tables.Area.Datas) if (a.areaNo == area + 1) { row = a; break; }
             if (row == null || row.themeId == _themeId) return;
@@ -208,6 +216,23 @@ namespace MV.Boot
             if (theme == null) return;
             _themeId = row.themeId;
             if (!await _world.SetThemeAsync(theme, _ct)) Debug.LogWarning("[MvGameLoop] 테마 그림 일부를 불러오지 못했습니다: " + theme.key);
+        }
+
+        /// <summary>지역이 바뀌면 `Stage_{지역 번호}` 맵 프리팹을 월드 아래에 불러오고 이전 맵은 지운다.</summary>
+        async UniTask LoadStageMapAsync(int area)
+        {
+            if (area == _stageArea || _world == null) return;
+            _stageArea = area;
+            foreach (var d in _stageLeases) d?.Dispose();
+            _stageLeases.Clear();
+            _stageMap = null;
+            var r = await AddressableScope.InstantiateWithLease(StageMapAddressPrefix + (area + 1), _world.transform, _ct);
+            Alive();
+            if (r.instance == null) { Debug.Log("[MvGameLoop] 스테이지 맵 없음: " + StageMapAddressPrefix + (area + 1)); return; }
+            if (r.destroyOnDispose != null) _stageLeases.Add(r.destroyOnDispose);
+            if (r.lease != null) _stageLeases.Add(r.lease);
+            _stageMap = r.instance.GetComponent<StageMap>();
+            if (_stageMap != null) _stageMap.Bind(_world.Rig.Cam, () => (float)_viewSource.Camera.Wy);
         }
 
         // ═════════ 로비 ═════════
