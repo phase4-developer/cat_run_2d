@@ -30,12 +30,12 @@ namespace MV.View
     }
 
     /// <summary>
-    /// `RunState` → 카메라 입력. 계단 오르기 중 플레이어 높이는 정본 L2758 식(<see cref="CameraModel.ClimbPlayer"/>).
+    /// `RunState` → 카메라 입력. 계단 오르기 중 플레이어 위치는 새 HTML `climbCatPos`(<see cref="ClimbPath"/>).
     /// </summary>
     public sealed class RunStateViewSource : IWorldViewSource
     {
         readonly RunState _s;
-        readonly double _stepH, _stepD, _bump;
+        readonly ClimbPath _path;
 
         /// <summary>지면 높이 WY(<see cref="IRunViewState.WorldY"/>, MV-RUN-VIEWAPI).</summary>
         public double Wy => _s.WorldY;
@@ -43,10 +43,7 @@ namespace MV.View
         public RunStateViewSource(RunState state, MvTables tables)
         {
             _s = state;
-            var c = tables.Climb.Config();
-            _stepH = c != null ? c["stepH"] : 0;
-            _stepD = c != null ? c["stepD"] : 0;
-            _bump = ViewConfig.ClimbBumpOf(tables.Climb);
+            _path = ClimbPath.From(tables.Climb);
         }
 
         public CameraInput Camera
@@ -58,7 +55,7 @@ namespace MV.View
                 if (_s.Phase == RunPhase.Climb && c != null)
                 {
                     input.Mode = WorldViewMode.Climb;
-                    CameraModel.ClimbPlayer(c.Pos, c.K, c.Z0, _stepH, _stepD, _bump, out double py, out double pz);
+                    _path.Cat(c.Pos, c.K, c.Z0, out double py, out double pz);
                     input.ClimbPy = py;
                     input.Pz = pz;
                 }

@@ -26,6 +26,8 @@ namespace MV.View
         /// <summary>런 캐릭터(플레이어·분신). 필드 이름은 예전 CatView 자리(프리팹 참조 유지).</summary>
         [SerializeField] CharacterPresenter _cats;
         [SerializeField] ProjectileView _projs;
+        /// <summary>계단 정산 칸(Obj_ClimbStep 쌓기). 프리팹에 없으면 만든다.</summary>
+        [SerializeField] ClimbStairView _stairs;
 
         readonly WorldSpriteCache _sprites = new WorldSpriteCache();
         ViewConfig _cfg;
@@ -39,6 +41,7 @@ namespace MV.View
         public ScreenRig Screen => _screen;
         public CharacterPresenter Cats => _cats;
         public ProjectileView Projectiles => _projs;
+        public ClimbStairView Stairs => _stairs;
 
         public void Init(MvTables tables, IWorldViewSource source)
         {
@@ -64,6 +67,13 @@ namespace MV.View
                 _projs = go.AddComponent<ProjectileView>();
             }
             _projs.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null, FxAtlas);
+            if (_stairs == null)   // 프리팹에 없으면 만든다
+            {
+                var go = new GameObject("ClimbStairs");
+                go.transform.SetParent(transform, false);
+                _stairs = go.AddComponent<ClimbStairView>();
+            }
+            _stairs.Init(tables, _cfg, _rig.Cam, _objects != null ? _objects.LabelMaterial : null);
         }
 
         /// <summary>테마 아틀라스·Fx 아틀라스를 먼저 로드한 뒤 색·소품을 바꾼다(03 §3.8.5·§3.8.8). 이전 테마 아틀라스는 그 뒤 반환.</summary>
@@ -99,7 +109,7 @@ namespace MV.View
 
         /// <summary>
         /// 런 고양이·투사체 맞추기(매 프레임, 통합 코드가 시뮬 뒤에 부른다). 런이 없으면(null) 숨긴다. 정본 `draw2D` L3797~3804.
-        /// 투사체·창·회전 장난감(<see cref="ProjectileView"/>)도 같은 프레임에 맞춘다(통합 코드 호출을 늘리지 않으려고 여기서 함께).
+        /// 투사체·창·회전 장난감(<see cref="ProjectileView"/>)과 계단 칸(<see cref="ClimbStairView"/>)도 같은 프레임에 맞춘다(통합 코드 호출을 늘리지 않으려고 여기서 함께).
         /// </summary>
         public void SyncCats(RunState state)
         {
@@ -107,6 +117,7 @@ namespace MV.View
             double now = Time.realtimeSinceStartupAsDouble;
             if (_cats != null) { if (off) _cats.Hide(); else _cats.Sync(state, now); }
             if (_projs != null) { if (off) _projs.Hide(); else _projs.Sync(state, now); }
+            if (_stairs != null) { if (off) _stairs.Hide(); else _stairs.Sync(state); }
         }
 
         /// <summary>런 이벤트 → 월드 뷰 반응(오브젝트 맞음·우물 벽돌 빠짐, 06 §6.13). <see cref="SyncObjects"/> 전에 같은 프레임 목록으로 부른다.</summary>

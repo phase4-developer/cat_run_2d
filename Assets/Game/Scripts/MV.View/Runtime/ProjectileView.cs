@@ -63,7 +63,7 @@ namespace MV.View
         WorldSpriteCache _sprites;
         string _fxAtlas;
         string[] _names;
-        double _stepH, _stepD, _bump;
+        ClimbPath _path;
         int _made, _stamp;
         bool _ready;
 
@@ -95,9 +95,7 @@ namespace MV.View
             if (_sprites != null) LoadArt();
             _orb = OrbConfig.From(tables.RunConfig);
             var c = tables.Climb.Config();
-            _stepH = c != null ? c["stepH"] : 0;
-            _stepD = c != null ? c["stepD"] : 1;
-            _bump = ViewConfig.ClimbBumpOf(tables.Climb);
+            _path = ClimbPath.From(tables.Climb);
             if (_blades.Length != _orb.Count)
             {
                 for (int i = 0; i < _blades.Length; i++)
@@ -346,7 +344,7 @@ namespace MV.View
             }
             double px = s.P.X, pz = s.P.Z;
             var C = s.Phase == RunPhase.Climb ? s.Climb : null;
-            if (C != null) CameraModel.ClimbPlayer(C.Pos, C.K, C.Z0, _stepH, _stepD, _bump, out _, out pz);
+            if (C != null) _path.Cat(C.Pos, C.K, C.Z0, out _, out pz);
             int visible = 0;
             for (int i = 0; i < _blades.Length; i++)
             {

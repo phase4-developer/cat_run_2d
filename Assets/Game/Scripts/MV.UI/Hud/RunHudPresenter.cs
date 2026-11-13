@@ -55,6 +55,8 @@ namespace MV.UI
                 v.SetWeapon(s.WeaponTier, s.WeaponIcon, s.WeaponName ?? "", WeaponDmgText(s.WeaponDmg, s.LookName), MvUi.Hex(s.WeaponGradeColor));
             if (all || s.MergeN != _last.MergeN)
                 v.SetMergeHint(MergeHintText(s.MergeN));
+            if (all || s.ClimbShown != _last.ClimbShown || s.ClimbN != _last.ClimbN || !Mathf.Approximately(s.ClimbAlpha, _last.ClimbAlpha))
+                v.SetClimbCount(s.ClimbN > 0 ? ClimbCountText(s.ClimbShown, s.ClimbN) : "", s.ClimbN > 0 ? s.ClimbAlpha : 0);
 
             _last = s;
             _drawn = true;
@@ -67,6 +69,8 @@ namespace MV.UI
         public static string GaugeLvText(int lv) => "Lv " + lv;                   // ui.hud.gaugeLv
         public static string GaugePerText(int lv) => "칸당 +" + lv;               // ui.hud.gaugePer 「칸당 」 + 「+{0}」
         /// <summary>머지 안내(장수 = 300 MERGE_N). 0 이하면 빈 문자열.</summary>
+        /// <summary>계단 정산 남은 칸 글자(새 HTML `${n} / ${N} 칸`).</summary>
+        public static string ClimbCountText(int shown, int n) => shown + " / " + n + " 칸"; // ui.hud.climbCount
         public static string MergeHintText(int mergeN) => mergeN > 0 ? "같은 무기 " + mergeN + "장 → 머지" : ""; // ui.hud.mergeHint
 
         public static string FloorText(RunHudState s)

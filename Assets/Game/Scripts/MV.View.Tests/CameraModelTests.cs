@@ -9,9 +9,16 @@ namespace MV.View.Tests
 
         static CameraModel NewModel() => CameraModel.FromTables(ViewTestTables.Load());
 
-        static CameraModel Settled(WorldViewMode mode)
+        /// <summary>옆 시점(side 행) 없이 기본 시점만 보는 모델.</summary>
+        static CameraModel NoSide()
         {
-            var m = NewModel();
+            var t = ViewTestTables.Load();
+            return new CameraModel(t.Camera.ByKey(CameraModel.KeyRun), t.Camera.ByKey(CameraModel.KeyClimb), t.Camera.ByKey(CameraModel.KeyLobby));
+        }
+
+        static CameraModel Settled(WorldViewMode mode, bool side = false)
+        {
+            var m = side ? NewModel() : NoSide();
             var input = new CameraInput { Mode = mode, Px = 0, Pz = 0, Wy = 0, ClimbPy = 0 };
             // dt = 1이면 모든 보간 계수가 1로 잘려 목표에 바로 선다.
             m.Step(input, 1, default);
@@ -81,23 +88,57 @@ namespace MV.View.Tests
         }
 
         [Test]
-        public void ClimbPlayer_FollowsReferenceFormula()
+        public void ClimbPath_FollowsHtmlClimbCatPos()
         {
-            CameraModel.ClimbPlayer(0.5, 3, 10, 0.42, 0.72, 0.12, out double py, out double pz);
-            Assert.That(pz, Is.EqualTo(10.36).Within(1e-12));
-            Assert.That(py, Is.EqualTo(0.5 * 0.42 * 1.2).Within(1e-12), "sp < 1이면 상한");
-            CameraModel.ClimbPlayer(1.5, 3, 10, 0.42, 0.72, 0.12, out py, out pz);
-            Assert.That(py, Is.EqualTo(2 * 0.42 + 0.12).Within(1e-12));
-            CameraModel.ClimbPlayer(9, 3, 10, 0.42, 0.72, 0.12, out py, out pz);
-            Assert.That(pz, Is.EqualTo(10 + 2.999 * 0.72).Within(1e-9), "k − 0.001로 자름");
+            var path = new ClimbPath(0.42, 0.72, 0.6, 1.4);
+            path.Cat(0, 3, 10, out double py, out double pz);
+            Assert.That(py, Is.EqualTo(0).Within(1e-12));
+            Assert.That(pz, Is.EqualTo(10 - 1.4).Within(1e-12), "출발 = 계단 입구(z0 − z0Gap)");
+            path.Cat(0.5, 3, 10, out py, out pz);
+            Assert.That(py, Is.EqualTo(0.5 * 0.42 + 0.5 * 0.42 * 0.6).Within(1e-12));
+            Assert.That(pz, Is.EqualTo(10 - 1.4 * 0.5 + 0.5 * 0.72).Within(1e-12));
+            path.Cat(9, 3, 10, out py, out pz);
+            Assert.That(py, Is.EqualTo(3 * 0.42 + 0.42 * 0.6).Within(1e-12), "k에서 멈춤");
+            Assert.That(pz, Is.EqualTo(10 + 3 * 0.72).Within(1e-12));
         }
 
         [Test]
-        public void ClimbBump_ReadsClimbTableBumpH()
+        public void ClimbPath_ReadsClimbTable()
         {
-            Assert.That(ViewConfig.ClimbBumpOf(ViewTestTables.Load().Climb), Is.EqualTo(0.12).Within(1e-12), "정본 L2758");
-            var edited = ViewTestTables.WithCell(MV.Data.ClimbData.Table, "default", "bumpH", "0.3");
-            Assert.That(ViewConfig.ClimbBumpOf(edited.Climb), Is.EqualTo(0.3).Within(1e-12), "표만 바꿔도 출렁임이 바뀐다");
+            var p = ClimbPath.From(ViewTestTables.Load().Climb);
+            Assert.That(p.StepH, Is.EqualTo(0.42).Within(1e-12), "Obj_ClimbStep 블록 높이");
+            Assert.That(p.StepD, Is.EqualTo(0.72).Within(1e-12), "Obj_ClimbStep 블록 깊이");
+            Assert.That(p.Lift, Is.EqualTo(0.6).Within(1e-12), "새 HTML climbCatPos 0.6");
+            Assert.That(p.Z0Gap, Is.EqualTo(1.4).Within(1e-12));
+            var edited = ViewTestTables.WithCell(MV.Data.ClimbData.Table, "default", "catLift", "0.3");
+            Assert.That(ClimbPath.From(edited.Climb).Lift, Is.EqualTo(0.3).Within(1e-12), "표만 바꿔도 고양이 높이가 바뀐다");
+        }
+
+        [Test]
+        public void ClimbSide_SettlesBesideCat()
+        {
+            var m = NewModel();
+            var side = m.SideRow;
+            var input = new CameraInput { Mode = WorldViewMode.Climb, Px = 0.5, Pz = 20, Wy = 2, ClimbPy = 1 };
+            m.Step(input, 1, default);
+            Assert.That(m.OrbitE, Is.EqualTo(1).Within(1e-12));
+            AssertVec(m.Pos, 0.5 * side.posXMul + side.posX, 3 + side.posY, 20 + side.posZ);
+            AssertVec(m.Look, 0.5 * side.lookXMul + side.lookX, 3 + side.lookY, 20 + side.lookZ);
+        }
+
+        [Test]
+        public void ClimbSide_TurnsOverTurnSecWithSmoothstep()
+        {
+            var m = NewModel();
+            double half = m.SideRow.turnSec / 2;
+            Assert.That(m.SideRow.turnSec, Is.EqualTo(0.42).Within(1e-12), "새 HTML ORB.dur");
+            var input = new CameraInput { Mode = WorldViewMode.Climb, Px = 0, Pz = 0, Wy = 0, ClimbPy = 0 };
+            m.Step(input, half, default);
+            Assert.That(m.OrbitK, Is.EqualTo(0.5).Within(1e-9));
+            Assert.That(m.OrbitE, Is.EqualTo(0.5).Within(1e-9), "smooth(0.5) = 0.5");
+            input.Mode = WorldViewMode.Run;
+            m.Step(input, half, default);
+            Assert.That(m.OrbitK, Is.EqualTo(0).Within(1e-9), "오르기가 끝나면 같은 시간에 되돌아온다");
         }
 
         [Test]

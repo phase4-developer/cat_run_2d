@@ -20,15 +20,6 @@ namespace MV.View
         public double PlayerCatScale, CloneCatScale;
         public double SortQuant, ObjProbeY, CatProbeY, SortCloth, SortLabel, SortBlade, SortProj;
 
-        /// <summary>
-        /// 계단 오르기 출렁임 높이 m = `330_climb` 설정 행 `bumpH`(정본 L2758 `sin(frac·π)·0.12`, 07 §7.3.5). 설정 행이 없으면 0.
-        /// </summary>
-        public static double ClimbBumpOf(ClimbTable climb)
-        {
-            var c = climb?.Config();
-            return c != null ? c["bumpH"] : 0;
-        }
-
         public static ViewConfig From(RunConfigTable t)
         {
             return new ViewConfig

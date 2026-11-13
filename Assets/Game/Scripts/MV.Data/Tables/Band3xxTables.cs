@@ -558,7 +558,8 @@ namespace MV.Data
         public const string Table = "320_camera";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Enum<CameraAnchor>("anchor", true)
             .Float("posXMul").Float("posY").Float("posZ").Float("lookXMul").Float("lookY").Float("lookZ").Float("posLerp")
-            .Bool("snap").Float("liftLerp").Float("blendLerp").Float("fovV", true).Float("near", true).Float("far", true);
+            .Bool("snap").Float("liftLerp").Float("blendLerp").Float("fovV", true).Float("near", true).Float("far", true)
+            .Float("posX").Float("lookX").Float("turnSec");
 
         public CameraAnchor anchor { get; private set; }
         public double posXMul { get; private set; }
@@ -574,6 +575,11 @@ namespace MV.Data
         public double fovV { get; private set; }
         public double near { get; private set; }
         public double far { get; private set; }
+        /// <summary>x 더하기(m): 목표 x = 기준 x·posXMul + posX. 계단 옆 시점(side)은 고양이 오른쪽 거리.</summary>
+        public double posX { get; private set; }
+        public double lookX { get; private set; }
+        /// <summary>이 시점으로 돌아 들어가는 시간(초, side 행). 0이면 즉시.</summary>
+        public double turnSec { get; private set; }
 
         public CameraData(TSVRow r) : base(r) { }
 
@@ -594,6 +600,9 @@ namespace MV.Data
             fovV = D(r, "fovV");
             near = D(r, "near");
             far = D(r, "far");
+            posX = D(r, "posX");
+            lookX = D(r, "lookX");
+            turnSec = D(r, "turnSec");
         }
     }
 
@@ -605,12 +614,13 @@ namespace MV.Data
 
         static readonly string[] s_configColumns =
         {
-            "lap", "maxCards", "lapTier", "kDirectMax", "kCompress", "kMax", "stepH", "stepD", "stepW", "bumpH", "z0Gap", "shiftFrom",
+            "lap", "maxCards", "lapTier", "kDirectMax", "kCompress", "kMax", "stepH", "stepD", "stepW", "catLift", "z0Gap", "shiftFrom",
             "shiftExtra", "landGap", "tBase", "tPerStep", "tMax", "accelP", "riseMin", "risePerK", "riseAhead", "dropSec",
             "dropH", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay", "rlFlyMs",
             "rlEndPad",
             // MV-SPEC-02 6-5 새 공식 상수(Q-07, 런 적용은 MV-RUN-SPEC2): 압축 시작 N, 연출 시간 상한·기본·칸당·앞당김, 칸 튕김 배율.
             "cmpFrom", "riseCap", "riseBase", "risePerStep", "riseLead", "stepPop",
+            // stepH·stepD·stepW = 계단 칸 프리팹(stepPrefab) 한 블록의 높이·깊이·폭(디자이너 리소스 기준, 2026-11-13). catLift = 칸 위 고양이 높이(stepH 배수).
         };
 
         /// <summary>설정 행(rowType = Config)이 채워야 하는 열.</summary>
@@ -622,13 +632,15 @@ namespace MV.Data
         {
             var s = new MvSchema(Table).Id().Enum<ClimbRowType>("rowType", true).Key(required: false);
             foreach (var c in s_configColumns) s.Float(c);
-            return s.Ints("cmpBandFrom").Ints("cmpBandC").Int("at").Color("accent").Color("sky1").Color("sky2").Color("sky3").Float("night")
+            return s.Res("stepPrefab", MvAtlas.Address).Ints("cmpBandFrom").Ints("cmpBandC").Int("at").Color("accent").Color("sky1").Color("sky2").Color("sky3").Float("night")
                 .Effect("enterEffect").Sound("enterSound");
         }
 
         readonly Dictionary<string, double> _config = new Dictionary<string, double>(StringComparer.Ordinal);
 
         public ClimbRowType rowType { get; private set; }
+        /// <summary>계단 칸 한 블록 프리팹 주소(설정 행만, 예 `Obj_ClimbStep`). 칸 하나 = 블록을 높이만큼 쌓은 기둥.</summary>
+        public string stepPrefab { get; private set; }
         /// <summary>압축 구간 시작 N(오름차순)과 구간별 C(MV-SPEC-02 6-5: 31~99 4, 100~149 5 …). 설정 행만.</summary>
         public IReadOnlyList<int> cmpBandFrom { get; private set; }
         public IReadOnlyList<int> cmpBandC { get; private set; }
@@ -651,6 +663,7 @@ namespace MV.Data
             if (rowType == ClimbRowType.Config)
                 foreach (var c in s_configColumns)
                     _config[c] = D(r, c);
+            stepPrefab = S(r, "stepPrefab");
             cmpBandFrom = Ints(r, "cmpBandFrom");
             cmpBandC = Ints(r, "cmpBandC");
             at = I(r, "at");

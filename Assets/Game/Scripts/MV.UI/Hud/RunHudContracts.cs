@@ -29,6 +29,10 @@ namespace MV.UI
         public int Stairs;
         /// <summary>계단 오르기 날기 중(상자 <c>fly</c> 모양).</summary>
         public bool Flying;
+        /// <summary>계단 정산 「n / N 칸」(새 HTML `drawClimbOverlay`): 오른 칸 수 n·전체 N. 오르기 중이 아니면 0.</summary>
+        public int ClimbShown, ClimbN;
+        /// <summary>그 글자 알파 0~1: 옆 시점 돌기 e > 0.6부터 min(1, (e − 0.6)·3).</summary>
+        public float ClimbAlpha;
 
         /// <summary><c>R.gauge.lv</c>.</summary>
         public int GaugeLv;
@@ -75,5 +79,7 @@ namespace MV.UI
         void SetWeapon(int tier, string iconSprite, string name, string damageText, Color gradeColor);
         /// <summary>무기 카드 아래 머지 안내 문구.</summary>
         void SetMergeHint(string text);
+        /// <summary>계단 정산 「n / N 칸」(화면 아래 가운데). 알파 0이면 숨김.</summary>
+        void SetClimbCount(string text, float alpha);
     }
 }

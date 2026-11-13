@@ -33,6 +33,7 @@ namespace MV.UI
         [SerializeField] Text weaponName;
         [SerializeField] Text weaponDmg;
         [SerializeField] Text mergeHint;
+        [SerializeField] Text climbCount;
 
         /// <summary>무기 카드 바탕 그림 수(UI_Skin_WpnCard_G1~G8, 그림 개수 — 표 값 아님). 넘는 등급은 마지막 그림을 다시 쓴다.</summary>
         const int WeaponCardSkinCount = 8;
@@ -81,6 +82,21 @@ namespace MV.UI
         {
             EnsureBuilt();
             if (mergeHint) mergeHint.text = text ?? "";
+        }
+
+        public void SetClimbCount(string text, float alpha)
+        {
+            EnsureBuilt();
+            if (climbCount == null)
+            {
+                if (alpha <= 0) return;
+                BuildClimbCount((RectTransform)transform);
+            }
+            climbCount.text = text ?? "";
+            var c = climbCount.color;
+            c.a = alpha;
+            climbCount.color = c;
+            climbCount.enabled = alpha > 0;
         }
 
         public void SetWeapon(int tier, string iconSprite, string name, string damageText, Color gradeColor)
@@ -149,6 +165,16 @@ namespace MV.UI
             var unit = MvUi.Label(stairBox.transform, "Unit", 3.4f * U, MvUi.InkDim, TextAnchor.MiddleLeft);
             MvUi.Place(unit.rectTransform, new Vector2(.5f, .5f), new Vector2(0, .5f), new Vector2(10.5f * U, -1.5f * U), new Vector2(10 * U, 4 * U));
             unit.text = "계단"; // ui.hud.stairUnit
+        }
+
+        void BuildClimbCount(RectTransform root)
+        {
+            // 새 HTML drawClimbOverlay: 가운데, 화면 높이 90%, 글자 6u(W·0.06), 종이색 + 진한 테두리(lineWidth fs·0.28 → 바깥 0.84u)
+            climbCount = MvUi.Label(root, "ClimbCount", 6 * U, MvUi.Hex("#fff4e2"), TextAnchor.MiddleCenter);
+            MvUi.Place(climbCount.rectTransform, new Vector2(.5f, .1f), new Vector2(.5f, .5f), Vector2.zero, new Vector2(80 * U, 6 * U * 1.25f));
+            var o = climbCount.gameObject.AddComponent<Outline>();
+            o.effectColor = MvUi.Hex("#3a2440");
+            o.effectDistance = new Vector2(.84f * U, -.84f * U);
         }
 
         void BuildGauge(RectTransform root)

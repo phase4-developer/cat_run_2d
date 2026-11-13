@@ -14,7 +14,7 @@ namespace MV.View
         public double Px, Pz;
         /// <summary>현재 지면 높이 `WY`.</summary>
         public double Wy;
-        /// <summary>계단 오르기 중 플레이어 높이(지면 기준, <see cref="CameraModel.ClimbPlayer"/>).</summary>
+        /// <summary>계단 오르기 중 플레이어 높이(지면 기준, <see cref="ClimbPath.Cat"/>).</summary>
         public double ClimbPy;
     }
 
@@ -24,41 +24,38 @@ namespace MV.View
     /// </summary>
     public sealed class CameraModel
     {
-        public const string KeyRun = "run", KeyClimb = "climb", KeyLobby = "lobby";
+        public const string KeyRun = "run", KeyClimb = "climb", KeyLobby = "lobby", KeySide = "side";
 
-        readonly CameraData _run, _climb, _lobby;
+        readonly CameraData _run, _climb, _lobby, _side;
 
         public double CamLift { get; private set; }
         public double Ck { get; private set; }
         public Vector3d Pos { get; private set; }
         public Vector3d Look { get; private set; }
+        /// <summary>옆 시점 돌기 진행 0~1(선형, 새 HTML `ORB.k`)과 그 부드러운 값(`ORB.e` = smooth(k)).</summary>
+        public double OrbitK { get; private set; }
+        public double OrbitE { get; private set; }
+        Vector3d _basePos;
         bool _hasPos;
 
-        public CameraModel(CameraData run, CameraData climb, CameraData lobby)
+        /// <param name="side">계단 오르기 옆 시점(새 HTML `orbitCam`). null이면 돌지 않는다(시험용).</param>
+        public CameraModel(CameraData run, CameraData climb, CameraData lobby, CameraData side = null)
         {
+            _side = side;
             _run = run ?? throw new ArgumentNullException(nameof(run));
             _climb = climb ?? throw new ArgumentNullException(nameof(climb));
             _lobby = lobby ?? throw new ArgumentNullException(nameof(lobby));
         }
 
         public static CameraModel FromTables(MvTables t) =>
-            new CameraModel(Row(t, KeyRun), Row(t, KeyClimb), Row(t, KeyLobby));
+            new CameraModel(Row(t, KeyRun), Row(t, KeyClimb), Row(t, KeyLobby), Row(t, KeySide));
 
         static CameraData Row(MvTables t, string key) =>
             t.Camera.ByKey(key) ?? throw new InvalidOperationException($"320_camera: key '{key}' 행이 없습니다");
 
         public CameraData RunRow => _run;
         public CameraData LobbyRow => _lobby;
-
-        /// <summary>계단 오르기 중 플레이어 위치(L2758): pz = z0 + sp·stepD, py = (floor(sp)+1)·stepH + sin(frac·π)·bump, sp &lt; 1이면 상한.</summary>
-        public static void ClimbPlayer(double pos, int k, double z0, double stepH, double stepD, double bump, out double py, out double pz)
-        {
-            double sp = Math.Max(0, Math.Min(k - 0.001, pos));
-            pz = z0 + sp * stepD;
-            double f = sp % 1;
-            py = (Math.Floor(sp) + 1) * stepH + Math.Sin(f * Math.PI) * bump;
-            if (sp < 1) py = Math.Min(py, sp * stepH * 1.2);
-        }
+        public CameraData SideRow => _side;
 
         /// <summary>
         /// 한 프레임(실시간 dt). camLift·ck 갱신 → 목표 계산 → 위치 보간 → 흔들림 가산(<paramref name="shake"/>, x·y만).
@@ -89,17 +86,46 @@ namespace MV.View
                 lerpK = snap ? 1 : Math.Min(1, dt * (c ? _climb.posLerp : _run.posLerp));
             }
 
-            Vector3d p = _hasPos ? Pos + (target - Pos) * lerpK : target;
+            Vector3d p = _hasPos ? _basePos + (target - _basePos) * lerpK : target;
             _hasPos = true;
             p = new Vector3d(p.x + shake.x, p.y + shake.y, p.z);
+            _basePos = p;
             Pos = p;
             Look = look;
+            Orbit(input, dt, shake);
         }
+
+        /// <summary>
+        /// 새 HTML `orbitCam`: 계단 오르기 동안 고양이 옆(side 행)으로 turnSec에 걸쳐 돈다. 기본 시점과 옆 시점 사이를
+        /// 수평 각도·수평 거리·높이로 보간하고, 주시점은 옆 주시점으로 e만큼 옮긴다. 로비면 바로 0.
+        /// </summary>
+        void Orbit(in CameraInput input, double dt, Vector3d shake)
+        {
+            if (_side == null || input.Mode == WorldViewMode.Lobby) { OrbitK = OrbitE = 0; return; }
+            double dir = input.Mode == WorldViewMode.Climb ? 1 : -1;
+            OrbitK = _side.turnSec > 0 ? Math.Max(0, Math.Min(1, OrbitK + dir * dt / _side.turnSec)) : (dir > 0 ? 1 : 0);
+            OrbitE = Smooth(OrbitK);
+            if (OrbitE <= 0.0001) return;
+            var cat = new Vector3d(input.Px, input.Wy + input.ClimbPy, input.Pz);
+            var lookS = new Vector3d(cat.x * _side.lookXMul + _side.lookX, cat.y + _side.lookY, cat.z + _side.lookZ);
+            var camS = new Vector3d(cat.x * _side.posXMul + _side.posX, cat.y + _side.posY, cat.z + _side.posZ);
+            Vector3d ob = Pos - Look, os = camS - lookS;
+            double e = OrbitE;
+            double aB = Math.Atan2(ob.x, ob.z), aS = Math.Atan2(os.x, os.z);
+            double rB = Math.Sqrt(ob.x * ob.x + ob.z * ob.z), rS = Math.Sqrt(os.x * os.x + os.z * os.z);
+            double a = aB + (aS - aB) * e, r = rB + (rS - rB) * e, h = ob.y + (os.y - ob.y) * e;
+            var look = Look + (lookS - Look) * e;
+            Look = look;
+            Pos = new Vector3d(look.x + Math.Sin(a) * r + shake.x, look.y + h + shake.y, look.z + Math.Cos(a) * r);
+        }
+
+        /// <summary>새 HTML `smooth(k) = k²(3 − 2k)`.</summary>
+        public static double Smooth(double k) => k * k * (3 - 2 * k);
 
         /// <summary>위치를 즉시 정한다(첫 진입·시험).</summary>
         public void Snap(Vector3d pos, Vector3d look, double camLift = 0, double ck = 0)
         {
-            Pos = pos; Look = look; CamLift = camLift; Ck = ck; _hasPos = true;
+            Pos = pos; _basePos = pos; Look = look; CamLift = camLift; Ck = ck; OrbitK = OrbitE = 0; _hasPos = true;
         }
 
         static double Lerp(double a, double b, double t) => a + (b - a) * t;
@@ -124,6 +150,35 @@ namespace MV.View
         {
             var f = (camLook - camPos).Normalized;
             return Vector3d.Dot(p - camPos, f);
+        }
+    }
+
+    /// <summary>
+    /// 계단 오르기 중 고양이 경로(새 HTML `climbCatPos`): sp = clamp(pos, 0, k), a = min(1, sp),
+    /// y = sp·stepH + a·stepH·catLift, z = z0 − z0Gap·(1 − a) + sp·stepD. 값은 `330_climb` 설정 행.
+    /// </summary>
+    public readonly struct ClimbPath
+    {
+        public readonly double StepH, StepD, Lift, Z0Gap;
+
+        public ClimbPath(double stepH, double stepD, double lift, double z0Gap)
+        {
+            StepH = stepH; StepD = stepD; Lift = lift; Z0Gap = z0Gap;
+        }
+
+        /// <summary>설정 행이 없으면 모두 0(경로 = 출발점).</summary>
+        public static ClimbPath From(ClimbTable climb)
+        {
+            var c = climb?.Config();
+            return c != null ? new ClimbPath(c["stepH"], c["stepD"], c["catLift"], c["z0Gap"]) : default;
+        }
+
+        /// <summary>지면(WY) 기준 높이 py와 z.</summary>
+        public void Cat(double pos, int k, double z0, out double py, out double pz)
+        {
+            double sp = Math.Max(0, Math.Min(k, pos)), a = Math.Min(1, sp);
+            py = sp * StepH + a * StepH * Lift;
+            pz = z0 - Z0Gap * (1 - a) + sp * StepD;
         }
     }
 
