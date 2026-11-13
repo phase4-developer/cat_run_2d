@@ -162,11 +162,11 @@
         },
         {
             "name": "105_objectKind",
-            "hash": "8c0043c61745975fd9719eafb0db6f8fff6b4ac85604e3ff7168b0453185238f",
+            "hash": "594cba6a44da021e8e12e0c1a8b930841db1920f7f6aa7adb76eeb13499b3db4",
             "metaHash": "b67565b270804f8dd5b7859f8c11943f237e8907edb75e18e38b84339e067450",
             "guid": "c6eba82ee8504d659dd0d176148d0f39",
-            "plainHash": "27c909a8bf760950ed7c2e6f9c742a04a13ab6bbf3df7737299b07bf2582a8c2",
-            "sourceHash": "497bd530175cb503837a38056d5634825718ae78390e5834bac9f404d5f91385",
+            "plainHash": "15c5058d77fc95a7b801109537653b1267d4d7b6ebf13fa0d56cf501f5151d15",
+            "sourceHash": "c4c6265d9b98edeeaf133a09fd65c10293ce038038f957a5ffdf2eecb2c081e0",
             "source": "Assets/Game/GameData/Table/TSV/105_objectKind.txt",
             "sourceKind": "LocalFile",
             "codec": "",
@@ -432,6 +432,18 @@
             "plainHash": "8675324cb8fdf54395651930995c4f6ad153f004a795d781c5c75fe51c15aebf",
             "sourceHash": "b1c8826e3dee6ad954dc6728827ce39f3b58c63e8873ebb60ea03dc70c46dfe1",
             "source": "Assets/Game/GameData/Table/TSV/304_theme.txt",
+            "sourceKind": "LocalFile",
+            "codec": "",
+            "encrypted": false
+        },
+        {
+            "name": "305_stageObject",
+            "hash": "b1a0a93a3af6a1f86d399d479e5bd9369bcb27c4a901445305c3d760b0ec0779",
+            "metaHash": "7faa3476d5a8d57dfc9e9e1804fbe3981f0e072a2a65edb4f397ea11162d3a26",
+            "guid": "6855c182d7484589afdbf31cc49aaacd",
+            "plainHash": "b2280c2f98b97fbdc445f59ed980c4ff5f7c6bd07f7e3e2fd9a070f25a930ae6",
+            "sourceHash": "eab572230b991ac2cc4b75816315ede2343b91a3e107d22915f8a38cb764e2af",
+            "source": "Assets/Game/GameData/Table/TSV/305_stageObject.txt",
             "sourceKind": "LocalFile",
             "codec": "",
             "encrypted": false
