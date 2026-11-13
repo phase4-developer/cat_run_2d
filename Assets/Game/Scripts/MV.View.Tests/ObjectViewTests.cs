@@ -220,5 +220,30 @@ namespace MV.View.Tests
             Assert.That(body, Is.Not.Null, "CharacterRig._body");
             Assert.That(body.sprite, Is.Null, "기본 그림 직접 참조 없음");
         }
+
+        /// <summary>정산 바퀴(MV-VIEW-CHAR-3): 116_charLook에 wheel이 있는 행의 프리팹은 CharacterRig._wheel이 몸 아래 SpriteRenderer로 연결되고 기본 그림이 없다.</summary>
+        [Test]
+        public void WheelLookRows_PrefabHasWheelUnderBody()
+        {
+            var t = ViewTestTables.Load();
+            int checkedRows = 0;
+            foreach (var row in t.CharLook.Datas)
+            {
+                if (string.IsNullOrEmpty(row.wheel)) continue;
+                string path = "Assets/Game/Addressables/Local/Character/Prefab/" + row.prefab + ".prefab";
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                Assert.That(prefab, Is.Not.Null, path);
+                var rig = prefab.GetComponent<CharacterRig>();
+                Assert.That(rig, Is.Not.Null, path);
+                var so = new SerializedObject(rig);
+                var body = so.FindProperty("_body").objectReferenceValue as SpriteRenderer;
+                var wheel = so.FindProperty("_wheel").objectReferenceValue as SpriteRenderer;
+                Assert.That(wheel, Is.Not.Null, row.id + ": CharacterRig._wheel");
+                Assert.That(wheel.transform.IsChildOf(body.transform), Is.True, row.id + ": 바퀴는 몸과 함께 기울도록 몸 아래");
+                Assert.That(wheel.sprite, Is.Null, row.id + ": 기본 그림 직접 참조 없음");
+                checkedRows++;
+            }
+            Assert.That(checkedRows, Is.GreaterThan(0), "wheel 행 없음");
+        }
     }
 }

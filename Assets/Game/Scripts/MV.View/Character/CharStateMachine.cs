@@ -19,7 +19,7 @@ namespace MV.View
     }
 
     /// <summary>그릴 그림 칸(116_charLook 열).</summary>
-    public enum CharPose : byte { WalkA, WalkB, AtkA, AtkB, Happy, Stair }
+    public enum CharPose : byte { WalkA, WalkB, AtkA, AtkB, Happy, Stair, HappyBack }
 
     /// <summary>재생 값(`300_runConfig` `char.*`, 디자이너 PDF 재생 규칙·웹 프로토). 표를 읽은 뒤 한 번 만든다.</summary>
     public readonly struct CharAnimParams
@@ -36,10 +36,14 @@ namespace MV.View
         public readonly double HappySpinSec;
         /// <summary>계단 정산 흔들림: 오르는 중 각속도(rad/s)·기울기(rad)·위아래 튐(m)·좌우(m), 오르기 전 각속도·기울기.</summary>
         public readonly double StairRate, StairRockRad, StairBobM, StairSwayM, StairIdleRate, StairIdleRockRad;
+        /// <summary>계단 한 칸 오를 때 정산 바퀴 회전 수(시계 방향).</summary>
+        public readonly double WheelTurnsPerStep;
 
         public CharAnimParams(double frameSec, double dipAt, double dipM, int atkFrames, double happySpinSec,
-            double stairRate, double stairRockRad, double stairBobM, double stairSwayM, double stairIdleRate, double stairIdleRockRad)
+            double stairRate, double stairRockRad, double stairBobM, double stairSwayM, double stairIdleRate, double stairIdleRockRad,
+            double wheelTurnsPerStep)
         {
+            if (!(wheelTurnsPerStep >= 0)) throw new ArgumentOutOfRangeException(nameof(wheelTurnsPerStep), wheelTurnsPerStep, RunConfigKeys.Char_WheelTurnsPerStep + " >= 0");
             if (!(frameSec > 0)) throw new ArgumentOutOfRangeException(nameof(frameSec), frameSec, RunConfigKeys.Char_FrameSec + " > 0");
             if (!(dipAt > 0 && dipAt < 1)) throw new ArgumentOutOfRangeException(nameof(dipAt), dipAt, RunConfigKeys.Char_DipAt + " 0~1 사이");
             if (!(happySpinSec > 0)) throw new ArgumentOutOfRangeException(nameof(happySpinSec), happySpinSec, RunConfigKeys.Char_HappySpinSec + " > 0");
@@ -54,6 +58,7 @@ namespace MV.View
             StairSwayM = stairSwayM;
             StairIdleRate = stairIdleRate;
             StairIdleRockRad = stairIdleRockRad;
+            WheelTurnsPerStep = wheelTurnsPerStep;
         }
 
         public static CharAnimParams From(MvTables t)
@@ -62,21 +67,22 @@ namespace MV.View
             var c = t.RunConfig;
             return new CharAnimParams(c.D(RunConfigKeys.Char_FrameSec), c.D(RunConfigKeys.Char_DipAt), c.D(RunConfigKeys.Char_DipM), (int)c.D(RunConfigKeys.Char_AtkFrames),
                 c.D(RunConfigKeys.Char_HappySpinSec), c.D(RunConfigKeys.Char_StairRate), c.D(RunConfigKeys.Char_StairRockRad), c.D(RunConfigKeys.Char_StairBobM),
-                c.D(RunConfigKeys.Char_StairSwayM), c.D(RunConfigKeys.Char_StairIdleRate), c.D(RunConfigKeys.Char_StairIdleRockRad));
+                c.D(RunConfigKeys.Char_StairSwayM), c.D(RunConfigKeys.Char_StairIdleRate), c.D(RunConfigKeys.Char_StairIdleRockRad),
+                c.D(RunConfigKeys.Char_WheelTurnsPerStep));
         }
     }
 
     /// <summary>
     /// 한 프레임에 그릴 것(카메라 평면 기준): 상태, 그림 칸, 내려감(m, 아래 +), 좌우(m, 오른쪽 +), 기울기(rad, 화면 시계 방향 +),
-    /// 가로 배율(세로축 회전 = cos, 음수면 뒷면 차례).
+    /// 가로 배율(세로축 회전 = cos, 음수면 뒷면 차례 — 그림은 <see cref="CharPose.HappyBack"/>), 정산 바퀴 누적 회전 수(시계 방향 +, NaN = 바퀴 없음).
     /// </summary>
     public readonly struct CharFrame
     {
         public readonly CharState State;
         public readonly CharPose Pose;
-        public readonly double Dip, SwayX, Roll, FlipX;
+        public readonly double Dip, SwayX, Roll, FlipX, WheelTurns;
 
-        public CharFrame(CharState state, CharPose pose, double dip, double swayX = 0, double roll = 0, double flipX = 1)
+        public CharFrame(CharState state, CharPose pose, double dip, double swayX = 0, double roll = 0, double flipX = 1, double wheelTurns = double.NaN)
         {
             State = state;
             Pose = pose;
@@ -84,7 +90,10 @@ namespace MV.View
             SwayX = swayX;
             Roll = roll;
             FlipX = flipX;
+            WheelTurns = wheelTurns;
         }
+
+        public bool HasWheel => !double.IsNaN(WheelTurns);
     }
 
     /// <summary>
@@ -92,8 +101,10 @@ namespace MV.View
     /// 걷기(디자이너 PDF 「재생 규칙」): 칸 = floor(now / frameSec + unit), A·B 교대. unit(0 플레이어, 1.. 분신)만큼 칸을 어긋나게 해 분신이 같이 걷지 않는다(웹 프로토 `newCatFrame(run, off)`).
     /// 공격: 쏜 시각부터 frameSec·atkFrames 동안, 그 칸이 A면 atkA(C), B면 atkB(D). 내려감: 칸 안 dipAt 지점에서 dipM 깊이(사인 반 주기, 앞뒤를 dipAt에서 나눈다).
     /// 기쁨(웹 프로토 `paperSpin`·`spinFx`): happySpinSec 동안 가로 배율 = cos(2π·e), e = 1 − (1 − k)³. 걷기·서 있음 위에서만 돌고, 다시 받으면 처음부터.
+    /// 배율이 음수인 동안(뒷면 차례)은 뒷면 그림 happyBack(노션 「신작 캐릭터 리소스 관리」 cat_happy_back).
     /// 계단(웹 프로토 `drawClimbCat`): 오르는 중이면 s = sin(now·stairRate)로 기울기 s·stairRockRad, 위로 |s|·stairBobM, 좌우 s·stairSwayM.
     /// 오르기 전이면 기울기 sin(now·stairIdleRate)·stairIdleRockRad만.
+    /// 바퀴(노션 「바퀴 회전」): 오른 칸 수(<see cref="ClimbedSteps"/>) × wheelTurnsPerStep 바퀴, 시계 방향. 멈추면 그 값 그대로라 바퀴도 멈춘다.
     /// </summary>
     public sealed class CharStateMachine
     {
@@ -105,6 +116,8 @@ namespace MV.View
         public double EnteredAt { get; private set; }
         /// <summary>계단 상태에서 오르는 중인지(뷰가 매 프레임 넣는다).</summary>
         public bool Climbing { get; set; }
+        /// <summary>계단 상태에서 지금까지 오른 칸 수(연속값, 뷰가 매 프레임 넣는다). 바퀴 회전에 쓴다.</summary>
+        public double ClimbedSteps { get; set; }
 
         /// <summary>상태를 바꾼다. 같은 상태면 그대로(들어간 시각 유지).</summary>
         public void Set(CharState state, double now)
@@ -125,6 +138,7 @@ namespace MV.View
             State = CharState.Hidden;
             EnteredAt = 0;
             Climbing = false;
+            ClimbedSteps = 0;
             _shotAt = double.NegativeInfinity;
             _happyAt = double.NegativeInfinity;
         }
@@ -134,10 +148,14 @@ namespace MV.View
             switch (State)
             {
                 case CharState.Hidden: return new CharFrame(CharState.Hidden, CharPose.WalkA, 0);
-                case CharState.Stair: return StairFrame(p, now, Climbing);
+                case CharState.Stair: return StairFrame(p, now, Climbing, ClimbedSteps);
             }
             double k = (now - _happyAt) / p.HappySpinSec;
-            if (k >= 0 && k < 1) return new CharFrame(CharState.Happy, CharPose.Happy, 0, flipX: SpinFlip(k));
+            if (k >= 0 && k < 1)
+            {
+                double flip = SpinFlip(k);
+                return new CharFrame(CharState.Happy, flip < 0 ? CharPose.HappyBack : CharPose.Happy, 0, flipX: flip);
+            }
             if (State != CharState.Walk) return new CharFrame(State, CharPose.WalkA, 0);
             double steps = now / p.FrameSec + unit;
             double step = Math.Floor(steps);
@@ -147,11 +165,12 @@ namespace MV.View
             return new CharFrame(CharState.Walk, pose, DipCurve(steps - step, p.DipAt) * p.DipM);
         }
 
-        static CharFrame StairFrame(in CharAnimParams p, double now, bool climbing)
+        static CharFrame StairFrame(in CharAnimParams p, double now, bool climbing, double climbedSteps)
         {
-            if (!climbing) return new CharFrame(CharState.Stair, CharPose.Stair, 0, roll: Math.Sin(now * p.StairIdleRate) * p.StairIdleRockRad);
+            double wheel = Math.Max(0, climbedSteps) * p.WheelTurnsPerStep;
+            if (!climbing) return new CharFrame(CharState.Stair, CharPose.Stair, 0, roll: Math.Sin(now * p.StairIdleRate) * p.StairIdleRockRad, wheelTurns: wheel);
             double w = Math.Sin(now * p.StairRate);
-            return new CharFrame(CharState.Stair, CharPose.Stair, -Math.Abs(w) * p.StairBobM, w * p.StairSwayM, w * p.StairRockRad);
+            return new CharFrame(CharState.Stair, CharPose.Stair, -Math.Abs(w) * p.StairBobM, w * p.StairSwayM, w * p.StairRockRad, wheelTurns: wheel);
         }
 
         /// <summary>기쁨 진행 k(0~1) → 가로 배율. 감속(ease-out 3제곱)으로 1바퀴. 범위 밖이면 1.</summary>
@@ -179,6 +198,7 @@ namespace MV.View
                 case CharPose.AtkA: return row.atkA;
                 case CharPose.AtkB: return row.atkB;
                 case CharPose.Happy: return row.happy;
+                case CharPose.HappyBack: return row.happyBack;
                 case CharPose.Stair: return row.stair;
                 default: return row.walkA;
             }

@@ -157,6 +157,7 @@ namespace MV.View.Tests
             Assert.That(CharStateMachine.SpriteOf(row, CharPose.AtkB), Is.EqualTo(row.atkB));
             Assert.That(CharStateMachine.SpriteOf(row, CharPose.Happy), Is.EqualTo(row.happy));
             Assert.That(CharStateMachine.SpriteOf(row, CharPose.Stair), Is.EqualTo(row.stair));
+            Assert.That(CharStateMachine.SpriteOf(row, CharPose.HappyBack), Is.EqualTo(row.happyBack));
         }
 
         // ───────── 기쁨·계단 상태(MV-VIEW-CHAR-2) ─────────
@@ -233,6 +234,50 @@ namespace MV.View.Tests
             Assert.That(up.Dip, Is.EqualTo(-p.StairBobM).Within(1e-9), "위로 튐");
             Assert.That(up.SwayX, Is.EqualTo(p.StairSwayM).Within(1e-9));
             Assert.That(sm.Evaluate(p, at * 3, 0).Dip, Is.EqualTo(-p.StairBobM).Within(1e-9), "sin = −1에서도 위로");
+        }
+
+        // ───────── 기쁨 뒷면·정산 바퀴(MV-VIEW-CHAR-3, 노션 「신작 캐릭터 리소스 관리」) ─────────
+
+        [Test]
+        public void CharAnim_ReadsWheelTurnsPerStepFromRunConfig()
+        {
+            var t = ViewTestTables.Load();
+            Assert.That(CharAnimParams.From(t).WheelTurnsPerStep, Is.EqualTo(t.RunConfig.D(RunConfigKeys.Char_WheelTurnsPerStep)));
+        }
+
+        [Test]
+        public void Happy_ShowsBackPoseWhileFlipIsNegative()
+        {
+            var p = Anim();
+            var sm = new CharStateMachine();
+            sm.Set(CharState.Walk, 0);
+            sm.Happy(0);
+            double half = 1 - Math.Pow(0.5, 1.0 / 3);   // e = 0.5(반 바퀴)
+            var back = sm.Evaluate(p, half * p.HappySpinSec, 0);
+            Assert.That(back.FlipX, Is.LessThan(0));
+            Assert.That(back.Pose, Is.EqualTo(CharPose.HappyBack));
+            double quarter = 1 - Math.Pow(0.9, 1.0 / 3);   // e = 0.1, 앞면
+            var front = sm.Evaluate(p, quarter * p.HappySpinSec, 0);
+            Assert.That(front.FlipX, Is.GreaterThan(0));
+            Assert.That(front.Pose, Is.EqualTo(CharPose.Happy));
+        }
+
+        [Test]
+        public void Stair_WheelTurnsWithClimbedSteps_StopsWhenClimbStops()
+        {
+            var p = Anim();
+            var sm = new CharStateMachine();
+            sm.Set(CharState.Walk, 0);
+            Assert.That(sm.Evaluate(p, 0.3, 0).HasWheel, Is.False, "걷기에는 바퀴 없음");
+            sm.Set(CharState.Stair, 0);
+            sm.ClimbedSteps = 0;
+            Assert.That(sm.Evaluate(p, 0.3, 0).WheelTurns, Is.EqualTo(0), "오르기 전 바퀴 멈춤");
+            sm.Climbing = true;
+            sm.ClimbedSteps = 2.5;
+            var a = sm.Evaluate(p, 1.0, 0);
+            Assert.That(a.HasWheel, Is.True);
+            Assert.That(a.WheelTurns, Is.EqualTo(2.5 * p.WheelTurnsPerStep).Within(1e-12), "오른 칸 × 칸당 바퀴");
+            Assert.That(sm.Evaluate(p, 2.0, 0).WheelTurns, Is.EqualTo(a.WheelTurns), "칸이 그대로면 시간이 흘러도 그대로");
         }
 
         // ───────── 캐릭터 뷰 구조 ─────────
