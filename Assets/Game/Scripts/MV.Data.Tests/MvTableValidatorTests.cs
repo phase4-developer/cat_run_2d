@@ -64,8 +64,8 @@ namespace MV.Data.Tests
         public void Extension_Area31_Passes()
         {
             var area = TsvFixture.Append(TsvFixture.Read("302_area"),
-                R("id", "areaNo", "zoneId", "sort", "active", "themeId", "hp", "needSouls", "floorGroup", "bgm", "mapIcon", "clearRewardType", "clearRewardId", "clearRewardValue"),
-                R("302001031", "31", "301001006", "31", "1", "304001015", "69000", "1755", "31", "", "", "", "", ""));
+                R("id", "areaNo", "zoneId", "sort", "active", "themeId", "hp", "needSouls", "floorGroup", "bgm", "mapIcon", "clearRewardType", "clearRewardId", "clearRewardValue", "stageMap"),
+                R("302001031", "31", "301001006", "31", "1", "304001015", "69000", "1755", "31", "", "", "", "", "", "Stage1"));
             var floorHeader = R("id", "group", "floor", "h0", "h1", "rows", "souls", "cellMode");
             var floor = TsvFixture.Read("303_areaFloor");
             floor = TsvFixture.Append(floor, floorHeader, R("303031001", "31", "1", "3700", "1200000", "14", "18", "Hash"));

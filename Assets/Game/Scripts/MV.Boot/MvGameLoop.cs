@@ -86,8 +86,6 @@ namespace MV.Boot
         long _runSeq;
         int _savedArea, _savedSouls;
         int _themeId = int.MinValue;
-        /// <summary>스테이지 맵 프리팹 주소 = 접두사 + 지역 번호(1부터, 주소 = 파일 이름 `Stage1`). 표 열로 옮기는 일은 MV-VIEW-STAGE(대기). 없으면 기존 지면만 쓴다.</summary>
-        public const string StageMapAddressPrefix = "Stage";
         int _stageArea = int.MinValue;
         StageMap _stageMap;
         readonly List<IDisposable> _stageLeases = new List<IDisposable>();
@@ -208,9 +206,9 @@ namespace MV.Boot
 
         async UniTask ApplyThemeAsync(int area)
         {
-            await LoadStageMapAsync(area);
             AreaData row = null;
             foreach (var a in _tables.Area.Datas) if (a.areaNo == area + 1) { row = a; break; }
+            await LoadStageMapAsync(area, row);
             if (row == null || row.themeId == _themeId) return;
             var theme = _tables.Theme.Get(row.themeId);
             if (theme == null) return;
@@ -218,17 +216,21 @@ namespace MV.Boot
             if (!await _world.SetThemeAsync(theme, _ct)) Debug.LogWarning("[MvGameLoop] 테마 그림 일부를 불러오지 못했습니다: " + theme.key);
         }
 
-        /// <summary>지역이 바뀌면 `Stage{지역 번호}` 맵 프리팹을 월드 아래에 불러오고 이전 맵은 지운다.</summary>
-        async UniTask LoadStageMapAsync(int area)
+        /// <summary>
+        /// 지역이 바뀌면 그 지역 행의 `302_area.stageMap` 맵 프리팹을 월드 아래에 불러오고 이전 맵은 지운다.
+        /// 행·주소가 없거나 로드에 실패하면 오류로 드러낸다(대체 지면으로 가리지 않는다).
+        /// </summary>
+        async UniTask LoadStageMapAsync(int area, AreaData row)
         {
             if (area == _stageArea || _world == null) return;
             _stageArea = area;
             foreach (var d in _stageLeases) d?.Dispose();
             _stageLeases.Clear();
             _stageMap = null;
-            var r = await AddressableScope.InstantiateWithLease(StageMapAddressPrefix + (area + 1), _world.transform, _ct);
+            if (row == null || string.IsNullOrEmpty(row.stageMap)) { Debug.LogError($"[MvGameLoop] 302_area 지역 {area + 1}의 stageMap이 없습니다"); return; }
+            var r = await AddressableScope.InstantiateWithLease(row.stageMap, _world.transform, _ct);
             Alive();
-            if (r.instance == null) { Debug.Log("[MvGameLoop] 스테이지 맵 없음: " + StageMapAddressPrefix + (area + 1)); return; }
+            if (r.instance == null) { Debug.LogError("[MvGameLoop] 스테이지 맵 로드 실패: " + row.stageMap); return; }
             if (r.destroyOnDispose != null) _stageLeases.Add(r.destroyOnDispose);
             if (r.lease != null) _stageLeases.Add(r.lease);
             _stageMap = r.instance.GetComponent<StageMap>();
