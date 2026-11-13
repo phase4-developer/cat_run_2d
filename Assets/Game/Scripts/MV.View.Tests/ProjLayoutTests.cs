@@ -1,3 +1,5 @@
+using System.Linq;
+using MV.Data;
 using NUnit.Framework;
 
 namespace MV.View.Tests
@@ -22,17 +24,43 @@ namespace MV.View.Tests
         [TestCase(0, 1)]
         [TestCase(1, 1)]
         [TestCase(6, 6)]
-        [TestCase(8, 8)]
-        [TestCase(9, 8)]
-        [TestCase(12, 8)]
-        [TestCase(13, 8)]
-        public void ProjSpriteName_ReadsItemTable_ReusesLastArtAboveArtCount(int tier, int drawn)
+        [TestCase(12, 12)]
+        [TestCase(13, 12)]
+        public void ProjSpriteAndTail_ReadItemTable_TopTierAboveMax(int tier, int drawnTier)
         {
-            // 103은 12등급, 그림은 8장: 9~12등급은 표 projSprite가 8단계 그림, 표 최고 등급 위는 최고 등급 그림.
-            var names = ProjLayout.NamesByTier(ViewTestTables.Load());
-            Assert.That(names.Length - 1, Is.EqualTo(12), "등급 수는 103 행에서");
-            Assert.That(ProjLayout.ProjSpriteName(tier, names), Is.EqualTo("World_Proj_" + drawn));
+            // 노션 「신작 이펙트 리소스 관리」: 무기 n단계 = projectile_(n−1) + VFX_Tail_(n−1). 표 최고 등급 위는 최고 등급.
+            var t = ViewTestTables.Load();
+            var names = ProjLayout.NamesByTier(t);
+            var tails = ProjLayout.TailsByTier(t);
+            var row = t.Item.Datas.First(r => r.tier == drawnTier);
+            Assert.That(ProjLayout.ProjSpriteName(tier, names), Is.EqualTo(row.projSprite));
+            Assert.That(ProjLayout.ProjSpriteName(tier, tails), Is.EqualTo(row.projTail));
             Assert.That(ProjLayout.ProjSpriteName(tier, null), Is.Null, "표 없음 = 그리지 않음(대체 이름 없음)");
+        }
+
+        /// <summary>마법탄 프리팹(노션 「투사체 프리팹 구조」): 루트에 ProjectileRig, proj_Image 그림 칸·VFX_Card 자리 연결.</summary>
+        [Test]
+        public void ProjectilePrefab_HasRigWithImageAndCardSlot()
+        {
+            var t = ViewTestTables.Load();
+            string address = t.RunConfig.Raw(RunConfigKeys.Proj_Prefab);
+            string path = "Assets/Game/Addressables/Local/Projectile/Prefab/" + address + ".prefab";
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>(path);
+            Assert.That(prefab, Is.Not.Null, path);
+            var rig = prefab.GetComponent<ProjectileRig>();
+            Assert.That(rig, Is.Not.Null, "ProjectileRig");
+            Assert.That(rig.Image, Is.Not.Null, "ProjectileRig._image");
+            Assert.That(rig.Card, Is.Not.Null, "ProjectileRig._card");
+            Assert.That(rig.Card.IsChildOf(rig.Image.transform), Is.False, "카드 자리는 그림과 따로 돈다");
+        }
+
+        [Test]
+        public void NamesAndTails_HaveOneEntryPerItemTier()
+        {
+            var t = ViewTestTables.Load();
+            int max = t.Item.Datas.Max(r => r.tier);
+            Assert.That(ProjLayout.NamesByTier(t).Length - 1, Is.EqualTo(max), "등급 수는 103 행에서");
+            Assert.That(ProjLayout.TailsByTier(t).Length - 1, Is.EqualTo(max));
         }
 
         [Test]

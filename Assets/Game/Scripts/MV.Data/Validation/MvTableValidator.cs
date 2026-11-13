@@ -476,6 +476,12 @@ namespace MV.Data
                 {
                     if (!s_color.IsMatch(row.value)) r.Error(name, row.id, "value", $"`{row.value}`는 색이 아닙니다");
                 }
+                else if (row.unit == RunConfigData.AddressUnit)
+                {
+                    // Addressables 주소(= 파일 이름). 등록 여부는 에디터 시험(MvFolderArtTests)이 본다.
+                    if (string.IsNullOrWhiteSpace(row.value) || row.value.IndexOfAny(new[] { ' ', '\t', '/' }) >= 0)
+                        r.Error(name, row.id, "value", $"`{row.value}`는 주소(파일 이름)가 아닙니다");
+                }
                 else
                 {
                     foreach (var part in row.value.Split('/'))
