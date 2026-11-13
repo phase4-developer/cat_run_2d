@@ -16,6 +16,8 @@ namespace MV.Data
     public sealed class RunConfigData : MvRow
     {
         public const string Table = "300_runConfig";
+        /// <summary>unit이 이 값이면 value는 숫자가 아니라 Addressables 주소(= 파일 이름)다.</summary>
+        public const string AddressUnit = "address";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Str("value", true).Str("unit");
 
         /// <summary>원문 문자열. `unit = color`면 색, `/`가 있으면 리스트, 그 밖은 double.</summary>
