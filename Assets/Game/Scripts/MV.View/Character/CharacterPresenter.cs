@@ -107,6 +107,7 @@ namespace MV.View
             if (go.GetComponent<Billboard>() == null) go.AddComponent<Billboard>();
             var body = rig.Body;
             if (body != null && _spriteMaterial != null) body.sharedMaterial = _spriteMaterial;
+            if (rig.Wheel != null && _spriteMaterial != null) rig.Wheel.sharedMaterial = _spriteMaterial;
             ds.Refresh();
         }
 
@@ -153,6 +154,7 @@ namespace MV.View
             bool walking = C != null || s.Phase == RunPhase.Run && !s.Fin;
             var state = walking ? CharState.Walk : CharState.Stand;
             _units[0].Sm.Climbing = C != null && C.Pos > 0;
+            _units[0].Sm.ClimbedSteps = C != null ? C.Pos : 0;
             int tier = s.EqTier();
 
             double px = s.P.X, pz = s.P.Z, py = 0, wy = s.WorldY;
@@ -185,6 +187,8 @@ namespace MV.View
             u.Row = row;
             if (row == null) { Park(u); return false; }
             Want(row, catId, slot);
+            bool wheel = !string.IsNullOrEmpty(row.wheel);
+            if (wheel) Load(row.wheelAtlas);
             var next = CharLookResolver.Resolve(_looks, catId, slot, tier + 1);
             if (next != null && next != row) Want(next, catId, slot);
 
@@ -206,7 +210,8 @@ namespace MV.View
                 if (u.Rig != null && u.Rig.gameObject.activeSelf) u.Rig.gameObject.SetActive(false);
                 return false;
             }
-            u.Rig.Apply(sprite, frame, row.scale);
+            var wheelSprite = wheel && frame.HasWheel && _sprites.IsLoaded(row.wheelAtlas) ? _sprites.Get(row.wheelAtlas, row.wheel) : null;
+            u.Rig.Apply(sprite, frame, row.scale, wheelSprite);
             u.Rig.transform.position = new Vector3((float)x, (float)y, (float)z);
             if (!u.Rig.gameObject.activeSelf) u.Rig.gameObject.SetActive(true);
             return true;
@@ -240,13 +245,20 @@ namespace MV.View
                 lru.Insert(0, atlas);
             }
             if (_sprites == null) return;
-            if (!_sprites.IsLoaded(atlas) && !_failed.Contains(atlas) && _loading.Add(atlas)) LoadAsync(atlas, this.GetCancellationTokenOnDestroy()).Forget();
+            Load(atlas);
             while (lru.Count > KeepPerFamily)
             {
                 string old = lru[lru.Count - 1];
                 lru.RemoveAt(lru.Count - 1);
                 if (!InUse(old) && !_loading.Contains(old)) _sprites.ReleaseAtlas(old);
             }
+        }
+
+        /// <summary>아틀라스가 없으면 읽기 시작한다(실패한 것은 다시 읽지 않는다). 바퀴 아틀라스는 등급과 상관없이 하나라 묶음 최근 목록에 넣지 않고 둔다.</summary>
+        void Load(string atlas)
+        {
+            if (_sprites == null || string.IsNullOrEmpty(atlas)) return;
+            if (!_sprites.IsLoaded(atlas) && !_failed.Contains(atlas) && _loading.Add(atlas)) LoadAsync(atlas, this.GetCancellationTokenOnDestroy()).Forget();
         }
 
         /// <summary>다른 묶음이 같은 아틀라스를 들고 있으면 반환하지 않는다.</summary>
