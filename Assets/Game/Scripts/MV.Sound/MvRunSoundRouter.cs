@@ -91,7 +91,7 @@ namespace MV.Sound
                 case RunEventType.ClimbStart: // L2260
                     Add(cues, ArriveSound(t, ArriveAction.StartClimb));
                     break;
-                case RunEventType.ClimbStepShown: // L2270: i % 4 == 0
+                case RunEventType.ClimbStepShown: // i % tickEvery == 0(새 HTML: 칸마다)
                 {
                     var c = ClimbConfig(t);
                     int every = c != null ? Round(c["tickEvery"]) : 0;

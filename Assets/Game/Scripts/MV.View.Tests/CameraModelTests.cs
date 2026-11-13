@@ -44,22 +44,14 @@ namespace MV.View.Tests
         }
 
         [Test]
-        public void ClimbPose_MatchesReferenceGeometry()
+        public void ClimbPose_MatchesHtmlClimbCamera()
         {
+            // 새 HTML syncScene(2026-11-13): ck = 1이면 위치 (px·0.3, camLift + 7.4 + 2, pz − 7.6 − 1.5), 주시 (px·0.3, camLift + 1.1, pz + 9)
             var m = Settled(WorldViewMode.Climb);
             Assert.That(m.Ck, Is.EqualTo(1).Within(1e-12));
-            AssertVec(m.Pos, 0, 15, -10.5);
-            AssertVec(m.Look, 0, 0.5, 5.5);
-            var cfg = ViewTestTables.Config();
-            double fov = m.RunRow.fovV;
-            double pitch = DepthMath.PitchDeg(m.Pos, m.Look);
-            Assert.That(pitch, Is.EqualTo(42.18).Within(0.01), "내려다보는 각");
-            Assert.That(pitch - fov / 2, Is.EqualTo(16.18).Within(0.01), "화면 맨 위 광선");
-            double d = CameraModel.ViewDepth(new Vector3d(0, 0.7, 0), m.Pos, m.Look);
-            Assert.That(d, Is.EqualTo(17.38).Within(0.01), "플레이어 몸통 깊이");
-            Assert.That(CameraModel.PxPerMeter(fov, H, d), Is.EqualTo(37.7).Within(0.05), "플레이어 s");
-            Assert.That(DepthMath.GroundZAtDepth(m.Pos, m.Look, 0, 0, cfg.FogStart), Is.EqualTo(21.8).Within(0.05), "안개 시작 지면 z");
-            Assert.That(DepthMath.GroundZAtDepth(m.Pos, m.Look, 0, 0, cfg.FogStart + cfg.FogRange), Is.EqualTo(89.3).Within(0.05), "안개 끝 지면 z");
+            AssertVec(m.Pos, 0, 7.4 + 2, -7.6 - 1.5);
+            AssertVec(m.Look, 0, 1.1, 9);
+            Assert.That(DepthMath.PitchDeg(m.Pos, m.Look), Is.EqualTo(System.Math.Atan2(8.3, 18.1) * 180 / System.Math.PI).Within(1e-9), "내려다보는 각");
         }
 
         [Test]

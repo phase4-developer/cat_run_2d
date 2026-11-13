@@ -100,8 +100,8 @@ namespace MV.Run
         public double Pw, Z0, ZEnd, DH, T;
         public double Time;
         public double Pos;
-        /// <summary>칸 생성 간격(MV-SPEC-02 6-5e, <see cref="RunFormulas.ClimbStepEvery"/>).</summary>
-        public double StepEvery;
+        /// <summary>다 오른 시각(Time, 없으면 −1). 그 뒤 sideOut만큼 멈췄다 끝난다(새 HTML endAt).</summary>
+        public double EndAt = -1;
         public int Shown;
         public int Tier = -1;
         public int Lap;

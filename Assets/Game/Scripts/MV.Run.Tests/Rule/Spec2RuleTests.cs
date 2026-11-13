@@ -38,47 +38,62 @@ namespace MV.Run.Tests
         static MvTables WithConfig(string key, string value) =>
             RunTestTables.Load(new Dictionary<string, string> { ["300_runConfig"] = SetCell(RunTestTables.ReadTsv("300_runConfig"), "key", key, "value", value) });
 
-        // ---------------- Q-07 계단 오르기 ----------------
+        // ---------------- 계단 정산: 새 HTML(2026-11-13 연출 정본, Q-07·Q-11 대체) ----------------
 
         [TestCase(1)]
         [TestCase(11)]
-        [TestCase(50)]
-        public void Climb_StepEvery_FromClimbColumns(int k)
+        [TestCase(600)]
+        [TestCase(1000)]
+        public void Climb_KAndTime_FromHtmlColumns(int n)
         {
             var c = RunTestTables.Load().Climb.Config();
-            double t = Math.Min(c["riseCap"], c["riseBase"] + c["risePerStep"] * (k - 1));
-            Assert.AreEqual(t, ClimbT(c, k), 1e-12);
-            Assert.AreEqual(Math.Max(0, (t - c["riseLead"]) / Math.Max(1, k - 1)), ClimbStepEvery(c, k), 1e-12);
+            int k = Math.Min((int)c["kMax"], n);
+            Assert.AreEqual(k, ClimbK(c, n), "k = min(kMax, n), 압축 없음");
+            Assert.AreEqual(c["tBase"] + c["tPerStep"] * k, ClimbT(c, k), 1e-12);
         }
 
         [Test]
-        public void Climb_EndsWithinRiseCap_AllStepsShown()
+        public void Climb_StepsAheadOfPos_EndsAfterSideOut()
         {
             var t = RunTestTables.Load(); var c = t.Climb.Config();
             var sim = Sim(new HandLevel().Add("stair", 0, 3), t: t);
-            sim.State.Stairs = 500;
-            Run(sim, 60 * 4);
+            sim.State.Stairs = 50;
+            int f = 0;
+            while (sim.State.Phase != RunPhase.Climb && f++ < 600) sim.Tick(1 / 60.0, default);
+            sim.Tick(1 / 60.0, default);
+            var C = sim.State.Climb;
+            Assert.AreEqual(50, C.K);
+            Assert.AreEqual((int)Math.Ceiling(C.Pos + c["riseAhead"]), C.StepsShown, "pos + riseAhead 앞까지 보임");
+            for (int i = 0; i < 60; i++)
+            {
+                sim.Tick(1 / 60.0, default);
+                if (sim.State.Phase != RunPhase.Climb) break;
+                Assert.AreEqual(Math.Min(C.K, (int)Math.Ceiling(C.Pos + c["riseAhead"])), C.StepsShown);
+            }
+            Run(sim, 60 * 8);
             var start = Ev(sim, RunEventType.ClimbStart).Single();
-            Assert.AreEqual(ClimbK(c, 500), start.B);
-            Assert.LessOrEqual(start.Amount3, c["riseCap"]);
+            Assert.AreEqual(ClimbT(c, 50), start.Amount3, 1e-12);
             Assert.AreEqual(start.B, Ev(sim, RunEventType.ClimbStepShown).Count);
             Assert.AreEqual(1, Ev(sim, RunEventType.ClimbEnd).Count);
+            Assert.GreaterOrEqual(C.Time, c["sideLead"] + C.T + c["sideOut"] - 1e-9, "다 오른 뒤 sideOut 멈춤");
         }
 
-        // ---------------- Q-11 오르는 중 좌우 조작 ----------------
-
         [Test]
-        public void Climb_KeepsLateralControl()
+        public void Climb_PullsToCenter()
         {
-            var sim = Sim(new HandLevel().Add("stair", 0, 1));
+            var t = RunTestTables.Load(); var c = t.Climb.Config();
+            var sim = Sim(new HandLevel().Add("stair", 0, 1), t: t);
             sim.State.Stairs = 100;
+            sim.State.P.X = 2; sim.State.P.Tx = 2;
             int f = 0;
-            while (sim.State.Phase != RunPhase.Climb && f++ < 120) sim.Tick(1 / 60.0, default);
+            while (sim.State.Phase != RunPhase.Climb && f++ < 120) sim.Tick(1 / 60.0, RunInput.Drag(2));
             Assert.AreEqual(RunPhase.Climb, sim.State.Phase);
-            for (int i = 0; i < 20; i++) sim.Tick(1 / 60.0, RunInput.Drag(2));
-            Assert.AreEqual(RunPhase.Climb, sim.State.Phase);
-            Assert.AreEqual(2, sim.State.P.Tx, 1e-12);
-            Assert.Greater(sim.State.P.X, 1, "오르는 중에도 끌기 목표로 따라간다(가운데로 당기지 않음)");
+            double x0 = sim.State.P.X;
+            sim.Tick(1 / 60.0, RunInput.Drag(2));
+            Assert.AreEqual(x0 * (1 - Math.Min(1, c["centerK"] / 60.0)), sim.State.P.X, 1e-9, "새 HTML: x += (0 − x)·min(1, dt·centerK)");
+            for (int i = 0; i < 60; i++) sim.Tick(1 / 60.0, RunInput.Drag(2));
+            Assert.Less(Math.Abs(sim.State.P.X), 0.01, "끌어도 가운데로 당겨진다");
+            Assert.AreEqual(sim.State.P.X, sim.State.P.Tx, 1e-12);
         }
 
         // ---------------- Q-06 계단 게이트 M ----------------

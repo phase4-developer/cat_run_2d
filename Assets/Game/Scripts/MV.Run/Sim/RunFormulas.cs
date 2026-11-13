@@ -291,33 +291,11 @@ namespace MV.Run
 
         // ---------------- 계단 ----------------
 
-        /// <summary>
-        /// 표시 칸 수 K(MV-SPEC-02 6-5d, Q-07): N ≤ cmpFrom → N, 아니면 cmpFrom + ceil((N − cmpFrom) / C).
-        /// C = <c>cmpBandC</c>[i], i = <c>cmpBandFrom</c>[i] ≤ N인 마지막 칸(첫 칸보다 작으면 첫 칸). 상수는 모두 330_climb 설정 행.
-        /// </summary>
-        public static int ClimbK(ClimbData c, int n)
-        {
-            int from = (int)c["cmpFrom"];
-            if (n <= from) return n;
-            return from + (int)Math.Ceiling((n - from) / (double)CompressC(c, n));
-        }
+        /// <summary>계단 단수 k = min(kMax, n)(새 HTML startClimb, 압축 없음). 칸 하나 = n/k 칸.</summary>
+        public static int ClimbK(ClimbData c, int n) => Math.Min((int)c["kMax"], n);
 
-        /// <summary>압축 구간 C(N).</summary>
-        public static int CompressC(ClimbData c, int n)
-        {
-            var bf = c.cmpBandFrom; var bc = c.cmpBandC;
-            int count = Math.Min(bf?.Count ?? 0, bc?.Count ?? 0);
-            if (count == 0) return 1;
-            int pick = 0;
-            for (int i = 0; i < count; i++) if (n >= bf[i]) pick = i;
-            return Math.Max(1, bc[pick]);
-        }
-
-        /// <summary>오르는 시간 T = min(riseCap, riseBase + risePerStep·(K − 1))(MV-SPEC-02 6-5e, 약 1.5초 안).</summary>
-        public static double ClimbT(ClimbData c, int k) => Math.Min(c["riseCap"], c["riseBase"] + c["risePerStep"] * Math.Max(0, k - 1));
-
-        /// <summary>칸 생성 간격 = max(0, (T − riseLead) / max(1, K − 1))(MV-SPEC-02 6-5e). 0이면 모든 칸이 바로 보인다.</summary>
-        public static double ClimbStepEvery(ClimbData c, int k) => Math.Max(0, (ClimbT(c, k) - c["riseLead"]) / Math.Max(1, k - 1));
+        /// <summary>오르는 시간 T = tBase + tPerStep·k(새 HTML `0.8 + k*0.09`).</summary>
+        public static double ClimbT(ClimbData c, int k) => c["tBase"] + c["tPerStep"] * k;
 
         /// <summary>남은 칸 rem의 카드 등급(115 need 이하 최고), 없으면 −1.</summary>
         public static int TierFor(MvTables t, int rem)
