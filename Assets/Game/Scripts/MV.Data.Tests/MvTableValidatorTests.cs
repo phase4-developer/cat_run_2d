@@ -172,6 +172,19 @@ namespace MV.Data.Tests
                 "300_runConfig", "PLAYABLE_AREAS");
 
         [Test]
+        public void RunConfig_AddressUnitWithPath_IsError() =>
+            AssertError(TsvFixture.Validate(("300_runConfig", TsvFixture.SetByKey(TsvFixture.Read("300_runConfig"), RunConfigKeys.Proj_Prefab, "value", "Prefab/projectile"))),
+                "300_runConfig", "주소(파일 이름)가 아닙니다");
+
+        [Test]
+        public void RunConfig_AddressUnit_AcceptsFileName()
+        {
+            var report = TsvFixture.Validate();
+            Assert.That(report.Contains(MvIssueLevel.Error, "300_runConfig", "주소(파일 이름)"), Is.False, report.Summary(60));
+            Assert.That(report.Contains(MvIssueLevel.Error, "300_runConfig", "숫자(또는"), Is.False, report.Summary(60));
+        }
+
+        [Test]
         public void Semantics_FloorMissing_IsError() =>
             AssertError(TsvFixture.Validate(("303_areaFloor", TsvFixture.Remove(TsvFixture.Read("303_areaFloor"), "303001002"))),
                 "303_areaFloor", "floor 2가 없습니다");

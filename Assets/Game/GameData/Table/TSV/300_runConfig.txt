@@ -181,4 +181,4 @@ id	name	key	value	unit
 300107011	계단 정산 기울기 진폭(오르기 전)	char.stairIdleRockRad	0.05	rad
 300107012	계단 한 칸당 바퀴 회전 수(시계 방향)	char.wheelTurnsPerStep	0.6	바퀴
 300108001	로비 트랙에 까는 오브젝트 범위(시작점에서 z 거리)	lobby.objZMax	70	m
-300109001	마법탄 프리팹 주소	proj.prefab	projectile	주소
+300109001	마법탄 프리팹 주소	proj.prefab	projectile	address
