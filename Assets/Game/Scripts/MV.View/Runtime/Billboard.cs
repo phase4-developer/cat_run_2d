@@ -13,6 +13,9 @@ namespace MV.View
         static readonly List<Billboard> s_all = new List<Billboard>(256);
         int _index = -1;
 
+        /// <summary>화면 평면 안 기울기(도, 반시계 +). 종이 쓰러짐(새 HTML paperDie) 같은 연출이 쓴다.</summary>
+        [System.NonSerialized] public float Roll;
+
         public static int Count => s_all.Count;
 
         void OnEnable()
@@ -37,7 +40,11 @@ namespace MV.View
 
         public static void SyncAll(Quaternion cameraRotation)
         {
-            for (int i = 0; i < s_all.Count; i++) s_all[i].transform.rotation = cameraRotation;
+            for (int i = 0; i < s_all.Count; i++)
+            {
+                var b = s_all[i];
+                b.transform.rotation = b.Roll == 0f ? cameraRotation : cameraRotation * Quaternion.Euler(0f, 0f, b.Roll);
+            }
         }
     }
 }

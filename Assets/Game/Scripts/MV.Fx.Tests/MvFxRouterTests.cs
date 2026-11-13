@@ -73,7 +73,6 @@ namespace MV.Fx.Tests
             yield return S("L2175 신 대폭발", t => new[] { Ev(RunEventType.GodBlast, x: 0, z: 5, key: "fire") }, "god.blast");
             yield return S("L2276 우다다 한 바퀴", t => new[] { Ev(RunEventType.ClimbStart, a: 100, b: 40, amount: 2.5, x: 10, z: 39), Ev(RunEventType.ClimbLap, a: 1, b: 75) }, "climb.lap");
             yield return S("L2282 우다다 등급", t => new[] { Ev(RunEventType.ClimbTierUp, a: 2, b: 30) }, "climb.tier");
-            yield return S("L3165 우다다 단계(0은 연출 없음)", t => new[] { Ev(RunEventType.ClimbWarpStage, a: 0), Ev(RunEventType.ClimbWarpStage, a: 1) }, "climb.stage");
             yield return S("L2286 우다다 착지", t => new[] { Ev(RunEventType.ClimbEnd, a: 100, b: 2) }, "climb.land");
             yield return S("L2370 룰렛 확정", t => new[] { Ev(RunEventType.RouletteChosen, a: 0, b: 1, c: 3) }, "roulette.pick");
             yield return S("소리·UI만 있는 사건(이펙트 없음)", t => new[]

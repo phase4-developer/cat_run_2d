@@ -230,8 +230,7 @@ namespace MV.Fx
                     o.WarpBegin = true;
                     break;
                 case RunEventType.ClimbWarpStage:
-                    o.WarpStage = e.A;
-                    if (e.A > 0) Grp(t, o, "climb.stage");
+                    o.WarpStage = e.A;   // 새 HTML 마나 정산에는 우다다 단계 연출(흔들림)이 없다
                     break;
                 case RunEventType.ClimbLap: // L2275~2276: x 0, 꼭대기 칸
                 {

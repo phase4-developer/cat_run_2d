@@ -16,6 +16,8 @@ namespace MV.UI
         [SerializeField] MonoBehaviour view;
         /// <summary>가호 카드 룰렛·가호 줄(05 §5.2.9·§5.2.7). 비면 자식으로 만든다.</summary>
         [SerializeField] BlessingCardsView cards;
+        /// <summary>마나 정산 종이 막 전환(새 HTML drawWipes). 비면 첫 자식(HUD 아래)으로 만든다.</summary>
+        [SerializeField] ClimbWipeView wipe;
 
         readonly RunHudPresenter _presenter = new RunHudPresenter();
 
@@ -32,7 +34,9 @@ namespace MV.UI
         public void Bind(IRunHudSource source)
         {
             Presenter.Bind(source);
-            Cards.Bind(source is RunStateHudSource rs ? rs.Current : (Func<RunState>)null);
+            var state = source is RunStateHudSource rs ? rs.Current : (Func<RunState>)null;
+            Cards.Bind(state);
+            Wipe.Bind(state);
             if (IsVisible) Presenter.Tick();
         }
 
@@ -44,6 +48,21 @@ namespace MV.UI
                 cards = GetComponentInChildren<BlessingCardsView>(true);
                 if (!cards) cards = MvUi.Stretch(MvUi.Rect(transform, "BlessingCards")).gameObject.AddComponent<BlessingCardsView>();
                 return cards;
+            }
+        }
+
+        public ClimbWipeView Wipe
+        {
+            get
+            {
+                if (wipe) return wipe;
+                wipe = GetComponentInChildren<ClimbWipeView>(true);
+                if (!wipe)
+                {
+                    wipe = MvUi.Stretch(MvUi.Rect(transform, "ClimbWipe")).gameObject.AddComponent<ClimbWipeView>();
+                    wipe.transform.SetAsFirstSibling();   // HUD 글자·칩은 막 위에 남는다(정본 캔버스 막 위 DOM HUD)
+                }
+                return wipe;
             }
         }
 
@@ -62,6 +81,7 @@ namespace MV.UI
         {
             Presenter.Tick();
             if (cards) cards.Tick(Time.unscaledDeltaTime);
+            if (wipe) wipe.Tick(Time.unscaledDeltaTime);
         }
     }
 }
