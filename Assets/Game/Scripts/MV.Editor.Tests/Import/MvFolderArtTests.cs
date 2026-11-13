@@ -66,8 +66,7 @@ namespace MV.Editor.Tests.Import
                 Check(row.id + ".projTail", row.projTail);
             }
             Check("300 " + MV.Data.RunConfigKeys.Proj_Prefab, tables.RunConfig.Raw(MV.Data.RunConfigKeys.Proj_Prefab));
-            Assert.That(failures, Is.Empty, string.Join("
-", failures));
+            Assert.That(failures, Is.Empty, string.Join("\n", failures));
         }
 
         /// <summary>Addressables 전체에서 같은 주소가 두 항목에 붙지 않는다(주소 = 파일 이름 규칙의 충돌 검사).</summary>
