@@ -1,6 +1,6 @@
 id	name	tierIndex	need	color	frameSprite	cardSound
-115001001	대마법 주문카드 등급 Common	0	5	#c9c2b4		card_0
-115001002	대마법 주문카드 등급 Uncommon	1	10	#6fd27a		card_1
-115001003	대마법 주문카드 등급 Rare	2	20	#58a6f0		card_2
-115001004	대마법 주문카드 등급 Epic	3	40	#c07af0		card_3
-115001005	대마법 주문카드 등급 Legendary	4	75	#f2b33d		card_4
+115001001	대마법 주문카드 등급 Common	0	5	#c9c2b4	UI_Skin_HCardCenter_T0	card_0
+115001002	대마법 주문카드 등급 Uncommon	1	10	#6fd27a	UI_Skin_HCardCenter_T1	card_1
+115001003	대마법 주문카드 등급 Rare	2	20	#58a6f0	UI_Skin_HCardCenter_T2	card_2
+115001004	대마법 주문카드 등급 Epic	3	40	#c07af0	UI_Skin_HCardCenter_T3	card_3
+115001005	대마법 주문카드 등급 Legendary	4	75	#f2b33d	UI_Skin_HCardCenter_T4	card_4
