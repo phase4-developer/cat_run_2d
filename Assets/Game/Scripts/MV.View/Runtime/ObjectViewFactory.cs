@@ -227,7 +227,7 @@ namespace MV.View
             if (!_prefabs.TryGetValue(v.Prefab, out var lease)) { Preload(v.Prefab); return; }
             if (lease == null || lease.Asset == null) return;
             v.Inst = Instantiate(lease.Asset, v.Go.transform, false);
-            // 빌보드는 프리팹이 정한다(카메라를 볼 이미지 자식에만 Billboard, 바닥에 까는 이미지는 없음). 코드는 붙이지 않는다.
+            // 빌보드는 프리팹이 정한다: 서 있는 이미지를 빈 부모 `Billboard` 하나로 묶고 그 부모에만 붙인다(바닥에 까는 이미지는 묶음 밖). 코드는 붙이지 않는다.
             if (v.Inst.GetComponentInChildren<Billboard>(true) == null && s_noBillboard.Add(v.Prefab))
                 Debug.LogError("[ObjectViewFactory] 오브젝트 프리팹에 Billboard가 없습니다(카메라를 볼 이미지 자식에 붙여야 함): " + v.Prefab);
             v.Rig = v.Inst.GetComponent<ObjectPrefabRig>();
@@ -240,13 +240,13 @@ namespace MV.View
         {
             var it = v.Inst.transform;
             var p = new PrefabParts { InstScale = it.localScale, Boards = v.Inst.GetComponentsInChildren<Billboard>(true) };
-            var glow = it.Find("Glow");
+            var glow = Deep(it, "Glow");
             if (glow != null && glow.TryGetComponent(out p.Glow)) p.GlowBase = p.Glow.color;
             switch (v.Shape)
             {
                 case ObjectShape.Well:
                 {
-                    p.Pile = it.Find("Orbs");
+                    p.Pile = Deep(it, "Orbs");
                     if (p.Pile != null)
                     {
                         p.PileBase = p.Pile.localPosition;
@@ -263,14 +263,16 @@ namespace MV.View
                 }
                 case ObjectShape.RollGate:
                 {
-                    var c = it.Find("Curtain");
+                    var c = Deep(it, "Curtain");
                     if (c != null && c.TryGetComponent(out p.Curtain)) p.CurtainBase = p.Curtain.color;
-                    p.Sparks = MakeSparks(it, ObjectReaction.GateSparks, Color.white, true);
+                    // 막 위 반짝이는 막과 같은 빌보드 묶음 안에 둔다(묶음이 카메라를 보므로 따로 돌리지 않는다).
+                    var board = p.Boards.Length > 0 ? p.Boards[0].transform : it;
+                    p.Sparks = MakeSparks(board, ObjectReaction.GateSparks, Color.white, board == it);
                     break;
                 }
                 case ObjectShape.Stair:
                 {
-                    p.Spin = it.Find("Circle_Spin");
+                    p.Spin = Deep(it, "Circle_Spin");
                     if (p.Spin != null) p.SpinBase = p.Spin.localRotation;
                     // 포탈 반짝이는 바닥 원 둘레(월드 축)라 빌보드 인스턴스가 아니라 뷰 루트 아래에 각자 빌보드로 둔다.
                     p.Sparks = MakeSparks(v.Go.transform, ObjectReaction.PortalSparks, s_portalSpark, true);
@@ -278,7 +280,7 @@ namespace MV.View
                 }
                 case ObjectShape.Junk:
                 {
-                    var body = it.Find("Body");
+                    var body = Deep(it, "Body");
                     if (body != null)
                     {
                         var list = new List<GameObject>();
@@ -289,6 +291,19 @@ namespace MV.View
                 }
             }
             return p;
+        }
+
+        /// <summary>이름으로 자식을 찾는다(빌보드 묶음 아래까지). 없으면 null.</summary>
+        static Transform Deep(Transform t, string name)
+        {
+            for (int i = 0; i < t.childCount; i++)
+            {
+                var c = t.GetChild(i);
+                if (c.name == name) return c;
+                var d = Deep(c, name);
+                if (d != null) return d;
+            }
+            return null;
         }
 
         SpriteRenderer[] MakeSparks(Transform parent, int n, Color color, bool billboard)

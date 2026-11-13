@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8220572307993632496}
   - component: {fileID: 6516131230821299534}
-  - component: {fileID: 7269962327228180546}
   m_Layer: 0
   m_Name: Chest_0
   m_TagString: Untagged
@@ -122,8 +121,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6859114733723773573}
-  - {fileID: 5405276178266284649}
+  - {fileID: 4960693528173780339}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!210 &14415312326663950
@@ -149,7 +147,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2820079577924729344}
   - component: {fileID: 3254005984675313110}
-  - component: {fileID: 8517156266279832728}
   m_Layer: 0
   m_Name: Chest_1
   m_TagString: Untagged
@@ -263,7 +260,7 @@ Transform:
   - {fileID: 8220572307993632496}
   - {fileID: 2820079577924729344}
   - {fileID: 507384670126681369}
-  m_Father: {fileID: 2527529124372497199}
+  m_Father: {fileID: 4960693528173780339}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5943619318379449588
 GameObject:
@@ -275,7 +272,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5405276178266284649}
   - component: {fileID: 4311386451101281024}
-  - component: {fileID: 8548804064438290526}
   m_Layer: 0
   m_Name: Badge
   m_TagString: Untagged
@@ -296,7 +292,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2527529124372497199}
+  m_Father: {fileID: 4960693528173780339}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4311386451101281024
 SpriteRenderer:
@@ -367,7 +363,6 @@ GameObject:
   m_Component:
   - component: {fileID: 507384670126681369}
   - component: {fileID: 8770579857787556368}
-  - component: {fileID: 5037334480783548080}
   m_Layer: 0
   m_Name: Chest_2
   m_TagString: Untagged
@@ -449,49 +444,47 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &7269962327228180546
+--- !u!1 &3607359202818691611
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4960693528173780339}
+  - component: {fileID: 5176147405543111987}
+  m_Layer: 0
+  m_Name: Billboard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4960693528173780339
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3607359202818691611}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6859114733723773573}
+  - {fileID: 5405276178266284649}
+  m_Father: {fileID: 2527529124372497199}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5176147405543111987
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1705787914975039448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MV.View::MV.View.Billboard
---- !u!114 &8517156266279832728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4761705689488577716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MV.View::MV.View.Billboard
---- !u!114 &8548804064438290526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5943619318379449588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MV.View::MV.View.Billboard
---- !u!114 &5037334480783548080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7888301709806718537}
+  m_GameObject: {fileID: 3607359202818691611}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
