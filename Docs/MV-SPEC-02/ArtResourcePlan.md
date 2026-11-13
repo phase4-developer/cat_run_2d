@@ -175,3 +175,15 @@ MV.View/Character/
 | 분신 4종 프리팹 따로(`Char_Clone_calico/gray/siamese/tux`, 옛 `Char_Clone` 변형) | 116 분신 4행. 자리 순서 = 노션 표 순서(삼색·회색 줄무늬·흰 얼룩·턱시도, 사용자 카드 결정 2026-11-13). `Char_Clone`은 바탕 프리팹이라 남김 |
 | 배경 공통·스테이지1 오브젝트 프리팹, 맵 `Stage1` | `Local_BG` 그룹(주소 = 파일 이름). 연결은 MV-VIEW-STAGE·MV-VIEW-OBJ 단계 |
 | 투사체 `projectile.prefab` + `projectile_0~11` + `VFX_Tail_0~11`, 카드 효과 `Fx_Card_Lightning` | `Local_Projectile` 그룹, 이펙트는 `Local_Effect`. 연결은 MV-VIEW-PROJ-2 |
+
+## 9. 오브젝트 프리팹 빌보드 규칙 (MV-VIEW-BILLBOARD, 2026-11-14)
+
+> 빌보드 객체를 붙일 오브젝트와 아닌거 구분이 필요할거 같고 그건 프리팹 제작단계에서 정해져야할 부분같아 … 프리팹 통짜가 아니라 내부 적용해야될 이미지에만으로 (사용자 2026-11-14)
+
+| # | 규칙 |
+|---|---|
+| B1 | 카메라를 봐야 하는 이미지(SpriteRenderer가 있는 선 그림: 기둥·등불·빛·상자·구슬 등)마다 그 GameObject에 `MV.View.Billboard`를 붙인다. 각 이미지는 자기 자리(월드)에서 카메라를 본다(새 HTML: 부분마다 자기 바닥점에 stamp). |
+| B2 | 프리팹 루트에는 붙이지 않는다. 루트를 통째로 돌리면 바닥에 깐 그림까지 세워진다(포탈 마법진이 납작한 선으로 보인 원인). |
+| B3 | 바닥에 까는 그림(마법진 `Circle`·`Circle_Spin`, 앞으로의 그림자 등)은 로컬 회전(x 90°)으로 눕히고 Billboard를 붙이지 않는다. |
+| B4 | 코드는 Billboard를 붙이지 않는다. Billboard가 하나도 없는 오브젝트 프리팹은 실행 중 오류 로그, EditMode `ObjectPrefabs_BillboardOnUprightImagesOnly`가 실패로 드러낸다. |
+| B5 | 1차 프리팹 11개(`d829ad28`)에는 AI가 B1~B3대로 53개를 붙였다. 계단 블록 `Obj_ClimbStep`은 면 그림(정면·윗면·옆면)이라 붙이지 않는다. |

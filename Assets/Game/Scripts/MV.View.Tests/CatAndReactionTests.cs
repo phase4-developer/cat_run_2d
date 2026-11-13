@@ -568,6 +568,48 @@ namespace MV.View.Tests
             Assert.AreEqual(0.85 + 0.15 * Math.Sin(6 * 2.0 + 3), ObjectReaction.OrbPulse(2, 3), 1e-12);
         }
 
+        /// <summary>
+        /// 빌보드는 프리팹이 정한다(2026-11-14 사용자 「프리팹 통짜가 아니라 내부 적용해야될 이미지에만으로」): 오브젝트 프리팹마다 Billboard가 있고,
+        /// 루트에는 없으며, 바닥에 눕힌 이미지(로컬 회전이 있는 것)에는 없다.
+        /// </summary>
+        [Test]
+        public void ObjectPrefabs_BillboardOnUprightImagesOnly()
+        {
+            const string BillboardGuid = "b6073823855d4665867abbe603050885";
+            var t = ViewTestTables.Load();
+            var addrs = new HashSet<string>();
+            foreach (var k in t.ObjectKind.Datas) if (!string.IsNullOrEmpty(k.prefab)) addrs.Add(k.prefab);
+            foreach (var s in t.StageObject.Datas) if (!string.IsNullOrEmpty(s.prefab)) addrs.Add(s.prefab);
+            Assert.That(addrs, Is.Not.Empty);
+            var dir = Path.Combine(Application.dataPath, "Game/Addressables/Local/BG/Prefab");
+            foreach (var a in addrs)
+            {
+                var files = Directory.GetFiles(dir, a + ".prefab", SearchOption.AllDirectories);
+                Assert.AreEqual(1, files.Length, a + " 프리팹 파일");
+                var docs = System.Text.RegularExpressions.Regex.Split(File.ReadAllText(files[0]).Replace("\r\n", "\n"), @"\n(?=--- !u!)");
+                var rot = new Dictionary<string, string>();
+                var father = new Dictionary<string, string>();
+                var boards = new List<string>();
+                foreach (var d in docs)
+                {
+                    var go = System.Text.RegularExpressions.Regex.Match(d, @"m_GameObject: \{fileID: (\d+)");
+                    if (!go.Success) continue;
+                    if (d.StartsWith("--- !u!4 ") || d.StartsWith("!u!4 "))
+                    {
+                        rot[go.Groups[1].Value] = System.Text.RegularExpressions.Regex.Match(d, @"m_LocalRotation: (\{[^}]*\})").Groups[1].Value;
+                        father[go.Groups[1].Value] = System.Text.RegularExpressions.Regex.Match(d, @"m_Father: \{fileID: (\d+)").Groups[1].Value;
+                    }
+                    if (d.Contains(BillboardGuid)) boards.Add(go.Groups[1].Value);
+                }
+                Assert.That(boards, Is.Not.Empty, a + ": Billboard 없음");
+                foreach (var b in boards)
+                {
+                    Assert.AreNotEqual("0", father[b], a + ": 루트 통째 빌보드 금지");
+                    Assert.AreEqual("{x: 0, y: 0, z: 0, w: 1}", rot[b], a + ": 눕힌 이미지에 빌보드");
+                }
+            }
+        }
+
         [Test]
         public void Hit_NoShakeWhenTableTurnsItOff()
         {

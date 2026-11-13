@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6757781674112066998}
   - component: {fileID: 3868336486630814209}
+  - component: {fileID: 8105575944346035924}
   m_Layer: 0
   m_Name: Crystal_R
   m_TagString: Untagged
@@ -101,6 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4962139774995411637}
   - component: {fileID: 4822162290141467634}
+  - component: {fileID: 1244588823275609021}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -192,6 +194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7738782596209723853}
   - component: {fileID: 3456313714127586157}
+  - component: {fileID: 4880084621472012827}
   m_Layer: 0
   m_Name: Crystal_L
   m_TagString: Untagged
@@ -283,6 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2787656567525286740}
   - component: {fileID: 2631147800347191525}
+  - component: {fileID: 6660999253139280340}
   m_Layer: 0
   m_Name: Glow
   m_TagString: Untagged
@@ -425,6 +429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7088338933419579449}
   - component: {fileID: 5238177928296203937}
+  - component: {fileID: 4495221856406049260}
   m_Layer: 0
   m_Name: Crystal_C
   m_TagString: Untagged
@@ -522,3 +527,63 @@ MonoBehaviour:
   - {fileID: 4340716172336495884}
   - {fileID: 8948461664116947985}
   - {fileID: 764636324501390229}
+--- !u!114 &1244588823275609021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381752405896682040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &4880084621472012827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4340716172336495884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &6660999253139280340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4638830914684396666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &8105575944346035924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764636324501390229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &4495221856406049260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8948461664116947985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard

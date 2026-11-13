@@ -57,6 +57,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8993018925818624427}
   - component: {fileID: 6358339894352059884}
+  - component: {fileID: 2625037174419851050}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -148,6 +149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2911102457311222623}
   - component: {fileID: 1226772979141669682}
+  - component: {fileID: 4466909533390941159}
   m_Layer: 0
   m_Name: Glow
   m_TagString: Untagged
@@ -229,3 +231,27 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &2625037174419851050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436967345375489926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
+--- !u!114 &4466909533390941159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4335192252890108333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
