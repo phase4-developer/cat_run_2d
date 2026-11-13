@@ -21,11 +21,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - lobby
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 50add1b2d87ae4d87b17e45fc2bf289d
-    m_Address: Stage_1
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: da22386e643849e6879104c9b629d283
     m_Address: WorldRoot
     m_ReadOnly: 0
