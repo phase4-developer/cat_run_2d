@@ -781,7 +781,7 @@ namespace MV.Run
             double pw = (double)n / k, z0 = o.Z + c["z0Gap"], zEnd = z0 + k * c["stepD"], dH = k * c["stepH"];
             s.Cliff = new RunCliff(zEnd, s.WorldY, s.WorldY + dH); s.HasCliff = true; // R.cliff(shiftWorld L2227), View용
             ShiftWorld(o.Z + c["shiftFrom"], k * c["stepD"] + c["shiftExtra"]);
-            s.Climb = new ClimbState { StairObjId = o.Id, N = n, K = k, Pw = pw, Z0 = z0, ZEnd = zEnd, DH = dH, T = ClimbT(c, k), StepEvery = ClimbStepEvery(c, k) };
+            s.Climb = new ClimbState { StairObjId = o.Id, N = n, K = k, Pw = pw, Z0 = z0, ZEnd = zEnd, DH = dH, T = ClimbT(c, k) };
             s.Emit(new RunEvent(RunEventType.ClimbStart, a: n, b: k, amount: pw, x: z0, z: zEnd, amount2: dH, amount3: s.Climb.T));
             return true;
         }
@@ -800,16 +800,16 @@ namespace MV.Run
         void UpdClimb(double dt)
         {
             var s = S; var C = s.Climb; var c = _p.Climb; var P = s.P;
-            // MV-SPEC-02 4-1f·6-5l(Q-11): 오르는 중에도 좌우 조작을 멈추지 않는다(가운데로 당기지 않음, 이동 폭 안).
-            P.X += (P.Tx - P.X) * Math.Min(1, dt * _p.MoveFollowK);
-            P.X = Clamp(P.X, -_p.LaneXMax, _p.LaneXMax);
+            // 새 HTML updClimb(2026-11-13 연출 정본): 오르는 동안 가운데로 당긴다(끌기 목표도 따라옴).
+            P.X += (0 - P.X) * Math.Min(1, dt * c["centerK"]);
+            P.Tx = P.X;
             P.Phase += dt * _p.PhaseClimb;
             C.Time += dt;
-            double accel = c["accelP"];
-            double p = Math.Min(1, C.Time / C.T), e = p < accel ? p * p / (accel * 2) : p - accel / 2;
-            C.Pos = Math.Min(C.K, e / (1 - accel / 2) * C.K);
-            // 칸 생성: 0초에 1칸, 그 뒤 StepEvery마다 1칸(MV-SPEC-02 6-5e). 마지막 칸은 T − riseLead에 나온다.
-            int show = C.StepEvery > 0 ? (int)Math.Min(C.K, 1 + Math.Floor(C.Time / C.StepEvery + 1e-9)) : C.K;
+            // sideLead 뒤 일정 속도(p = (t − lead)/T), pos = p·k
+            double p = Math.Min(1, Math.Max(0, C.Time - c["sideLead"]) / C.T);
+            C.Pos = Math.Min(C.K, p * C.K);
+            // 칸은 pos + riseAhead 앞까지 보인다. 다 오르면 모두 보인다.
+            int show = p >= 1 ? C.K : (int)Math.Min(C.K, Math.Ceiling(C.Pos + c["riseAhead"]));
             for (; C.StepsShown < show; C.StepsShown++) s.Emit(new RunEvent(RunEventType.ClimbStepShown, a: C.StepsShown));
             C.Shown = (int)Math.Min(C.N, Math.Floor(C.Pos * C.Pw + 0.0001));
             if (p >= 1) C.Shown = C.N;
@@ -838,8 +838,12 @@ namespace MV.Run
             }
             if (p >= 1)
             {
-                s.Emit(new RunEvent(RunEventType.ClimbEnd, a: C.N, b: C.Tier));
-                EndClimb();
+                if (C.EndAt < 0) C.EndAt = C.Time;
+                if (C.Time - C.EndAt >= c["sideOut"])   // 새 HTML SIDE_OUT: 다 오른 뒤 잠깐 멈췄다 끝
+                {
+                    s.Emit(new RunEvent(RunEventType.ClimbEnd, a: C.N, b: C.Tier));
+                    EndClimb();
+                }
             }
         }
 

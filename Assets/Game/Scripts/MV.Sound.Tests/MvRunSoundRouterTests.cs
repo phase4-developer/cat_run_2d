@@ -78,7 +78,7 @@ namespace MV.Sound.Tests
             yield return S("L2107 명중", t => new[] { Ev(RunEventType.ProjImpact, 1) }, "hit");
             yield return S("L2107 치명 명중", t => new[] { Ev(RunEventType.ProjImpact, 1, flag: true) }, "crit");
             yield return S("L2260 계단 오르기 시작", t => new[] { Ev(RunEventType.ClimbStart, a: 30, b: 30) }, "gate");
-            yield return S("L2270 칸 등장 i%4==0", t => Enumerable.Range(0, 9).Select(i => Ev(RunEventType.ClimbStepShown, a: i)).ToArray(), "tick", "tick", "tick");
+            yield return S("새 HTML 칸 등장마다 tick(330 tickEvery 1)", t => Enumerable.Range(0, 9).Select(i => Ev(RunEventType.ClimbStepShown, a: i)).ToArray(), Enumerable.Repeat("tick", 9).ToArray());
             yield return S("L2277 랩 카드", t => new[] { Ev(RunEventType.ClimbLap, a: 1, b: 75) }, "card_4");
             yield return S("L2281 등급 상승 1~4", t => Enumerable.Range(1, 4).Select(i => Ev(RunEventType.ClimbTierUp, a: i)).ToArray(),
                 "tierup_1", "tierup_2", "tierup_3", "tierup_4");

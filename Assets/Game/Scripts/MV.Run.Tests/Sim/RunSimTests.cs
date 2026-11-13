@@ -122,9 +122,9 @@ namespace MV.Run.Tests
         public void Climb_KCompressionAndTiers()
         {
             var t = RunTestTables.Load(); var c = t.Climb.Config();
-            // MV-SPEC-02 6-5d·e(Q-07): N ≤ 30 그대로, 31~99 C 4, 100~149 C 5 …, T = min(1.5, 0.5 + 0.1(K − 1)).
-            Assert.AreEqual(30, ClimbK(c, 30)); Assert.AreEqual(31, ClimbK(c, 31)); Assert.AreEqual(48, ClimbK(c, 99)); Assert.AreEqual(44, ClimbK(c, 100)); Assert.AreEqual(152, ClimbK(c, 1000));
-            Assert.AreEqual(0.5, ClimbT(c, 1), 1e-12); Assert.AreEqual(1.4, ClimbT(c, 10), 1e-12); Assert.AreEqual(1.5, ClimbT(c, 150), 1e-12);
+            // 새 HTML startClimb(2026-11-13 연출 정본): k = min(600, n), T = 0.8 + 0.09k.
+            Assert.AreEqual(30, ClimbK(c, 30)); Assert.AreEqual(600, ClimbK(c, 600)); Assert.AreEqual(600, ClimbK(c, 1000));
+            Assert.AreEqual(0.89, ClimbT(c, 1), 1e-12); Assert.AreEqual(1.7, ClimbT(c, 10), 1e-12); Assert.AreEqual(54.8, ClimbT(c, 600), 1e-9);
             void Tiers(int n, params int[] e) => Assert.AreEqual(e, ClimbTiers(t, n).ToArray(), $"n={n}");
             Tiers(4); Tiers(5, 0); Tiers(74, 3); Tiers(75, 4); Tiers(80, 4, 0); Tiers(150, 4, 4); Tiers(200, 4, 4, 3); Tiers(225, 4, 4, 4); Tiers(400, 4, 4, 4);
         }
@@ -329,7 +329,7 @@ namespace MV.Run.Tests
         {
             var sim = Sim(new HandLevel().Add("stair", 0, 3));
             sim.State.Stairs = 80;
-            Run(sim, 60 * 12);
+            Run(sim, 60 * 20);   // T = 0.8 + 0.09·80 = 8초 + 룰렛
             var s = sim.State;
             Assert.AreEqual(80, s.Climbed);
             Assert.AreEqual(RunPhase.Run, s.Phase);

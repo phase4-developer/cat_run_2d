@@ -614,12 +614,13 @@ namespace MV.Data
 
         static readonly string[] s_configColumns =
         {
-            "lap", "maxCards", "lapTier", "kDirectMax", "kCompress", "kMax", "stepH", "stepD", "stepW", "catLift", "z0Gap", "shiftFrom",
-            "shiftExtra", "landGap", "tBase", "tPerStep", "tMax", "accelP", "riseMin", "risePerK", "riseAhead", "dropSec",
+            "lap", "maxCards", "lapTier", "kMax", "stepH", "stepD", "stepW", "catLift", "z0Gap", "shiftFrom",
+            "shiftExtra", "landGap", "tBase", "tPerStep", "riseAhead", "dropSec",
             "dropH", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay", "rlFlyMs",
             "rlEndPad",
-            // MV-SPEC-02 6-5 새 공식 상수(Q-07, 런 적용은 MV-RUN-SPEC2): 압축 시작 N, 연출 시간 상한·기본·칸당·앞당김, 칸 튕김 배율.
-            "cmpFrom", "riseCap", "riseBase", "risePerStep", "riseLead", "stepPop",
+            // 새 HTML 계단 정산(2026-11-13, 연출 정본): k = min(kMax, n), T = tBase + tPerStep·k, sideLead 뒤 일정 속도로 오름,
+            // 칸은 pos + riseAhead 앞까지 보임, 끝나고 sideOut 멈춤, 오르는 동안 x를 centerK로 가운데로 당김.
+            "sideLead", "sideOut", "centerK",
             // stepH·stepD·stepW = 계단 칸 프리팹(stepPrefab) 한 블록의 높이·깊이·폭(디자이너 리소스 기준, 2026-11-13). catLift = 칸 위 고양이 높이(stepH 배수).
         };
 
@@ -632,7 +633,7 @@ namespace MV.Data
         {
             var s = new MvSchema(Table).Id().Enum<ClimbRowType>("rowType", true).Key(required: false);
             foreach (var c in s_configColumns) s.Float(c);
-            return s.Res("stepPrefab", MvAtlas.Address).Ints("cmpBandFrom").Ints("cmpBandC").Int("at").Color("accent").Color("sky1").Color("sky2").Color("sky3").Float("night")
+            return s.Res("stepPrefab", MvAtlas.Address).Int("at").Color("accent").Color("sky1").Color("sky2").Color("sky3").Float("night")
                 .Effect("enterEffect").Sound("enterSound");
         }
 
@@ -641,9 +642,6 @@ namespace MV.Data
         public ClimbRowType rowType { get; private set; }
         /// <summary>계단 칸 한 블록 프리팹 주소(설정 행만, 예 `Obj_ClimbStep`). 칸 하나 = 블록을 높이만큼 쌓은 기둥.</summary>
         public string stepPrefab { get; private set; }
-        /// <summary>압축 구간 시작 N(오름차순)과 구간별 C(MV-SPEC-02 6-5: 31~99 4, 100~149 5 …). 설정 행만.</summary>
-        public IReadOnlyList<int> cmpBandFrom { get; private set; }
-        public IReadOnlyList<int> cmpBandC { get; private set; }
         public int at { get; private set; }
         public string accent { get; private set; }
         public string sky1 { get; private set; }
@@ -664,8 +662,6 @@ namespace MV.Data
                 foreach (var c in s_configColumns)
                     _config[c] = D(r, c);
             stepPrefab = S(r, "stepPrefab");
-            cmpBandFrom = Ints(r, "cmpBandFrom");
-            cmpBandC = Ints(r, "cmpBandC");
             at = I(r, "at");
             accent = S(r, "accent");
             sky1 = S(r, "sky1");
