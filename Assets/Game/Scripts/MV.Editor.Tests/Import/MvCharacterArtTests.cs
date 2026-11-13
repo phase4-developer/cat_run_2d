@@ -103,8 +103,11 @@ namespace MV.Editor.Tests.Import
                 if (!prefabs.ContainsKey(row.prefab)) failures.Add($"{row.id}: 프리팹 {row.prefab} 없음");
                 if (!sets.TryGetValue(row.atlas, out var pngs)) { failures.Add($"{row.id}: 아틀라스 {row.atlas} 없음"); continue; }
                 var names = new HashSet<string>(pngs.Select(Path.GetFileNameWithoutExtension));
-                foreach (var image in new[] { row.walkA, row.walkB, row.atkA, row.atkB, row.happy, row.stair })
+                foreach (var image in new[] { row.walkA, row.walkB, row.atkA, row.atkB, row.happy, row.stair, row.happyBack })
                     if (!names.Contains(image)) failures.Add($"{row.id}: 그림 {image}가 {row.atlas}에 없음");
+                if (string.IsNullOrEmpty(row.wheel)) continue;
+                if (!sets.TryGetValue(row.wheelAtlas, out var wheelPngs)) { failures.Add($"{row.id}: 바퀴 아틀라스 {row.wheelAtlas} 없음"); continue; }
+                if (!wheelPngs.Select(Path.GetFileNameWithoutExtension).Contains(row.wheel)) failures.Add($"{row.id}: 바퀴 {row.wheel}가 {row.wheelAtlas}에 없음");
             }
             Assert.That(failures, Is.Empty, string.Join("\n", failures));
         }

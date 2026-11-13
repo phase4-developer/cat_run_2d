@@ -35,7 +35,7 @@ namespace MV.Data
 
         // ---------------- 116 ----------------
 
-        /// <summary>116_charLook: 캐릭터마다 slot 0부터 연속, (catId·slot)마다 fromTier 1 행, fromTier 겹침 없음, scale &gt; 0.</summary>
+        /// <summary>116_charLook: 캐릭터마다 slot 0부터 연속, (catId·slot)마다 fromTier 1 행, fromTier 겹침 없음, scale &gt; 0, wheel·wheelAtlas 함께.</summary>
         static void CheckCharLook(MvTables t, MvValidationReport r)
         {
             foreach (var row in t.CharLook.Datas)
@@ -43,6 +43,8 @@ namespace MV.Data
                 if (row.scale <= 0) r.Error(CharLookData.Table, row.id, "scale", $"scale은 0보다 커야 합니다({row.scale})");
                 if (row.slot < 0) r.Error(CharLookData.Table, row.id, "slot", $"slot은 0 이상이어야 합니다({row.slot})");
                 if (row.fromTier < 1) r.Error(CharLookData.Table, row.id, "fromTier", $"fromTier는 1 이상이어야 합니다({row.fromTier})");
+                if (string.IsNullOrEmpty(row.wheel) != string.IsNullOrEmpty(row.wheelAtlas))
+                    r.Error(CharLookData.Table, row.id, "wheelAtlas", "wheel과 wheelAtlas는 둘 다 채우거나 둘 다 비워야 합니다");
             }
             foreach (var cat in t.CharLook.Datas.GroupBy(x => x.catId))
             {

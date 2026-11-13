@@ -583,7 +583,7 @@ namespace MV.Data
         public const string Table = "116_charLook";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Fk("catId", CatData.Table, true).Int("slot", true).Int("fromTier", true)
             .Str("prefab", true).Str("atlas", true).Str("walkA", true).Str("walkB", true).Str("atkA", true).Str("atkB", true)
-            .Str("happy", true).Str("stair", true).Float("scale", true);
+            .Str("happy", true).Str("stair", true).Str("happyBack", true).Str("wheel").Str("wheelAtlas").Float("scale", true);
 
         public int catId { get; private set; }
         /// <summary>자리 순서. 플레이어 0, 분신은 i번째 분신 = slot i(없으면 마지막 slot).</summary>
@@ -598,6 +598,12 @@ namespace MV.Data
         public string atkB { get; private set; }
         public string happy { get; private set; }
         public string stair { get; private set; }
+        /// <summary>기쁨 회전 때 뒷면 그림(같은 아틀라스). 노션 「신작 캐릭터 리소스 관리」 `cat_happy_back`.</summary>
+        public string happyBack { get; private set; }
+        /// <summary>계단 정산 바퀴 그림. 빈칸 = 바퀴 없음.</summary>
+        public string wheel { get; private set; }
+        /// <summary>바퀴 그림이 든 아틀라스 주소. <see cref="wheel"/>가 있을 때만.</summary>
+        public string wheelAtlas { get; private set; }
         /// <summary>리소스 크기에 곱하는 추가 배율.</summary>
         public double scale { get; private set; }
 
@@ -617,6 +623,9 @@ namespace MV.Data
             atkB = S(r, "atkB");
             happy = S(r, "happy");
             stair = S(r, "stair");
+            happyBack = S(r, "happyBack");
+            wheel = S(r, "wheel");
+            wheelAtlas = S(r, "wheelAtlas");
             scale = D(r, "scale");
         }
     }
