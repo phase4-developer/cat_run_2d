@@ -115,6 +115,7 @@ namespace MV.View.Tests
             f.Init(ViewTestTables.Config(), camGo.transform, new WorldSpriteCache(), WorldView.FxAtlas);
             f.SetTheme(ViewTestTables.Theme("market"));
             f.LabelText = _ => null;   // TMP 글꼴 없이 구조만 본다
+            f.PrefabLoader = (a, ct) => Cysharp.Threading.Tasks.UniTask.Never<jjevol.AddressableLease<GameObject>>(ct);   // 프리팹 로드 없이 뷰 구조만
             return f;
         }
 
@@ -157,7 +158,7 @@ namespace MV.View.Tests
         [Test]
         public void Well_BricksSortedFarFirstInsideGroup()
         {
-            var t = ViewTestTables.Load();
+            var t = ViewTestTables.CodeShapes();
             var f = MakeFactory(out var cam);
             var o = RunObjectFactory.Create(t, t.ObjectKind.ByKey("tower"), 0, 20);
             o.Id = 1;
@@ -171,6 +172,86 @@ namespace MV.View.Tests
             var byOrder = parts.OrderBy(p => p.sortingOrder).ToList();
             for (int i = 1; i < byOrder.Count; i++)
                 Assert.That(D(byOrder[i - 1]), Is.GreaterThanOrEqualTo(D(byOrder[i]) - 1e-4f), "먼 벽돌이 먼저");
+        }
+
+        // ---------------- 오브젝트 프리팹(105.prefab · 305_stageObject) ----------------
+
+        static RunObject Make(MvTables t, string key, int id, double z)
+        {
+            var o = RunObjectFactory.Create(t, t.ObjectKind.ByKey(key), 0, z);
+            o.Id = id;
+            return o;
+        }
+
+        [Test]
+        public void PrefabFor_StageRowFirst_ThenKindPrefab_ElseCodeShape()
+        {
+            var t = ViewTestTables.Load();
+            var wall = Make(t, "wall", 1, 10);
+            wall.Idx = 0;
+            foreach (var row in t.StageObject.Datas)
+            {
+                if (row.kind != "wall" || row.reward == StageObjectReward.Any) continue;
+                wall.Rew = (FieldReward)System.Enum.Parse(typeof(FieldReward), row.reward.ToString());
+                Assert.That(ObjectViewFactory.PrefabFor(t, row.stageMap, wall), Is.EqualTo(row.prefab), row.id + ": 305 보상 행");
+            }
+            foreach (var k in t.ObjectKind.Sorted)
+            {
+                var o = Make(t, k.key, 2, 10);
+                bool staged = t.StageObject.Datas.Any(r => r.kind == k.key && r.reward == StageObjectReward.Any);
+                string expected = string.IsNullOrEmpty(k.prefab) ? null : k.prefab;
+                if (!staged) Assert.That(ObjectViewFactory.PrefabFor(t, "Stage1", o), Is.EqualTo(expected), k.key + ": 105.prefab(빈칸 = 코드 모양)");
+                Assert.That(ObjectViewFactory.PrefabFor(t, null, o), Is.EqualTo(expected), k.key + ": 맵이 없으면 105만");
+            }
+            var archRow = t.StageObject.Datas.First(r => r.kind == "arch");
+            Assert.That(ObjectViewFactory.PrefabFor(t, archRow.stageMap, Make(t, "arch", 3, 10)), Is.EqualTo(archRow.prefab), "305 Any 행");
+        }
+
+        [Test]
+        public void SetStage_ObjectsWithPrefabUsePrefabView_OthersKeepCodeShape()
+        {
+            var t = ViewTestTables.Load();
+            var f = MakeFactory(out _);
+            var arch = t.StageObject.Datas.First(r => r.kind == "arch");
+            f.SetStage(t, arch.stageMap);
+            var objs = new List<RunObject> { Make(t, "arch", 1, 15), Make(t, "tower", 2, 20), Make(t, "enemy", 3, 25) };
+            f.Sync(objs, 0, 0, 0);
+            Assert.That(f.TryPrefabView(1, out string a1, out _), Is.True);
+            Assert.That(a1, Is.EqualTo(arch.prefab));
+            Assert.That(f.TryPrefabView(2, out string a2, out _), Is.True);
+            Assert.That(a2, Is.EqualTo(t.ObjectKind.ByKey("tower").prefab));
+            Assert.That(f.TryPrefabView(3, out string a3, out _), Is.True);
+            Assert.That(a3, Is.Null, "105.prefab 빈칸은 코드 모양");
+            Assert.That(f.ViewOf(1).GetComponent<DepthSortable>(), Is.Not.Null, "프리팹 뷰도 같은 정렬 루트");
+        }
+
+        [TestCase(3, 10, 10, 3)]
+        [TestCase(3, 7, 10, 3)]
+        [TestCase(3, 6, 10, 2)]
+        [TestCase(3, 3, 10, 1)]
+        [TestCase(3, 0.1, 10, 1)]
+        [TestCase(3, 0, 10, 0)]
+        [TestCase(2, 5, 10, 1)]
+        public void PrefabRig_ShownStages_CeilOfHpRatio(int n, double hp, double max, int shown) =>
+            Assert.That(ObjectPrefabRig.ShownStages(n, hp, max), Is.EqualTo(shown));
+
+        /// <summary>줄어드는 그림이 있는 오브젝트 프리팹(츄르 더미·마법석)은 ObjectPrefabRig 단계가 모두 프리팹 안 오브젝트로 연결된다.</summary>
+        [TestCase("Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_CoinPile.prefab")]
+        [TestCase("Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_GemRock.prefab")]
+        public void ShrinkingObjectPrefab_HasRigStages(string path)
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            Assert.That(prefab, Is.Not.Null, path);
+            var rig = prefab.GetComponent<ObjectPrefabRig>();
+            Assert.That(rig, Is.Not.Null, "ObjectPrefabRig");
+            var stages = new SerializedObject(rig).FindProperty("_stages");
+            Assert.That(stages.arraySize, Is.GreaterThan(1));
+            for (int i = 0; i < stages.arraySize; i++)
+            {
+                var go = stages.GetArrayElementAtIndex(i).objectReferenceValue as GameObject;
+                Assert.That(go, Is.Not.Null, "단계 " + i);
+                Assert.That(go.transform.IsChildOf(prefab.transform), Is.True, "단계 " + i + "는 프리팹 안");
+            }
         }
 
         [Test]

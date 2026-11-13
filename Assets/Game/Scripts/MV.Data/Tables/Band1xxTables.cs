@@ -147,7 +147,7 @@ namespace MV.Data
             .Fk("hpRuleId", HpRuleData.Table).Fk("hitReactionId", HitReactionData.Table).Fk("chargeGateId", ChargeGateData.Table)
             .Fk("receiveId", ReceiveConditionData.Table).Fk("moveAiId", MoveAiData.Table).Fk("enemyId", EnemyData.Table)
             .Enum<RewardSource>("rewardSource").Consume("reward", runExtension: true).FkGroup("dropId", DropData.Table).Int("rewardShares", true)
-            .Res("sprite", MvAtlas.Theme).Enum<SpritePick>("spritePick").Enum<ObjectViewShape>("viewShape").Res("spriteSoul", MvAtlas.Theme).Colors("tint").Str("gradeColorFrom")
+            .Res("sprite", MvAtlas.Theme).Enum<SpritePick>("spritePick").Enum<ObjectViewShape>("viewShape").Res("spriteSoul", MvAtlas.Theme).Res("prefab", MvAtlas.Address).Colors("tint").Str("gradeColorFrom")
             .Enum<LabelKind>("labelKind").Str("labelKey").Float("sortBias")
             .Sound("hitSound").Sound("breakSound").Effect("hitEffect").Effect("breakEffect");
 
@@ -171,6 +171,8 @@ namespace MV.Data
         /// <summary>그림 모양. 빈칸 = Single.</summary>
         public ObjectViewShape viewShape { get; private set; }
         public string spriteSoul { get; private set; }
+        /// <summary>공통 오브젝트 프리팹 주소(`Local/BG/Prefab/Object/Obj_*`, 노션 「신작 배경 리소스 관리」). 스테이지마다 다른 것은 `305_stageObject`가 먼저. 빈칸 = 코드 모양(viewShape)으로 그림.</summary>
+        public string prefab { get; private set; }
         public IReadOnlyList<string> tint { get; private set; }
         /// <summary>
         /// 테두리 등급색 출처(MV-SPEC-02 05 게이트 색 규칙, Q-18): <c>StairLv</c> = 현재 계단 Lv, <c>WeaponTier</c> = 현재 생산 지팡이 단계.
@@ -215,6 +217,7 @@ namespace MV.Data
             spritePick = E(r, "spritePick", SpritePick.Single);
             viewShape = E(r, "viewShape", ObjectViewShape.Single);
             spriteSoul = S(r, "spriteSoul");
+            prefab = S(r, "prefab");
             tint = Strs(r, "tint");
             gradeColorFrom = S(r, "gradeColorFrom");
             dropId = I(r, "dropId");

@@ -447,6 +447,7 @@ namespace MV.View.Tests
             f.Init(ViewTestTables.Config(), camGo.transform, new WorldSpriteCache(), WorldView.FxAtlas);
             f.SetTheme(ViewTestTables.Theme("market"));
             f.LabelText = _ => null;
+            f.PrefabLoader = (a, ct) => Cysharp.Threading.Tasks.UniTask.Never<jjevol.AddressableLease<GameObject>>(ct);   // 프리팹 로드 없이 뷰 구조만
             return f;
         }
 
@@ -460,7 +461,7 @@ namespace MV.View.Tests
         [Test]
         public void HitAndWellFlush_DriveReactionsFromTable()
         {
-            var t = ViewTestTables.Load();
+            var t = ViewTestTables.CodeShapes();   // 우물 벽돌은 코드 모양(105.prefab 빈칸)일 때만 있다
             var f = MakeFactory();
             var objs = new List<RunObject> { Obj(t, "wall", 1, 15), Obj(t, "sgate", 2, 20), Obj(t, "tower", 3, 25) };
             f.Sync(objs, 0, 0, 0);

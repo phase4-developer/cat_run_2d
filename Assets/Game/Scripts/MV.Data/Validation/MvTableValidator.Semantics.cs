@@ -31,6 +31,23 @@ namespace MV.Data
             CheckMetaSystems(t, r);
             CheckModesAndShop(t, r);
             CheckCharLook(t, r);
+            CheckStageObject(t, r);
+        }
+
+        // ---------------- 305 ----------------
+
+        /// <summary>305_stageObject: stageMap은 302_area.stageMap에 있는 맵, (stageMap·kind·reward) 조합은 한 행.</summary>
+        static void CheckStageObject(MvTables t, MvValidationReport r)
+        {
+            var maps = new HashSet<string>(t.Area.Datas.Select(a => a.stageMap).Where(s => !string.IsNullOrEmpty(s)));
+            var seen = new HashSet<string>();
+            foreach (var row in t.StageObject.Datas)
+            {
+                if (!maps.Contains(row.stageMap))
+                    r.Error(StageObjectData.Table, row.id, "stageMap", $"`{row.stageMap}`는 302_area.stageMap에 없는 맵입니다");
+                if (!seen.Add(row.stageMap + "|" + row.kind + "|" + row.reward))
+                    r.Error(StageObjectData.Table, row.id, "reward", $"stageMap·kind·reward 조합 `{row.stageMap}·{row.kind}·{row.reward}`가 두 번 있습니다");
+            }
         }
 
         // ---------------- 116 ----------------

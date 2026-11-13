@@ -227,6 +227,7 @@ namespace MV.Boot
             foreach (var d in _stageLeases) d?.Dispose();
             _stageLeases.Clear();
             _stageMap = null;
+            if (_world.Objects != null) _world.Objects.SetStage(_tables, row?.stageMap);   // 맵별 오브젝트 프리팹(305 → 105.prefab)
             if (row == null || string.IsNullOrEmpty(row.stageMap)) { Debug.LogError($"[MvGameLoop] 302_area 지역 {area + 1}의 stageMap이 없습니다"); return; }
             var r = await AddressableScope.InstantiateWithLease(row.stageMap, _world.transform, _ct);
             Alive();
