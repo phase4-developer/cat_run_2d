@@ -27,6 +27,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - char
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d7e334cfd701474c83b3e00bfbba93b
+    m_Address: Char_Clone_tux
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4c2815f6e86705a4bbcaf72cb87b8745
     m_Address: atlas_player_10
     m_ReadOnly: 0
@@ -39,14 +45,38 @@ MonoBehaviour:
     m_SerializedLabels:
     - char
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6afdf72638e6d4e0c965494c999a71fc
+    m_Address: Char_Clone_calico
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7bad1d198b7c60947b27a9a3f3a98545
     m_Address: atlas_clone_siamese
     m_ReadOnly: 0
     m_SerializedLabels:
     - char
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 85709b5b3d66146038bd6962d1f46968
+    m_Address: atlas_clone_tux
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8dbb7b3ec978ea4479b5b7ab501fb973
     m_Address: atlas_player_8
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 981956a990f8448e4ae325e63d0220a6
+    m_Address: Char_Clone_siamese
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a626b3fcc43564bb7901ffe85da0c531
+    m_Address: Char_Clone_gray
     m_ReadOnly: 0
     m_SerializedLabels:
     - char
@@ -59,6 +89,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aeab0e6f7abd34a048cb8dc859b32cf9
     m_Address: Char_Cat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b2ddda8de49d8408cb285f63a42ca5a6
+    m_Address: atlas_clone_gray
     m_ReadOnly: 0
     m_SerializedLabels:
     - char
@@ -101,6 +137,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f6512b2a4e89e3745b5b37953fa17e5d
     m_Address: atlas_player_1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - char
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ff287f5b2e3ce4bd0acfd4f4c56f0367
+    m_Address: atlas_clone_calico
     m_ReadOnly: 0
     m_SerializedLabels:
     - char
