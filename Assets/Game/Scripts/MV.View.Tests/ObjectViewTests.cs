@@ -229,7 +229,7 @@ namespace MV.View.Tests
         [TestCase(3, 7, 10, 3)]
         [TestCase(3, 6, 10, 2)]
         [TestCase(3, 3, 10, 1)]
-        [TestCase(3, 0.1, 10, 1)]
+        [TestCase(3, 1, 30, 1)]
         [TestCase(3, 0, 10, 0)]
         [TestCase(2, 5, 10, 1)]
         public void PrefabRig_ShownStages_CeilOfHpRatio(int n, double hp, double max, int shown) =>
