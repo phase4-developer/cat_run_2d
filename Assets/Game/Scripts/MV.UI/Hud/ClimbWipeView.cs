@@ -88,7 +88,9 @@ namespace MV.UI
         {
             if (_panel) return;
             _root = (RectTransform)transform;
-            _panel = MvUi.Stretch(MvUi.Rect(_root, "Panel")).gameObject.AddComponent<PaperPanelGraphic>();
+            var panelGo = MvUi.Stretch(MvUi.Rect(_root, "Panel")).gameObject;
+            panelGo.AddComponent<CanvasRenderer>();
+            _panel = panelGo.AddComponent<PaperPanelGraphic>();
             _panel.raycastTarget = false;
             _clip = MvUi.Rect(_root, "Clip");
             _clip.anchorMin = Vector2.zero; _clip.anchorMax = new Vector2(0, 1); _clip.pivot = new Vector2(0, .5f);
@@ -96,6 +98,7 @@ namespace MV.UI
             _clip.gameObject.AddComponent<RectMask2D>();
             _sparksRt = MvUi.Rect(_clip, "Sparks");
             _sparksRt.anchorMin = Vector2.zero; _sparksRt.anchorMax = new Vector2(0, 1); _sparksRt.pivot = new Vector2(0, .5f);
+            _sparksRt.gameObject.AddComponent<CanvasRenderer>();
             _sparks = _sparksRt.gameObject.AddComponent<PaperSparkGraphic>();
             _sparks.raycastTarget = false;
             _text = MvUi.Label(MvUi.Stretch(MvUi.Rect(_clip, "Caption")), "Text", 40, PaperPanelGraphic.Title, TextAnchor.MiddleCenter);
