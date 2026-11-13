@@ -20,6 +20,9 @@ namespace MV.UI
             _savedSouls = savedSouls;
         }
 
+        /// <summary>현재 런 상태(가호 카드 화면이 직접 읽는다).</summary>
+        public RunState Current() => _state?.Invoke();
+
         public bool TryRead(out RunHudState h)
         {
             h = default;
