@@ -204,6 +204,8 @@ namespace MV.Data
         public const string Char_WheelTurnsPerStep = "char.wheelTurnsPerStep";
         /// <summary>로비 트랙에 까는 오브젝트 범위(m, 시작점에서 z 거리). 정본 `toLobby` `makeObjs(...).filter(o =&gt; o.z &lt; 70)`(MV-SPEC-01 04 §4.13.1, MV-SPEC-02 01 「로비와 인게임이 같은 화면」).</summary>
         public const string Lobby_ObjZMax = "lobby.objZMax";
+        /// <summary>마법탄 프리팹 주소(`Local/Projectile/Prefab/projectile`, 노션 「신작 이펙트 리소스 관리」 투사체 프리팹 구조).</summary>
+        public const string Proj_Prefab = "proj.prefab";
 
         /// <summary>모든 키(02·06 그룹 001~008 + 07 그룹 101~106 + 캐릭터 107 + 로비 108. 개수는 이 배열 길이. FLOOR_COUNT·LOBBY_STAIR_MAX_LV는 표 행으로 계산 — MvTables.FloorCount·StairMaxLv).</summary>
         public static readonly string[] All =
@@ -390,6 +392,7 @@ namespace MV.Data
             Char_StairIdleRockRad,
             Char_WheelTurnsPerStep,
             Lobby_ObjZMax,
+            Proj_Prefab,
         };
     }
 }
