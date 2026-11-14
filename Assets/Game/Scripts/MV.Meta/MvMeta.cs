@@ -119,6 +119,7 @@ namespace MV.Meta
                 ["runSeq"] = outcome.RunSeq, ["end"] = outcome.End.ToString(), ["mul"] = mul,
                 ["gold"] = outcome.Gold, ["souls"] = outcome.Souls, ["dia"] = outcome.Dia, ["cpRun"] = outcome.CpRun,
                 ["startGold"] = outcome.StartGold, ["startDia"] = outcome.StartDia,
+                ["climbed"] = outcome.Climbed, ["walls"] = outcome.Walls, // 정산 판정 밖, 응답 보탬(퀘스트)이 같은 저장에 센다
             };
             if (outcome.Bars != null) p["bars"] = BarsJson(outcome.Bars);
             if (outcome.PendingSettle != null && outcome.PendingSettle.Count > 0)
