@@ -47,6 +47,8 @@ namespace MV.Boot
         public int RunFrames { get; private set; }
         /// <summary>이 루프에서 결과까지 간 런 수.</summary>
         public int RunsFinished { get; private set; }
+        /// <summary>이 루프에서 결과 팝업을 열라고 한 횟수(런 끝 지도 닫힘 → 결과, 시험이 읽는다).</summary>
+        public int ResultOpens { get; private set; }
         /// <summary>정산 명령을 부른 횟수(받기 1번 = 1).</summary>
         public int SettleCount { get; private set; }
         public bool LastSettleOk { get; private set; }
@@ -437,6 +439,7 @@ namespace MV.Boot
             {
                 if (resultOpened || Phase != MvLoopPhase.Result) return;
                 resultOpened = true;
+                ResultOpens++;
                 _mapPopup = null;
                 OpenResultAsync(data).Forget(Debug.LogException);
             }
@@ -459,6 +462,9 @@ namespace MV.Boot
             _mapPopup.Presenter.PressClose();
             return true;
         }
+
+        /// <summary>뒤로 가기·Esc(시험용): Framework <c>UIManager</c>의 뒤로 가기 처리를 그대로 부른다.</summary>
+        public UniTask PressBack() => UIManager.Instance.HandleBackButtonAsync();
 
         async UniTask OpenResultAsync(ResultViewData data)
         {
