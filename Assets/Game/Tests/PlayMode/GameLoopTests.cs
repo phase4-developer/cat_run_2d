@@ -129,41 +129,19 @@ namespace MV.Tests
             // 돌아온 로비도 트랙 위: 다음 순번 배치를 다시 깐다.
             Assert.IsTrue(loop.WorldCameraActive, "돌아온 로비가 월드 카메라로 그려지지 않는다");
             Assert.Greater(loop.LobbyObjectCount, 0, "돌아온 로비 트랙에 오브젝트가 없다");
-        }
+            Assert.AreEqual(1, loop.ResultOpens, "결과를 여러 번 열었다");
 
-        /// <summary>
-        /// 런 끝 지도를 뒤로 가기·Esc(Framework UIManager)로 닫아도 결과가 정확히 한 번 열린다.
-        /// 결과 팝업은 뒤로 가기로 닫히지 않고(받기 없이 닫히면 로비로 못 돌아간다), 받기 1번 → 정산 1번 → 로비.
-        /// </summary>
-        [UnityTest]
-        public IEnumerator Loop_MapBackKey_OpensResultOnce()
-        {
-            SceneManager.LoadScene(GameBootstrap.BootSceneName, LoadSceneMode.Single);
-            yield return null;
-            float elapsed = 0f;
-            while ((GameBootstrap.State == BootState.NotStarted || GameBootstrap.State == BootState.Running) && elapsed < TimeoutSeconds)
-            {
-                elapsed += Time.unscaledDeltaTime;
-                yield return null;
-            }
-            Assert.AreEqual(BootState.Succeeded, GameBootstrap.State, GameBootstrap.LastError?.ToString());
-
-            var loop = MvGameLoop.Current;
-            Assert.IsNotNull(loop, "Game 씬에 게임 루프가 없다");
-            Assert.AreEqual(MvLoopPhase.Lobby, loop.Phase);
-            loop.FixedDt = 0.05;
-            loop.TicksPerFrame = 40;
-            loop.ScriptedDrag = f => 2.0 * Math.Sin(f * 0.37);
-            Assert.IsTrue(loop.PressStart(), "출발이 런을 시작하지 않았다");
-
+            // 두 번째 런(같은 Boot, PlayMode에서 Boot는 한 번만 돈다): 런 끝 지도를 뒤로 가기·Esc(Framework UIManager)로
+            // 닫아도 결과가 정확히 한 번 열린다. 결과는 뒤로 가기로 닫히지 않고, 받기 1번 → 정산 1번 → 로비.
+            Assert.IsTrue(loop.PressStart(), "두 번째 출발이 런을 시작하지 않았다");
             elapsed = 0f;
             while (!loop.MapOpen && loop.RunFrames < MaxRunFrames && elapsed < TimeoutSeconds)
             {
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
-            Assert.IsTrue(loop.MapOpen, $"런 끝 지도가 열리지 않았다(단계 {loop.Phase}, 프레임 {loop.RunFrames})");
-            Assert.AreEqual(0, loop.ResultOpens);
+            Assert.IsTrue(loop.MapOpen, $"두 번째 런 끝 지도가 열리지 않았다(단계 {loop.Phase}, 프레임 {loop.RunFrames})");
+            Assert.AreEqual(1, loop.ResultOpens);
 
             // 뒤로 가기 = 지도 닫기 → 결과(한 번만).
             yield return loop.PressBack().ToCoroutine();
@@ -175,25 +153,25 @@ namespace MV.Tests
             }
             Assert.IsTrue(loop.ResultOpen, "뒤로 가기로 지도를 닫았는데 결과 팝업이 열리지 않았다");
             Assert.IsFalse(loop.MapOpen);
-            Assert.AreEqual(1, loop.ResultOpens, "결과를 여러 번 열었다");
+            Assert.AreEqual(2, loop.ResultOpens, "결과를 여러 번 열었다");
 
             // 결과에서 뒤로 가기: 받기 없이 닫히지 않는다.
             yield return loop.PressBack().ToCoroutine();
             yield return null;
             Assert.IsTrue(loop.ResultOpen, "뒤로 가기가 받기 없이 결과를 닫았다");
             Assert.AreEqual(MvLoopPhase.Result, loop.Phase);
-            Assert.AreEqual(0, loop.SettleCount);
+            Assert.AreEqual(1, loop.SettleCount);
 
             Assert.IsTrue(loop.PressCollect());
-            Assert.AreEqual(1, loop.SettleCount, "정산은 받기 1번에 1번");
+            Assert.AreEqual(2, loop.SettleCount, "정산은 받기 1번에 1번");
             elapsed = 0f;
             while (loop.Phase != MvLoopPhase.Lobby && elapsed < TimeoutSeconds)
             {
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
-            Assert.AreEqual(MvLoopPhase.Lobby, loop.Phase, "결과 뒤 로비로 돌아오지 않았다");
-            Assert.AreEqual(1, loop.ResultOpens);
+            Assert.AreEqual(MvLoopPhase.Lobby, loop.Phase, "두 번째 결과 뒤 로비로 돌아오지 않았다");
+            Assert.AreEqual(2, loop.ResultOpens);
         }
 
         /// <summary>저장의 벽 기록 JSON → Floor별 칸 HP. 빈 칸(null)·없는 Floor·다른 Area는 비운다. cells = 읽은 칸 합(−1 = 기록 없음).</summary>
