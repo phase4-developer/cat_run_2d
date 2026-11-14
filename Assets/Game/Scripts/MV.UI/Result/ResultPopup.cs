@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using jjevol;
 using MV.Sound;
 using UnityEngine;
@@ -87,6 +88,12 @@ namespace MV.UI
                 if (ok && _presenter.Data == data) Finish();
             });
         }
+
+        /// <summary>
+        /// 뒤로 가기·Esc로는 닫지 않는다. Framework 기본(true)은 받기 없이 팝업만 닫아 <see cref="ResultViewData.OnCollected"/>가
+        /// 불리지 않고 게임 루프가 결과 단계에 남는다. 결과는 「괜찮아요」·「×N 보상」으로만 닫는다(기획서에 뒤로 가기 규칙 없음).
+        /// </summary>
+        public override UniTask<bool> OnBackRequestAsync() => UniTask.FromResult(false);
 
         void Finish()
         {

@@ -252,6 +252,37 @@ namespace MV.Content.Tests
             Assert.That(Entry(DailyRun).Count, Is.EqualTo(1));
         }
 
+        /// <summary>
+        /// 런 안 계단·벽(<c>MvRunOutcome.Climbed</c>·<c>Walls</c>)은 정산과 같은 저장 1번에 센다. 같은 순번을 다시 정산하면
+        /// 거절되고 카운터·재화·진행도 모두 그대로다(중복 지급·중복 집계 없음).
+        /// </summary>
+        [Test]
+        public void Settle_RunCounters_SavedWithSettleOnce()
+        {
+            int applied = 0;
+            Meta.Applied += (rq, rs) => applied++;
+            long seq = Meta.BeginRun();
+            var outcome = new MvRunOutcome { RunSeq = seq, End = MvRunEnd.Wall, Gold = 50, Souls = 1, Climbed = 7, Walls = 3 };
+            var settled = Meta.Settle(outcome);
+            Assert.That(settled.Ok, Is.True, settled.Code);
+            Assert.That(applied, Is.EqualTo(1), "계단·벽을 따로 기록 요청으로 보내지 않는다(저장 1번)");
+            Assert.That(Quest.LifetimeCount(QuestClearType.StairClimb), Is.EqualTo(7), "stairClimb");
+            Assert.That(Quest.LifetimeCount(QuestClearType.WallBreak), Is.EqualTo(3), "wallBreak");
+            Assert.That(Quest.LifetimeCount(QuestClearType.RunComplete), Is.EqualTo(1));
+            Assert.That(Store.Progress.LastSettledRunSeq, Is.EqualTo(seq));
+
+            long gold = Store.GetWealth(MvWealthIds.Gold);
+            int runs = Store.Progress.Runs;
+            var again = Meta.Settle(outcome);
+            Assert.That(again.Code, Is.EqualTo(MvMetaErrors.AlreadySettled));
+            Assert.That(applied, Is.EqualTo(1));
+            Assert.That(Quest.LifetimeCount(QuestClearType.StairClimb), Is.EqualTo(7), "거절된 정산은 세지 않는다");
+            Assert.That(Quest.LifetimeCount(QuestClearType.WallBreak), Is.EqualTo(3));
+            Assert.That(Quest.LifetimeCount(QuestClearType.RunComplete), Is.EqualTo(1));
+            Assert.That(Store.GetWealth(MvWealthIds.Gold), Is.EqualTo(gold), "중복 지급 없음");
+            Assert.That(Store.Progress.Runs, Is.EqualTo(runs));
+        }
+
         [Test]
         public void AnyWrite_RollsStalePeriodBeforeSaving()
         {

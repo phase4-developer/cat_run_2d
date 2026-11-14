@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using jjevol;
 using MV.Sound;
 using UnityEngine;
@@ -146,10 +147,24 @@ namespace MV.UI
         void OnActionPressed(string id) => Presenter.Press(id);
         void OnTabPressed(string id) => Presenter.SelectTab(id);
 
+        /// <summary>
+        /// 뒤로 가기·Esc(<c>UIManager.HandleBackButtonAsync</c>)와 Framework 닫기 버튼(<c>OnClickCloseBtn</c>)은
+        /// 이 값이 true면 <c>ClosePopup</c>을 직접 불러 <see cref="MetaPopupData.OnClosed"/>를 건너뛴다(런 끝 지도 → 결과가 멈춤).
+        /// 그래서 닫기 버튼과 같은 길(화면 코드 PressClose → <see cref="Close"/>)로 보내고 false를 돌려 Framework가 다시 닫지 않게 한다.
+        /// </summary>
+        public override UniTask<bool> OnBackRequestAsync()
+        {
+            if (IsOpen && !IsTransitioning) Presenter.PressClose();
+            return UniTask.FromResult(false);
+        }
+
+        /// <summary>실제로 닫혔을 때만 <see cref="MetaPopupData.OnClosed"/>를 한 번 부른다(이미 닫힘·연출 중이라 무시된 닫기는 부르지 않는다).</summary>
         void Close()
         {
+            if (!IsOpen) return;
             var data = Data;
             ClosePopup(true);
+            if (IsOpen) return;
             data?.OnClosed?.Invoke();
         }
 

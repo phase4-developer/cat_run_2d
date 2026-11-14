@@ -70,7 +70,9 @@ namespace MV.Content
     /// <summary>
     /// 퀘스트 입구(08 §8.5.1). 화면은 <see cref="Board"/>·<see cref="Claim"/>만 쓴다.
     /// 정산·강화·부활·광고 카운터는 그 요청의 같은 응답에 더해진다(<see cref="MvQuestBackend.Contributor"/>, 저장 1번).
-    /// 클라이언트에서만 생기는 값(런 안 계단·벽, 모드 클리어)만 <see cref="RecordRun"/>·<see cref="RecordModeClear"/>로 기록 요청을 보낸다.
+    /// 본편 런 안 계단·벽은 정산 요청(<c>MvRunOutcome.Climbed</c>·<c>Walls</c>)에 실려 정산 저장에 함께 센다.
+    /// 클라이언트에서만 생기는 그 밖의 값(모드 클리어)만 <see cref="RecordModeClear"/>로 기록 요청을 보낸다.
+    /// 제작 게이트 무기 수(weaponCraft)는 <c>RunResult</c>에 없어 아직 세지 않는다(MV-RUN 요청, 이전과 같음).
     /// 읽기(<see cref="Board"/>)는 저장소 컨테이너 <c>mvQuest</c>만 읽는다(서버 전환 때 같은 모양 캐시).
     /// Boot 연결: 메타를 만들 때마다 <c>MvQuest.Install(meta)</c> 한 줄.
     /// </summary>
@@ -142,18 +144,6 @@ namespace MV.Content
 
         public MvMetaResponse Record(params MvQuestEvent[] events) => Record((IEnumerable<MvQuestEvent>)events);
 
-        /// <summary>
-        /// 본편 런 안 값(정산 시점, <c>RunResult</c>): 계단 오르기 칸 수(<c>Climbed</c>), 벽 파괴(<c>Walls</c>).
-        /// 제작 게이트 무기 수(weaponCraft)는 <c>RunResult</c>에 없어 <paramref name="weaponsCrafted"/>로 받는다(MV-RUN 요청).
-        /// 모드 런은 부르지 않는다(「본편」 카운터).
-        /// </summary>
-        public MvMetaResponse RecordRun(RunResult result, int weaponsCrafted = 0)
-        {
-            if (result == null) throw new ArgumentNullException(nameof(result));
-            return Record(new MvQuestEvent(QuestClearType.StairClimb, result.Climbed), new MvQuestEvent(QuestClearType.WallBreak, result.Walls),
-                new MvQuestEvent(QuestClearType.WeaponCraft, weaponsCrafted));
-        }
-
         /// <summary>모드 클리어 1번(clearCondition = contentType).</summary>
         public MvMetaResponse RecordModeClear(ContentType type) => Record(new MvQuestEvent(QuestClearType.ModeClear, 1, (int)type));
 
@@ -172,6 +162,9 @@ namespace MV.Content
                     list.Add(new MvQuestEvent(QuestClearType.GoldEarn, r.Value<long?>("gold") ?? 0));
                     list.Add(new MvQuestEvent(QuestClearType.SoulEarn, r.Value<long?>("souls") ?? 0));
                     if (r.Value<bool?>("pass") == true) list.Add(new MvQuestEvent(QuestClearType.AreaOpen, 1));
+                    // 본편 런 안 값(MvRunOutcome.Climbed·Walls)은 정산 요청에 실려 와 같은 정산 저장에 센다(따로 기록 요청을 보내지 않는다).
+                    list.Add(new MvQuestEvent(QuestClearType.StairClimb, request.Params?.Value<int?>("climbed") ?? 0));
+                    list.Add(new MvQuestEvent(QuestClearType.WallBreak, request.Params?.Value<int?>("walls") ?? 0));
                     break;
                 case MvMetaRequestNames.BuyLobbyUp: // L2641, 조건 = 10_lobbyUpgrade.sort(1 캣타워 / 2 스크래쳐 / 3 생선 건조대)
                     list.Add(new MvQuestEvent(QuestClearType.LobbyUpgrade, 1, LobbyCondition(tables, request.Params.Value<string>("key"))));

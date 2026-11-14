@@ -34,6 +34,12 @@ namespace MV.Meta
         public IReadOnlyList<IReadOnlyDictionary<int, double>> Bars;
         /// <summary>런 안 재화 외 정산 대기(07 §7.9, <c>RunResult.PendingSettle</c>). Wealth·RbPending만 반영하고 나머지는 결과에 돌려준다.</summary>
         public IReadOnlyList<MvConsume> PendingSettle;
+        /// <summary>
+        /// 본편 런 안 계단 오르기 칸 수·벽 파괴 수(<c>RunResult.Climbed</c>·<c>Walls</c>). 정산 판정은 쓰지 않고 요청에 실어 보내
+        /// 콘텐츠 응답 보탬(퀘스트 stairClimb·wallBreak)이 같은 정산 저장에 더한다(정산과 따로 저장하면 그 사이 실패 때 카운터만 빠진다).
+        /// </summary>
+        public int Climbed;
+        public int Walls;
     }
 
     /// <summary>정산 결과(결과 화면·로비 배너·해금 연출용).</summary>

@@ -72,6 +72,8 @@ namespace MV.UI
                     CpRun = r.CpRun,
                     Bars = r.BarRec?.Floors,
                     PendingSettle = r.PendingSettle,
+                    Climbed = r.Climbed,
+                    Walls = r.Walls,
                 },
             };
             if (tables != null)
