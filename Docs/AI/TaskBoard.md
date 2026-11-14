@@ -63,7 +63,7 @@
 | MV-00-bundle6 프로젝트 설정 맞춤 | 완료(2026-11-12, 사용자 「프로젝트 설정 맞춰서 적용해줄래? 프레임워크」) | `ai/MV-00-bundle6-settings` | 설정 저장 11-12 18:20 범위대로 베타 고정본 갱신 12·추가 2(localization.tmp·ui.contracts)·network.firebase 제거, MV.UI.asmdef에 ui.contracts 참조. compile PASS, EditMode 573 PASS·7 Ignore(Q-04), PlayMode 7/7. 화면·기기 NOT_RUN. 기준선 PROJECT_CONTEXT 6차 |
 | MV-HARDCODE-1b 규칙·표 중복 | 완료(2026-11-11) | `13c04949` | 남은 줄 PC-16~21, 115↔330 lap 중복(1a 쪽과 함께) |
 | MV-RUN-MIDZONE 평지 감속 제거 | 완료(2026-11-11) | `1fb4a25f` | 310 midFromZ·midToZ 빈칸(걷기 항상 4), 중간 구역 = 계단 오르는 구간(임시, PC-10). 사람 확인: 사용자가 속도 4 확인 |
-| DOC-ARCH 코드 구조 문서 | 완료(2026-11-15, 사용자 「클래스 구조와 함수 흐름 상세하게 문서화」) | 브랜치 `ai/DOC-ARCH-structure-doc` | `Docs/Architecture/`(README 지도 + 01~05 모듈별). 기준 dev `046c8be6`. 문서만이라 Unity 검증 해당 없음(NOT_RUN). 구조 변경 계약은 병합 때 해당 절 갱신 |
+| DOC-ARCH 코드 구조 문서 | 완료(2026-11-15, 사용자 「클래스 구조와 함수 흐름 상세하게 문서화」, 2차 「다이어그램 표가 있어야 … PDF로 전달해」) | 브랜치 `ai/DOC-ARCH-structure-doc` | `Docs/Architecture/`(README 지도 + 01~05 모듈별). 기준 dev `046c8be6`. 문서만이라 Unity 검증 해당 없음(NOT_RUN). 구조 변경 계약은 병합 때 해당 절 갱신 | 2차: `MoonVillage_CodeStructure.pdf`(그림 17·표, 원본 `pdf_src/`), 브랜치 `ai/DOC-ARCH-2-pdf`. |
 
 ## 이번 회차 범위 (2026-11-11 재정정: 새 기획 표·규칙으로 기본 모드)
 
