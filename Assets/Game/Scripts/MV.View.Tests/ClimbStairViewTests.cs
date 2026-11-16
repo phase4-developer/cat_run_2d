@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using MV.Data;
 using MV.Run;
@@ -162,7 +161,7 @@ namespace MV.View.Tests
             double back = ClimbStairView.PopBack(c["stepPop"]);
             // 이징 최댓값 = stepPop(기획서 1.1배), 시작 0, 끝 1
             double peak = 0;
-            for (int i = 0; i <= 1000; i++) peak = Math.Max(peak, ClimbStairView.PopScale(i / 1000.0, back));
+            for (int i = 0; i <= 1000; i++) peak = System.Math.Max(peak, ClimbStairView.PopScale(i / 1000.0, back));
             Assert.That(peak, Is.EqualTo(c["stepPop"]).Within(1e-4), "가장 클 때 stepPop배");
             Assert.That(ClimbStairView.PopScale(0, back), Is.EqualTo(0));
             Assert.That(ClimbStairView.PopScale(1, back), Is.EqualTo(1));
