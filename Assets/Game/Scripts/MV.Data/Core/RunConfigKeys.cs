@@ -101,11 +101,7 @@ namespace MV.Data
         public const string Warp_SpeedLines = "warp.speedLines";
         public const string DRAG_SCREEN_M = "DRAG_SCREEN_M";
         public const string LANE_X_MAX = "LANE_X_MAX";
-        public const string KEY_MOVE_SPEED = "KEY_MOVE_SPEED";
-        public const string MOVE_FOLLOW_K = "MOVE_FOLLOW_K";
-        public const string RUN_SPEED = "RUN_SPEED";
-        /// <summary>중간 구역 전진 속도(MV-SPEC-02 4-1, Q-15). 구간 위치는 <c>310_template.midFromZ·midToZ</c>.</summary>
-        public const string RUN_SPEED_MID = "RUN_SPEED_MID";
+        // KEY_MOVE_SPEED·MOVE_FOLLOW_K·RUN_SPEED·RUN_SPEED_MID는 2026-11-16 MvCharacterSettings로 옮겼다(표에 두지 않는다).
         public const string PHASE_RUN = "PHASE_RUN";
         public const string PHASE_BLOCKED = "PHASE_BLOCKED";
         public const string PHASE_CLIMB = "PHASE_CLIMB";
@@ -307,10 +303,6 @@ namespace MV.Data
             Warp_SpeedLines,
             DRAG_SCREEN_M,
             LANE_X_MAX,
-            KEY_MOVE_SPEED,
-            MOVE_FOLLOW_K,
-            RUN_SPEED,
-            RUN_SPEED_MID,
             PHASE_RUN,
             PHASE_BLOCKED,
             PHASE_CLIMB,

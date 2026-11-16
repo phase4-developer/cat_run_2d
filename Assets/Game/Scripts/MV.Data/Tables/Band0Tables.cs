@@ -273,13 +273,13 @@ namespace MV.Data
 
     // ---------------- 06_balancePreset ----------------
 
+    /// <summary>난이도 프리셋. 기본 연사(rate)는 2026-11-16부터 <see cref="MvCharacterSettings"/>(프리셋 key별)에 있다.</summary>
     public sealed class BalancePresetData : MvRow
     {
         public const string Table = "06_balancePreset";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active")
-            .Float("rate", true).Float("scale", true).Float("diff", true).Float("gauge", true).Bool("isDefault", true);
+            .Float("scale", true).Float("diff", true).Float("gauge", true).Bool("isDefault", true);
 
-        public double rate { get; private set; }
         public double scale { get; private set; }
         public double diff { get; private set; }
         public double gauge { get; private set; }
@@ -290,7 +290,6 @@ namespace MV.Data
         public override void Init(TSVRow r)
         {
             base.Init(r);
-            rate = D(r, "rate");
             scale = D(r, "scale");
             diff = D(r, "diff");
             gauge = D(r, "gauge");

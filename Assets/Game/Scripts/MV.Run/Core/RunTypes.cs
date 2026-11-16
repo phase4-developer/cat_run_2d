@@ -155,13 +155,13 @@ namespace MV.Run
         public string God;
         /// <summary>`06_balancePreset.key`. null이면 isDefault 행(기본 난이도는 표가 정한다, MV-SPEC2-FIX1).</summary>
         public string Preset;
-        /// <summary>디버그 발사 속도(DBG.rate). null이면 프리셋 rate.</summary>
+        /// <summary>디버그 발사 속도(DBG.rate). null이면 캐릭터 설정의 프리셋 기본 연사.</summary>
         public double? RateOverride;
         /// <summary>디버그 배속 DBG.ts(정수 1~3).</summary>
         public int TimeScale = 1;
 
         // ---- 모드 필드(04 §4.20.3) — 기본값 = 정본 ----
-        /// <summary>null이면 `300_runConfig.RUN_SPEED`.</summary>
+        /// <summary>null이면 캐릭터 설정 `MvCharacterSettings.runSpeed`.</summary>
         public double? ForwardSpeed;
         public bool FailOnWall = true;
         public int FixedWeaponTier;

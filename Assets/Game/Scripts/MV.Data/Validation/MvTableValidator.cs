@@ -86,6 +86,7 @@ namespace MV.Data
             if (tables == null) throw new ArgumentNullException(nameof(tables));
             var report = new MvValidationReport();
             Validate(tables, report, options ?? new MvValidationOptions());
+            CheckPresetRates(tables, report);
             return report;
         }
 

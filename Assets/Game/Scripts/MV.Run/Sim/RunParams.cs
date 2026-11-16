@@ -27,16 +27,17 @@ namespace MV.Run
         public static RunParams From(MvTables t)
         {
             var c = t.RunConfig;
+            var ch = t.Character;   // 이동 기본값(MvCharacterSettings 사본)
             var p = new RunParams
             {
                 DtCap = c.D(RunConfigKeys.Time_DtCap), HitStopScale = c.D(RunConfigKeys.Time_HitStopScale),
-                LaneXMax = c.D(RunConfigKeys.LANE_X_MAX), KeyMoveSpeed = c.D(RunConfigKeys.KEY_MOVE_SPEED),
-                MoveFollowK = c.D(RunConfigKeys.MOVE_FOLLOW_K), RunSpeed = c.D(RunConfigKeys.RUN_SPEED),
+                LaneXMax = c.D(RunConfigKeys.LANE_X_MAX), KeyMoveSpeed = ch.KeyMoveSpeed,
+                MoveFollowK = ch.MoveFollowK, RunSpeed = ch.RunSpeed,
                 PhaseRun = c.D(RunConfigKeys.PHASE_RUN), PhaseBlocked = c.D(RunConfigKeys.PHASE_BLOCKED),
                 PhaseClimb = c.D(RunConfigKeys.PHASE_CLIMB),
                 PlayerHalfW = c.D(RunConfigKeys.PLAYER_HALF_W), WallFaceGap = c.D(RunConfigKeys.WALL_FACE_GAP),
                 WallFaceEps = c.D(RunConfigKeys.WALL_FACE_EPS), WarnDist = c.D(RunConfigKeys.WARN_DIST),
-                RunSpeedMid = c.D(RunConfigKeys.RUN_SPEED_MID), StuckEndSec = c.D(RunConfigKeys.STUCK_END_SEC),
+                RunSpeedMid = ch.RunSpeedMid, StuckEndSec = c.D(RunConfigKeys.STUCK_END_SEC),
                 WeaponStackMax = c.I(RunConfigKeys.WEAPON_STACK_MAX),
                 MaxClones = RunFormulas.CloneCap(t), CloneXMax = c.D(RunConfigKeys.CLONE_X_MAX),
                 DblShotDx = c.D(RunConfigKeys.DBL_SHOT_DX), ProjSpawnDz = c.D(RunConfigKeys.PROJ_SPAWN_DZ),
