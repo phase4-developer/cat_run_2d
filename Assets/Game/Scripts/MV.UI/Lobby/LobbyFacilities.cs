@@ -4,7 +4,7 @@ using MV.Meta;
 namespace MV.UI
 {
     /// <summary>
-    /// 로비 아지트 시설 단계(정본 <c>azStages</c> L3468~3471). 로비 월드(<c>LobbyStage.SetFacility</c>, MV.View)에 넘길 값만 계산하고
+    /// 로비 아지트 시설 단계(정본 <c>azStages</c> L3468~3471). 로비 월드(옛 <c>LobbyStage</c>, 2026-11-16 삭제)에 넘길 값만 계산하고
     /// 월드는 만지지 않는다(연결은 게임 루프, <see cref="ILobbySource.FacilityStage"/>).
     /// 문턱 숫자는 정본 상수다(표 열 없음 → MV-DATA 변경 요청 후보).
     /// </summary>
