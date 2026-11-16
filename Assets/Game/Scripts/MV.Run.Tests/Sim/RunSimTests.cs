@@ -160,6 +160,30 @@ namespace MV.Run.Tests
             Assert.AreEqual(3.5 - 0.05 * 9, sim.State.P.Tx, 1e-12);
         }
 
+        /// <summary>
+        /// 런 중 캐릭터 기본값 사본이 바뀌면(에디터 Inspector 수정 → <see cref="MvTables.Character"/>) 실행 중 런이 다음 틱부터 따른다:
+        /// 전진 속도는 <see cref="RunParams"/>를 다시 읽고, 연사는 발사 때마다 사본을 읽는다.
+        /// </summary>
+        [Test]
+        public void Character_ChangeDuringRun_AppliesNextTick()
+        {
+            var t = RunTestTables.Load(null);   // 공유 캐시를 바꾸지 않게 새 표
+            var sim = RunSim.Create(Setup(), t, new ConstRng(0.5), new HandLevel());
+            sim.Tick(0.05, RunInput.None);
+            double z1 = sim.State.P.Z;
+            Assert.AreEqual(t.Character.RunSpeed * 0.05, z1, 1e-12);
+            string key = sim.State.Bal.key;
+            double rate = t.Character.Rate(key);
+
+            var ch = t.Character.Clone();
+            ch.RunSpeed *= 2;
+            ch.PresetRates[key] = rate * 2;
+            t.Character = ch;
+            sim.Tick(0.05, RunInput.None);
+            Assert.AreEqual(z1 + ch.RunSpeed * 0.05, sim.State.P.Z, 1e-12, "전진 속도 변경이 실행 중 런에 반영되지 않았다");
+            Assert.AreEqual(1 / (rate * 2), RunFormulas.FireInterval(sim.State), 1e-12, "연사 변경이 발사 간격에 반영되지 않았다");
+        }
+
         [Test]
         public void Wall_BlocksAndFinishes()
         {

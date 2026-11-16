@@ -16,15 +16,51 @@ namespace MV.Data
         public static MvTables Current { get; set; }
 
         RunCharacterConfig _character;
+        MvCharacterSettings _characterAsset;
 
         /// <summary>
         /// 표가 아닌 캐릭터 기본값(이동 속도·프리셋 기본 연사). 정본은 Resources의 <see cref="MvCharacterSettings"/> 에셋이고 처음 읽을 때 사본을 만든다.
+        /// 에디터에서 Inspector로 에셋 값을 바꾸면 사본을 새로 만들고 <see cref="CharacterVersion"/>을 올린다(실행 중 런이 이동 값을 다시 읽는다).
         /// 시험은 사본을 바꿔 넣을 수 있다(에셋은 바꾸지 않는다).
         /// </summary>
         public RunCharacterConfig Character
         {
-            get => _character ??= MvCharacterSettings.LoadConfig();
-            set => _character = value;
+            get
+            {
+                if (_character == null) LoadCharacter();
+                return _character;
+            }
+            set
+            {
+                _character = value;
+                CharacterVersion++;
+            }
+        }
+
+        /// <summary><see cref="Character"/> 사본이 바뀔 때마다 1씩 오른다.</summary>
+        public int CharacterVersion { get; private set; }
+
+        void LoadCharacter()
+        {
+            var asset = MvCharacterSettings.Load();
+            _character = asset.ToConfig();
+            if (_characterAsset == asset) return;
+            if (_characterAsset != null) _characterAsset.Changed -= OnCharacterAssetChanged;
+            _characterAsset = asset;
+            asset.Changed += OnCharacterAssetChanged;
+        }
+
+        void OnCharacterAssetChanged()
+        {
+            if (_characterAsset == null) return;
+            try
+            {
+                Character = _characterAsset.ToConfig();
+            }
+            catch (InvalidOperationException e)
+            {
+                UnityEngine.Debug.LogError(e.Message);   // 잘못된 값(프리셋 중복 등)은 이전 사본을 유지한다.
+            }
         }
 
         // 0
