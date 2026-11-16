@@ -79,7 +79,12 @@ namespace MV.Fx.Tests
                 // 표 1 sparks: n개, 수명 life·rnd(0.7, 1.2), 호출 색
                 var s = FxSpawn.Of("fx.sparks", Vector3.zero).WithColor(new Color32(0xff, 0xd6, 0x5a, 255));
                 s.Count = 12; s.Life = 0.6f;
-                var d = Spawn("Sparks", s); made.Add(d.gameObject);
+                // Sparks 프리팹은 디자이너 파티클(드라이버 꺼짐)이라 정본 공식은 켜진 드라이버로 본다.
+                var sg = new GameObject("SparksCanon"); made.Add(sg);
+                var d = sg.AddComponent<MvFxDriver>();
+                d.kind = FxKind.Sparks;
+                d.SetSkin(MvFxParamBank.Put(s));
+                d.Play(0, false, null);
                 Assert.AreEqual(12, d.PartCount);
                 for (int i = 0; i < d.PartCount; i++)
                 {
@@ -128,6 +133,34 @@ namespace MV.Fx.Tests
             finally
             {
                 foreach (var g in made) Object.DestroyImmediate(g);
+            }
+        }
+
+        /// <summary>드라이버를 꺼 둔 프리팹(Sparks)은 자식 ParticleSystem을 1회 재생하고 상한 시간 안에 완료를 알린다(끝나지 않고 남던 문제).</summary>
+        [Test]
+        public void DisabledDriverPrefab_PlaysParticlesOnceAndCompletes()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(Dir + "Sparks.prefab");
+            Assert.IsNotNull(prefab);
+            Assert.IsFalse(prefab.GetComponent<MvFxDriver>().enabled, "Sparks 프리팹은 드라이버를 꺼 둔 파티클 이펙트");
+            var go = Object.Instantiate(prefab);
+            try
+            {
+                var d = go.GetComponent<MvFxDriver>();
+                Assert.IsTrue(d.ParticleMode);
+                bool done = false;
+                d.SetSkin(MvFxParamBank.Put(FxSpawn.Of("fx.sparks", Vector3.zero)));
+                d.Play(0, false, () => done = true);
+                Assert.AreEqual(0, d.PartCount, "정본 부품을 만들지 않음");
+                Assert.IsTrue(d.enabled, "재생 동안 켜져 끝을 본다");
+                foreach (var ps in go.GetComponentsInChildren<ParticleSystem>(true)) Assert.IsFalse(ps.main.loop, ps.name + " 반복 끔");
+                for (int i = 0; i < 1000 && !done; i++) d.StepParticles(0.1f);
+                Assert.IsTrue(done, "상한 시간 안에 완료");
+                Assert.IsFalse(d.enabled);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
             }
         }
     }
