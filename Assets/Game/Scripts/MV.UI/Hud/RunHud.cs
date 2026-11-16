@@ -18,6 +18,8 @@ namespace MV.UI
         [SerializeField] BlessingCardsView cards;
         /// <summary>마나 정산 종이 막 전환(새 HTML drawWipes). 비면 첫 자식(HUD 아래)으로 만든다.</summary>
         [SerializeField] ClimbWipeView wipe;
+        /// <summary>계단 정산 글자(등급 이름·냥파워 카드 확정)와 런 안내(토스트). 비면 마지막 자식(HUD 위)으로 만든다.</summary>
+        [SerializeField] ClimbNoticeView notice;
 
         readonly RunHudPresenter _presenter = new RunHudPresenter();
 
@@ -37,6 +39,9 @@ namespace MV.UI
             var state = source is RunStateHudSource rs ? rs.Current : (Func<RunState>)null;
             Cards.Bind(state);
             Wipe.Bind(state);
+            Notice.Bind(state);
+            // 런 안내(MvUiToast)는 이 HUD가 보일 때 여기에 띄운다. 숨었으면 로그만(기존 동작).
+            MvUiToast.Handler = text => { if (this != null && isActiveAndEnabled) Notice.Toast(text); else Debug.Log("[Toast] " + text); };
             if (IsVisible) Presenter.Tick();
         }
 
@@ -66,6 +71,17 @@ namespace MV.UI
             }
         }
 
+        public ClimbNoticeView Notice
+        {
+            get
+            {
+                if (notice) return notice;
+                notice = GetComponentInChildren<ClimbNoticeView>(true);
+                if (!notice) notice = MvUi.Stretch(MvUi.Rect(transform, "ClimbNotice")).gameObject.AddComponent<ClimbNoticeView>();
+                return notice;
+            }
+        }
+
         protected virtual void Awake()
         {
             MvUi.EnsureLayer(gameObject, MvUiLayer.Hud, false); // HUD 전체는 누를 수 없다(드래그가 아래로 지나감)
@@ -82,6 +98,7 @@ namespace MV.UI
             Presenter.Tick();
             if (cards) cards.Tick(Time.unscaledDeltaTime);
             if (wipe) wipe.Tick(Time.unscaledDeltaTime);
+            if (notice) notice.Tick(Time.unscaledDeltaTime);
         }
     }
 }

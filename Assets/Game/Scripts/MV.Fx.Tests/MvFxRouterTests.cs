@@ -225,6 +225,13 @@ namespace MV.Fx.Tests
             Assert.AreEqual(2.2f, land.Radius, 1e-5f);
             Assert.AreEqual(16.8f + 0.3f, land.Pos.y, 1e-4f);
             Assert.AreEqual(39.5f, land.Pos.z, 1e-4f);
+            // 사용자 계단 규칙 8·새 HTML: 꼭대기 위 2.4 m에 「N칸 올라옴!」, 마지막 등급색, 2배 크기.
+            Assert.AreEqual(1, o.Pops.Count);
+            Assert.AreEqual("100칸 올라옴!", o.Pops[0].Text);
+            Assert.AreEqual(MvFxRouter.C(t.CardTier.Datas.First(r => r.tierIndex == 2).color), o.Pops[0].Color);
+            Assert.AreEqual(2f, o.Pops[0].Size, 1e-5f);
+            Assert.AreEqual(16.8f + 2.4f, o.Pops[0].World.y, 1e-4f);
+            Assert.AreEqual(39f, o.Pops[0].World.z, 1e-4f);
         }
 
         /// <summary>정본 호출 인자로 만든 기대 재생(옛 하드코딩 값 그대로). NaN = 종류 기본값.</summary>

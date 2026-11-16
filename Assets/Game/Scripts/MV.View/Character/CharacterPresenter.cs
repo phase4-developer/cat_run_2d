@@ -16,7 +16,7 @@ namespace MV.View
     /// 프리팹은 <see cref="CharacterPool"/>, 그림은 행 아틀라스(<see cref="WorldSpriteCache"/>)에서. 지금 행 + 다음 등급 행 아틀라스를 미리 읽고 캐릭터 묶음별 최근 3개만 둔다(03 §3.8.8).
     /// 그림은 <see cref="CharStateMachine"/>이 고른다: 런 중 Walk, 끝나면 Stand, 계단 정산(오르기 단계) 중 플레이어 Stair(분신은 Walk — 정산 중 분신 숨김은 카메라 궤도 회전과 함께 5단계).
     /// 쏜 순간은 런 이벤트 Fire(a = 0 플레이어, 1.. 분신), 기쁨은 GateTake(계단·공방 게이트 통과)·GaugeLevelUp(계단 Lv 상승)으로 모두가 함께 돈다(웹 프로토 `paperSpin`).
-    /// 위치(정본 syncScene): 런 = (P.x, WY, P.z), 오르기 = <see cref="ClimbPath"/>(새 HTML climbCatPos), 분신 y = <see cref="CatLayout.StairY"/>. 정렬: 순위 Unit, 탐침 +sort.catProbeY, 안개 없음.
+    /// 위치(정본 syncScene): 런 = (P.x, WY, P.z), 오르기 = <see cref="ClimbPath"/>(새 HTML climbCatPos), 분신은 계단 정산 중 숨김. 정렬: 순위 Unit, 탐침 +sort.catProbeY, 안개 없음.
     /// 프리팹·그림이 로드되기 전에는 그 캐릭터를 그리지 않는다.
     /// </summary>
     [DefaultExecutionOrder(56)]
@@ -41,7 +41,6 @@ namespace MV.View
         readonly Dictionary<int, List<string>> _lru = new Dictionary<int, List<string>>();
         readonly HashSet<string> _loading = new HashSet<string>(StringComparer.Ordinal);
         readonly HashSet<string> _failed = new HashSet<string>(StringComparer.Ordinal);
-        readonly List<double> _stepShownAt = new List<double>(64);
 
         IReadOnlyList<CharLookData> _looks;
         WorldSpriteCache _sprites;
@@ -49,9 +48,8 @@ namespace MV.View
         ViewConfig _cfg;
         CharAnimParams _anim;
         int _playerCat, _friendCat;
-        double _xMax, _stepH, _stepD, _dropSec;
+        double _xMax;
         ClimbPath _path;
-        ClimbState _climbSeen;
         bool _ready;
 
         public bool Ready => _ready;
@@ -78,10 +76,6 @@ namespace MV.View
             _friendCat = CatId(tables, FriendKey);
             CatLayout.CloneOffsets(tables, _offsets);
             _xMax = tables.RunConfig.D(RunConfigKeys.CLONE_X_MAX);
-            var c = tables.Climb.Config();
-            _stepH = c != null ? c["stepH"] : 0;
-            _stepD = c != null ? c["stepD"] : 1;
-            _dropSec = c != null ? c["dropSec"] : 0;
             _path = ClimbPath.From(tables.Climb);
             _pool?.Dispose();
             _pool = new CharacterPool(transform, Setup);
@@ -151,7 +145,6 @@ namespace MV.View
         {
             if (!_ready || s == null) { Hide(); return; }
             var C = s.Phase == RunPhase.Climb ? s.Climb : null;
-            TrackSteps(C);
             bool walking = C != null || s.Phase == RunPhase.Run && !s.Fin;
             var state = walking ? CharState.Walk : CharState.Stand;
             _units[0].Sm.Climbing = C != null && C.Pos > 0;
@@ -168,15 +161,10 @@ namespace MV.View
             for (int i = 0; i < slots; i++)
             {
                 var u = _units[1 + i];
-                if (i >= n) { Park(u); continue; }
+                // 사용자 계단 규칙 6(2026-11-16): 분신(견습냥)은 계단 정산 중 보이지 않고 끝나면 다시 나타난다.
+                if (i >= n || C != null) { Park(u); continue; }
                 CatLayout.ClonePos(px, pz, _offsets[i].dx, _offsets[i].dz, _xMax, out double cx, out double cz);
-                double cy = 0;
-                if (C != null)
-                {
-                    int si = CatLayout.StairIndex(cz, C.Z0, _stepD);
-                    cy = CatLayout.StairY(si, C.K, _stepH, Landed(C, si));
-                }
-                if (Place(1 + i, _friendCat, i, tier, state, cx, wy + cy, cz, nowSec)) visible++;
+                if (Place(1 + i, _friendCat, i, tier, state, cx, wy, cz, nowSec)) visible++;
             }
             VisibleCount = visible;
         }
@@ -216,21 +204,6 @@ namespace MV.View
             u.Rig.transform.position = new Vector3((float)x, (float)y, (float)z);
             if (!u.Rig.gameObject.activeSelf) u.Rig.gameObject.SetActive(true);
             return true;
-        }
-
-        /// <summary>오르기 칸이 보인 시각(오르기 시계 C.Time)을 적어 둔다 — 정본 `st.t`(보인 뒤 흐른 시간) 대신.</summary>
-        void TrackSteps(ClimbState C)
-        {
-            if (C == null) { _climbSeen = null; return; }
-            if (!ReferenceEquals(C, _climbSeen)) { _climbSeen = C; _stepShownAt.Clear(); }
-            while (_stepShownAt.Count < C.StepsShown) _stepShownAt.Add(C.Time);
-        }
-
-        bool Landed(ClimbState C, int i)
-        {
-            if (i < 0 || i >= _stepShownAt.Count) return false;
-            if (C.T > 0 && C.Time >= C.T) return true;   // 끝(p ≥ 1)에는 모든 칸 t = 1
-            return C.Time - _stepShownAt[i] >= _dropSec;
         }
 
         /// <summary>캐릭터 묶음(catId·slot)의 아틀라스를 최근으로 올리고 없으면 읽는다. 묶음마다 최근 3개(지금·다음·바로 전)만 둔다.</summary>
