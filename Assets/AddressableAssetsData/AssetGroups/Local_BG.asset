@@ -50,11 +50,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7e0498ad17d11465ca28b2500c75f0d4
-    m_Address: Obj_CraftGate
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7f7344a209aa0443ba49a3470c93c25c
     m_Address: Obj_ClimbStep_UC
     m_ReadOnly: 0
@@ -72,6 +67,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 900e726c4e9bb4d2e873dd7e82371bed
     m_Address: Obj_ClimbStep_C
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9156da3ec9abf40c083b197281e5756e
+    m_Address: Obj_CraftGate
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

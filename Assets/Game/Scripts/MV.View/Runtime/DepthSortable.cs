@@ -71,9 +71,16 @@ namespace MV.View
         public void Refresh()
         {
             _group = GetComponent<SortingGroup>();
+            // 이미 기준 색을 잡아 둔 스프라이트는 그 값을 유지한다. 지금 색은 안개 알파가 곱해진 값일 수 있어서
+            // 다시 읽으면 알파가 계속 줄어든다(풀 재사용·스프라이트 교체 뒤 Refresh). 새로 생긴 스프라이트만 지금 색을 읽는다.
+            var oldSprites = _sprites; var oldBase = _baseColors;
             _sprites = GetComponentsInChildren<SpriteRenderer>(true);
             _baseColors = new Color[_sprites.Length];
-            for (int i = 0; i < _sprites.Length; i++) _baseColors[i] = _sprites[i].color;
+            for (int i = 0; i < _sprites.Length; i++)
+            {
+                int k = oldSprites != null ? System.Array.IndexOf(oldSprites, _sprites[i]) : -1;
+                _baseColors[i] = k >= 0 && oldBase != null && k < oldBase.Length ? oldBase[k] : _sprites[i].color;
+            }
             _fogTargets = GetComponentsInChildren<IFogAlphaTarget>(true);
             _renderers = GetComponentsInChildren<Renderer>(true);
             _lastAlpha = -1f;

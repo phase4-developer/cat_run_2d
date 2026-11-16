@@ -164,7 +164,7 @@ namespace MV.View
             if (Place(0, _playerCat, 0, tier, C != null ? CharState.Stair : state, px, wy + py, pz, nowSec)) visible++;
 
             int slots = _units.Count - 1;
-            int n = Math.Min(s.Clones, slots);
+            int n = C != null ? 0 : Math.Min(s.Clones, slots);   // 계단 정산 중에는 분신을 숨긴다(플레이어만 오름)
             for (int i = 0; i < slots; i++)
             {
                 var u = _units[1 + i];
