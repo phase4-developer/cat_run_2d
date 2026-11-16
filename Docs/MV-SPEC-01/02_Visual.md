@@ -124,24 +124,33 @@ camera.lookAt(camLook);
 - `WY` = 현재 지면 높이(계단을 오를 때마다 증가, L937). `dt` = 실시간 dt(상한 0.05, 히트스톱 미적용, §2.8).
 - 흔들림은 lerp **뒤에** 위치에 직접 더한다. 다음 프레임 lerp 시작점이 흔들린 위치라 진폭이 조금 남는다. 주시점은 흔들지 않으므로 화면이 살짝 회전도 한다. 정본 방식 그대로 재현한다(D-43).
 
-### 2.2.2 `320_camera` 표 (정본 값, [프로토])
+### 2.2.2 카메라 설정 `MvCameraSettings` (정본 값)
 
-| id | key | anchor | posXMul | posY | posZ | lookXMul | lookY | lookZ | posLerp | snap | liftLerp | blendLerp | fovV | near | far |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 320001001 | run | Player | 0.25 | 13 | −9 | 0.25 | 0.5 | 5.5 | 10 | 0 | 6 | 2 | 52 | 0.1 | 400 |
-| 320001002 | climb | Player | 0.25 | 15 | −10.5 | 0.25 | 0.5 | 5.5 | 10 | 0 | 12 | 3 | 52 | 0.1 | 400 |
-| 320001003 | lobby | World | 0 | 4.2 | −4.4 | 0 | 0.2 | 3.4 | 0 | 1 | 0 | 0 | 52 | 0.1 | 400 |
+> 현재 기준(2026-11-16, D-SCENE-CAM): 카메라 값은 표(`320_camera`, 삭제)가 아니라 설정 에셋 `Assets/Game/GameData/Settings/MvCameraSettings.asset` 하나에 둔다. `Game.unity`의 `WorldRoot/GameCamera`(`CameraRig._settings`)가 이 에셋을 참조하고 편집 모드·Play Mode·빌드가 같은 값을 읽는다. 아래 값은 에셋의 현재 값이다(run·lobby = [프로토], climb·side = MV-VIEW-CLIMB·CLIMB2 새 HTML 연출 값). 값을 바꿀 때는 에셋만 고치고 이 표는 기록으로 따라 고친다.
 
-열 의미: `anchor=Player`면 위치 = `(px·posXMul, camLift + posY, pz + posZ)`, 주시점 = `(px·lookXMul, camLift + lookY, pz + lookZ)`. `World`면 그대로 월드 좌표. `posLerp` = 위치 보간 계수(`min(1, dt·posLerp)`), `snap=1`이면 즉시. `liftLerp` = 그 모드일 때 camLift 계수. `blendLerp` = 그 모드로 **들어갈 때** ck 계수(run 행 2 = 계단에서 나올 때, climb 행 3 = 들어갈 때). `fovV` = 9:16 기준 세로 FOV(§2.7).
+| 시점 | posXMul | posY | posZ | lookXMul | lookY | lookZ | posLerp | snap | liftLerp | blendLerp | fovV | near | far | posX | lookX | turnSec |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| run | 0.25 | 13 | −9 | 0.25 | 0.5 | 5.5 | 10 | 0 | 6 | 2 | 52 | 0.1 | 400 | 0 | 0 | 0 |
+| climb | 0.3 | 9.4 | −9.1 | 0.3 | 1.1 | 9 | 10 | 1 | 12 | 3 | 52 | 0.1 | 400 | 0 | 0 | 0 |
+| lobby | 0 | 4.2 | −4.4 | 0 | 0.2 | 3.4 | 0 | 1 | 0 | 0 | 52 | 0.1 | 400 | 0 | 0 | 0 |
+| side | 1 | 2.1 | 0.35 | 1 | 1.5 | 0.35 | 0 | 1 | 0 | 0 | 52 | 0.1 | 400 | 9.2 | 0 | 0.42 |
+
+화면비: 기준 `refAspect` 9:16, 범위 `minAspect` 9:21 ~ `maxAspect` 3:4(§2.7).
+
+열 의미: run·climb·side는 플레이어 기준 — 위치 = `(px·posXMul + posX, camLift + posY, pz + posZ)`, 주시점 = `(px·lookXMul + lookX, camLift + lookY, pz + lookZ)`. lobby는 월드 좌표 그대로(옛 `anchor=World`). `posLerp` = 위치 보간 계수(`min(1, dt·posLerp)`), `snap=1`이면 즉시. `liftLerp` = 그 모드일 때 camLift 계수. `blendLerp` = 그 모드로 **들어갈 때** ck 계수(run 행 2 = 계단에서 나올 때, climb 행 3 = 들어갈 때). `fovV` = 9:16 기준 세로 FOV(§2.7). `turnSec` = 계단 오르기 중 옆 시점으로 돌아 들어가는 시간(side).
+
+**편집 모드 미리보기.** `CameraRig`는 `[ExecuteAlways]`다. Play 없이 Inspector `_preview`(Lobby·Run·Climb·ClimbSide)와 `_previewTarget`(비우면 월드 원점)을 고르면 Play와 같은 `CameraModel` 식으로 그 시점의 다 따라간 자세에 선다. 에셋 값을 Inspector에서 바꾸면 다음 에디터 틱에 다시 선다. 런 오브젝트·지면은 Play에서 생기므로 편집 모드 미리보기는 카메라 자세·FOV만 보여 준다.
+
+**Play Mode·빌드.** 시작 때 에셋의 행을 복사해 런타임 모델을 만든다(게임은 에셋을 쓰지 않는다). Play 중 Inspector로 에셋을 고치면 `OnValidate` 알림으로 새 사본을 만들어 바꾸고 현재 위치·보간 상태는 이어 간다. Play 중 고친 에셋 값은 Unity 에디터 규칙대로 Play를 끝내도 남으므로, 시험으로만 고친 값은 되돌린다.
 
 `CameraRig.LateUpdate` 순서(실시간 dt):
 1. 모드 판정: 로비 / 런 / 계단(`CN` 있음).
-2. `camLift`, `ck` 갱신(위 식, 계수는 표).
+2. `camLift`, `ck` 갱신(위 식, 계수는 설정 에셋).
 3. 목표 위치·주시점 = `lerp(run 행, climb 행, ck)` 결과(위 식의 `13 + 2ck`, `−9 − 1.5ck`와 같다). 로비면 lobby 행.
 4. 위치 보간 → 흔들림 가산(§2.2.4) → `transform.LookAt(look, Vector3.up)`.
 5. 모든 빌보드 회전 동기화와 `DepthSorter` 실행(§2.3)은 이 뒤.
 
-**로비 → 런 전환.** 로비에서는 화면을 아지트(§2.9)가 그리지만 `GameCamera`는 로비 자세 `(0,4.2,−4.4)→(0,0.2,3.4)`에 계속 둔다. 런 시작 첫 프레임부터 `dt·10` 보간으로 런 자세로 올라간다(약 0.3초에 95%). 이 「낮은 뒤 → 높은 위」 스윕이 정본 감각이므로 로비에서 카메라를 런 자세로 미리 옮기지 않는다.
+**로비 → 런 전환.** 로비는 같은 `GameCamera`가 로비 자세로 트랙을 그린다(§2.9 현재 기준). `GameCamera`는 로비 자세 `(0,4.2,−4.4)→(0,0.2,3.4)`에 계속 둔다. 런 시작 첫 프레임부터 `dt·10` 보간으로 런 자세로 올라간다(약 0.3초에 95%). 이 「낮은 뒤 → 높은 위」 스윕이 정본 감각이므로 로비에서 카메라를 런 자세로 미리 옮기지 않는다.
 
 ### 2.2.3 기준 기하(검산용, [계산])
 
@@ -509,6 +518,8 @@ stepFx(sdt); syncScene(dt); stepPops(dt);
 
 ## 2.9 로비 장면(아지트)
 
+> 현재 기준(2026-11-12 MV-VIEW-LOBBY-TRACK, DiffReport Q-02 B→A, 사용자 「로비를 트랙 화면으로 바꿔야해」; 2026-11-16 D-SCENE-CAM): 로비는 아지트가 아니라 Game 씬의 트랙 화면이다. 다음 런의 미리보기 배치를 `GameCamera` 로비 자세(§2.2.2)로 그리고, 별도 `LobbyStage`·`LobbyCamera`는 두지 않는다(2026-11-16 삭제). 로비/Game 씬 분리는 제외(로비 → 런 카메라 보간 유지). 아래 아지트 내용은 정본 기록으로만 남긴다.
+
 정본은 로비에서 `drawAzit()`만 그리고 끝낸다(L3780). 카메라·안개·틴트·가산광·이펙트·정렬 목록 모두 쓰지 않는다. `#vig` 비네트는 여전히 위에 있다.
 
 | 항목 | 런 | 로비 |
@@ -519,22 +530,21 @@ stepFx(sdt); syncScene(dt); stepPops(dt);
 | 안개·틴트·가산광 | 있음 | 없음(난로 불빛·전구 광륜은 아지트 자체 그림) |
 | 시간 | 게임·실시간 | `t = lobbyT`(실시간 누적), `AZ.emote`·`AZ.bump`는 프레임 단위 |
 
-Unity 권장: `LobbyStage` = 별도 직교 카메라 `LobbyCamera`(URP Base, 로비일 때만 켬, `GameCamera`는 끔). 직교 크기 = 8, 기준 프레임 9×16 단위(1 단위 = W/9). 아지트 그림은 이 단위로 `iso()` 식에 따라 배치한 스프라이트, `sortingOrder`는 화면 y로 매 프레임 계산. 세로로 긴 화면은 기준 프레임을 세로 가운데에 두고 위(벽 색 `#7a5462`/`#8a646c` 연장)·아래(바닥 바깥 `#2e2230`)를 채운다. 그리는 순서·수치는 E 노트 §6.14, 그림은 [03](03_ResourcePipeline.md), 위 UI는 [05](05_Screens.md).
+~~Unity 권장~~(현재 기준에서 쓰지 않음): `LobbyStage` = 별도 직교 카메라 `LobbyCamera`(URP Base, 로비일 때만 켬, `GameCamera`는 끔). 직교 크기 = 8, 기준 프레임 9×16 단위(1 단위 = W/9). 아지트 그림은 이 단위로 `iso()` 식에 따라 배치한 스프라이트, `sortingOrder`는 화면 y로 매 프레임 계산. 세로로 긴 화면은 기준 프레임을 세로 가운데에 두고 위(벽 색 `#7a5462`/`#8a646c` 연장)·아래(바닥 바깥 `#2e2230`)를 채운다. 그리는 순서·수치는 E 노트 §6.14, 그림은 [03](03_ResourcePipeline.md), 위 UI는 [05](05_Screens.md).
 
-런 시작: `LobbyCamera` 끔 → `GameCamera` 켬(자세는 로비 자세에서 보간 시작, §2.2.2). 정본도 전환 프레임에 바로 골목을 그린다(페이드 없음).
+런 시작(현재 기준): 카메라 전환 없이 `GameCamera`가 로비 자세에서 런 자세로 보간한다(§2.2.2). 정본도 전환 프레임에 바로 골목을 그린다(페이드 없음).
 
 ## 2.10 MV.View 구성 요소 요약
 
 | 구성 요소 | 책임 | 절 |
 |---|---|---|
-| `CameraRig` | 320_camera 공식, camLift·ck, 흔들림, FOV(화면비) | §2.2, §2.7 |
+| `CameraRig` | `MvCameraSettings` 값·공식, camLift·ck, 흔들림, FOV(화면비), 편집 모드 미리보기 | §2.2, §2.7 |
 | `BillboardSync` | 등록된 빌보드에 카메라 회전 복사 | §2.1.3 |
 | `DepthSorter` | d 계산, 근평면 숨김, sortingOrder, `_FogAlpha` | §2.3, §2.4 |
 | `GroundStripMesh` | 지면·옹벽 띠 메쉬, 정점색 | §2.4.3 |
 | `PropStreamer` | 테마 소품 생성·재사용(z 3.2 간격), 빨랫줄 | §2.5.2 |
 | `ObjectViewFactory` | 105_objectKind 행 → 오브젝트 뷰 프리팹, 글자판 | [03](03_ResourcePipeline.md), [07](07_Tables.md) |
 | `ScreenRig` | Tint·Light 외 화면 공간 층, 기준 px 단위 | §2.1.6, §2.5 |
-| `LobbyStage` | 아지트 직교 장면 | §2.9 |
 | `MvColor` | shadeC·mixC·ha | §2.6 |
 
 ## 2.x 의문점·결정 필요

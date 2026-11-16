@@ -250,7 +250,7 @@ MvTables.Current = tables;
 | | `312_templateCycle` | TemplateCycleTable | Run | 7.6.3 | 07 |
 | | `313_fieldGen` | FieldGenTable | Run | 7.6.4 | 07 |
 | | `314_spawnGroup` | SpawnGroupTable(group) | Run | 7.6.5 | 07 |
-| | `320_camera` | CameraTable | View | 7.3.4 | 07 |
+| | ~~`320_camera`~~ | 삭제(2026-11-16, D-SCENE-CAM) → 설정 에셋 `MvCameraSettings` | View | 7.3.4 | 02 |
 | | `330_climb` | ClimbTable | Run | 7.3.5 | 07 |
 | 4xx | `400_content` | ContentTable | UI, Content | 7.9.1 | 08 |
 | | `401_modeStage` · `402_modeRule` | | Content | 7.9.1 | 08 |
@@ -480,28 +480,9 @@ MV-SPEC-02 반영(MV-DATA-SPEC2): 그룹 101 `RUN_SPEED_MID`, 104 `WEAPON_STACK_
 
 규칙: 코드는 키를 상수 클래스 `RunConfigKeys`로만 쓴다. 검증기가 그 목록과 TSV를 대조해 누락·남는 키를 오류로 낸다. MV.Run은 런 시작 때 값을 `RunConstants` 구조체로 한 번 복사한다(프레임마다 사전 조회 금지).
 
-### 7.3.4 320_camera — 카메라 프리셋
+### 7.3.4 320_camera — 삭제
 
-MV.View 소유. 열 정의와 값은 [02 §2.2.2](02_Visual.md)를 그대로 옮긴다. 식은 02가 정본.
-
-| 열 | 타입 | 뜻 |
-|---|---|---|
-| id, key | int, string | `run` / `climb` / `lobby` |
-| anchor | enum | `Player`(플레이어 기준) / `World`(월드 좌표 그대로) |
-| posXMul / posY / posZ | float | 위치 = `(px·posXMul, camLift + posY, pz + posZ)` |
-| lookXMul / lookY / lookZ | float | 주시점 = `(px·lookXMul, camLift + lookY, pz + lookZ)` |
-| posLerp | float | 위치 보간 `min(1, dt·posLerp)` |
-| snap | bool01 | 1이면 즉시 |
-| liftLerp | float | 그 모드의 camLift 계수 |
-| blendLerp | float | 그 모드로 들어갈 때 ck 계수 |
-| fovV | float | 9:16 기준 세로 FOV |
-| near / far | float | |
-
-| id | key | anchor | posXMul | posY | posZ | lookXMul | lookY | lookZ | posLerp | snap | liftLerp | blendLerp | fovV | near | far |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 320001001 | run | Player | 0.25 | 13 | −9 | 0.25 | 0.5 | 5.5 | 10 | 0 | 6 | 2 | 52 | 0.1 | 400 |
-| 320001002 | climb | Player | 0.25 | 15 | −10.5 | 0.25 | 0.5 | 5.5 | 10 | 0 | 12 | 3 | 52 | 0.1 | 400 |
-| 320001003 | lobby | World | 0 | 4.2 | −4.4 | 0 | 0.2 | 3.4 | 0 | 1 | 0 | 0 | 52 | 0.1 | 400 |
+2026-11-16 D-SCENE-CAM으로 표를 지웠다. 카메라 값은 `Assets/Game/GameData/Settings/MvCameraSettings.asset` 하나가 정본이고 열 뜻·값은 [02 §2.2.2](02_Visual.md)에 있다. 같은 값을 표와 에셋에 함께 두지 않는다.
 
 ### 7.3.5 330_climb — 계단 오르기·룰렛·워프 단계
 
@@ -2321,6 +2302,6 @@ id	group	floor	h0	h1	rows	souls	cellMode
 
 - **08**: 4xx·7xx 표 열 정의는 08이 정본이고 이 문서는 목록·관계(§7.2, §7.9)만 가진다. 08의 consumeType(610·620·621·622·630), 16_levelPrice 그룹(301 이상), `01_wealth` 5~17, `02_playResource` 2001001~2001005, `05_contentOpen` 5001001~018, `08_adPlacement` 모드·상점·축복 행을 이 문서 표에 그대로 받는다. 600번대 type을 메타 보상에 쓰지 않는다(608·609·630 제외).
 - **05**: `09_uiResource` 행과 `ui.*` 문구는 05가 늘린다. 화면은 `08_adPlacement.key`로 광고 자리를 찾는다.
-- **02·06**: `300_runConfig` 그룹 001~008(95키)과 `04_effect` 행·`320_camera` 열은 02·06이 정본이다.
+- **02·06**: `300_runConfig` 그룹 001~008(95키)과 `04_effect` 행은 02·06이 정본이다. 카메라 값은 표가 아니라 `MvCameraSettings` 에셋(02 §2.2.2).
 - **03**: `03_sound` 33행, 아틀라스 이름, `sprite_catalog.tsv` 형식은 03이 정본이다. 이 문서는 열 정의와 검증 규칙만 가진다.
 - **09**: 저장은 표 id가 아니라 **key**를 저장한다(덱·재화 제외). 표에서 행이 빠졌을 때 처리는 §7.13.4.
