@@ -10,7 +10,7 @@ namespace MV.View.Tests
     /// <summary>
     /// 계단 정산 칸(MV-VIEW-CLIMB·MV-VIEW-CLIMB3): 디자이너 프리팹 `Obj_ClimbStep`(등급별 `_C`·`_UC`·`_R`·`_E`·`_L`) = 330 stepW·stepH·stepD 한 블록,
     /// 칸 = 늘린 기둥 하나(새 HTML startClimb·drawStairs3D), 칸 프리팹 = 남은 칸 수의 카드 등급(115 climbStep, 노션 계단연출 2절),
-    /// 떨어짐 dropH·(1 − f)², 옆 시점 칸 번호, 시야 밖 칸은 안 만듦.
+    /// 칸 등장 = popSec 동안 0 → stepPop(1.1)배 → 1배로 튕김, 옆 시점 칸 번호, 시야 밖 칸은 안 만듦.
     /// </summary>
     public sealed class ClimbStairViewTests
     {
@@ -150,7 +150,7 @@ namespace MV.View.Tests
         }
 
         [Test]
-        public void NewStep_DropsFromDropHWithQuadraticEase()
+        public void NewStep_PopsToStepPopThenSettles()
         {
             var t = ViewTestTables.Load();
             var c = t.Climb.Config();
@@ -158,15 +158,23 @@ namespace MV.View.Tests
             var v = NewView(t, SideCamera(0, z0));
             var s = Climbing(t, 20, z0, 1, 1);
             v.Sync(s);
-            s.Climb.Time = 1 + c["dropSec"] * 0.5;
+            double back = ClimbStairView.PopBack(c["stepPop"]);
+            // 이징 최댓값 = stepPop(기획서 1.1배), 시작 0, 끝 1
+            double peak = 0;
+            for (int i = 0; i <= 1000; i++) peak = System.Math.Max(peak, ClimbStairView.PopScale(i / 1000.0, back));
+            Assert.That(peak, Is.EqualTo(c["stepPop"]).Within(1e-4), "가장 클 때 stepPop배");
+            Assert.That(ClimbStairView.PopScale(0, back), Is.EqualTo(0));
+            Assert.That(ClimbStairView.PopScale(1, back), Is.EqualTo(1));
+            s.Climb.Time = 1 + c["popSec"] * 0.5;
             v.Sync(s);
             var blocks = Active(v);
             Assert.That(blocks.Count, Is.EqualTo(1), "보인 칸 1개 = 블록 1개");
-            Assert.That(blocks[0].position.y, Is.EqualTo(c["dropH"] * 0.25).Within(1e-4), "dropH·(1 − 0.5)²");
+            Assert.That(blocks[0].localScale.y, Is.EqualTo((float)ClimbStairView.PopScale(0.5, back)).Within(1e-4), "popSec 절반의 크기");
+            Assert.That(blocks[0].position.y, Is.EqualTo(0).Within(1e-4), "떨어지지 않고 바닥에서 생긴다");
             Assert.That(blocks[0].position.z, Is.EqualTo(z0).Within(1e-4));
-            s.Climb.Time = 1 + c["dropSec"];
+            s.Climb.Time = 1 + c["popSec"];
             v.Sync(s);
-            Assert.That(Active(v)[0].position.y, Is.EqualTo(0).Within(1e-4), "다 떨어지면 바닥");
+            Assert.That(Active(v)[0].localScale.y, Is.EqualTo(1).Within(1e-4), "다 생기면 1배");
         }
 
         [Test]

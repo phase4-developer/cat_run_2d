@@ -558,12 +558,14 @@ namespace MV.Data
 
         static readonly string[] s_configColumns =
         {
-            "lap", "maxCards", "lapTier", "kMax", "stepH", "stepD", "stepW", "catLift", "z0Gap", "shiftFrom",
-            "shiftExtra", "landGap", "tBase", "tPerStep", "riseAhead", "dropSec",
-            "dropH", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay", "rlFlyMs",
+            "lap", "maxCards", "lapTier", "stepH", "stepD", "stepW", "catLift", "z0Gap", "shiftFrom",
+            "shiftExtra", "landGap", "popSec", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay", "rlFlyMs",
             "rlEndPad",
-            // 새 HTML 계단 정산(2026-11-13, 연출 정본): k = min(kMax, n), T = tBase + tPerStep·k, sideLead 뒤 일정 속도로 오름,
-            // 칸은 pos + riseAhead 앞까지 보임, 끝나고 sideOut 멈춤, 오르는 동안 x를 centerK로 가운데로 당김.
+            // 기획서 계단 압축·연출 시간(MV-SPEC-02 6-5, 노션 「계단연출 상세설명」 2절, 사용자 2026-11-16 「수치만 적용」):
+            // K = N ≤ cmpFrom면 N, 아니면 cmpFrom + ceil((N − cmpFrom)/C), T = min(riseCap, riseBase + risePerStep·(K − 1)),
+            // 칸 생성 간격 = max(0, (T − riseLead)/max(1, K − 1)), 칸은 popSec 동안 stepPop배로 튕기며 생김.
+            "cmpFrom", "riseCap", "riseBase", "risePerStep", "riseLead", "stepPop",
+            // 새 HTML(연출 정본): sideLead 뒤 일정 속도로 오름, 끝나고 sideOut 멈춤, 오르는 동안 x를 centerK로 가운데로 당김.
             "sideLead", "sideOut", "centerK",
             // stepH·stepD·stepW = 계단 칸 프리팹(stepPrefab) 한 블록의 높이·깊이·폭(디자이너 리소스 기준, 2026-11-13). catLift = 칸 위 고양이 높이(stepH 배수).
         };
@@ -577,7 +579,7 @@ namespace MV.Data
         {
             var s = new MvSchema(Table).Id().Enum<ClimbRowType>("rowType", true).Key(required: false);
             foreach (var c in s_configColumns) s.Float(c);
-            return s.Res("stepPrefab", MvAtlas.Address).Int("at").Color("accent").Color("sky1").Color("sky2").Color("sky3").Float("night")
+            return s.Res("stepPrefab", MvAtlas.Address).Ints("cmpBandFrom").Ints("cmpBandC").Int("at").Color("accent").Color("sky1").Color("sky2").Color("sky3").Float("night")
                 .Effect("enterEffect").Sound("enterSound");
         }
 
@@ -586,6 +588,9 @@ namespace MV.Data
         public ClimbRowType rowType { get; private set; }
         /// <summary>계단 칸 한 블록 프리팹 주소(설정 행만, 예 `Obj_ClimbStep`). 칸 하나 = 블록을 높이만큼 쌓은 기둥.</summary>
         public string stepPrefab { get; private set; }
+        /// <summary>압축 구간 시작 N(오름차순)과 구간별 C(기획서: 31~99 4, 100~149 5 …). 설정 행만.</summary>
+        public IReadOnlyList<int> cmpBandFrom { get; private set; }
+        public IReadOnlyList<int> cmpBandC { get; private set; }
         public int at { get; private set; }
         public string accent { get; private set; }
         public string sky1 { get; private set; }
@@ -606,6 +611,8 @@ namespace MV.Data
                 foreach (var c in s_configColumns)
                     _config[c] = D(r, c);
             stepPrefab = S(r, "stepPrefab");
+            cmpBandFrom = Ints(r, "cmpBandFrom");
+            cmpBandC = Ints(r, "cmpBandC");
             at = I(r, "at");
             accent = S(r, "accent");
             sky1 = S(r, "sky1");

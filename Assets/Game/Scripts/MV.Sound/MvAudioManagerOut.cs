@@ -6,7 +6,8 @@ using UnityEngine;
 namespace MV.Sound
 {
     /// <summary>
-    /// <see cref="IMvAudioOut"/>의 Framework 구현(03 §3.9.5): 효과음 <c>AudioManager.PlayAsync(soundName, AudioTrack.Sfx, volume, pitch, false, debounce: 0f)</c>,
+    /// <see cref="IMvAudioOut"/>의 Framework 구현(03 §3.9.5): 효과음 <c>AudioManager.PlayAsync(soundName, AudioTrack.Sfx, volume, pitch, false)</c>(debounce = Framework 기본 <c>defaultDebounceSeconds</c> 0.1초,
+    /// 같은 소리를 그 안에 다시 부르면 무시 — 사용자 2026-11-16 「프레임워크 0.1초 켜기」),
     /// 음악 <c>PlayMusicAsync</c>. 주소 로드는 audio.addressables 공급자(Boot가 설정).
     /// </summary>
     public sealed class MvAudioManagerOut : IMvAudioOut
@@ -16,7 +17,7 @@ namespace MV.Sound
         public void PlaySfx(string address, float volume, float pitch)
         {
             if (!Ready) return;
-            Observe(AudioManager.Instance.PlayAsync(address, AudioTrack.Sfx, volume, pitch, false, 0f));
+            Observe(AudioManager.Instance.PlayAsync(address, AudioTrack.Sfx, volume, pitch, false));
         }
 
         public void PlayMusic(string address, float volume, float crossfadeSeconds, bool keepPosition)

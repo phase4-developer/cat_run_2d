@@ -38,41 +38,61 @@ namespace MV.Run.Tests
         static MvTables WithConfig(string key, string value) =>
             RunTestTables.Load(new Dictionary<string, string> { ["300_runConfig"] = SetCell(RunTestTables.ReadTsv("300_runConfig"), "key", key, "value", value) });
 
-        // ---------------- 계단 정산: 새 HTML(2026-11-13 연출 정본, Q-07·Q-11 대체) ----------------
+        // ---------------- 계단 정산: 기획서 압축·약 1.5초(사용자 2026-11-16 「수치만 적용」), 오르기 모양은 새 HTML ----------------
 
-        [TestCase(1)]
-        [TestCase(11)]
-        [TestCase(600)]
-        [TestCase(1000)]
-        public void Climb_KAndTime_FromHtmlColumns(int n)
+        // 기획서 예: N ≤ 30 그대로, 31~99는 C 4, 100~149 5, 150~199 6, 200~249 7, 250 이상 8.
+        [TestCase(1, 1)]
+        [TestCase(30, 30)]
+        [TestCase(31, 31)]
+        [TestCase(99, 48)]
+        [TestCase(100, 44)]
+        [TestCase(149, 54)]
+        [TestCase(150, 50)]
+        [TestCase(250, 58)]
+        [TestCase(600, 102)]
+        public void Climb_K_CompressesFromSpec(int n, int expected)
         {
             var c = RunTestTables.Load().Climb.Config();
-            int k = Math.Min((int)c["kMax"], n);
-            Assert.AreEqual(k, ClimbK(c, n), "k = min(kMax, n), 압축 없음");
-            Assert.AreEqual(c["tBase"] + c["tPerStep"] * k, ClimbT(c, k), 1e-12);
+            Assert.AreEqual(expected, ClimbK(c, n), "K = 30 + ceil((N − 30)/C)");
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(11)]
+        [TestCase(30)]
+        [TestCase(102)]
+        public void Climb_TimeAndStepEvery_FromSpecColumns(int k)
+        {
+            var c = RunTestTables.Load().Climb.Config();
+            double t = Math.Min(c["riseCap"], c["riseBase"] + c["risePerStep"] * (k - 1));
+            Assert.AreEqual(t, ClimbT(c, k), 1e-12);
+            Assert.LessOrEqual(ClimbT(c, k), c["riseCap"] + 1e-12, "칸 수와 상관없이 약 1.5초 안");
+            Assert.AreEqual(Math.Max(0, (t - c["riseLead"]) / Math.Max(1, k - 1)), ClimbStepEvery(c, k), 1e-12);
         }
 
         [Test]
-        public void Climb_StepsAheadOfPos_EndsAfterSideOut()
+        public void Climb_StepsOnSchedule_EndsAfterSideOut()
         {
             var t = RunTestTables.Load(); var c = t.Climb.Config();
             var sim = Sim(new HandLevel().Add("stair", 0, 3), t: t);
             sim.State.Stairs = 50;
             int f = 0;
             while (sim.State.Phase != RunPhase.Climb && f++ < 600) sim.Tick(1 / 60.0, default);
-            sim.Tick(1 / 60.0, default);
             var C = sim.State.Climb;
-            Assert.AreEqual(50, C.K);
-            Assert.AreEqual((int)Math.Ceiling(C.Pos + c["riseAhead"]), C.StepsShown, "pos + riseAhead 앞까지 보임");
+            int k = ClimbK(c, 50);
+            Assert.AreEqual(k, C.K);
+            Assert.AreEqual(ClimbStepEvery(c, k), C.StepEvery, 1e-12);
             for (int i = 0; i < 60; i++)
             {
                 sim.Tick(1 / 60.0, default);
                 if (sim.State.Phase != RunPhase.Climb) break;
-                Assert.AreEqual(Math.Min(C.K, (int)Math.Ceiling(C.Pos + c["riseAhead"])), C.StepsShown);
+                double p = Math.Min(1, Math.Max(0, C.Time - c["sideLead"]) / C.T);
+                int want = p >= 1 ? C.K : Math.Min(C.K, 1 + (int)Math.Floor(C.Time / C.StepEvery + 1e-9));
+                Assert.AreEqual(want, C.StepsShown, "0초에 1칸, 그 뒤 StepEvery마다 1칸");
             }
-            Run(sim, 60 * 8);
+            Run(sim, 60 * 4);
             var start = Ev(sim, RunEventType.ClimbStart).Single();
-            Assert.AreEqual(ClimbT(c, 50), start.Amount3, 1e-12);
+            Assert.AreEqual(ClimbT(c, k), start.Amount3, 1e-12);
             Assert.AreEqual(start.B, Ev(sim, RunEventType.ClimbStepShown).Count);
             Assert.AreEqual(1, Ev(sim, RunEventType.ClimbEnd).Count);
             Assert.GreaterOrEqual(C.Time, c["sideLead"] + C.T + c["sideOut"] - 1e-9, "다 오른 뒤 sideOut 멈춤");

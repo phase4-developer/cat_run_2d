@@ -100,6 +100,8 @@ namespace MV.Run
         public double Pw, Z0, ZEnd, DH, T;
         public double Time;
         public double Pos;
+        /// <summary>칸 생성 간격(기획서, <see cref="RunFormulas.ClimbStepEvery"/>). 0이면 모든 칸이 바로 보인다.</summary>
+        public double StepEvery;
         /// <summary>다 오른 시각(Time, 없으면 −1). 그 뒤 sideOut만큼 멈췄다 끝난다(새 HTML endAt).</summary>
         public double EndAt = -1;
         public int Shown;

@@ -364,7 +364,6 @@ MvTables.Current = tables;
 | PHASE_RUN | 13 | 1/s | [프로토] L2029 | 달리기 위상(그림) |
 | PHASE_BLOCKED | 4 | 1/s | [프로토] L2029 | 막힘 위상 |
 | PHASE_CLIMB | 30 | 1/s | [프로토] L2264 | 계단 위상 |
-| CLIMB_X_FOLLOW_K | 6 | 1/s | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2264 | 계단 중 x 복귀. **미사용**(행은 둔다) |
 | PLAYER_HALF_W | 0.32 | m | [프로토] L2033 | 막힘·경고 폭 |
 | WALL_FACE_GAP | 0.35 | m | [프로토] L2066 | 막힐 때 앞면과 간격 |
 | WALL_FACE_EPS | 0.02 | m | [프로토] L2066 | 앞면 판정 여유 |
@@ -501,16 +500,13 @@ MV-SPEC-02 반영(MV-DATA-SPEC2): 그룹 101 `RUN_SPEED_MID`, 104 `WEAPON_STACK_
 | lap | 75 | [프로토] L773, L2274 | 랩 1회 계단 수 |
 | maxCards | 3 | [프로토] `MAX_CLIMB_CARDS` | 한 번 오를 때 카드 최대 |
 | lapTier | 4 | [프로토] L2276 | 랩 카드 등급(LEGENDARY) |
-| kDirectMax / kCompress / kMax | 60 / 3 / 150 | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2246 | 칸 압축. **미사용**(새 압축은 cmpFrom·cmpBand) |
-| stepH / stepD / stepW | 0.7 / 0.87 / 8.6 | MV-SPEC-02 6-5c(옛 [프로토] 0.42 / 0.72) | 칸 높이·깊이·폭(m) |
+| stepH / stepD / stepW | 0.42 / 0.72 / 2 | 디자이너 프리팹 `Obj_ClimbStep` 한 칸(사용자 2026-11-16 「리소스 크기 유지」, 기획서 0.7 / 0.87은 프리팹이 바뀔 때) | 칸 높이·깊이·폭(m) |
 | bumpH | 0.12 | [프로토] L2758 | 오르는 중 칸 사이 출렁임 높이(m): `py = (floor(sp)+1)·stepH + sin(frac(sp)·π)·bumpH` |
 | z0Gap | 1.4 | [프로토] L2246 | 첫 칸 z = 계단 z + 1.4 |
 | shiftFrom / shiftExtra | 0.5 / 8 | [프로토] L2226, L2247 | 오브젝트 제거 기준, 밀어내기 여분 |
 | landGap | 0.2 | [프로토] L2290 | 착지 z = zEnd + 0.2 |
-| tBase / tPerStep / tMax | 1.6 / 0.05 / 9 | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2259 | 오르는 시간 min(9, 1.6 + 0.05k). **미사용**(새 시간은 rise*) |
 | accelP | 0.12 | [프로토] L2263 | 처음 12% 가속 |
-| riseMin / risePerK / riseAhead | 30 / 1.6 / 6 | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2265~2266 | 칸 등장. **미사용** |
-| dropSec / dropH | 0.2 / 5 | [프로토] L2267 | 칸 낙하 연출 |
+| popSec | 0.2 | [프로토] 칸 등장 시간(기획서에 값 없음, 임시) | 칸이 stepPop배로 튕기며 생기는 시간(초) |
 | tickEvery | 4 | [프로토] L2270 | 칸 4개마다 tick 소리 |
 | rlEndBase / rlEndStep | 1.0 / 0.45 | [프로토] L2362 | 카드 i 확정 = 1.0 + 0.45i(게임 초) |
 | rlFlipSec | 0.06 | [프로토] L2367 | 얼굴 넘김 간격 |
@@ -1440,7 +1436,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | patternCount | int | 무늬 수(1 / 4) |
 | lobbySprite | res | 로비 아지트 정면 그림. 기본 아틀라스 `Atlas_World_Lobby` |
 
-크기 배율은 `300_runConfig` `view.playerCatScale`·`view.cloneCatScale`([02](02_Visual.md))이 정본이다. 프레임 이름·수는 [03 §3.5.1](03_ResourcePipeline.md).
+크기 배율은 `116_charLook.scale`이 정본이다(옛 `300_runConfig` `view.playerCatScale`·`view.cloneCatScale`은 2026-11-16 MV-DATA-KEYTRIM2에서 삭제). 프레임 이름·수는 [03 §3.5.1](03_ResourcePipeline.md).
 
 ---
 

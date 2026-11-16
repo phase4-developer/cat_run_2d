@@ -11,7 +11,7 @@ namespace MV.Sound
     /// <summary>
     /// 소리 재생 본체(03 §3.9.5). key → 03_sound 행 → 음소거·GAP·피치 → <see cref="IMvAudioOut"/>.
     /// 시계·출력·피치 난수는 주입한다. 피치 난수는 런 결정성을 깨지 않게 RunRng가 아닌 별도 <see cref="Random"/>를 쓴다.
-    /// // Framework 대체: GAP·피치 무작위는 com.jjevol.audio에 없어 게임이 한다(Framework debounce는 끄고 부른다).
+    /// // Framework 대체: GAP·피치 무작위는 com.jjevol.audio에 없어 게임이 한다(출력에서 Framework 기본 debounce 0.1초도 걸려, 같은 소리는 둘 중 긴 간격 안에서 무시된다).
     /// </summary>
     public sealed class MvSoundPlayer
     {
