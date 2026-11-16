@@ -8,7 +8,7 @@ namespace MV.Sound
     /// </summary>
     public interface IMvAudioOut
     {
-        /// <summary>효과음 1회(트랙 Sfx, Framework debounce 끔).</summary>
+        /// <summary>효과음 1회(트랙 Sfx, Framework 기본 debounce 0.1초 적용).</summary>
         void PlaySfx(string address, float volume, float pitch);
 
         /// <summary>
