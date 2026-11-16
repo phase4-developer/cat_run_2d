@@ -8,8 +8,8 @@ namespace MV.Data
     [Serializable]
     public sealed class PresetFireRate
     {
-        public string key;
-        public double rate;
+        [MvLabel("난이도 (key)"), Tooltip("06_balancePreset의 key(easy·mid·orig)")] public string key;
+        [MvLabel("초당 발사 수 (rate)"), Tooltip("기본 연사. 발사 간격 = 1 ÷ (이 값 × 카드·강화·연구 배율). 키우면 더 빨리 쏜다")] public double rate;
     }
 
     /// <summary>
@@ -57,14 +57,14 @@ namespace MV.Data
         public const string ResourcePath = "MvCharacterSettings";
         public const string AssetPath = "Assets/Game/GameData/Settings/Resources/MvCharacterSettings.asset";
 
-        [Header("이동")]
-        [Tooltip("전진 속도(m/s)")] public double runSpeed;
-        [Tooltip("템플릿 중간 구역 전진 속도(m/s, 310 midFromZ~midToZ)")] public double runSpeedMid;
-        [Tooltip("키 이동 속도(m/s)")] public double keyMoveSpeed;
-        [Tooltip("x 추종 계수(1/s). 지수 추종 시간상수 = 1/k초")] public double moveFollowK;
+        [Header("이동 — Play 중에 바꾸면 달리는 중인 런에 바로 반영")]
+        [MvLabel("전진 속도 (runSpeed)"), Tooltip("앞으로 달리는 속도(m/초)")] public double runSpeed;
+        [MvLabel("중간 구역 전진 속도 (runSpeedMid)"), Tooltip("템플릿 중간 구역(310 midFromZ~midToZ)에서 달리는 속도(m/초)")] public double runSpeedMid;
+        [MvLabel("키보드 좌우 이동 속도 (keyMoveSpeed)"), Tooltip("←/→ 키를 누를 때 목표 위치가 움직이는 속도(m/초). 개발용 입력")] public double keyMoveSpeed;
+        [MvLabel("좌우 따라가기 빠르기 (moveFollowK)"), Tooltip("드래그한 위치로 고양이가 따라가는 빠르기(1/초). 10이면 약 0.1초에 63%. 키우면 더 민첩하다")] public double moveFollowK;
 
-        [Header("공격속도")]
-        [Tooltip("난이도 프리셋(06_balancePreset.key)별 기본 연사(초당 발사 수). 발사 간격 = 1 / (연사 × 카드·강화·연구 배율)")]
+        [Header("공격속도 — 난이도별 기본 연사")]
+        [Tooltip("난이도 프리셋(06_balancePreset.key)마다 기본 연사(초당 발사 수). 발사 간격 = 1 ÷ (연사 × 카드·강화·연구 배율)")]
         public List<PresetFireRate> presetFireRates = new List<PresetFireRate>();
 
         /// <summary>Inspector에서 값을 바꿨을 때(에디터 전용 알림). Play 중이면 <see cref="MvTables"/>가 사본을 새로 만든다.</summary>
