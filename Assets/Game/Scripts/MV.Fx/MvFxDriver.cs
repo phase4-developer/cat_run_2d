@@ -55,12 +55,32 @@ namespace MV.Fx
         float _meteorTail;
         FxSpawn _spawn;
 
+        /// <summary>
+        /// 디자이너가 프리팹에서 이 컴포넌트를 꺼 두면(Unity ParticleSystem으로 그린 이펙트) 정본 부품을 만들지 않고
+        /// 자식 ParticleSystem을 1회 재생해 다 끝나면 완료를 알린다. 끝 신호를 이 컴포넌트가 내므로 재생 동안만 켠다.
+        /// </summary>
+        bool _particleMode, _modeKnown;
+        ParticleSystem[] _systems;
+        float _psElapsed, _psTimeout;
+
+        public bool ParticleMode { get { DetectMode(); return _particleMode; } }
+
         public Transform Root => transform;
 
         void Awake() => Ensure();
 
+        /// <summary>처음 쓸 때 1번: 프리팹에서 꺼져 있었으면 파티클 모드(재생 중 켜기 전에 정해 둔다). EditMode는 Awake가 없어 여기서도 정한다.</summary>
+        void DetectMode()
+        {
+            if (_modeKnown) return;
+            _modeKnown = true;
+            _particleMode = !enabled;
+            if (_particleMode) _systems = GetComponentsInChildren<ParticleSystem>(true);
+        }
+
         void Ensure()
         {
+            DetectMode();
             if (_mesh != null) return;
             if (!TryGetComponent(out MeshFilter mf)) mf = gameObject.AddComponent<MeshFilter>();
             if (!TryGetComponent(out _mr)) _mr = gameObject.AddComponent<MeshRenderer>();
@@ -89,7 +109,16 @@ namespace MV.Fx
             _sort.Group.sortingOrder = order;
         }
 
-        public void SetPaused(bool paused) => _paused = paused;
+        public void SetPaused(bool paused)
+        {
+            _paused = paused;
+            if (!_particleMode || !_playing) return;
+            foreach (var ps in _systems)
+            {
+                if (!ps) continue;
+                if (paused) ps.Pause(); else ps.Play();
+            }
+        }
         public void SetUnscaledTime(bool unscaled) { }
         /// <summary>skinIndex = <see cref="MvFxParamBank"/> 토큰.</summary>
         public void SetSkin(int skinIndex) => _token = skinIndex;
@@ -101,6 +130,11 @@ namespace MV.Fx
             _onComplete = onComplete;
             if (!MvFxParamBank.TryGet(_token, out _spawn)) _spawn = FxSpawn.Of(null, transform.position);
             _token = 0;
+            if (_particleMode)
+            {
+                PlayParticles();
+                return;
+            }
             _spawn.Pos = transform.position;
             if (_spawn.To == default) _spawn.To = _spawn.Pos;
             Spawn(_spawn);
@@ -114,6 +148,58 @@ namespace MV.Fx
             _onComplete = null;
             ClearParts();
             if (_mesh != null) _mesh.Clear();
+            if (_particleMode)
+            {
+                foreach (var ps in _systems)
+                    if (ps) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                enabled = false;
+            }
+        }
+
+        /// <summary>
+        /// 파티클 모드 재생: 반복을 끄고 1회 재생. 끝 = 모든 계통이 죽음, 또는 가장 긴 계통의
+        /// duration / simulationSpeed + startLifetimeMultiplier(Framework ParticleEffectRenderer와 같은 상한).
+        /// </summary>
+        void PlayParticles()
+        {
+            _psElapsed = 0f;
+            _psTimeout = 0f;
+            foreach (var ps in _systems)
+            {
+                if (!ps) continue;
+                var main = ps.main;
+                main.loop = false;
+                _psTimeout = Mathf.Max(_psTimeout, main.duration / Mathf.Max(0.0001f, main.simulationSpeed) + main.startLifetimeMultiplier + 0.05f);
+                ps.Play(true);
+            }
+            _playing = true;
+            enabled = true;
+            if (_psTimeout <= 0f) FinishParticles();
+        }
+
+        /// <summary>파티클 모드 진행(시험이 직접 부를 수 있다).</summary>
+        public void StepParticles(float dt)
+        {
+            if (!_playing) return;
+            _psElapsed += dt;
+            if (_psElapsed < _psTimeout && AnyParticleAlive()) return;
+            FinishParticles();
+        }
+
+        bool AnyParticleAlive()
+        {
+            foreach (var ps in _systems)
+                if (ps && ps.IsAlive(true)) return true;
+            return false;
+        }
+
+        void FinishParticles()
+        {
+            _playing = false;
+            enabled = false;
+            var cb = _onComplete;
+            _onComplete = null;
+            cb?.Invoke();
         }
 
         void OnDisable() => ClearParts();
@@ -138,7 +224,8 @@ namespace MV.Fx
         void Update()
         {
             if (!_playing || _paused) return;
-            Step(MvFxClock.SimDt);
+            if (_particleMode) StepParticles(Time.deltaTime);
+            else Step(MvFxClock.SimDt);
         }
 
         /// <summary>simDt만큼 진행(시험이 직접 부를 수 있다).</summary>
