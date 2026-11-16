@@ -23,17 +23,36 @@ namespace MV.Run.Tests
         {
             var dir = new MvTsvDirectorySource(MvTableLoader.TsvDirectory);
             jjevol.ITableSource src = dir;
+            Dictionary<string, double> rates = null;
             if (overrides != null)
             {
                 var mem = new MvMemoryTableSource(dir);
-                foreach (var kv in overrides) mem.Set(kv.Key, kv.Value);
+                foreach (var kv in overrides)
+                {
+                    if (kv.Key.StartsWith(RatePrefix, StringComparison.Ordinal))
+                    {
+                        (rates ??= new Dictionary<string, double>())[kv.Key.Substring(RatePrefix.Length)] =
+                            double.Parse(kv.Value, System.Globalization.CultureInfo.InvariantCulture);
+                        continue;
+                    }
+                    mem.Set(kv.Key, kv.Value);
+                }
                 src = mem;
             }
             var t = new MvTables();
             t.LoadAll(src);
             t.BuildIndexes();
+            if (rates != null)
+            {
+                var ch = t.Character.Clone();   // 설정 에셋 사본만 바꾼다
+                foreach (var kv in rates) ch.PresetRates[kv.Key] = kv.Value;
+                t.Character = ch;
+            }
             return t;
         }
+
+        /// <summary>override 묶음 안의 프리셋 연사 바꾸기 표시(표 이름이 아니다). 연사는 표가 아니라 MvCharacterSettings에 있다.</summary>
+        const string RatePrefix = "#rate:";
 
         public static string ReadTsv(string table) =>
             File.ReadAllText(Path.Combine(MvTableLoader.TsvDirectory, table + ".txt"), new UTF8Encoding(false));
@@ -69,7 +88,11 @@ namespace MV.Run.Tests
             {
                 var c = lines[i].Split('\t');
                 if (c.Length <= ki || c[ki] != key) continue;
-                foreach (var kv in values) c[Array.IndexOf(header, kv.Key)] = kv.Value;
+                foreach (var kv in values)
+                {
+                    if (kv.Key == "rate") { o[RatePrefix + key] = kv.Value; continue; }   // 연사는 MvCharacterSettings 사본으로
+                    c[Array.IndexOf(header, kv.Key)] = kv.Value;
+                }
                 lines[i] = string.Join("\t", c);
                 found = true;
             }

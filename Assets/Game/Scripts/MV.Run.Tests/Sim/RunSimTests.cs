@@ -54,11 +54,12 @@ namespace MV.Run.Tests
         [Test]
         public void FireInterval_EasyAndModifier()
         {
-            // 기본 연사는 06_balancePreset isDefault 행 rate(MV-SPEC-02 155 「기본 연사 0.95」, MV-SPEC2-FIX1). 값은 표에서 읽는다.
+            // 기본 연사는 isDefault 프리셋 key의 MvCharacterSettings 연사(MV-SPEC-02 155 「기본 연사 0.95」, MV-SPEC2-FIX1). 값은 설정 에셋에서 읽는다.
             var d = NewState();
-            Assert.AreEqual(1 / d.Bal.rate, FireInterval(d), 1e-12);
+            double rate = d.Tables.Character.Rate(d.Bal.key);
+            Assert.AreEqual(1 / rate, FireInterval(d), 1e-12);
             var s = NewState(new RunSetup { Modifiers = new RunModifiers { FireRate = 20 } });
-            Assert.AreEqual(1 / (s.Bal.rate * 1.2), FireInterval(s), 1e-12);
+            Assert.AreEqual(1 / (s.Tables.Character.Rate(s.Bal.key) * 1.2), FireInterval(s), 1e-12);
         }
 
         [Test]
@@ -151,7 +152,7 @@ namespace MV.Run.Tests
         {
             var sim = Sim(new HandLevel());
             sim.Tick(0.05, RunInput.Drag(9));
-            // MV-SPEC-02: LANE_X_MAX 3.5, MOVE_FOLLOW_K 10 → 한 틱 추종 0.05 × 10
+            // MV-SPEC-02: LANE_X_MAX 3.5, 캐릭터 설정 moveFollowK 10 → 한 틱 추종 0.05 × 10
             Assert.AreEqual(3.5, sim.State.P.Tx, 1e-12);
             Assert.AreEqual(3.5 * 0.5, sim.State.P.X, 1e-12);
             Assert.AreEqual(0.2, sim.State.P.Z, 1e-12);

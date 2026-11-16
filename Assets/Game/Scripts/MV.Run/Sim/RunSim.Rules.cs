@@ -234,7 +234,7 @@ namespace MV.Run
             if (got < n) s.Emit(new RunEvent(RunEventType.WeaponRejected, a: n - got, b: s.Bt));
         }
 
-        /// <summary>전진 속도: 템플릿 중간 구역(310 midFromZ~midToZ, 템플릿 기준 z)이면 RUN_SPEED_MID(MV-SPEC-02 4-1, Q-15).</summary>
+        /// <summary>전진 속도: 템플릿 중간 구역(310 midFromZ~midToZ, 템플릿 기준 z)이면 캐릭터 설정 runSpeedMid(MV-SPEC-02 4-1, Q-15).</summary>
         double RunSpeedAt(RunState s)
         {
             var tpl = T.Template.Get(s.Tpl);

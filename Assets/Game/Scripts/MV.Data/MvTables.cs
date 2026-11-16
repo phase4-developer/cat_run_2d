@@ -15,6 +15,18 @@ namespace MV.Data
         /// <summary>검증을 통과한 현재 표. 부팅(MV.Boot) 또는 핫 리로드가 교체한다.</summary>
         public static MvTables Current { get; set; }
 
+        RunCharacterConfig _character;
+
+        /// <summary>
+        /// 표가 아닌 캐릭터 기본값(이동 속도·프리셋 기본 연사). 정본은 Resources의 <see cref="MvCharacterSettings"/> 에셋이고 처음 읽을 때 사본을 만든다.
+        /// 시험은 사본을 바꿔 넣을 수 있다(에셋은 바꾸지 않는다).
+        /// </summary>
+        public RunCharacterConfig Character
+        {
+            get => _character ??= MvCharacterSettings.LoadConfig();
+            set => _character = value;
+        }
+
         // 0
         public ConfigTable Config { get; } = new ConfigTable();
         public MvWealthTable Wealth { get; } = new MvWealthTable();
