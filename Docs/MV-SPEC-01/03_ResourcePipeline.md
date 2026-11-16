@@ -896,9 +896,9 @@ gapMs 출처: `GAP`(L1677) — throw 70, hit 35, crit 50, wood 50, coin 45, tick
 
 | 규칙 | 내용 |
 |---|---|
-| 호출 | `AudioManager.Instance.PlayAsync(row.soundName, AudioTrack.Sfx, row.volume, 1f, false, debounce: 0f)` |
+| 호출 | `AudioManager.Instance.PlayAsync(row.soundName, AudioTrack.Sfx, row.volume, pitch, false)`(debounce 생략 = Framework 기본) |
 | 최소 간격 GAP | **재생 쪽에서 처리.** `MV.Sound`가 「GAP 묶음 키」별 마지막 재생 시각을 `Time.unscaledTime`으로 기록하고 `gapMs` 안의 요청은 버린다(큐잉 없음, L1678). GAP 묶음 키 = `key`에서 끝의 `_숫자`를 뗀 것(`tierup_3` → `tierup`) — 정본은 인자와 상관없이 `tierup` 하나로 간격을 잰다 |
-| Framework debounce | 키·클립 debounce가 겹치지 않게 `debounce: 0f`로 끈다(Framework audio README: 키 debounce는 전체 문자열 기준) |
+| Framework debounce | **켠다**(사용자 2026-11-16 「프레임워크 0.1초 켜기」). `AudioManager.defaultDebounceSeconds` 0.1초 안에 같은 키(주소 전체 문자열)·같은 클립을 다시 부르면 무시한다. GAP을 통과한 요청에 한 번 더 걸리므로 같은 소리는 둘 중 긴 간격(지금 표 gapMs는 모두 0.1초보다 짧아 사실상 0.1초)으로 걸러진다 |
 | 트랙 | 효과음·UI 클릭 모두 `Sfx`(정본은 버스 하나 + 음소거 버튼 하나, L713). BGM은 `Music` |
 | 음소거 | 정본 `ce_mute`(L1624) → 저장 설정([09](09_Save.md)). 음소거 중 효과음은 호출 자체를 막는다(L1678) |
 | 지연 재생 | `fail` 350 ms(L2408), 로비 덱 머지 `merge` 450 ms(L2644)는 호출하는 쪽이 지연 |
