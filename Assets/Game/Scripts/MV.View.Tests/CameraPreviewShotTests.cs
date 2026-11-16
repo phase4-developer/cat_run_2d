@@ -50,6 +50,7 @@ namespace MV.View.Tests
                 var so = new SerializedObject(rig);
                 var preview = so.FindProperty("_preview");
                 var log = new StringBuilder("view\tpos\teuler\tfovV\n");
+                var poses = new Vector3[Enum.GetValues(typeof(CameraPreview)).Length];
                 foreach (CameraPreview v in Enum.GetValues(typeof(CameraPreview)))
                 {
                     preview.enumValueIndex = (int)v;
@@ -61,10 +62,14 @@ namespace MV.View.Tests
                         var l = settings.lobby;
                         AssertNear(new Vector3(0, (float)l.posY, (float)l.posZ), t.position, "Lobby 미리보기 위치 = lobby 행");
                     }
+                    Assert.AreEqual(v, (CameraPreview)preview.enumValueIndex);
+                    poses[(int)v] = t.position;
                     Shot(rig.Cam, rt, Path.Combine(ShotDir, $"edit_{(int)v}_{v}.png"));
                     log.Append(v).Append('\t').Append(t.position.ToString("F3")).Append('\t')
                         .Append(t.eulerAngles.ToString("F2")).Append('\t').Append(rig.Cam.fieldOfView.ToString("F2")).Append('\n');
                 }
+
+                Assert.Greater(Vector3.Distance(poses[(int)CameraPreview.Lobby], poses[(int)CameraPreview.Run]), 1f, "미리보기 시점을 바꿔도 카메라가 움직이지 않았다");
 
                 // 설정 변경 반영: Lobby 시점에서 lobby.posY를 +1 → Inspector 수정과 같은 OnValidate → 구도가 따라온다.
                 preview.enumValueIndex = (int)CameraPreview.Lobby;
@@ -96,9 +101,26 @@ namespace MV.View.Tests
             Assert.AreEqual(original, JsonUtility.ToJson(settings), "설정 에셋 값이 원래대로 돌아오지 않았다");
         }
 
+        /// <summary>
+        /// 에디터 틱을 넘기고 `EditorApplication.delayCall`을 비운다. 시험 실행기 안에서는 delayCall이 틱마다 돌지 않아
+        /// 에디터가 쓰는 내부 호출(`Internal_CallDelayFunctions`)을 그대로 부른다(Inspector 수정 → OnValidate → delayCall 길 그대로).
+        /// </summary>
         static IEnumerator Ticks()
         {
-            for (int i = 0; i < 3; i++) yield return null;
+            for (int i = 0; i < 3; i++)
+            {
+                yield return null;
+                FlushDelayCall();
+            }
+        }
+
+        static readonly MethodInfo CallDelay =
+            typeof(EditorApplication).GetMethod("Internal_CallDelayFunctions", BindingFlags.Static | BindingFlags.NonPublic);
+
+        static void FlushDelayCall()
+        {
+            Assert.IsNotNull(CallDelay, "EditorApplication.Internal_CallDelayFunctions를 찾지 못했다");
+            CallDelay.Invoke(null, null);
         }
 
         /// <summary>Inspector가 값을 바꿀 때 Unity가 부르는 것과 같은 `OnValidate`.</summary>
