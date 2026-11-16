@@ -3,27 +3,17 @@ using UnityEngine;
 
 namespace MV.View
 {
-    /// <summary>편집 모드에서 보여 줄 카메라 시점.</summary>
-    public enum CameraPreview { Lobby, Run, Climb, ClimbSide }
-
     /// <summary>
     /// `GameCamera` 리그(02 §2.2.2 `CameraRig.LateUpdate`). 실시간 dt(상한 `time.dtCap`, 히트스톱 무관)로
     /// camLift·ck 갱신 → 위치 보간 → 흔들림 가산 → LookAt. 빌보드 동기화·깊이 정렬은 <see cref="DepthSorter"/>가 이 뒤에 한다.
-    /// 값은 씬에서 참조하는 <see cref="MvCameraSettings"/> 에셋 하나에서 읽는다(편집 모드·Play Mode·빌드 같음).
-    /// 편집 모드에서는 <see cref="_preview"/> 시점의 다 따라간 자세로 서서 Scene·Game 뷰에서 구도를 바로 본다.
+    /// 값은 씬에서 참조하는 <see cref="MvCameraSettings"/> 에셋 하나에서 읽는다(Play Mode·빌드 같음). 런타임은 에셋 행의 사본을 쓰고,
+    /// Play 중 Inspector로 에셋을 고치면 새 사본으로 바로 바꾼다.
     /// </summary>
-    [ExecuteAlways]
     [DefaultExecutionOrder(-100)]
     [RequireComponent(typeof(Camera))]
     public sealed class CameraRig : MonoBehaviour
     {
         [SerializeField] MvCameraSettings _settings;
-
-        [Header("편집 모드 미리보기(Play에는 쓰지 않음)")]
-        [Tooltip("편집 모드에서 카메라가 설 시점")]
-        [SerializeField] CameraPreview _preview = CameraPreview.Lobby;
-        [Tooltip("기준 대상(플레이어 자리). 비우면 월드 원점. 높이(y)는 지면 높이로 본다")]
-        [SerializeField] Transform _previewTarget;
 
         Camera _cam;
         CameraModel _model;
@@ -62,19 +52,9 @@ namespace MV.View
 
         public void ClearShake() => _shake.Clear();
 
-        void OnEnable()
-        {
-            Listen(_settings);
-            if (!Application.isPlaying) ApplyPreview();
-        }
+        void OnEnable() => Listen(_settings);
 
         void OnDisable() => Listen(null);
-
-        void OnValidate()
-        {
-            Listen(isActiveAndEnabled ? _settings : null);
-            if (!Application.isPlaying) QueuePreview();
-        }
 
         void Listen(MvCameraSettings s)
         {
@@ -84,14 +64,10 @@ namespace MV.View
             if (_listening != null) _listening.Changed += OnSettingsChanged;
         }
 
-        /// <summary>
-        /// Inspector에서 설정을 바꿨을 때. 편집 모드는 미리보기 구도를 다시 세우고, Play Mode는 새 값의 사본으로 바꾼다(위치·보간 상태 유지).
-        /// </summary>
+        /// <summary>Play 중 Inspector에서 설정 에셋을 바꿨을 때: 새 값의 사본으로 바꾼다(위치·보간 상태 유지).</summary>
         void OnSettingsChanged()
         {
-            if (this == null) return;
-            if (!Application.isPlaying) { QueuePreview(); return; }
-            if (_model == null || _settings == null) return;
+            if (this == null || _model == null || _settings == null) return;
             var next = CameraModel.FromSettings(_settings);
             next.Snap(_model.Pos, _model.Look, _model.CamLift, _model.Ck);
             _model = next;
@@ -100,47 +76,12 @@ namespace MV.View
 
         void LateUpdate()
         {
-            if (!Application.isPlaying)
-            {
-                if (_previewTarget != null && _previewTarget.hasChanged) { _previewTarget.hasChanged = false; ApplyPreview(); }
-                return;
-            }
             if (!Ready) return;
             double dt = System.Math.Min(_dtCap, Time.unscaledDeltaTime);
             // 표시 전용 난수(UnityEngine.Random). MV.Run 결정적 난수와 섞지 않는다.
             var shake = _shake.Step(dt, UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f));
             _model.Step(_source.Camera, dt, shake);
             Apply(_model);
-        }
-
-        /// <summary>
-        /// 편집 모드 구도: 고른 시점의 다 따라간 자세(보간·돌기 끝)로 선다. 같은 <see cref="CameraModel"/> 식을 쓰므로 Play와 같다.
-        /// </summary>
-        void ApplyPreview()
-        {
-            if (_settings == null || Application.isPlaying) return;
-            CameraModel m;
-            try { m = CameraModel.FromSettings(_settings, _preview == CameraPreview.ClimbSide); }
-            catch (System.Exception e) { Debug.LogWarning("[CameraRig] 미리보기 실패: " + e.Message, this); return; }
-            var p = _previewTarget != null ? _previewTarget.position : Vector3.zero;
-            var mode = _preview == CameraPreview.Lobby ? WorldViewMode.Lobby
-                : _preview == CameraPreview.Run ? WorldViewMode.Run : WorldViewMode.Climb;
-            var input = new CameraInput { Mode = mode, Px = p.x, Pz = p.z, Wy = p.y };
-            m.Snap(new Vector3d(0, m.LobbyRow.posY, m.LobbyRow.posZ), new Vector3d(0, m.LobbyRow.lookY, m.LobbyRow.lookZ));
-            // 큰 dt 한 번이면 보간·높이·섞기·옆 돌기 계수가 모두 1로 잘려 목표 자세에 선다.
-            m.Step(input, PreviewSettleDt, default);
-            ApplyLens(m);
-            Apply(m);
-        }
-
-        const double PreviewSettleDt = 1e3;
-
-        /// <summary>OnValidate 안에서는 Transform을 바꾸지 않고 다음 에디터 틱에 세운다.</summary>
-        void QueuePreview()
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.delayCall += () => { if (this != null && isActiveAndEnabled) ApplyPreview(); };
-#endif
         }
 
         void ApplyLens(CameraModel m)

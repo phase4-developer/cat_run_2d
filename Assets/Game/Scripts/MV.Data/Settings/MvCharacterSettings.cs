@@ -67,6 +67,11 @@ namespace MV.Data
         [Tooltip("난이도 프리셋(06_balancePreset.key)별 기본 연사(초당 발사 수). 발사 간격 = 1 / (연사 × 카드·강화·연구 배율)")]
         public List<PresetFireRate> presetFireRates = new List<PresetFireRate>();
 
+        /// <summary>Inspector에서 값을 바꿨을 때(에디터 전용 알림). Play 중이면 <see cref="MvTables"/>가 사본을 새로 만든다.</summary>
+        public event Action Changed;
+
+        void OnValidate() => Changed?.Invoke();
+
         /// <summary>런타임 사본(에셋은 바꾸지 않는다).</summary>
         public RunCharacterConfig ToConfig()
         {
@@ -80,12 +85,15 @@ namespace MV.Data
             return c;
         }
 
-        /// <summary>Resources의 에셋을 읽어 사본을 만든다. 없으면 오류.</summary>
-        public static RunCharacterConfig LoadConfig()
+        /// <summary>Resources의 에셋. 없으면 오류.</summary>
+        public static MvCharacterSettings Load()
         {
             var s = Resources.Load<MvCharacterSettings>(ResourcePath);
             if (s == null) throw new InvalidOperationException("MvCharacterSettings 에셋이 없습니다: " + AssetPath);
-            return s.ToConfig();
+            return s;
         }
+
+        /// <summary>Resources의 에셋을 읽어 사본을 만든다. 없으면 오류.</summary>
+        public static RunCharacterConfig LoadConfig() => Load().ToConfig();
     }
 }

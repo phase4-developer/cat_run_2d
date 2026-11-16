@@ -139,9 +139,7 @@ camera.lookAt(camLook);
 
 열 의미: run·climb·side는 플레이어 기준 — 위치 = `(px·posXMul + posX, camLift + posY, pz + posZ)`, 주시점 = `(px·lookXMul + lookX, camLift + lookY, pz + lookZ)`. lobby는 월드 좌표 그대로(옛 `anchor=World`). `posLerp` = 위치 보간 계수(`min(1, dt·posLerp)`), `snap=1`이면 즉시. `liftLerp` = 그 모드일 때 camLift 계수. `blendLerp` = 그 모드로 **들어갈 때** ck 계수(run 행 2 = 계단에서 나올 때, climb 행 3 = 들어갈 때). `fovV` = 9:16 기준 세로 FOV(§2.7). `turnSec` = 계단 오르기 중 옆 시점으로 돌아 들어가는 시간(side).
 
-**편집 모드 미리보기.** `CameraRig`는 `[ExecuteAlways]`다. Play 없이 Inspector `_preview`(Lobby·Run·Climb·ClimbSide)와 `_previewTarget`(비우면 월드 원점)을 고르면 Play와 같은 `CameraModel` 식으로 그 시점의 다 따라간 자세에 선다. 에셋 값을 Inspector에서 바꾸면 다음 에디터 틱에 다시 선다. 런 오브젝트·지면은 Play에서 생기므로 편집 모드 미리보기는 카메라 자세·FOV만 보여 준다.
-
-**Play Mode·빌드.** 시작 때 에셋의 행을 복사해 런타임 모델을 만든다(게임은 에셋을 쓰지 않는다). Play 중 Inspector로 에셋을 고치면 `OnValidate` 알림으로 새 사본을 만들어 바꾸고 현재 위치·보간 상태는 이어 간다. Play 중 고친 에셋 값은 Unity 에디터 규칙대로 Play를 끝내도 남으므로, 시험으로만 고친 값은 되돌린다.
+**설정 수정·저장·반영.** 편집 모드에서는 에셋 Inspector에서 수치만 고친다(편집 모드에 월드·카메라 구도 미리보기는 두지 않는다, 2026-11-16 사용자 정정). 시작 때 에셋의 행을 복사해 런타임 모델을 만들고 게임은 에셋을 쓰지 않는다. Play 중 Inspector로 에셋을 고치면 `OnValidate` 알림으로 새 사본을 만들어 바로 바꾸고 현재 위치·보간 상태는 이어 간다. Play 중 고친 값은 에셋이라 Play를 끝내도 남고, 저장(File > Save Project, Ctrl+S)하면 `.asset` 파일에 써져 Git으로 같은 값이 전달된다. 빌드는 씬의 `GameCamera`가 참조하는 같은 에셋을 넣는다.
 
 `CameraRig.LateUpdate` 순서(실시간 dt):
 1. 모드 판정: 로비 / 런 / 계단(`CN` 있음).
@@ -538,7 +536,7 @@ stepFx(sdt); syncScene(dt); stepPops(dt);
 
 | 구성 요소 | 책임 | 절 |
 |---|---|---|
-| `CameraRig` | `MvCameraSettings` 값·공식, camLift·ck, 흔들림, FOV(화면비), 편집 모드 미리보기 | §2.2, §2.7 |
+| `CameraRig` | `MvCameraSettings` 값·공식, camLift·ck, 흔들림, FOV(화면비), Play 중 설정 변경 반영 | §2.2, §2.7 |
 | `BillboardSync` | 등록된 빌보드에 카메라 회전 복사 | §2.1.3 |
 | `DepthSorter` | d 계산, 근평면 숨김, sortingOrder, `_FogAlpha` | §2.3, §2.4 |
 | `GroundStripMesh` | 지면·옹벽 띠 메쉬, 정점색 | §2.4.3 |

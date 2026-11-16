@@ -70,9 +70,9 @@ namespace MV.Tests
             Assert.Greater(loop.LobbyObjectCount, 0, "로비 트랙에 오브젝트가 없다");
             Assert.AreEqual(0L, loop.LobbyFrame, "로비 미리보기 런이 없거나 진행됐다");
 
-            // 카메라 시각 검수(MV-SCENE-VERIFY): 로비 자세를 찍고, 첫 런은 실시간으로 출발해 로비 → 런 보간을 기록한다.
+            // 설정 에셋 Play 확인(MV-SCENE-VERIFY·MV-SETTINGS-LIVE): 로비 자세, 첫 런은 실시간으로 출발해 로비 → 런 보간·Play 중 설정 변경 반영을 본다.
             var cam = new CameraSweepProbe();
-            cam.CaptureLobby();
+            cam.CheckLobby();
 
             // 출발: 같은 프레임에 런이 시작된다. 스크립트 입력(좌우 드래그).
             loop.FixedDt = null;
@@ -83,7 +83,8 @@ namespace MV.Tests
             Assert.AreEqual(settledBefore + 1, loop.CurrentRunSeq, "런 순번은 마지막 정산 순번 + 1");
             Assert.AreEqual(MvRunSnapshot.SeedFor(loop.CurrentRunSeq), loop.CurrentSeed, "시드는 런 순번에서 결정적으로 만든다");
             yield return cam.RecordSweep(() => loop.Phase == MvLoopPhase.Run);
-            yield return cam.CheckSettingsChange(() => loop.Phase == MvLoopPhase.Run);
+            yield return cam.CheckCameraChange(() => loop.Phase == MvLoopPhase.Run);
+            yield return cam.CheckCharacterChange(() => loop.Phase == MvLoopPhase.Run);
             cam.Finish();
 
             // 나머지는 빠르게 돈다.

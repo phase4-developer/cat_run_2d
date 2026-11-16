@@ -150,8 +150,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _settings: {fileID: 11400000, guid: 3da2b4e9ac7e49b790ff7ea1b5a7f0e5, type: 2}
-  _preview: 0
-  _previewTarget: {fileID: 0}
 --- !u!81 &1185
 AudioListener:
   m_ObjectHideFlags: 0
