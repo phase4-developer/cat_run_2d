@@ -123,9 +123,9 @@ namespace MV.Run.Tests
         public void Climb_KCompressionAndTiers()
         {
             var t = RunTestTables.Load(); var c = t.Climb.Config();
-            // 새 HTML startClimb(2026-11-13 연출 정본): k = min(600, n), T = 0.8 + 0.09k.
-            Assert.AreEqual(30, ClimbK(c, 30)); Assert.AreEqual(600, ClimbK(c, 600)); Assert.AreEqual(600, ClimbK(c, 1000));
-            Assert.AreEqual(0.89, ClimbT(c, 1), 1e-12); Assert.AreEqual(1.7, ClimbT(c, 10), 1e-12); Assert.AreEqual(54.8, ClimbT(c, 600), 1e-9);
+            // 기획서 압축(2026-11-16): K = N ≤ 30이면 N, 아니면 30 + ceil((N − 30)/C), T = min(1.5, 0.5 + 0.1(K − 1)).
+            Assert.AreEqual(30, ClimbK(c, 30)); Assert.AreEqual(102, ClimbK(c, 600)); Assert.AreEqual(152, ClimbK(c, 1000));
+            Assert.AreEqual(0.5, ClimbT(c, 1), 1e-12); Assert.AreEqual(1.4, ClimbT(c, 10), 1e-12); Assert.AreEqual(1.5, ClimbT(c, 102), 1e-12);
             void Tiers(int n, params int[] e) => Assert.AreEqual(e, ClimbTiers(t, n).ToArray(), $"n={n}");
             Tiers(4); Tiers(5, 0); Tiers(74, 3); Tiers(75, 4); Tiers(80, 4, 0); Tiers(150, 4, 4); Tiers(200, 4, 4, 3); Tiers(225, 4, 4, 4); Tiers(400, 4, 4, 4);
         }

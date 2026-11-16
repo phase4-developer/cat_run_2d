@@ -17,7 +17,8 @@ namespace MV.View
     /// `Top`·칸 번호는 늘어난 높이만큼 위로 옮긴다. 프리팹 루트 기준점 = 블록 바닥·앞면(지금과 같음).
     /// 칸 색 = 칸마다 프리팹을 고른다(노션 「신작 배경 리소스 관리」 계단연출 2절): 칸의 남은 칸 수(새 HTML rem)가 받는 카드 등급 행의
     /// `115_cardTier.climbStep`(Obj_ClimbStep_C·_UC·_R·_E·_L), 첫 등급 기준 아래는 `330_climb.stepPrefab`(Obj_ClimbStep). 등급 기준은 115 need 하나뿐이다.
-    /// 칸은 시뮬이 보이기 시작한 순서(<see cref="ClimbState.StepsShown"/>, MV-SPEC-02 6-5e)대로 dropH 위에서 dropSec 동안 (1 − f)²로 떨어지고, 알파는 0.4 + 0.6f.
+    /// 칸은 시뮬이 보이기 시작한 순서(<see cref="ClimbState.StepsShown"/>)대로 popSec 동안 0에서 커지며 stepPop배(기획서 1.1배)까지 튕겼다 1배로 선다
+    /// (<see cref="PopScale"/>, 블록 바닥·앞면 기준).
     /// 옆 시점이면 꼭대기 옆면에 칸 번호. 블록은 카메라 시야 안의 것만 풀에서 꺼내 쓴다. 오르기가 끝난 뒤에도 같은 런이면 마지막 계단을 그대로 둔다(HTML `LASTC`).
     /// </summary>
     [DefaultExecutionOrder(56)]
@@ -25,8 +26,8 @@ namespace MV.View
     {
         /// <summary>새 HTML 칸 번호 글자: 높이 0.28 m, 꼭대기 아래 0.45 m, 옆면 바깥 0.01 m. 옆 시점 비율 = (카메라 x − 반폭)/3 m, 0.05 이하면 안 그림.</summary>
         public const float NumberSize = 0.28f, NumberBelowTop = 0.45f, NumberOut = 0.01f, SideFadeM = 3f, SideMin = 0.05f;
-        /// <summary>떨어지는 칸의 알파 = AlphaFrom + (1 − AlphaFrom)·f(새 HTML `0.4 + 0.6*f`).</summary>
-        public const float AlphaFrom = 0.4f;
+        /// <summary>막 생긴 칸의 최소 크기(크기 0 변환을 피하는 값, 눈에는 안 보임).</summary>
+        const float MinPop = 1e-3f;
         /// <summary>칸 번호는 블록 안 다른 그림 위에 그린다(정렬 그룹 안 순서).</summary>
         const int NumberOrder = 10;
         const string FrontName = "Front", SideName = "Side", TopName = "Top";
@@ -61,7 +62,7 @@ namespace MV.View
         Material _labelMaterial;
         /// <summary>칸 종류별 프리팹 주소: [0] = 첫 등급 아래(330 stepPrefab), [tierIndex + 1] = 115 climbStep.</summary>
         string[] _addresses = Array.Empty<string>();
-        double _stepH, _stepD, _halfW, _dropSec, _dropH, _lap;
+        double _stepH, _stepD, _halfW, _popSec, _popBack, _lap;
         Func<string, GameObject> _templates;
         readonly Dictionary<string, AddressableLease<GameObject>> _leases = new Dictionary<string, AddressableLease<GameObject>>();
         readonly HashSet<string> _loading = new HashSet<string>();
@@ -105,8 +106,8 @@ namespace MV.View
             _stepH = c["stepH"];
             _stepD = c["stepD"];
             _halfW = c["stepW"] * 0.5;
-            _dropSec = c["dropSec"];
-            _dropH = c["dropH"];
+            _popSec = c["popSec"];
+            _popBack = PopBack(c["stepPop"]);
             _lap = c["lap"];
             _ready = true;
             Hide();
@@ -144,13 +145,12 @@ namespace MV.View
             var size = new Vector3((float)(_halfW * 2), (float)_stepH, (float)_stepD);   // 블록 1칸 크기(컬링 상자 가로·깊이)
             for (int i = 0; i < shown; i++)
             {
-                double f = ended || _dropSec <= 0 ? 1 : Math.Min(1, (C.Time - _shownAt[i]) / _dropSec);
-                double lift = _dropH * (1 - f) * (1 - f);
-                double zs = C.Z0 + i * _stepD, foot = _base + lift;
+                double f = ended || _popSec <= 0 ? 1 : Math.Min(1, (C.Time - _shownAt[i]) / _popSec);
+                float pop = Mathf.Max(MinPop, (float)PopScale(f, _popBack));   // 막 생긴 칸도 블록은 둔다(크기 0 행렬 피함)
+                double zs = C.Z0 + i * _stepD, foot = _base;
                 var column = new Bounds(new Vector3(0, (float)(foot + (i + 1) * _stepH * 0.5), (float)(zs + _stepD * 0.5)),
                     new Vector3(size.x, (float)((i + 1) * _stepH), size.z));
                 if (!GeometryUtility.TestPlanesAABB(_planes, column)) continue;
-                float alpha = AlphaFrom + (1 - AlphaFrom) * (float)f;
                 // 칸 하나 = 블록 하나(바닥 foot부터 높이 (i+1)·stepH인 기둥)
                 float h = (float)((i + 1) * _stepH);
                 int kind = _kind[i];
@@ -159,14 +159,14 @@ namespace MV.View
                 var blk = Take(kind, template);
                 blocks++;
                 blk.Go.transform.position = new Vector3(0, (float)foot, (float)zs);
+                blk.Go.transform.localScale = new Vector3(pop, pop, pop);
                 SetHeight(blk, h);
-                blk.Ds.SetAlphaScale(alpha);
                 if (sideK > SideMin)
                 {
                     blk.Number.gameObject.SetActive(true);
                     blk.Number.transform.localPosition = new Vector3((float)_halfW + NumberOut, h - NumberBelowTop, (float)(_stepD * 0.5));
                     blk.Number.SetText(_label[i]);
-                    blk.Number.SetOpacity(sideK * alpha);
+                    blk.Number.SetOpacity(sideK);
                     numbers++;
                 }
                 else if (blk.Number.gameObject.activeSelf) blk.Number.gameObject.SetActive(false);
@@ -279,6 +279,34 @@ namespace MV.View
             var p = f.Tr.localPosition; p.y = f.PosY * k; f.Tr.localPosition = p;   // 가운데 기준 면은 높이에 비례해 중심이 올라간다(아래 기준 면은 PosY = 0이라 그대로)
             if (f.Sliced) { var sz = f.Sr.size; sz.y = f.SizeY * k; f.Sr.size = sz; }
             else { var sc = f.Tr.localScale; sc.y = f.ScaleY * k; f.Tr.localScale = sc; }
+        }
+
+        /// <summary>
+        /// 칸이 생기는 크기(f = 0 → 0, f = 1 → 1). 뒤로 넘는 이징 y = 1 + (b + 1)(f − 1)³ + b(f − 1)²이고, 가장 클 때가 <see cref="PopBack"/>로 맞춘 stepPop배다.
+        /// </summary>
+        public static double PopScale(double f, double back)
+        {
+            if (f <= 0) return 0;
+            if (f >= 1) return 1;
+            double u = f - 1;
+            return 1 + (back + 1) * u * u * u + back * u * u;
+        }
+
+        /// <summary>최댓값이 peak(예 1.1)가 되는 이징 계수 b. 최댓값 − 1 = 4b³ / (27(b + 1)²)는 b에 대해 늘어나므로 이분법으로 푼다. peak ≤ 1이면 0(넘지 않음).</summary>
+        public static double PopBack(double peak)
+        {
+            double over = peak - 1;
+            if (over <= 0) return 0;
+            double lo = 0, hi = 1;
+            while (Over(hi) < over) hi *= 2;
+            for (int i = 0; i < 60; i++)
+            {
+                double mid = (lo + hi) * 0.5;
+                if (Over(mid) < over) lo = mid; else hi = mid;
+            }
+            return (lo + hi) * 0.5;
+
+            static double Over(double b) => 4 * b * b * b / (27 * (b + 1) * (b + 1));
         }
 
         static void Park(Block b)

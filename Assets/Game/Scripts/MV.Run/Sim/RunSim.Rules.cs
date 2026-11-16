@@ -792,7 +792,7 @@ namespace MV.Run
             double pw = (double)n / k, z0 = o.Z + c["z0Gap"], zEnd = z0 + k * c["stepD"], dH = k * c["stepH"];
             s.Cliff = new RunCliff(zEnd, s.WorldY, s.WorldY + dH); s.HasCliff = true; // R.cliff(shiftWorld L2227), View용
             ShiftWorld(o.Z + c["shiftFrom"], k * c["stepD"] + c["shiftExtra"]);
-            s.Climb = new ClimbState { StairObjId = o.Id, N = n, K = k, Pw = pw, Z0 = z0, ZEnd = zEnd, DH = dH, T = ClimbT(c, k) };
+            s.Climb = new ClimbState { StairObjId = o.Id, N = n, K = k, Pw = pw, Z0 = z0, ZEnd = zEnd, DH = dH, T = ClimbT(c, k), StepEvery = ClimbStepEvery(c, k) };
             s.Emit(new RunEvent(RunEventType.ClimbStart, a: n, b: k, amount: pw, x: z0, z: zEnd, amount2: dH, amount3: s.Climb.T));
             return true;
         }
@@ -819,8 +819,8 @@ namespace MV.Run
             // sideLead 뒤 일정 속도(p = (t − lead)/T), pos = p·k
             double p = Math.Min(1, Math.Max(0, C.Time - c["sideLead"]) / C.T);
             C.Pos = Math.Min(C.K, p * C.K);
-            // 칸은 pos + riseAhead 앞까지 보인다. 다 오르면 모두 보인다.
-            int show = p >= 1 ? C.K : (int)Math.Min(C.K, Math.Ceiling(C.Pos + c["riseAhead"]));
+            // 칸 생성(기획서): 0초에 1칸, 그 뒤 StepEvery마다 1칸 — 마지막 칸은 T − riseLead에 나온다. 다 오르면 모두 보인다.
+            int show = p >= 1 || C.StepEvery <= 0 ? C.K : (int)Math.Min(C.K, 1 + Math.Floor(C.Time / C.StepEvery + 1e-9));
             for (; C.StepsShown < show; C.StepsShown++) s.Emit(new RunEvent(RunEventType.ClimbStepShown, a: C.StepsShown));
             C.Shown = (int)Math.Min(C.N, Math.Floor(C.Pos * C.Pw + 0.0001));
             if (p >= 1) C.Shown = C.N;
