@@ -364,7 +364,6 @@ MvTables.Current = tables;
 | PHASE_RUN | 13 | 1/s | [프로토] L2029 | 달리기 위상(그림) |
 | PHASE_BLOCKED | 4 | 1/s | [프로토] L2029 | 막힘 위상 |
 | PHASE_CLIMB | 30 | 1/s | [프로토] L2264 | 계단 위상 |
-| CLIMB_X_FOLLOW_K | 6 | 1/s | 미사용(MV-SPEC-02 6-5 새 공식) · [프로토] L2264 | 계단 중 x 복귀. **미사용**(행은 둔다) |
 | PLAYER_HALF_W | 0.32 | m | [프로토] L2033 | 막힘·경고 폭 |
 | WALL_FACE_GAP | 0.35 | m | [프로토] L2066 | 막힐 때 앞면과 간격 |
 | WALL_FACE_EPS | 0.02 | m | [프로토] L2066 | 앞면 판정 여유 |
@@ -1437,7 +1436,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | patternCount | int | 무늬 수(1 / 4) |
 | lobbySprite | res | 로비 아지트 정면 그림. 기본 아틀라스 `Atlas_World_Lobby` |
 
-크기 배율은 `300_runConfig` `view.playerCatScale`·`view.cloneCatScale`([02](02_Visual.md))이 정본이다. 프레임 이름·수는 [03 §3.5.1](03_ResourcePipeline.md).
+크기 배율은 `116_charLook.scale`이 정본이다(옛 `300_runConfig` `view.playerCatScale`·`view.cloneCatScale`은 2026-11-16 MV-DATA-KEYTRIM2에서 삭제). 프레임 이름·수는 [03 §3.5.1](03_ResourcePipeline.md).
 
 ---
 

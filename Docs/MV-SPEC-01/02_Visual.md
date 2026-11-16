@@ -215,8 +215,6 @@ id 형식 `300{그룹3}{순번3}`. 그룹 001 시간, 002 뷰, 003 정렬(§2.3)
 | 300002021 | view.refWidthPx | 360 | px | L942 기본 W |
 | 300002022 | view.refHeightPx | 640 | px | L942 기본 H |
 | 300002023 | view.outlineColor | #4a3446 | color | L2804 |
-| 300002024 | view.playerCatScale | 1.05 | 배 | L3798 (101_cat로 옮길 수 있음) |
-| 300002025 | view.cloneCatScale | 0.85 | 배 | L3799 |
 
 `value` 열은 문자열로 저장하고 `unit=color`면 색으로, 그 외는 실수로 읽는다(07에 기대하는 가정).
 
