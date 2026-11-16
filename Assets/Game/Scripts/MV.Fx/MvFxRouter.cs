@@ -23,7 +23,11 @@ namespace MV.Fx
         readonly Dictionary<int, string> _projEl = new Dictionary<int, string>();
         // 계단 오르기 시작 값(ClimbEnd 때 상태가 이미 비어 있을 수 있어 이벤트에서 보관).
         int _climbK = 1;
-        double _climbPw = 1, _climbZ0, _climbZEnd, _climbDH;
+        double _climbPw = 1, _climbZ0, _climbZEnd, _climbDH, _climbBaseY;
+        /// <summary>새 HTML 「N칸 올라옴!」: 꼭대기 위 2.4 m, 글자 크기 2배.</summary>
+        public const double ClimbedPopUp = 2.4;
+        public const float ClimbedPopSize = 2f;
+        public const string ClimbedText = "{0}칸 올라옴!"; // ui.fx.climbed
         string _lastEl;
 
         /// <param name="rnd01">표시 전용 난수 [0,1). 기본 UnityEngine.Random.value(06 §6.2.3).</param>
@@ -227,6 +231,7 @@ namespace MV.Fx
                 }
                 case RunEventType.ClimbStart:
                     _climbK = Math.Max(1, e.B); _climbPw = e.Amount > 0 ? e.Amount : 1; _climbZ0 = e.X; _climbZEnd = e.Z; _climbDH = e.Amount2;
+                    _climbBaseY = w?.WorldY ?? 0;   // 오르기 시작 지면(끝나면 시뮬이 DH만큼 올린다)
                     o.WarpBegin = true;
                     break;
                 case RunEventType.ClimbWarpStage:
@@ -261,6 +266,14 @@ namespace MV.Fx
                     var s = FromRow(row, V(w?.PlayerX ?? 0, _climbDH + 0.3, _climbZEnd + 0.5));
                     o.Spawns.Add(s);
                     o.WarpEnd = true;
+                    // 새 HTML: 꼭대기에 「N칸 올라옴!」(마지막 등급색, 등급 없으면 흰색). 사용자 계단 규칙 8.
+                    o.Pops.Add(new PopRequest
+                    {
+                        World = V(0, _climbBaseY + _climbDH + ClimbedPopUp, _climbZEnd),
+                        Text = string.Format(System.Globalization.CultureInfo.InvariantCulture, ClimbedText, e.A),
+                        Color = e.B >= 0 ? C(TierHex(t, e.B)) : C("#ffffff"),
+                        Size = ClimbedPopSize,
+                    });
                     break;
                 }
                 case RunEventType.RouletteChosen: // L2370: 플레이어 위치
