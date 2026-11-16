@@ -59,23 +59,28 @@ namespace MV.Fx
         /// 디자이너가 프리팹에서 이 컴포넌트를 꺼 두면(Unity ParticleSystem으로 그린 이펙트) 정본 부품을 만들지 않고
         /// 자식 ParticleSystem을 1회 재생해 다 끝나면 완료를 알린다. 끝 신호를 이 컴포넌트가 내므로 재생 동안만 켠다.
         /// </summary>
-        bool _particleMode;
+        bool _particleMode, _modeKnown;
         ParticleSystem[] _systems;
         float _psElapsed, _psTimeout;
 
-        public bool ParticleMode => _particleMode;
+        public bool ParticleMode { get { DetectMode(); return _particleMode; } }
 
         public Transform Root => transform;
 
-        void Awake()
+        void Awake() => Ensure();
+
+        /// <summary>처음 쓸 때 1번: 프리팹에서 꺼져 있었으면 파티클 모드(재생 중 켜기 전에 정해 둔다). EditMode는 Awake가 없어 여기서도 정한다.</summary>
+        void DetectMode()
         {
+            if (_modeKnown) return;
+            _modeKnown = true;
             _particleMode = !enabled;
             if (_particleMode) _systems = GetComponentsInChildren<ParticleSystem>(true);
-            Ensure();
         }
 
         void Ensure()
         {
+            DetectMode();
             if (_mesh != null) return;
             if (!TryGetComponent(out MeshFilter mf)) mf = gameObject.AddComponent<MeshFilter>();
             if (!TryGetComponent(out _mr)) _mr = gameObject.AddComponent<MeshRenderer>();
