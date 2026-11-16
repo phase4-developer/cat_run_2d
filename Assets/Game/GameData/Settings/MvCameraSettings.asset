@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb87f48586c423f86200d12838720cd, type: 3}
+  m_Name: MvCameraSettings
+  m_EditorClassIdentifier: MV.Data::MV.Data.MvCameraSettings
+  run:
+    posXMul: 0.25
+    posY: 13
+    posZ: -9
+    lookXMul: 0.25
+    lookY: 0.5
+    lookZ: 5.5
+    posLerp: 10
+    snap: 0
+    liftLerp: 6
+    blendLerp: 2
+    fovV: 52
+    near: 0.1
+    far: 400
+    posX: 0
+    lookX: 0
+    turnSec: 0
+  climb:
+    posXMul: 0.3
+    posY: 9.4
+    posZ: -9.1
+    lookXMul: 0.3
+    lookY: 1.1
+    lookZ: 9
+    posLerp: 10
+    snap: 1
+    liftLerp: 12
+    blendLerp: 3
+    fovV: 52
+    near: 0.1
+    far: 400
+    posX: 0
+    lookX: 0
+    turnSec: 0
+  lobby:
+    posXMul: 0
+    posY: 4.2
+    posZ: -4.4
+    lookXMul: 0
+    lookY: 0.2
+    lookZ: 3.4
+    posLerp: 0
+    snap: 1
+    liftLerp: 0
+    blendLerp: 0
+    fovV: 52
+    near: 0.1
+    far: 400
+    posX: 0
+    lookX: 0
+    turnSec: 0
+  side:
+    posXMul: 1
+    posY: 2.1
+    posZ: 0.35
+    lookXMul: 1
+    lookY: 1.5
+    lookZ: 0.35
+    posLerp: 0
+    snap: 1
+    liftLerp: 0
+    blendLerp: 0
+    fovV: 52
+    near: 0.1
+    far: 400
+    posX: 9.2
+    lookX: 0
+    turnSec: 0.42
+  refAspect: {x: 9, y: 16}
+  minAspect: {x: 9, y: 21}
+  maxAspect: {x: 3, y: 4}

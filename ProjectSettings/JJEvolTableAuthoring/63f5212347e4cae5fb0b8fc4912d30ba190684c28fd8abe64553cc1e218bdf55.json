@@ -509,18 +509,6 @@
             "encrypted": false
         },
         {
-            "name": "320_camera",
-            "hash": "da8884439ed5f6949603876602635a8c82b11e12fc6e273df9c3ae2997a261d9",
-            "metaHash": "21b9f319e2bfdcf6e39ae1cac8584a8e53eb10f59d3f4c68fabf0efaf41bb41b",
-            "guid": "4ec0a23a596e4590845ae17c8b299702",
-            "plainHash": "179488398e00ff2ad3ab66cba28d7f026a756d4406167441a470612ea42f0ac3",
-            "sourceHash": "4c3173bb49ef78561d6478733d9d2af13a61f229dfa93cc6a65e539ad155141e",
-            "source": "Assets/Game/GameData/Table/TSV/320_camera.txt",
-            "sourceKind": "LocalFile",
-            "codec": "",
-            "encrypted": false
-        },
-        {
             "name": "330_climb",
             "hash": "ad285be03c0e4b8252c5287bc38ba15ee5d74909e0ba6c879daa9c5ac171a5fc",
             "metaHash": "0f1a8b33e84bd1a459b09a2a75e6d07647556ad84b8e45b94ed8672af07b1ad3",

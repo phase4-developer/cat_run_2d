@@ -8,7 +8,6 @@ namespace MV.Data
 
     public enum CellMode { Hash, Baked }
     public enum CycleMode { Direct, Loop }
-    public enum CameraAnchor { Player, World }
     public enum ClimbRowType { Config, WarpStage }
 
     // ---------------- 300_runConfig (세로 키/값) ----------------
@@ -548,61 +547,6 @@ namespace MV.Data
             kindId = I(r, "kindId");
             dx = D(r, "dx");
             dz = D(r, "dz");
-        }
-    }
-
-    // ---------------- 320_camera ----------------
-
-    public sealed class CameraData : MvRow
-    {
-        public const string Table = "320_camera";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Enum<CameraAnchor>("anchor", true)
-            .Float("posXMul").Float("posY").Float("posZ").Float("lookXMul").Float("lookY").Float("lookZ").Float("posLerp")
-            .Bool("snap").Float("liftLerp").Float("blendLerp").Float("fovV", true).Float("near", true).Float("far", true)
-            .Float("posX").Float("lookX").Float("turnSec");
-
-        public CameraAnchor anchor { get; private set; }
-        public double posXMul { get; private set; }
-        public double posY { get; private set; }
-        public double posZ { get; private set; }
-        public double lookXMul { get; private set; }
-        public double lookY { get; private set; }
-        public double lookZ { get; private set; }
-        public double posLerp { get; private set; }
-        public bool snap { get; private set; }
-        public double liftLerp { get; private set; }
-        public double blendLerp { get; private set; }
-        public double fovV { get; private set; }
-        public double near { get; private set; }
-        public double far { get; private set; }
-        /// <summary>x 더하기(m): 목표 x = 기준 x·posXMul + posX. 계단 옆 시점(side)은 고양이 오른쪽 거리.</summary>
-        public double posX { get; private set; }
-        public double lookX { get; private set; }
-        /// <summary>이 시점으로 돌아 들어가는 시간(초, side 행). 0이면 즉시.</summary>
-        public double turnSec { get; private set; }
-
-        public CameraData(TSVRow r) : base(r) { }
-
-        public override void Init(TSVRow r)
-        {
-            base.Init(r);
-            anchor = E(r, "anchor", CameraAnchor.Player);
-            posXMul = D(r, "posXMul");
-            posY = D(r, "posY");
-            posZ = D(r, "posZ");
-            lookXMul = D(r, "lookXMul");
-            lookY = D(r, "lookY");
-            lookZ = D(r, "lookZ");
-            posLerp = D(r, "posLerp");
-            snap = Bool(r, "snap");
-            liftLerp = D(r, "liftLerp");
-            blendLerp = D(r, "blendLerp");
-            fovV = D(r, "fovV");
-            near = D(r, "near");
-            far = D(r, "far");
-            posX = D(r, "posX");
-            lookX = D(r, "lookX");
-            turnSec = D(r, "turnSec");
         }
     }
 

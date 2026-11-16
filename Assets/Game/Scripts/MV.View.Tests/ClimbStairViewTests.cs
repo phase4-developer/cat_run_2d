@@ -60,8 +60,7 @@ namespace MV.View.Tests
             var go = new GameObject("Cam");
             _made.Add(go);
             var cam = go.AddComponent<Camera>();
-            var t = ViewTestTables.Load();
-            var side = t.Camera.ByKey(CameraModel.KeySide);
+            var side = ViewTestTables.Camera().side;
             cam.fieldOfView = (float)side.fovV;
             cam.nearClipPlane = (float)side.near;
             cam.farClipPlane = (float)side.far;
