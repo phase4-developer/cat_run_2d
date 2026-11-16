@@ -12,7 +12,9 @@ namespace MV.View
 {
     /// <summary>
     /// 계단 정산 칸(새 HTML `startClimb`·`updClimb`·`drawStairs3D`). 칸 i는 바닥(오르기 시작 WY)부터 높이 (i+1)·stepH인 기둥이고,
-    /// 디자이너 프리팹(`330_climb.stepPrefab`, 한 블록 = stepW × stepH × stepD) 블록을 그 높이만큼 쌓아 만든다. 프리팹 크기·비율은 바꾸지 않는다.
+    /// 디자이너 프리팹(`330_climb.stepPrefab`, 한 블록 = stepW × stepH × stepD)을 칸마다 1개만 두고, 세로로 칸 높이만큼 늘려 한 장짜리 기둥으로 만든다(웹 `drawStairs3D`처럼 블록을 쌓은 느낌이 아니라 점점 길어지는 계단).
+    /// 늘리는 방법: 프리팹 안 `Front`·`Side` SpriteRenderer가 Sliced/Tiled면 size.y만 늘려 테두리 두께를 지키고, Simple이면 세로 스케일로 늘린다(테두리도 늘어남, 경고 1회).
+    /// `Top`·`Stripe`·칸 번호는 늘어난 높이만큼 위로 옮긴다. 프리팹 루트 기준점 = 블록 바닥·앞면(지금과 같음).
     /// 칸은 시뮬이 보이기 시작한 순서(<see cref="ClimbState.StepsShown"/>, MV-SPEC-02 6-5e)대로 dropH 위에서 dropSec 동안 (1 − f)²로 떨어지고,
     /// 알파는 0.4 + 0.6f. 꼭대기 블록의 줄무늬는 그 칸 남은 칸 수의 카드 등급 색(없으면 프리팹 색), 아래 블록 줄무늬는 끈다(HTML 줄무늬는 칸마다 꼭대기 1줄).
     /// 옆 시점이면 꼭대기 옆면에 칸 번호. 블록은 카메라 시야 안의 것만 풀에서 꺼내 쓴다. 오르기가 끝난 뒤에도 같은 런이면 마지막 계단을 그대로 둔다(HTML `LASTC`).
@@ -26,9 +28,18 @@ namespace MV.View
         public const float AlphaFrom = 0.4f;
         /// <summary>칸 번호는 블록 안 다른 그림 위에 그린다(정렬 그룹 안 순서).</summary>
         const int NumberOrder = 10;
-        const string StripeName = "Stripe";
+        const string StripeName = "Stripe", FrontName = "Front", SideName = "Side", TopName = "Top";
 
         public Func<string, CancellationToken, UniTask<AddressableLease<GameObject>>> PrefabLoader = AddressableScope.GetPrefab;
+
+        /// <summary>세로로 늘리는 면(앞판·옆판). 프리팹 원래 값(높이 1칸 기준)을 기억해 두고 매번 그 값에서 다시 계산한다.</summary>
+        sealed class Face
+        {
+            public SpriteRenderer Sr;
+            public Transform Tr;
+            public float PosY, SizeY, ScaleY;
+            public bool Sliced;
+        }
 
         sealed class Block
         {
@@ -37,7 +48,13 @@ namespace MV.View
             public SpriteRenderer Stripe;
             public Color StripeBase;
             public WorldLabel Number;
+            public Face Front, Side;
+            public Transform Top, StripeTr;
+            public float TopY, StripeY;
+            public float Height = -1f;   // 마지막으로 맞춘 기둥 높이(같으면 다시 안 바꿈)
         }
+
+        bool _warnedSimple;
 
         MvTables _t;
         ViewConfig _cfg;
@@ -60,7 +77,7 @@ namespace MV.View
         int _used;
         readonly Plane[] _planes = new Plane[6];
 
-        /// <summary>시험·QA: 이번 프레임에 켠 블록 수, 칸 번호를 켠 블록 수.</summary>
+        /// <summary>시험·QA: 이번 프레임에 켠 블록 수(= 보이는 칸 수), 칸 번호를 켠 블록 수.</summary>
         public int ActiveBlocks => _used;
         public int ActiveNumbers { get; private set; }
         public string Address => _address;
@@ -113,7 +130,7 @@ namespace MV.View
             float sideK = Mathf.Clamp01((float)((_cam.transform.position.x - _halfW) / SideFadeM));
             _used = 0;
             int numbers = 0;
-            var size = new Vector3((float)(_halfW * 2), (float)_stepH, (float)_stepD);
+            var size = new Vector3((float)(_halfW * 2), (float)_stepH, (float)_stepD);   // 블록 1칸 크기(컬링 상자 가로·깊이)
             for (int i = 0; i < shown; i++)
             {
                 double f = ended || _dropSec <= 0 ? 1 : Math.Min(1, (C.Time - _shownAt[i]) / _dropSec);
@@ -123,33 +140,22 @@ namespace MV.View
                     new Vector3(size.x, (float)((i + 1) * _stepH), size.z));
                 if (!GeometryUtility.TestPlanesAABB(_planes, column)) continue;
                 float alpha = AlphaFrom + (1 - AlphaFrom) * (float)f;
-                bool placed = false;
-                for (int j = i; j >= 0; j--)   // 위에서 아래로: 시야 아래로 벗어나면 그 아래는 안 본다
+                // 칸 하나 = 블록 하나(바닥 foot부터 높이 (i+1)·stepH인 기둥)
+                float h = (float)((i + 1) * _stepH);
+                var blk = Take(template);
+                blk.Go.transform.position = new Vector3(0, (float)foot, (float)zs);
+                SetHeight(blk, h);
+                blk.Ds.SetAlphaScale(alpha);
+                if (blk.Stripe != null) { blk.Stripe.enabled = true; blk.Ds.SetBaseColor(blk.Stripe, StripeColor(i, blk.StripeBase)); }
+                if (sideK > SideMin)
                 {
-                    double y = foot + j * _stepH;
-                    var b = new Bounds(new Vector3(0, (float)(y + _stepH * 0.5), (float)(zs + _stepD * 0.5)), size);
-                    if (!GeometryUtility.TestPlanesAABB(_planes, b)) { if (placed) break; continue; }
-                    placed = true;
-                    bool top = j == i;
-                    var blk = Take(template);
-                    blk.Go.transform.position = new Vector3(0, (float)y, (float)zs);
-                    blk.Ds.SetAlphaScale(alpha);
-                    if (blk.Stripe != null)
-                    {
-                        blk.Stripe.enabled = top;
-                        if (top) blk.Ds.SetBaseColor(blk.Stripe, StripeColor(i, blk.StripeBase));
-                    }
-                    bool num = top && sideK > SideMin;
-                    if (num)
-                    {
-                        blk.Number.gameObject.SetActive(true);
-                        blk.Number.transform.localPosition = new Vector3((float)_halfW + NumberOut, (float)_stepH - NumberBelowTop, (float)(_stepD * 0.5));
-                        blk.Number.SetText(_label[i]);
-                        blk.Number.SetOpacity(sideK * alpha);
-                        numbers++;
-                    }
-                    else if (blk.Number.gameObject.activeSelf) blk.Number.gameObject.SetActive(false);
+                    blk.Number.gameObject.SetActive(true);
+                    blk.Number.transform.localPosition = new Vector3((float)_halfW + NumberOut, h - NumberBelowTop, (float)(_stepD * 0.5));
+                    blk.Number.SetText(_label[i]);
+                    blk.Number.SetOpacity(sideK * alpha);
+                    numbers++;
                 }
+                else if (blk.Number.gameObject.activeSelf) blk.Number.gameObject.SetActive(false);
             }
             for (int i = _used; i < _pool.Count; i++) Park(_pool[i]);
             ActiveNumbers = numbers;
@@ -225,7 +231,10 @@ namespace MV.View
             ds.Rank = DepthMath.RankObject;
             ds.SortOffsetY = (float)_cfg.ObjProbeY;
             var stripe = go.transform.Find(StripeName);
-            var blk = new Block { Go = go, Ds = ds, Stripe = stripe != null ? stripe.GetComponent<SpriteRenderer>() : null };
+            var top = go.transform.Find(TopName);
+            var blk = new Block { Go = go, Ds = ds, Stripe = stripe != null ? stripe.GetComponent<SpriteRenderer>() : null,
+                Front = MakeFace(go.transform.Find(FrontName)), Side = MakeFace(go.transform.Find(SideName)),
+                Top = top, TopY = top != null ? top.localPosition.y : 0f, StripeTr = stripe, StripeY = stripe != null ? stripe.localPosition.y : 0f };
             if (blk.Stripe != null) blk.StripeBase = blk.Stripe.color;
             blk.Number = WorldLabel.Create(go.transform, "Number", NumberSize, _labelMaterial);   // 정렬·안개 기본 색을 잡기 전에 붙인다
             blk.Number.Text.sortingOrder = NumberOrder;
@@ -234,6 +243,40 @@ namespace MV.View
             _pool.Add(blk);
             _used++;
             return blk;
+        }
+
+        Face MakeFace(Transform t)
+        {
+            if (t == null) return null;
+            var sr = t.GetComponent<SpriteRenderer>();
+            if (sr == null) return null;
+            bool sliced = sr.drawMode != SpriteDrawMode.Simple;
+            if (!sliced && !_warnedSimple)
+            {
+                _warnedSimple = true;
+                Debug.LogWarning("[ClimbStairView] 계단 칸 프리팹의 " + t.name + "가 Simple이라 세로 스케일로 늘립니다(테두리도 늘어남). Sprite에 9-slice 테두리를 잡고 Draw Mode를 Sliced로 바꿔 주세요.");
+            }
+            return new Face { Sr = sr, Tr = t, PosY = t.localPosition.y, SizeY = sliced ? sr.size.y : 0f, ScaleY = t.localScale.y, Sliced = sliced };
+        }
+
+        /// <summary>기둥 높이 h(m)에 맞춰 앞판·옆판을 늘리고 윗판·줄무늬를 올린다. 프리팹 원래 높이 = stepH.</summary>
+        void SetHeight(Block b, float h)
+        {
+            if (Mathf.Approximately(b.Height, h)) return;
+            b.Height = h;
+            float k = h / (float)_stepH, up = h - (float)_stepH;
+            StretchFace(b.Front, k);
+            StretchFace(b.Side, k);
+            if (b.Top != null) { var p = b.Top.localPosition; p.y = b.TopY + up; b.Top.localPosition = p; }
+            if (b.StripeTr != null) { var p = b.StripeTr.localPosition; p.y = b.StripeY + up; b.StripeTr.localPosition = p; }
+        }
+
+        static void StretchFace(Face f, float k)
+        {
+            if (f == null) return;
+            var p = f.Tr.localPosition; p.y = f.PosY * k; f.Tr.localPosition = p;   // 가운데 기준 면은 높이에 비례해 중심이 올라간다(아래 기준 면은 PosY = 0이라 그대로)
+            if (f.Sliced) { var sz = f.Sr.size; sz.y = f.SizeY * k; f.Sr.size = sz; }
+            else { var sc = f.Tr.localScale; sc.y = f.ScaleY * k; f.Tr.localScale = sc; }
         }
 
         static void Park(Block b)

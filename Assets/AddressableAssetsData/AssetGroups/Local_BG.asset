@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Local_BG
   m_GUID: 9a1bbfd4527617948bb6d71ddbb563f0
   m_SerializeEntries:
+  - m_GUID: 00e6f7e064c0b4ee084b8ee1005e7a02
+    m_Address: Obj_ClimbStep_E
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 28b3601d9fb7f4bc8b9a09b6a650ea69
     m_Address: Stage1_Block_Cat
     m_ReadOnly: 0
@@ -40,8 +45,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6323877bc368d499896a14215f147f8a
+    m_Address: Obj_ClimbStep_L
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7e0498ad17d11465ca28b2500c75f0d4
     m_Address: Obj_CraftGate
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7f7344a209aa0443ba49a3470c93c25c
+    m_Address: Obj_ClimbStep_UC
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -52,6 +67,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 890efbb3bef3e4d7fabe66c569383a83
     m_Address: Obj_CoinPile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 900e726c4e9bb4d2e873dd7e82371bed
+    m_Address: Obj_ClimbStep_C
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -72,6 +92,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c4e822753f919473f80f6748fc60d5b7
     m_Address: Obj_ClimbStep
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d1a78db91b2224e6487164bf51c2cbfa
+    m_Address: Obj_ClimbStep_R
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

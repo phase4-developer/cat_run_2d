@@ -81,7 +81,7 @@ TrailRenderer:
   m_SortingLayer: 2
   m_SortingOrder: -1
   m_MaskInteraction: 0
-  m_Time: 0.2
+  m_Time: 0.1
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -147,7 +147,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.04
+  m_MinVertexDistance: 0
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
@@ -1139,12 +1139,75 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: 0
-          outSlope: 0
+          inSlope: -0.7943783
+          outSlope: -0.7943783
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
-          outWeight: 0
+          outWeight: 0.961569
+        - serializedVersion: 3
+          time: 0.10511492
+          value: 0.8232488
+          inSlope: -0.34134293
+          outSlope: -0.34134293
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.21948263
+          value: 1
+          inSlope: -0.4367472
+          outSlope: -0.4367472
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.33034664
+          value: 0.72209847
+          inSlope: -0.7090523
+          outSlope: -0.7090523
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.45865247
+          value: 0.85941166
+          inSlope: -0.5341766
+          outSlope: -0.5341766
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.57991445
+          value: 0.48591915
+          inSlope: -0.87200475
+          outSlope: -0.87200475
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.7141753
+          value: 0.63961923
+          inSlope: 0.038335007
+          outSlope: 0.038335007
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.8647569
+          value: 0.36883372
+          inSlope: -0.7186979
+          outSlope: -0.7186979
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
           value: 0.5
@@ -5102,7 +5165,7 @@ TrailRenderer:
   m_SortingLayer: 2
   m_SortingOrder: -2
   m_MaskInteraction: 0
-  m_Time: 0.2
+  m_Time: 0.1
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -5168,7 +5231,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.04
+  m_MinVertexDistance: 0
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
