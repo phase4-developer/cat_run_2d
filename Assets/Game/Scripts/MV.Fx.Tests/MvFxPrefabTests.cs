@@ -136,24 +136,54 @@ namespace MV.Fx.Tests
             }
         }
 
-        /// <summary>드라이버를 꺼 둔 프리팹(Sparks)은 자식 ParticleSystem을 1회 재생하고 상한 시간 안에 완료를 알린다(끝나지 않고 남던 문제).</summary>
+        /// <summary>Sparks 프리팹: 정본 불꽃과 디자이너 ParticleSystem을 함께 1회 재생하고, 둘 다 끝나야 완료(긴 쪽 기준).</summary>
         [Test]
-        public void DisabledDriverPrefab_PlaysParticlesOnceAndCompletes()
+        public void SparksPrefab_PlaysCodeAndParticles_CompletesAfterLonger()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(Dir + "Sparks.prefab");
             Assert.IsNotNull(prefab);
-            Assert.IsFalse(prefab.GetComponent<MvFxDriver>().enabled, "Sparks 프리팹은 드라이버를 꺼 둔 파티클 이펙트");
+            Assert.IsTrue(prefab.GetComponent<MvFxDriver>().enabled, "Sparks 프리팹은 드라이버를 켠 상태(사용자 2026-11-16)");
+            Assert.Greater(prefab.GetComponentsInChildren<ParticleSystem>(true).Length, 0, "디자이너 파티클");
             var go = Object.Instantiate(prefab);
             try
             {
                 var d = go.GetComponent<MvFxDriver>();
+                Assert.IsFalse(d.ParticleMode);
+                bool done = false;
+                d.SetSkin(MvFxParamBank.Put(FxSpawn.Of("fx.sparks", Vector3.zero)));
+                d.Play(0, false, () => done = true);
+                Assert.Greater(d.PartCount, 0, "정본 불꽃");
+                Assert.IsTrue(d.ParticlesPlaying, "파티클도 재생");
+                foreach (var ps in go.GetComponentsInChildren<ParticleSystem>(true)) Assert.IsFalse(ps.main.loop, ps.name + " 반복 끔");
+                for (int i = 0; i < 100; i++) d.Step(0.1f);
+                Assert.AreEqual(0, d.PartCount, "정본 불꽃은 끝남");
+                Assert.IsFalse(done, "파티클이 남아 있으면 아직 완료 아님");
+                for (int i = 0; i < 1000 && !done; i++) d.StepParticles(0.1f);
+                Assert.IsTrue(done, "파티클 상한 시간 안에 완료");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        /// <summary>드라이버를 꺼 둔 프리팹은 파티클만 1회 재생하고 상한 시간 안에 완료를 알린다(끝나지 않고 남던 문제).</summary>
+        [Test]
+        public void DisabledDriver_PlaysParticlesOnlyAndCompletes()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(Dir + "Sparks.prefab");
+            Assert.IsNotNull(prefab);
+            var go = Object.Instantiate(prefab);
+            try
+            {
+                var d = go.GetComponent<MvFxDriver>();
+                d.enabled = false; // 프리팹에서 꺼 둔 것과 같음(EditMode는 Awake 전이라 처음 쓸 때 판단)
                 Assert.IsTrue(d.ParticleMode);
                 bool done = false;
                 d.SetSkin(MvFxParamBank.Put(FxSpawn.Of("fx.sparks", Vector3.zero)));
                 d.Play(0, false, () => done = true);
                 Assert.AreEqual(0, d.PartCount, "정본 부품을 만들지 않음");
                 Assert.IsTrue(d.enabled, "재생 동안 켜져 끝을 본다");
-                foreach (var ps in go.GetComponentsInChildren<ParticleSystem>(true)) Assert.IsFalse(ps.main.loop, ps.name + " 반복 끔");
                 for (int i = 0; i < 1000 && !done; i++) d.StepParticles(0.1f);
                 Assert.IsTrue(done, "상한 시간 안에 완료");
                 Assert.IsFalse(d.enabled);
