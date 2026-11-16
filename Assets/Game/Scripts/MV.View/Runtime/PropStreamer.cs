@@ -32,7 +32,7 @@ namespace MV.View
         ThemeData _theme;
         string _atlas, _fxAtlas;
         double _groundY;
-        bool _night;
+        bool _night, _nearFaded;
         Color _lampColor, _winColor;
 
         readonly List<double> _clothZ = new List<double>(8);
@@ -98,7 +98,25 @@ namespace MV.View
                 if (want && v == null) _views[i] = Show(_specs[i]);
                 else if (!want && v != null) { Hide(_specs[i].Kind, v); _views[i] = null; }
             }
+            double e = _rig.Model.OrbitE;
+            if (e > 0 || _nearFaded) { ApplyNearFade(e); _nearFaded = e > 0; }
             UpdateCloth(pz);
+        }
+
+        /// <summary>
+        /// 계단 정산 옆 시점(<see cref="ClimbOcclusion"/>): 카메라 쪽(x &gt; 0) 소품 알파 = max(0, 1 − e·2.2), 0.01 이하면 그리지 않는다(새 HTML `streetProps`).
+        /// </summary>
+        void ApplyNearFade(double e)
+        {
+            for (int i = 0; i < _specs.Count; i++)
+            {
+                var v = _views[i];
+                if (v == null || _specs[i].GenX <= 0) continue;
+                float a = ClimbOcclusion.NearAlpha(e, _specs[i].GenX);
+                v.GetComponent<DepthSortable>().SetAlphaScale(a);
+                bool on = a > 0.01f;
+                if (v.activeSelf != on) v.SetActive(on);
+            }
         }
 
         void ClearViews()
@@ -112,6 +130,7 @@ namespace MV.View
         void Hide(PropKind kind, GameObject v)
         {
             v.SetActive(false);
+            v.GetComponent<DepthSortable>().SetAlphaScale(1f);   // 옆 시점에서 흐려진 채 풀에 들어가도 다시 쓸 때는 원래 알파
             if (_lights.TryGetValue(v, out var lights))
                 for (int i = 0; i < lights.Count; i++) lights[i].SetActive(false);
             if (!_pool.TryGetValue(kind, out var st)) _pool[kind] = st = new Stack<GameObject>();
