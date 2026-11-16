@@ -231,7 +231,7 @@ namespace MV.Run
         /// <summary>발사 간격 iv(§4.2.2).</summary>
         public static double FireInterval(RunState s)
         {
-            double rate = s.Setup.RateOverride ?? s.Bal.rate;
+            double rate = s.Setup.RateOverride ?? s.Tables.Character.Rate(s.Bal.key);
             return 1 / (rate * CardMul(s, CardEffectType.FireRateMul) * (1 + Aup(s, AreaStatKey.FireRate)) * (1 + s.Setup.Modifiers.FireRate / 100));
         }
 

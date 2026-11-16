@@ -355,7 +355,7 @@ namespace MV.View.Tests
         }
 
         [Test]
-        public void CharacterPresenter_ClimbPhase_PlayerStair_ClonesWalk()
+        public void CharacterPresenter_ClimbPhase_PlayerStair_ClonesHiddenUntilRun()
         {
             var t = ViewTestTables.Load();
             var go = new GameObject("Cats");
@@ -369,7 +369,11 @@ namespace MV.View.Tests
             view.Sync(s, 1.0);
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Stair));
             Assert.That(view.SpriteNameOf(0), Is.EqualTo(view.LookOf(0).stair));
-            Assert.That(view.StateOf(1), Is.EqualTo(CharState.Walk), "분신 숨김은 5단계(카메라 궤도 회전)");
+            Assert.That(view.StateOf(1), Is.EqualTo(CharState.Hidden), "사용자 계단 규칙 6: 정산 중 분신 숨김");
+            s.Phase = RunPhase.Run;
+            s.Climb = null;
+            view.Sync(s, 2.0);
+            Assert.That(view.StateOf(1), Is.EqualTo(CharState.Walk), "정산이 끝나면 다시 나타남");
         }
 
         // ───────── 로비 트랙(MV-VIEW-LOBBY-TRACK) ─────────

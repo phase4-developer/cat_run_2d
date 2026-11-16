@@ -70,9 +70,10 @@ GameObject:
   - component: {fileID: 1030}
   - component: {fileID: 1170}
   - component: {fileID: 1180}
+  - component: {fileID: 1185}
   m_Layer: 0
   m_Name: GameCamera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,6 +149,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24a27490fa84bc58a46d7625313aff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _settings: {fileID: 11400000, guid: 3da2b4e9ac7e49b790ff7ea1b5a7f0e5, type: 2}
+--- !u!81 &1185
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020}
+  m_Enabled: 1
 --- !u!1 &1040
 GameObject:
   m_ObjectHideFlags: 0

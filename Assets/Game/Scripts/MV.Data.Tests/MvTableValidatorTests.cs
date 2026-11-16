@@ -149,8 +149,8 @@ namespace MV.Data.Tests
         [Test]
         public void Format_IdPrefix_IsError()
         {
-            var text = TsvFixture.Set(TsvFixture.Read("320_camera"), TsvFixture.Read("320_camera").Split('\n')[1].Split('\t')[0], "id", "999000001");
-            AssertError(TsvFixture.Validate(("320_camera", text)), "320_camera", "표 번호");
+            var text = TsvFixture.Set(TsvFixture.Read("330_climb"), TsvFixture.Read("330_climb").Split('\n')[1].Split('\t')[0], "id", "999000001");
+            AssertError(TsvFixture.Validate(("330_climb", text)), "330_climb", "표 번호");
         }
 
         [Test]

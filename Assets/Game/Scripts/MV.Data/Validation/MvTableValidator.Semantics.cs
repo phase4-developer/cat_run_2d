@@ -90,6 +90,20 @@ namespace MV.Data
             if (n != 1) r.Error(BalancePresetData.Table, null, "isDefault", $"isDefault 1인 행이 정확히 1개여야 합니다(지금 {n}개)");
         }
 
+        /// <summary>
+        /// 기본 연사는 MvCharacterSettings(프리셋 key별). 활성 프리셋마다 값이 있어야 한다. 런타임 로드에서만 본다
+        /// (표 반영 검증은 에셋 가져오기 중일 수 있어 Resources를 읽지 않는다).
+        /// </summary>
+        static void CheckPresetRates(MvTables t, MvValidationReport r)
+        {
+            RunCharacterConfig ch;
+            try { ch = t.Character; }
+            catch (Exception e) { r.Error(BalancePresetData.Table, null, "key", e.Message); return; }
+            foreach (var p in t.BalancePreset.Datas)
+                if (p.active && !ch.TryRate(p.key, out _))
+                    r.Error(BalancePresetData.Table, p.id, "key", $"MvCharacterSettings에 프리셋 '{p.key}'의 기본 연사가 없습니다");
+        }
+
         // ---------------- 301·302 ----------------
 
         static void CheckWorld(MvTables t, MvValidationReport r)

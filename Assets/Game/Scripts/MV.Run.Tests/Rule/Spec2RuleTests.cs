@@ -251,7 +251,7 @@ namespace MV.Run.Tests
             var sim = Sim(new HandLevel(), t: t);
             sim.State.Tpl = t.Template.ByKey("tpl1").id;
             sim.Tick(0.05, default);
-            double speed = inside ? t.RunConfig.D(RunConfigKeys.RUN_SPEED_MID) : t.RunConfig.D(RunConfigKeys.RUN_SPEED);
+            double speed = inside ? t.Character.RunSpeedMid : t.Character.RunSpeed;
             Assert.AreEqual(speed * 0.05, sim.State.P.Z, 1e-12);
         }
 

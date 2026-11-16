@@ -64,10 +64,10 @@
 | 씬 | 내용 | 시작 담당 |
 |---|---|---|
 | `Boot` (Build 0) | `GameBootstrap`, `UIManagerCreater`(+자식 EventSystem), Main Camera(URP Base, Tag MainCamera), `AudioManager`, `EffectManager` | Framework `NewGame.md` 5~6단계 순서 그대로 |
-| `Game` | 런과 로비를 **한 씬**에서 처리한다. 프로토도 로비→런 전환이 씬 교체 없이 즉시다(화면을 누르면 바로 출발). `WorldRoot`(월드 렌더), `GameCamera`(FOV 52 원근), `LobbyStage`(아이소메트릭 아지트) | `GameInitializer : SceneInitializerBase` |
+| `Game` | 런과 로비를 **한 씬**에서 처리한다. 프로토도 로비→런 전환이 씬 교체 없이 즉시다(화면을 누르면 바로 출발). `WorldRoot`(월드 렌더, `Assets/Game/Prefabs/WorldRoot.prefab`을 씬에 직접 배치. Addressables로 만들지 않음), 그 아래 `GameCamera`(원근, MainCamera 태그·AudioListener, 값은 `MvCameraSettings` 에셋 §02 2.2.2). 로비는 같은 트랙 화면(02 §2.9 현재 기준, 아지트 `LobbyStage` 없음). `GameInitializer._world`가 씬의 `WorldView`를 게임 루프에 넘긴다 | `GameInitializer : SceneInitializerBase` |
 | `Mode_*` (선택) | 추가 콘텐츠 모드 중 규칙이 크게 다른 것(예: 골목 수비전 = Hell War류)은 별도 씬. Addressable 씬 | `ModeInitializer` |
 
-이유: 로비에서 탭하면 0프레임 안에 런이 시작되고 카메라가 로비 시점에서 런 시점으로 보간된다(프로토 `syncScene` L2746~, 로비 `camPos=(0,4.2,-4.4)` 시선 `(0,0.2,3.4)`). 씬을 나누면 이 감각을 재현할 수 없다.
+이유: 로비에서 탭하면 0프레임 안에 런이 시작되고 카메라가 로비 시점에서 런 시점으로 보간된다(프로토 `syncScene` L2746~, 로비 `camPos=(0,4.2,-4.4)` 시선 `(0,0.2,3.4)`). 씬을 나누면 이 감각을 재현할 수 없다. 로비/Game 씬 분리는 이번 기획에서 **제외**(2026-11-16 D-SCENE-CAM, 사용자 「HOLD가 아닌 제외로 기록」). 카메라 검수용 별도 씬(CameraPreview)도 두지 않는다.
 
 ## 10.4 모듈 경계 (asmdef)
 

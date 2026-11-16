@@ -7,14 +7,10 @@ namespace MV.View.Tests
     {
         const double H = 640;
 
-        static CameraModel NewModel() => CameraModel.FromTables(ViewTestTables.Load());
+        static CameraModel NewModel() => CameraModel.FromSettings(ViewTestTables.Camera());
 
-        /// <summary>옆 시점(side 행) 없이 기본 시점만 보는 모델.</summary>
-        static CameraModel NoSide()
-        {
-            var t = ViewTestTables.Load();
-            return new CameraModel(t.Camera.ByKey(CameraModel.KeyRun), t.Camera.ByKey(CameraModel.KeyClimb), t.Camera.ByKey(CameraModel.KeyLobby));
-        }
+        /// <summary>옆 시점(side) 없이 기본 시점만 보는 모델.</summary>
+        static CameraModel NoSide() => CameraModel.FromSettings(ViewTestTables.Camera(), withSide: false);
 
         static CameraModel Settled(WorldViewMode mode, bool side = false)
         {

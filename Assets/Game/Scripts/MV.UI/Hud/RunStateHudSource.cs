@@ -11,13 +11,16 @@ namespace MV.UI
     {
         readonly Func<RunState> _state;
         readonly Func<int> _savedSouls;
+        readonly double _sideTurnSec;
 
         /// <param name="state">현재 런 상태(없으면 null).</param>
         /// <param name="savedSouls">저장된 누적 생선 <c>save.souls</c>.</param>
-        public RunStateHudSource(Func<RunState> state, Func<int> savedSouls)
+        /// <param name="sideTurnSec">계단 옆 시점으로 도는 시간(<c>MvCameraSettings.side.turnSec</c>). 0이면 바로 다 돈 것으로 본다.</param>
+        public RunStateHudSource(Func<RunState> state, Func<int> savedSouls, double sideTurnSec = 0)
         {
             _state = state;
             _savedSouls = savedSouls;
+            _sideTurnSec = sideTurnSec;
         }
 
         /// <summary>현재 런 상태(가호 카드 화면이 직접 읽는다).</summary>
@@ -51,7 +54,7 @@ namespace MV.UI
                 {
                     h.ClimbN = climb.N;
                     h.ClimbShown = Math.Min(climb.N, climb.Shown);
-                    h.ClimbAlpha = ClimbAlpha(t, climb.Time);
+                    h.ClimbAlpha = ClimbAlpha(_sideTurnSec, climb.Time);
                 }
             }
             else h.Stairs = s.Stairs;
@@ -76,14 +79,12 @@ namespace MV.UI
             return true;
         }
 
-        /// <summary>새 HTML 「n / N 칸」은 옆 시점 돌기 e(320 side.turnSec, smooth)가 ClimbTextFrom을 넘으면 ClimbTextRate 배로 나타난다.</summary>
+        /// <summary>새 HTML 「n / N 칸」은 옆 시점 돌기 e(카메라 설정 side.turnSec, smooth)가 ClimbTextFrom을 넘으면 ClimbTextRate 배로 나타난다.</summary>
         public const double ClimbTextFrom = 0.6, ClimbTextRate = 3;
 
         /// <summary>오르기 시작부터 time초 뒤 글자 알파. 카메라 돌기는 오르기와 함께 0에서 시작한다(<c>ORB.k += dt/dur</c>).</summary>
-        public static float ClimbAlpha(MvTables t, double time)
+        public static float ClimbAlpha(double turn, double time)
         {
-            var side = t?.Camera.ByKey("side");
-            double turn = side != null ? side.turnSec : 0;
             double k = turn > 0 ? Math.Max(0, Math.Min(1, time / turn)) : 1, e = k * k * (3 - 2 * k);
             return e > ClimbTextFrom ? (float)Math.Min(1, (e - ClimbTextFrom) * ClimbTextRate) : 0f;
         }

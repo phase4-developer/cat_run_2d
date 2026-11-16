@@ -9,6 +9,8 @@ namespace MV.Run
     public sealed partial class RunSim
     {
         RunParams _p;
+        /// <summary>마지막으로 읽은 <see cref="MvTables.CharacterVersion"/>.</summary>
+        int _characterVersion;
         /// <summary>이 런 Area의 계단 게이트 M 표(302_area.sgateM). 없으면 null(107 base).</summary>
         IReadOnlyList<double> _sgateM;
         readonly List<MvDropResult> _dropBuf = new List<MvDropResult>();
@@ -19,9 +21,17 @@ namespace MV.Run
         partial void OnCreated()
         {
             _p = RunParams.From(T);
+            _characterVersion = T.CharacterVersion;
             foreach (var a in T.Area.Datas) if (a.areaNo == S.Area + 1) { _sgateM = a.sgateM; break; }
             S.Emit(new RunEvent(RunEventType.RunStarted, a: S.Area, b: S.Level, c: S.Tpl));
             S.Emit(new RunEvent(RunEventType.WeaponHandReset, ids: (int[])S.W.Clone()));
+        }
+
+        /// <summary>캐릭터 기본값 사본이 바뀌었으면(에디터 Inspector 수정) 이동 값을 다시 읽는다. 연사는 발사 때마다 <see cref="MvTables.Character"/>를 읽는다.</summary>
+        void ApplyCharacter()
+        {
+            _p.ApplyCharacter(T.Character);
+            _characterVersion = T.CharacterVersion;
         }
 
         // ================= 프레임 (§4.13.2) =================
@@ -30,6 +40,7 @@ namespace MV.Run
         {
             var s = S;
             s.Frame++;
+            if (_characterVersion != T.CharacterVersion) ApplyCharacter();
             if (s.Phase == RunPhase.Lobby) return;
             double dt = Math.Min(_p.DtCap, realDt);
             s.RealTime += dt;
@@ -234,7 +245,7 @@ namespace MV.Run
             if (got < n) s.Emit(new RunEvent(RunEventType.WeaponRejected, a: n - got, b: s.Bt));
         }
 
-        /// <summary>전진 속도: 템플릿 중간 구역(310 midFromZ~midToZ, 템플릿 기준 z)이면 RUN_SPEED_MID(MV-SPEC-02 4-1, Q-15).</summary>
+        /// <summary>전진 속도: 템플릿 중간 구역(310 midFromZ~midToZ, 템플릿 기준 z)이면 캐릭터 설정 runSpeedMid(MV-SPEC-02 4-1, Q-15).</summary>
         double RunSpeedAt(RunState s)
         {
             var tpl = T.Template.Get(s.Tpl);

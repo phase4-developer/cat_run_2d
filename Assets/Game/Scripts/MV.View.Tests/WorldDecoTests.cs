@@ -121,18 +121,5 @@ namespace MV.View.Tests
             Assert.That(LobbyIso.FacSprite("scratch", 3, 0), Is.EqualTo("Lobby_Fac_Scratch_3"));
             Assert.That(LobbyIso.FacSprite("basket", 1, 0), Is.EqualTo("Lobby_Fac_Basket_1"));
         }
-
-        [Test]
-        public void LobbyStagePrefab_HasOrthoCameraAndMaterial()
-        {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Addressables/Local/World/LobbyStage.prefab");
-            Assert.That(prefab, Is.Not.Null);
-            var so = new SerializedObject(prefab.GetComponent<LobbyStage>());
-            var cam = so.FindProperty("_camera").objectReferenceValue as Camera;
-            Assert.That(cam, Is.Not.Null);
-            Assert.That(cam.orthographic, Is.True);
-            Assert.That(cam.orthographicSize, Is.EqualTo(LobbyIso.OrthoSize));
-            Assert.That(so.FindProperty("_spriteMaterial").objectReferenceValue, Is.Not.Null);
-        }
     }
 }

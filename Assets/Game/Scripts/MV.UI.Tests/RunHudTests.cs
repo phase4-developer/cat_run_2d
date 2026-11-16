@@ -206,13 +206,15 @@ namespace MV.UI.Tests
         [Test]
         public void ClimbAlpha_FollowsSideTurnSmoothstep()
         {
-            var t = MV.UI.Tests.MetaUiTestKit.Base();
-            double turn = t.Camera.ByKey("side").turnSec;
-            Assert.AreEqual(0f, RunStateHudSource.ClimbAlpha(t, 0), "돌기 시작 전");
-            Assert.AreEqual(0f, RunStateHudSource.ClimbAlpha(t, turn * 0.5), 1e-6, "e = 0.5 ≤ 0.6");
-            Assert.AreEqual(1f, RunStateHudSource.ClimbAlpha(t, turn), 1e-6, "다 돌면 e = 1 → min(1, 0.4·3)");
+            var settings = UnityEditor.AssetDatabase.LoadAssetAtPath<MV.Data.MvCameraSettings>(MV.Data.MvCameraSettings.AssetPath);
+            Assert.That(settings, Is.Not.Null, MV.Data.MvCameraSettings.AssetPath);
+            double turn = settings.side.turnSec;
+            Assert.That(turn, Is.GreaterThan(0), "side.turnSec");
+            Assert.AreEqual(0f, RunStateHudSource.ClimbAlpha(turn, 0), "돌기 시작 전");
+            Assert.AreEqual(0f, RunStateHudSource.ClimbAlpha(turn, turn * 0.5), 1e-6, "e = 0.5 ≤ 0.6");
+            Assert.AreEqual(1f, RunStateHudSource.ClimbAlpha(turn, turn), 1e-6, "다 돌면 e = 1 → min(1, 0.4·3)");
             double k = 0.8, e = k * k * (3 - 2 * k);
-            Assert.AreEqual((float)((e - 0.6) * 3), RunStateHudSource.ClimbAlpha(t, turn * k), 1e-5);
+            Assert.AreEqual((float)((e - 0.6) * 3), RunStateHudSource.ClimbAlpha(turn, turn * k), 1e-5);
         }
     }
 }

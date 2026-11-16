@@ -28,18 +28,17 @@ namespace MV.Boot
 
     /// <summary>
     /// Game 씬 게임 루프(10 §10.3, MV-PLAY-INT): 로비 → 런 → 지도 → 결과 → 로비를 한 씬에서 돈다(런 끝 순서 MV-SPEC-02 01 §12-3).
-    /// <see cref="GameInitializer"/>가 붙이고 <see cref="InitAsync"/>를 기다린다. 씬 파일은 바꾸지 않고 `WorldRoot`를
-    /// Addressables로 만들어 이 오브젝트 아래에 둔다.
+    /// <see cref="GameInitializer"/>가 붙이고 <see cref="InitAsync"/>를 기다린다. `WorldRoot`(월드·`GameCamera`)는 Game 씬에 직접 놓여 있고
+    /// 초기화기가 그 참조를 넘긴다(2026-11-16, 에디터에서 월드·카메라를 직접 보고 고치기 위해 Addressables 생성을 뺐다).
     /// 로비 = 트랙 위 같은 화면(MV-SPEC-02 01 §3 [원작], 사용자 2026-11-12 「로비를 트랙 화면으로 바꿔야해」): 다음 런과 같은 순번·시드로
     /// 런 상태를 미리 만들어(Tick하지 않음) 시작점부터 `lobby.objZMax` 안 오브젝트와 걷는 냥법사를 월드 카메라 로비 자세로 그린다.
-    /// 출발하면 런을 새로 만들고 카메라가 로비 자세에서 런 자세로 쓸어 간다(02 §2.2.2). 아지트 방(`LobbyStage`)은 쓰지 않는다.
+    /// 출발하면 런을 새로 만들고 카메라가 로비 자세에서 런 자세로 쓸어 간다(02 §2.2.2). 아지트 방(옛 `LobbyStage`·`LobbyCamera`)은 2026-11-16 삭제했다.
     /// 런 프레임: 입력 → <see cref="RunSim.Tick"/> → <see cref="RunSim.DrainEvents"/> 한 번 → 같은 목록을 소리·이펙트·월드 뷰에 넘긴다. HUD는 상태를 직접 읽는다.
     /// 카드 룰렛은 MV.Run이 스스로 고르고(04 §4.8.4), 신 선택은 로비(저장)라 런이 플레이어 선택을 기다리는 곳은 아직 없다.
     /// 교체 지점: 선택을 기다리는 런 상태가 생기면 <see cref="TickRun"/>에서 「// 1차 자동 선택:」으로 첫 선택지를 고르고 선택 UI는 MV-UI 2차가 붙인다.
     /// </summary>
     public sealed class MvGameLoop : MonoBehaviour
     {
-        public const string WorldRootAddress = "WorldRoot";
         public static MvGameLoop Current { get; private set; }
 
         public MvLoopPhase Phase { get; private set; }
@@ -77,7 +76,6 @@ namespace MV.Boot
         WorldView _world;
         RunSim _lobbySim;
         readonly List<RunObject> _lobbyObjs = new List<RunObject>(64);
-        Camera _sceneCamera;
         readonly List<IDisposable> _leases = new List<IDisposable>();
         readonly LoopViewSource _viewSource = new LoopViewSource();
         MvRunInputReader _input;
@@ -109,10 +107,11 @@ namespace MV.Boot
 
         // ═════════ 준비 ═════════
 
-        /// <summary>월드·이펙트를 만들고 로비를 연다. 실패하면 예외(씬 초기화 실패로 남는다).</summary>
-        public async UniTask InitAsync(MvTables tables)
+        /// <summary>씬의 월드를 초기화하고 이펙트를 만들어 로비를 연다. 실패하면 예외(씬 초기화 실패로 남는다).</summary>
+        public async UniTask InitAsync(MvTables tables, WorldView world)
         {
             _tables = tables ?? throw new ArgumentNullException(nameof(tables));
+            _world = world != null ? world : throw new ArgumentNullException(nameof(world), "Game 씬에 WorldRoot(WorldView)가 없습니다.");
             _ct = this.GetCancellationTokenOnDestroy();
             Phase = MvLoopPhase.Loading;
             try
@@ -124,18 +123,12 @@ namespace MV.Boot
 
                 _input = new MvRunInputReader(tables.RunConfig.D(RunConfigKeys.DRAG_SCREEN_M));
 
-                var world = await AddressableScope.InstantiateWithLease(WorldRootAddress, transform, _ct);
-                Alive();
-                Keep(world.lease, world.destroyOnDispose);
-                _world = world.instance ? world.instance.GetComponent<WorldView>() : null;
-                if (_world == null) throw new InvalidOperationException($"'{WorldRootAddress}' 프리팹에 WorldView가 없습니다.");
                 _world.Init(tables, _viewSource);
                 await ApplyThemeAsync(CurrentArea());
                 Alive();
 
                 await InstallFxAsync();
                 Alive();
-                TakeSceneCamera();
                 await EnterLobbyAsync();
             }
             catch (OperationCanceledException)
@@ -153,12 +146,6 @@ namespace MV.Boot
         void Alive()
         {
             if (!this) throw new OperationCanceledException(_ct);
-        }
-
-        void Keep(IDisposable lease, IDisposable destroy)
-        {
-            if (destroy != null) _leases.Add(destroy);
-            if (lease != null) _leases.Add(lease);
         }
 
         async UniTask InstallFxAsync()
@@ -183,21 +170,13 @@ namespace MV.Boot
         }
 
         /// <summary>
-        /// 화면 카메라: 로비·런 모두 월드 카메라가 그리고 UI는 그 위에 겹친다(UIManagerCreater.mainCamera를 바꾸면 다음 LateUpdate에 다시 붙는다).
-        /// 씬의 Main Camera는 렌더를 끈다(AudioListener는 남긴다).
+        /// 화면 카메라: 로비·런 모두 씬의 `GameCamera`(월드 카메라)가 그리고 UI는 그 위에 겹친다
+        /// (UIManagerCreater.mainCamera를 바꾸면 다음 LateUpdate에 다시 붙는다).
         /// </summary>
-        void TakeSceneCamera()
-        {
-            foreach (var root in gameObject.scene.GetRootGameObjects())
-                foreach (var cam in root.GetComponentsInChildren<Camera>(true))
-                    if (cam.CompareTag("MainCamera") && !cam.transform.IsChildOf(transform)) { _sceneCamera = cam; break; }
-        }
-
         void UseCamera(Camera cam)
         {
             var ui = GameBootstrap.Ui;
             if (ui) ui.mainCamera = cam;
-            if (_sceneCamera) _sceneCamera.enabled = false;
         }
 
         int CurrentArea()
@@ -237,7 +216,7 @@ namespace MV.Boot
             if (r.destroyOnDispose != null) _stageLeases.Add(r.destroyOnDispose);
             if (r.lease != null) _stageLeases.Add(r.lease);
             _stageMap = r.instance.GetComponent<StageMap>();
-            if (_stageMap != null) _stageMap.Bind(_world.Rig.Cam, () => (float)_viewSource.Camera.Wy);
+            if (_stageMap != null) _stageMap.Bind(_world.Rig.Cam, () => (float)_viewSource.Camera.Wy, () => _world.Rig.Ready ? _world.Rig.Model.OrbitE : 0);
         }
 
         // ═════════ 로비 ═════════
@@ -353,7 +332,7 @@ namespace MV.Boot
             _world.RebuildProps(s.Base, Math.Max(0, s.Gz - s.Base), false, s.WorldY);
             Phase = MvLoopPhase.Run;
 
-            MvUiNav.EnterRunAsync(new RunStateHudSource(() => _sim?.State, () => _savedSouls)).Forget(Debug.LogException);
+            MvUiNav.EnterRunAsync(new RunStateHudSource(() => _sim?.State, () => _savedSouls, _world.Rig.Model.SideRow?.turnSec ?? 0)).Forget(Debug.LogException);
         }
 
         void Update()
@@ -398,6 +377,7 @@ namespace MV.Boot
             foreach (var e in events)
                 if (e.Type == RunEventType.ClimbStart)   // 계단 위 새 지형(정본 buildEnv(len, from, cliff))
                     _world.RebuildProps(e.Z, Math.Max(0, s.Gz - e.Z), true, s.WorldY + e.Amount2);
+                else if (e.Type == RunEventType.Toast) MvUiToast.Show(RunToastText.Of(e));   // 모은 마나 없음·5 미만 냥파워 없음 등(런 HUD가 띄움)
             _world.SyncObjects(s.Objs, s.P.Z, s.WorldY);
             _world.SyncCats(s);   // 플레이어·친구 고양이(02 §2.1.4)
 
