@@ -14,9 +14,10 @@ namespace MV.View
     /// 계단 정산 칸(새 HTML `startClimb`·`updClimb`·`drawStairs3D`). 칸 i는 바닥(오르기 시작 WY)부터 높이 (i+1)·stepH인 기둥이고,
     /// 디자이너 프리팹(`330_climb.stepPrefab`, 한 블록 = stepW × stepH × stepD)을 칸마다 1개만 두고, 세로로 칸 높이만큼 늘려 한 장짜리 기둥으로 만든다(웹 `drawStairs3D`처럼 블록을 쌓은 느낌이 아니라 점점 길어지는 계단).
     /// 늘리는 방법: 프리팹 안 `Front`·`Side` SpriteRenderer가 Sliced/Tiled면 size.y만 늘려 테두리 두께를 지키고, Simple이면 세로 스케일로 늘린다(테두리도 늘어남, 경고 1회).
-    /// `Top`·`Stripe`·칸 번호는 늘어난 높이만큼 위로 옮긴다. 프리팹 루트 기준점 = 블록 바닥·앞면(지금과 같음).
-    /// 칸은 시뮬이 보이기 시작한 순서(<see cref="ClimbState.StepsShown"/>, MV-SPEC-02 6-5e)대로 dropH 위에서 dropSec 동안 (1 − f)²로 떨어지고,
-    /// 알파는 0.4 + 0.6f. 꼭대기 블록의 줄무늬는 그 칸 남은 칸 수의 카드 등급 색(없으면 프리팹 색), 아래 블록 줄무늬는 끈다(HTML 줄무늬는 칸마다 꼭대기 1줄).
+    /// `Top`·칸 번호는 늘어난 높이만큼 위로 옮긴다. 프리팹 루트 기준점 = 블록 바닥·앞면(지금과 같음).
+    /// 칸 색 = 칸마다 프리팹을 고른다(노션 「신작 배경 리소스 관리」 계단연출 2절): 칸의 남은 칸 수(새 HTML rem)가 받는 카드 등급 행의
+    /// `115_cardTier.climbStep`(Obj_ClimbStep_C·_UC·_R·_E·_L), 첫 등급 기준 아래는 `330_climb.stepPrefab`(Obj_ClimbStep). 등급 기준은 115 need 하나뿐이다.
+    /// 칸은 시뮬이 보이기 시작한 순서(<see cref="ClimbState.StepsShown"/>, MV-SPEC-02 6-5e)대로 dropH 위에서 dropSec 동안 (1 − f)²로 떨어지고, 알파는 0.4 + 0.6f.
     /// 옆 시점이면 꼭대기 옆면에 칸 번호. 블록은 카메라 시야 안의 것만 풀에서 꺼내 쓴다. 오르기가 끝난 뒤에도 같은 런이면 마지막 계단을 그대로 둔다(HTML `LASTC`).
     /// </summary>
     [DefaultExecutionOrder(56)]
@@ -28,7 +29,7 @@ namespace MV.View
         public const float AlphaFrom = 0.4f;
         /// <summary>칸 번호는 블록 안 다른 그림 위에 그린다(정렬 그룹 안 순서).</summary>
         const int NumberOrder = 10;
-        const string StripeName = "Stripe", FrontName = "Front", SideName = "Side", TopName = "Top";
+        const string FrontName = "Front", SideName = "Side", TopName = "Top";
 
         public Func<string, CancellationToken, UniTask<AddressableLease<GameObject>>> PrefabLoader = AddressableScope.GetPrefab;
 
@@ -45,12 +46,10 @@ namespace MV.View
         {
             public GameObject Go;
             public DepthSortable Ds;
-            public SpriteRenderer Stripe;
-            public Color StripeBase;
             public WorldLabel Number;
             public Face Front, Side;
-            public Transform Top, StripeTr;
-            public float TopY, StripeY;
+            public Transform Top;
+            public float TopY;
             public float Height = -1f;   // 마지막으로 맞춘 기둥 높이(같으면 다시 안 바꿈)
         }
 
@@ -60,27 +59,32 @@ namespace MV.View
         ViewConfig _cfg;
         Camera _cam;
         Material _labelMaterial;
-        string _address;
+        /// <summary>칸 종류별 프리팹 주소: [0] = 첫 등급 아래(330 stepPrefab), [tierIndex + 1] = 115 climbStep.</summary>
+        string[] _addresses = Array.Empty<string>();
         double _stepH, _stepD, _halfW, _dropSec, _dropH, _lap;
-        GameObject _template;
-        AddressableLease<GameObject> _lease;
-        bool _loading, _ready;
+        Func<string, GameObject> _templates;
+        readonly Dictionary<string, AddressableLease<GameObject>> _leases = new Dictionary<string, AddressableLease<GameObject>>();
+        readonly HashSet<string> _loading = new HashSet<string>();
+        bool _ready;
         readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
         RunState _run;
         ClimbState _climb;
         double _base;
         readonly List<double> _shownAt = new List<double>();
-        readonly List<int> _tier = new List<int>();
+        readonly List<int> _kind = new List<int>();
         readonly List<string> _label = new List<string>();
-        readonly List<Block> _pool = new List<Block>();
-        int _used;
+        readonly List<List<Block>> _pools = new List<List<Block>>();
+        int[] _used = Array.Empty<int>();
         readonly Plane[] _planes = new Plane[6];
 
         /// <summary>시험·QA: 이번 프레임에 켠 블록 수(= 보이는 칸 수), 칸 번호를 켠 블록 수.</summary>
-        public int ActiveBlocks => _used;
+        public int ActiveBlocks { get; private set; }
         public int ActiveNumbers { get; private set; }
-        public string Address => _address;
+        /// <summary>칸 종류별 프리팹 주소([0] = 첫 등급 아래, [tierIndex + 1] = 등급).</summary>
+        public IReadOnlyList<string> Addresses => _addresses;
+        /// <summary>시험·QA: 칸 i의 프리팹 주소(오르기 시작 뒤).</summary>
+        public string AddressOf(int i) => i >= 0 && i < _kind.Count ? _addresses[_kind[i]] : null;
 
         public void Init(MvTables tables, ViewConfig cfg, Camera cam, Material labelMaterial)
         {
@@ -89,7 +93,15 @@ namespace MV.View
             _cam = cam;
             _labelMaterial = labelMaterial;
             var c = tables.Climb.Config() ?? throw new InvalidOperationException(ClimbData.Table + ": 설정 행(default)이 없습니다");
-            _address = c.stepPrefab;
+            int tiers = 0;
+            foreach (var r in tables.CardTier.Datas) tiers = Math.Max(tiers, r.tierIndex + 1);
+            _addresses = new string[tiers + 1];
+            _addresses[0] = c.stepPrefab;
+            foreach (var r in tables.CardTier.Datas) _addresses[r.tierIndex + 1] = r.climbStep;
+            for (int i = 0; i < _addresses.Length; i++)
+                if (string.IsNullOrEmpty(_addresses[i])) throw new InvalidOperationException(CardTierData.Table + ": tierIndex " + (i - 1) + " 행이 없어 계단 칸 프리팹(climbStep)을 정할 수 없습니다");
+            _used = new int[_addresses.Length];
+            while (_pools.Count < _addresses.Length) _pools.Add(new List<Block>());
             _stepH = c["stepH"];
             _stepD = c["stepD"];
             _halfW = c["stepW"] * 0.5;
@@ -100,13 +112,14 @@ namespace MV.View
             Hide();
         }
 
-        /// <summary>시험: Addressables 대신 프리팹을 바로 준다.</summary>
-        public void UseTemplate(GameObject prefab) => _template = prefab;
+        /// <summary>시험: Addressables 대신 주소로 프리팹을 바로 준다.</summary>
+        public void UseTemplates(Func<string, GameObject> byAddress) => _templates = byAddress;
 
         public void Hide()
         {
-            for (int i = 0; i < _pool.Count; i++) Park(_pool[i]);
-            _used = 0;
+            foreach (var pool in _pools) for (int i = 0; i < pool.Count; i++) Park(pool[i]);
+            for (int k = 0; k < _used.Length; k++) _used[k] = 0;
+            ActiveBlocks = 0;
             ActiveNumbers = 0;
         }
 
@@ -118,9 +131,7 @@ namespace MV.View
             var live = s.Phase == RunPhase.Climb ? s.Climb : null;
             if (live != null && !ReferenceEquals(live, _climb)) Begin(live, s.WorldY);
             var C = _climb;
-            if (C == null || C.K <= 0) { Hide(); return; }
-            var template = Template();
-            if (template == null || _cam == null) { Hide(); return; }
+            if (C == null || C.K <= 0 || _cam == null) { Hide(); return; }
 
             bool ended = live == null || C.T > 0 && C.Time >= C.T;   // 끝(p ≥ 1)에는 모든 칸 t = 1
             while (_shownAt.Count < Math.Min(C.K, C.StepsShown)) _shownAt.Add(C.Time);
@@ -128,8 +139,8 @@ namespace MV.View
 
             GeometryUtility.CalculateFrustumPlanes(_cam, _planes);
             float sideK = Mathf.Clamp01((float)((_cam.transform.position.x - _halfW) / SideFadeM));
-            _used = 0;
-            int numbers = 0;
+            for (int k = 0; k < _used.Length; k++) _used[k] = 0;
+            int numbers = 0, blocks = 0;
             var size = new Vector3((float)(_halfW * 2), (float)_stepH, (float)_stepD);   // 블록 1칸 크기(컬링 상자 가로·깊이)
             for (int i = 0; i < shown; i++)
             {
@@ -142,11 +153,14 @@ namespace MV.View
                 float alpha = AlphaFrom + (1 - AlphaFrom) * (float)f;
                 // 칸 하나 = 블록 하나(바닥 foot부터 높이 (i+1)·stepH인 기둥)
                 float h = (float)((i + 1) * _stepH);
-                var blk = Take(template);
+                int kind = _kind[i];
+                var template = Template(kind);
+                if (template == null) continue;   // 그 등급 프리팹을 아직 불러오는 중
+                var blk = Take(kind, template);
+                blocks++;
                 blk.Go.transform.position = new Vector3(0, (float)foot, (float)zs);
                 SetHeight(blk, h);
                 blk.Ds.SetAlphaScale(alpha);
-                if (blk.Stripe != null) { blk.Stripe.enabled = true; blk.Ds.SetBaseColor(blk.Stripe, StripeColor(i, blk.StripeBase)); }
                 if (sideK > SideMin)
                 {
                     blk.Number.gameObject.SetActive(true);
@@ -157,7 +171,9 @@ namespace MV.View
                 }
                 else if (blk.Number.gameObject.activeSelf) blk.Number.gameObject.SetActive(false);
             }
-            for (int i = _used; i < _pool.Count; i++) Park(_pool[i]);
+            for (int k = 0; k < _pools.Count; k++)
+                for (int i = _used[k]; i < _pools[k].Count; i++) Park(_pools[k][i]);
+            ActiveBlocks = blocks;
             ActiveNumbers = numbers;
         }
 
@@ -166,35 +182,23 @@ namespace MV.View
             _climb = c;
             _base = baseY;
             _shownAt.Clear();
-            _tier.Clear();
+            _kind.Clear();
             _label.Clear();
             for (int i = 0; i < c.K; i++)
             {
-                // 새 HTML startClimb: v = (i+1)·pw, lap = floor((v − 0.001)/LAP), rem = v − lap·LAP, 색 = tierColor(rem)
+                // 새 HTML startClimb: v = (i+1)·pw, lap = floor((v − 0.001)/LAP), rem = v − lap·LAP, 색 = tierColor(rem) → 그 등급 칸 프리팹
                 double v = (i + 1) * c.Pw, lap = Math.Floor((v - 0.001) / _lap), rem = v - lap * _lap;
-                _tier.Add(RunFormulas.TierFor(_t, (int)Math.Floor(rem)));
+                _kind.Add(RunFormulas.TierFor(_t, (int)Math.Floor(rem)) + 1);
                 _label.Add(Math.Round(v).ToString(System.Globalization.CultureInfo.InvariantCulture));   // 칸 번호 = round(v)
             }
         }
 
-        Color StripeColor(int i, Color fallback)
+        GameObject Template(int kind)
         {
-            int tier = i < _tier.Count ? _tier[i] : -1;
-            if (tier < 0) return fallback;
-            foreach (var r in _t.CardTier.Datas)
-                if (r.tierIndex == tier && ColorUtility.TryParseHtmlString(r.color, out var col)) return col;
-            return fallback;
-        }
-
-        GameObject Template()
-        {
-            if (_template != null) return _template;
-            if (_lease != null) return _lease.Asset;
-            if (!_loading && !string.IsNullOrEmpty(_address))
-            {
-                _loading = true;
-                LoadAsync(_address, _cts.Token).Forget();
-            }
+            string address = _addresses[kind];
+            if (_templates != null) return _templates(address);
+            if (_leases.TryGetValue(address, out var lease)) return lease.Asset;
+            if (_loading.Add(address)) LoadAsync(address, _cts.Token).Forget();
             return null;
         }
 
@@ -206,19 +210,20 @@ namespace MV.View
             if (this == null || ct.IsCancellationRequested) { lease?.Dispose(); return; }
             if (lease == null || lease.Asset == null)
             {
-                // 다시 시도하지 않는다(표 주소 오류를 드러낸다). 계단 칸은 그리지 않는다.
+                // 다시 시도하지 않는다(표 주소 오류를 드러낸다). 그 등급 칸은 그리지 않는다.
                 Debug.LogError("[ClimbStairView] 계단 칸 프리팹 로드 실패: " + address);
                 lease?.Dispose();
                 return;
             }
-            _lease = lease;
+            _leases[address] = lease;
         }
 
-        Block Take(GameObject template)
+        Block Take(int kind, GameObject template)
         {
-            if (_used < _pool.Count)
+            var pool = _pools[kind];
+            if (_used[kind] < pool.Count)
             {
-                var b = _pool[_used++];
+                var b = pool[_used[kind]++];
                 if (!b.Go.activeSelf) b.Go.SetActive(true);
                 return b;
             }
@@ -230,18 +235,16 @@ namespace MV.View
             if (ds == null) ds = go.AddComponent<DepthSortable>();
             ds.Rank = DepthMath.RankObject;
             ds.SortOffsetY = (float)_cfg.ObjProbeY;
-            var stripe = go.transform.Find(StripeName);
             var top = go.transform.Find(TopName);
-            var blk = new Block { Go = go, Ds = ds, Stripe = stripe != null ? stripe.GetComponent<SpriteRenderer>() : null,
+            var blk = new Block { Go = go, Ds = ds,
                 Front = MakeFace(go.transform.Find(FrontName)), Side = MakeFace(go.transform.Find(SideName)),
-                Top = top, TopY = top != null ? top.localPosition.y : 0f, StripeTr = stripe, StripeY = stripe != null ? stripe.localPosition.y : 0f };
-            if (blk.Stripe != null) blk.StripeBase = blk.Stripe.color;
+                Top = top, TopY = top != null ? top.localPosition.y : 0f };
             blk.Number = WorldLabel.Create(go.transform, "Number", NumberSize, _labelMaterial);   // 정렬·안개 기본 색을 잡기 전에 붙인다
             blk.Number.Text.sortingOrder = NumberOrder;
             blk.Number.gameObject.SetActive(false);
             ds.Refresh();
-            _pool.Add(blk);
-            _used++;
+            pool.Add(blk);
+            _used[kind]++;
             return blk;
         }
 
@@ -259,7 +262,7 @@ namespace MV.View
             return new Face { Sr = sr, Tr = t, PosY = t.localPosition.y, SizeY = sliced ? sr.size.y : 0f, ScaleY = t.localScale.y, Sliced = sliced };
         }
 
-        /// <summary>기둥 높이 h(m)에 맞춰 앞판·옆판을 늘리고 윗판·줄무늬를 올린다. 프리팹 원래 높이 = stepH.</summary>
+        /// <summary>기둥 높이 h(m)에 맞춰 앞판·옆판을 늘리고 윗판을 올린다. 프리팹 원래 높이 = stepH.</summary>
         void SetHeight(Block b, float h)
         {
             if (Mathf.Approximately(b.Height, h)) return;
@@ -268,7 +271,6 @@ namespace MV.View
             StretchFace(b.Front, k);
             StretchFace(b.Side, k);
             if (b.Top != null) { var p = b.Top.localPosition; p.y = b.TopY + up; b.Top.localPosition = p; }
-            if (b.StripeTr != null) { var p = b.StripeTr.localPosition; p.y = b.StripeY + up; b.StripeTr.localPosition = p; }
         }
 
         static void StretchFace(Face f, float k)
@@ -288,8 +290,8 @@ namespace MV.View
         {
             _cts.Cancel();
             _cts.Dispose();
-            _lease?.Dispose();
-            _lease = null;
+            foreach (var l in _leases.Values) l?.Dispose();
+            _leases.Clear();
         }
     }
 }

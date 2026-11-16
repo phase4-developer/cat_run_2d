@@ -396,6 +396,8 @@ MonoBehaviour:
   GroundSnap: 44
   HideBuiltInGround: 1
   HideBuiltInProps: 1
+  NearGround: {fileID: 7929966308103593954}
+  SideCut: {fileID: 7669878943561748533}
   DecoTemplate: {fileID: 6985638389419506446}
   DecoSprites:
   - {fileID: 21300000, guid: 07824bc6c09fb451498bb99c4f42c982, type: 3}

@@ -106,6 +106,8 @@ namespace MV.Data.Tests
             Assert.That(t.RunConfig.D(RunConfigKeys.View_GroundFar), Is.EqualTo(120));
             Assert.That(t.Climb.Config()["catLift"], Is.EqualTo(0.6).Within(1e-9));
             Assert.That(t.Climb.Config().stepPrefab, Is.EqualTo("Obj_ClimbStep"));
+            // 115 climbStep: 등급별 계단 칸 프리팹(노션 「신작 배경 리소스 관리」 계단연출 2절, MV-VIEW-CLIMB3).
+            Assert.That(t.CardTier.Datas.OrderBy(x => x.tierIndex).Select(x => x.climbStep), Is.EqualTo(new[] { "Obj_ClimbStep_C", "Obj_ClimbStep_UC", "Obj_ClimbStep_R", "Obj_ClimbStep_E", "Obj_ClimbStep_L" }));
             // 304: 길가 소품·줄 종류는 deco 규칙(정본 drawMoonProp L3572, drawClothes L3547) — 15행 모두.
             foreach (var th in t.Theme.Datas)
             {

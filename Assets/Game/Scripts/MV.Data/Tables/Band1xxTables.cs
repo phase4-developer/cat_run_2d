@@ -555,17 +555,22 @@ namespace MV.Data
 
     // ---------------- 115_cardTier ----------------
 
+    /// <summary>
+    /// 115_cardTier — 대마법 주문카드 등급. need = 등급 기준 칸 수(하나뿐인 기준). climbStep = 그 등급 구간의 계단 정산 칸 프리팹 주소
+    /// (노션 「신작 배경 리소스 관리」 계단연출 2절 칸 색, 사용자 결정 2026-11-16). 첫 등급 기준 아래 칸은 330 stepPrefab.
+    /// </summary>
     public sealed class CardTierData : MvRow
     {
         public const string Table = "115_cardTier";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("tierIndex", true).Int("need", true)
-            .Color("color", true).Res("frameSprite", MvAtlas.UiCard).Sound("cardSound");
+            .Color("color", true).Res("frameSprite", MvAtlas.UiCard).Sound("cardSound").Res("climbStep", MvAtlas.Address, true);
 
         public int tierIndex { get; private set; }
         public int need { get; private set; }
         public string color { get; private set; }
         public string frameSprite { get; private set; }
         public string cardSound { get; private set; }
+        public string climbStep { get; private set; }
 
         public CardTierData(TSVRow r) : base(r) { }
 
@@ -577,6 +582,7 @@ namespace MV.Data
             color = S(r, "color");
             frameSprite = S(r, "frameSprite");
             cardSound = S(r, "cardSound");
+            climbStep = S(r, "climbStep");
         }
     }
 
