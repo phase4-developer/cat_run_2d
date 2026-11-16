@@ -89,7 +89,7 @@ P.x += (P.tx - P.x) * Math.min(1, dt*14); P.x = clamp(P.x, -3.2, 3.2);          
 | 추종 | `x += (tx − x) × min(1, dt×14)`, clamp ±3.2. **run 모드 updRun 안에서만**(게임 dt) | `300_runConfig.MOVE_FOLLOW_K`=14 |
 | 전진 | `spd = 4` m/s 고정, 막히면 앞면에서 멈춤 | `300_runConfig.RUN_SPEED`=4 |
 | 달리기 위상 | `P.phase += dt × (blocked ? 4 : 13)` (그림용) | `300_runConfig.PHASE_RUN`=13, `PHASE_BLOCKED`=4 |
-| 계단 중 | `P.x += (0 − P.x) × min(1, dt×6); P.tx = P.x; P.phase += dt×30` `L2264` | `300_runConfig.CLIMB_X_FOLLOW_K`=6, `PHASE_CLIMB`=30 |
+| 계단 중 | `P.x += (0 − P.x) × min(1, dt×6); P.tx = P.x; P.phase += dt×30` `L2264` | `PHASE_CLIMB`=30 (x 복귀 6은 MV-SPEC-02 6-5 새 공식으로 미사용, 키 `CLIMB_X_FOLLOW_K`는 2026-11-16 삭제) |
 | 런 시작 키 | Space/Enter(로비, 다른 입력 칸에 포커스 없음) `L3850` | — |
 
 Unity 구현: `MV.Run`은 `RunInput { float? dragTargetX; int keyAxis; }`만 받는다. 화면 px → m 변환(`/ (W/7.2)`)은 `MV.UI`(Input System) 몫이다. 키 축은 `MV.Run.Tick`이 실시간 dt로 tx에 더한다(프로토와 같은 시간축, §4.13).

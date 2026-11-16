@@ -30,8 +30,6 @@ namespace MV.Data
         public const string View_RefWidthPx = "view.refWidthPx";
         public const string View_RefHeightPx = "view.refHeightPx";
         public const string View_OutlineColor = "view.outlineColor";
-        public const string View_PlayerCatScale = "view.playerCatScale";
-        public const string View_CloneCatScale = "view.cloneCatScale";
         public const string Sort_Quant = "sort.quant";
         public const string Sort_ObjProbeY = "sort.objProbeY";
         public const string Sort_CatProbeY = "sort.catProbeY";
@@ -105,7 +103,6 @@ namespace MV.Data
         public const string PHASE_RUN = "PHASE_RUN";
         public const string PHASE_BLOCKED = "PHASE_BLOCKED";
         public const string PHASE_CLIMB = "PHASE_CLIMB";
-        public const string CLIMB_X_FOLLOW_K = "CLIMB_X_FOLLOW_K";
         public const string PLAYER_HALF_W = "PLAYER_HALF_W";
         public const string WALL_FACE_GAP = "WALL_FACE_GAP";
         public const string WALL_FACE_EPS = "WALL_FACE_EPS";
@@ -232,8 +229,6 @@ namespace MV.Data
             View_RefWidthPx,
             View_RefHeightPx,
             View_OutlineColor,
-            View_PlayerCatScale,
-            View_CloneCatScale,
             Sort_Quant,
             Sort_ObjProbeY,
             Sort_CatProbeY,
@@ -306,7 +301,6 @@ namespace MV.Data
             PHASE_RUN,
             PHASE_BLOCKED,
             PHASE_CLIMB,
-            CLIMB_X_FOLLOW_K,
             PLAYER_HALF_W,
             WALL_FACE_GAP,
             WALL_FACE_EPS,

@@ -17,7 +17,6 @@ namespace MV.View
         public int SnowCount;
         public double RefWidthPx, RefHeightPx;
         public string OutlineColor;
-        public double PlayerCatScale, CloneCatScale;
         public double SortQuant, ObjProbeY, CatProbeY, SortCloth, SortLabel, SortBlade, SortProj;
 
         public static ViewConfig From(RunConfigTable t)
@@ -47,8 +46,6 @@ namespace MV.View
                 RefWidthPx = t.D(RunConfigKeys.View_RefWidthPx),
                 RefHeightPx = t.D(RunConfigKeys.View_RefHeightPx),
                 OutlineColor = t.Raw(RunConfigKeys.View_OutlineColor),
-                PlayerCatScale = t.D(RunConfigKeys.View_PlayerCatScale),
-                CloneCatScale = t.D(RunConfigKeys.View_CloneCatScale),
                 SortQuant = t.D(RunConfigKeys.Sort_Quant),
                 ObjProbeY = t.D(RunConfigKeys.Sort_ObjProbeY),
                 CatProbeY = t.D(RunConfigKeys.Sort_CatProbeY),
