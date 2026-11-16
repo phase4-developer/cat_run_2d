@@ -28,7 +28,7 @@ namespace MV.View
             _rig = rig;
             _source = source;
             _quant = cfg.MixQuant;
-            _builder = new GroundStripBuilder(cfg, tables.Camera.ByKey(CameraModel.KeyRun).fovV);
+            _builder = new GroundStripBuilder(cfg, rig.Model.RunRow.fovV);
             if (_mesh == null)
             {
                 _mesh = new Mesh { name = "GroundStrip" };

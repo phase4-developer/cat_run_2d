@@ -20,7 +20,7 @@ namespace MV.Data.Tests
             ["112_cardEffect"] = 26, ["113_god"] = 12, ["114_hpRule"] = 7, ["115_cardTier"] = 5, ["116_charLook"] = 16,
             ["300_runConfig"] = 179, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15, ["305_stageObject"] = 5,
             ["310_template"] = 10, ["311_templateObject"] = 123, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
-            ["314_spawnGroup"] = 35, ["320_camera"] = 4, ["330_climb"] = 5,
+            ["314_spawnGroup"] = 35, ["330_climb"] = 5,
             ["400_content"] = 5, ["401_modeStage"] = 53, ["402_modeRule"] = 4, ["410_questGroup"] = 14, ["413_repeatQuest"] = 16,
             ["414_passQuest"] = 60, ["420_achievement"] = 19, ["499_contentConfig"] = 40,
             ["700_productTab"] = 6, ["701_product"] = 29, ["702_shopSection"] = 4,

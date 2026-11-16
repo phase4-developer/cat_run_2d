@@ -19,7 +19,7 @@ namespace MV.View
     }
 
     /// <summary>
-    /// 정본 `syncScene` 카메라 공식(L2746~2779, 02 §2.2). 값은 `320_camera` 행(key run/climb/lobby)에서 읽는다.
+    /// 정본 `syncScene` 카메라 공식(L2746~2779, 02 §2.2). 값은 <see cref="MvCameraSettings"/>(run/climb/lobby/side)의 사본에서 읽는다.
     /// 위치·주시점은 double로 계산하고 Unity Transform에 넣을 때만 float로 바꾼다.
     /// </summary>
     public sealed class CameraModel
@@ -47,13 +47,30 @@ namespace MV.View
             _lobby = lobby ?? throw new ArgumentNullException(nameof(lobby));
         }
 
-        public static CameraModel FromTables(MvTables t) =>
-            new CameraModel(Row(t, KeyRun), Row(t, KeyClimb), Row(t, KeyLobby), Row(t, KeySide));
+        /// <summary>화면비 기준·범위(가로/세로). 기본은 9:16, 9:21~3:4.</summary>
+        public double RefAspect { get; private set; } = 9.0 / 16.0;
+        public double MinAspect { get; private set; } = 9.0 / 21.0;
+        public double MaxAspect { get; private set; } = 3.0 / 4.0;
 
-        static CameraData Row(MvTables t, string key) =>
-            t.Camera.ByKey(key) ?? throw new InvalidOperationException($"320_camera: key '{key}' 행이 없습니다");
+        /// <summary>설정 에셋의 사본으로 만든다(에셋은 바꾸지 않는다). <paramref name="withSide"/>가 false면 옆 시점으로 돌지 않는다.</summary>
+        public static CameraModel FromSettings(MvCameraSettings s, bool withSide = true)
+        {
+            if (s == null) throw new ArgumentNullException(nameof(s), "MvCameraSettings가 없습니다");
+            var m = new CameraModel(Copy(s.run, KeyRun), Copy(s.climb, KeyClimb), Copy(s.lobby, KeyLobby), withSide ? Copy(s.side, KeySide) : null);
+            m.RefAspect = s.RefAspect;
+            m.MinAspect = s.MinAspect;
+            m.MaxAspect = s.MaxAspect;
+            return m;
+        }
+
+        static CameraData Copy(CameraData row, string key) =>
+            row?.Clone() ?? throw new InvalidOperationException($"MvCameraSettings: '{key}' 시점이 없습니다");
+
+        /// <summary>이 모델의 화면비 설정으로 세로 FOV를 구한다.</summary>
+        public double VerticalFov(double baseFovDeg, double aspect) => VerticalFov(baseFovDeg, aspect, RefAspect, MinAspect, MaxAspect);
 
         public CameraData RunRow => _run;
+        public CameraData ClimbRow => _climb;
         public CameraData LobbyRow => _lobby;
         public CameraData SideRow => _side;
 

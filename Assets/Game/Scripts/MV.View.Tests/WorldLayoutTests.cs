@@ -12,7 +12,7 @@ namespace MV.View.Tests
     {
         static readonly Vector3d s_runCam = new Vector3d(0, 13, -9), s_runLook = new Vector3d(0, 0.5, 5.5);
 
-        static GroundStripBuilder Builder(ViewConfig cfg) => new GroundStripBuilder(cfg, ViewTestTables.Load().Camera.ByKey(CameraModel.KeyRun).fovV);
+        static GroundStripBuilder Builder(ViewConfig cfg) => new GroundStripBuilder(cfg, ViewTestTables.Camera().run.fovV);
 
         static GroundFrame RunFrame(double groundY = 0) =>
             new GroundFrame { Pz = s_runCam.z, CamPos = s_runCam, CamLook = s_runLook, GroundY = groundY };

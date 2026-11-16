@@ -1,13 +1,14 @@
 using Cysharp.Threading.Tasks;
 using jjevol;
 using MV.Data;
+using MV.View;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace MV.Boot
 {
     /// <summary>
-    /// Game 씬 초기화(기획서 10 §10.3). 게임 루프(<see cref="MvGameLoop"/>)를 붙여 월드·로비 무대를 만들고 로비를 연다(MV-PLAY-INT).
+    /// Game 씬 초기화(기획서 10 §10.3). 게임 루프(<see cref="MvGameLoop"/>)를 붙여 씬에 놓인 월드(<see cref="_world"/>)를 초기화하고 로비를 연다(MV-PLAY-INT).
     /// Editor에서 Game 씬을 바로 실행하면 Boot가 돌지 않아 표·저장·UI가 없다(데이터 없음). 이때는 Boot 씬을 먼저 열어
     /// 정상 순서(Boot → Game)로 다시 들어온다. Boot가 돌았는데 표·UI가 없으면(시작 실패) 루프를 만들지 않고 경고만 남긴다.
     /// </summary>
@@ -15,6 +16,9 @@ namespace MV.Boot
     {
         /// <summary>이 프로세스에서 초기화가 돈 횟수. 시험이 읽는다.</summary>
         public static int InitializeCount { get; private set; }
+
+        /// <summary>Game 씬에 직접 놓인 `WorldRoot`(월드 렌더·`GameCamera`).</summary>
+        [SerializeField] WorldView _world;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics() => InitializeCount = 0;
@@ -36,7 +40,7 @@ namespace MV.Boot
                 return;
             }
             var loop = gameObject.AddComponent<MvGameLoop>();
-            await loop.InitAsync(tables);
+            await loop.InitAsync(tables, _world);
         }
     }
 }

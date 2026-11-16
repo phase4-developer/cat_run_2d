@@ -76,7 +76,6 @@ namespace MV.Data
         public TemplateCycleTable TemplateCycle { get; } = new TemplateCycleTable();
         public MvTable<FieldGenData> FieldGen { get; } = new MvTable<FieldGenData>(FieldGenData.Schema, r => new FieldGenData(r));
         public MvTable<SpawnGroupData> SpawnGroup { get; } = new MvTable<SpawnGroupData>(SpawnGroupData.Schema, r => new SpawnGroupData(r), d => d.group);
-        public MvTable<CameraData> Camera { get; } = new MvTable<CameraData>(CameraData.Schema, r => new CameraData(r));
         public ClimbTable Climb { get; } = new ClimbTable();
 
         // 4xx 모드·퀘스트·콘텐츠 상수(08 §8.4, §8.5.1, §8.5.6, §8.5.13)
@@ -125,7 +124,7 @@ namespace MV.Data
                 LobbyUpgrade, StairLevel, WeaponLevel, AreaUpgrade, RebirthPerk, LevelPrice,
                 Cat, Enemy, Item, ObjectKind, HitReaction, ChargeGate, ReceiveCondition, MoveAi, Card, CardPool, CardEffect,
                 God, HpRule, CardTier, CharLook,
-                RunConfig, Zone, Area, AreaFloor, Theme, StageObject, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup, Camera,
+                RunConfig, Zone, Area, AreaFloor, Theme, StageObject, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup,
                 Climb,
                 Content, ModeStage, ModeRule, QuestGroup, RepeatQuest, PassQuest, Achievement, ContentConfig,
                 Pet, PetBuild, Research, Friend, FriendPower, Rune, GearPart, GearRarity, Blessing, Attendance, RoadMap, GodLevel,

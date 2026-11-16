@@ -26,7 +26,7 @@ namespace MV.UI
 
         /// <summary>
         /// 로비 아지트 시설 단계(0 = 잠김). key는 <see cref="LobbyFacilities.Keys"/>(= <c>LobbyIso.Slots</c>).
-        /// 게임 루프(MV-PLAY-INT)가 로비를 열 때와 <see cref="LobbyViewData.OnFacilityBump"/> 때 <c>LobbyStage.SetFacility</c>로 넘긴다.
+        /// 게임 루프(MV-PLAY-INT)가 로비를 열 때와 <see cref="LobbyViewData.OnFacilityBump"/> 때 로비 월드로 넘길 값(아지트 방 <c>LobbyStage</c>는 2026-11-16 삭제, 지금 받는 곳 없음).
         /// </summary>
         int FacilityStage(string key, out int extra);
     }

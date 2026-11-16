@@ -21,6 +21,14 @@ namespace MV.View.Tests
             return t;
         }
 
+        /// <summary>저장소의 카메라 설정 에셋(게임과 같은 정본).</summary>
+        public static MvCameraSettings Camera()
+        {
+            var s = UnityEditor.AssetDatabase.LoadAssetAtPath<MvCameraSettings>(MvCameraSettings.AssetPath);
+            Assert.That(s, Is.Not.Null, MvCameraSettings.AssetPath);
+            return s;
+        }
+
         static MvTables _codeShapes;
 
         /// <summary>
