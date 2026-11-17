@@ -893,7 +893,8 @@ namespace MV.View
                 if (v.Label != null && v.Label.gameObject.activeSelf) v.Label.gameObject.SetActive(false);
                 return;
             }
-            if (line == null)
+            // 프리팹 오브젝트는 로드 전에 그림이 없으므로 글자판도 없다(로드되면 프리팹 글자판, 프리팹에 없을 때만 TMP 한 줄).
+            if (line == null || (v.Prefab != null && v.Inst == null))
             {
                 if (v.Label != null && v.Label.gameObject.activeSelf) v.Label.gameObject.SetActive(false);
                 return;
