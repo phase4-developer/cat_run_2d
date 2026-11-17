@@ -19,6 +19,8 @@ namespace MV.UI
     {
         public const float LabelSec = 1.3f, LabelY = .36f, LabelScale = .085f, ToastSec = 1.4f, ToastY = .58f, ToastScale = .04f;
         public const string LapText = "냥파워 카드 확정!"; // ui.hud.climbLapCard
+        /// <summary>새 HTML `PAPER`·`INK`(안내 종이 판·글자).</summary>
+        static readonly Color Paper = MvUi.Hex("#fff4e2"), Ink = MvUi.Hex("#3a2440");
 
         Func<RunState> _state;
         RunState _run;
@@ -93,13 +95,13 @@ namespace MV.UI
             Outline(_label);
             _toastRt = MvUi.Rect(_root, "Toast");
             _toastRt.anchorMin = new Vector2(.5f, 1 - ToastY); _toastRt.anchorMax = new Vector2(.5f, 1 - ToastY);
-            _toastRt.gameObject.AddComponent<Image>().color = PaperPanelGraphic.Paper;
+            _toastRt.gameObject.AddComponent<Image>().color = Paper;
             var fit = _toastRt.gameObject.AddComponent<HorizontalLayoutGroup>();
             fit.padding = new RectOffset(48, 48, 20, 20);
             fit.childControlWidth = fit.childControlHeight = true;
             _toastRt.gameObject.AddComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             _toastRt.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            _toast = MvUi.Label(_toastRt, "Text", 40, PaperPanelGraphic.Ink, TextAnchor.MiddleCenter);
+            _toast = MvUi.Label(_toastRt, "Text", 40, Ink, TextAnchor.MiddleCenter);
             _toast.horizontalOverflow = HorizontalWrapMode.Overflow;
             foreach (var g in GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
             _labelRt.gameObject.SetActive(false);
@@ -109,10 +111,10 @@ namespace MV.UI
         static void Outline(Text t)
         {
             var a = t.gameObject.AddComponent<Outline>();
-            a.effectColor = PaperPanelGraphic.Ink;
+            a.effectColor = Ink;
             a.effectDistance = new Vector2(6, -6);
             var b = t.gameObject.AddComponent<Outline>();
-            b.effectColor = PaperPanelGraphic.Paper;
+            b.effectColor = Paper;
             b.effectDistance = new Vector2(3, -3);
         }
 
