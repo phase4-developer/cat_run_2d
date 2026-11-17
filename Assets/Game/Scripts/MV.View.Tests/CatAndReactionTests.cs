@@ -613,6 +613,10 @@ namespace MV.View.Tests
             "Obj_StairGate:Billboard/Shadow/Pillar_L",
             "Obj_StairGate:Billboard/Shadow/Pillar_R",
             "Obj_StairGate:Billboard/Shadow/Ribbon",
+            // Obj_CraftGate는 Obj_StairGate의 변형 프리팹이라 위 세 이미지를 그대로 물려받는다(원본을 고치면 함께 바뀐다).
+            "Obj_CraftGate:Billboard/Shadow/Pillar_L",
+            "Obj_CraftGate:Billboard/Shadow/Pillar_R",
+            "Obj_CraftGate:Billboard/Shadow/Ribbon",
             "Obj_StairZone:Billboard/Lantern_L/Shadow",
             "Obj_StairZone:Billboard/Lantern_R/Shadow",
             "Obj_StairZone:Billboard/Glow (1)",
@@ -648,7 +652,37 @@ namespace MV.View.Tests
             {
                 var files = Directory.GetFiles(dir, a + ".prefab", SearchOption.AllDirectories);
                 Assert.AreEqual(1, files.Length, a + " 프리팹 파일");
-                var docs = System.Text.RegularExpressions.Regex.Split(File.ReadAllText(files[0]).Replace("\r\n", "\n"), @"\n(?=--- !u!)");
+                // 변형 프리팹(예: Obj_CraftGate ← Obj_StairGate)은 파일에 원본 구조가 없다. 원본 파일을 읽고 변형이 덮어쓴 회전만 얹는다.
+                // 구조를 바꾼 변형(오브젝트·컴포넌트 추가·삭제)은 이 글자 읽기로 판정할 수 없으므로 통과시키지 않고 오류로 낸다.
+                var rotOverride = new Dictionary<string, Dictionary<string, string>>();
+                string text = File.ReadAllText(files[0]).Replace("\r\n", "\n");
+                for (int depth = 0; ; depth++)
+                {
+                    var src = M(text, @"m_SourcePrefab: \{fileID: \d+, guid: ([0-9a-f]{32})");
+                    bool variant = src.Success && !System.Text.RegularExpressions.Regex.IsMatch(text, @"\n--- !u!1 &\d+\n");
+                    if (!variant) break;
+                    Assert.Less(depth, 8, a + ": 변형 프리팹 단계가 너무 깊다");
+                    foreach (var list in new[] { "m_RemovedComponents", "m_RemovedGameObjects", "m_AddedGameObjects", "m_AddedComponents" })
+                        Assert.IsTrue(M(text, list + @": \[\]").Success, a + ": 구조를 바꾼 변형 프리팹(" + list + ")은 이 시험이 읽지 못한다");
+                    foreach (System.Text.RegularExpressions.Match o in System.Text.RegularExpressions.Regex.Matches(text,
+                        @"- target: \{fileID: (\d+), guid: [0-9a-f]{32}, type: 3\}\n\s+propertyPath: m_LocalRotation\.([xyzw])\n\s+value: (\S+)"))
+                    {
+                        if (!rotOverride.TryGetValue(o.Groups[1].Value, out var axes)) rotOverride[o.Groups[1].Value] = axes = new Dictionary<string, string>();
+                        if (!axes.ContainsKey(o.Groups[2].Value)) axes[o.Groups[2].Value] = o.Groups[3].Value;   // 바깥 변형이 먼저
+                    }
+                    string guid = src.Groups[1].Value;
+                    var metas = Directory.GetFiles(dir, "*.prefab.meta", SearchOption.AllDirectories)
+                        .Where(f => File.ReadAllText(f).Contains("guid: " + guid)).ToArray();
+                    Assert.AreEqual(1, metas.Length, a + ": 원본 프리팹(" + guid + ")");
+                    text = File.ReadAllText(metas[0].Substring(0, metas[0].Length - ".meta".Length)).Replace("\r\n", "\n");
+                }
+                string Rot(string id, string q)
+                {
+                    if (!rotOverride.TryGetValue(id, out var axes)) return q;
+                    foreach (var kv in axes) q = System.Text.RegularExpressions.Regex.Replace(q, @"(?<=[{ ])" + kv.Key + @": [^,}]+", kv.Key + ": " + kv.Value);
+                    return q;
+                }
+                var docs = System.Text.RegularExpressions.Regex.Split(text, @"\n(?=--- !u!)");
                 var trOfGo = new Dictionary<string, string>();
                 var rot = new Dictionary<string, string>();
                 var father = new Dictionary<string, string>();
@@ -667,7 +701,7 @@ namespace MV.View.Tests
                     {
                         trOfGo[g] = id;
                         goOfTr[id] = g;
-                        rot[id] = M(d, @"m_LocalRotation: (\{[^}]*\})").Groups[1].Value;
+                        rot[id] = Rot(id, M(d, @"m_LocalRotation: (\{[^}]*\})").Groups[1].Value);
                         father[id] = M(d, @"m_Father: \{fileID: (\d+)").Groups[1].Value;
                     }
                     if (type == "212") images.Add(g);
