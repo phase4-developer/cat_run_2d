@@ -62,14 +62,14 @@ namespace MV.Run.Tests.Rule
                 Companions = { new CompanionSpec(1, CompanionTrigger.Seconds, 9, 100, 1) },
             };
             var rngProbe = new LoggingRng(new ConstRng(0.5));
-            var sim = RunSim.Create(ctx, probe, rngProbe, split);
+            var sim = TestSims.Create(ctx, probe, rngProbe, split);
             Assert.AreEqual(new[] { "Build", "BuildCourse L1" }, probe.Log.ToArray());
             Assert.AreEqual(2, sim.State.Setup.Layout);
             Assert.AreEqual(10, sim.State.Setup.Modifiers.Dmg);
             Assert.AreEqual(1, sim.State.Setup.Companions.Count);
             Assert.AreEqual(0, snap.Companions.Count, "Build는 스냅숏을 바꾸지 않는다");
 
-            var main = RunSim.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy", Modifiers = new RunModifiers { Dmg = 10 } },
+            var main = TestSims.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy", Modifiers = new RunModifiers { Dmg = 10 } },
                 t, new LoggingRng(new ConstRng(0.5)), lv);
             int frames = 0;
             while (!sim.State.Fin && frames < 600) { sim.Tick(1 / 60.0, RunInput.None); main.Tick(1 / 60.0, RunInput.None); frames++; }

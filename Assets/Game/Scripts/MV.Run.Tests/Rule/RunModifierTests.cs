@@ -117,7 +117,7 @@ namespace MV.Run.Tests.Rule
             Assert.IsNotNull(new RunModifiers { DoubleChance = -0.5 }.Validate());
             var setup = new RunSetup { Modifiers = new RunModifiers { Gold = -1 } };
             setup.Deck[1] = 1;
-            Assert.Throws<ArgumentException>(() => RunSim.Create(setup, RunTestTables.Load(), new ConstRng(0.5), new HandLevel()));
+            Assert.Throws<ArgumentException>(() => TestSims.Create(setup, RunTestTables.Load(), new ConstRng(0.5), new HandLevel()));
         }
 
         /// <summary>빈 레벨에서 3초 동안 뽑은 사용처 수.</summary>
@@ -125,7 +125,7 @@ namespace MV.Run.Tests.Rule
         {
             var setup = new RunSetup { Modifiers = m };
             setup.Deck[1] = 1;
-            var sim = RunSim.Create(setup, RunTestTables.Load(), new ConstRng(0.5), new HandLevel());
+            var sim = TestSims.Create(setup, RunTestTables.Load(), new ConstRng(0.5), new HandLevel());
             sim.State.RngLog = new System.Collections.Generic.List<RngDraw>();
             for (int i = 0; i < 180; i++) sim.Tick(1 / 60.0, RunInput.None);
             return sim.State.RngLog.FindAll(d => d.Use == use).Count;

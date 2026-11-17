@@ -14,7 +14,7 @@ namespace MV.Run.Tests
     {
         static RunSetup Setup() => new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } };
         static RunSim Sim(HandLevel lv, RunSetup s = null, MvTables t = null, IRng rng = null) =>
-            RunSim.Create(s ?? Setup(), t ?? RunTestTables.Load(), rng ?? new ConstRng(0.5), lv);
+            TestSims.Create(s ?? Setup(), t ?? RunTestTables.Load(), rng ?? new ConstRng(0.5), lv);
         static void Run(RunSim sim, int frames, RunInput input = default) { for (int i = 0; i < frames && !sim.State.Fin; i++) sim.Tick(1 / 60.0, input); }
         static List<RunEvent> Ev(RunSim sim, RunEventType t) => sim.State.Events.Where(e => e.Type == t).ToList();
 
@@ -229,7 +229,7 @@ namespace MV.Run.Tests
             int want = Math.Min(int.Parse(maxClones), offsets);
             Assert.AreEqual(want, CloneCap(t));
             var setup = Setup(); setup.AupClone = 1000;
-            var s = RunSim.Create(setup, t, new ConstRng(0.5), new RunLevelBuilder()).State;
+            var s = TestSims.Create(setup, t, new ConstRng(0.5), new RunLevelBuilder()).State;
             Assert.AreEqual(want, s.Clones);
             Assert.AreEqual(want + 1, s.FireT.Length);
         }

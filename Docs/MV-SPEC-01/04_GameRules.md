@@ -143,6 +143,8 @@ units.forEach((u,i)=>{
 
 ### 4.2.3 투사체 이동·명중 `L2094~2117`
 
+> **Unity 구현 차이(MV-HIT-PHYS, 2026-11-17 사용자 지시):** 아래 정본의 `|b.x − o.x| ≤ hw`, 앞면 `o.z − hd` 계산은 Unity에서 **오브젝트 프리팹 `Hitbox` Collider + Unity Physics**로 바뀌었다(`IProjectileHitQuery` → `RunHitWorld`). 이동 구간 [b.z, nzb]를 투사체 높이(`ProjLayout.ProjY`)에서 Raycast하고 시작점 겹침도 본다. 틱당 가장 앞(진입 z, 같으면 Id) 피격 가능 대상 1개, `b.hit` 중복 제외, `--pierce < 0` 소멸, 피해·보상·사거리 규칙은 그대로다. 명중 연출 z(`ProjImpact`) = Collider 진입 z.
+
 ```js
 const PSPD = 20, RANGE = 22 * (1 + 0.1*save.aup.range);
 for (const b of R.projs){

@@ -81,6 +81,36 @@
 | MV-HARDCODE-1b 규칙·표 중복 | 완료(2026-11-11) | `13c04949` | 남은 줄 PC-16~21, 115↔330 lap 중복(1a 쪽과 함께) |
 | MV-RUN-MIDZONE 평지 감속 제거 | 완료(2026-11-11) | `1fb4a25f` | 310 midFromZ·midToZ 빈칸(걷기 항상 4), 중간 구역 = 계단 오르는 구간(임시, PC-10). 사람 확인: 사용자가 속도 4 확인 |
 | DOC-ARCH 코드 구조 문서 | 완료(2026-11-15, 사용자 「클래스 구조와 함수 흐름 상세하게 문서화」, 2차 「다이어그램 표가 있어야 … PDF로 전달해」) | 브랜치 `ai/DOC-ARCH-structure-doc` | `Docs/Architecture/`(README 지도 + 01~05 모듈별). 기준 dev `046c8be6`. 문서만이라 Unity 검증 해당 없음(NOT_RUN). 구조 변경 계약은 병합 때 해당 절 갱신 | 2차: `MoonVillage_CodeStructure.pdf`(그림 17·표, 원본 `pdf_src/`), 브랜치 `ai/DOC-ARCH-2-pdf`. |
+| MV-HIT-PHYS 투사체 판정 Collider 전환 | 완료·dev 병합 964416f7(2026-11-17, 사용자 지시 「투사체의 공간 충돌 검출은 실제 Collider와 Unity Physics를 활용하는 방향으로 개선」, 결정 「그림까지 프리팹으로 전환」·불일치 사례 「벽·잡동사니」) | dev | 아래 「MV-HIT-PHYS 검수와 설계」 절. 구현 7f89bd2b·Addressables e58acd02·표 산출물 772d11da(setup 1a68b098bf9a PASS)·문서 cf46d7cb. 검증: 브랜치 EditMode(MV.Run·MV.View) 843c701fdbb7 258/266 통과(새 Physics 시험 10개 전부 통과), dev 병합본 전체 EditMode 1788f5732ee5 751/759 통과, PlayMode --graphics 934220cb95e8 7/8, 게임 루프 단독 재실행 98cb099619d3 PASS. 남은 실패는 모두 병합 전 dev에도 있음: ① Obj_Tower Shadow(눕힌 그림)가 Billboard 묶음 아래(ObjectPrefabs_OneBillboardGroup_FlatImagesOutside, 아트 Commit 6034a953·8349b32a) ② ClimbShotTests(Explicit)가 어셈블리 단위 실행에 끼어 -nographics면 Unity 크래시, --graphics면 이펙트 provider가 먼저 잡혀 게임 루프 시험 실패. 건너뜀 7개는 Q-04 의도. 실행기 폰트 변경은 폐기. NOT_RUN: 실기·사람 장면 대조(벽·잡동사니 판정 크기) |
+| MV-FIX-DEVTEST dev 시험 실패 2건 정리 | 완료·dev 병합 01b6ac03(2026-11-17, 사용자 「여기서 고쳐」, 후속 지시 「기존 아트 배치를 유지 … 수동 확인 결과가 나오기 전에는 아트 구조 변경이나 규칙 변경을 확정하지 마세요」) | dev | 아트 변경 없음(Obj_Tower 그림자 원래 배치로 복구, 프리팹 전부 dev와 같음). 코드: 게임 루프 파괴 때 연출 재생기 내림(MvGameLoop), PlayMode 시험 끝마다 씬 닫고 이펙트 관리자 정리(PlayModeIsolation), ClimbShotTests는 그래픽 없으면 Ignore. 빌보드 시험: -0·z회전 오판 수정, 루트 기준 누적 회전으로 판정, 변형 프리팹(Obj_CraftGate←Obj_StairGate)은 원본+회전 덮어쓰기로 읽음, 규칙 유지·충돌 이미지는 항목별 확인 대기 목록(Inconclusive, PASS 아님). Commit 56edd3da·7288e2d2·45ab5afd·a7060cd1·9d9fc94c. 검증: PASS — EditMode 전체 44398241cd9b(9d9fc94c) 751 통과·실패 0·Inconclusive 1(아트 확인 대기 21건)·건너뜀 7(Q-04 의도), PlayMode 그래픽 없음 d428c4c5ce0b(45ab5afd) 7 통과·ClimbShot Ignore, PlayMode --graphics 79a41a0ccad7(7288e2d2) 8/8. FAIL 없음. NOT_RUN — 최종 HEAD PlayMode --graphics(06f1e08d5f80 실행기 RESOURCE_BUSY 거절 12회, 그 뒤 바뀐 것은 프리팹 복구·EditMode 시험뿐), 실기, 아트 배치 사람 확인(아래 「아트 배치 사람 확인 대기」). 실행기 폰트 변경은 폐기 |
+
+
+## 아트 배치 사람 확인 대기 (2026-11-17, MV-FIX-DEVTEST)
+
+상태: **사람 확인 대기(NOT_RUN)**. 아트 구조·규칙 변경은 확인 전 확정하지 않는다. 사용자가 Unity 에디터에서 보고 필요한 프리팹만 고친다. 시험 `ObjectPrefabs_OneBillboardGroup_FlatImagesOutside`의 `PendingArtCheck` 목록과 같다. 고친 항목은 목록에서 지운다(지우지 않으면 시험이 목록 정리를 요구).
+
+규칙: 서 있는 이미지는 Billboard 묶음 아래, 눕힌(화면 면에서 기울어진) 이미지는 묶음 밖. 아래 이미지는 눕혀져 있는데 묶음 아래에 있다. 출처 아트 Commit 6034a953·8349b32a.
+
+| # | 프리팹 | 경로 | 이미지(루트 아래) | 로컬 회전 (x, y, z, w) | 기울기 |
+|---|---|---|---|---|---|
+| 1 | Obj_Tower | Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_Tower.prefab | Billboard/Shadow | 0.5548, 0.2298, -0.3060, 0.7388 | 약 74° |
+| 2 | Obj_CoinPile | Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_CoinPile.prefab | Billboard/Image/Pile_1/Pile_1, Pile_2/Pile_2, Pile_3/Pile_3 (3개 같은 값) | 0.6073, 0.2515, -0.2884, 0.6963 | 약 82° |
+| 3 | Obj_GemRock | Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_GemRock.prefab | Billboard/Rock/Rock/Rock · Crystal_C/Crystal_C | 0.4813, 0.1994, -0.3267, 0.7886 | 약 63° |
+| | | | Billboard/Rock/Crystal_R/Crystal_C (1) | 0.4271, 0.2983, -0.3267, 0.7886 | 약 63° |
+| | | | Billboard/Rock/Crystal_L/Crystal_C (2) | 0.5209, -0.0005, -0.3267, 0.7886 | 약 63° |
+| 4 | Obj_StairGate | Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_StairGate.prefab | Billboard/Shadow/Pillar_L · Pillar_R | 0.3536, 0.1464, -0.3536, 0.8536 | 약 45° |
+| | | | Billboard/Shadow/Ribbon | 0.3827, 0, 0, 0.9239 | 약 45° |
+| 5 | Obj_StairZone | Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_StairZone.prefab | Billboard/Lantern_L/Shadow · Lantern_R/Shadow | 0.3536, -0.1464, 0.3536, 0.8536 | 약 45° |
+| | | | Billboard/Glow (1) | 0.4226, 0, 0, 0.9063 | 약 50° |
+| | | | Billboard/Glow (2) | 0.7071, 0, 0, 0.7071 | 약 90° |
+| 6 | Stage1_Block_Blue | Assets/Game/Addressables/Local/BG/Prefab/Stage1/Stage1_Block_Blue.prefab | Billboard/Chest_1 | 0.5877, 0.2434, -0.2953, 0.7129 | 약 79° |
+| 7 | Stage1_Block_Cat | Assets/Game/Addressables/Local/BG/Prefab/Stage1/Stage1_Block_Cat.prefab | Billboard/Body (2) | 0.4493, 0.1861, -0.3344, 0.8073 | 약 58° |
+| 8 | Stage1_Block_Gold | Assets/Game/Addressables/Local/BG/Prefab/Stage1/Stage1_Block_Gold.prefab | Billboard/Chest_2 | 0.5359, 0.2220, -0.3117, 0.7526 | 약 71° |
+| (참고) | Obj_CraftGate | Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_CraftGate.prefab | 4번 Obj_StairGate의 변형 프리팹이라 같은 3개를 물려받음 | 4번과 같음 | 4번을 고치면 함께 바뀜 |
+
+문제가 될 수 있는 이유: Billboard 묶음은 실행 중 카메라를 향해 돈다. 눕힌 그림자·바닥 그림이 묶음 안에 있으면 함께 돌아 카메라 각도(오르기 중 측면 시점 등)에 따라 바닥에서 떠 보이거나 늘어나 보이고 오브젝트와 어긋날 수 있다. 반대로 카메라에 맞춰 일부러 기울인 배치일 수도 있어 사람이 본다.
+
+에디터 확인 방법: Game 씬 또는 실행 중 해당 오브젝트를 여러 카메라 각도(정면·오르기 측면)에서 보고, 그림자·바닥 그림이 바닥에 붙어 있고 본체와 어긋나지 않는지 본다. 어긋나면 그 이미지만 월드 배치를 유지한 채 Billboard 밖(루트 아래)으로 옮긴다. 의도된 배치면 규칙 예외로 정할지 결정한다.
 
 ## 이번 회차 범위 (2026-11-11 재정정: 새 기획 표·규칙으로 기본 모드)
 
@@ -258,3 +288,34 @@ PC 한 대에서 Unity 무거운 작업은 한 번에 하나다. 그래서 순�
   5. G8: MV-QA-HARNESS Unity 쪽, MV-QA-ACCEPT(D-87).
 - 기대 시험 목록 `C:/Project/MoonVillage.wt/_notes/expected/dev-full.json`은 새 시험이 들어오면 갱신한다(담당 근거 `EditMode.xml`의 fullname을 더함). Addressables 항목 추가는 그룹 파일 `  m_ReadOnly: 0
   m_Settings:` 앞에 넣는다.
+
+
+## MV-HIT-PHYS 검수와 설계 (2026-11-17)
+
+정적 검수만 했다(Unity 미실행). 경로 `S/` = `Assets/Game/Scripts/`, `A/` = `Assets/Game/Addressables/Local/`.
+
+### 투사체 판정 설계 (구현할 것)
+1. 정본: 피격 대상 프리팹 안 `Hitbox` 자식(BoxCollider 등 + 표시 컴포넌트 `RunHitbox`, Billboard 아래 금지)의 Collider. 표 105/102 `hw`·`hd`는 투사체 판정에 쓰지 않는다.
+2. MV.Run: 작은 질의 하나만 둔다. 매 Tick의 투사체 단계 앞에서 한 번 `Prepare`(판정체를 시뮬 위치로 옮기고 `Physics.SyncTransforms` 1회), 투사체마다 이동 구간 [z0, nzb] 검사 → (진입 z, 오브젝트 id)로 정렬한 후보 목록. `Hittable`·`HitIds`·관통·피해·보상은 `RunSim.Rules.cs` `MoveProjectiles`에 그대로 둔다(틱마다 1대상 규칙 유지). 질의가 없으면 예외(옛 Hw/Hd 계산으로 되돌아가는 경로 없음).
+3. MV.View: 판정 세계 컴포넌트가 질의를 구현. 뷰(흔들림·눌림·쓰러짐이 루트를 움직임, `ObjectViewFactory.cs:963·1036`)와 분리된 판정체를 프리팹 `Hitbox`에서 복제해 오브젝트 id별로 둔다. 위치 (o.X, WorldY, o.Z) + 프리팹 안 상대 위치, 투사체 높이 = `ProjLayout.ProjY`. `Physics.RaycastNonAlloc` + 시작점 겹침 검사, Collider→id 사전으로 대상 단위 처리(여러 Collider 한 대상). 새 레이어는 ProjectSettings(통합 Writer)라 만들지 않고 사전으로 거른다. 사거리 22m < 그리기 90m라 대상은 늘 로드 범위 안. 판정체 없는 피격 가능 종류는 오류 로그.
+4. 프리팹: `A/BG/Prefab/Object/` Obj_Tower·Obj_CoinPile·Obj_GemRock·Obj_StairGate·Obj_CraftGate, `A/BG/Prefab/Stage1/` Stage1_Block_Gold·Blue·Cat에 Hitbox 추가(그림 기준. 벽은 그림 약 3.13m vs hw 2.3m 사용자 확인 사례). 쥐·카드상자는 그림까지 새 프리팹으로 전환하고 105.prefab에 연결. 코드 조립 경로(`ObjectViewFactory` Mouse·Single)는 제거하고 쥐 프레임은 102.fps를 쓴다.
+5. 문서: 10_Architecture §MV.Run(79행), 04 §4.3 투사체 판정, 03_Logic_Run_Meta_Save 45~47행, `Docs/Architecture/` 충돌 설명.
+6. 검증: compile, 바꾼 모듈 EditMode, 실제 Collider·Physics 통합 시험(고속 구간, 앞뒤 순서, 관통·중복, 시작 겹침, 움직이는 쥐, 프리팹 이동·회전·스케일, Collider 편집 시 범위 변화). 가짜 질의 시험만으로 PASS 처리 금지. 실제 씬 벽 대조는 사람 확인 NOT_RUN.
+- 리플레이: `SimReplayTests` 4건은 이미 `Ignore`(Q-04)라 막지 않음.
+
+### 다른 영역 발견 (미착수, 같은 기준)
+| 구분 | 위치 | 내용 / 최소 수정 |
+|---|---|---|
+| 사용자 판단 | `S/MV.Run/Sim/RunSim.Rules.cs:97·185` | 벽이 플레이어를 막는 폭도 hw+`PLAYER_HALF_W`. 투사체만 Collider로 가면 벽 크기가 둘로 나뉨 → 막힘도 같은 Hitbox로 옮길지 결정 |
+| 사용자 판단 | Rules.cs:542·567·602·672 / 04_effect radius | 연쇄·낙뢰·구슬·뇌우 판정 범위(300 *_BOX, 112 p*)와 이펙트 반경(04 radius, 코드 1.6)이 따로 관리됨 |
+| 수정 | 108 `insideX` + `MvTableValidator.Semantics.cs:318` | 쓰이지 않는 열(hw+margin을 옮겨 적음) 삭제 |
+| 수정 | Obj_StairGate 기둥 ±1.25, Stage1_Arch ±4.6, `ScreenLayers.cs:40` | hw를 프리팹·코드에 손으로 옮겨 적음 |
+| 수정 | `ObjectViewFactory.cs:243-297` | 프리팹 부품을 이름으로 찾음 → `ObjectPrefabRig` 직렬화 참조 |
+| 수정 | `ObjectViewFactory.cs:666-860`, `ObjectLayout.cs` | 프리팹이 있는 종류의 코드 대체 그리기 경로(실행 안 됨) 정리 |
+| 수정 | `ProjectileView.cs:181`, `CharacterPresenter.cs:103-104` | 프리팹 재질을 코드가 덮어씀 |
+| 수정 | `WorldView.cs:63-75`, WorldRoot.prefab | ProjectileView·ClimbStairView를 코드로 생성(직렬화 필드 지정 불가) |
+| 수정 | WorldRoot.prefab GameCamera, `MvCameraSettings.cs:36-38` | 프리팹 카메라 값 전부 덮어씀, 쓰지 않는 행 렌즈 값 |
+| 수정 | 화면비 9:16 6곳, `MvRunInputReader.cs:22,29` | 정본 하나(300 표)로 |
+| 사용자 판단 | `A/UI/**` 빈 프리팹 13개 + View `EnsureBuilt` | UI 배치를 코드로 만듦, 프리팹 이관 순서 결정 |
+| 사용자 판단 | 109 touchX/Z, 300 PLAYER_HALF_W, 102 bossMouse scale(대왕쥐는 [창작] 모드, 꺼짐) | 몸 크기 체계가 셋 |
+| 사용자 판단 | 기획서 10:79·91, 03:45-47, 04:5 「Unity 비참조·HTML 비트 일치」 | 사용자 원문 근거 없음(중앙 IC-20261117-006 보고). 이번 사용자 지시로 투사체 판정은 해제 |

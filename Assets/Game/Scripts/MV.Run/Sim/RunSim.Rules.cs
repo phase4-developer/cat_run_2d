@@ -332,26 +332,36 @@ namespace MV.Run
             return null;
         }
 
+        readonly List<ProjectileHit> _projHits = new List<ProjectileHit>();
+
         void MoveProjectiles(double dt)
         {
             var s = S;
             double range = ProjRange(s);
+            if (s.Projs.Count > 0)
+            {
+                if (HitQuery == null) throw new InvalidOperationException("RunSim.HitQuery가 없습니다(투사체 판정은 프리팹 Collider로만 한다).");
+                HitQuery.Prepare(s);
+            }
             for (int bi = 0; bi < s.Projs.Count; bi++)
             {
                 var b = s.Projs[bi];
                 if (b.Dead) continue;
                 double nzb = b.Z + _p.ProjSpeed * dt;
-                RunObject best = null; double bz = 1e9;
-                foreach (var o in s.Objs)
+                // 이번 틱 이동 구간 [b.Z, nzb]에서 가장 먼저 닿는 피격 가능 대상 하나(정본 틱당 1대상). 순서는 질의가 진입 z·Id로 정한다.
+                _projHits.Clear();
+                HitQuery.Cast(s, b.X, b.Z, nzb, _projHits);
+                RunObject best = null; double bz = 0;
+                foreach (var h in _projHits)
                 {
-                    if (!Hittable(o) || Math.Abs(b.X - o.X) > o.Hw) continue;
-                    if (b.HitIds != null && b.HitIds.Contains(o.Id)) continue;
-                    double f = o.Z - o.Hd;
-                    if (f <= nzb && o.Z + o.Hd >= b.Z && f < bz) { bz = f; best = o; }
+                    if (!Hittable(h.Obj)) continue;
+                    if (b.HitIds != null && b.HitIds.Contains(h.Obj.Id)) continue;
+                    best = h.Obj; bz = h.Z;
+                    break;
                 }
                 if (best != null)
                 {
-                    s.Emit(new RunEvent(RunEventType.ProjImpact, objId: b.Id, x: b.X, z: best.Z - best.Hd, flag: b.Crit));
+                    s.Emit(new RunEvent(RunEventType.ProjImpact, objId: b.Id, x: b.X, z: bz, flag: b.Crit));
                     Hit(best, b.D, b.Crit, true, false, b.Crit ? HitColor.Crit : HitColor.Normal, b.Spear ? HitSource.Spear : HitSource.Projectile);
                     if (s.Companions.Count > 0) CompanionOnProjectileHit();
                     (b.HitIds ??= new List<int>()).Add(best.Id);

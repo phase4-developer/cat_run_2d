@@ -13,6 +13,11 @@ namespace MV.Run
         public RunState State { get; }
         /// <summary>이 런의 규칙(정본이면 <see cref="MainRunRule"/>).</summary>
         public IRunRule Rule { get; }
+        /// <summary>
+        /// 투사체 공간 충돌 검출(판정 형상 = 오브젝트 프리팹 Collider). 런을 돌리는 쪽이 넣는다.
+        /// 투사체가 있는데 비어 있으면 <see cref="Tick"/>이 예외를 낸다(다른 판정으로 대신하지 않는다).
+        /// </summary>
+        public IProjectileHitQuery HitQuery { get; set; }
 
         RunSim(RunState s, IRunRule rule)
         {

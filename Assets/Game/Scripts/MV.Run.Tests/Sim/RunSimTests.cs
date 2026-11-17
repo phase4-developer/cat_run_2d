@@ -12,7 +12,7 @@ namespace MV.Run.Tests
         static RunState NewState(RunSetup setup = null, HandLevel lv = null)
         {
             var t = RunTestTables.Load();
-            return RunSim.Create(setup ?? new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } }, t, new ConstRng(0.5), lv ?? new HandLevel()).State;
+            return TestSims.Create(setup ?? new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } }, t, new ConstRng(0.5), lv ?? new HandLevel()).State;
         }
 
         [TestCase(20, 10)]
@@ -143,7 +143,7 @@ namespace MV.Run.Tests
     public sealed class RunSimRuleTests
     {
         static RunSetup Setup() => new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } };
-        static RunSim Sim(HandLevel lv, RunSetup s = null, IRng rng = null) => RunSim.Create(s ?? Setup(), RunTestTables.Load(), rng ?? new ConstRng(0.5), lv);
+        static RunSim Sim(HandLevel lv, RunSetup s = null, IRng rng = null) => TestSims.Create(s ?? Setup(), RunTestTables.Load(), rng ?? new ConstRng(0.5), lv);
         static void Run(RunSim sim, int frames, RunInput input = default) { for (int i = 0; i < frames; i++) sim.Tick(1 / 60.0, input); }
         static List<RunEvent> Ev(RunSim sim, RunEventType t) => sim.State.Events.Where(e => e.Type == t).ToList();
 
@@ -168,7 +168,7 @@ namespace MV.Run.Tests
         public void Character_ChangeDuringRun_AppliesNextTick()
         {
             var t = RunTestTables.Load(null);   // 공유 캐시를 바꾸지 않게 새 표
-            var sim = RunSim.Create(Setup(), t, new ConstRng(0.5), new HandLevel());
+            var sim = TestSims.Create(Setup(), t, new ConstRng(0.5), new HandLevel());
             sim.Tick(0.05, RunInput.None);
             double z1 = sim.State.P.Z;
             Assert.AreEqual(t.Character.RunSpeed * 0.05, z1, 1e-12);
@@ -201,7 +201,7 @@ namespace MV.Run.Tests
             new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy", Modifiers = mods, PerkDcap = perkDcap };
 
         /// <summary>상자 시험: 프로토 easy 연사 표(MV-SPEC2-FIX2, RunTestTables.ProtoEasy).</summary>
-        static RunSim BoxSim(HandLevel lv, RunSetup setup, IRng rng = null) => RunSim.Create(setup, RunTestTables.ProtoEasy(), rng ?? new ConstRng(0.5), lv);
+        static RunSim BoxSim(HandLevel lv, RunSetup setup, IRng rng = null) => TestSims.Create(setup, RunTestTables.ProtoEasy(), rng ?? new ConstRng(0.5), lv);
 
         static List<RunEvent> Gains(RunSim sim, RunObject o) => Ev(sim, RunEventType.Gain).Where(e => e.ObjId == o.Id).ToList();
 
@@ -424,7 +424,7 @@ namespace MV.Run.Tests
             Assert.IsNotNull(t.ObjectKind.ByKey("fishCrate"));
             var lv = new HandLevel().Add("fishCrate", 0, 20);
             // 피해 10인 단계(103 더미 5단계)·easy 연사(MV-SPEC2-FIX1: 1단계 피해 1).
-            var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" }, t, new ConstRng(0.5), lv);
+            var sim = TestSims.Create(new RunSetup { Deck = new[] { 0, 0, 0, 0, 0, 1, 0, 0, 0 }, Preset = "easy" }, t, new ConstRng(0.5), lv);
             var o = sim.State.Objs[0];
             Assert.AreEqual(25, o.Hp, "bonus025: round(100 × 0.25)");
             for (int i = 0; i < 300; i++) sim.Tick(1 / 60.0, default);
