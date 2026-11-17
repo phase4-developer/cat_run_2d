@@ -39,6 +39,9 @@ namespace MV.View
             public GameObject Line;
             public MeshFilter LineMf;
             public ProjectileRig Rig;
+            /// <summary>창 장식 파티클(`VFX_Spear_Bolt`/`_Fire`) 인스턴스와 주소.</summary>
+            public GameObject SpearFx;
+            public string SpearFxAddr;
             public bool Fresh;
             public int Stamp;
         }
@@ -118,6 +121,8 @@ namespace MV.View
             LoadPrefab(_projPrefab, ct);
             if (_names != null) foreach (var n in _names) LoadSprite(n, ct);
             if (_tails != null) foreach (var n in _tails) LoadPrefab(n, ct);
+            LoadPrefab(SpearFxBolt, ct);
+            LoadPrefab(SpearFxFire, ct);
         }
 
         void LoadSprite(string address, CancellationToken ct)
@@ -290,7 +295,8 @@ namespace MV.View
                 sprite = SpearHead(fire);
                 var mesh = SpearLine(fire);
                 if (it.LineMf.sharedMesh != mesh) it.LineMf.sharedMesh = mesh;
-                if (!it.Line.activeSelf) it.Line.SetActive(true);
+                // 기존 창 선(코드로 그린 띠)은 끈다: 꼬리는 창 장식 파티클(VFX_Spear_*)의 리본이 그린다. 다시 쓰려면 SetActive(true)로.
+                if (it.Line.activeSelf) it.Line.SetActive(false);
                 it.Spin.localRotation = Quaternion.identity;
                 it.Spin.localScale = Vector3.one;
             }
@@ -302,13 +308,55 @@ namespace MV.View
             if (it.Sr.sprite != sprite) it.Sr.sprite = sprite;
             it.Go.transform.position = new Vector3((float)b.X, (float)(wy + ProjLayout.ProjY), (float)b.Z);
             if (!it.Go.activeSelf) it.Go.SetActive(true);
+            SetSpearFx(it, fire ? SpearFxFire : SpearFxBolt);
+            if (it.Fresh)
+            {
+                it.Fresh = false;
+                RestartSpearFx(it);
+            }
             return true;
+        }
+
+        /// <summary>창 장식 파티클 주소(불 / 그 외). 프리팹이 아직 없으면 장식 없이 창만 그린다.</summary>
+        const string SpearFxBolt = "VFX_Spear_Bolt", SpearFxFire = "VFX_Spear_Fire";
+
+        /// <summary>창 장식을 끼운다. 주소가 같으면 켜기만, 다르면 옛것을 지우고 새로 만든다. null이면 끈다.</summary>
+        void SetSpearFx(Item it, string address)
+        {
+            if (address == null)
+            {
+                if (it.SpearFx != null && it.SpearFx.activeSelf) it.SpearFx.SetActive(false);
+                return;
+            }
+            if (it.SpearFxAddr == address && it.SpearFx != null)
+            {
+                if (!it.SpearFx.activeSelf) { it.SpearFx.SetActive(true); RestartSpearFx(it); }
+                return;
+            }
+            var prefab = Prefab(address);
+            if (prefab == null) return;
+            if (it.SpearFx != null) Destroy(it.SpearFx);
+            it.SpearFx = Instantiate(prefab, it.Go.transform, false);
+            it.SpearFx.name = address;
+            it.SpearFxAddr = address;
+        }
+
+        /// <summary>풀에서 다시 꺼낸 창: 옛 자리에서 이어지는 입자가 생기지 않게 처음부터 다시 재생한다.</summary>
+        static void RestartSpearFx(Item it)
+        {
+            if (it.SpearFx == null) return;
+            foreach (var ps in it.SpearFx.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                ps.Simulate(0f, false, true);
+                ps.Play(false);
+            }
         }
 
         /// <summary>던진 장난감: 마법탄 프리팹에 등급 그림·꼬리를 넣고 그림만 돌린다. 프리팹·그림이 아직 없으면 그리지 않는다.</summary>
         bool PlaceToy(Item it, RunProjectile b, double wy, double nowSec)
         {
             if (it.Line.activeSelf) it.Line.SetActive(false);
+            SetSpearFx(it, null);
             if (it.Sr.sprite != null) it.Sr.sprite = null;
             var rig = EnsureRig(it);
             var sprite = ProjSprite(b.Tier);

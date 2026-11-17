@@ -136,6 +136,8 @@ namespace MV.Fx
             _token = 0;
             _playing = true;
             if (_particleMode) enabled = true;
+            if (_spawn.Key == null && _spawn.Pos == default) _spawn.Pos = transform.position;
+            ApplyBinds(_spawn);
             PlayParticles();
             if (!_particleMode)
             {
@@ -156,6 +158,22 @@ namespace MV.Fx
             foreach (var ps in _systems)
                 if (ps) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             if (_particleMode) enabled = false;
+        }
+
+        MvFxParticleBind[] _binds;
+
+        /// <summary>디자이너 파티클에 호출 값(색·개수·반경·치명타·고리 끔)을 넘긴다. <see cref="MvFxParticleBind"/>가 붙은 것만.</summary>
+        void ApplyBinds(in FxSpawn s)
+        {
+            if (_binds == null) _binds = GetComponentsInChildren<MvFxParticleBind>(true);
+            if (_binds.Length == 0) return;
+            bool critTint = kind == FxKind.Impact && s.Crit;
+            bool has = s.HasColor || critTint;
+            Color32 c = s.HasColor ? s.Color : MvFxRouter.C("#ffb07a");
+            float cr = float.IsNaN(s.Count) || count <= 0f ? 1f : s.Count / count;
+            float rr = float.IsNaN(s.Radius) || radius <= 0f ? 1f : s.Radius / radius;
+            float lf = float.IsNaN(s.Life) ? life : s.Life;
+            foreach (var bd in _binds) if (bd) bd.Apply(s, has, c, cr, rr, lf);
         }
 
         /// <summary>
