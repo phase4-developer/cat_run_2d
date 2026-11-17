@@ -76,7 +76,7 @@
 | `MV.Core` | 공통 타입(게임 좌표 `GVec`, ID 구조체, 난수 `IRng`, 시간 `IClock`), 상수 키 | 없음 | — |
 | `MV.Data` | 표 행·표 클래스·검증기·`MvTables`(모든 표 묶음), 리소스 키 해석 | tables, MV.Core | 정적 정의 |
 | `MV.Save` | `DataContainer` 구현(진행·재화·강화·설정), 이관 | data, save, economy, MV.Data | 영속 상태 |
-| `MV.Run` | **순수 C# 런 시뮬레이션.** Floor 생성, 이동·사격·피격·게이트·우물·계단·카드·적·종료 판정. 렌더·UI·Unity API 없음(시간·입력·난수는 주입) | MV.Core, MV.Data | Run 상태 |
+| `MV.Run` | **순수 C# 런 시뮬레이션.** Floor 생성, 이동·사격·피격·게이트·우물·계단·카드·적·종료 판정. 렌더·UI·Unity API 없음(시간·입력·난수·투사체 공간 충돌 검출 `IProjectileHitQuery`는 주입) | MV.Core, MV.Data | Run 상태 |
 | `MV.Meta` | 로비 강화, Area 강화, 부활, 신·카드 덱, Area 개방, 지도, 광고 한도, 결과 정산 | MV.Data, MV.Save | 영속 상태 변경의 유일한 진입점 |
 | `MV.Content` | 추가 모드·퀘스트·펫·연구·챔피언·장비·상점(규칙). 모드는 `IModeRule` 구현 | MV.Run, MV.Meta | 모드별 Run 상태 |
 | `MV.View` | 월드 렌더: 카메라 리그, 빌보드·정렬·안개·밤·틴트, 지면·계단 메쉬, 테마 소품 배치, 오브젝트 뷰 | MV.Run(읽기), resources.addressables, URP | 표시 상태만 |
@@ -88,7 +88,8 @@
 | `MV.Editor` | 표 검증기 등록(`TableAuthoringOptions`), 리소스 임포트 후처리, 캡처 도구 | tables.authoring, Editor | — |
 
 규칙:
-- `MV.Run`은 Unity를 참조하지 않는다. 그래야 프로토 HTML과 같은 입력으로 같은 결과를 내는지 EditMode 시험으로 대조할 수 있다([12](12_Acceptance.md) 로직 대조).
+- `MV.Run`은 Unity를 참조하지 않는다. 피해·관통·보상 같은 규칙은 EditMode 시험으로 따로 돌릴 수 있다.
+- **투사체 공간 충돌은 예외로 Unity Physics가 정본이다**(MV-HIT-PHYS, 2026-11-17 사용자 지시 「투사체의 공간 충돌 검출은 실제 Collider와 Unity Physics를 활용하는 방향으로 개선」). 피격 형상 = 오브젝트 프리팹 안 `Hitbox`(`RunHitbox` + Collider). `MV.Run`은 `IProjectileHitQuery`(틱마다 `Prepare` 1회, 투사체마다 이동 구간 `Cast`)만 알고, 구현은 `MV.View` `RunHitWorld`(Raycast + 시작점 겹침, 대상 단위, 진입 z·Id 순)다. 표 `105`·`102`의 `hw`·`hd`는 투사체 판정에 쓰지 않는다(벽 막힘·게이트 통과·범위 공격 규칙에는 아직 쓴다). 그래서 투사체 결과는 프로토 HTML과 비트 일치를 보장하지 않는다.
 - 영속 상태는 `MV.Meta`만 바꾼다. UI는 명령을 호출하고 `DataRepository.Changed`로 다시 그린다(Framework `UIBase.SetDirty`).
 - 런 중 표시 효과(흔들림·팝업·이펙트·소리)는 `MV.Run`이 이벤트(`RunEvent` 큐: `Hit`, `Break`, `GateFill`, `GateTake`, `GateMiss`, `Steal`, `ClimbStart` …)로 내보내고 `MV.Fx`·`MV.Sound`·`MV.UI`가 구독한다.
 
