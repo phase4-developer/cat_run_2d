@@ -81,7 +81,7 @@
 | MV-HARDCODE-1b 규칙·표 중복 | 완료(2026-11-11) | `13c04949` | 남은 줄 PC-16~21, 115↔330 lap 중복(1a 쪽과 함께) |
 | MV-RUN-MIDZONE 평지 감속 제거 | 완료(2026-11-11) | `1fb4a25f` | 310 midFromZ·midToZ 빈칸(걷기 항상 4), 중간 구역 = 계단 오르는 구간(임시, PC-10). 사람 확인: 사용자가 속도 4 확인 |
 | DOC-ARCH 코드 구조 문서 | 완료(2026-11-15, 사용자 「클래스 구조와 함수 흐름 상세하게 문서화」, 2차 「다이어그램 표가 있어야 … PDF로 전달해」) | 브랜치 `ai/DOC-ARCH-structure-doc` | `Docs/Architecture/`(README 지도 + 01~05 모듈별). 기준 dev `046c8be6`. 문서만이라 Unity 검증 해당 없음(NOT_RUN). 구조 변경 계약은 병합 때 해당 절 갱신 | 2차: `MoonVillage_CodeStructure.pdf`(그림 17·표, 원본 `pdf_src/`), 브랜치 `ai/DOC-ARCH-2-pdf`. |
-| MV-HIT-PHYS 투사체 판정 Collider 전환 | 설계·검수 완료, 구현 인계(2026-11-17, 사용자 지시 「투사체의 공간 충돌 검출은 실제 Collider와 Unity Physics를 활용하는 방향으로 개선」, 결정 「그림까지 프리팹으로 전환」·불일치 사례 「벽·잡동사니」) | 브랜치 `ai/MV-HIT-PHYS-projectile-collider` | 아래 「MV-HIT-PHYS 검수와 설계」 절. 구현·프리팹·Unity 검증 미착수(새 세션) |
+| MV-HIT-PHYS 투사체 판정 Collider 전환 | 구현 완료·Unity 검증 대기(2026-11-17, 사용자 지시 「투사체의 공간 충돌 검출은 실제 Collider와 Unity Physics를 활용하는 방향으로 개선」, 결정 「그림까지 프리팹으로 전환」·불일치 사례 「벽·잡동사니」) | 브랜치 `ai/MV-HIT-PHYS-projectile-collider` | 아래 「MV-HIT-PHYS 검수와 설계」 절. 구현 7f89bd2b·Addressables e58acd02·표 산출물 772d11da(setup 1a68b098bf9a PASS)·문서 cf46d7cb. compile·EditMode NOT_RUN: 실행기 다이나믹 폰트 SOURCE_CHANGED(잡 14a165673dac, 중앙 차단 b-f63d1c954a0c). PlayMode·실기·사람 장면 대조 NOT_RUN |
 
 ## 이번 회차 범위 (2026-11-11 재정정: 새 기획 표·규칙으로 기본 모드)
 
