@@ -286,7 +286,10 @@ namespace MV.Boot
             var builder = new RunLevelBuilder();
             var ctx = MvRunStart.CreateContext(snap, _tables, seed);
             if (hasSave) ctx.MetaModifiers = MV.Content.MvResearch.Modifiers(store, _tables); // 연구 단계 → 런 메타 능력치(MV-META-RESEARCH)
-            return RunSim.Create(ctx, new MainRunRule(builder), new Pcg32Rng(seed), builder);
+            var sim = RunSim.Create(ctx, new MainRunRule(builder), new Pcg32Rng(seed), builder);
+            // 투사체 판정 = 오브젝트 프리팹 Collider(Unity Physics). 월드에 판정 세계가 없으면 런을 시작하지 않는다.
+            sim.HitQuery = _world.Hits != null ? _world.Hits : throw new InvalidOperationException("WorldView에 RunHitWorld가 없습니다(오브젝트 뷰 필요).");
+            return sim;
         }
 
         /// <summary>로비 출발(시험·키 입력). 로비가 떠 있으면 런이 이 프레임에 시작된다.</summary>

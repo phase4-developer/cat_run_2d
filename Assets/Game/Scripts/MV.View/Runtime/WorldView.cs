@@ -28,6 +28,8 @@ namespace MV.View
         [SerializeField] ProjectileView _projs;
         /// <summary>계단 정산 칸(Obj_ClimbStep 쌓기). 프리팹에 없으면 만든다.</summary>
         [SerializeField] ClimbStairView _stairs;
+        /// <summary>투사체 판정(프리팹 Collider, Unity Physics). 프리팹에 없으면 만든다.</summary>
+        [SerializeField] RunHitWorld _hits;
 
         readonly WorldSpriteCache _sprites = new WorldSpriteCache();
         ViewConfig _cfg;
@@ -42,6 +44,8 @@ namespace MV.View
         public CharacterPresenter Cats => _cats;
         public ProjectileView Projectiles => _projs;
         public ClimbStairView Stairs => _stairs;
+        /// <summary>런 시뮬의 투사체 판정 질의(<see cref="MV.Run.RunSim.HitQuery"/>). 오브젝트 뷰가 없으면 null.</summary>
+        public RunHitWorld Hits => _hits;
 
         public void Init(MvTables tables, IWorldViewSource source)
         {
@@ -74,6 +78,16 @@ namespace MV.View
                 _stairs = go.AddComponent<ClimbStairView>();
             }
             _stairs.Init(tables, _cfg, _rig.Cam, _objects != null ? _objects.LabelMaterial : null);
+            if (_objects != null)
+            {
+                if (_hits == null)   // 판정 형상 복사본을 담는 곳(설정 값 없음). 프리팹에 없으면 만든다.
+                {
+                    var go = new GameObject("HitWorld");
+                    go.transform.SetParent(transform, false);
+                    _hits = go.AddComponent<RunHitWorld>();
+                }
+                _hits.Init(_objects.PrefabAddress, _objects.LoadedPrefab);
+            }
         }
 
         /// <summary>테마 아틀라스·Fx 아틀라스를 먼저 로드한 뒤 색·소품을 바꾼다(03 §3.8.5·§3.8.8). 이전 테마 아틀라스는 그 뒤 반환.</summary>

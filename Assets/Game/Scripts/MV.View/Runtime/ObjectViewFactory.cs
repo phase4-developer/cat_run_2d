@@ -104,6 +104,8 @@ namespace MV.View
             public GameObject[] Chests;
             /// <summary>반짝이(게이트 막 위·포탈 둘레).</summary>
             public SpriteRenderer[] Sparks;
+            /// <summary>적 몸 그림(Image). 프레임은 지금 테마 아틀라스의 `102_enemy.sprite` 프레임을 `102_enemy.fps`로 넘긴다.</summary>
+            public SpriteRenderer Body;
         }
 
         /// <summary>포탈 반짝이 색 `#fff4c0`(drawPortal L3735).</summary>
@@ -179,6 +181,17 @@ namespace MV.View
             string p = tables != null ? StageObjectData.Find(tables.StageObject.Datas, stageMap, o.Kind.key, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any) : null;
             if (string.IsNullOrEmpty(p)) p = o.Kind.prefab;
             return string.IsNullOrEmpty(p) ? null : p;
+        }
+
+        /// <summary>지금 스테이지에서 오브젝트가 쓰는 프리팹 주소(<see cref="PrefabFor"/>). 투사체 판정 형상(<see cref="RunHitWorld"/>)도 같은 프리팹에서 온다.</summary>
+        public string PrefabAddress(RunObject o) => PrefabFor(_tables, _stageMap, o);
+
+        /// <summary>로드된 프리팹 원본. 아직 로드 전이면 로드를 시작하고 null, 로드 실패면 null.</summary>
+        public GameObject LoadedPrefab(string address)
+        {
+            if (string.IsNullOrEmpty(address)) return null;
+            if (!_prefabs.TryGetValue(address, out var lease)) { Preload(address); return null; }
+            return lease != null ? lease.Asset : null;
         }
 
         /// <summary>런 칸 보상 → 305 reward(이름 1:1). 이름이 없으면 Any.</summary>
@@ -276,6 +289,12 @@ namespace MV.View
                     if (p.Spin != null) p.SpinBase = p.Spin.localRotation;
                     // 포탈 반짝이는 바닥 원 둘레(월드 축)라 빌보드 인스턴스가 아니라 뷰 루트 아래에 각자 빌보드로 둔다.
                     p.Sparks = MakeSparks(v.Go.transform, ObjectReaction.PortalSparks, s_portalSpark, true);
+                    break;
+                }
+                case ObjectShape.Mouse:
+                {
+                    var img = Deep(it, "Image");
+                    if (img != null) img.TryGetComponent(out p.Body);
                     break;
                 }
                 case ObjectShape.Junk:
@@ -610,6 +629,7 @@ namespace MV.View
                 v.Ds.Rank = DepthMath.RankObject;
             }
             v.Obj = o;
+            v.Frames = null;   // 테마가 바뀌었을 수 있다(적 프레임은 지금 테마 아틀라스)
             v.Ds.SortOffsetY = (float)_cfg.ObjProbeY;
             v.Ds.Bias = o.Kind != null ? (float)o.Kind.sortBias : 0f;
             v.Ds.SetAlphaScale(1f);
@@ -686,14 +706,6 @@ namespace MV.View
                 case ObjectShape.CatnipPot:
                     Part(v, 0, _atlas, SpriteAt(o, 0), Vector3.zero, 0);
                     Part(v, 1, _fxAtlas, Star, new Vector3(0.1f, 1.37f, 0), 1);
-                    break;
-                case ObjectShape.Mouse:
-                    string prefix = o.Enemy?.sprite;
-                    if (!string.IsNullOrEmpty(prefix) && !prefix.EndsWith("_")) prefix += "_";
-                    v.Frames = string.IsNullOrEmpty(prefix) || _sprites == null ? null : _sprites.GetFrames(_atlas, prefix, Math.Max(1, o.Enemy.frameCount));
-                    var m = Part(v, 0, _atlas, null, Vector3.zero, 0);
-                    m.sprite = v.Frames != null && v.Frames.Length > 0 ? v.Frames[0] : null;
-                    m.gameObject.SetActive(m.sprite != null);
                     break;
                 default:
                     Part(v, 0, _atlas, SpriteAt(o, 0), Vector3.zero, 0);
@@ -944,14 +956,6 @@ namespace MV.View
                     }
                     break;
                 }
-                case ObjectShape.Mouse:
-                    if (v.Frames != null && v.Frames.Length > 0)
-                    {
-                        double ph = (nowMs / 200.0) % (Math.PI * 2);
-                        int f = Math.Min(v.Frames.Length - 1, (int)(ph / (Math.PI * 2) * v.Frames.Length));
-                        if (v.Frames[f] != null) v.Parts[0].sprite = v.Frames[f];
-                    }
-                    break;
                 case ObjectShape.Well:
                     AnimateBricks(v, dt);
                     SortBricks(v);
@@ -1029,6 +1033,18 @@ namespace MV.View
                             SetSpark(p.Sparks[i], at, ObjectReaction.PortalSparkR * (1 - k));
                         }
                     break;
+                case ObjectShape.Mouse:
+                {
+                    // 적 프리팹(그림 자리·크기·Hitbox) + 테마 프레임. 프레임 넘김 = 102_enemy.fps.
+                    v.Frames ??= EnemyFrames(o);
+                    if (p?.Body != null && v.Frames != null && v.Frames.Length > 0)
+                    {
+                        double fps = o.Enemy != null ? o.Enemy.fps : 0;
+                        int f = fps > 0 ? (int)(Math.Floor(t * fps) % v.Frames.Length) : 0;
+                        if (v.Frames[f] != null) p.Body.sprite = v.Frames[f];
+                    }
+                    break;
+                }
                 case ObjectShape.Junk:
                 {
                     sx = (float)ObjectReaction.WallShakeX(v.Shake);
@@ -1046,6 +1062,15 @@ namespace MV.View
             v.Inst.transform.localPosition = new Vector3(sx, dy, 0);
             v.Inst.transform.localScale = Vector3.Scale(p != null ? p.InstScale : Vector3.one, PunchScale(v.Punch));
             if (v.Rig != null) v.Rig.SetFill(o.HasHp ? o.Hp : 1, o.HasHp ? o.Max : 1);
+        }
+
+        /// <summary>적 프레임: 지금 테마 아틀라스에서 `102_enemy.sprite` 접두 + 번호, `frameCount`장.</summary>
+        Sprite[] EnemyFrames(RunObject o)
+        {
+            string prefix = o.Enemy?.sprite;
+            if (string.IsNullOrEmpty(prefix) || _sprites == null) return null;
+            if (!prefix.EndsWith("_")) prefix += "_";
+            return _sprites.GetFrames(_atlas, prefix, Math.Max(1, o.Enemy.frameCount));
         }
 
         /// <summary>맞음 눌림 크기 (1 + 0.07k, 1 − 0.08k, 1 + 0.07k)(updObjMesh L1468).</summary>

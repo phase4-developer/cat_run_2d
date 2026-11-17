@@ -214,7 +214,7 @@ namespace MV.View.Tests
             var f = MakeFactory(out _);
             var arch = t.StageObject.Datas.First(r => r.kind == "arch");
             f.SetStage(t, arch.stageMap);
-            var objs = new List<RunObject> { Make(t, "arch", 1, 15), Make(t, "tower", 2, 20), Make(t, "enemy", 3, 25) };
+            var objs = new List<RunObject> { Make(t, "arch", 1, 15), Make(t, "tower", 2, 20), Make(t, "cardbox", 3, 25), Make(t, "enemy", 4, 30) };
             f.Sync(objs, 0, 0, 0);
             Assert.That(f.TryPrefabView(1, out string a1, out _), Is.True);
             Assert.That(a1, Is.EqualTo(arch.prefab));
@@ -222,6 +222,8 @@ namespace MV.View.Tests
             Assert.That(a2, Is.EqualTo(t.ObjectKind.ByKey("tower").prefab));
             Assert.That(f.TryPrefabView(3, out string a3, out _), Is.True);
             Assert.That(a3, Is.Null, "105.prefab 빈칸은 코드 모양");
+            Assert.That(f.TryPrefabView(4, out string a4, out _), Is.True);
+            Assert.That(a4, Is.EqualTo("Obj_Enemy"), "적은 프리팹(그림 자리·Hitbox)");
             Assert.That(f.ViewOf(1).GetComponent<DepthSortable>(), Is.Not.Null, "프리팹 뷰도 같은 정렬 루트");
         }
 

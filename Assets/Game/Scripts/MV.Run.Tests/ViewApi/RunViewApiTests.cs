@@ -17,7 +17,7 @@ namespace MV.Run.Tests
         const double Eps = 1e-9;
 
         static RunSetup Setup() => new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } };
-        static RunSim Sim(HandLevel lv, IRng rng = null) => RunSim.Create(Setup(), RunTestTables.Load(), rng ?? new ConstRng(0.5), lv);
+        static RunSim Sim(HandLevel lv, IRng rng = null) => TestSims.Create(Setup(), RunTestTables.Load(), rng ?? new ConstRng(0.5), lv);
 
         static void TickUntil(RunSim sim, System.Func<RunState, bool> done, int max = 60 * 40)
         {

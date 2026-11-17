@@ -169,7 +169,7 @@ namespace MV.Run.Tests
                     {
                         if (sim == null)
                         {
-                            sim = RunSim.Create(setup, t, rng, new RunLevelBuilder());
+                            sim = TestSims.Create(setup, t, rng, new RunLevelBuilder());
                             sim.State.RngLog = new List<RngDraw>();
                             logStart = rng.Position;
                         }
