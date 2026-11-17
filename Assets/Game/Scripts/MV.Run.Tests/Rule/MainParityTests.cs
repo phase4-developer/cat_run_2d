@@ -17,18 +17,18 @@ namespace MV.Run.Tests.Rule
     /// </summary>
     public sealed class MainParityTests
     {
-        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반).</summary>
+        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["A1L1"] = "f3126 e424 r235 Wall 4a10c80899b0edc6",
             ["A1L8"] = "f3890 e576 r291 Wall dc8e3f5784b69e70",
-            ["A1L15"] = "f3788 e481 r281 Wall 7af4a945bec9e6ae",
-            ["A2L1"] = "f3298 e421 r243 Wall 94928e902a753488",
+            ["A1L15"] = "f3788 e482 r281 Wall 34fd9fe9eda1ff89",
+            ["A2L1"] = "f3298 e422 r243 Wall 8033e2aaea0689f1",
             ["A2L8"] = "f3886 e547 r291 Wall d67585aca514800a",
             ["A2L15"] = "f3676 e496 r275 Wall 3d5886a184a9bb00",
-            ["A3L1"] = "f3448 e845 r497 Wall df726ee9e93c9db9",
+            ["A3L1"] = "f3448 e847 r497 Wall d7b17dc4d0b0dbaa",
             ["A3L8"] = "f3890 e988 r577 Wall c6cb96099cd9255a",
-            ["A3L15"] = "f3829 e930 r559 Wall 70cb8b501f2ea2fc",
+            ["A3L15"] = "f3829 e931 r559 Wall 906e60976154d56c",
             ["A4L1"] = "f3155 e803 r469 Wall 54cfe749c2ef432f",
             ["A4L8"] = "f3864 e946 r573 Wall 39929c3dd2d90a15",
             ["A4L15"] = "f3680 e944 r545 Wall 13b7db96dc957f80",
