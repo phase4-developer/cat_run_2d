@@ -44,6 +44,21 @@ namespace MV.Fx
         {
             _projEl.Clear();
             _lastEl = null;
+            _gradeTier = int.MinValue;
+        }
+
+        int _gradeTier = int.MinValue;
+
+        /// <summary>장착 무기 등급이 바뀌면 그 등급의 `103_item.gradeCol`을 디자이너 파티클 색(<see cref="MvFxParticleBind"/> 무기 등급 색)으로 알린다.</summary>
+        void UpdateWeaponGrade(MvTables t, IMvFxWorld w)
+        {
+            if (!(w is RunStateFxWorld rw)) return;
+            int tier = rw.WeaponTier;
+            if (tier == _gradeTier) return;
+            _gradeTier = tier;
+            string hex = null;
+            if (t.Item != null) foreach (var it in t.Item.Datas) if (it != null && it.tier == tier) { hex = it.gradeCol; break; }
+            MvFxParticleBind.SetWeaponGrade(hex);
         }
 
         float Rnd(float a, float b) => a + _rnd() * (b - a);
@@ -53,6 +68,7 @@ namespace MV.Fx
             var t = _tables();
             if (t == null || o == null) return;
             double wy = w?.WorldY ?? 0;
+            UpdateWeaponGrade(t, w);
             switch (e.Type)
             {
                 case RunEventType.RunStarted:

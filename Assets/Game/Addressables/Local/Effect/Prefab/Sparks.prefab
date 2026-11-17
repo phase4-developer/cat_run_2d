@@ -54,7 +54,7 @@ MonoBehaviour:
   life: 0.6
   grav: 6
   radius: 0
-  color: '#ffffff'
+  color: 
   sortBias: -0.2
   _normal: {fileID: 2100000, guid: ad9f9cb996e64639b51df21bddbb6867, type: 2}
   _add: {fileID: 2100000, guid: f001e692dd034c2c9d79a07d4ba1b09f, type: 2}
@@ -4872,6 +4872,7 @@ GameObject:
   - component: {fileID: 7673506858625891476}
   - component: {fileID: 4516264179382815737}
   - component: {fileID: 5744381136593088138}
+  - component: {fileID: 7947616440600259595}
   m_Layer: 0
   m_Name: impact
   m_TagString: Untagged
@@ -9758,6 +9759,31 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &7947616440600259595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957805127168666799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af4a2fe7859cb4bd389f2ff78560d7f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.Fx::MV.Fx.MvFxParticleBind
+  Tint: 1
+  Lighten: 0.6
+  Source: 1
+  RingOnly: 0
+  ScaleBurst: 0
+  ScaleBy: 0
+  CritScale: 1.4
+  AtTarget: 0
+  Move: 0
+  Offset: {x: 0, y: 0, z: 0}
+  MoveTime: 0
+  Ease: 1
+  PlayLightning: 0
 --- !u!1 &3788366458930699921
 GameObject:
   m_ObjectHideFlags: 0
@@ -9769,6 +9795,7 @@ GameObject:
   - component: {fileID: 650360968037357006}
   - component: {fileID: 7551750082352339502}
   - component: {fileID: 6793211421517443304}
+  - component: {fileID: 1945382661035263569}
   m_Layer: 0
   m_Name: sparks
   m_TagString: Untagged
@@ -14652,6 +14679,31 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &1945382661035263569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3788366458930699921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af4a2fe7859cb4bd389f2ff78560d7f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.Fx::MV.Fx.MvFxParticleBind
+  Tint: 1
+  Lighten: 0.5
+  Source: 1
+  RingOnly: 0
+  ScaleBurst: 0
+  ScaleBy: 0
+  CritScale: 1.4
+  AtTarget: 0
+  Move: 0
+  Offset: {x: 0, y: 0, z: 0}
+  MoveTime: 0
+  Ease: 1
+  PlayLightning: 0
 --- !u!1 &4630721487626557588
 GameObject:
   m_ObjectHideFlags: 0
@@ -14663,6 +14715,7 @@ GameObject:
   - component: {fileID: 3679841326099916703}
   - component: {fileID: 2515064852090276248}
   - component: {fileID: 8007927600107822557}
+  - component: {fileID: 3285188457405418738}
   m_Layer: 0
   m_Name: sparks_Paper
   m_TagString: Untagged
@@ -19546,6 +19599,31 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &3285188457405418738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4630721487626557588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af4a2fe7859cb4bd389f2ff78560d7f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.Fx::MV.Fx.MvFxParticleBind
+  Tint: 1
+  Lighten: 0.35
+  Source: 1
+  RingOnly: 0
+  ScaleBurst: 0
+  ScaleBy: 0
+  CritScale: 1.4
+  AtTarget: 0
+  Move: 0
+  Offset: {x: 0, y: 0, z: 0}
+  MoveTime: 0
+  Ease: 1
+  PlayLightning: 0
 --- !u!1 &7427012315818997061
 GameObject:
   m_ObjectHideFlags: 0
@@ -19557,6 +19635,7 @@ GameObject:
   - component: {fileID: 8986274837351633630}
   - component: {fileID: 1246177905682922898}
   - component: {fileID: 6211548604326768605}
+  - component: {fileID: 7951739129793988495}
   m_Layer: 0
   m_Name: Line
   m_TagString: Untagged
@@ -24440,3 +24519,28 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &7951739129793988495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7427012315818997061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af4a2fe7859cb4bd389f2ff78560d7f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.Fx::MV.Fx.MvFxParticleBind
+  Tint: 1
+  Lighten: 0.75
+  Source: 1
+  RingOnly: 0
+  ScaleBurst: 0
+  ScaleBy: 0
+  CritScale: 1.4
+  AtTarget: 0
+  Move: 0
+  Offset: {x: 0, y: 0, z: 0}
+  MoveTime: 0
+  Ease: 1
+  PlayLightning: 0

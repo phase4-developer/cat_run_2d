@@ -57,6 +57,9 @@ namespace MV.Fx
             return false;
         }
 
+        /// <summary>장착 최고 무기 등급(`RunState.EqTier()`, 없으면 −1). 이펙트 색 `103_item.gradeCol`을 고를 때 쓴다.</summary>
+        public int WeaponTier => _state?.Invoke()?.EqTier() ?? -1;
+
         public double PlayerX => _state?.Invoke()?.P.X ?? 0;
         public double PlayerZ => _state?.Invoke()?.P.Z ?? 0;
         public double WorldY => _state?.Invoke()?.WorldY ?? 0;
