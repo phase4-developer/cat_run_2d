@@ -237,7 +237,7 @@ id	group	floor	h0	h1	rows	souls
 | 분위기 | 눈 온 낮 | 포장마차 저녁 | 놀이터 오후 | 해질녘 역 | 도시 밤 |
 | skyTop | #a8c8e8 | #2a2050 | #9ad0f0 | #f0a070 | #0e1238 |
 | skyBot | #eef4fa | #c8607a | #fff0d8 | #ffe0b0 | #2a3a78 |
-| fog | #e8eef4 | #6a4a6a | #e8e0d0 | #e0c8b0 | #3a4a7a |
+| fog | #c4a6d6 | #c4a6d6 | #c4a6d6 | #c4a6d6 | #c4a6d6 |
 | grass | #eef2f8 | #b8a49c | #d8e4d0 | #c4b8ac | #9aa0b8 |
 | grass2 | #e4eaf2 | #b09a92 | #ccdcc4 | #bcb0a4 | #9298b0 |
 | road | #f4f6fa | #cdbcb0 | #ece4d4 | #d4ccc4 | #b8bcd0 |
@@ -262,7 +262,7 @@ id	group	floor	h0	h1	rows	souls
 | 분위기 | 봄 낮 | 오후 카페 | 노을 온천 김 | 밤 바다 | 깊은 밤 달빛 |
 | skyTop | #a8d4f4 | #a0c4e8 | #d88a7a | #1a2450 | #0a0c30 |
 | skyBot | #fde8ee | #f8e4cc | #f8d0b8 | #4a5a8a | #2a2a6a |
-| fog | #f4e0e4 | #e8d8c4 | #f0dcd0 | #4a5878 | #3a3a6a |
+| fog | #c4a6d6 | #c4a6d6 | #c4a6d6 | #c4a6d6 | #c4a6d6 |
 | grass | #e8d4d0 | #d0bca4 | #c8b4a8 | #a4aac0 | #c8cce8 |
 | grass2 | #e0cac6 | #c8b49c | #c0aca0 | #9ca2b8 | #c0c4e0 |
 | road | #f2e6e0 | #e8dcc8 | #dccabc | #c0c4d6 | #dcdff0 |
