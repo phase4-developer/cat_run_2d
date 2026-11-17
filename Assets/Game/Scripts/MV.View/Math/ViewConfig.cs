@@ -18,6 +18,8 @@ namespace MV.View
         public double RefWidthPx, RefHeightPx;
         public string OutlineColor;
         public double SortQuant, ObjProbeY, CatProbeY, SortCloth, SortLabel, SortBlade, SortProj;
+        /// <summary>결계문 글자판 숨김 거리 m(`ARCH_LABEL_HIDE`, 정본 L1479).</summary>
+        public double ArchLabelHide;
 
         public static ViewConfig From(RunConfigTable t)
         {
@@ -53,6 +55,7 @@ namespace MV.View
                 SortLabel = t.D(RunConfigKeys.Sort_Label),
                 SortBlade = t.D(RunConfigKeys.Sort_Blade),
                 SortProj = t.D(RunConfigKeys.Sort_Proj),
+                ArchLabelHide = t.D(RunConfigKeys.ARCH_LABEL_HIDE),
             };
         }
     }

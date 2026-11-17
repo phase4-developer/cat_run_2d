@@ -129,6 +129,7 @@ namespace MV.View
         {
             bool off = state == null || _rig == null || !_rig.Ready;
             double now = Time.realtimeSinceStartupAsDouble;
+            if (_objects != null && !off) _objects.GoldMul = RunFormulas.GoldMul(state);   // 결계 블록 글자판 「+골드」(정본 L1492)
             if (_cats != null) { if (off) _cats.Hide(); else _cats.Sync(state, now, _rig.Model.OrbitE); }
             if (_projs != null) { if (off) _projs.Hide(); else _projs.Sync(state, now); }
             if (_stairs != null) { if (off) _stairs.Hide(); else _stairs.Sync(state); }

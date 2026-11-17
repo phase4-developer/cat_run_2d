@@ -52,6 +52,8 @@ namespace MV.Run
         public int Made;
         /// <summary>cgate 「지팡이 제작 2배」로 더 만든 장 수(통과 지급 = Made + Extra, 문턱 단계는 Made만 센다).</summary>
         public int Extra;
+        /// <summary>게이트 글자판 진행 막대(0~1, 표시 전용): sgate F/M, cgate F/T(상한이면 1). 판정에는 쓰지 않는다(정본 `prog` L1504).</summary>
+        public double Prog;
         /// <summary>통과 후 가라앉기(그림, 0이면 안 함).</summary>
         public double Sink;
 
