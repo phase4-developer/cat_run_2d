@@ -108,7 +108,7 @@ namespace MV.Sound
                     Add(cues, MvSoundKeys.Variant(MvSoundKeys.Tierup, e.A));
                     break;
                 // ClimbWarpStage: 새 HTML 마나 정산에는 우다다 단계 소리가 없다(2026-11-14, 옛 L3165 tierup 제거).
-                case RunEventType.ClimbEnd: // L2286
+                case RunEventType.ClimbTop: // L2286: endAt 처음 잡을 때(sideOut 멈춤 전)
                     Add(cues, MvSoundKeys.Land);
                     break;
                 case RunEventType.RouletteFlip: // L2368: 첫 카드만

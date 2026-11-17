@@ -10,17 +10,19 @@ namespace MV.UI
     /// 계단 정산 글자(사용자 계단 규칙 2026-11-16, 새 HTML `drawClimbOverlay` SIDE.label·`toast`).
     /// <list type="bullet">
     /// <item>가운데 큰 글자: 등급이 오르면 그 등급 이름(115 행 이름 끝 낱말, 예 COMMON), 75칸 카드가 확정되면 「냥파워 카드 확정!」(lapTier 색).
-    /// 카드 확정 뒤 등급은 다시 센다. 1.3초 동안 0.6 → 1.1배로 커졌다 1.0배로, 끝 0.33초 사라짐. 화면 위에서 36%, 글자 = 화면 너비 × 0.085.</item>
-    /// <item>안내(<see cref="Toast"/>): 화면 위에서 58%, 종이 판 위 글자, 1.4초.</item>
+    /// 카드 확정 뒤 등급은 다시 센다. 1.3초 동안 0.6 → 1.1배로 커졌다 1.0배로, 끝 0.33초 사라짐. 화면 위에서 40%(새 HTML H·0.4), 글자 = 화면 너비 × 0.085.</item>
+    /// <item>안내(<see cref="Toast"/>): 화면 위에서 58%, 어두운 패널(새 HTML v16 `--panel`) 위 밝은 글자(`--ink`). 300 `toast.time` 동안 보이고 `toast.fade`로 나타나고 사라진다(CSS opacity 전환).</item>
     /// </list>
-    /// 수치는 새 HTML 상수 그대로(표 키 없음).
+    /// 글자 수치는 새 HTML 상수 그대로(표 키 없음), 안내 시간은 300 표.
     /// </summary>
     public sealed class ClimbNoticeView : MonoBehaviour
     {
-        public const float LabelSec = 1.3f, LabelY = .36f, LabelScale = .085f, ToastSec = 1.4f, ToastY = .58f, ToastScale = .04f;
+        public const float LabelSec = 1.3f, LabelY = .4f, LabelScale = .085f, ToastY = .58f, ToastScale = .04f;
         public const string LapText = "냥파워 카드 확정!"; // ui.hud.climbLapCard
-        /// <summary>새 HTML `PAPER`·`INK`(안내 종이 판·글자).</summary>
+        /// <summary>새 HTML `PAPER`·`INK`(등급 글자 테두리).</summary>
         static readonly Color Paper = MvUi.Hex("#fff4e2"), Ink = MvUi.Hex("#3a2440");
+        /// <summary>새 HTML `#toast`: 배경 `--panel`(v16 덮어씀 rgba(18,15,26,.68)), 글자 `--ink`.</summary>
+        public static readonly Color ToastPanel = new Color(18 / 255f, 15 / 255f, 26 / 255f, .68f), ToastInk = MvUi.Hex("#fbf6ec");
 
         Func<RunState> _state;
         RunState _run;
@@ -30,11 +32,15 @@ namespace MV.UI
 
         RectTransform _root, _labelRt, _toastRt;
         Text _label, _toast;
+        Image _toastBg;
+        float _toastTime, _toastFade;
 
         // ---- 시험·QA ----
         public string Label => _labelT >= 0 && _label != null ? _label.text : null;
         public Color LabelColor => _label != null ? _label.color : Color.clear;
         public string ToastText => _toastT >= 0 && _toast != null ? _toast.text : null;
+        /// <summary>안내 불투명도(0~1, 페이드 포함).</summary>
+        public float ToastAlpha { get; private set; }
 
         public void Bind(Func<RunState> state)
         {
@@ -51,11 +57,33 @@ namespace MV.UI
             EnsureBuilt();
             _toast.text = text;
             _toastT = 0;
+            var t = _state?.Invoke()?.Tables;
+            _toastTime = t != null ? (float)t.RunConfig.D(RunConfigKeys.Toast_Time) : 0;
+            _toastFade = t != null ? (float)t.RunConfig.D(RunConfigKeys.Toast_Fade) : 0;
+            SetToastAlpha(ToastFadeAlpha(0, _toastTime, _toastFade));
             _toastRt.gameObject.SetActive(true);
         }
 
         /// <summary>새 HTML 크기 곡선: k &lt; 0.15면 0.6 + k/0.15·0.5, 아니면 1.1 − min(0.1, k − 0.15).</summary>
         public static float Scale(float k) => k < .15f ? .6f + k / .15f * .5f : 1.1f - Mathf.Min(.1f, k - .15f);
+
+        /// <summary>
+        /// 안내 불투명도(새 HTML: `on`이 붙으면 fade초에 0→1, toastTimer가 끝나면 fade초에 1→0). fade ≤ 0이면 바로 바뀐다.
+        /// </summary>
+        public static float ToastFadeAlpha(float k, float time, float fade)
+        {
+            if (k < 0) return 0;
+            float a = fade > 0 ? Mathf.Clamp01(k / fade) : 1;
+            if (k > time) a = Mathf.Min(a, fade > 0 ? Mathf.Clamp01(1 - (k - time) / fade) : 0);
+            return a;
+        }
+
+        void SetToastAlpha(float a)
+        {
+            ToastAlpha = a;
+            var c = ToastPanel; c.a *= a; _toastBg.color = c;
+            var i = ToastInk; i.a *= a; _toast.color = i;
+        }
 
         /// <summary>새 HTML 알파: min(1, (1.3 − k)·3).</summary>
         public static float Alpha(float k) => Mathf.Clamp01((LabelSec - k) * 3f);
@@ -95,13 +123,14 @@ namespace MV.UI
             Outline(_label);
             _toastRt = MvUi.Rect(_root, "Toast");
             _toastRt.anchorMin = new Vector2(.5f, 1 - ToastY); _toastRt.anchorMax = new Vector2(.5f, 1 - ToastY);
-            _toastRt.gameObject.AddComponent<Image>().color = Paper;
+            _toastBg = _toastRt.gameObject.AddComponent<Image>();
+            _toastBg.color = ToastPanel;
             var fit = _toastRt.gameObject.AddComponent<HorizontalLayoutGroup>();
             fit.padding = new RectOffset(48, 48, 20, 20);
             fit.childControlWidth = fit.childControlHeight = true;
             _toastRt.gameObject.AddComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             _toastRt.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            _toast = MvUi.Label(_toastRt, "Text", 40, Ink, TextAnchor.MiddleCenter);
+            _toast = MvUi.Label(_toastRt, "Text", 40, ToastInk, TextAnchor.MiddleCenter);
             _toast.horizontalOverflow = HorizontalWrapMode.Overflow;
             foreach (var g in GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
             _labelRt.gameObject.SetActive(false);
@@ -161,8 +190,12 @@ namespace MV.UI
             if (_toastT >= 0)
             {
                 _toastT += dt;
-                if (_toastT > ToastSec) { _toastT = -1; _toastRt.gameObject.SetActive(false); }
-                else _toast.fontSize = Mathf.Max(1, Mathf.RoundToInt(size.x * ToastScale));
+                if (_toastT > _toastTime + _toastFade) { _toastT = -1; ToastAlpha = 0; _toastRt.gameObject.SetActive(false); }
+                else
+                {
+                    _toast.fontSize = Mathf.Max(1, Mathf.RoundToInt(size.x * ToastScale));
+                    SetToastAlpha(ToastFadeAlpha(_toastT, _toastTime, _toastFade));
+                }
             }
         }
     }

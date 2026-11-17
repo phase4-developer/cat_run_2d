@@ -140,36 +140,65 @@ namespace MV.View
             }
         }
 
-        /// <summary>매 프레임(시뮬 뒤): 외형·상태·위치를 맞춘다. <paramref name="s"/>가 null이면 모두 숨긴다.</summary>
-        public void Sync(RunState s, double nowSec)
+        /// <summary>새 HTML drawClimbCat: e ≥ 0.5면 옆모습(계단 그림), 기울기 = (−atan(stepH/stepD)·0.85·(오르는 중 1, 멈춤 0.3) + 흔들림)·smooth((e − 0.5)·2).</summary>
+        public const double SideAt = 0.5, SlopeK = 0.85, SlopeIdleK = 0.3;
+        /// <summary>새 HTML draw2D: 분신은 옆 시점 진행 e &gt; 0.3이면 그리지 않는다.</summary>
+        public const double CloneHideE = 0.3;
+
+        /// <summary>
+        /// 새 HTML drawClimbCat 종이 뒤집힘: e &lt; 0.5면 뒷모습을 가로 cos(eπ)로 접고, e ≥ 0.5면 옆모습을 −cos(eπ)로 편다(e = 0이면 1).
+        /// </summary>
+        public static double OrbitFlip(double e) => e < SideAt ? Math.Cos(e * Math.PI) : -Math.Cos(e * Math.PI);
+
+        /// <summary>
+        /// 매 프레임(시뮬 뒤): 외형·상태·위치를 맞춘다. <paramref name="s"/>가 null이면 모두 숨긴다.
+        /// orbitE = 옆 시점 돌기 진행(<see cref="CameraModel.OrbitE"/>): 고양이 그림 전환·뒤집힘·경사 기울기와 분신 숨김이 이 값을 따른다(정산이 끝난 뒤 되돌아올 때도).
+        /// </summary>
+        public void Sync(RunState s, double nowSec, double orbitE = 0)
         {
             if (!_ready || s == null) { Hide(); return; }
             var C = s.Phase == RunPhase.Climb ? s.Climb : null;
             bool walking = C != null || s.Phase == RunPhase.Run && !s.Fin;
             var state = walking ? CharState.Walk : CharState.Stand;
-            _units[0].Sm.Climbing = C != null && C.Pos > 0;
+            bool climbing = C != null && C.Pos > 0;
+            _units[0].Sm.Climbing = climbing;
             _units[0].Sm.ClimbedSteps = C != null ? C.Pos : 0;
             int tier = s.EqTier();
 
             double px = s.P.X, pz = s.P.Z, py = 0, wy = s.WorldY;
             if (C != null) _path.Cat(C.Pos, C.K, C.Z0, out py, out pz);
             int visible = 0;
-            if (Place(0, _playerCat, 0, tier, C != null ? CharState.Stair : state, px, wy + py, pz, nowSec)) visible++;
+            double e = Math.Max(0, Math.Min(1, orbitE));
+            bool side = e >= SideAt;
+            double flip = e > 0 ? OrbitFlip(e) : 1;
+            double k = side ? CameraModel.Smooth(Math.Min(1, (e - SideAt) * 2)) : 1;
+            double slope = side ? -Math.Atan2(_path.StepH, _path.StepD) * SlopeK * (climbing ? 1 : SlopeIdleK) * k : 0;
+            if (Place(0, _playerCat, 0, tier, side ? CharState.Stair : state, px, wy + py, pz, nowSec, flip, side ? k : 1, slope)) visible++;
 
             int slots = _units.Count - 1;
-            int n = C != null ? 0 : Math.Min(s.Clones, slots);   // 계단 정산 중에는 분신을 숨긴다(플레이어만 오름)
+            // 사용자 계단 규칙 6(2026-11-16): 분신(견습냥)은 계단 정산 중 보이지 않고 끝나면 다시 나타난다.
+            // 숨는·나타나는 순간은 새 HTML대로 옆 시점 진행 e > 0.3.
+            int n = e > CloneHideE ? 0 : Math.Min(s.Clones, slots);
             for (int i = 0; i < slots; i++)
             {
                 var u = _units[1 + i];
-                // 사용자 계단 규칙 6(2026-11-16): 분신(견습냥)은 계단 정산 중 보이지 않고 끝나면 다시 나타난다.
-                if (i >= n || C != null) { Park(u); continue; }
+                if (i >= n) { Park(u); continue; }
                 CatLayout.ClonePos(px, pz, _offsets[i].dx, _offsets[i].dz, _xMax, out double cx, out double cz);
-                if (Place(1 + i, _friendCat, i, tier, state, cx, wy, cz, nowSec)) visible++;
+                if (Place(1 + i, _friendCat, i, tier, state, cx, wy + StairY(C, cz), cz, nowSec)) visible++;
             }
             VisibleCount = visible;
         }
 
-        bool Place(int index, int catId, int slot, int tier, CharState state, double x, double y, double z, double nowSec)
+        /// <summary>새 HTML stairY(z): 정산 중 그 z의 칸이 보이면 칸 높이(지면 기준), 아니면 0.</summary>
+        double StairY(ClimbState C, double z)
+        {
+            if (C == null || _path.StepD <= 0) return 0;
+            int i = (int)Math.Floor((z - C.Z0) / _path.StepD);
+            return i >= 0 && i < C.K && i < C.StepsShown ? (i + 1) * _path.StepH : 0;
+        }
+
+        bool Place(int index, int catId, int slot, int tier, CharState state, double x, double y, double z, double nowSec,
+            double flip = 1, double rollK = 1, double rollAdd = 0)
         {
             var u = _units[index];
             var row = CharLookResolver.Resolve(_looks, catId, slot, tier);
@@ -183,6 +212,8 @@ namespace MV.View
 
             u.Sm.Set(state, nowSec);
             var frame = u.Sm.Evaluate(_anim, nowSec, index);
+            if (flip != 1 || rollK != 1 || rollAdd != 0)
+                frame = new CharFrame(frame.State, frame.Pose, frame.Dip, frame.SwayX, frame.Roll * rollK + rollAdd, frame.FlipX * flip, frame.WheelTurns);
             u.Shown = frame.State;
             u.SpriteName = CharStateMachine.SpriteOf(row, frame.Pose);
 

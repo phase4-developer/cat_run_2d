@@ -103,20 +103,22 @@ namespace MV.View
                 lerpK = snap ? 1 : Math.Min(1, dt * (c ? _climb.posLerp : _run.posLerp));
             }
 
+            // 새 HTML 순서: orbitCam이 목표(camPos·camLook)를 먼저 돌리고, 카메라 위치만 그 목표로 보간한다(주시점은 바로).
+            Orbit(input, dt, ref target, ref look);
             Vector3d p = _hasPos ? _basePos + (target - _basePos) * lerpK : target;
             _hasPos = true;
             p = new Vector3d(p.x + shake.x, p.y + shake.y, p.z);
             _basePos = p;
             Pos = p;
             Look = look;
-            Orbit(input, dt, shake);
         }
 
         /// <summary>
         /// 새 HTML `orbitCam`: 계단 오르기 동안 고양이 옆(side 행)으로 turnSec에 걸쳐 돈다. 기본 시점과 옆 시점 사이를
         /// 수평 각도·수평 거리·높이로 보간하고, 주시점은 옆 주시점으로 e만큼 옮긴다. 로비면 바로 0.
+        /// 보간 전 목표(<paramref name="target"/>·<paramref name="look"/>)를 바꾼다(새 HTML L2800 orbitCam → L2801 lerp).
         /// </summary>
-        void Orbit(in CameraInput input, double dt, Vector3d shake)
+        void Orbit(in CameraInput input, double dt, ref Vector3d target, ref Vector3d look)
         {
             if (_side == null || input.Mode == WorldViewMode.Lobby) { OrbitK = OrbitE = 0; return; }
             double dir = input.Mode == WorldViewMode.Climb ? 1 : -1;
@@ -126,14 +128,13 @@ namespace MV.View
             var cat = new Vector3d(input.Px, input.Wy + input.ClimbPy, input.Pz);
             var lookS = new Vector3d(cat.x * _side.lookXMul + _side.lookX, cat.y + _side.lookY, cat.z + _side.lookZ);
             var camS = new Vector3d(cat.x * _side.posXMul + _side.posX, cat.y + _side.posY, cat.z + _side.posZ);
-            Vector3d ob = Pos - Look, os = camS - lookS;
+            Vector3d ob = target - look, os = camS - lookS;
             double e = OrbitE;
             double aB = Math.Atan2(ob.x, ob.z), aS = Math.Atan2(os.x, os.z);
             double rB = Math.Sqrt(ob.x * ob.x + ob.z * ob.z), rS = Math.Sqrt(os.x * os.x + os.z * os.z);
             double a = aB + (aS - aB) * e, r = rB + (rS - rB) * e, h = ob.y + (os.y - ob.y) * e;
-            var look = Look + (lookS - Look) * e;
-            Look = look;
-            Pos = new Vector3d(look.x + Math.Sin(a) * r + shake.x, look.y + h + shake.y, look.z + Math.Cos(a) * r);
+            look = look + (lookS - look) * e;
+            target = new Vector3d(look.x + Math.Sin(a) * r, look.y + h, look.z + Math.Cos(a) * r);
         }
 
         /// <summary>새 HTML `smooth(k) = k²(3 − 2k)`.</summary>

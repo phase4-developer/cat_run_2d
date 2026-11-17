@@ -134,7 +134,7 @@ namespace MV.View
             var C = _climb;
             if (C == null || C.K <= 0 || _cam == null) { Hide(); return; }
 
-            bool ended = live == null || C.T > 0 && C.Time >= C.T;   // 끝(p ≥ 1)에는 모든 칸 t = 1
+            bool ended = live == null || C.EndAt >= 0;   // 끝(새 HTML p ≥ 1, t − sideLead ≥ T)에는 모든 칸 t = 1
             while (_shownAt.Count < Math.Min(C.K, C.StepsShown)) _shownAt.Add(C.Time);
             int shown = ended ? C.K : _shownAt.Count;
 
