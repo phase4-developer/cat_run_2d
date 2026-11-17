@@ -129,8 +129,9 @@ namespace MV.Tests
                 if (s != null && !InClimb(s) && Convert.ToInt32(Get(s, "Stairs")) < StairsTopUp) Set(s, "Stairs", StairsTopUp);
                 if (!InClimb(s)) { elapsed += Time.unscaledDeltaTime; yield return null; continue; }
 
-                // 정산 시작: 실시간 한 칸씩 돌려 카메라·연출을 사람이 보는 속도로 찍는다.
+                // 정산 시작: 시뮬도 실시간(dt = 실제 프레임 시간)으로 돌려 카메라 시계와 맞추고 사람이 보는 속도로 찍는다.
                 loop.TicksPerFrame = 1;
+                loop.FixedDt = null;
                 string tag = $"c{done + 1}";
                 var climb = Get(s, "Climb");
                 var shots = new List<(string name, Func<bool> when)>
@@ -171,6 +172,7 @@ namespace MV.Tests
                 Shot(cam, $"{tag}_10_back", s, model);
                 done++;
                 loop.TicksPerFrame = 8;
+                loop.FixedDt = 1 / 60.0;
             }
             Debug.Log("[ClimbShotTests]\n" + _log);
             Assert.AreEqual(Climbs, done, $"정산 {done}번만 일어났다(단계 {loop.Phase})");

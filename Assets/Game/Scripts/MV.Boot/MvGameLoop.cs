@@ -216,7 +216,8 @@ namespace MV.Boot
             if (r.destroyOnDispose != null) _stageLeases.Add(r.destroyOnDispose);
             if (r.lease != null) _stageLeases.Add(r.lease);
             _stageMap = r.instance.GetComponent<StageMap>();
-            if (_stageMap != null) _stageMap.Bind(_world.Rig.Cam, () => (float)_viewSource.Camera.Wy, () => _world.Rig.Ready ? _world.Rig.Model.OrbitE : 0);
+            if (_stageMap != null) _stageMap.Bind(_world.Rig.Cam, () => (float)_viewSource.Camera.Wy, () => _world.Rig.Ready ? _world.Rig.Model.OrbitE : 0,
+                () => _viewSource.TryGetCliff(out var cliff) ? cliff : (CliffInfo?)null);
         }
 
         // ═════════ 로비 ═════════
