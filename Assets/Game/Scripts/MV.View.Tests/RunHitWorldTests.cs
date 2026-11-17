@@ -228,6 +228,41 @@ namespace MV.View.Tests
             Assert.That(Cast(low, s, 0, 0, 30), Is.Empty);
         }
 
+        /// <summary>
+        /// 밀집: 한 구간에 대상 Collider 60개 + 판정 대상이 아닌 Collider(화면 프리팹 등) 40개 → Raycast 기본 버퍼(32)·겹침 버퍼(16)를 넘어도
+        /// 대상이 빠지지 않고 (진입 z, Id) 순서가 유지된다. 시작점에 대상 아닌 Collider 20개가 겹쳐 있어도 시작 겹침 대상을 잡는다.
+        /// </summary>
+        [Test]
+        public void DenseTargets_OverflowBuffers_NoMissAndOrderKept()
+        {
+            var s = NewState();
+            const int n = 60;
+            for (int i = 0; i < n; i++) Wall(s, 1000 - i, 0, 10 + i * 4);   // 뒤로 갈수록 Id가 작다(Id 순서와 z 순서가 반대)
+            var w = RealWorld();
+            w.Prepare(s);
+            for (int i = 0; i < 40; i++)
+            {
+                var d = new GameObject("Distractor" + i);
+                _made.Add(d);
+                d.AddComponent<BoxCollider>().size = new Vector3(2, 4, 0.5f);
+                d.transform.position = new Vector3(0, (float)ProjLayout.ProjY, 5 + i * 6);
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                var d = new GameObject("StartDistractor" + i);
+                _made.Add(d);
+                d.AddComponent<SphereCollider>().radius = 1f;
+                d.transform.position = new Vector3(0, (float)ProjLayout.ProjY, 10);
+            }
+            Physics.SyncTransforms();
+            var hits = Cast(w, s, 0, 0, 10 + n * 4);
+            Assert.That(hits.Select(h => h.Obj.Id), Is.EqualTo(Enumerable.Range(0, n).Select(i => 1000 - i)), "대상 60개 모두, 진입 z 순");
+            for (int i = 1; i < hits.Count; i++) Assert.That(hits[i].Z, Is.GreaterThan(hits[i - 1].Z));
+            var inside = Cast(w, s, 0, 10, 10.2);
+            Assert.That(inside.Select(h => h.Obj.Id), Is.EqualTo(new[] { 1000 }), "시작점 겹침: 대상 아닌 Collider 20개와 함께 있어도 잡는다");
+            Assert.That(inside[0].Z, Is.EqualTo(10).Within(1e-6));
+        }
+
         /// <summary>시뮬 + 실제 Physics: 관통 1 투사체가 앞 벽 → 뒤 벽 순서로 한 번씩 맞고 사라진다(같은 대상 중복 없음).</summary>
         [Test]
         public void RunSim_WithRealPhysics_PierceOrderAndNoDuplicate()
