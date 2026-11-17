@@ -593,7 +593,35 @@ namespace MV.View.Tests
         /// <summary>
         /// 빌보드는 프리팹이 정한다(2026-11-14 사용자 「빌보드 적용할거는 묶어서 처리해야지 … 붙어서 보여야되는 하나의 오브젝트가 벌어져서 보이게돼」):
         /// 오브젝트 프리팹마다 Billboard는 1개, 루트 바로 아래 묶음(루트 아님)에 있고, 모든 이미지는 그 묶음 아래이거나 눕힌 것(로컬 회전)이다.
+        /// <see cref="PendingArtCheck"/>에 하나씩 적은 이미지는 아트 배치(6034a953 등)가 이 규칙과 부딪혀 사람 확인을 기다린다.
+        /// 그 항목이 남아 있으면 이 시험은 PASS가 아니라 Inconclusive로 끝난다. 목록 밖 위반은 실패, 목록에 있는데 더는 위반이 아니면 목록 정리를 요구한다.
         /// </summary>
+        /// <summary>
+        /// 사람 확인 대기(2026-11-17 사용자 「기존 아트 배치를 유지 … 수동 확인 결과가 나오기 전에는 아트 구조 변경이나 규칙 변경을 확정하지 마세요」).
+        /// 프리팹 주소 + 루트 아래 이미지 경로(같은 이름은 경로로 구분). 확인이 끝난 항목은 프리팹을 고치거나 규칙을 정한 뒤 여기서 지운다.
+        /// </summary>
+        static readonly HashSet<string> PendingArtCheck = new HashSet<string>
+        {
+            "Obj_Tower:Billboard/Shadow",
+            "Obj_CoinPile:Billboard/Image/Pile_1/Pile_1",
+            "Obj_CoinPile:Billboard/Image/Pile_2/Pile_2",
+            "Obj_CoinPile:Billboard/Image/Pile_3/Pile_3",
+            "Obj_GemRock:Billboard/Rock/Rock/Rock",
+            "Obj_GemRock:Billboard/Rock/Crystal_C/Crystal_C",
+            "Obj_GemRock:Billboard/Rock/Crystal_R/Crystal_C (1)",
+            "Obj_GemRock:Billboard/Rock/Crystal_L/Crystal_C (2)",
+            "Obj_StairGate:Billboard/Shadow/Pillar_L",
+            "Obj_StairGate:Billboard/Shadow/Pillar_R",
+            "Obj_StairGate:Billboard/Shadow/Ribbon",
+            "Obj_StairZone:Billboard/Lantern_L/Shadow",
+            "Obj_StairZone:Billboard/Lantern_R/Shadow",
+            "Obj_StairZone:Billboard/Glow (1)",
+            "Obj_StairZone:Billboard/Glow (2)",
+            "Stage1_Block_Blue:Billboard/Chest_1",
+            "Stage1_Block_Cat:Billboard/Body (2)",
+            "Stage1_Block_Gold:Billboard/Chest_2",
+        };
+
         [Test]
         public void ObjectPrefabs_OneBillboardGroup_FlatImagesOutside()
         {
@@ -614,6 +642,8 @@ namespace MV.View.Tests
             Assert.That(addrs, Is.Not.Empty);
             var dir = Path.Combine(Application.dataPath, "Game/Addressables/Local/BG/Prefab");
             System.Text.RegularExpressions.Match M(string d, string pat) => System.Text.RegularExpressions.Regex.Match(d, pat);
+            var pending = new List<string>();
+            var errors = new List<string>();
             foreach (var a in addrs)
             {
                 var files = Directory.GetFiles(dir, a + ".prefab", SearchOption.AllDirectories);
@@ -624,15 +654,19 @@ namespace MV.View.Tests
                 var father = new Dictionary<string, string>();
                 var boards = new List<string>();
                 var images = new List<string>();
+                var goName = new Dictionary<string, string>();
+                var goOfTr = new Dictionary<string, string>();
                 foreach (var d in docs)
                 {
                     var head = M(d, @"^--- !u!(\d+) &(\d+)");
+                    if (head.Success && head.Groups[1].Value == "1") goName[head.Groups[2].Value] = M(d, @"m_Name: (.*)").Groups[1].Value.Trim();
                     var go = M(d, @"m_GameObject: \{fileID: (\d+)");
                     if (!head.Success || !go.Success) continue;
                     string type = head.Groups[1].Value, id = head.Groups[2].Value, g = go.Groups[1].Value;
                     if (type == "4")
                     {
                         trOfGo[g] = id;
+                        goOfTr[id] = g;
                         rot[id] = M(d, @"m_LocalRotation: (\{[^}]*\})").Groups[1].Value;
                         father[id] = M(d, @"m_Father: \{fileID: (\d+)").Groups[1].Value;
                     }
@@ -649,10 +683,23 @@ namespace MV.View.Tests
                     bool under = false;
                     for (string x = tr; x != "0"; x = father[x]) if (x == bt) { under = true; break; }
                     bool laid = Laid(rot[tr]);
-                    Assert.That(under || laid, a + ": 서 있는 이미지는 Billboard 묶음 아래");
-                    if (laid) Assert.IsFalse(under, a + ": 눕힌 이미지는 묶음 밖");
+                    var parts = new List<string>();
+                    for (string x = tr; father[x] != "0"; x = father[x]) parts.Insert(0, goName[goOfTr[x]]);
+                    string key = a + ":" + string.Join("/", parts);
+                    if (!under && !laid) errors.Add(key + " 서 있는 이미지는 Billboard 묶음 아래");
+                    if (laid && under)
+                    {
+                        if (PendingArtCheck.Contains(key)) pending.Add(key + " " + rot[tr]);
+                        else errors.Add(key + " 눕힌 이미지는 묶음 밖");
+                    }
                 }
             }
+            foreach (var key in PendingArtCheck)
+                if (!pending.Exists(p => p.StartsWith(key + " ", StringComparison.Ordinal)))
+                    errors.Add(key + " 확인 대기 목록에 있으나 위반이 아님(또는 프리팹이 표에 없음): 목록에서 지운다");
+            Assert.IsEmpty(errors, string.Join("\n", errors));
+            if (pending.Count > 0)
+                Assert.Inconclusive("아트 배치 사람 확인 대기 " + pending.Count + "건(PASS 아님):\n" + string.Join("\n", pending));
         }
 
         /// <summary>
