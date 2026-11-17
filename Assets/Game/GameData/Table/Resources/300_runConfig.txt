@@ -3,7 +3,7 @@
 300001002	히트스톱 시간 배율	time.hitStopScale	0.12	배
 300001003	목표 FPS	time.targetFps	60	fps
 300002001	가까운 자르기 거리	view.nearCut	0.3	m
-300002002	안개 시작 거리	view.fogStart	34	m
+300002002	안개 시작 거리	view.fogStart	50	m
 300002003	안개 길이	view.fogRange	50	m
 300002004	오브젝트 뒤 컬링	view.objCullBack	-18	m
 300002005	오브젝트 앞 컬링	view.objCullFront	78	m
