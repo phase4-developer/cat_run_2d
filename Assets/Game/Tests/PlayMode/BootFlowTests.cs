@@ -30,6 +30,7 @@ namespace MV.Tests
         public void ReleaseSave()
         {
             MvBootMeta.Detach();
+            PlayModeIsolation.ResetEffects();
             MvSave.Shutdown();
             MvSave.PreferencesOverride = null;
         }

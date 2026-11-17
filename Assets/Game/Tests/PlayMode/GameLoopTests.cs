@@ -38,6 +38,7 @@ namespace MV.Tests
                 loop.TicksPerFrame = 1;
             }
             MvBootMeta.Detach();
+            PlayModeIsolation.ResetEffects();
             MvSave.Shutdown();
             MvSave.PreferencesOverride = null;
         }

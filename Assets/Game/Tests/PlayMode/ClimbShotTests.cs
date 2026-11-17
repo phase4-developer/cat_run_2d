@@ -51,6 +51,7 @@ namespace MV.Tests
             if (_rt != null) { _rt.Release(); UnityEngine.Object.DestroyImmediate(_rt); }
             File.WriteAllText(Path.Combine(ShotDir, "climb_log.txt"), _log.ToString());
             MvBootMeta.Detach();
+            PlayModeIsolation.ResetEffects();
             MvSave.Shutdown();
             MvSave.PreferencesOverride = null;
         }
@@ -99,6 +100,8 @@ namespace MV.Tests
         [UnityTest]
         public IEnumerator TwoClimbs_ShotsAtKeyMoments()
         {
+            // Explicit여도 어셈블리 단위 실행에 끼어든다. 그래픽 장치 없이(-nographics) 렌더 요청을 내면 Unity가 죽으므로 건너뛴다.
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) Assert.Ignore("그래픽 장치 없음: --graphics로 돌린다");
             SceneManager.LoadScene(GameBootstrap.BootSceneName, LoadSceneMode.Single);
             yield return null;
             float elapsed = 0f;
