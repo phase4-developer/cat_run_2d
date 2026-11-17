@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MV.Data::MV.Data.MvCameraSettings
   run:
     posXMul: 0.25
-    posY: 13
+    posY: 7.2
     posZ: -9
     lookXMul: 0.25
     lookY: 0.5
