@@ -630,15 +630,16 @@ namespace MV.View.Tests
         public void ObjectPrefabs_OneBillboardGroup_FlatImagesOutside()
         {
             const string BillboardGuid = "b6073823855d4665867abbe603050885";
-            // 눕힘 = 화면 면에서 기울어짐(x·y 회전 성분). z만 돈 것은 면 안에서 돈 것이라 서 있다. -0도 0으로 본다.
-            bool Laid(string q)
+            // 눕힘 = 루트 기준 누적 회전이 화면 면에서 기울어짐(x·y 회전 성분). 부모가 눕혀져 있으면 자식도 눕는다(예: Obj_StairZone Circle 아래 선).
+            // z만 돈 것은 면 안에서 돈 것이라 서 있다. -0도 0으로 본다.
+            Quaternion Q(string q)
             {
-                var m = System.Text.RegularExpressions.Regex.Match(q, @"x: ([^,]+), y: ([^,]+),");
+                var m = System.Text.RegularExpressions.Regex.Match(q, @"x: ([^,]+), y: ([^,]+), z: ([^,]+), w: ([^,}]+)");
                 Assert.IsTrue(m.Success, "회전 값을 읽지 못했다: " + q);
-                double x = double.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
-                double y = double.Parse(m.Groups[2].Value, System.Globalization.CultureInfo.InvariantCulture);
-                return Math.Abs(x) > 1e-6 || Math.Abs(y) > 1e-6;
+                float F(int i) => float.Parse(m.Groups[i].Value.Trim(), System.Globalization.CultureInfo.InvariantCulture);
+                return new Quaternion(F(1), F(2), F(3), F(4));
             }
+            bool Laid(Quaternion q) => Math.Abs(q.x) > 1e-6 || Math.Abs(q.y) > 1e-6;
             var t = ViewTestTables.Load();
             var addrs = new HashSet<string>();
             foreach (var k in t.ObjectKind.Datas) if (!string.IsNullOrEmpty(k.prefab)) addrs.Add(k.prefab);
@@ -716,7 +717,9 @@ namespace MV.View.Tests
                     string tr = trOfGo[img];
                     bool under = false;
                     for (string x = tr; x != "0"; x = father[x]) if (x == bt) { under = true; break; }
-                    bool laid = Laid(rot[tr]);
+                    var acc = Quaternion.identity;
+                    for (string x = tr; father[x] != "0"; x = father[x]) acc = Q(rot[x]) * acc;   // 루트 자신의 회전은 넣지 않는다
+                    bool laid = Laid(acc);
                     var parts = new List<string>();
                     for (string x = tr; father[x] != "0"; x = father[x]) parts.Insert(0, goName[goOfTr[x]]);
                     string key = a + ":" + string.Join("/", parts);
