@@ -257,15 +257,20 @@ namespace MV.View.Tests
         }
 
         [Test]
-        public void HpLabel_ShowsCeilOfHp()
+        public void HpLabel_ShowsFloorOfHp_OnlyWhenHurt()
         {
             var t = ViewTestTables.Load();
             var kind = t.ObjectKind.Sorted.FirstOrDefault(k => k.labelKind == LabelKind.EnemyHp || k.labelKind == LabelKind.BoxHp);
             Assume.That(kind, Is.Not.Null, "체력 글자판 종류가 표에 없음");
             var o = RunObjectFactory.Create(t, kind, 0, 10);
             o.HasHp = true;
-            o.Hp = 12.2;
-            Assert.That(ObjectViewFactory.DefaultLabel(o), Is.EqualTo("13"));
+            o.Max = 20;
+            o.Hp = 20;
+            Assert.That(ObjectLabel.Of(o, 0, 3, 0, 1).Visible, Is.False, "다치기 전에는 숨김(정본 L1521·L1525 hp < max)");
+            o.Hp = 12.7;
+            var c = ObjectLabel.Of(o, 0, 3, 0, 1);
+            Assert.That(c.Visible, Is.True);
+            Assert.That(c.Number, Is.EqualTo("12"), "정본 fmt = floor");
         }
 
         [Test]

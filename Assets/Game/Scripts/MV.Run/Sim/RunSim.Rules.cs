@@ -410,6 +410,7 @@ namespace MV.Run
                         if (dblC > 0 && s.Draw(RngUse.StairDouble) < dblC) add *= 2;
                         o.N += add; got += add;
                     }
+                    o.Prog = Clamp(o.F / M, 0, 1);
                     s.Emit(new RunEvent(RunEventType.GateFill, objId: o.Id, kindId: o.Kind.id, a: got, amount: Clamp(o.F / M, 0, 1), quiet: quiet || got == 0));
                     break;
                 }
@@ -428,6 +429,7 @@ namespace MV.Run
                         s.Emit(new RunEvent(RunEventType.GateFill, objId: o.Id, kindId: o.Kind.id, a: made, amount: 0));
                     }
                     if (o.Made >= g.cap) o.F = 0;
+                    o.Prog = o.Made >= g.cap ? 1 : Clamp(o.F / Threshold(g, o.Made, s.Bal, s.ZoneHp), 0, 1);
                     break;
                 }
             }

@@ -23,7 +23,7 @@ namespace MV.View
     {
         public const string WorldLayer = "World";
         public const string StairArrow = "World_Obj_Stair_Arrow", Star = "Fx_Star4";
-        /// <summary>글자판 높이·글자 크기 m [추정: 정본 labelPlane 위치는 캡처 대조로 조정].</summary>
+        /// <summary>프리팹 글자판(`Obj_Text_Count`)이 없는 오브젝트의 TMP 글자판 높이·글자 크기 m [추정: 정본 labelPlane 위치는 캡처 대조로 조정].</summary>
         public const float LabelY = 2.2f, LabelSize = 0.5f;
 
         [SerializeField] Material _spriteMaterial;
@@ -32,8 +32,14 @@ namespace MV.View
         /// <summary>글자판 공유 TMP 머티리얼(계단 칸 번호도 같이 쓴다).</summary>
         public Material LabelMaterial => _labelMaterial;
 
-        /// <summary>글자판 문구 공급(UI·Localization 연결 지점). 없으면 <see cref="DefaultLabel"/>.</summary>
+        /// <summary>
+        /// 글자판 문구 덮어쓰기(시험·Localization 연결 지점). 있으면 이 값이 한 줄 글자가 되고 null이면 글자판(프리팹 글자판 포함)을 숨긴다.
+        /// 없으면 <see cref="ObjectLabel.Of"/>.
+        /// </summary>
         public Func<RunObject, string> LabelText;
+
+        /// <summary>결계 블록 글자판 「+골드」에 곱할 골드 배율(정본 `goldMul()` L1492). 통합 코드가 런 상태에서 매 프레임 넣는다.</summary>
+        public double GoldMul = 1;
 
         /// <summary>오브젝트 프리팹 로더(주소 → 임대). 기본은 Addressables. 시험은 로드 없이 뷰 구조만 보도록 바꾼다.</summary>
         public Func<string, CancellationToken, UniTask<AddressableLease<GameObject>>> PrefabLoader = AddressableScope.GetPrefab;
@@ -45,6 +51,8 @@ namespace MV.View
             public ObjectShape Shape;
             public DepthSortable Ds;
             public WorldLabel Label;
+            /// <summary>오브젝트 프리팹이 품은 글자판(`Obj_Text_Count`). 없으면 null이고 <see cref="Label"/>을 쓴다.</summary>
+            public CountLabel Board;
             public readonly List<SpriteRenderer> Parts = new List<SpriteRenderer>(8);
             public readonly List<Vector3> Base = new List<Vector3>(8);
             public Sprite[] Frames;
@@ -124,6 +132,7 @@ namespace MV.View
         readonly Dictionary<int, View> _views = new Dictionary<int, View>(64);
         readonly Dictionary<ObjectShape, Stack<View>> _pool = new Dictionary<ObjectShape, Stack<View>>();
         readonly List<int> _drop = new List<int>(16);
+        readonly Dictionary<int, List<int>> _wallRows = new Dictionary<int, List<int>>(16);
         readonly List<WellBrick> _bricks = new List<WellBrick>(64);
         readonly MeshBuffer _mb = new MeshBuffer();
 
@@ -245,6 +254,7 @@ namespace MV.View
                 Debug.LogError("[ObjectViewFactory] 오브젝트 프리팹에 Billboard가 없습니다(카메라를 볼 이미지 자식에 붙여야 함): " + v.Prefab);
             v.Rig = v.Inst.GetComponent<ObjectPrefabRig>();
             v.P = BuildParts(v);
+            v.Board = CountLabel.Find(v.Inst.transform);
             v.Ds.Refresh();
         }
 
@@ -396,15 +406,6 @@ namespace MV.View
             return ObjectShape.Single;
         }
 
-        /// <summary>기본 글자판: 체력 라벨은 남은 체력 올림, 그 외는 105.labelKey(Localization 연결 전 키 그대로).</summary>
-        public static string DefaultLabel(RunObject o)
-        {
-            var lk = o.Kind != null ? o.Kind.labelKind : LabelKind.None;
-            if (lk == LabelKind.None) return null;
-            if (lk == LabelKind.EnemyHp || lk == LabelKind.BoxHp) return o.HasHp ? Math.Ceiling(Math.Max(0, o.Hp)).ToString("0") : null;
-            return o.Kind.labelKey;
-        }
-
         /// <summary>
         /// 매 프레임: 그리기 범위의 살아 있는 오브젝트에 뷰를 맞춘다. <paramref name="pz"/> = 카메라 기준 z(PZ),
         /// <paramref name="playerZ"/> = 플레이어 z(관문 흐려짐), <paramref name="groundY"/> = 지면 높이.
@@ -416,6 +417,7 @@ namespace MV.View
             double nowMs = Time.realtimeSinceStartupAsDouble * 1000.0;
             double dt = _lastMs < 0 ? 0 : Math.Max(0, Math.Min(0.1, (nowMs - _lastMs) / 1000.0));
             _lastMs = nowMs;
+            CollectWallRows(objs);
             for (int i = 0; i < objs.Count; i++)
             {
                 var o = objs[i];
@@ -426,6 +428,7 @@ namespace MV.View
                 v.Stamp = _stamp;
                 v.Go.transform.position = new Vector3((float)o.X, (float)groundY, (float)o.Z);
                 Animate(v, nowMs, playerZ, dt);
+                UpdateLabel(v, o, playerZ);
             }
             _drop.Clear();
             foreach (var kv in _views)
@@ -550,6 +553,7 @@ namespace MV.View
             v.DieAt = v.Go.transform.position;
             v.Punch = 0;
             if (v.Label != null) v.Label.gameObject.SetActive(false);
+            if (v.Board != null) v.Board.Apply(LabelContent.Hidden);
         }
 
         /// <summary>종이 쓰러짐(paperDie L3663): 뛰어오르며 가로로 뒤집히고, 세로로 눌리며 기울고, 뒤 40%에서 사라진다.</summary>
@@ -645,7 +649,7 @@ namespace MV.View
                 if (v.Inst != null) v.Inst.transform.localPosition = Vector3.zero;
             }
             else Build(v, o);
-            BuildLabel(v, o);
+            if (v.Label != null) v.Label.gameObject.SetActive(false);
             v.Go.SetActive(true);
             v.Ds.Refresh();
             return v;
@@ -870,20 +874,67 @@ namespace MV.View
             }
         }
 
-        void BuildLabel(View v, RunObject o)
+        /// <summary>
+        /// 글자판 맞추기(매 프레임). 내용은 <see cref="ObjectLabel.Of"/>, 그림은 오브젝트 프리팹이 품은 글자판(<see cref="CountLabel"/>)이 먼저이고
+        /// 없으면(코드 모양·프리팹 로드 전) TMP 한 줄 글자판(숫자, 없으면 제목)을 쓴다.
+        /// </summary>
+        void UpdateLabel(View v, RunObject o, double playerZ)
         {
-            string text = LabelText != null ? LabelText(o) : DefaultLabel(o);
-            if (text == null)
+            var c = v.Die >= 0 ? LabelContent.Hidden : ObjectLabel.Of(o, playerZ, _cfg.ArchLabelHide, WallAhead(o), GoldMul);
+            string line = c.Line;
+            if (LabelText != null)
             {
-                if (v.Label != null) v.Label.gameObject.SetActive(false);
+                line = LabelText(o);
+                if (line == null) c = LabelContent.Hidden;
+            }
+            if (v.Board != null)
+            {
+                v.Board.Apply(c);
+                if (v.Label != null && v.Label.gameObject.activeSelf) v.Label.gameObject.SetActive(false);
                 return;
             }
-            if (v.Label == null) v.Label = WorldLabel.Create(v.Go.transform, "Label", LabelSize, _labelMaterial);
-            v.Label.transform.localPosition = new Vector3(0, LabelY, 0);
-            v.Label.GetComponent<Renderer>().sortingOrder = 100;   // 그룹 안 맨 위(정본 편향 −0.05와 같은 결과)
-            v.Label.SetText(text);
-            v.Label.gameObject.SetActive(true);
+            // 프리팹 오브젝트는 로드 전에 그림이 없으므로 글자판도 없다(로드되면 프리팹 글자판, 프리팹에 없을 때만 TMP 한 줄).
+            if (line == null || (v.Prefab != null && v.Inst == null))
+            {
+                if (v.Label != null && v.Label.gameObject.activeSelf) v.Label.gameObject.SetActive(false);
+                return;
+            }
+            if (v.Label == null)
+            {
+                v.Label = WorldLabel.Create(v.Go.transform, "Label", LabelSize, _labelMaterial);
+                v.Label.transform.localPosition = new Vector3(0, LabelY, 0);
+                v.Label.GetComponent<Renderer>().sortingOrder = CountLabel.SortBase;   // 그룹 안 맨 위(정본 편향 −0.05와 같은 결과)
+                v.Ds.Refresh();
+            }
+            v.Label.SetText(line);
+            if (!v.Label.gameObject.activeSelf) v.Label.gameObject.SetActive(true);
         }
+
+        /// <summary>같은 골목·같은 줄(bar·lane)마다 살아 있는 결계 블록의 행 번호(오름차순). 블록 글자판 「앞쪽 2칸만」 판정에 쓴다.</summary>
+        void CollectWallRows(IReadOnlyList<RunObject> objs)
+        {
+            foreach (var l in _wallRows.Values) l.Clear();
+            for (int i = 0; i < objs.Count; i++)
+            {
+                var o = objs[i];
+                if (o == null || o.Dead || o.Kind == null || o.Kind.labelKind != LabelKind.WallCell) continue;
+                int key = WallKey(o);
+                if (!_wallRows.TryGetValue(key, out var list)) _wallRows[key] = list = new List<int>(16);
+                list.Add(o.Row);
+            }
+            foreach (var l in _wallRows.Values) if (l.Count > 1) l.Sort();
+        }
+
+        /// <summary>이 블록 앞(행 번호가 작은 쪽)에 살아 있는 같은 줄 블록 수(정본 L1488 `w.row &lt; o.row &amp;&amp; !w.dead`).</summary>
+        int WallAhead(RunObject o)
+        {
+            if (o.Kind == null || o.Kind.labelKind != LabelKind.WallCell || !_wallRows.TryGetValue(WallKey(o), out var list)) return 0;
+            int n = 0;
+            for (int i = 0; i < list.Count && list[i] < o.Row; i++) n++;
+            return n;
+        }
+
+        static int WallKey(RunObject o) => o.Bar * 1024 + o.Lane;
 
         Transform MeshChild(Transform root, string name)
         {
@@ -973,8 +1024,6 @@ namespace MV.View
                     break;
             }
             if (v.Prefab == null) v.Go.transform.localScale = PunchScale(v.Punch);
-            if (v.Label != null && v.Label.gameObject.activeSelf && (o.Kind.labelKind == LabelKind.EnemyHp || o.Kind.labelKind == LabelKind.BoxHp))
-                v.Label.SetText(LabelText != null ? LabelText(o) : DefaultLabel(o));
         }
 
         /// <summary>
