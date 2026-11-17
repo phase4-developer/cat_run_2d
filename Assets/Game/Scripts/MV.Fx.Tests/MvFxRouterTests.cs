@@ -234,6 +234,23 @@ namespace MV.Fx.Tests
             Assert.AreEqual(39f, o.Pops[0].World.z, 1e-4f);
         }
 
+        /// <summary>두 번째 정산(시작 지면 WY &gt; 0): 새 HTML boom·sparks는 fxG(y = WY) 안이라 바퀴·등급·착지 이펙트가 모두 시작 지면만큼 올라간다.</summary>
+        [Test]
+        public void ClimbEffects_AddStartGround()
+        {
+            var t = FxTestTables.Load();
+            const double baseY = 5;
+            var start = Ev(RunEventType.ClimbStart, a: 100, b: 40, amount: 2.5, x: 10, z: 39, amount2: 16.8);
+            var flat = Route(t, World(), 0f, start, Ev(RunEventType.ClimbLap, a: 1, b: 75), Ev(RunEventType.ClimbTierUp, a: 2, b: 30), Ev(RunEventType.ClimbEnd, a: 100, b: 2));
+            var w = World(); w.WorldY = baseY;
+            var up = Route(t, w, 0f, start, Ev(RunEventType.ClimbLap, a: 1, b: 75), Ev(RunEventType.ClimbTierUp, a: 2, b: 30), Ev(RunEventType.ClimbEnd, a: 100, b: 2));
+            Assert.AreEqual(flat.Spawns.Count, up.Spawns.Count);
+            Assert.Greater(flat.Spawns.Count, 0);
+            for (int i = 0; i < flat.Spawns.Count; i++)
+                Assert.AreEqual(flat.Spawns[i].Pos.y + baseY, up.Spawns[i].Pos.y, 1e-4f, flat.Spawns[i].Key + " #" + i);
+            Assert.AreEqual(flat.Pops[0].World.y + baseY, up.Pops[0].World.y, 1e-4f, "「N칸 올라옴!」은 기존 계산 유지(시작 지면 + dH + 2.4)");
+        }
+
         /// <summary>정본 호출 인자로 만든 기대 재생(옛 하드코딩 값 그대로). NaN = 종류 기본값.</summary>
         static FxSpawn Sp(string key, double x, double y, double z, string hex = null, float n = float.NaN, float spd = float.NaN, float size = float.NaN,
             float life = float.NaN, float grav = float.NaN, float r = float.NaN, bool noRing = false, bool crit = false)

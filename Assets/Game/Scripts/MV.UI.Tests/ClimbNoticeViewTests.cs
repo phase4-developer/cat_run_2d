@@ -78,12 +78,29 @@ namespace MV.UI.Tests
         {
             Assert.That(RunToastText.Of(new RunEvent(RunEventType.Toast, key: RunToastText.NoStairs)), Is.EqualTo("모은 마나가 없습니다"));
             Assert.That(RunToastText.Of(new RunEvent(RunEventType.Toast, key: RunToastText.NoCard, a: 3)), Is.EqualTo("포탈 3 · 5 미만이라 냥파워 없음"));
-            var v = NewView(() => null);
+            var s = new RunState(null, T, new Pcg32Rng(1));
+            float time = (float)T.RunConfig.D(RunConfigKeys.Toast_Time), fade = (float)T.RunConfig.D(RunConfigKeys.Toast_Fade);
+            var v = NewView(() => s);
             v.Toast("모은 마나가 없습니다");
-            v.Tick(0.1f);
+            Assert.That(v.ToastAlpha, Is.EqualTo(0f).Within(1e-5), "나타날 때 투명에서 시작(CSS opacity 전환)");
+            v.Tick(fade / 2);
+            Assert.That(v.ToastAlpha, Is.EqualTo(0.5f).Within(1e-4));
+            v.Tick(time - fade / 2);
             Assert.That(v.ToastText, Is.EqualTo("모은 마나가 없습니다"));
-            v.Tick(ClimbNoticeView.ToastSec);
-            Assert.That(v.ToastText, Is.Null, "1.4초 뒤 사라짐");
+            Assert.That(v.ToastAlpha, Is.EqualTo(1f).Within(1e-4), "300 toast.time 동안 보임");
+            v.Tick(fade / 2);
+            Assert.That(v.ToastAlpha, Is.EqualTo(0.5f).Within(1e-4), "시간이 끝나면 toast.fade 동안 사라짐");
+            v.Tick(fade);
+            Assert.That(v.ToastText, Is.Null);
+        }
+
+        [Test]
+        public void Toast_UsesHtmlPanelAndInk_LabelAt40Percent()
+        {
+            // 새 HTML #toast background = --panel(v16 :root 덮어씀 rgba(18,15,26,.68)), color = --ink #fbf6ec. SIDE.label y = H·0.4.
+            Assert.That(ClimbNoticeView.ToastPanel, Is.EqualTo(new Color(18 / 255f, 15 / 255f, 26 / 255f, .68f)));
+            Assert.That(ColorUtility.ToHtmlStringRGB(ClimbNoticeView.ToastInk), Is.EqualTo("FBF6EC"));
+            Assert.That(ClimbNoticeView.LabelY, Is.EqualTo(.4f));
         }
     }
 }
