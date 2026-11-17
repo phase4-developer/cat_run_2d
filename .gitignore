@@ -34,6 +34,7 @@
 *.unityproj
 *.pdb
 *.mdb
+*.mdb.meta
 *.opendb
 *.VC.db
 
