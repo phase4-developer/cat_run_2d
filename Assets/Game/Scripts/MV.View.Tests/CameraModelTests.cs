@@ -21,22 +21,36 @@ namespace MV.View.Tests
             return m;
         }
 
+        /// <summary>달리기 시점은 카메라 설정 run 행 값에 선다(디자이너가 값을 바꿔도 시험은 설정을 읽는다).</summary>
         [Test]
-        public void RunPose_MatchesReferenceGeometry()
+        public void RunPose_FollowsRunRow()
         {
             var m = Settled(WorldViewMode.Run);
-            AssertVec(m.Pos, 0, 13, -9);
-            AssertVec(m.Look, 0, 0.5, 5.5);
-            var cfg = ViewTestTables.Config();
-            double fov = m.RunRow.fovV;
+            var r = ViewTestTables.Camera().run;
+            AssertVec(m.Pos, 0, r.posY, r.posZ);
+            AssertVec(m.Look, 0, r.lookY, r.lookZ);
             double pitch = DepthMath.PitchDeg(m.Pos, m.Look);
+            Assert.That(pitch, Is.EqualTo(System.Math.Atan2(r.posY - r.lookY, r.lookZ - r.posZ) * 180 / System.Math.PI).Within(1e-9), "내려다보는 각");
+            var cfg = ViewTestTables.Config();
+            double z = DepthMath.GroundZAtDepth(m.Pos, m.Look, 0, 0, cfg.FogStart);
+            Assert.That(CameraModel.ViewDepth(new Vector3d(0, 0, z), m.Pos, m.Look), Is.EqualTo(cfg.FogStart).Within(1e-6), "안개 시작 지면 z는 안개 시작 깊이에 있다");
+        }
+
+        /// <summary>기준 기하 검산(02 §2.2.3 표). 계산식 검산이라 표의 프로토 카메라·안개 값(위치 (0,13,−9), 주시 (0,0.5,5.5), 화각 52, 안개 34~84)을 그대로 넣는다.</summary>
+        [Test]
+        public void ReferenceGeometry_MatchesSpecTable()
+        {
+            var pos = new Vector3d(0, 13, -9);
+            var look = new Vector3d(0, 0.5, 5.5);
+            const double fov = 52, fogStart = 34, fogEnd = 84;
+            double pitch = DepthMath.PitchDeg(pos, look);
             Assert.That(pitch, Is.EqualTo(40.76).Within(0.01), "내려다보는 각");
             Assert.That(pitch - fov / 2, Is.EqualTo(14.76).Within(0.01), "화면 맨 위 광선");
-            double d = CameraModel.ViewDepth(new Vector3d(0, 0.7, 0), m.Pos, m.Look);
+            double d = CameraModel.ViewDepth(new Vector3d(0, 0.7, 0), pos, look);
             Assert.That(d, Is.EqualTo(14.85).Within(0.01), "플레이어 몸통 깊이");
             Assert.That(CameraModel.PxPerMeter(fov, H, d), Is.EqualTo(44.2).Within(0.05), "플레이어 s");
-            Assert.That(DepthMath.GroundZAtDepth(m.Pos, m.Look, 0, 0, cfg.FogStart), Is.EqualTo(24.7).Within(0.05), "안개 시작 지면 z");
-            Assert.That(DepthMath.GroundZAtDepth(m.Pos, m.Look, 0, 0, cfg.FogStart + cfg.FogRange), Is.EqualTo(90.7).Within(0.05), "안개 끝 지면 z");
+            Assert.That(DepthMath.GroundZAtDepth(pos, look, 0, 0, fogStart), Is.EqualTo(24.7).Within(0.05), "안개 시작 지면 z");
+            Assert.That(DepthMath.GroundZAtDepth(pos, look, 0, 0, fogEnd), Is.EqualTo(90.7).Within(0.05), "안개 끝 지면 z");
         }
 
         [Test]
@@ -69,10 +83,11 @@ namespace MV.View.Tests
             m.Step(new CameraInput { Mode = WorldViewMode.Run, Px = 2, Pz = 10, Wy = 1 }, dt, default);
             // camLift: 0 + (1 − 0)·min(1, dt·6)
             Assert.That(m.CamLift, Is.EqualTo(dt * 6).Within(1e-12));
-            double k = dt * 10;
-            var target = new Vector3d(2 * 0.25, m.CamLift + 13, 10 - 9);
+            var r = m.RunRow;
+            double k = dt * r.posLerp;
+            var target = new Vector3d(2 * r.posXMul, m.CamLift + r.posY, 10 + r.posZ);
             AssertVec(m.Pos, 0 + (target.x - 0) * k, 4.2 + (target.y - 4.2) * k, -4.4 + (target.z + 4.4) * k);
-            AssertVec(m.Look, 0.5, m.CamLift + 0.5, 15.5);
+            AssertVec(m.Look, 2 * r.lookXMul, m.CamLift + r.lookY, 10 + r.lookZ);
         }
 
         [Test]

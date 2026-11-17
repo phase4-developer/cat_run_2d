@@ -14,14 +14,16 @@ namespace MV.View.Tests
             Assert.That(DepthMath.Depth(p, cam, fwd), Is.EqualTo(DepthMath.Depth(new Vector3d(0, 0.7, 0), cam, fwd)).Within(1e-12));
         }
 
-        [TestCase(10, 100)]
-        [TestCase(34, 100)]
-        [TestCase(59, 50)]
-        [TestCase(84, 0)]
-        [TestCase(120, 0)]
-        public void FogAlpha_MatchesReferenceFogK(int d, int alphaPercent)
+        /// <summary>안개 알파는 표의 안개 시작·길이를 따른다. 깊이 = 시작 + 길이 × rangePercent%(음수 = 시작보다 가까움).</summary>
+        [TestCase(-50, 100)]
+        [TestCase(0, 100)]
+        [TestCase(50, 50)]
+        [TestCase(100, 0)]
+        [TestCase(150, 0)]
+        public void FogAlpha_FollowsFogTable(int rangePercent, int alphaPercent)
         {
             var cfg = ViewTestTables.Config();
+            double d = cfg.FogStart + cfg.FogRange * rangePercent / 100.0;
             Assert.That(DepthMath.FogAlpha(d, cfg.FogStart, cfg.FogRange), Is.EqualTo(alphaPercent / 100.0).Within(1e-12));
         }
 
