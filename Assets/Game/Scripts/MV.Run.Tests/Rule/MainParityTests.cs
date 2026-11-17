@@ -51,12 +51,12 @@ namespace MV.Run.Tests.Rule
             {
                 string key = $"A{area + 1}L{level}";
                 Golden.TryGetValue(key, out var want);
-                string legacy = ParityRun.Play(t, area, level, (setup, rng) => RunSim.Create(setup, t, rng, new RunLevelBuilder()));
+                string legacy = ParityRun.Play(t, area, level, (setup, rng) => TestSims.Create(setup, t, rng, new RunLevelBuilder()));
                 string viaRule = ParityRun.Play(t, area, level, (setup, rng) =>
                 {
                     var b = new RunLevelBuilder();
                     var ctx = new RunContext { Tables = t, Snapshot = setup, MetaModifiers = RunModifiers.Zero };
-                    return RunSim.Create(ctx, new MainRunRule(b), rng, b);
+                    return TestSims.Create(ctx, new MainRunRule(b), rng, b);
                 });
                 UnityEngine.Debug.Log($"[PARITY] {key} {legacy} / {viaRule}");
                 if (want != legacy) bad.Add($"{key} 기존 진입점: 골든 {(want ?? "없음")} / 지금 {legacy}");

@@ -20,6 +20,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 06b56a3b269b4c8fbe698d5c49c97a1d
+    m_Address: Obj_Enemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 28b3601d9fb7f4bc8b9a09b6a650ea69
     m_Address: Stage1_Block_Cat
     m_ReadOnly: 0
