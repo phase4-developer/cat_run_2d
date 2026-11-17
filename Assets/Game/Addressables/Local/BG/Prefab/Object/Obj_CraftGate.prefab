@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 229f68e0c153a4b3ca370d2150df0d3a, type: 3}
+    - target: {fileID: 1137269647727369021, guid: bd292f017983f44939e4fca12986d13a, type: 3}
+      propertyPath: m_text
+      value: "\uBB34\uAE30"
+      objectReference: {fileID: 0}
     - target: {fileID: 1378066880026358262, guid: bd292f017983f44939e4fca12986d13a, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
       value: 0.74509805
