@@ -27,6 +27,9 @@ namespace MV.Tests
             _prefs = MvSave.UseMemoryPreferences();
         }
 
+        [UnityTearDown]
+        public IEnumerator EndGame() => PlayModeIsolation.EndGame();
+
         [TearDown]
         public void ReleaseSave()
         {
@@ -38,7 +41,6 @@ namespace MV.Tests
                 loop.TicksPerFrame = 1;
             }
             MvBootMeta.Detach();
-            PlayModeIsolation.ResetEffects();
             MvSave.Shutdown();
             MvSave.PreferencesOverride = null;
         }

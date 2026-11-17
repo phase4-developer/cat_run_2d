@@ -43,6 +43,9 @@ namespace MV.Tests
             _rt = new RenderTexture(ShotW, ShotH, 24);
         }
 
+        [UnityTearDown]
+        public IEnumerator EndGame() => PlayModeIsolation.EndGame();
+
         [TearDown]
         public void TearDown()
         {
@@ -51,7 +54,6 @@ namespace MV.Tests
             if (_rt != null) { _rt.Release(); UnityEngine.Object.DestroyImmediate(_rt); }
             File.WriteAllText(Path.Combine(ShotDir, "climb_log.txt"), _log.ToString());
             MvBootMeta.Detach();
-            PlayModeIsolation.ResetEffects();
             MvSave.Shutdown();
             MvSave.PreferencesOverride = null;
         }

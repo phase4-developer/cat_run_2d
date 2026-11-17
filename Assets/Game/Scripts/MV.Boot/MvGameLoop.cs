@@ -77,6 +77,8 @@ namespace MV.Boot
         RunSim _lobbySim;
         readonly List<RunObject> _lobbyObjs = new List<RunObject>(64);
         readonly List<IDisposable> _leases = new List<IDisposable>();
+        /// <summary>이 루프가 세운 연출 재생기. 루프(씬)가 사라지면 함께 내린다(FxRoot·카메라 리그를 들고 있다).</summary>
+        MvFxPlayer _fx;
         readonly LoopViewSource _viewSource = new LoopViewSource();
         MvRunInputReader _input;
         LobbyScreen _lobbyScreen;
@@ -99,6 +101,8 @@ namespace MV.Boot
         void OnDestroy()
         {
             if (Current == this) Current = null;
+            if (_fx != null && MvFx.Player == _fx) MvFx.Install(null);
+            _fx = null;
             foreach (var d in _stageLeases) d?.Dispose();
             _stageLeases.Clear();
             foreach (var d in _leases) d?.Dispose();
@@ -158,7 +162,7 @@ namespace MV.Boot
             Alive();
             FxMaterialsLoaded = normal != null && add != null;
             if (!FxMaterialsLoaded) Debug.LogWarning("[MvGameLoop] 우다다 머티리얼을 찾지 못했습니다(" + MvFx.MatNormalAddress + ", " + MvFx.MatAddAddress + ").");
-            MvFx.InstallDefault(fxRoot, _world.Rig, () => _sim?.State, normal, add);
+            _fx = MvFx.InstallDefault(fxRoot, _world.Rig, () => _sim?.State, normal, add);
         }
 
         async UniTask<Material> LoadMaterialAsync(string address)

@@ -26,11 +26,13 @@ namespace MV.Tests
             _prefs = MvSave.UseMemoryPreferences();
         }
 
+        [UnityTearDown]
+        public IEnumerator EndGame() => PlayModeIsolation.EndGame();
+
         [TearDown]
         public void ReleaseSave()
         {
             MvBootMeta.Detach();
-            PlayModeIsolation.ResetEffects();
             MvSave.Shutdown();
             MvSave.PreferencesOverride = null;
         }

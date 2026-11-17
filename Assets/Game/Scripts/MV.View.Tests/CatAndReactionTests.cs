@@ -597,7 +597,16 @@ namespace MV.View.Tests
         [Test]
         public void ObjectPrefabs_OneBillboardGroup_FlatImagesOutside()
         {
-            const string BillboardGuid = "b6073823855d4665867abbe603050885", Ident = "{x: 0, y: 0, z: 0, w: 1}";
+            const string BillboardGuid = "b6073823855d4665867abbe603050885";
+            // 눕힘 = 화면 면에서 기울어짐(x·y 회전 성분). z만 돈 것은 면 안에서 돈 것이라 서 있다. -0도 0으로 본다.
+            bool Laid(string q)
+            {
+                var m = System.Text.RegularExpressions.Regex.Match(q, @"x: ([^,]+), y: ([^,]+),");
+                Assert.IsTrue(m.Success, "회전 값을 읽지 못했다: " + q);
+                double x = double.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+                double y = double.Parse(m.Groups[2].Value, System.Globalization.CultureInfo.InvariantCulture);
+                return Math.Abs(x) > 1e-6 || Math.Abs(y) > 1e-6;
+            }
             var t = ViewTestTables.Load();
             var addrs = new HashSet<string>();
             foreach (var k in t.ObjectKind.Datas) if (!string.IsNullOrEmpty(k.prefab)) addrs.Add(k.prefab);
@@ -639,8 +648,9 @@ namespace MV.View.Tests
                     string tr = trOfGo[img];
                     bool under = false;
                     for (string x = tr; x != "0"; x = father[x]) if (x == bt) { under = true; break; }
-                    Assert.That(under || rot[tr] != Ident, a + ": 서 있는 이미지는 Billboard 묶음 아래");
-                    if (rot[tr] != Ident) Assert.IsFalse(under, a + ": 눕힌 이미지는 묶음 밖");
+                    bool laid = Laid(rot[tr]);
+                    Assert.That(under || laid, a + ": 서 있는 이미지는 Billboard 묶음 아래");
+                    if (laid) Assert.IsFalse(under, a + ": 눕힌 이미지는 묶음 밖");
                 }
             }
         }
