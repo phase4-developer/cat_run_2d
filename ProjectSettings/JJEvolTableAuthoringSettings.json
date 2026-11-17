@@ -1,7 +1,7 @@
 {
     "version": 1,
-    "inputDirectory": "",
-    "outputDirectory": "",
+    "inputDirectory": "Assets/Game/GameData/Table/TSV",
+    "outputDirectory": "Assets/Game/GameData/Table/Resources",
     "codeDirectory": "",
     "gameNamespace": "",
     "enumName": "GameConsumeType",
