@@ -56,6 +56,8 @@ namespace MV.View
         const float WallLeftX = -70f;
         /// <summary>새 HTML drawStreet: yawPx = −yaw·W·1.3, 원경 겹 이동 = yawPx·(0.7 + par·0.3), par = 먼 겹 0.5·가까운 겹 1.0.</summary>
         const float YawScreens = 1.3f, YawBase = 0.7f, YawPar = 0.3f, FarPar = 0.5f, NearPar = 1.0f;
+        /// <summary>새 HTML 옆 시점 뒤쪽 확장: 땅 zN = PZ + 0.8 − 46·e(drawGround), 소품 z gt; PZ − 2 − 40·e(draw2D·streetProps).</summary>
+        const float GroundBackE = 46f, DecoBackE = 40f;
 
         /// <summary>바닥 판 한 장: z 방향 길이 축과 원래 자리·무늬를 기억해 두고 매번 그 값에서 잘라 다시 계산한다.</summary>
         sealed class GroundPart
@@ -144,7 +146,7 @@ namespace MV.View
             double e = _orbitE != null ? _orbitE() : 0;
             // 새 HTML groundY: z < cliff.z면 아래층, 아니면 지형 높이(정산 시작부터 위층).
             float far = cl.HasValue ? (float)cl.Value.High : gy;
-            float snapZ = Mathf.Floor(c.z / GroundSnap) * GroundSnap;
+            float snapZ = Mathf.Floor((c.z - GroundBackE * (float)e) / GroundSnap) * GroundSnap;   // 옆 시점이면 카메라 뒤 땅까지
             float cutX = (float)ClimbOcclusion.CutX(e);
             bool section = e > 0 && ClimbOcclusion.ShowSection(c.x, e);
 
@@ -282,7 +284,7 @@ namespace MV.View
         void PlaceDecos(float camZ, Func<float, float> groundAt, double e)
         {
             if (DecoTemplate == null || DecoSprites.Count == 0) return;
-            int k0 = Mathf.FloorToInt((camZ + DecoRange.x) / DecoSpacing), k1 = Mathf.FloorToInt((camZ + DecoRange.y) / DecoSpacing);
+            int k0 = Mathf.FloorToInt((camZ + DecoRange.x - DecoBackE * (float)e) / DecoSpacing), k1 = Mathf.FloorToInt((camZ + DecoRange.y) / DecoSpacing);
             int need = (k1 - k0 + 1) * 2;
             while (_decos.Count < need)
             {
