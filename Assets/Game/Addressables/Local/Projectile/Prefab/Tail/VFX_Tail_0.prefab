@@ -10,7 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6818959710335968176, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
       propertyPath: m_Name
-      value: VFX_Tail
+      value: VFX_Tail_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048444742823696448, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_Time
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048444742823696448, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_MinVertexDistance
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8498302747282055517, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
       propertyPath: m_LocalPosition.x

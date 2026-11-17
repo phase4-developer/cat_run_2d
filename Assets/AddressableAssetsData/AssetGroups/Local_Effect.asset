@@ -15,11 +15,66 @@ MonoBehaviour:
   m_GroupName: Local_Effect
   m_GUID: e307695ea4b8436197c4f9a7cfde9322
   m_SerializeEntries:
+  - m_GUID: 0054ac7e7008b144eae4abce4d57bfed
+    m_Address: Flash 13
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 04c7d67e8b3c8f04b9cee60f95113b33
+    m_Address: Projectile 6 black hole
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0b0d69410ca2f1045b821e4b992ce9a2
+    m_Address: Flash 12
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c1d21299412c1b4685f7282c52222a4
+    m_Address: Flash 10
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c493020e111d7e4fac7535fde124408
+    m_Address: Flash 5
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11e40931ec6ea2645b692966183791ae
+    m_Address: Flash 8
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12c5a36b60a39734f80150bc3e23e850
+    m_Address: Flash 7
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 17f9ce0149554b82b3d22407e45f8ace
     m_Address: Paw
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21380ddb0b252984da608f69594b18ec
+    m_Address: Flash 4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21c2c2f37bb45894e8c5ac0cb9e2cb90
+    m_Address: Flash 15
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 244f87a37ba29b741848d41f7591bc93
+    m_Address: Flash 14
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2eb45cbb5c5e9d549ac5e123909fff4b
+    m_Address: Hit 8
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2f5a8e821bc1476ebeb5ec94fb155e6d
     m_Address: Bolt
@@ -39,6 +94,36 @@ MonoBehaviour:
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 385602d83d1117d4c98c7e9163962899
+    m_Address: Projectile 1 magic
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4a5436a0346eac54ca17b5daf613b102
+    m_Address: Projectile 5 star
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ab34b8edd399b3499e3bfb5dff80b4d
+    m_Address: Flash 6
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ab48a9a03327fb4ca76018592f4626d
+    m_Address: Flash 1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 51d7d662db448f44f8b2c6ce61eb3c38
+    m_Address: Projectile 15 arrow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5547fe8514802d74c98fc7c5aa554ff2
+    m_Address: Projectile 12 blue
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5e7ee1f5203746378778bc519754e67c
     m_Address: HolyBeam
     m_ReadOnly: 0
@@ -51,11 +136,26 @@ MonoBehaviour:
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 60ff48a39b3e7b644aa620b288bb256e
+    m_Address: Hit 15
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b80d5fba4e83cb4584421b219575610
+    m_Address: Flash 11
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7ce4395e40c04b90a7246f2d435236af
     m_Address: Trail
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8281469a426430648ad0bf11c78fc3a2
+    m_Address: Hit 9
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 88553e25d6a743e798c2848bab97dd9e
     m_Address: Sparks
@@ -63,17 +163,97 @@ MonoBehaviour:
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a9ff079e725ff045b74de6dfa30bb4f
+    m_Address: Projectile 3 torpedo
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8b585bd4793e2404c9ce7e3770159d4b
+    m_Address: Hit 5
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8b78bf871862d08409f84a0bac02efdd
+    m_Address: Hit 1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8d51197dc324b9b46ba083f2bd0bb642
+    m_Address: Hit 4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8fea08f7cd39cd243840dcfe935c84bc
+    m_Address: Hit 2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91fb7ab2ef38317499700fcf6b971451
+    m_Address: Hit 12
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c84ef1ae16472445b15eb9d288f39d9
+    m_Address: Projectile 8 triangle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f423c73d6fd3e542a42b41623e81db1
+    m_Address: Hit 3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a3ad1def1510419bafb53fb17597fcba
     m_Address: Hiss
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a436369cb96b52d4fbd4d7bb0f9244a1
+    m_Address: Projectile 14 huricara
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: abf7a8ff530cf134d84795bf112b1631
+    m_Address: Projectile 2 acid
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac2312a3e32471549882f1a6da5568e6
+    m_Address: Hit 7
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ad9f9cb996e64639b51df21bddbb6867
     m_Address: MV_FxNormal
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae2b13f9ecf0d2444b46bdcb21f42ce3
+    m_Address: Hit 13
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b08f505eff218204fb92fac4cda2cfca
+    m_Address: Flash 9
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b15a120c1390db449b8eb5af19d62424
+    m_Address: Hit 11
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b15ff8497c1816242b4531a624ad5784
+    m_Address: Flash 2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b60a21c2bfc38974c987df17bdbd03bf
+    m_Address: Projectile 13 star
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c08ac448b34cc4026ad0e973ef0c61fa
     m_Address: Fx_Card_Lightning
@@ -92,11 +272,36 @@ MonoBehaviour:
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d07a2dac65a5080458290ccf1869336e
+    m_Address: Flash 3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d6ebe1b9125e36747b5aaed57e503724
+    m_Address: Hit 6
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7de06b47eb03f14eb666ec364c681c5
+    m_Address: Projectile 10 green
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dbc053b9eb6814d4395db21c6ef15c9f
+    m_Address: Projectile 7 fire
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e6ec90810b324b2088f17460b80cb3ff
     m_Address: BrickChunk
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef3053d4bea0099478974204c6171ff0
+    m_Address: Projectile 4 water
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f001e692dd034c2c9d79a07d4ba1b09f
     m_Address: MV_FxAdd
@@ -104,11 +309,31 @@ MonoBehaviour:
     m_SerializedLabels:
     - fx
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f39c43985f1039b47b3065f46848760e
+    m_Address: Hit 14
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f940b07d09c3418c80d86d58cf8ec148
     m_Address: Impact
     m_ReadOnly: 0
     m_SerializedLabels:
     - fx
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa061b6e827a549489643e3a005f53ca
+    m_Address: Projectile 11 bullets
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fae7d8f670da44c4fbef473695272926
+    m_Address: Hit 10
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc110adf05fc16f4a84d3aa73734d894
+    m_Address: Projectile 9 thunder
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}

@@ -8,9 +8,49 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.9042858
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: InitialModule.startColor.minColor.b
+      value: 0.35669956
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: InitialModule.startColor.minColor.g
+      value: 0.7264151
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: InitialModule.startColor.minColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6818959710335968176, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
       propertyPath: m_Name
-      value: VFX_Tail
+      value: VFX_Tail_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048444742823696448, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.b
+      value: 0.6183789
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048444742823696448, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048444742823696448, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048444742823696448, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_Parameters.colorGradient.m_ColorSpace
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8498302747282055517, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
       propertyPath: m_LocalPosition.x

@@ -73,7 +73,13 @@ namespace MV.View
         {
             if (_tail == null) return;
             foreach (var tr in _tail.GetComponentsInChildren<TrailRenderer>(true)) tr.Clear();
-            foreach (var ps in _tail.GetComponentsInChildren<ParticleSystem>(true)) ps.Clear(true);
+            // 처음부터 다시 재생: 한 번만 뿜는 파티클 꼬리(VFX_Tail_6_P 등)는 지우기만 하면 다시 생기지 않는다
+            foreach (var ps in _tail.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                if (ps.transform.parent != null && ps.transform.parent.GetComponentInParent<ParticleSystem>() != null) continue;   // 자식 파티클은 맨 위 파티클이 함께 다시 재생
+                ps.Simulate(0f, true, true);
+                ps.Play(true);
+            }
         }
     }
 }
