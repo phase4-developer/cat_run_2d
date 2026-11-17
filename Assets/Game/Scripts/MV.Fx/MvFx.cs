@@ -46,8 +46,8 @@ namespace MV.Fx
             var proj = new CameraScreenProjector(() => rig != null ? rig.Cam : Camera.main);
             p.Pops.Projector = proj;
             p.Flies.Projector = proj;
-            // 옛 우다다 덮개(MvWarpOverlay)는 만들지 않는다: 새 HTML 마나 정산은 옆 시점 계단을 그대로 보이고
-            // 종이 막 전환(MV.UI ClimbWipeView)만 지나간다(2026-11-14 사용자 「계단 연출 횡으로 변경되면서 가는거잖아」).
+            // 옛 우다다 덮개(MvWarpOverlay)는 만들지 않는다: 새 HTML 마나 정산은 옆 시점 계단을 그대로 보인다
+            // (종이 막 drawWipes는 새 HTML에서 호출되지 않는 죽은 코드라 옮기지 않는다, 2026-11-17).
             if (cam != null) MvFxDriver.ViewCamera = cam;
             Install(p);
             MvFxRunner.Ensure();

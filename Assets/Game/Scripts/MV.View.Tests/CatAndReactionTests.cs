@@ -366,14 +366,32 @@ namespace MV.View.Tests
             s.Clones = 1;
             s.Phase = RunPhase.Climb;
             s.Climb = new ClimbState { N = 3, K = 3, Z0 = s.P.Z, ZEnd = s.P.Z + 3, T = 1 };
-            view.Sync(s, 1.0);
+            // 새 HTML drawClimbCat: 옆 시점으로 돌기 전(e < 0.5)은 뒷모습(걷기), e ≥ 0.5면 옆모습(계단 그림).
+            view.Sync(s, 1.0, 0.2);
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Walk), "돌기 전반: 뒷모습을 접는다");
+            Assert.That(view.StateOf(1), Is.EqualTo(CharState.Walk), "e ≤ 0.3이면 분신이 아직 보인다(새 HTML)");
+            view.Sync(s, 1.0, 1.0);
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Stair));
             Assert.That(view.SpriteNameOf(0), Is.EqualTo(view.LookOf(0).stair));
             Assert.That(view.StateOf(1), Is.EqualTo(CharState.Hidden), "사용자 계단 규칙 6: 정산 중 분신 숨김");
             s.Phase = RunPhase.Run;
             s.Climb = null;
-            view.Sync(s, 2.0);
+            view.Sync(s, 2.0, 0.6);
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Stair), "끝난 뒤 되돌아오는 동안(e ≥ 0.5)은 옆모습");
+            Assert.That(view.StateOf(1), Is.EqualTo(CharState.Hidden), "되돌아오는 중 e > 0.3이면 분신은 아직 숨김");
+            view.Sync(s, 2.0, 0);
+            Assert.That(view.StateOf(0), Is.EqualTo(CharState.Walk));
             Assert.That(view.StateOf(1), Is.EqualTo(CharState.Walk), "정산이 끝나면 다시 나타남");
+        }
+
+        [Test]
+        public void OrbitFlip_FoldsBackThenUnfoldsSide()
+        {
+            Assert.That(CharacterPresenter.OrbitFlip(0), Is.EqualTo(1).Within(1e-12));
+            Assert.That(CharacterPresenter.OrbitFlip(0.25), Is.EqualTo(Math.Cos(0.25 * Math.PI)).Within(1e-12));
+            Assert.That(CharacterPresenter.OrbitFlip(0.5), Is.EqualTo(0).Within(1e-12), "가운데서 종이가 옆으로 선다");
+            Assert.That(CharacterPresenter.OrbitFlip(0.75), Is.EqualTo(-Math.Cos(0.75 * Math.PI)).Within(1e-12));
+            Assert.That(CharacterPresenter.OrbitFlip(1), Is.EqualTo(1).Within(1e-12));
         }
 
         // ───────── 로비 트랙(MV-VIEW-LOBBY-TRACK) ─────────

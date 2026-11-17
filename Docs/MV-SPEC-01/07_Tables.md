@@ -656,7 +656,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2): Area 30 묶음(group 30) `souls` 33 / 43 / 54�
 | worldAtlas | Atlas_World_Theme_market | Atlas_World_Theme_stairs | Atlas_World_Theme_harbor | Atlas_World_Theme_roof | Atlas_World_Theme_snow |
 | skyTop | #8ac8f0 | #9ac0e8 | #e8906a | #1a1c48 | #141640 |
 | skyBot | #d8ecf8 | #f0dcc8 | #ffd0a0 | #3a3a7a | #3a3a78 |
-| fog | #e4dccf | #ddd0c6 | #e8c4a8 | #4a4870 | #5a5e8a |
+| fog | #c4a6d6 | #c4a6d6 | #c4a6d6 | #c4a6d6 | #c4a6d6 |
 | grass | #cbbba2 | #bdb4ac | #c8b0a0 | #a8a4c0 | #e8eef8 |
 | grass2 | #c3b399 | #b5aca4 | #c0a898 | #a09cb8 | #e0e8f4 |
 | road | #e4d8c4 | #d8d0c8 | #dcc8b4 | #c4c0d8 | #f6f8fc |
@@ -672,6 +672,8 @@ MV-SPEC-02 반영(MV-DATA-SPEC2): Area 30 묶음(group 30) `souls` 33 / 43 / 54�
 | deco | market | stairs | harbor | roof | snow |
 | tint | (빈칸) | #fff0de | #ffd6b8 | #9698da | #acb4e2 |
 | night | 0 | 0 | 0.2 | 1 | 1 |
+
+`fog`는 모든 행 `#c4a6d6`(새 HTML 2026-11-12 테마 6개 공통 값). 사용자 2026-11-17 결정 「Use HTML lavender」: 옆 시점 땅 밖 카메라 배경이 표 값(시장 골목 `#e4dccf` 등)으로 베이지가 되던 것을 새 HTML 색으로 맞춤. 옛 프로토 값: #e4dccf · #ddd0c6 · #e8c4a8 · #4a4870 · #5a5e8a.
 
 테마 6~15는 [08 §8.2.5](08_Content.md)(결정 대기 D-72). 새 테마는 행 추가 + 아틀라스 굽기(03 §3.6.4).
 

@@ -82,7 +82,7 @@ namespace MV.Sound.Tests
             yield return S("L2277 랩 카드", t => new[] { Ev(RunEventType.ClimbLap, a: 1, b: 75) }, "card_4");
             yield return S("L2281 등급 상승 1~4", t => Enumerable.Range(1, 4).Select(i => Ev(RunEventType.ClimbTierUp, a: i)).ToArray(),
                 "tierup_1", "tierup_2", "tierup_3", "tierup_4");
-            yield return S("L2286 착지", t => new[] { Ev(RunEventType.ClimbEnd, a: 30, b: 2) }, "land");
+            yield return S("L2286 착지(endAt 처음)", t => new[] { Ev(RunEventType.ClimbTop, a: 30) }, "land");
             yield return S("L2368 룰렛 넘김은 첫 카드만", t => new[] { Ev(RunEventType.RouletteFlip, a: 0), Ev(RunEventType.RouletteFlip, a: 1), Ev(RunEventType.RouletteFlip, a: 2) }, "tick");
             yield return S("L2369 룰렛 확정 card(pick.t)", t => Enumerable.Range(0, 5).Select(i => Ev(RunEventType.RouletteChosen, a: 0, b: 1, c: i)).ToArray(),
                 "card_0", "card_1", "card_2", "card_3", "card_4");
@@ -132,7 +132,7 @@ namespace MV.Sound.Tests
         {
             RunEventType.FloorEnter, RunEventType.Fire, RunEventType.ProjImpact, RunEventType.Hit, RunEventType.Break, RunEventType.Gain,
             RunEventType.GateTake, RunEventType.GaugeLevelUp, RunEventType.Steal, RunEventType.Blocked, RunEventType.ClimbStart,
-            RunEventType.ClimbStepShown, RunEventType.ClimbLap, RunEventType.ClimbTierUp, RunEventType.ClimbEnd,
+            RunEventType.ClimbStepShown, RunEventType.ClimbLap, RunEventType.ClimbTierUp, RunEventType.ClimbTop,
             RunEventType.RouletteFlip, RunEventType.RouletteChosen, RunEventType.CardApplied, RunEventType.RunFinished,
         };
 

@@ -845,11 +845,11 @@ namespace MV.Run
             {
                 C.WarpStage = stage;
                 s.Emit(new RunEvent(RunEventType.ClimbWarpStage, a: stage));
-                if (stage > 0) { var (a, t) = RunParams.Shake(T, "shake.warpStage"); Shake(a, t); }
+                // 흔들림 없음: 새 HTML의 우다다 단계 흔들림은 호출되지 않는 drawWarp에만 있다(2026-11-17).
             }
             if (p >= 1)
             {
-                if (C.EndAt < 0) C.EndAt = C.Time;
+                if (C.EndAt < 0) { C.EndAt = C.Time; s.Emit(new RunEvent(RunEventType.ClimbTop, a: C.N)); }   // 새 HTML: endAt 처음 잡을 때 land
                 if (C.Time - C.EndAt >= c["sideOut"])   // 새 HTML SIDE_OUT: 다 오른 뒤 잠깐 멈췄다 끝
                 {
                     s.Emit(new RunEvent(RunEventType.ClimbEnd, a: C.N, b: C.Tier));

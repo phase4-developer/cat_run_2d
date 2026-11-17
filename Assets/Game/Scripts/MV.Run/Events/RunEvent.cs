@@ -16,6 +16,8 @@ namespace MV.Run
         Toast, Banner, RunFinished, CompanionShot,
         /// <summary>지팡이 스택이 가득 차 공방 지급이 거절됨(MV-SPEC-02 6-3, Q-17). A=거절 장 수, B=tier.</summary>
         WeaponRejected,
+        /// <summary>계단을 다 오름(새 HTML updClimb `C.endAt` 처음 설정, land 소리). A=n.</summary>
+        ClimbTop,
     }
 
     /// <summary>
@@ -37,7 +39,7 @@ namespace MV.Run
     /// <item>GodStormStart·GodStormStrike·GodBlast: X, Z, Key=el, Amount=life(Start)</item>
     /// <item>OrbTick: Ids / Beam·MeteorLaunch·MeteorImpact: X, Z</item>
     /// <item>ClimbStart: A=n, B=k, Amount=pw, X=z0, Z=zEnd, Amount2=dH, Amount3=T / ClimbStepShown: A=i</item>
-    /// <item>ClimbLap: A=lap, B=stepIndex / ClimbTierUp: A=tier, B=stepIndex / ClimbWarpStage: A=stage / ClimbEnd: A=n, B=tier</item>
+    /// <item>ClimbLap: A=lap, B=stepIndex / ClimbTierUp: A=tier, B=stepIndex / ClimbWarpStage: A=stage / ClimbTop: A=n / ClimbEnd: A=n, B=tier</item>
     /// <item>RouletteStart: Ids=tiers, Ids2=카드 id / RouletteFlip: A=i / RouletteChosen: A=i, B=cardId, C=tier</item>
     /// <item>RouletteFly: A=i, B=cardId / CardApplied: B=cardId, A=count / RouletteEnd</item>
     /// <item>Toast·Banner: Key, A=인자 / RunFinished: (결과는 RunState.Result)</item>

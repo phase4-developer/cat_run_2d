@@ -246,7 +246,7 @@ namespace MV.Fx
                     int si = Math.Min(_climbK - 1, (int)Math.Ceiling(e.A * lap / _climbPw) - 1);
                     si = Math.Max(0, si);
                     double y = (si + 1) * cc["stepH"], z = _climbZ0 + si * cc["stepD"];
-                    PlayParts(t, grp, o, 0, y, z, s_none, TierColor(t, lapTier));   // 기준점 = 꼭대기 칸 위(x 0)
+                    PlayParts(t, grp, o, 0, _climbBaseY + y, z, s_none, TierColor(t, lapTier));   // 기준점 = 꼭대기 칸 위(x 0), 시작 지면 기준(새 HTML fxG.y = WY)
                     break;
                 }
                 case RunEventType.ClimbTierUp: // L2281~2283
@@ -256,14 +256,14 @@ namespace MV.Fx
                     if (cc == null) break;
                     int si = Math.Max(0, Math.Min(_climbK - 1, (int)Math.Floor(e.B / _climbPw)));
                     double y = (si + 1) * cc["stepH"], z = _climbZ0 + si * cc["stepD"];
-                    PlayParts(t, grp, o, w?.PlayerX ?? 0, y, z, s_none, TierColor(t, e.A));   // 기준점 = 오른 칸 위
+                    PlayParts(t, grp, o, w?.PlayerX ?? 0, _climbBaseY + y, z, s_none, TierColor(t, e.A));   // 기준점 = 오른 칸 위, 시작 지면 기준
                     o.Flashes.Add(new FlashRequest { Peak = (float)t.RunConfig.D(RunConfigKeys.Flash_ClimbTier), HoldMs = t.RunConfig.I(RunConfigKeys.Flash_ClimbTierMs), Color = TierHex(t, e.A) });
                     break;
                 }
                 case RunEventType.ClimbEnd: // L2286
                 {
                     var row = Grp(t, o, "climb.land");
-                    var s = FromRow(row, V(w?.PlayerX ?? 0, _climbDH + 0.3, _climbZEnd + 0.5));
+                    var s = FromRow(row, V(w?.PlayerX ?? 0, _climbBaseY + _climbDH + 0.3, _climbZEnd + 0.5));
                     o.Spawns.Add(s);
                     o.WarpEnd = true;
                     // 새 HTML: 꼭대기에 「N칸 올라옴!」(마지막 등급색, 등급 없으면 흰색). 사용자 계단 규칙 8.

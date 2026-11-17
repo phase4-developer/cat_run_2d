@@ -63,6 +63,48 @@ namespace MV.Editor.Build
             EditorApplication.Exit(code);
         }
 
+        /// <summary>
+        /// 중앙 실행기 setup 모드가 <c>-executeMethod MV.Editor.Build.MvBuild.BuildTablesOnly</c>로 부르는 표 빌드만(중앙 policies/Unity.md 「표 산출물과 빌드 기록」).
+        /// TSV를 고친 뒤 Resources 산출물과 빌드 기록(<c>ProjectSettings/JJEvolTableAuthoring</c>)을 앱 빌드 없이 다시 만든다. 0 성공, <see cref="ExitTablesFailed"/> 실패.
+        /// </summary>
+        public static void BuildTablesOnly()
+        {
+            int code;
+            try
+            {
+                code = BuildTables(checkRecord: true) ? ExitSuccess : ExitTablesFailed;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(LogPrefix + "예외로 표 빌드 중단: " + e);
+                code = ExitTablesFailed;
+            }
+            Debug.Log(LogPrefix + "표 빌드 종료 코드 " + code);
+            EditorApplication.Exit(code);
+        }
+
+        /// <summary>BuildAndroidDev 3c와 BuildTablesOnly가 함께 쓰는 표 빌드. checkRecord면 빌드 뒤 산출물이 빌드 기록과 같은지도 본다.</summary>
+        static bool BuildTables(bool checkRecord)
+        {
+            try
+            {
+                var tables = TableBuilder.Build(Path.GetFullPath(MvTableAuthoring.TsvAssetPath), Path.GetFullPath(MvTableAuthoring.OutputAssetPath),
+                    useEncrypt: false, validate: MvTableAuthoring.ValidateBuildInputs);
+                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                Debug.Log(LogPrefix + $"표 산출물 {tables.State}, 파일 {tables.OutputFiles.Count}, 바뀜 없음 {tables.NoOp}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(LogPrefix + "표 산출물 만들기 실패: " + e.Message);
+                return false;
+            }
+            if (!checkRecord) return true;
+            var diffs = TableBuilder.GetFileDifferences(MvTableAuthoring.OutputAssetPath);
+            if (diffs.Count == 0) return true;
+            foreach (var d in diffs) Debug.LogError(LogPrefix + $"빌드 뒤에도 기록과 다름: {d.Table} {d.Path} {d.Reason}");
+            return false;
+        }
+
         static int RunAndroidDev()
         {
             // 1. 대상 확인 — 실행기는 -buildTarget Android로 띄운다.
@@ -96,18 +138,7 @@ namespace MV.Editor.Build
             }
 
             // 3c. 표 산출물 — 플레이어는 Resources 표만 읽는다(에디터의 TSV 대체 경로는 플레이어에 없다). TSV에서 TableBuilder로 만든다(검증기 포함, 암호화 끔).
-            try
-            {
-                var tables = TableBuilder.Build(Path.GetFullPath(MvTableAuthoring.TsvAssetPath), Path.GetFullPath(MvTableAuthoring.OutputAssetPath),
-                    useEncrypt: false, validate: MvTableAuthoring.ValidateBuildInputs);
-                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-                Debug.Log(LogPrefix + $"표 산출물 {tables.State}, 파일 {tables.OutputFiles.Count}, 바뀜 없음 {tables.NoOp}");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(LogPrefix + "표 산출물 만들기 실패: " + e.Message);
-                return ExitTablesFailed;
-            }
+            if (!BuildTables(checkRecord: false)) return ExitTablesFailed;
 
             // 4. Addressables — 모든 그룹이 Local 경로라 APK 안에 들어간다(사용자 「원격 에셋은 안쓸거니 다 로컬로」). 플레이어 빌드가 자동으로 콘텐츠를 빌드하지 않을 때만 한 번 빌드한다. 설정 자산은 바꾸지 않는다.
             var aaSettings = AddressableAssetSettingsDefaultObject.Settings;

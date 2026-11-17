@@ -102,6 +102,37 @@ namespace MV.View.Tests
             Assert.That(ClimbPath.From(edited.Climb).Lift, Is.EqualTo(0.3).Within(1e-12), "표만 바꿔도 고양이 높이가 바뀐다");
         }
 
+        /// <summary>새 HTML L2801: 정산 중에도 위치는 lerp(dt·10)로 따라가고 주시점만 바로 선다(바로 붙는 것은 로비뿐).</summary>
+        [Test]
+        public void ClimbPose_FollowsSmoothly_LookSnaps()
+        {
+            var m = Settled(WorldViewMode.Climb);
+            var before = m.Pos;
+            double dt = 0.05, k = System.Math.Min(1, dt * m.ClimbRow.posLerp);
+            Assert.That(m.ClimbRow.snap, Is.False, "정산 카메라는 부드럽게 따라간다");
+            m.Step(new CameraInput { Mode = WorldViewMode.Climb, Px = 0, Pz = 10, Wy = 0, ClimbPy = 0 }, dt, default);
+            Assert.That(m.Pos.z, Is.EqualTo(before.z + 10 * k).Within(1e-9));
+            Assert.That(m.Look.z, Is.EqualTo(9 + 10).Within(1e-9));
+        }
+
+        /// <summary>새 HTML 순서: orbitCam이 목표를 돌린 뒤 위치를 보간한다 — 돌기 첫 프레임도 위치가 목표로 튀지 않는다.</summary>
+        [Test]
+        public void ClimbSide_OrbitsTargetBeforeLerp()
+        {
+            var m = NewModel();
+            var run = new CameraInput { Mode = WorldViewMode.Run, Px = 0, Pz = 0, Wy = 0, ClimbPy = 0 };
+            m.Step(run, 1, default);
+            var before = m.Pos;
+            var settled = NewModel();
+            var climb = new CameraInput { Mode = WorldViewMode.Climb, Px = 0, Pz = 0, Wy = 0, ClimbPy = 0 };
+            settled.Step(climb, 1, default);
+            double dt = 0.02;
+            m.Step(climb, dt, default);
+            Assert.That(m.OrbitK, Is.GreaterThan(0));
+            double moved = (m.Pos - before).Length, full = (settled.Pos - before).Length;
+            Assert.That(moved, Is.LessThan(full * System.Math.Min(1, dt * m.ClimbRow.posLerp) + 1e-6), "한 프레임에 보간 계수만큼만 움직인다");
+        }
+
         [Test]
         public void ClimbSide_SettlesBesideCat()
         {

@@ -37,7 +37,7 @@ MonoBehaviour:
     lookY: 1.1
     lookZ: 9
     posLerp: 10
-    snap: 1
+    snap: 0
     liftLerp: 12
     blendLerp: 3
     fovV: 52

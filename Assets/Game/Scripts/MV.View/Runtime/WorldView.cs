@@ -115,7 +115,7 @@ namespace MV.View
         {
             bool off = state == null || _rig == null || !_rig.Ready;
             double now = Time.realtimeSinceStartupAsDouble;
-            if (_cats != null) { if (off) _cats.Hide(); else _cats.Sync(state, now); }
+            if (_cats != null) { if (off) _cats.Hide(); else _cats.Sync(state, now, _rig.Model.OrbitE); }
             if (_projs != null) { if (off) _projs.Hide(); else _projs.Sync(state, now); }
             if (_stairs != null) { if (off) _stairs.Hide(); else _stairs.Sync(state); }
         }

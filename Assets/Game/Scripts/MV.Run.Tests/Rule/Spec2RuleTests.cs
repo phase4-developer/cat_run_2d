@@ -96,6 +96,10 @@ namespace MV.Run.Tests
             Assert.AreEqual(start.B, Ev(sim, RunEventType.ClimbStepShown).Count);
             Assert.AreEqual(1, Ev(sim, RunEventType.ClimbEnd).Count);
             Assert.GreaterOrEqual(C.Time, c["sideLead"] + C.T + c["sideOut"] - 1e-9, "다 오른 뒤 sideOut 멈춤");
+            // 새 HTML: endAt을 처음 잡을 때 land(ClimbTop 1번), 끝은 sideOut 뒤 → ClimbTop이 ClimbEnd보다 먼저.
+            var all = sim.State.Events;
+            Assert.AreEqual(1, Ev(sim, RunEventType.ClimbTop).Count);
+            Assert.Less(all.FindIndex(e => e.Type == RunEventType.ClimbTop), all.FindIndex(e => e.Type == RunEventType.ClimbEnd));
         }
 
         [Test]
