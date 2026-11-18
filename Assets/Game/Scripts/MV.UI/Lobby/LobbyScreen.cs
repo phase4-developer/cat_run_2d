@@ -44,6 +44,9 @@ namespace MV.UI
             }
         }
 
+        /// <summary>로비 Level 서식(05 §5.4.2 <c>ui.lobby.level</c>, 노션 [HUD] 로비스크린 「Level {0}」).</summary>
+        public const string LevelFormat = "Level {0}";
+
         LobbyViewData Data => screenData as LobbyViewData;
         /// <summary>로비 값 입구(게임 루프가 시설 단계를 읽을 때도 쓴다).</summary>
         public ILobbySource Source => Data?.Source ?? MvSaveLobbySource.Instance;
@@ -127,17 +130,28 @@ namespace MV.UI
             bool all = !_drawn;
             if (all || !Same(s, _last)) Presenter.Draw(); // 재화·Area가 바뀌면 강화 버튼 켜짐·부제를 다시 그린다
             if (all || s.Level != _last.Level)
-                v.SetLevel("Level " + s.Level); // ui.lobby.level
+                v.SetLevel(string.Format(LevelFormat, s.Level)); // ui.lobby.level, Level = 실패 횟수
             if (all || s.AreaNo != _last.AreaNo || s.AreaName != _last.AreaName)
                 v.SetArea(string.IsNullOrEmpty(s.AreaName) ? "Area " + s.AreaNo : s.AreaName + " · Area " + s.AreaNo); // ui.lobby.zoneNo
             if (all || s.Gold != _last.Gold || s.Souls != _last.Souls || s.Dia != _last.Dia || s.NeedSouls != _last.NeedSouls)
                 v.SetWealth(MvUiFormat.Fmt(s.Gold), MvUiFormat.Fmt(s.Souls), MvUiFormat.Fmt(s.Dia));
+            if (v is ILobbyStateView raw && (all || !Same(s, _last) || !SameDeck(s.Deck, _last.Deck)))
+                raw.SetState(s, Presenter.Port.Tables);
             _last = s;
             _drawn = true;
         }
 
         static bool Same(in LobbyState a, in LobbyState b) =>
-            a.Level == b.Level && a.AreaNo == b.AreaNo && a.Gold == b.Gold && a.Souls == b.Souls && a.Dia == b.Dia && a.NeedSouls == b.NeedSouls;
+            a.Level == b.Level && a.AreaNo == b.AreaNo && a.Gold == b.Gold && a.Souls == b.Souls && a.Dia == b.Dia && a.NeedSouls == b.NeedSouls
+            && a.ZoneNo == b.ZoneNo && a.AreaId == b.AreaId;
+
+        static bool SameDeck(int[] a, int[] b)
+        {
+            if (a == null || b == null) return a == b;
+            if (a.Length != b.Length) return false;
+            for (int i = 0; i < a.Length; i++) if (a[i] != b[i]) return false;
+            return true;
+        }
 
         /// <summary>사이드·시스템 버튼(<see cref="LobbySideIds"/>). 시험·입력 어댑터용.</summary>
         public void PressSide(string id) => Presenter.PressSide(id);

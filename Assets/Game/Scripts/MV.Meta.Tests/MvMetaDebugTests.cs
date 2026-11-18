@@ -27,9 +27,10 @@ namespace MV.Meta.Tests
         [Test]
         public void DebugLevelUp_AddsOneLevel()
         {
-            int before = Store.Progress.Level;
+            int before = Store.Progress.Level, fails = Store.Progress.Fails;
             Ok(Debug(MvMetaRequestNames.DebugLevelUp));
             Assert.That(Store.Progress.Level, Is.EqualTo(before + 1));
+            Assert.That(Store.Progress.Fails, Is.EqualTo(fails + 1), "로비·해금 Level(실패 횟수)도 +1");
         }
 
         [Test]
@@ -120,7 +121,7 @@ namespace MV.Meta.Tests
         [Test]
         public void DisarmRebirth_ClearsConfirmWait()
         {
-            SetContainer(MvSaveKeys.Progress, "\"area\":1,\"level\":" + RebirthUseLevel);
+            SetContainer(MvSaveKeys.Progress, "\"area\":1,\"fails\":" + RebirthUseLevel);
             Assert.That(Meta.PressRebirth(), Is.Null, "첫 누름 = 확인 대기");
             Assert.That(Meta.RebirthArmed, Is.True);
             Meta.DisarmRebirth();

@@ -81,7 +81,10 @@ namespace MV.UI
             bool has = Source.TryRead(out var s);
             BuildRoad(has, s);
             BuildSide(t, ready, has ? s.AreaNo : Port.AreaIndex + 1);
+            BuildRebirth(t, has ? s.Level : 0);
             if (t != null) BuildUpgrades(t, ready);
+            if (t != null) Model.AreaUpgradeDot = ready && AnyAreaUpgrade(t);
+            if (t != null) BuildStair(t);
             View?.Render(Model);
         }
 
@@ -137,6 +140,45 @@ namespace MV.UI
 
             Add(LobbySideIds.Sound, "♪", Muted ? "꺼짐" : "", true);
             Add(LobbySideIds.Debug, "테스트", "", true).Visible = DevBuild; // ui.debug.btn
+        }
+
+        /// <summary>부활 버튼 값(디자이너 Button Rebirth). 잠김·숨김은 사이드 버튼 판정(<see cref="ApplyLock"/>)과 같다.</summary>
+        void BuildRebirth(MvTables t, int level)
+        {
+            var b = Model.FindSide(LobbySideIds.Rebirth);
+            var r = Model.Rebirth;
+            r.Visible = b != null && b.Visible;
+            r.Locked = b != null && b.Locked;
+            r.UnlockNow = level;
+            r.UnlockNeed = LevelNeed(t?.ContentOpen.ByKey(RebirthUnlockKey));
+            r.CoolLeftMs = Math.Max(0, Port.RebirthCooldownLeftMs);
+            var cfg = t?.Config.Value;
+            r.CoolTotalMs = cfg != null ? Math.Max(0, (long)cfg.rebirthCooldownSec * 1000L) : 0;
+            r.Pending = Port.RebirthPending;
+        }
+
+        /// <summary>사용 조건 중 Level 값(07 §7.8.9 조건 3). 없으면 0.</summary>
+        static int LevelNeed(ContentOpenData row)
+        {
+            if (row?.openConditions == null) return 0;
+            foreach (var c in row.openConditions)
+                if (c.type == UnlockConditionType.Level) return c.value;
+            return 0;
+        }
+
+        void BuildStair(MvTables t)
+        {
+            var k = MvMetaRules.StairStart(t, Port.Level(MvGrowth.Lobby, MvMetaRules.LobbyStair));
+            Model.StairLv = k.Lv;
+            Model.StairStep = k.Step;
+            Model.StairNeed = k.Need;
+        }
+
+        bool AnyAreaUpgrade(MvTables t)
+        {
+            foreach (var row in t.AreaUpgrade.Sorted)
+                if (row.active && !Port.IsMax(MvGrowth.AreaUp, row.key) && Port.CanBuy(MvGrowth.AreaUp, row.key)) return true;
+            return false;
         }
 
         LobbySideButton Add(string id, string title, string sub, bool enabled)
@@ -213,9 +255,19 @@ namespace MV.UI
                     Price = max ? "MAX" : MetaPanelPresenter.PriceText(Port.NextPrice(MvGrowth.Lobby, row.key), t), // ui.common.max
                     Enabled = ready && !max && Port.CanBuy(MvGrowth.Lobby, row.key),
                 };
+                if (!max) SetPrice(u, Port.NextPrice(MvGrowth.Lobby, row.key), t);
                 Describe(u, row, t, p);
                 Model.Upgrades.Add(u);
             }
+        }
+
+        /// <summary>가격 첫 항목의 숫자·재화 아이콘(디자이너 Slot_Price). 재화가 아니면 아이콘 없음.</summary>
+        static void SetPrice(LobbyUpgradeItem u, System.Collections.Generic.IReadOnlyList<ConsumeData> price, MvTables t)
+        {
+            if (price == null || price.Count == 0) return;
+            var c = price[0];
+            u.PriceValue = MvUiFormat.Fmt(c.Value);
+            if (c.Type == ConsumeType.Wealth) u.PriceIcon = t.Wealth.Get(c.Id)?.icon ?? "";
         }
 
         static string FallbackName(string key)
@@ -239,6 +291,9 @@ namespace MV.UI
                     var k = MvMetaRules.StairStart(t, p);
                     int maxLv = t.StairMaxLv();
                     u.Icon = string.IsNullOrEmpty(row.icon) ? "" : row.icon + "_" + StageOf(t, LobbyEffectType.StartStairLv, p);
+                    u.LevelNo = Math.Min(k.Lv, maxLv);
+                    u.CurValue = u.LevelNo.ToString(Inv);
+                    u.NextValue = Math.Min(u.LevelNo + 1, maxLv).ToString(Inv); // 계단 게이트 1칸 +N(ui.up.stairDesc)
                     if (k.Lv >= maxLv)
                     {
                         u.LevelText = "계단 Lv " + maxLv;          // ui.up.stairLv
@@ -262,6 +317,8 @@ namespace MV.UI
                     int tier = w.Lv;
                     bool last = tier < top && w.Step == w.Need - 1;
                     u.Icon = WeaponIcon(t, tier);
+                    u.IconIsItem = true;
+                    u.LevelNo = tier;
                     u.LevelText = "Level " + tier; // ui.up.weaponLv
                     u.Desc = last ? WeaponName(t, tier) + " 카드 +1 · 다 차면 " + WeaponName(t, tier + 1) + " 카드로" // ui.up.weaponDescLast
                                   : WeaponName(t, tier) + " 카드 1장 추가";                                          // ui.up.weaponDesc
@@ -272,6 +329,9 @@ namespace MV.UI
                 default:
                 {
                     u.Icon = string.IsNullOrEmpty(row.icon) ? "" : row.icon + "_" + StageOf(t, LobbyEffectType.GoldMul, p);
+                    u.LevelNo = p + 1;
+                    u.CurValue = MvMetaRules.GoldMul(t, p).ToString("0.##", Inv);
+                    u.NextValue = MvMetaRules.GoldMul(t, p + 1).ToString("0.##", Inv);
                     u.LevelText = "Lv " + (p + 1); // ui.up.incomeLv
                     u.Desc = "츄르 ×" + MvMetaRules.GoldMul(t, p).ToString("0.00", Inv) + " → ×" + MvMetaRules.GoldMul(t, p + 1).ToString("0.00", Inv); // ui.up.incomeDesc
                     u.Progress = -1f; // 진행바 없음

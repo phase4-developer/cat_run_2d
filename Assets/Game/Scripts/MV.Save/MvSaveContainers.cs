@@ -14,6 +14,8 @@ namespace MV.Save
         public int Area => ReadInt("area");
         public int Cp => ReadInt("cp");
         public int Runs => ReadInt("runs");
+        /// <summary>Area를 깨지 못하고 끝난 정산 수(개방·구역 끝이 아닌 정산마다 +1). 로비 Level 표시와 해금 조건 Level(07 §7.8.9)이 읽는다(사용자 2026-11-19 「level은 실패횟수로 일단 판정해」). 부활해도 유지.</summary>
+        public int Fails => ReadInt("fails");
         public bool ZoneClear => ReadBool("zoneClear");
         /// <summary>정본 잔재. 읽기만 한다.</summary>
         public bool Escaped => ReadBool("escaped");

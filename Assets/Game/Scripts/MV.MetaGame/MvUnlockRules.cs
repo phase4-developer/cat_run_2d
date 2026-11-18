@@ -22,7 +22,7 @@ namespace MV.Meta
         public readonly int Area;
         /// <summary>본편 런 정산 수.</summary>
         public readonly int Runs;
-        /// <summary>Level(런 1회 = +1).</summary>
+        /// <summary>조건 Level 값 = Area를 깨지 못한 정산 수(<c>mvProgress.fails</c>, 사용자 2026-11-19 「level은 실패횟수로 일단 판정해」).</summary>
         public readonly int Level;
 
         public MvUnlockProgress(int area, int runs, int level)

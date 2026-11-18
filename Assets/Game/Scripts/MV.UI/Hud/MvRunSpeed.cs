@@ -9,6 +9,11 @@ namespace MV.UI
     public static class MvRunSpeed
     {
         public static Action<int> Set;
+        /// <summary>지금 세션 배속(런이 없을 때도 읽는다. 로비 1x/2x 토글). 비면 1.</summary>
+        public static Func<int> Get;
+
+        /// <summary>지금 배속(1 이상).</summary>
+        public static int Current => Math.Max(1, Get?.Invoke() ?? 1);
 
         /// <summary>토글 다음 배속: 상태 수(디자이너 토글의 1x·2x 자식 수)까지 1씩 올리고, 그 위면 1로. 상태 수 밖(테스트 패널 ×3)이면 1로.</summary>
         public static int Next(int current, int states) => current >= 1 && current < states ? current + 1 : 1;

@@ -64,8 +64,38 @@ namespace MV.UI
         public bool Max;
         /// <summary>꺼짐: 최대·비용 부족·메타 없음(05 §5.5.1 상태 표).</summary>
         public bool Enabled;
+        /// <summary>단계 숫자(캣타워 = 계단 Lv, 무기 = 무기 등급, 건조대 = 산 단계 + 1). 디자이너 강화 칸 「Level {0}」.</summary>
+        public int LevelNo;
+        /// <summary>디자이너 강화 칸 <c>Slot_Count</c> 지금 값·다음 값(캣타워 = 칸당 계단, 건조대 = 츄르 배수). 없으면 빈 문자열.</summary>
+        public string CurValue = "";
+        public string NextValue = "";
+        /// <summary>가격 숫자(<c>fmt</c>)와 가격 재화 아이콘(<c>01_wealth.icon</c>, Atlas_UI_Icon). 최대면 빈 문자열.</summary>
+        public string PriceValue = "";
+        public string PriceIcon = "";
+        /// <summary>
+        /// <see cref="Icon"/>이 103_item 그림(Atlas_UI_Icon)인지. 무기 강화만 true(노션: 레벨업하면 다음 등급 무기 그림).
+        /// 나머지는 옛 아지트 시설 그림 키라 디자이너 칸에 넣지 않는다.
+        /// </summary>
+        public bool IconIsItem;
 
         public bool HasProgress => Progress >= 0f;
+    }
+
+    /// <summary>부활(냥환생) 버튼 값(디자이너 <c>Button Rebirth</c>: 해금 진행·쿨타임·대기 조각).</summary>
+    public sealed class LobbyRebirthInfo
+    {
+        /// <summary>false면 숨김(해금 행 꺼짐 또는 잠금 표시 조건 전).</summary>
+        public bool Visible;
+        /// <summary>사용 조건 전(잠김 진행 <c>Progress_UnLock</c>을 보인다).</summary>
+        public bool Locked;
+        /// <summary>해금 진행: 지금 Level(실패 횟수)·필요 Level(<c>05_contentOpen</c> 사용 조건 Level 값). 조건에 Level이 없으면 Need = 0.</summary>
+        public int UnlockNow;
+        public int UnlockNeed;
+        /// <summary>쿨타임 남은 ms·전체 ms(<c>00_config.rebirthCooldownSec</c>).</summary>
+        public long CoolLeftMs;
+        public long CoolTotalMs;
+        /// <summary>부활하면 받을 조각(<c>save.rb.pending</c>).</summary>
+        public int Pending;
     }
 
     /// <summary>로비 화면 코드(<see cref="LobbyPresenter"/>)가 만들고 겉이 그리는 값(재화·Level·Area 외).</summary>
@@ -78,6 +108,14 @@ namespace MV.UI
         public float RoadFill;
         public readonly List<LobbySideButton> Side = new List<LobbySideButton>();
         public readonly List<LobbyUpgradeItem> Upgrades = new List<LobbyUpgradeItem>();
+        public readonly LobbyRebirthInfo Rebirth = new LobbyRebirthInfo();
+        /// <summary>Area 강화(<c>13_areaUpgrade</c>)에 지금 살 수 있는 행이 있다(디자이너 <c>Button AreaUpgrade/RedDot</c>).</summary>
+        public bool AreaUpgradeDot;
+        /// <summary>
+        /// 런 시작 계단 등급(캣타워 강화 → <c>11_stairLevel</c>, 런의 게이지 시작값과 같은 계산 <see cref="MV.Meta.MvMetaRules.StairStart"/>).
+        /// 디자이너 Mid/Stair. 표가 없으면 Lv 0.
+        /// </summary>
+        public int StairLv, StairStep, StairNeed;
 
         public void Clear()
         {
@@ -85,6 +123,12 @@ namespace MV.UI
             RoadFill = 0;
             Side.Clear();
             Upgrades.Clear();
+            var r = Rebirth;
+            r.Visible = r.Locked = false;
+            r.UnlockNow = r.UnlockNeed = r.Pending = 0;
+            r.CoolLeftMs = r.CoolTotalMs = 0;
+            AreaUpgradeDot = false;
+            StairLv = StairStep = StairNeed = 0;
         }
 
         public LobbySideButton FindSide(string id)
@@ -102,7 +146,7 @@ namespace MV.UI
 
     /// <summary>
     /// 로비 겉의 사이드 버튼·강화 버튼·진행 상자 부분(D-92). 기존 <see cref="ILobbyView"/>(Level·Area·재화·출발)와 나눠
-    /// 기존 겉 구현을 깨지 않는다. 기본 겉 <see cref="LobbyView"/>는 둘 다 구현한다.
+    /// 기존 겉 구현을 깨지 않는다. 겉 <see cref="LobbyDesignView"/>(디자이너 LobbyScreen 연결)는 둘 다 구현한다.
     /// </summary>
     public interface ILobbyMenuView
     {

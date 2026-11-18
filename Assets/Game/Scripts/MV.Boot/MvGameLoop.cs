@@ -99,6 +99,7 @@ namespace MV.Boot
         {
             Current = this;
             MvRunSpeed.Set = SetTimeScale;
+            MvRunSpeed.Get = () => _timeScale;
             MvDebugHooks.SetTimeScale = v => SetTimeScale((int)Math.Round(v));
         }
 
@@ -116,6 +117,7 @@ namespace MV.Boot
             {
                 Current = null;
                 MvRunSpeed.Set = null;
+                MvRunSpeed.Get = null;
                 MvDebugHooks.SetTimeScale = null;
             }
             _fx.Dispose();

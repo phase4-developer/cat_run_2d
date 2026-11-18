@@ -25,6 +25,7 @@ namespace MV.Meta.Tests
             Assert.That(W(MvWealthIds.RbToken), Is.EqualTo(0), "조각은 대기분으로만 쌓인다");
             Assert.That(Store.Rebirth.Pending, Is.EqualTo(2));
             Assert.That(Store.Progress.Level, Is.EqualTo(2));
+            Assert.That(Store.Progress.Fails, Is.EqualTo(1), "Area를 깨지 못한 정산 = 실패 +1");
             Assert.That(Store.Progress.Runs, Is.EqualTo(1));
             Assert.That(Store.Progress.Area, Is.EqualTo(0));
             Assert.That(Store.Progress.Cp, Is.EqualTo(1));
@@ -67,8 +68,8 @@ namespace MV.Meta.Tests
             SetWealth((MvWealthIds.Souls, 45), (MvWealthIds.Gold, 7), (MvWealthIds.Dia, 3));
             SetContainer(MvSaveKeys.Lobby, "\"up\":{\"stair\":3,\"income\":2},\"deck\":[0,2,1,0,0,0,0,0,0]");
             SetContainer(MvSaveKeys.AreaUp, "\"lv\":{\"rate\":2}");
-            // 정산으로 Level +1 → 부활 사용 Level에 닿는다(05_contentOpen[rebirth]).
-            SetContainer(MvSaveKeys.Progress, "\"cp\":2,\"level\":" + (RebirthUseLevel - 1) + ",\"bars\":{\"A0\":[[1,2]]}");
+            // 사용 Level(실패 횟수)은 이미 채웠고, 개방으로 잠금 표시 조건(Area 2)에 닿는다(05_contentOpen[rebirth]). 개방 판은 실패가 아니라 +0.
+            SetContainer(MvSaveKeys.Progress, "\"cp\":2,\"fails\":" + RebirthUseLevel + ",\"bars\":{\"A0\":[[1,2]]}");
             Assert.That(Meta.IsOpen(MvMetaRules.RebirthKey), Is.False);
 
             MvSettleResult r = Meta.Settle(Outcome(Meta.BeginRun(), MvRunEnd.Gate, gold: 1, souls: 5, cpRun: 1, bars: OneBar()));
@@ -82,6 +83,7 @@ namespace MV.Meta.Tests
             Assert.That(r.Tokens, Is.EqualTo(1 + 1 + 2 + 3));
             Assert.That(Store.Progress.Area, Is.EqualTo(1));
             Assert.That(Store.Progress.BestArea, Is.EqualTo(1));
+            Assert.That(Store.Progress.Fails, Is.EqualTo(RebirthUseLevel), "개방 판은 실패로 세지 않는다");
             Assert.That(Store.Progress.Cp, Is.EqualTo(0));
             Assert.That(Store.Progress.BarAreaKeys, Is.Empty, "개방이면 bars 비움");
             Assert.That(Store.Lobby.Up.Values, Is.All.EqualTo(0), "로비 강화 초기화");
