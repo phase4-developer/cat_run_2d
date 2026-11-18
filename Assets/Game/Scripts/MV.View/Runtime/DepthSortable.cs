@@ -10,6 +10,12 @@ namespace MV.View
         void SetFogAlpha(float alpha);
     }
 
+    /// <summary>안개를 색으로 받는 그림(정점색 메쉬 등). <paramref name="k"/> = 안개 비율(0 맑음 ~ 1 안개색), <paramref name="pop"/> = 먼 끝 등장 알파.</summary>
+    public interface IFogColorTarget
+    {
+        void SetFog(float k, float pop, Color fogColor);
+    }
+
     /// <summary>
     /// 월드 그림 단위(오브젝트·소품·고양이·글자판·이펙트 1회분)의 루트(02 §2.3.2). `SortingGroup`(레이어 `World`)을 달고
     /// <see cref="DepthSorter"/>에 등록된다. 탐침 = 앵커 + <see cref="SortOffsetY"/>(오브젝트 +0.8, 고양이 +0.7),
@@ -42,6 +48,23 @@ namespace MV.View
         int _index = -1;
 
         float _alphaScale = 1f;
+        float _lastK = -1f, _lastPop = -1f;
+
+        /// <summary>안개색(카메라 배경 = 테마 fog). <see cref="DepthSorter"/>가 매 프레임 넣는다.</summary>
+        public static Color FogColor = Color.white;
+
+        static readonly Dictionary<Shader, bool> s_shaderFog = new Dictionary<Shader, bool>();
+
+        /// <summary>셰이더가 색 안개를 직접 하는지(MV/WorldSprite·MV/WorldSpriteTint). 그런 그림은 알파를 먼 끝 등장 페이드에만 쓴다.</summary>
+        static bool ShaderFog(Renderer r)
+        {
+            var m = r.sharedMaterial;
+            var sh = m != null ? m.shader : null;
+            if (sh == null) return false;
+            if (!s_shaderFog.TryGetValue(sh, out bool on))
+                s_shaderFog[sh] = on = sh.name == "MV/WorldSprite" || sh.name == "MV/WorldSpriteTint";
+            return on;
+        }
 
         public static List<DepthSortable> All => s_all;
 
@@ -136,6 +159,30 @@ namespace MV.View
         /// 안개 알파를 `SpriteRenderer.color`에 넣는다(03 §3.8.9: MPB·머티리얼 복제 금지, 공유 머티리얼 배칭 유지).
         /// 1/255 미만 변화는 건너뛴다.
         /// </summary>
+        /// <summary>
+        /// 안개(색 안개판): 셰이더가 색을 섞는 그림(<see cref="ShaderFog"/>)은 알파 = 기본 알파 × 등장 페이드 <paramref name="pop"/>,
+        /// 그 밖의 스프라이트(기본 셰이더)는 지금처럼 알파 = 기본 알파 × (1 − k). 정점색 메쉬(<see cref="IFogColorTarget"/>)는 색을 섞고,
+        /// 그 밖의 대상(글자판)은 알파 1 − k. 1/255 미만 변화는 건너뛴다.
+        /// </summary>
+        internal void ApplyFog(float k, float pop)
+        {
+            if (!Fog) { k = 0f; pop = 1f; }
+            float a = (1f - k) * _alphaScale, p = pop * _alphaScale;
+            if (Mathf.Abs(a - _lastAlpha) < 1f / 255f && Mathf.Abs(p - _lastPop) < 1f / 255f && Mathf.Abs(k - _lastK) < 1f / 255f) return;
+            _lastAlpha = a; _lastPop = p; _lastK = k;
+            for (int i = 0; i < _sprites.Length; i++)
+            {
+                var c = _baseColors[i];
+                c.a *= ShaderFog(_sprites[i]) ? p : a;
+                _sprites[i].color = c;
+            }
+            for (int i = 0; i < _fogTargets.Length; i++)
+            {
+                if (_fogTargets[i] is IFogColorTarget ct) ct.SetFog(k, p, FogColor);
+                else _fogTargets[i].SetFogAlpha(a);
+            }
+        }
+
         internal void ApplyFogAlpha(float a)
         {
             if (!Fog) a = 1f;

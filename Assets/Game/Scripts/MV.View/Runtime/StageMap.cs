@@ -22,8 +22,24 @@ namespace MV.View
         [Header("하늘·원경 (카메라를 따라감)")]
         public Transform Backdrop;
         [Tooltip("카메라 앞 거리(m). 바닥 끝보다 멀어야 한다.")] public float BackdropDistance = 110f;
-        public Renderer SkylineFar, SkylineNear;
+        [Tooltip("원경 묶음 오브젝트(먼 겹·가까운 겹). 아래의 모든 렌더러(그림·그림자)를 같은 시차로 민다")] public GameObject SkylineFar, SkylineNear;
         [Tooltip("원경 시차(웹 프로토: 먼 겹 0.5, 가까운 겹 1.0) — 카메라 x 1m당 텍스처 이동량")] public float FarParallax = 0.004f, NearParallax = 0.008f;
+
+        [Header("하늘 장식 (원경과 함께 이동)")]
+        [Tooltip("원경 무늬와 같이 밀리는 장식(Backdrop 자식 스프라이트 등). +로 개수를 늘려 추가한다")]
+        public List<SkyDecoEntry> SkyDecos = new List<SkyDecoEntry>();
+
+        public enum SkyLayer { Near, Far }
+
+        /// <summary>하늘 장식 한 개: 따라갈 원경 겹과 이동 배율. 원경 무늬 반복 간격마다 반대편에서 다시 나타난다.</summary>
+        [Serializable]
+        public sealed class SkyDecoEntry
+        {
+            [Tooltip("움직일 장식 오브젝트")] public Transform Target;
+            [Tooltip("따라갈 원경 겹(가까운 겹이 더 많이 움직인다)")] public SkyLayer Follow = SkyLayer.Near;
+            [Tooltip("원경 이동량에 곱하는 배율(1 = 원경 무늬와 똑같이, 0.5 = 절반만)")] public float Speed = 1f;
+            [NonSerialized] public Vector3 Base;
+        }
 
         [Header("바닥 (카메라 z를 따라감)")]
         public Transform Ground;
@@ -84,7 +100,9 @@ namespace MV.View
             public float NearRight = float.PositiveInfinity;
         }
         readonly List<SpriteRenderer> _decos = new List<SpriteRenderer>();
-        Material _farMat, _nearMat;
+        /// <summary>원경 묶음 아래 렌더러와 그 인스턴스 머티리얼(시차로 텍스처를 민다).</summary>
+        Renderer[] _farRs = new Renderer[0], _nearRs = new Renderer[0];
+        Material[] _farMats = new Material[0], _nearMats = new Material[0];
 
         /// <summary>
         /// 게임 루프가 부른다. groundY = 지금 지면 높이(계단을 오르면 올라간다). orbitE = 옆 시점 돌기 진행(<see cref="CameraModel.OrbitE"/>, 없으면 가림 처리 안 함).
@@ -122,8 +140,9 @@ namespace MV.View
                     wall.SetActive(false);
                 }
             }
-            if (SkylineFar != null) _farMat = SkylineFar.material;
-            if (SkylineNear != null) _nearMat = SkylineNear.material;
+            Collect(SkylineFar, out _farRs, out _farMats);
+            Collect(SkylineNear, out _nearRs, out _nearMats);
+            foreach (var d in SkyDecos) if (d != null && d.Target != null) d.Base = d.Target.localPosition;
             if (HideBuiltInGround) foreach (var g in FindObjectsByType<GroundStripMesh>(FindObjectsSortMode.None)) g.GetComponent<Renderer>().enabled = false;
             if (HideBuiltInProps) foreach (var p in FindObjectsByType<PropStreamer>(FindObjectsSortMode.None)) p.gameObject.SetActive(false);
             if (DecoTemplate != null) DecoTemplate.transform.parent.gameObject.SetActive(false);
@@ -133,8 +152,8 @@ namespace MV.View
         {
             // 숨겼던 기존 지면을 되살린다(다른 스테이지 맵으로 바뀔 때)
             if (HideBuiltInGround) foreach (var g in FindObjectsByType<GroundStripMesh>(FindObjectsSortMode.None)) if (g) g.GetComponent<Renderer>().enabled = true;
-            if (_farMat != null) Destroy(_farMat);
-            if (_nearMat != null) Destroy(_nearMat);
+            foreach (var m in _farMats) if (m != null) Destroy(m);
+            foreach (var m in _nearMats) if (m != null) Destroy(m);
         }
 
         void LateUpdate()
@@ -162,8 +181,9 @@ namespace MV.View
                 Backdrop.position = new Vector3(c.x + f.x * dist, far, c.z + f.z * dist);
                 Backdrop.rotation = Quaternion.LookRotation(f, Vector3.up) * _backdropRot;
                 float span = 2f * dist * Mathf.Tan(_cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * _cam.aspect;   // 그 거리에서 보이는 가로(m)
-                if (_farMat != null) _farMat.mainTextureOffset = new Vector2(c.x * FarParallax + YawShift(SkylineFar, _farMat, yaw, span, FarPar), 0f);
-                if (_nearMat != null) _nearMat.mainTextureOffset = new Vector2(c.x * NearParallax + YawShift(SkylineNear, _nearMat, yaw, span, NearPar), 0f);
+                for (int i = 0; i < _farMats.Length; i++) _farMats[i].mainTextureOffset = new Vector2(c.x * FarParallax + YawShift(_farRs[i], _farMats[i], yaw, span, FarPar), 0f);
+                for (int i = 0; i < _nearMats.Length; i++) _nearMats[i].mainTextureOffset = new Vector2(c.x * NearParallax + YawShift(_nearRs[i], _nearMats[i], yaw, span, NearPar), 0f);
+                MoveSkyDecos();
             }
             if (_high != null)
             {
@@ -185,6 +205,38 @@ namespace MV.View
         }
 
         /// <summary>새 HTML 원경 yaw 이동을 텍스처 u로: 화면 이동 yaw·1.3·(0.7 + par·0.3)화면 → 보이는 가로 span(m) → 판 가로·반복 수.</summary>
+        /// <summary>
+        /// 하늘 장식을 따라갈 원경 겹과 같은 양만큼 옮긴다. 원경 텍스처 u가 du 밀리면 무늬는 −du × 반복 간격(m)만큼 움직인다.
+        /// 반복 간격 = 원경 폭 / 텍스처 반복 수. 그 간격으로 감싸서 화면 밖으로 나간 장식이 반대편에서 다시 나온다.
+        /// </summary>
+        void MoveSkyDecos()
+        {
+            for (int k = 0; k < SkyDecos.Count; k++)
+            {
+                var d = SkyDecos[k];
+                if (d == null || d.Target == null) continue;
+                var rs = d.Follow == SkyLayer.Far ? _farRs : _nearRs;
+                var ms = d.Follow == SkyLayer.Far ? _farMats : _nearMats;
+                if (ms.Length == 0 || rs[0] == null) continue;
+                float texScale = Mathf.Max(0.0001f, ms[0].mainTextureScale.x);
+                float period = Mathf.Abs(rs[0].transform.lossyScale.x) / texScale;
+                if (period <= 0f) continue;
+                float shift = -ms[0].mainTextureOffset.x * period * d.Speed;
+                float x = Mathf.Repeat(shift + period * 0.5f, period) - period * 0.5f;
+                var p = d.Base;
+                p.x += x;
+                d.Target.localPosition = p;
+            }
+        }
+
+        /// <summary>원경 묶음 아래 렌더러(꺼진 것 포함)와 인스턴스 머티리얼을 모은다.</summary>
+        static void Collect(GameObject root, out Renderer[] rs, out Material[] ms)
+        {
+            rs = root != null ? root.GetComponentsInChildren<Renderer>(true) : new Renderer[0];
+            ms = new Material[rs.Length];
+            for (int i = 0; i < rs.Length; i++) ms[i] = rs[i].material;
+        }
+
         static float YawShift(Renderer r, Material m, float yaw, float span, float par)
         {
             float width = r != null ? Mathf.Abs(r.transform.lossyScale.x) : 0f;
