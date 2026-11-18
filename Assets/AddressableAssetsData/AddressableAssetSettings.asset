@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: b7aa880e95e49dc45a2965cbd78480c9
   m_currentHash:
     serializedVersion: 2
-    Hash: 2f09b5303b21418fa519d244d0c9de25
+    Hash: 00000000000000000000000000000000
   m_DisableWriteTypeTree: 0
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
@@ -71,6 +71,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cddfb1ec0010d8c40bc22132c9d4fd23, type: 2}
   - {fileID: 11400000, guid: ee610b1b03ad40b8aa5874f670a39d2b, type: 2}
   - {fileID: 11400000, guid: b5673ce9ba556024fbeb4e93cee938c7, type: 2}
+  - {fileID: 11400000, guid: fbb5083cfa743104bbbcf1e618db2ca9, type: 2}
   - {fileID: 11400000, guid: c054d0a0b1d548019ca2898c8fbd32c9, type: 2}
   - {fileID: 11400000, guid: bc2b58dd218de474798582b64c4b8d80, type: 2}
   - {fileID: 11400000, guid: 74db12505d754daf92b1c3437bb7847f, type: 2}
@@ -141,6 +142,12 @@ MonoBehaviour:
     - theme.subway
     - ui.god
     - char
+    - Locale
+    - Locale-ko
+    - Locale-en
+    - Locale-ja
+    - Preload
+    - Localization
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 9ba2a4a8fa06a984a80fad0c85404714, type: 2}
