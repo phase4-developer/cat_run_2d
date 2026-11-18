@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using MV.Data;
 using MV.Run;
@@ -83,6 +83,8 @@ namespace MV.View
         public RunHitWorld Hits;
         /// <summary>결계 블록 글자판 「+골드」 배율(정본 `goldMul()` L1492).</summary>
         public double GoldMul = 1;
+        /// <summary>무기문 위 카드 묶음 그림(지금 런 무기 단계 Bt의 103_item.icon, Atlas_UI_Icon). 통합 코드가 매 프레임 넣는다(<see cref="CraftGateBundle"/>).</summary>
+        public string GateWeaponIcon;
         /// <summary>글자판 문구 덮어쓰기(시험·Localization). 있으면 이 값이 한 줄 글자, null이면 글자판을 숨긴다.</summary>
         public bool HideLabels;
         public readonly WallRowIndex WallRows = new WallRowIndex();
