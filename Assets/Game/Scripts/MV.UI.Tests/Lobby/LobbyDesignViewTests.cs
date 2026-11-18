@@ -138,6 +138,30 @@ namespace MV.UI.Tests
             Assert.That(view.Currencies.Count(c => expect.ContainsKey(c.wealthType)), Is.EqualTo(view.Currencies.Count), "칸의 재화는 로비가 읽는 01_wealth.type");
         }
 
+        /// <summary>프리팹 단위 관리: 공용 Slot_AreaLabel은 루트 HudAreaLabel 하나가 그리고, 로비는 그 컴포넌트에 데이터만 넘긴다.</summary>
+        [Test]
+        public void AreaLabel_IsSharedPrefabRootComponent()
+        {
+            var common = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Art/UI/Prefab/Common/Slot_AreaLabel.prefab");
+            Assert.That(common, Is.Not.Null);
+            var part = common.GetComponent<HudAreaLabel>();
+            Assert.That(part, Is.Not.Null, "Slot_AreaLabel 루트의 HudAreaLabel");
+            Assert.That(part.HasRefs, Is.True, "Area 그림·Zone·Area 글자 참조");
+
+            var (_, view) = NewLobby();
+            foreach (var label in new[] { view.AreaLabel, view.AreaUpgradeLabel })
+            {
+                Assert.That(label, Is.Not.Null);
+                Assert.That(label.gameObject.name, Does.StartWith("Slot_AreaLabel"));
+            }
+            view.SetState(new LobbyState { AreaNo = 2, ZoneNo = 3, AreaName = "테스트", Deck = System.Array.Empty<int>() }, T);
+            foreach (var label in new[] { view.AreaLabel, view.AreaUpgradeLabel })
+            {
+                Assert.That(label.ZoneText, Is.EqualTo(string.Format(HudAreaLabel.ZoneFormat, 3)));
+                Assert.That(label.AreaText, Is.EqualTo("테스트"));
+            }
+        }
+
         [Test]
         public void SpeedToggle_CyclesTheDesignerStates()
         {

@@ -362,6 +362,7 @@ GameObject:
   - component: {fileID: 1123283559421318625}
   - component: {fileID: 2587707074176347867}
   - component: {fileID: 1226363299832402480}
+  - component: {fileID: 8311432158699843278}
   m_Layer: 5
   m_Name: Slot_AreaLabel
   m_TagString: Untagged
@@ -808,3 +809,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8311432158699843278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5226946139909140744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be54c511762c45ac859243f0e849e518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  areaTexture: {fileID: 8589459274311380975}
+  zoneText: {fileID: 6567657151608775017}
+  areaText: {fileID: 161280438341526577}
