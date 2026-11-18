@@ -4,7 +4,7 @@
 조사 범위: `Assets/Game/Scripts/MV.UI`, `Assets/Game/Scripts/MV.Platform`, `Assets/Game/Addressables/Local/UI`·`UIAtlas`, 그리고 흐름을 잇는 데 필요한 만큼 `MV.Boot`(GameBootstrap·MvBootMeta·MvGameLoop)와 `MV.Meta`(MvMeta·MvMetaRequest·MvLocalMetaBackend·MvMetaPorts).
 Framework UI 패키지: `com.jjevol.ui` 0.1.0-pre.3, `com.jjevol.ui.addressables` 0.1.0-pre.6, `com.jjevol.ui.contracts`, `com.jjevol.ui.urp`. 「Framework」 줄 번호는 `Library/PackageCache` 풀린 본 기준이다.
 
-경로 약어: `UI/` = `Assets/Game/Scripts/MV.UI/`, `PF/` = `Assets/Game/Scripts/MV.Platform/`, `BOOT/` = `Assets/Game/Scripts/MV.Boot/`, `META/` = `Assets/Game/Scripts/MV.Meta/`, `FW/` = `Library/PackageCache/com.jjevol.ui.addressables@952d405d47c4/Runtime/`.
+경로 약어: `UI/` = `Assets/Game/Scripts/MV.UI/`, `PF/` = `Assets/Game/Scripts/MV.Platform/`, `BOOT/` = `Assets/Game/Scripts/MV.Boot/`, `META/` = `Assets/Game/Scripts/MV.MetaGame/`, `FW/` = `Library/PackageCache/com.jjevol.ui.addressables@952d405d47c4/Runtime/`.
 
 ---
 
