@@ -19612,7 +19612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MV.Fx::MV.Fx.MvFxParticleBind
   Tint: 1
-  Lighten: 0.35
+  Lighten: 0.865
   Source: 1
   RingOnly: 0
   ScaleBurst: 0

@@ -539,7 +539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3998159444951277660
 Transform:
   m_ObjectHideFlags: 0
@@ -773,16 +773,20 @@ MonoBehaviour:
   HideBuiltInProps: 1
   NearGround: {fileID: 7929966308103593954}
   SideCut: {fileID: 7669878943561748533}
+  ShadowLightDir: {x: 0.55, y: -1, z: 0.45}
+  ShadowColor: {r: 0, g: 0, b: 0, a: 0.5019608}
+  ShadowLayer: Ground
+  ShadowOrder: 10
   DecoTemplate: {fileID: 9067802597922072011}
-  DecoShadowName: Shadow
-  DecoShadowLayer: Ground
-  DecoShadowOrder: 10
   DecoSprites:
   - {fileID: 21300000, guid: 07824bc6c09fb451498bb99c4f42c982, type: 3}
   - {fileID: 21300000, guid: 103c4c4f2f87a4ffda792d6fb83f16ba, type: 3}
   - {fileID: 21300000, guid: 4e8be7c26270147e8b7a1080718746c9, type: 3}
+  - {fileID: 21300000, guid: 3d0d603b7d4c448b7bba773114b59948, type: 3}
+  - {fileID: 21300000, guid: 1a3070ce2407e4b29b751d1fbc972612, type: 3}
+  - {fileID: 21300000, guid: 15a5944677bee45d39fad269586e6799, type: 3}
   DecoSpacing: 12.6
-  DecoX: {x: 5, y: 10}
+  DecoX: {x: 6.5, y: 12.5}
   DecoRange: {x: -10, y: 110}
 --- !u!1 &4127818535923531683
 GameObject:
@@ -1375,7 +1379,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2246001161950241697}
-  - component: {fileID: 5766427623407206801}
   - component: {fileID: 6985638389419506446}
   m_Layer: 0
   m_Name: Sprite
@@ -1398,20 +1401,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3998159444951277660}
-  m_Father: {fileID: 3188215173290671278}
+  m_Father: {fileID: 5667761707661982118}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5766427623407206801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6166932690996336943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MV.View::MV.View.Billboard
 --- !u!212 &6985638389419506446
 SpriteRenderer:
   serializedVersion: 2
@@ -2017,6 +2008,51 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7555231403578761054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5667761707661982118}
+  - component: {fileID: 6641220325269202054}
+  m_Layer: 0
+  m_Name: Billboard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5667761707661982118
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7555231403578761054}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2246001161950241697}
+  m_Father: {fileID: 3188215173290671278}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6641220325269202054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7555231403578761054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6073823855d4665867abbe603050885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.Billboard
 --- !u!1 &8856477752471925316
 GameObject:
   m_ObjectHideFlags: 0
@@ -2210,6 +2246,7 @@ GameObject:
   - component: {fileID: 3188215173290671278}
   - component: {fileID: 2333869714515302361}
   - component: {fileID: 1105656800039611657}
+  - component: {fileID: 1616999440530242398}
   m_Layer: 0
   m_Name: DecoSlot
   m_TagString: Untagged
@@ -2230,7 +2267,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2246001161950241697}
+  - {fileID: 5667761707661982118}
   m_Father: {fileID: 4219344101068395755}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!210 &2333869714515302361
@@ -2262,6 +2299,23 @@ MonoBehaviour:
   Bias: 0
   SortOffsetY: 0
   Fog: 1
+--- !u!114 &1616999440530242398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9067802597922072011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9084391e48d474df0b15c114eee2c0a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.PlanarShadow
+  Sources:
+  - {fileID: 6985638389419506446}
+  Material: {fileID: 2100000, guid: 24fbf21890e0646d2ab4ac22913e41bc, type: 2}
+  GroundFromParent: 0
+  Strength: 1
 --- !u!1 &9174617092644513293
 GameObject:
   m_ObjectHideFlags: 0

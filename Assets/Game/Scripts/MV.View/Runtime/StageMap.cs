@@ -49,13 +49,15 @@ namespace MV.View
         [Tooltip("계단 정산 옆 시점에서 오른쪽 끝을 잘라 줄이는 카메라 쪽 바닥 판(왼쪽 끝은 그대로)")] public Transform NearGround;
         [Tooltip("계단 정산 옆 시점에서 잘린 끝에 세우는 땅 단면(꺼 둔 채 둔다)")] public Transform SideCut;
 
+        [Header("바닥 그림자 (PlanarShadow 공통 설정)")]
+        [Tooltip("빛이 나아가는 방향. y는 음수(위→아래), x·z가 클수록 그림자가 그쪽으로 길어진다")] public Vector3 ShadowLightDir = new Vector3(0.55f, -1f, 0.45f);
+        [Tooltip("그림자 색(알파 = 진하기)")] public Color ShadowColor = new Color(0f, 0f, 0f, 0.5f);
+        [Tooltip("그림자 정렬 레이어(World보다 먼저 그려지는 바닥 레이어)")] public string ShadowLayer = "Ground";
+        [Tooltip("그림자 정렬 순서(같은 레이어 바닥 판(0)보다 커야 바닥 위에 보인다)")] public int ShadowOrder = 10;
+
         [Header("길가 장식")]
         [Tooltip("장식 한 개의 틀 오브젝트(꺼 둔 채 둔다). 복제해서 쓰며, 안의 모든 SpriteRenderer(본체·그림자 등)에 같은 스프라이트를 넣는다")]
         public GameObject DecoTemplate;
-        [Tooltip("템플릿 안에서 이 이름의 오브젝트는 바닥 그림자로 보고 정렬 그룹 밖(아래 레이어)으로 빼서 길 위 오브젝트를 가리지 않게 한다")]
-        public string DecoShadowName = "Shadow";
-        [Tooltip("그림자를 그릴 정렬 레이어(World보다 먼저 그려지는 바닥 레이어)")] public string DecoShadowLayer = "Ground";
-        [Tooltip("그림자 정렬 순서(같은 레이어의 바닥 판(0)보다 커야 바닥 위에 보인다)")] public int DecoShadowOrder = 10;
         [Tooltip("장식마다 무작위로 고를 스프라이트")] public List<Sprite> DecoSprites = new List<Sprite>();
         [Tooltip("한쪽 장식 간격(m)")] public float DecoSpacing = 12.6f;
         [Tooltip("길 중심에서 장식까지 거리(m), 아래·위 범위에서 무작위")] public Vector2 DecoX = new Vector2(6.9f, 8.0f);
@@ -146,64 +148,15 @@ namespace MV.View
             public GameObject Root;
             public SpriteRenderer[] Sprites;
             public DepthSortable Sort;
-            /// <summary>정렬 그룹 밖으로 뺀 그림자 묶음(없으면 null)과 원래 부모·원래 로컬 자세.</summary>
-            public Transform Shadow, ShadowParent;
-            public bool ShadowParentBillboard;
-            public Vector3 ShadowPos, ShadowScale;
-            public Quaternion ShadowRot;
-            public SpriteRenderer[] ShadowSprites;
-            public Color[] ShadowBase;
         }
 
-        /// <summary>템플릿 복제본에서 그림자 오브젝트를 찾아 바닥 레이어 정렬 그룹으로 옮긴다(복제본을 켜기 전에 부른다).</summary>
-        void DetachShadow(DecoView d)
-        {
-            if (string.IsNullOrEmpty(DecoShadowName)) return;
-            Transform sh = null;
-            foreach (var tr in d.Root.GetComponentsInChildren<Transform>(true))
-                if (tr != d.Root.transform && tr.name == DecoShadowName) { sh = tr; break; }
-            if (sh == null) return;
-            d.ShadowParent = sh.parent;
-            d.ShadowParentBillboard = sh.parent.GetComponent<Billboard>() != null;
-            d.ShadowPos = sh.localPosition; d.ShadowRot = sh.localRotation; d.ShadowScale = sh.localScale;
-            var holder = new GameObject(DecoShadowName + "_Ground");
-            holder.transform.SetParent(d.Root.transform.parent, false);
-            var sg = holder.AddComponent<UnityEngine.Rendering.SortingGroup>();
-            sg.sortingLayerName = DecoShadowLayer;
-            sg.sortingOrder = DecoShadowOrder;
-            sh.SetParent(holder.transform, false);
-            sh.localPosition = Vector3.zero; sh.localRotation = Quaternion.identity; sh.localScale = Vector3.one;
-            d.Shadow = holder.transform;
-            d.ShadowSprites = holder.GetComponentsInChildren<SpriteRenderer>(true);
-            d.ShadowBase = new Color[d.ShadowSprites.Length];
-            for (int i = 0; i < d.ShadowSprites.Length; i++) d.ShadowBase[i] = d.ShadowSprites[i].color;
-        }
-
-        /// <summary>그림자 묶음을 원래 부모 자리에 맞춘다. 부모가 빌보드면 이번 프레임 카메라 회전을 쓴다(빌보드 갱신이 이 뒤에 돌기 때문).</summary>
-        void FollowShadow(DecoView d, float alpha, bool on)
-        {
-            if (d.Shadow == null) return;
-            if (d.Shadow.gameObject.activeSelf != on) d.Shadow.gameObject.SetActive(on);
-            if (!on) return;
-            var p = d.ShadowParent;
-            Quaternion pr = d.ShadowParentBillboard && _cam != null ? _cam.transform.rotation : p.rotation;
-            Vector3 ps = p.lossyScale;
-            d.Shadow.SetPositionAndRotation(p.position + pr * Vector3.Scale(ps, d.ShadowPos), pr * d.ShadowRot);
-            d.Shadow.localScale = Vector3.Scale(ps, d.ShadowScale);
-            for (int i = 0; i < d.ShadowSprites.Length; i++)
-            {
-                var c = d.ShadowBase[i];
-                c.a *= alpha;
-                if (d.ShadowSprites[i].color != c) d.ShadowSprites[i].color = c;
-            }
-        }
-        /// <summary>원경 묶음 아래 렌더러와 그 인스턴스 머티리얼(시차로 텍스처를 민다).</summary>
+        /// <summary>원경 묶음(먼 겹·가까운 겹) 아래 렌더러와 각자의 인스턴스 머티리얼(텍스처 밀기용).</summary>
         Renderer[] _farRs = new Renderer[0], _nearRs = new Renderer[0];
         Material[] _farMats = new Material[0], _nearMats = new Material[0];
 
         /// <summary>
-        /// 게임 루프가 부른다. groundY = 지금 지면 높이(계단을 오르면 올라간다). orbitE = 옆 시점 돌기 진행(<see cref="CameraModel.OrbitE"/>, 없으면 가림 처리 안 함).
-        /// cliff = 정산 절벽(없으면 null, 한 층).
+        /// 게임 루프가 맵을 붙일 때 부른다: 카메라, 지면 높이, 계단 정산 옆 시점 진행도(0~1), 절벽 정보.
+        /// 바닥 복제(아래층)·옹벽·원경 재질·하늘 장식 기준 위치를 준비하고, 기존 지면·소품·장식 템플릿을 숨긴다.
         /// </summary>
         public void Bind(Camera cam, Func<float> groundY, Func<double> orbitE = null, Func<CliffInfo?> cliff = null)
         {
@@ -241,6 +194,7 @@ namespace MV.View
             Collect(SkylineFar, out _farRs, out _farMats);
             Collect(SkylineNear, out _nearRs, out _nearMats);
             foreach (var d in SkyDecos) if (d != null && d.Target != null) d.Base = d.Target.localPosition;
+            ApplyShadowSettings();
             if (HideBuiltInGround) foreach (var g in FindObjectsByType<GroundStripMesh>(FindObjectsSortMode.None)) g.GetComponent<Renderer>().enabled = false;
             if (HideBuiltInProps) foreach (var p in FindObjectsByType<PropStreamer>(FindObjectsSortMode.None)) p.gameObject.SetActive(false);
             if (DecoTemplate != null) DecoTemplate.SetActive(false);
@@ -256,6 +210,7 @@ namespace MV.View
 
         void LateUpdate()
         {
+            ApplyShadowSettings();
             if (_cam == null) return;
             var c = _cam.transform.position;
             float gy = _groundY != null ? _groundY() : 0f;
@@ -440,7 +395,6 @@ namespace MV.View
             {
                 var root = Instantiate(DecoTemplate, DecoTemplate.transform.parent);   // 템플릿이 꺼져 있어 복제본도 꺼진 채 나온다
                 var dv = new DecoView { Root = root, Sprites = root.GetComponentsInChildren<SpriteRenderer>(true) };
-                DetachShadow(dv);   // 켜기 전에 빼야 정렬 그룹(DepthSortable)이 본체만 잡는다
                 root.SetActive(true);
                 dv.Sort = root.GetComponentInChildren<DepthSortable>(true);
                 if (dv.Sort != null) dv.Sort.Refresh();
@@ -464,13 +418,20 @@ namespace MV.View
                     if (d.Sort != null) d.Sort.SetAlphaScale(a);
                     bool on = a > 0.01f;
                     if (d.Root.activeSelf != on) d.Root.SetActive(on);
-                    FollowShadow(d, a, on);
                 }
             for (; n < _decos.Count; n++)
             {
                 if (_decos[n].Root.activeSelf) _decos[n].Root.SetActive(false);
-                FollowShadow(_decos[n], 0f, false);
             }
+        }
+
+        /// <summary>바닥 그림자 공통 설정을 <see cref="PlanarShadow"/>에 넣는다(인스펙터에서 바꾸면 바로 반영).</summary>
+        void ApplyShadowSettings()
+        {
+            PlanarShadow.LightDir = ShadowLightDir;
+            PlanarShadow.ShadowColor = ShadowColor;
+            PlanarShadow.SortingLayer = ShadowLayer;
+            PlanarShadow.SortingOrder = ShadowOrder;
         }
 
         static float Hash(float x) { float s = Mathf.Sin(x * 127.1f + 311.7f) * 43758.5453f; return s - Mathf.Floor(s); }
