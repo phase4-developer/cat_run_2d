@@ -25,7 +25,7 @@
 | dataKey | 클래스 | 담는 것 | 부활 때 | 진행 초기화 때 |
 |---|---|---|---|---|
 | `wealthInfos` | Framework `WealthContainer` | 재화. Framework 형식 그대로 `01_wealth.type` 이름별 `{type, quantity}` 행 배열(`gold`·`dia`·`rescueCat`·`goldenFish` + 08의 5~17). 게임 코드는 재화 id로 묻고 `MvWealthIds`가 type으로 바꾼다(Boot가 표와 대조) | gold·souls 0, dia·rbToken 유지 | 전부 0 |
-| `mvProgress` | `MvProgressContainer` | Level, Area, 체크포인트, 벽 기록, 런 수, 최고 Area, 정산 순번 | level·runs·bestArea 유지, 나머지 기본 | 기본 |
+| `mvProgress` | `MvProgressContainer` | Level, Area, 체크포인트, 벽 기록, 런 수, 실패 횟수, 최고 Area, 정산 순번 | level·runs·fails·bestArea 유지, 나머지 기본 | 기본 |
 | `mvLobby` | `MvLobbyContainer` | 로비 강화 3종, 시작 덱 | 기본 | 기본 |
 | `mvAreaUp` | `MvAreaUpContainer` | Area 강화 5종 | 기본 | 기본 |
 | `mvRebirth` | `MvRebirthContainer` | 부활 Lv, 적립 대기, 특성 4종, 쿨타임 끝 시각 | lv+1, pending 0, cdUntil 갱신 | 기본 |
@@ -58,6 +58,7 @@
 | `cp` | int | 0 | `save.cp` | 체크포인트(0~`CP_MAX`) |
 | `bars` | object | `{}` | `save.bars` | 벽 기록. 키 `"A{area}"`(L1757 `barKey`), 값 `int[3][]` = Floor별 칸 idx → 남은 HP(0 = 부서짐) |
 | `runs` | int | 0 | `save.runs` | 정산한 런 수 |
+| `fails` | int | 0 | 없음(노션 「Area 실패 횟수」) | Area를 넘지 못한 정산 수(pass·zoneEnd가 아니면 +1). 로비 Level 표시와 해금 조건 3(Level, [07 §7.8.9](07_Tables.md))이 읽는다. 부활해도 유지(사용자 2026-11-19) |
 | `zoneClear` | bool | false | `save.zoneClear` | 마지막 Area 관문 도달 + 생선 충족(zoneEnd) |
 | `escaped` | bool | false | `save.escaped` | 정본 잔재(L2657 `#unlockBtn`). 읽기만 하고 쓰지 않는다 |
 | `bestArea` | int | 0 | 없음 [창작] | 도달한 가장 큰 `area`. 부활 뒤 빠른 이동([08 §8.5.14](08_Content.md))에 쓴다 |

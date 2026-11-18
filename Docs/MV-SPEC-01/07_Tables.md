@@ -1681,7 +1681,7 @@ id	group	targetLevel	priceType	priceId	priceValue
 | 0 | Always | 항상 |
 | 1 | Area | `areaNo ≥ value`, 즉 `save.area + 1 ≥ value` |
 | 2 | Runs | 본편 런 정산 수 ≥ value |
-| 3 | Level | `mvProgress.level ≥ value`(런 1회 = Level +1, 부활해도 유지) |
+| 3 | Level | `mvProgress.fails ≥ value`. Level = Area를 넘지 못한 횟수(실패 횟수, 노션 「Area 실패 횟수」). 개방(pass·zoneEnd) 없이 정산한 런마다 +1, 부활해도 유지(사용자 2026-11-19 「level은 실패횟수로 일단 판정해 실패횟수 기록이 없으면 추가해야해」). 판 번호 `mvProgress.level`(템플릿 순환)과 다른 값 |
 
 판정은 `MV.Meta.MvUnlockRules` 한 곳이 한다(숨김 `Hidden` / 잠금 표시 `Locked` / 사용 가능 `Open`). active 0 또는 잠금 표시 조건 전 = 숨김. sticky 기록(`mvUnlock.opened`)이 있으면 진행이 되돌아가도 사용 가능. 지도 칸은 잠금 표시 조건, 없으면 사용 가능 조건의 첫 Area 조건 값(`MvUnlockRules.MapArea`). 검증(§7.13.3): 종류·값 개수 같음, 종류는 정의된 값, 값 0 이상.
 

@@ -650,7 +650,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 |---|---|---|---|---|---|---|
 | 윗줄 `.ltop` | 위·좌·우 0, 여백 3u, 양 끝 정렬 | — | — | — | — | L149 |
 | 제목 묶음 `.ttl` | (3u, 3u), 세로 사이 1u | 그림자 `sh` | — | — | — | L150 |
-| Level | — | `--ink`, 줄높이 1 | D 6.6u(71.28) `ui.lobby.level` 「Level {0}」 | `save.level` | — | L151, L307 |
+| Level | — | `--ink`, 줄높이 1 | D 6.6u(71.28) `ui.lobby.level` 「Level {0}」 | `mvProgress.fails`(실패 횟수, 사용자 2026-11-19. 정본 `save.level`은 판 번호) | — | L151, L307 |
 | 구역 상자 `.zone` | 여백 1.2u 2.4u | Panel 바탕, 반지름 1.6u, 테두리 3px, 하이라이트+그림자 | — | — | — | L152, L308 |
 | 구역 줄 `#lZoneNo` | — | `--ink-dim`, 자간 .06em | B7 2.8u `ui.lobby.zoneNo` 「{0} · Zone {1} · Area {2}」 | `name:<301_zone id>`, 구역 번호, `save.area+1` | — | L153, L2621 |
 | Area 이름 `#lZone` | — | `--gold` | D 4.6u `name:<302_area id>` | 현재 Area | — | L154 |

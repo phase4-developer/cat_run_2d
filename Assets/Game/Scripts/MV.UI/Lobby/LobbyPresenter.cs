@@ -152,7 +152,8 @@ namespace MV.UI
             r.UnlockNow = level;
             r.UnlockNeed = LevelNeed(t?.ContentOpen.ByKey(RebirthUnlockKey));
             r.CoolLeftMs = Math.Max(0, Port.RebirthCooldownLeftMs);
-            r.CoolTotalMs = t != null ? Math.Max(0, (long)t.Config.rebirthCooldownSec * 1000L) : 0;
+            var cfg = t?.Config.Value;
+            r.CoolTotalMs = cfg != null ? Math.Max(0, (long)cfg.rebirthCooldownSec * 1000L) : 0;
             r.Pending = Port.RebirthPending;
         }
 
