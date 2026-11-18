@@ -19,7 +19,7 @@ namespace MV.Save.Tests
             "\"ads\":{\"day\":\"2023-11-14\",\"dia\":1,\"skip\":4},\"zoneClear\":false}";
 
         private const string ExpectedV1 =
-            "{\"mvProgress\":{\"level\":7,\"area\":2,\"cp\":1,\"bars\":{\"A2\":[[0,3,null,5],[],[2]]},\"runs\":12,\"zoneClear\":false,\"escaped\":false,\"bestArea\":2,\"lastSettledRunSeq\":0}," +
+            "{\"mvProgress\":{\"level\":7,\"area\":2,\"cp\":1,\"bars\":{\"A2\":[[0,3,null,5],[],[2]]},\"runs\":12,\"fails\":0,\"zoneClear\":false,\"escaped\":false,\"bestArea\":2,\"lastSettledRunSeq\":0}," +
             "\"mvLobby\":{\"up\":{\"stair\":3,\"weapon\":2,\"income\":1},\"deck\":[0,2,1,0,0,0,0,0,0]}," +
             "\"mvAreaUp\":{\"lv\":{\"rate\":1,\"range\":0,\"clone\":2,\"crit\":0,\"dbl\":1}}," +
             "\"mvRebirth\":{\"lv\":1,\"pending\":5,\"perks\":{\"power\":2,\"crit\":1,\"obst\":0,\"dcap\":0},\"cdUntil\":1700000100000}," +
