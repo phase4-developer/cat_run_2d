@@ -24,13 +24,14 @@ namespace MV.Run
         public ClimbData Climb;
         public IReadOnlyList<ClimbData> WarpStages;
 
-        /// <summary>캐릭터 이동 기본값 4개를 사본에서 다시 읽는다(런 중 Inspector 수정 반영).</summary>
+        /// <summary>캐릭터 이동 기본값 4개와 마법탄 속도를 사본에서 다시 읽는다(런 중 Inspector 수정 반영).</summary>
         public void ApplyCharacter(RunCharacterConfig ch)
         {
             KeyMoveSpeed = ch.KeyMoveSpeed;
             MoveFollowK = ch.MoveFollowK;
             RunSpeed = ch.RunSpeed;
             RunSpeedMid = ch.RunSpeedMid;
+            ProjSpeed = ch.ProjSpeed;
         }
 
         public static RunParams From(MvTables t)
@@ -48,7 +49,7 @@ namespace MV.Run
                 WeaponStackMax = c.I(RunConfigKeys.WEAPON_STACK_MAX),
                 MaxClones = RunFormulas.CloneCap(t), CloneXMax = c.D(RunConfigKeys.CLONE_X_MAX),
                 DblShotDx = c.D(RunConfigKeys.DBL_SHOT_DX), ProjSpawnDz = c.D(RunConfigKeys.PROJ_SPAWN_DZ),
-                ThrowT = c.D(RunConfigKeys.THROW_T), ProjSpeed = c.D(RunConfigKeys.PROJ_SPEED),
+                ThrowT = c.D(RunConfigKeys.THROW_T),
                 DmgMin = c.D(RunConfigKeys.DMG_MIN), DmgMax = c.D(RunConfigKeys.DMG_MAX),
                 WellFlushBehind = c.D(RunConfigKeys.WELL_FLUSH_BEHIND), WellBrickDiv = c.D(RunConfigKeys.WELL_BRICK_DIV),
                 WellBrickMax = c.I(RunConfigKeys.WELL_BRICK_MAX), BrickFlushInterval = c.D(RunConfigKeys.Fx_BrickFlushInterval),
@@ -60,7 +61,7 @@ namespace MV.Run
                 MeteorMinDz = c.D(RunConfigKeys.METEOR_MIN_DZ), MeteorMaxDz = c.D(RunConfigKeys.METEOR_MAX_DZ),
                 MeteorFall = c.D(RunConfigKeys.METEOR_FALL), MeteorBox = c.D(RunConfigKeys.METEOR_BOX), OrbZBack = c.D(RunConfigKeys.ORB_Z_BACK),
             };
-            p.ApplyCharacter(t.Character);   // 이동 기본값(MvCharacterSettings 사본)
+            p.ApplyCharacter(t.Character);   // 이동 기본값·마법탄 속도(MvCharacterSettings 사본)
             var ph = c.List(RunConfigKeys.FIRE_PHASE);
             p.FirePhase = new double[ph.Count];
             for (int i = 0; i < ph.Count; i++) p.FirePhase[i] = ph[i];

@@ -26,6 +26,8 @@ namespace MV.Data
         public double KeyMoveSpeed;
         /// <summary>x 추종 계수(1/s, 지수 추종).</summary>
         public double MoveFollowK;
+        /// <summary>마법탄 속도(m/s). 2026-11-18 `300_runConfig.PROJ_SPEED`에서 옮김.</summary>
+        public double ProjSpeed;
         /// <summary>프리셋 key → 기본 연사(초당 발사 수).</summary>
         public readonly Dictionary<string, double> PresetRates = new Dictionary<string, double>(StringComparer.Ordinal);
 
@@ -41,14 +43,14 @@ namespace MV.Data
 
         public RunCharacterConfig Clone()
         {
-            var c = new RunCharacterConfig { RunSpeed = RunSpeed, RunSpeedMid = RunSpeedMid, KeyMoveSpeed = KeyMoveSpeed, MoveFollowK = MoveFollowK };
+            var c = new RunCharacterConfig { RunSpeed = RunSpeed, RunSpeedMid = RunSpeedMid, KeyMoveSpeed = KeyMoveSpeed, MoveFollowK = MoveFollowK, ProjSpeed = ProjSpeed };
             foreach (var kv in PresetRates) c.PresetRates[kv.Key] = kv.Value;
             return c;
         }
     }
 
     /// <summary>
-    /// 캐릭터 이동·공격속도 기본값의 정본(2026-11-16 사용자 지시: 이동 4개 + 프리셋 연사를 표에서 옮김).
+    /// 캐릭터 이동·공격속도 기본값의 정본(2026-11-16 사용자 지시: 이동 4개 + 프리셋 연사를 표에서 옮김, 2026-11-18 마법탄 속도 추가).
     /// `Resources`에 있어 편집 모드·EditMode 시험·Play Mode·빌드가 같은 에셋을 읽는다. 런타임은 <see cref="ToConfig"/> 사본만 쓴다.
     /// </summary>
     [CreateAssetMenu(fileName = "MvCharacterSettings", menuName = "MoonVillage/Character Settings")]
@@ -63,6 +65,9 @@ namespace MV.Data
         [MvLabel("키보드 좌우 이동 속도 (keyMoveSpeed)"), Tooltip("←/→ 키를 누를 때 목표 위치가 움직이는 속도(m/초). 개발용 입력")] public double keyMoveSpeed;
         [MvLabel("좌우 따라가기 빠르기 (moveFollowK)"), Tooltip("드래그한 위치로 고양이가 따라가는 빠르기(1/초). 10이면 약 0.1초에 63%. 키우면 더 민첩하다")] public double moveFollowK;
 
+        [Header("마법탄 — Play 중에 바꾸면 날아가는 탄에 바로 반영")]
+        [MvLabel("마법탄 속도 (projSpeed)"), Tooltip("쏜 마법탄이 앞으로 날아가는 속도(m/초). 키우면 더 빨리 날아가 멀리 있는 대상에 빨리 닿는다")] public double projSpeed;
+
         [Header("공격속도 — 난이도별 기본 연사")]
         [Tooltip("난이도 프리셋(06_balancePreset.key)마다 기본 연사(초당 발사 수). 발사 간격 = 1 ÷ (연사 × 카드·강화·연구 배율)")]
         public List<PresetFireRate> presetFireRates = new List<PresetFireRate>();
@@ -75,7 +80,7 @@ namespace MV.Data
         /// <summary>런타임 사본(에셋은 바꾸지 않는다).</summary>
         public RunCharacterConfig ToConfig()
         {
-            var c = new RunCharacterConfig { RunSpeed = runSpeed, RunSpeedMid = runSpeedMid, KeyMoveSpeed = keyMoveSpeed, MoveFollowK = moveFollowK };
+            var c = new RunCharacterConfig { RunSpeed = runSpeed, RunSpeedMid = runSpeedMid, KeyMoveSpeed = keyMoveSpeed, MoveFollowK = moveFollowK, ProjSpeed = projSpeed };
             foreach (var p in presetFireRates)
             {
                 if (p == null || string.IsNullOrEmpty(p.key)) continue;

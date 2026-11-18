@@ -379,7 +379,7 @@ MvTables.Current = tables;
 | DBL_SHOT_DX | 0.2 | m | [프로토] L2088 | 2연발 좌우 간격 |
 | PROJ_SPAWN_DZ | 0.4 | m | [프로토] L2081 | 탄 출발 z |
 | THROW_T | 0.12 | s | [프로토] L2086 | 던지기 자세(그림) |
-| PROJ_SPEED | 20 | m/s | [프로토] L2094 `PSPD` | 탄 속도 |
+| ~~PROJ_SPEED~~ | (20) | m/s | [프로토] L2094 `PSPD` | 탄 속도. **표에 없음**: 2026-11-18 사용자 지시(Play 중 조절)로 설정 에셋 `MvCharacterSettings.projSpeed`=20으로 옮김(MV-SETTINGS-PROJSPEED). 값은 그 에셋 한 곳에만 둔다 |
 | PROJ_RANGE | 22 | m | [프로토] L2094 `RANGE` | 기본 사거리(× (1 + aup.range × perLv)) |
 | DMG_MIN | 1 | | [프로토] L1905 | 피해 하한 |
 | DMG_MAX | 99999 | | [프로토] L1905 | 피해 상한 |
