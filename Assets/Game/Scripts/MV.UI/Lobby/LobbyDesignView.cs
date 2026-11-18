@@ -95,6 +95,7 @@ namespace MV.UI
         /// 비용이 모자랄 때 강화 칸 가격 글자색(사용자 2026-11-19 「재화가 부족하면 하단 레이블 색깔 빨갛게」, 기획서엔 색 값 없음).
         /// 기본값은 Framework <c>PriceLabel.insufficientColor</c>와 같다(나중에 PriceBtn으로 옮길 때 같은 색).
         /// </summary>
+        [Tooltip("임시: 비용 부족 가격 글자색. 기획서·시안에 값 없음, Framework PriceLabel 기본값")]
         [SerializeField] Color priceShortColor = new Color(1f, 0.38f, 0.45f);
         [SerializeField] Button rebirthButton;
         [SerializeField] Slider rebirthUnlock;
