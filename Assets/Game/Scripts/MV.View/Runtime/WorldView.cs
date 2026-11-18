@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using MV.Data;
 using MV.Run;
@@ -80,6 +80,7 @@ namespace MV.View
             if (theme == null) return false;
             bool ok = await _sprites.LoadAtlasAsync(theme.worldAtlas, ct);
             ok &= await _sprites.LoadAtlasAsync(FxAtlas, ct);
+            ok &= await _sprites.LoadAtlasAsync(MvAtlas.UiIcon, ct);   // 무기문 위 카드 묶음(UI 아이콘 그대로, 테마와 무관해 반환하지 않는다)
             string prev = _themeAtlas;
             _themeAtlas = theme.worldAtlas;
             _rig.SetTheme(theme);
@@ -110,10 +111,27 @@ namespace MV.View
             bool off = state == null || _rig == null || !_rig.Ready;
             double now = Time.realtimeSinceStartupAsDouble;
             if (_objects != null && !off) _objects.GoldMul = RunFormulas.GoldMul(state);   // 결계 블록 글자판 「+골드」(정본 L1492)
+            if (_objects != null && !off) _objects.GateWeaponIcon = WeaponIcon(state);
             if (_cats != null) { if (off) _cats.Hide(); else _cats.Sync(state, now, _rig.Model.OrbitE); }
             if (_projs != null) { if (off) _projs.Hide(); else _projs.Sync(state, now); }
             if (_stairs != null) { if (off) _stairs.Hide(); else _stairs.Sync(state); }
         }
+
+        /// <summary>지금 런 무기 단계(Bt)의 103_item.icon. 같은 단계면 다시 찾지 않는다.</summary>
+        string WeaponIcon(RunState state)
+        {
+            if (state.Tables == null) return null;
+            if (state.Bt == _iconTier && state.Tables == _iconTables) return _icon;
+            _iconTier = state.Bt;
+            _iconTables = state.Tables;
+            _icon = null;
+            foreach (var it in state.Tables.Item.Datas) if (it.tier == state.Bt) { _icon = it.icon; break; }
+            return _icon;
+        }
+
+        int _iconTier = -1;
+        MvTables _iconTables;
+        string _icon;
 
         /// <summary>런 이벤트 → 월드 뷰 반응(오브젝트 맞음·우물 벽돌 빠짐, 06 §6.13). <see cref="SyncObjects"/> 전에 같은 프레임 목록으로 부른다.</summary>
         public void OnRunEvents(System.Collections.Generic.IReadOnlyList<RunEvent> events)

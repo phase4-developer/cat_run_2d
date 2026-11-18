@@ -551,6 +551,36 @@ namespace MV.View.Tests
             Assert.That(tower.GoneCount, Is.EqualTo(tower.OrbCount), "남은 구슬보다 많으면 있는 만큼만");
         }
 
+        /// <summary>
+        /// 무기문 위 카드 묶음(MV-UI3-HUD9, 임시 리소스): 장 수 = 글자판 숫자와 같은 Made + Extra(상한 없음), 통과(Done)하면 숨긴다.
+        /// 카드는 프리팹 안 꺼 둔 원본을 복제해 풀에서 꺼내고, 줄면 돌려준다.
+        /// </summary>
+        [Test]
+        public void CraftGateBundle_ShowsMadePlusExtra_HidesAfterPass()
+        {
+            var t = ViewTestTables.Load();
+            var rig = PrefabRig(t);
+            var f = rig.Factory;
+            var gate = Obj(t, "cgate", 1, 20);
+            gate.Made = 6;
+            gate.Extra = 2;
+            var objs = new List<RunObject> { gate };
+            rig.Frame(0, objs);
+            var bundle = Mod<CraftGateBundle>(f, 1);
+            Assert.That(bundle, Is.Not.Null, "Obj_CraftGate 프리팹 CraftGateBundle");
+            Assert.That(bundle.Template, Is.Not.Null, "카드 원본 직렬화 참조");
+            Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
+            Assert.AreEqual(8, bundle.Shown, "Made + Extra");
+
+            gate.Made = 3; gate.Extra = 0;
+            rig.Frame(0.1, objs);
+            Assert.AreEqual(3, bundle.Shown, "줄면 풀로 돌려준다");
+
+            gate.Done = true;
+            rig.Frame(0.2, objs);
+            Assert.AreEqual(0, bundle.Shown, "통과하면 숨김(나는 카드는 HUD)");
+        }
+
         /// <summary>눌림(106.punch)은 실제 프리팹의 빌보드 묶음 크기만 바꾸고, 뷰 뿌리와 Hitbox Collider의 위치·크기는 그대로다.</summary>
         [Test]
         public void Hit_PunchFromTable_MatchesNewHtml()

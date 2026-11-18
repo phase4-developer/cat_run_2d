@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -46,6 +46,9 @@ namespace MV.View
 
         /// <summary>결계 블록 글자판 「+골드」에 곱할 골드 배율(정본 `goldMul()` L1492). 통합 코드가 런 상태에서 매 프레임 넣는다.</summary>
         public double GoldMul { get => _ctx.GoldMul; set => _ctx.GoldMul = value; }
+
+        /// <summary>무기문 위 카드 묶음 그림 이름(103_item.icon, Atlas_UI_Icon). 통합 코드가 런 상태에서 매 프레임 넣는다.</summary>
+        public string GateWeaponIcon { get => _ctx.GateWeaponIcon; set => _ctx.GateWeaponIcon = value; }
 
         /// <summary>오브젝트 프리팹 로더(주소 → 원본). 기본은 Addressables. 시험은 에셋 원본을 바로 주거나 로드 없이 뷰 구조만 본다.</summary>
         public Func<string, CancellationToken, UniTask<PrefabHandle>> PrefabLoader = LoadAddressable;
