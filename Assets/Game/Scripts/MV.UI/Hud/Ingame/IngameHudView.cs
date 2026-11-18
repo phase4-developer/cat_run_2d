@@ -21,31 +21,15 @@ namespace MV.UI
     {
         [Header("Top")]
         [SerializeField] GameObject top;
-        [SerializeField] TMP_Text levelText;
-        /// <summary>배속 토글 버튼(<c>Toggle PlaySpeed</c>).</summary>
-        [SerializeField] Button speedButton;
-        /// <summary>디자이너가 1x 자식에 둔 Toggle. 클릭을 가로채지 않게 끄고 버튼 하나로 받는다.</summary>
-        [SerializeField] Toggle speedToggle;
-        /// <summary>배속 상태 자식(1x, 2x …). i번째 = 배속 i+1. 토글 상태 수 = 이 개수.</summary>
-        [SerializeField] GameObject[] speedStates;
-        /// <summary>재화 칸(<c>Slot_Currency</c>): 츄르·캣닢(디자이너가 둔 두 칸).</summary>
-        [SerializeField] RectTransform goldSlot;
-        [SerializeField] RectTransform diaSlot;
+        /// <summary>상단 줄 섹션(<c>Top</c>): 레벨·배속·재화(MV-UI3-HUD5).</summary>
+        [SerializeField] TopBarSection topBar;
 
         [Header("Mid")]
         [SerializeField] GameObject mid;
         /// <summary>무기 섹션(<c>Mid/Weapon</c>): 장착 칸·손패 스택·날아오는 카드(MV-UI3-HUD4).</summary>
         [SerializeField] WeaponSection weapon;
-        [SerializeField] AddressableImage stairGrade;
-        /// <summary>「+{칸당 계단}」.</summary>
-        [SerializeField] TMP_Text stairValue;
-        /// <summary>「x{계단 수}」.</summary>
-        [SerializeField] TMP_Text stairCount;
-        [SerializeField] Slider gauge;
-        [SerializeField] AddressableImage gaugeGrade;
-        [SerializeField] TMP_Text gaugeLevel;
-        [SerializeField] AddressableImage gaugeNextGrade;
-        [SerializeField] TMP_Text gaugeNextLevel;
+        /// <summary>계단 섹션(<c>Mid/Stair</c>): 계단 수·게이지(MV-UI3-HUD5).</summary>
+        [SerializeField] StairSection stair;
         /// <summary>얻은 카드 자리(<c>Card Pos</c>, 자식 <c>Holder_Card</c>).</summary>
         [SerializeField] RectTransform cardPos;
 
@@ -63,17 +47,10 @@ namespace MV.UI
         [SerializeField] float climbShiftSec = 0.3f;
         [SerializeField] float rollStepSec = 0.06f;
 
-        // 문구: 디자이너 [HUD] 인게임 서식(키 자리 ui.hud.*)
-        public const string StairValueFormat = "+{0}"; // ui.hud.stairPer
-        public const string StairCountFormat = "x{0}"; // ui.hud.stairCount
-
         Func<RunState> _state;
         RunState _run;
         MvTables T => _run?.Tables;
-        int _speed = 1;
         bool _ready;
-
-        TMP_Text _gold, _dia;
 
         HudClimbCard _climbTemplate;
         readonly List<HudClimbCard> _climbPool = new List<HudClimbCard>();
@@ -98,14 +75,8 @@ namespace MV.UI
         public IReadOnlyList<HudClimbCard> ClimbCards => _climbCards;
         public HudSkillCard SkillCard { get { Init(); return _skill; } }
         public IReadOnlyList<HudSkillCard> PosCards => _posCards;
-        public int SpeedStateCount => speedStates?.Length ?? 0;
-        public int ShownSpeedState { get { if (speedStates != null) for (int i = 0; i < speedStates.Length; i++) if (speedStates[i] && speedStates[i].activeSelf) return i; return -1; } }
-        public string LevelText => levelText ? levelText.text : null;
-        public string GoldText { get { Init(); return _gold ? _gold.text : null; } }
-        public string DiaText { get { Init(); return _dia ? _dia.text : null; } }
-        public string StairValueText => stairValue ? stairValue.text : null;
-        public string StairCountText => stairCount ? stairCount.text : null;
-        public string GaugeGradeSprite => gaugeGrade ? gaugeGrade.spriteName : null;
+        public TopBarSection TopBar => topBar;
+        public StairSection Stair => stair;
 
         void Awake() => Init();
 
@@ -115,11 +86,7 @@ namespace MV.UI
             _ready = true;
             // HUD는 버튼만 누를 수 있다: 버튼(Selectable) 아래 그림만 raycastTarget을 남긴다(드래그가 아래로 지나감).
             foreach (var g in GetComponentsInChildren<Graphic>(true)) g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null;
-            if (speedToggle) speedToggle.enabled = false;
-            if (speedButton) speedButton.onClick.AddListener(OnSpeedClick);
-
-            _gold = goldSlot ? goldSlot.GetComponentInChildren<TMP_Text>(true) : null;
-            _dia = diaSlot ? diaSlot.GetComponentInChildren<TMP_Text>(true) : null;
+            if (topBar) topBar.BindTables(MvTables.Current);
 
             foreach (var h in new[] { holderPrev, holderCurrent })
             {
@@ -169,10 +136,10 @@ namespace MV.UI
 
         // ---------------- IRunHudView(프레젠터 문자열) ----------------
 
-        public void SetLevel(string text) { if (levelText) levelText.text = text; }
-        public void SetGold(string text) { Init(); if (_gold) _gold.text = text; }
-        public void SetDia(string text) { Init(); if (_dia) _dia.text = text; }
-        public void SetStairs(string text, bool flying) { if (stairCount) stairCount.text = string.Format(StairCountFormat, text); }
+        public void SetLevel(string text) { if (topBar) topBar.SetLevel(text); }
+        public void SetGold(string text) { Init(); if (topBar) topBar.SetGold(text); }
+        public void SetDia(string text) { Init(); if (topBar) topBar.SetDia(text); }
+        public void SetStairs(string text, bool flying) { if (stair) stair.SetStairs(text); }
 
         /// <summary>디자이너 화면에 칸이 없다(Area 이름·생선·머지 안내·「n / N 칸」). 값은 받기만 한다.</summary>
         public void SetFloor(string text) { }
@@ -190,26 +157,9 @@ namespace MV.UI
         public void SetState(in RunHudState s)
         {
             Init();
-            _speed = Math.Max(1, s.TimeScale);
-            int shown = MvRunSpeed.StateIndex(_speed, SpeedStateCount);
-            if (speedStates != null) for (int i = 0; i < speedStates.Length; i++) if (speedStates[i]) speedStates[i].SetActive(i == shown);
-
-            int lv = s.GaugeLv;
-            var cap = T != null ? RunFormulas.GaugeRow(T) : null;
-            int next = cap != null ? Math.Min(cap.cap, lv + 1) : lv + 1;
-            if (gauge) gauge.normalizedValue = Mathf.Clamp01(s.GaugeFill);
-            HudImage.Set(stairGrade, HudGrade.Frame(T, lv));
-            HudImage.Set(gaugeGrade, HudGrade.Frame(T, lv));
-            HudImage.Set(gaugeNextGrade, HudGrade.Frame(T, next));
-            if (stairValue) stairValue.text = string.Format(StairValueFormat, lv);
-            if (gaugeLevel) gaugeLevel.text = lv.ToString();
-            if (gaugeNextLevel) gaugeNextLevel.text = next.ToString();
+            if (topBar) topBar.SetSpeed(s.TimeScale);
+            if (stair) stair.SetGauge(T, s.GaugeLv, s.GaugeFill);
         }
-
-        void OnSpeedClick() => MvRunSpeed.Set?.Invoke(MvRunSpeed.Next(_speed, SpeedStateCount));
-
-        /// <summary>시험: 배속 토글을 누른 것처럼.</summary>
-        public void ClickSpeed() => OnSpeedClick();
 
         // ---------------- IRunHudStateView(런 상태) ----------------
 
@@ -225,7 +175,7 @@ namespace MV.UI
         {
             Init();
             var s = _state?.Invoke();
-            if (s != _run) { _run = s; ResetRun(); }
+            if (s != _run) { _run = s; ResetRun(); if (topBar && s?.Tables != null) topBar.BindTables(s.Tables); }
             if (weapon) weapon.Tick(dt);
             if (s == null) return;
             TickClimb(s);

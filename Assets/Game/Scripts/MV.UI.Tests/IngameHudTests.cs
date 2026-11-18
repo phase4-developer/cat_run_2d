@@ -150,7 +150,12 @@ namespace MV.UI.Tests
                 if (it.propertyType == SerializedPropertyType.ObjectReference && it.objectReferenceValue == null && it.propertyPath != "m_Script")
                     missing.Add(it.propertyPath);
             Assert.That(missing, Is.Empty, "IngameHudView 참조");
-            Assert.That(view.SpeedStateCount, Is.GreaterThan(1), "1x/2x 상태 자식");
+            Assert.That(view.TopBar.SpeedStateCount, Is.GreaterThan(1), "1x/2x 상태 자식");
+            Assert.That(view.TopBar, Is.Not.Null, "Top 상단 줄 섹션");
+            AssertRefs(view.TopBar);
+            Assert.That(view.Stair, Is.Not.Null, "Mid/Stair 계단 섹션");
+            AssertRefs(view.Stair);
+            Assert.That(view.TopBar.Gold, Is.Not.SameAs(view.TopBar.Dia), "재화 칸 2개 = 서로 다른 Slot_Currency(공용 HudCurrencySlot)");
             Assert.That(view.Weapon, Is.Not.Null, "Mid/Weapon 무기 섹션");
             AssertRefs(view.Weapon);
             Assert.That(view.Weapon.Equip, Is.Not.Null, "Equip/Slot_Weapon");
@@ -189,22 +194,27 @@ namespace MV.UI.Tests
             p.SetView(view);
             p.Bind(src);
             p.Tick();
-            Assert.AreEqual("Level 3", view.LevelText);
-            Assert.AreEqual("12.3K", view.GoldText);
-            Assert.AreEqual("7", view.DiaText);
-            Assert.AreEqual("x15", view.StairCountText, "Count Text 서식 「x」+값");
-            Assert.AreEqual("+2", view.StairValueText, "Slot_Stair Value 서식 「+」+칸당 계단");
-            Assert.AreEqual(1, view.ShownSpeedState, "2배속 → 2x 자식만 켬");
+            Assert.AreEqual("Level 3", view.TopBar.LevelText);
+            Assert.AreEqual("12.3K", view.TopBar.Gold.ValueText);
+            Assert.AreEqual("7", view.TopBar.Dia.ValueText);
+            Assert.AreEqual("x15", view.Stair.StairCountText, "Count Text 서식 「x」+값");
+            Assert.AreEqual("+2", view.Stair.StairValueText, "Slot_Stair Value 서식 「+」+칸당 계단");
+            Assert.AreEqual(1, view.TopBar.ShownSpeedState, "2배속 → 2x 자식만 켬");
 
             int asked = 0;
             MvRunSpeed.Set = x => asked = x;
-            view.ClickSpeed();
+            view.TopBar.ClickSpeed();
             Assert.AreEqual(1, asked, "2x에서 누르면 1x 요청");
             var s = src.State; s.TimeScale = 1; src.State = s;
             p.Tick();
-            Assert.AreEqual(0, view.ShownSpeedState, "표시는 런 배속 값을 따른다");
-            view.ClickSpeed();
+            Assert.AreEqual(0, view.TopBar.ShownSpeedState, "표시는 런 배속 값을 따른다");
+            view.TopBar.ClickSpeed();
             Assert.AreEqual(2, asked);
+
+            // 재화 칸 그림 = 01_wealth.icon(상단 줄이 종류를 넘긴다, 로비와 같은 컴포넌트)
+            view.TopBar.BindTables(T);
+            Assert.AreEqual(HudCurrencySlot.IconOf(T, "gold"), view.TopBar.Gold.IconSprite);
+            Assert.AreEqual(HudCurrencySlot.IconOf(T, "dia"), view.TopBar.Dia.IconSprite);
         }
 
         [Test]
