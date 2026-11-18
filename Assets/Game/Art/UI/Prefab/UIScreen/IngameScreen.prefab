@@ -3177,6 +3177,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 7431286054410923872}
   - component: {fileID: 6222745884958503920}
   m_Layer: 5
   m_Name: Top
@@ -3352,6 +3353,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 7431286054410923873}
   - component: {fileID: 2481385601466386050}
   - component: {fileID: 6147875061767125895}
   - component: {fileID: 7175409437217156731}
@@ -5236,24 +5238,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   top: {fileID: 6845502027262449496}
-  levelText: {fileID: 4029910445530474622}
-  speedButton: {fileID: 6406667618829410555}
-  speedToggle: {fileID: 3089528086219291577}
-  speedStates:
-  - {fileID: 86784465915622256}
-  - {fileID: 9174851715605835873}
-  goldSlot: {fileID: 4511057362660106336}
-  diaSlot: {fileID: 981983169869039328}
+  topBar: {fileID: 7431286054410923872}
   mid: {fileID: 1344421506128573404}
   weapon: {fileID: 7431286054410923871}
-  stairGrade: {fileID: 2830996914003023605}
-  stairValue: {fileID: 2836234995055786518}
-  stairCount: {fileID: 7518927449556166699}
-  gauge: {fileID: 849106886642657882}
-  gaugeGrade: {fileID: 80675868278005785}
-  gaugeLevel: {fileID: 9177991876545755957}
-  gaugeNextGrade: {fileID: 6765914837132262739}
-  gaugeNextLevel: {fileID: 7429469731756045783}
+  stair: {fileID: 7431286054410923873}
   cardPos: {fileID: 4296539063756947053}
   climbStair: {fileID: 9119664277454892412}
   gradeSection: {fileID: 8032430310997250833}
@@ -5265,3 +5253,85 @@ MonoBehaviour:
   skillSection: {fileID: 7343300302770266304}
   climbShiftSec: 0.3
   rollStepSec: 0.06
+--- !u!114 &7431286054410923872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845502027262449496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e712cee2ff842db8039e2d4335bfafc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  levelText: {fileID: 4029910445530474622}
+  speedButton: {fileID: 6406667618829410555}
+  speedToggle: {fileID: 3089528086219291577}
+  speedStates:
+  - {fileID: 86784465915622256}
+  - {fileID: 9174851715605835873}
+  goldSlot: {fileID: 3821538353159962773}
+  goldType: gold
+  diaSlot: {fileID: 446452687946475029}
+  diaType: dia
+--- !u!114 &7431286054410923873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7111505866923587152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebcfdbe60d094dc0bfb2a1c5fba96cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  stairGrade: {fileID: 2830996914003023605}
+  stairValue: {fileID: 2836234995055786518}
+  stairCount: {fileID: 7518927449556166699}
+  gauge: {fileID: 849106886642657882}
+  gaugeGrade: {fileID: 80675868278005785}
+  gaugeLevel: {fileID: 9177991876545755957}
+  gaugeNextGrade: {fileID: 6765914837132262739}
+  gaugeNextLevel: {fileID: 7429469731756045783}
+--- !u!114 &3821538353159962773 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4729153866204517731, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
+  m_PrefabInstance: {fileID: 8406391467125806582}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff4c731a0bc42fb860812633a95d0e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &446452687946475029 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4729153866204517731, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
+  m_PrefabInstance: {fileID: 5157547603341636470}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff4c731a0bc42fb860812633a95d0e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
