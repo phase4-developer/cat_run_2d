@@ -50,6 +50,7 @@ namespace MV.View
         public void Init(MvTables tables, IWorldViewSource source)
         {
             _cfg = ViewConfig.From(tables.RunConfig);
+            _sprites.ServeAtlasRequests();   // 프리팹이 직접 참조한 지연 바인딩 아틀라스 그림(글자판 게이지 등)
             _rig.Init(tables, source);
             _sorter.Init(_cfg, _rig.Cam);
             _sorter.SetFocus(_rig.TryGetFocus);
@@ -87,7 +88,7 @@ namespace MV.View
                     go.transform.SetParent(transform, false);
                     _hits = go.AddComponent<RunHitWorld>();
                 }
-                _hits.Init(_objects.PrefabAddress, _objects.LoadedPrefab);
+                _hits.Init(_objects.HitShape, _objects.PrefabAddress);
             }
         }
 

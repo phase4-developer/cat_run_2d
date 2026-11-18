@@ -39,12 +39,34 @@ namespace MV.View.Tests
             return null;
         }
 
+        /// <summary>
+        /// 판정 세계 + 시험용 판정 형상 공급: 오브젝트마다 프리팹 인스턴스 하나를 시뮬 위치에 두고 그 안 <see cref="RunHitbox"/> Collider를 준다
+        /// (게임에서는 <see cref="ObjectViewFactory.HitShape"/>가 화면 뷰 인스턴스로 같은 일을 한다).
+        /// </summary>
         RunHitWorld MakeWorld(System.Func<RunObject, string> addressOf, System.Func<string, GameObject> assetOf)
         {
             var go = new GameObject("HitWorldTest");
             _made.Add(go);
             var w = go.AddComponent<RunHitWorld>();
-            w.Init(addressOf, assetOf);
+            var inst = new Dictionary<int, GameObject>();
+            w.Init((o, wy) =>
+            {
+                string a = addressOf(o);
+                if (a == null) return null;
+                if (!inst.TryGetValue(o.Id, out var g))
+                {
+                    var prefab = assetOf(a);
+                    if (prefab == null) return null;
+                    g = Object.Instantiate(prefab);
+                    g.SetActive(true);
+                    _made.Add(g);
+                    inst[o.Id] = g;
+                }
+                g.transform.position = new Vector3((float)o.X, (float)wy, (float)o.Z);
+                var cols = new List<Collider>();
+                foreach (var hb in g.GetComponentsInChildren<RunHitbox>(true)) cols.AddRange(hb.GetComponentsInChildren<Collider>(true));
+                return cols;
+            }, addressOf);
             return w;
         }
 

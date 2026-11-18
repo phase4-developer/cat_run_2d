@@ -61,7 +61,9 @@ namespace MV.View.Tests
             Assert.That(label, Is.Not.Null, $"{address} 글자판(Count_Number)");
             Assert.That(label.GaugeRoot, Is.Not.Null, $"{address} Count_Gauge");
             Assert.That(label.Pivot, Is.Not.Null, $"{address} Gauge_Pivot");
-            TestContext.WriteLine($"{address}: 글자판 부모 = {label.transform.parent.name}, Billboard 아래 = {label.GetComponentInParent<Billboard>(true) != null}");
+            Assert.That(label.GetComponentInParent<Billboard>(true), Is.Not.Null, $"{address} 글자판은 그림과 같은 빌보드 묶음 안(카메라 평면)");
+            foreach (var hb in inst.GetComponentsInChildren<RunHitbox>(true))
+                Assert.That(hb.GetComponentInParent<Billboard>(true), Is.Null, $"{address} Hitbox는 빌보드 밖(연출이 판정을 움직이지 않게)");
 
             float baseX = label.Pivot.localScale.x;
             o.Prog = 0.5;
@@ -92,7 +94,17 @@ namespace MV.View.Tests
             var go = new GameObject("HitWorldTest");
             _made.Add(go);
             var w = go.AddComponent<RunHitWorld>();
-            w.Init(o => ObjectViewFactory.PrefabFor(_t, StageMap, o), LoadPrefab);
+            GameObject gateInst = null;
+            w.Init((o, wy) =>
+            {
+                string a = ObjectViewFactory.PrefabFor(_t, StageMap, o);
+                if (a == null) return null;
+                if (gateInst == null) { gateInst = Object.Instantiate(LoadPrefab(a)); _made.Add(gateInst); }
+                gateInst.transform.position = new Vector3((float)o.X, (float)wy, (float)o.Z);
+                var cols = new List<Collider>();
+                foreach (var hb in gateInst.GetComponentsInChildren<RunHitbox>(true)) cols.AddRange(hb.GetComponentsInChildren<Collider>(true));
+                return cols;
+            }, o => ObjectViewFactory.PrefabFor(_t, StageMap, o));
             sim.HitQuery = w;
             s.Objs.Clear();
             s.Projs.Clear();
