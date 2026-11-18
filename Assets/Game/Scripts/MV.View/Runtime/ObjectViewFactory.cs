@@ -91,8 +91,12 @@ namespace MV.View
         sealed class PrefabParts
         {
             public Vector3 InstScale = Vector3.one;
-            /// <summary>프리팹에 붙어 있는 빌보드(카메라를 보는 이미지). 쓰러짐 기울기를 받는다.</summary>
+            /// <summary>프리팹에 붙어 있는 빌보드(카메라를 보는 이미지 묶음). 흔들림·눌림·가라앉기·쓰러짐은 이 묶음만 움직인다(판정 Hitbox는 그대로).</summary>
             public Billboard[] Boards;
+            /// <summary>빌보드 묶음의 프리팹 기본 위치·배율. 연출은 이 값에 더하고 곱한다.</summary>
+            public Vector3[] BoardPos, BoardScale;
+            /// <summary>투사체 판정 형상: 프리팹 안 <see cref="RunHitbox"/>의 Collider(판정 정본, <see cref="RunHitWorld"/>).</summary>
+            public Collider[] HitCols;
             /// <summary>빛(수정탑·포탈·생선 비석 Glow)과 기본 색.</summary>
             public SpriteRenderer Glow;
             public Color GlowBase;
@@ -148,6 +152,8 @@ namespace MV.View
         WorldSpriteCache _sprites;
         string _atlas, _fxAtlas;
         int _stamp;
+        /// <summary>마지막 <see cref="Sync"/>의 카메라 기준 z(PZ). 그 전에는 NaN.</summary>
+        double _lastPz = double.NaN;
 
         public int ViewCount => _views.Count;
         /// <summary>월드 스프라이트 공유 머티리얼(고양이 뷰가 프리팹 값이 없을 때 빌린다).</summary>
@@ -184,13 +190,8 @@ namespace MV.View
         }
 
         /// <summary>오브젝트의 프리팹 주소: `305_stageObject`(맵·종류·보상) → `105_objectKind.prefab`. 둘 다 없으면 null(코드 모양).</summary>
-        public static string PrefabFor(MvTables tables, string stageMap, RunObject o)
-        {
-            if (o?.Kind == null) return null;
-            string p = tables != null ? StageObjectData.Find(tables.StageObject.Datas, stageMap, o.Kind.key, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any) : null;
-            if (string.IsNullOrEmpty(p)) p = o.Kind.prefab;
-            return string.IsNullOrEmpty(p) ? null : p;
-        }
+        public static string PrefabFor(MvTables tables, string stageMap, RunObject o) =>
+            o?.Kind == null ? null : StageObjectData.PrefabFor(tables, stageMap, o.Kind, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any);
 
         /// <summary>지금 스테이지에서 오브젝트가 쓰는 프리팹 주소(<see cref="PrefabFor"/>). 투사체 판정 형상(<see cref="RunHitWorld"/>)도 같은 프리팹에서 온다.</summary>
         public string PrefabAddress(RunObject o) => PrefabFor(_tables, _stageMap, o);
@@ -263,6 +264,12 @@ namespace MV.View
         {
             var it = v.Inst.transform;
             var p = new PrefabParts { InstScale = it.localScale, Boards = v.Inst.GetComponentsInChildren<Billboard>(true) };
+            p.BoardPos = new Vector3[p.Boards.Length];
+            p.BoardScale = new Vector3[p.Boards.Length];
+            for (int i = 0; i < p.Boards.Length; i++) { p.BoardPos[i] = p.Boards[i].transform.localPosition; p.BoardScale[i] = p.Boards[i].transform.localScale; }
+            var cols = new List<Collider>();
+            foreach (var hb in v.Inst.GetComponentsInChildren<RunHitbox>(true)) cols.AddRange(hb.GetComponentsInChildren<Collider>(true));
+            p.HitCols = cols.ToArray();
             var glow = Deep(it, "Glow");
             if (glow != null && glow.TryGetComponent(out p.Glow)) p.GlowBase = p.Glow.color;
             switch (v.Shape)
@@ -303,7 +310,7 @@ namespace MV.View
                 }
                 case ObjectShape.Mouse:
                 {
-                    var img = Deep(it, "Image");
+                    var img = EnemyFramePrefab.FindBody(it);
                     if (img != null) img.TryGetComponent(out p.Body);
                     break;
                 }
@@ -394,6 +401,26 @@ namespace MV.View
         }
 
         /// <summary>
+        /// 투사체 판정 형상(<see cref="RunHitWorld"/>): 오브젝트 프리팹 안 <see cref="RunHitbox"/>의 Collider. 판정 정본은 화면에 있는 그 Collider 하나다.
+        /// 뷰 뿌리를 시뮬 위치 (x, <paramref name="worldY"/>, z)에 놓고 돌려준다(시뮬은 한 프레임에 여러 번 돌 수 있어 판정 직전마다 맞춘다).
+        /// 그리기 범위(<see cref="Sync"/>와 같은 범위) 밖·프리팹 로드 전·쓰러지는 중이면 null. 범위 안인데 뷰가 아직 없으면 여기서 만든다.
+        /// </summary>
+        public IReadOnlyList<Collider> HitShape(RunObject o, double worldY)
+        {
+            if (o == null || _cfg == null) return null;
+            if (!_views.TryGetValue(o.Id, out var v) || v.Obj != o)
+            {
+                if (double.IsNaN(_lastPz) || o.Z < _lastPz + _cfg.ObjDrawBack || o.Z > _lastPz + _cfg.ObjDrawFront) return null;
+                if (v != null) Release(v);
+                _views[o.Id] = v = Show(o, worldY);
+                v.Stamp = _stamp;
+            }
+            if (v.Inst == null || v.P == null || v.Die >= 0) return null;
+            v.Go.transform.position = new Vector3((float)o.X, (float)worldY, (float)o.Z);
+            return v.P.HitCols;
+        }
+
+        /// <summary>
         /// 모양 선택: `105_objectKind.viewShape`(07 §7.5.2)만 읽는다. 표 값에 맞는 모양이 없으면 기본 모양(Single) + 경고 1번.
         /// </summary>
         public static ObjectShape ShapeOf(ObjectKindData k)
@@ -414,6 +441,7 @@ namespace MV.View
         {
             if (_cfg == null || objs == null) return;
             _stamp++;
+            _lastPz = pz;
             double nowMs = Time.realtimeSinceStartupAsDouble * 1000.0;
             double dt = _lastMs < 0 ? 0 : Math.Max(0, Math.Min(0.1, (nowMs - _lastMs) / 1000.0));
             _lastMs = nowMs;
@@ -566,8 +594,7 @@ namespace MV.View
             float deg = (float)(-roll * 180 / Math.PI);
             if (v.Inst != null && v.P != null)
             {
-                v.Inst.transform.localPosition = new Vector3(0, (float)hop, 0);
-                v.Inst.transform.localScale = Vector3.Scale(v.P.InstScale, new Vector3((float)sx, (float)sy, 1));
+                PoseBoards(v.P, new Vector3(0, (float)hop, 0), new Vector3((float)sx, (float)sy, 1));
                 for (int i = 0; i < v.P.Boards.Length; i++) v.P.Boards[i].Roll = deg;
             }
             else
@@ -591,6 +618,7 @@ namespace MV.View
             var p = v.P;
             if (p == null || v.Inst == null) return;
             v.Inst.transform.localScale = p.InstScale;
+            PoseBoards(p, Vector3.zero, Vector3.one);
             for (int i = 0; i < p.Boards.Length; i++) p.Boards[i].Roll = 0;
             if (p.Gone != null)
                 for (int i = 0; i < p.Gone.Length; i++) { p.Gone[i] = 0; p.Grow[i] = 1; p.Orbs[i].localScale = p.OrbScale[i]; }
@@ -1036,7 +1064,7 @@ namespace MV.View
             EnsureInstance(v);
             if (v.Inst == null) return;
             var p = v.P;
-            float sx = 0f, dy = 0f;
+            float sx = 0f, dy = 0f, jx = 0f, jz = 0f;
             switch (v.Shape)
             {
                 case ObjectShape.WarpGate:
@@ -1097,8 +1125,8 @@ namespace MV.View
                 case ObjectShape.Junk:
                 {
                     sx = (float)ObjectReaction.WallShakeX(v.Shake);
-                    ObjectReaction.WallJitter(o.Idx, o.Bar, out double jx, out double jz);
-                    v.Go.transform.position += new Vector3((float)jx, 0, (float)jz);
+                    ObjectReaction.WallJitter(o.Idx, o.Bar, out double wjx, out double wjz);
+                    jx = (float)wjx; jz = (float)wjz;   // 자리 흔들기도 그림만(판정은 시뮬 위치)
                     if (p?.Chests != null && p.Chests.Length > 0)
                     {
                         int pick = Math.Max(0, o.Bar) % p.Chests.Length;   // 정본 chest(bar % 3), 개수 = 프리팹 Chest_ 자식 수
@@ -1108,29 +1136,37 @@ namespace MV.View
                     break;
                 }
             }
-            v.Inst.transform.localPosition = new Vector3(sx, dy, 0);
-            v.Inst.transform.localScale = Vector3.Scale(p != null ? p.InstScale : Vector3.one, PunchScale(v.Punch));
+            // 연출은 빌보드 묶음(그림)만 움직인다. 프리팹 뿌리와 그 아래 Hitbox는 시뮬 위치에 그대로 둔다.
+            if (p != null) PoseBoards(p, new Vector3(sx + jx, dy, jz), PunchScale(v.Punch));
             if (v.Rig != null) v.Rig.SetFill(o.HasHp ? o.Hp : 1, o.HasHp ? o.Max : 1);
         }
 
         /// <summary>
-        /// 적 프레임: `102_enemy.sprite` 접두 + 번호, `frameCount`장. 프리팹 몸 그림의 <see cref="SpriteFrameList"/>에 그 접두 그림이 있으면 그것(스테이지 전용 리소스),
-        /// 없으면 지금 테마 아틀라스에서 찾는다.
+        /// 적 프레임(<see cref="EnemyFrameRule"/>, 리소스 검사기와 같은 규칙): 프리팹 몸 그림의 <see cref="SpriteFrameList"/>에 접두 그림이 있으면 그것(스테이지 전용 리소스),
+        /// 없으면 지금 테마 아틀라스에서 접두 + 번호 `frameCount`장. 여기서는 아틀라스 로딩만 맡는다.
         /// </summary>
         Sprite[] EnemyFrames(RunObject o, PrefabParts p)
         {
-            string prefix = o.Enemy?.sprite;
-            if (string.IsNullOrEmpty(prefix)) return null;
-            if (!prefix.EndsWith("_")) prefix += "_";
-            int count = Math.Max(1, o.Enemy.frameCount);
-            var list = p?.Body != null ? p.Body.GetComponentInParent<SpriteFrameList>(true) : null;
-            var own = list != null ? list.Pick(prefix, count) : null;
+            var own = EnemyFramePrefab.FromPrefab(p?.Body != null ? p.Body.transform : null, o.Enemy);
             if (own != null) return own;
-            if (_sprites == null) return null;
-            return _sprites.GetFrames(_atlas, prefix, count);
+            string prefix = EnemyFrameRule.Prefix(o.Enemy?.sprite);
+            if (prefix == null || _sprites == null) return null;
+            return _sprites.GetFrames(_atlas, prefix, EnemyFrameRule.Count(o.Enemy));
         }
 
         /// <summary>맞음 눌림 크기 (1 + 0.07k, 1 − 0.08k, 1 + 0.07k)(updObjMesh L1468).</summary>
+        /// <summary>빌보드 묶음 = 기본 위치 + <paramref name="offset"/>, 기본 배율 × <paramref name="scale"/>.</summary>
+        static void PoseBoards(PrefabParts p, Vector3 offset, Vector3 scale)
+        {
+            if (p.Boards == null || p.BoardPos == null) return;
+            for (int i = 0; i < p.Boards.Length; i++)
+            {
+                var tr = p.Boards[i].transform;
+                tr.localPosition = p.BoardPos[i] + offset;
+                tr.localScale = Vector3.Scale(p.BoardScale[i], scale);
+            }
+        }
+
         static Vector3 PunchScale(double k)
         {
             float g = (float)(k * ObjectReaction.PunchGrow), s = (float)(k * ObjectReaction.PunchSquash);

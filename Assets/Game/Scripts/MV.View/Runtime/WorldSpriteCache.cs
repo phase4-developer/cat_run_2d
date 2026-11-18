@@ -28,6 +28,31 @@ namespace MV.View
 
         public bool IsLoaded(string atlasKey) => atlasKey != null && _atlases.ContainsKey(atlasKey);
 
+        bool _serving;
+
+        /// <summary>
+        /// 빌드 포함이 꺼진 아틀라스(지연 바인딩)의 그림을 프리팹이 직접 참조하면 Unity가 <see cref="SpriteAtlasManager.atlasRequested"/>로 아틀라스를 묻는다.
+        /// 답하지 않으면 그 그림은 빈 그림이 된다(예: 글자판 게이지 `Fx_Square` ∈ `Atlas_Fx_Common`). 요청 이름 = 아틀라스 이름 = Addressables 주소(파일 이름)로 읽어 넘긴다.
+        /// </summary>
+        public void ServeAtlasRequests()
+        {
+            if (_serving) return;
+            _serving = true;
+            SpriteAtlasManager.atlasRequested += OnAtlasRequested;
+        }
+
+        void OnAtlasRequested(string tag, Action<SpriteAtlas> bind)
+        {
+            if (string.IsNullOrEmpty(tag) || bind == null) return;
+            if (_atlases.TryGetValue(tag, out var e)) { bind(e.Lease.Asset); return; }
+            BindWhenLoaded(tag, bind).Forget();
+        }
+
+        async UniTaskVoid BindWhenLoaded(string tag, Action<SpriteAtlas> bind)
+        {
+            if (await LoadAtlasAsync(tag) && _atlases.TryGetValue(tag, out var e)) bind(e.Lease.Asset);
+        }
+
         public async UniTask<bool> LoadAtlasAsync(string atlasKey, CancellationToken ct = default)
         {
             if (string.IsNullOrEmpty(atlasKey)) return false;
@@ -83,7 +108,7 @@ namespace MV.View
         public Sprite[] GetFrames(string atlasKey, string prefix, int count)
         {
             var arr = new Sprite[count];
-            for (int i = 0; i < count; i++) arr[i] = Get(atlasKey, prefix + i.ToString("00"));
+            for (int i = 0; i < count; i++) arr[i] = Get(atlasKey, MV.Data.EnemyFrameRule.FrameName(prefix, i));
             return arr;
         }
 
@@ -100,6 +125,7 @@ namespace MV.View
 
         public void Dispose()
         {
+            if (_serving) { SpriteAtlasManager.atlasRequested -= OnAtlasRequested; _serving = false; }
             var keys = new List<string>(_atlases.Keys);
             foreach (var k in keys) ReleaseAtlas(k);
         }

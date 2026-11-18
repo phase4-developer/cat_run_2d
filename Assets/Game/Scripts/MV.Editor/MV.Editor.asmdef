@@ -4,6 +4,7 @@
     "references": [
         "MV.Core",
         "MV.Data",
+        "MV.View",
         "JJEvol.Tables.Runtime",
         "JJEvol.Data.Runtime",
         "MV.Boot",

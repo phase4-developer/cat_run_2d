@@ -465,17 +465,17 @@
       }
     },
     "com.jjevol.tables": {
-      "version": "file:Frozen/com.jjevol.tables-0.1.0-pre.3.tgz",
+      "version": "file:Frozen/com.jjevol.tables-0.1.0-pre.4.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
     },
     "com.jjevol.tables.authoring": {
-      "version": "file:Frozen/com.jjevol.tables.authoring-0.1.0-pre.11.tgz",
+      "version": "file:Frozen/com.jjevol.tables.authoring-0.1.0-pre.13.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
-        "com.jjevol.tables": "0.1.0-pre.3"
+        "com.jjevol.tables": "0.1.0-pre.4"
       }
     },
     "com.jjevol.ui": {

@@ -6,82 +6,64 @@ using UnityEngine;
 namespace MV.View
 {
     /// <summary>
-    /// 투사체 공간 충돌 검출(<see cref="IProjectileHitQuery"/>)을 Unity Physics로 한다. 판정 형상의 정본 = 오브젝트 프리팹 안 <see cref="RunHitbox"/>의 Collider.
-    /// 화면 뷰(흔들림·눌림·쓰러짐이 뷰 루트를 움직이고, 그리기 범위에서만 있음)와 분리해, 프리팹에서 떼어 낸 판정 형상 복사본을 오브젝트마다 두고 시뮬 위치에만 놓는다.
-    /// 순서: 시뮬 위치 갱신(이동 AI) → <see cref="Prepare"/>(복사본을 (x, WorldY, z)로 옮기고 <see cref="Physics.SyncTransforms"/> 한 번) → 투사체마다 <see cref="Cast"/> → 시뮬이 피해 반영.
+    /// 투사체 공간 충돌 검출(<see cref="IProjectileHitQuery"/>)을 Unity Physics로 한다. 판정 형상 = 화면에 있는 오브젝트 프리팹 안 <see cref="RunHitbox"/>의 Collider 그대로다(복사본 없음).
+    /// 오브젝트 연출(흔들림·눌림·가라앉기·쓰러짐)은 프리팹 안 빌보드 묶음만 움직이므로 Hitbox는 프리팹 뿌리 = 시뮬 위치에 있다(<see cref="ObjectViewFactory"/>).
+    /// 순서: 시뮬 위치 갱신(이동 AI) → <see cref="Prepare"/>(오브젝트 뿌리를 (x, WorldY, z)로 맞추고 <see cref="Physics.SyncTransforms"/> 한 번) → 투사체마다 <see cref="Cast"/> → 시뮬이 피해 반영.
     /// 투사체 높이 = WorldY + <see cref="ProjLayout.ProjY"/>(그림과 같은 높이). 구간 검사 = Raycast(이동 구간) + 시작점 겹침 검사.
     /// 여러 Collider가 한 대상이면 대상 단위로 가장 앞 진입 z만 낸다. 순서는 Physics 반환 순서가 아니라 (진입 z, Id)로 정렬한다.
-    /// 판정 형상이 없는 피격 가능 오브젝트는 맞지 않고 오류 로그를 남긴다(다른 크기로 대신하지 않는다).
+    /// 프리팹이 없거나 프리팹에 Hitbox가 없는 피격 가능 오브젝트는 맞지 않고 오류 로그를 남긴다(다른 크기로 대신하지 않는다).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class RunHitWorld : MonoBehaviour, IProjectileHitQuery
     {
-        sealed class Entry
-        {
-            public RunObject Obj;
-            public string Address;
-            public GameObject Go;
-            public int Stamp;
-        }
+        /// <summary>오브젝트 → 판정 Collider(뿌리를 시뮬 위치에 맞춘 뒤). 그리기 범위 밖·로드 전이면 null, 프리팹에 Hitbox가 없으면 빈 목록.</summary>
+        public delegate IReadOnlyList<Collider> HitShapeOf(RunObject o, double worldY);
 
+        HitShapeOf _shapeOf;
         Func<RunObject, string> _addressOf;
-        Func<string, GameObject> _assetOf;
-        Transform _templates, _live;
-        readonly Dictionary<string, GameObject> _template = new Dictionary<string, GameObject>(StringComparer.Ordinal);
-        readonly Dictionary<string, Stack<GameObject>> _pool = new Dictionary<string, Stack<GameObject>>(StringComparer.Ordinal);
-        readonly Dictionary<int, Entry> _entries = new Dictionary<int, Entry>();
-        readonly Dictionary<Collider, Entry> _owner = new Dictionary<Collider, Entry>();
-        readonly Dictionary<Entry, double> _first = new Dictionary<Entry, double>();
-        readonly List<int> _drop = new List<int>();
-        readonly List<Collider> _cols = new List<Collider>();
+        readonly Dictionary<Collider, RunObject> _owner = new Dictionary<Collider, RunObject>();
+        readonly Dictionary<RunObject, double> _first = new Dictionary<RunObject, double>();
+        readonly HashSet<RunObject> _live = new HashSet<RunObject>();
         readonly HashSet<string> _reported = new HashSet<string>(StringComparer.Ordinal);
         RaycastHit[] _rays = new RaycastHit[32];
         Collider[] _overlap = new Collider[16];
         double _y;
-        int _stamp;
 
-        /// <summary>지금 판정 형상을 가진 오브젝트 수(시험·QA).</summary>
-        public int LiveCount => _entries.Count;
+        /// <summary>지난 <see cref="Prepare"/>에서 판정 Collider를 가진 오브젝트 수(시험·QA).</summary>
+        public int LiveCount => _live.Count;
 
-        /// <summary>오브젝트의 판정 형상 복사본(시험·QA). 없으면 null.</summary>
-        public GameObject HitboxOf(int objId) => _entries.TryGetValue(objId, out var e) ? e.Go : null;
-
-        /// <param name="addressOf">오브젝트 → 프리팹 주소(<see cref="ObjectViewFactory.PrefabAddress"/>). 없으면 null.</param>
-        /// <param name="assetOf">주소 → 로드된 프리팹 원본(<see cref="ObjectViewFactory.LoadedPrefab"/>). 로드 전이면 null.</param>
-        public void Init(Func<RunObject, string> addressOf, Func<string, GameObject> assetOf)
+        /// <param name="shapeOf">오브젝트 → 프리팹 안 판정 Collider(<see cref="ObjectViewFactory.HitShape"/>).</param>
+        /// <param name="addressOf">오브젝트 → 프리팹 주소(<see cref="ObjectViewFactory.PrefabAddress"/>). 프리팹 없는 종류를 알리는 데만 쓴다.</param>
+        public void Init(HitShapeOf shapeOf, Func<RunObject, string> addressOf)
         {
+            _shapeOf = shapeOf ?? throw new ArgumentNullException(nameof(shapeOf));
             _addressOf = addressOf ?? throw new ArgumentNullException(nameof(addressOf));
-            _assetOf = assetOf ?? throw new ArgumentNullException(nameof(assetOf));
-            if (_templates != null) return;
-            _templates = new GameObject("HitTemplates").transform;
-            _templates.SetParent(transform, false);
-            _templates.gameObject.SetActive(false);
-            _live = new GameObject("Hitboxes").transform;
-            _live.SetParent(transform, false);
         }
 
         public void Prepare(RunState s)
         {
-            if (_addressOf == null) throw new InvalidOperationException("RunHitWorld.Init 전입니다.");
-            _stamp++;
+            if (_shapeOf == null) throw new InvalidOperationException("RunHitWorld.Init 전입니다.");
+            _owner.Clear();
+            _live.Clear();
             _y = s.WorldY + ProjLayout.ProjY;
-            float wy = (float)s.WorldY;
             foreach (var o in s.Objs)
             {
                 if (o == null || o.Dead || o.Kind == null || o.Kind.hittable == MV.Data.Hittable.Never) continue;
-                if (_entries.TryGetValue(o.Id, out var e) && e.Obj != o) { Release(e); _entries.Remove(o.Id); e = null; }
-                if (e == null)
+                var cols = _shapeOf(o, s.WorldY);
+                if (cols == null)
                 {
-                    e = Acquire(o);
-                    if (e == null) continue;
-                    _entries[o.Id] = e;
+                    if (_addressOf(o) == null)
+                        Report("noprefab:" + o.Kind.key, $"[RunHitWorld] 피격 가능 종류 {o.Kind.key}에 프리팹이 없어 판정 형상이 없습니다(맞지 않음).");
+                    continue;
                 }
-                e.Stamp = _stamp;
-                e.Go.transform.SetPositionAndRotation(new Vector3((float)o.X, wy, (float)o.Z), Quaternion.identity);
+                if (cols.Count == 0)
+                {
+                    Report("nohitbox:" + o.Kind.key, $"[RunHitWorld] 프리팹 {_addressOf(o)}에 {nameof(RunHitbox)}(Collider)가 없습니다(맞지 않음).");
+                    continue;
+                }
+                for (int i = 0; i < cols.Count; i++) if (cols[i] != null) _owner[cols[i]] = o;
+                _live.Add(o);
             }
-            _drop.Clear();
-            foreach (var kv in _entries) if (kv.Value.Stamp != _stamp) _drop.Add(kv.Key);
-            foreach (int id in _drop) { Release(_entries[id]); _entries.Remove(id); }
             Physics.SyncTransforms();
         }
 
@@ -103,14 +85,14 @@ namespace MV.View
                 for (int i = 0; i < n; i++) Note(_rays[i].collider, _rays[i].point.z);
             }
             int start = hits.Count;
-            foreach (var kv in _first) hits.Add(new ProjectileHit(kv.Key.Obj, kv.Value));
+            foreach (var kv in _first) hits.Add(new ProjectileHit(kv.Key, kv.Value));
             hits.Sort(start, hits.Count - start, HitOrder.Instance);
         }
 
         void Note(Collider c, double z)
         {
-            if (c == null || !_owner.TryGetValue(c, out var e) || e.Stamp != _stamp) return;
-            if (!_first.TryGetValue(e, out double prev) || z < prev) _first[e] = z;
+            if (c == null || !_owner.TryGetValue(c, out var o)) return;
+            if (!_first.TryGetValue(o, out double prev) || z < prev) _first[o] = z;
         }
 
         sealed class HitOrder : IComparer<ProjectileHit>
@@ -124,74 +106,6 @@ namespace MV.View
             }
         }
 
-        Entry Acquire(RunObject o)
-        {
-            string address = _addressOf(o);
-            if (address == null)
-            {
-                Report("noprefab:" + o.Kind.key, $"[RunHitWorld] 피격 가능 종류 {o.Kind.key}에 프리팹이 없어 판정 형상이 없습니다(맞지 않음).");
-                return null;
-            }
-            var tpl = Template(address);
-            if (tpl == null) return null;
-            GameObject go;
-            if (_pool.TryGetValue(address, out var st) && st.Count > 0) go = st.Pop();
-            else
-            {
-                go = Instantiate(tpl, _live, false);
-                go.name = tpl.name;
-            }
-            go.SetActive(true);
-            var e = new Entry { Obj = o, Address = address, Go = go };
-            go.GetComponentsInChildren(true, _cols);
-            foreach (var c in _cols) _owner[c] = e;
-            return e;
-        }
-
-        void Release(Entry e)
-        {
-            e.Go.GetComponentsInChildren(true, _cols);
-            foreach (var c in _cols) _owner.Remove(c);
-            e.Go.SetActive(false);
-            if (!_pool.TryGetValue(e.Address, out var st)) _pool[e.Address] = st = new Stack<GameObject>();
-            st.Push(e.Go);
-        }
-
-        /// <summary>프리팹의 <see cref="RunHitbox"/>들을 프리팹 뿌리 기준 자세 그대로 떼어 낸 판정 형상 원본(주소마다 한 번).</summary>
-        GameObject Template(string address)
-        {
-            if (_template.TryGetValue(address, out var tpl)) return tpl;
-            var prefab = _assetOf(address);
-            if (prefab == null)
-            {
-                Report("unloaded:" + address, $"[RunHitWorld] 프리팹 {address}이 아직 로드되지 않아 판정 형상이 없습니다(맞지 않음).");
-                return null;
-            }
-            var boxes = prefab.GetComponentsInChildren<RunHitbox>(true);
-            if (boxes.Length == 0)
-            {
-                Report("nohitbox:" + address, $"[RunHitWorld] 프리팹 {address}에 {nameof(RunHitbox)}(Collider)가 없습니다(맞지 않음).");
-                _template[address] = null;
-                return null;
-            }
-            tpl = new GameObject("Hit_" + address);
-            tpl.transform.SetParent(_templates, false);
-            // 프리팹 뿌리는 뷰 루트 아래 localPosition 0에 놓이고 회전·배율은 프리팹 값 그대로다(ObjectViewFactory.EnsureInstance).
-            var pr = prefab.transform;
-            var rootM = Matrix4x4.TRS(Vector3.zero, pr.localRotation, pr.localScale) * pr.worldToLocalMatrix;
-            foreach (var hb in boxes)
-            {
-                var mtx = rootM * hb.transform.localToWorldMatrix;
-                var copy = Instantiate(hb.gameObject, tpl.transform, false);
-                copy.name = hb.name;
-                copy.transform.localPosition = mtx.GetColumn(3);
-                copy.transform.localRotation = mtx.rotation;
-                copy.transform.localScale = mtx.lossyScale;
-            }
-            _template[address] = tpl;
-            return tpl;
-        }
-
         void Report(string key, string message)
         {
             if (_reported.Add(key)) Debug.LogError(message);
@@ -199,8 +113,9 @@ namespace MV.View
 
         void OnDestroy()
         {
-            _entries.Clear();
             _owner.Clear();
+            _first.Clear();
+            _live.Clear();
         }
     }
 }
