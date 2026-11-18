@@ -41,6 +41,8 @@ namespace MV.UI
         /// <summary>현재 위치·사용 중 같은 강조.</summary>
         public bool Highlight;
         public bool Locked;
+        /// <summary>디자이너 프리팹 겉이 읽는 화면별 칸 데이터(예: <see cref="UpgradeElementData"/>). 기본 겉은 쓰지 않는다.</summary>
+        public object Data;
         public readonly List<MetaAction> Actions = new List<MetaAction>();
 
         public MetaRow(string id, MetaRowKind kind, string title) { Id = id; Kind = kind; Title = title; }
@@ -81,9 +83,12 @@ namespace MV.UI
         public bool BottomUp;
         /// <summary>열 때 화면 가운데로 올 칸(지도 현재 Area).</summary>
         public string FocusRowId;
+        /// <summary>디자이너 프리팹 겉이 읽는 화면별 데이터(예: <see cref="AreaUpgradeViewData"/>). 기본 겉은 쓰지 않는다.</summary>
+        public object Data;
 
         public void Clear()
         {
+            Data = null;
             Title = Sub = Currencies = Empty = "";
             Tabs.Clear();
             Rows.Clear();

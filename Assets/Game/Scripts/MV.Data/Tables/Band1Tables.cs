@@ -21,6 +21,12 @@ namespace MV.Data
         int levelPriceGroup { get; }
     }
 
+    /// <summary>환생(부활 레벨)으로 잠기는 성장 행(<c>13_areaUpgrade</c>·<c>14_rebirthPerk</c> <c>needRebirth</c>). 0이면 잠기지 않는다.</summary>
+    public interface IRebirthLocked
+    {
+        int needRebirth { get; }
+    }
+
     // ---------------- 10_lobbyUpgrade ----------------
 
     public sealed class LobbyUpgradeData : MvRow, ILevelPriced
@@ -103,15 +109,17 @@ namespace MV.Data
 
     // ---------------- 13_areaUpgrade ----------------
 
-    public sealed class AreaUpgradeData : MvRow, ILevelPriced
+    public sealed class AreaUpgradeData : MvRow, ILevelPriced, IRebirthLocked
     {
         public const string Table = "13_areaUpgrade";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active").Int("max", true)
             .Float("perLv", true).Enum<AreaStatKey>("statKey", true).Str("valueFormat", true).Float("valueBase").Float("valueStep")
             .Enum<ResetOn>("resetOn").FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon)
-            .Float("costBase").Float("costGrowth");
+            .Float("costBase").Float("costGrowth").Int("needRebirth");
 
         public int max { get; private set; }
+        /// <summary>구매에 필요한 부활 레벨(<c>save.rb.lv</c>). 0 = 잠김 없음(노션 [팝업] Area 업그레이드 잠김 버튼).</summary>
+        public int needRebirth { get; private set; }
         public double perLv { get; private set; }
         public AreaStatKey statKey { get; private set; }
         public string valueFormat { get; private set; }
@@ -139,21 +147,24 @@ namespace MV.Data
             icon = S(r, "icon");
             costBase = D(r, "costBase");
             costGrowth = D(r, "costGrowth", 1.6);
+            needRebirth = I(r, "needRebirth");
         }
     }
 
     // ---------------- 14_rebirthPerk ----------------
 
-    public sealed class RebirthPerkData : MvRow, ILevelPriced
+    public sealed class RebirthPerkData : MvRow, ILevelPriced, IRebirthLocked
     {
         public const string Table = "14_rebirthPerk";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("sort").Bool("active").Int("max", true)
             .Float("base", true).Float("perLv", true).Float("floor").Enum<RebirthStatKey>("statKey", true)
             .Str("valueFormat", true).Float("valueBase").Float("valueStep")
             .FkGroup("levelPriceGroup", LevelPriceData.Table, true).Res("icon", MvAtlas.UiIcon)
-            .Float("costBase").Float("costGrowth");
+            .Float("costBase").Float("costGrowth").Int("needRebirth");
 
         public int max { get; private set; }
+        /// <summary>구매에 필요한 부활 레벨(<c>save.rb.lv</c>). 0 = 잠김 없음.</summary>
+        public int needRebirth { get; private set; }
         public double @base { get; private set; }
         public double perLv { get; private set; }
         /// <summary>빈칸 = 하한 없음.</summary>
@@ -184,6 +195,7 @@ namespace MV.Data
             icon = S(r, "icon");
             costBase = D(r, "costBase");
             costGrowth = D(r, "costGrowth", 1.5);
+            needRebirth = I(r, "needRebirth");
         }
 
         /// <summary>값 = max(floor, base + perLv × lv).</summary>
