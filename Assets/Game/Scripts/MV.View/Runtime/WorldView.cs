@@ -66,13 +66,9 @@ namespace MV.View
                 _cats = go.AddComponent<CharacterPresenter>();
             }
             _cats.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null);
-            if (_projs == null)   // 프리팹에 없으면 만든다
-            {
-                var go = new GameObject("Projectiles");
-                go.transform.SetParent(transform, false);
-                _projs = go.AddComponent<ProjectileView>();
-            }
-            _projs.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null, FxAtlas);
+            // 투사체 관리자는 WorldRoot 프리팹의 자식(Projectiles)이다. 없으면 만들지 않고 오류로 드러낸다.
+            if (_projs != null) _projs.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null, FxAtlas);
+            else Debug.LogError("[WorldView] WorldRoot 프리팹에 Projectiles(ProjectileView)가 없습니다.", this);
             if (_stairs == null)   // 프리팹에 없으면 만든다
             {
                 var go = new GameObject("ClimbStairs");

@@ -5,18 +5,14 @@ using jjevol;
 using MV.Data;
 using MV.Run;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace MV.View
 {
     /// <summary>
-    /// 런 투사체 뷰(02 §2.1.4 「던진 장난감 L3804, 회전 장난감 L3800」·「창 궤적 L3802~3803」 행, 정본 `draw2D` L3800~3804).
-    /// 던진 장난감 = 마법탄 프리팹(`300 proj.prefab`, 노션 「신작 이펙트 리소스 관리」 투사체 프리팹 구조, <see cref="ProjectileRig"/>)을 빌보드에 세우고
-    /// proj_Image에 등급 그림(`103_item.projSprite` 단독 주소), 그 아래에 등급 꼬리(`103_item.projTail`)·가운데 이펙트(`103_item.projCenter`)를 끼운다. 그림만 로컬 z 회전 −(ms/110 + sz). 크기는 프리팹 그대로.
-    /// 창 = 월드 선 메쉬 2겹 + 머리 빌보드
-    /// (`World_Proj_SpearHead_Fire`/`_Bolt`, `Atlas_Fx_Common`), 회전 장난감 = 플레이어 둘레 ORB_COUNT개 빌보드(orb 카드, 등급 그림만).
-    /// 그림·프리팹·꼬리는 Init 때 모두 읽기 시작하고, 읽히기 전에는 그 투사체를 그리지 않는다.
-    /// 정렬: 순위 Unit, 탐침 = 위치(오프셋 0), 편향 sort.proj / sort.blade, 안개 알파 없음(02 §2.3.1 7·8행, §2.4.1 대상 아님).
+    /// 런 투사체 관리자(02 §2.1.4 「던진 장난감 L3804, 회전 장난감 L3800」·「창 궤적 L3802~3803」 행, 정본 `draw2D` L3800~3804).
+    /// 생성·연결·풀·회수와 그림 임대만 한다. 그리기는 종류별 프리팹 모듈이 한다:
+    /// 던진 장난감 = <see cref="ToyProjectile"/>(`Proj_Toy`), 창 = <see cref="SpearProjectile"/>(`Proj_Spear`), 회전 장난감 = <see cref="OrbBlade"/>(`Proj_OrbBlade`, ORB_COUNT개).
+    /// 그림(`103_item.projSprite`)·마법탄 프리팹(`300 proj.prefab`)·꼬리(`projTail`)·가운데(`projCenter`)·창 장식은 Init 때 모두 읽기 시작하고, 읽히기 전에는 그 투사체를 그리지 않는다.
     /// 틴트는 화면 전체 곱하기 층(<see cref="TintLayer"/>)이 덮으므로 따로 하지 않는다.
     /// 풀: 투사체 `Id`로 묶고 최대 <see cref="MaxProjs"/>개([창작], 정본·표에 상한 없음). 넘는 것은 그리지 않는다.
     /// </summary>
@@ -26,30 +22,15 @@ namespace MV.View
         /// <summary>동시에 그리는 투사체 최대 수([창작] 64).</summary>
         public const int MaxProjs = 64;
 
-        [SerializeField] Material _spriteMaterial;
-        /// <summary>창 선 메쉬(정점색). 비우면 스프라이트 머티리얼(정점색·Cull Off)을 쓴다.</summary>
-        [SerializeField] Material _lineMaterial;
+        [SerializeField] ToyProjectile _toyPrefab;
+        [SerializeField] SpearProjectile _spearPrefab;
+        [SerializeField] OrbBlade _bladePrefab;
 
-        sealed class Item
-        {
-            public GameObject Go;
-            public DepthSortable Ds;
-            public Transform Spin;
-            public SpriteRenderer Sr;
-            public GameObject Line;
-            public MeshFilter LineMf;
-            public ProjectileRig Rig;
-            /// <summary>창 장식 파티클(`VFX_Spear_Bolt`/`_Fire`) 인스턴스와 주소.</summary>
-            public GameObject SpearFx;
-            public string SpearFxAddr;
-            public bool Fresh;
-            public int Stamp;
-        }
-
-        readonly Dictionary<int, Item> _active = new Dictionary<int, Item>(MaxProjs);
-        readonly Stack<Item> _free = new Stack<Item>(MaxProjs);
+        readonly Dictionary<int, ProjectileSlot> _active = new Dictionary<int, ProjectileSlot>(MaxProjs);
+        readonly Stack<ToyProjectile> _freeToys = new Stack<ToyProjectile>(MaxProjs);
+        readonly Stack<SpearProjectile> _freeSpears = new Stack<SpearProjectile>(MaxProjs);
         readonly List<int> _drop = new List<int>(MaxProjs);
-        Item[] _blades = System.Array.Empty<Item>();
+        OrbBlade[] _blades = System.Array.Empty<OrbBlade>();
         Sprite[] _projSprites = System.Array.Empty<Sprite>();
         readonly Dictionary<string, AddressableLease<Sprite>> _spriteLeases = new Dictionary<string, AddressableLease<Sprite>>(System.StringComparer.Ordinal);
         readonly Dictionary<string, AddressableLease<GameObject>> _prefabLeases = new Dictionary<string, AddressableLease<GameObject>>(System.StringComparer.Ordinal);
@@ -60,7 +41,7 @@ namespace MV.View
         string[] _centers;
         OrbConfig _orb;
         Sprite _headFire, _headBolt;
-        Mesh _lineFire, _lineOther;
+        Material _imageMaterial;
 
         MvTables _tables;
         ViewConfig _cfg;
@@ -76,6 +57,9 @@ namespace MV.View
         double _spinLocal, _spinLastTime;
         bool _simSpins;
 
+        /// <summary>창 장식 파티클 주소(불 / 그 외). 프리팹이 아직 없으면 장식 없이 창만 그린다.</summary>
+        const string SpearFxBolt = "VFX_Spear_Bolt", SpearFxFire = "VFX_Spear_Fire";
+
         public bool Ready => _ready;
         /// <summary>지금 보이는 투사체·창 수(시험·QA).</summary>
         public int VisibleProjs { get; private set; }
@@ -84,14 +68,20 @@ namespace MV.View
         /// <summary>만든 풀 항목 수(회전 장난감 제외, 시험·QA).</summary>
         public int PoolMade => _made;
 
-        public void Init(MvTables tables, ViewConfig cfg, WorldSpriteCache sprites, Material fallbackMaterial, string fxAtlas)
+        /// <param name="imageMaterial">마법탄 프리팹(외부 Addressables 프리팹) proj_Image에 넣을 월드 스프라이트 머티리얼.</param>
+        public void Init(MvTables tables, ViewConfig cfg, WorldSpriteCache sprites, Material imageMaterial, string fxAtlas)
         {
+            if (_toyPrefab == null || _spearPrefab == null || _bladePrefab == null
+                || !_toyPrefab.HasRefs || !_spearPrefab.HasRefs || !_bladePrefab.HasRefs)
+            {
+                Debug.LogError("[ProjectileView] 투사체 프리팹(Proj_Toy·Proj_Spear·Proj_OrbBlade) 참조가 비었습니다.", this);
+                return;
+            }
             _tables = tables;
             _cfg = cfg;
             _sprites = sprites;
             _fxAtlas = fxAtlas;
-            if (_spriteMaterial == null) _spriteMaterial = fallbackMaterial;
-            if (_lineMaterial == null) _lineMaterial = _spriteMaterial;
+            _imageMaterial = imageMaterial;
             _names = ProjLayout.NamesByTier(tables);
             _tails = ProjLayout.TailsByTier(tables);
             _centers = ProjLayout.CentersByTier(tables);
@@ -99,24 +89,33 @@ namespace MV.View
             _projPrefab = tables.RunConfig.Raw(RunConfigKeys.Proj_Prefab);
             if (_sprites != null) LoadArt();
             _orb = OrbConfig.From(tables.RunConfig);
-            var c = tables.Climb.Config();
             _path = ClimbPath.From(tables.Climb);
             if (_blades.Length != _orb.Count)
             {
-                for (int i = 0; i < _blades.Length; i++)
-                {
-                    if (_blades[i] == null) continue;
-                    if (Application.isPlaying) Destroy(_blades[i].Go); else DestroyImmediate(_blades[i].Go);
-                }
-                _blades = new Item[System.Math.Max(0, _orb.Count)];
+                foreach (var b in _blades) if (b != null) Discard(b.gameObject);
+                _blades = new OrbBlade[System.Math.Max(0, _orb.Count)];
             }
             for (int i = 0; i < _blades.Length; i++)
-                if (_blades[i] == null) _blades[i] = Make("Blade" + i, (float)cfg.SortBlade);
+                if (_blades[i] == null) _blades[i] = Spawn(_bladePrefab, "Blade" + i, (float)cfg.SortBlade);
             _ready = true;
             Hide();
         }
 
-        /// <summary>마법탄 프리팹·등급 그림·등급 꼬리·가운데 이펙트를 읽기 시작한다(같은 주소는 한 번). 그림 캐시가 없는 시험에서는 부르지 않는다.</summary>
+        static void Discard(GameObject go)
+        {
+            if (Application.isPlaying) Destroy(go); else DestroyImmediate(go);
+        }
+
+        T Spawn<T>(T prefab, string name, float bias) where T : ProjectileSlot
+        {
+            var slot = Instantiate(prefab, transform, false);
+            slot.name = name;
+            slot.SetBias(bias);
+            slot.Hide();
+            return slot;
+        }
+
+        /// <summary>마법탄 프리팹·등급 그림·등급 꼬리·가운데 이펙트·창 장식을 읽기 시작한다(같은 주소는 한 번). 그림 캐시가 없는 시험에서는 부르지 않는다.</summary>
         void LoadArt()
         {
             var ct = _cts.Token;
@@ -177,68 +176,20 @@ namespace MV.View
 
         GameObject Prefab(string address) => address != null && _prefabLeases.TryGetValue(address, out var l) ? l.Asset : null;
 
-        /// <summary>항목에 마법탄 프리팹 인스턴스를 붙인다(빌보드 아래, 처음 한 번). 프리팹이 아직 없으면 null.</summary>
-        ProjectileRig EnsureRig(Item it)
-        {
-            if (it.Rig != null) return it.Rig;
-            var prefab = Prefab(_projPrefab);
-            if (prefab == null) return null;
-            var go = Instantiate(prefab, it.Spin.parent, false);
-            go.name = _projPrefab;
-            it.Rig = go.GetComponent<ProjectileRig>();
-            if (it.Rig.Image != null && _spriteMaterial != null) it.Rig.Image.sharedMaterial = _spriteMaterial;
-            return it.Rig;
-        }
-
-        Item Make(string name, float bias)
-        {
-            var go = new GameObject(name);
-            go.transform.SetParent(transform, false);
-            var sg = go.AddComponent<SortingGroup>();
-            sg.sortingLayerName = ObjectViewFactory.WorldLayer;
-            var ds = go.AddComponent<DepthSortable>();
-            ds.Rank = DepthMath.RankUnit;
-            ds.Bias = bias;
-            ds.SortOffsetY = 0f;
-            ds.Fog = false;
-
-            var line = new GameObject("Line", typeof(MeshFilter), typeof(MeshRenderer));
-            line.transform.SetParent(go.transform, false);
-            var mr = line.GetComponent<MeshRenderer>();
-            mr.sharedMaterial = _lineMaterial;
-            mr.shadowCastingMode = ShadowCastingMode.Off;
-            mr.receiveShadows = false;
-            mr.sortingOrder = 0;
-            line.SetActive(false);
-
-            var bill = new GameObject("Bill");
-            bill.transform.SetParent(go.transform, false);
-            bill.AddComponent<Billboard>();
-            var spin = new GameObject("Spin");
-            spin.transform.SetParent(bill.transform, false);
-            var sr = spin.AddComponent<SpriteRenderer>();
-            if (_spriteMaterial != null) sr.sharedMaterial = _spriteMaterial;
-            sr.sortingOrder = 1;   // 창 선 위에 머리
-
-            ds.Refresh();
-            go.SetActive(false);
-            return new Item { Go = go, Ds = ds, Spin = spin.transform, Sr = sr, Line = line, LineMf = line.GetComponent<MeshFilter>() };
-        }
-
         public void Hide()
         {
             foreach (var kv in _active) Release(kv.Value);
             _active.Clear();
-            for (int i = 0; i < _blades.Length; i++)
-                if (_blades[i] != null && _blades[i].Go.activeSelf) _blades[i].Go.SetActive(false);
+            foreach (var b in _blades) if (b != null) b.Hide();
             VisibleProjs = 0;
             VisibleBlades = 0;
         }
 
-        void Release(Item it)
+        void Release(ProjectileSlot slot)
         {
-            if (it.Go.activeSelf) it.Go.SetActive(false);
-            _free.Push(it);
+            slot.Hide();
+            if (slot is ToyProjectile toy) _freeToys.Push(toy);
+            else if (slot is SpearProjectile spear) _freeSpears.Push(spear);
         }
 
         /// <summary>
@@ -259,15 +210,25 @@ namespace MV.View
                 {
                     var b = projs[i];
                     if (b == null || b.Dead) continue;
-                    if (!_active.TryGetValue(b.Id, out var it))
+                    if (_active.TryGetValue(b.Id, out var slot) && (slot is SpearProjectile) != b.Spear)
                     {
-                        it = Rent();
-                        if (it == null) continue;   // 풀 최대치를 넘음
-                        it.Fresh = true;
-                        _active[b.Id] = it;
+                        Release(slot);   // 같은 번호가 다른 종류로 다시 쓰였다
+                        _active.Remove(b.Id);
+                        slot = null;
                     }
-                    it.Stamp = _stamp;
-                    if (PlaceProj(it, b, fire, wy, nowSec)) visible++;
+                    if (slot == null)
+                    {
+                        slot = Rent(b.Spear);
+                        if (slot == null) continue;   // 풀 최대치를 넘음
+                        slot.Fresh = true;
+                        _active[b.Id] = slot;
+                    }
+                    slot.Stamp = _stamp;
+                    var pos = new Vector3((float)b.X, (float)(wy + ProjLayout.ProjY), (float)b.Z);
+                    bool shown = slot is SpearProjectile spear
+                        ? spear.Place(SpearHead(fire), fire ? SpearFxFire : SpearFxBolt, Prefab(fire ? SpearFxFire : SpearFxBolt), pos)
+                        : PlaceToy((ToyProjectile)slot, b, pos, nowSec);
+                    if (shown) visible++;
                 }
             }
             _drop.Clear();
@@ -281,108 +242,22 @@ namespace MV.View
             VisibleBlades = SyncBlades(s, fire, wy, nowSec);
         }
 
-        Item Rent()
+        ProjectileSlot Rent(bool spear)
         {
-            if (_free.Count > 0) return _free.Pop();
+            if (spear && _freeSpears.Count > 0) return _freeSpears.Pop();
+            if (!spear && _freeToys.Count > 0) return _freeToys.Pop();
             if (_made >= MaxProjs) return null;
             _made++;
-            return Make("Proj" + _made, (float)_cfg.SortProj);
+            float bias = (float)_cfg.SortProj;
+            return spear ? Spawn(_spearPrefab, "Spear" + _made, bias) : (ProjectileSlot)Spawn(_toyPrefab, "Toy" + _made, bias);
         }
 
-        bool PlaceProj(Item it, RunProjectile b, bool fire, double wy, double nowSec)
+        bool PlaceToy(ToyProjectile toy, RunProjectile b, Vector3 pos, double nowSec)
         {
-            if (!b.Spear) return PlaceToy(it, b, wy, nowSec);
-            if (it.Rig != null && it.Rig.gameObject.activeSelf) it.Rig.gameObject.SetActive(false);
-            Sprite sprite;
-            {
-                sprite = SpearHead(fire);
-                var mesh = SpearLine(fire);
-                if (it.LineMf.sharedMesh != mesh) it.LineMf.sharedMesh = mesh;
-                // 기존 창 선(코드로 그린 띠)은 끈다: 꼬리는 창 장식 파티클(VFX_Spear_*)의 리본이 그린다. 다시 쓰려면 SetActive(true)로.
-                if (it.Line.activeSelf) it.Line.SetActive(false);
-                it.Spin.localRotation = Quaternion.identity;
-                it.Spin.localScale = Vector3.one;
-            }
-            if (sprite == null)
-            {
-                if (it.Go.activeSelf) it.Go.SetActive(false);
-                return false;
-            }
-            if (it.Sr.sprite != sprite) it.Sr.sprite = sprite;
-            it.Go.transform.position = new Vector3((float)b.X, (float)(wy + ProjLayout.ProjY), (float)b.Z);
-            if (!it.Go.activeSelf) it.Go.SetActive(true);
-            SetSpearFx(it, fire ? SpearFxFire : SpearFxBolt);
-            if (it.Fresh)
-            {
-                it.Fresh = false;
-                RestartSpearFx(it);
-            }
-            return true;
-        }
-
-        /// <summary>창 장식 파티클 주소(불 / 그 외). 프리팹이 아직 없으면 장식 없이 창만 그린다.</summary>
-        const string SpearFxBolt = "VFX_Spear_Bolt", SpearFxFire = "VFX_Spear_Fire";
-
-        /// <summary>창 장식을 끼운다. 주소가 같으면 켜기만, 다르면 옛것을 지우고 새로 만든다. null이면 끈다.</summary>
-        void SetSpearFx(Item it, string address)
-        {
-            if (address == null)
-            {
-                if (it.SpearFx != null && it.SpearFx.activeSelf) it.SpearFx.SetActive(false);
-                return;
-            }
-            if (it.SpearFxAddr == address && it.SpearFx != null)
-            {
-                if (!it.SpearFx.activeSelf) { it.SpearFx.SetActive(true); RestartSpearFx(it); }
-                return;
-            }
-            var prefab = Prefab(address);
-            if (prefab == null) return;
-            if (it.SpearFx != null) Destroy(it.SpearFx);
-            it.SpearFx = Instantiate(prefab, it.Go.transform, false);
-            it.SpearFx.name = address;
-            it.SpearFxAddr = address;
-        }
-
-        /// <summary>풀에서 다시 꺼낸 창: 옛 자리에서 이어지는 입자가 생기지 않게 처음부터 다시 재생한다.</summary>
-        static void RestartSpearFx(Item it)
-        {
-            if (it.SpearFx == null) return;
-            foreach (var ps in it.SpearFx.GetComponentsInChildren<ParticleSystem>(true))
-            {
-                ps.Simulate(0f, false, true);
-                ps.Play(false);
-            }
-        }
-
-        /// <summary>던진 장난감: 마법탄 프리팹에 등급 그림·꼬리·가운데 이펙트를 넣고 그림만 돌린다. 프리팹·그림이 아직 없으면 그리지 않는다.</summary>
-        bool PlaceToy(Item it, RunProjectile b, double wy, double nowSec)
-        {
-            if (it.Line.activeSelf) it.Line.SetActive(false);
-            SetSpearFx(it, null);
-            if (it.Sr.sprite != null) it.Sr.sprite = null;
-            var rig = EnsureRig(it);
-            var sprite = ProjSprite(b.Tier);
-            if (rig == null || sprite == null)
-            {
-                if (it.Go.activeSelf) it.Go.SetActive(false);
-                return false;
-            }
-            if (!rig.gameObject.activeSelf) rig.gameObject.SetActive(true);
-            rig.SetSprite(sprite);
             string tail = ProjLayout.ProjSpriteName(b.Tier, _tails);
-            rig.SetTail(tail, Prefab(tail));
             string center = ProjLayout.ProjSpriteName(b.Tier, _centers);
-            rig.SetCenter(center, Prefab(center));
-            rig.SetSpin(ProjLayout.ToDegrees(ProjLayout.ProjAngle(nowSec, b.Sz)));
-            it.Go.transform.position = new Vector3((float)b.X, (float)(wy + ProjLayout.ProjY), (float)b.Z);
-            if (!it.Go.activeSelf) it.Go.SetActive(true);
-            if (it.Fresh)
-            {
-                it.Fresh = false;
-                rig.ResetTrails();
-            }
-            return true;
+            return toy.Place(Prefab(_projPrefab), _projPrefab, _imageMaterial, ProjSprite(b.Tier),
+                tail, Prefab(tail), center, Prefab(center), ProjLayout.ToDegrees(ProjLayout.ProjAngle(nowSec, b.Sz)), pos);
         }
 
         int SyncBlades(RunState s, bool fire, double wy, double nowSec)
@@ -392,31 +267,19 @@ namespace MV.View
             double spinA = SpinAngle(s, orb, spin);
             if (!orb || s.Fin)
             {
-                for (int i = 0; i < _blades.Length; i++) if (_blades[i].Go.activeSelf) _blades[i].Go.SetActive(false);
+                foreach (var b in _blades) b.Hide();
                 return 0;
             }
             double px = s.P.X, pz = s.P.Z;
             var C = s.Phase == RunPhase.Climb ? s.Climb : null;
             if (C != null) _path.Cat(C.Pos, C.K, C.Z0, out _, out pz);
+            float k = (float)(ProjLayout.BladeRadius / ProjLayout.BakedRadius);
             int visible = 0;
             for (int i = 0; i < _blades.Length; i++)
             {
-                var it = _blades[i];
-                var sprite = ProjSprite(ProjLayout.BladeTier(i, fire));
-                if (it.Rig != null && it.Rig.gameObject.activeSelf) it.Rig.gameObject.SetActive(false);
-                if (sprite == null)
-                {
-                    if (it.Go.activeSelf) it.Go.SetActive(false);
-                    continue;
-                }
-                if (it.Sr.sprite != sprite) it.Sr.sprite = sprite;
                 ProjLayout.BladePos(spinA, i, _orb, px, pz, out double x, out double y, out double z);
-                it.Go.transform.position = new Vector3((float)x, (float)(wy + y), (float)z);
-                it.Spin.localRotation = Quaternion.Euler(0f, 0f, ProjLayout.ToDegrees(ProjLayout.BladeAngle(nowSec, i)));
-                float k = (float)(ProjLayout.BladeRadius / ProjLayout.BakedRadius);
-                it.Spin.localScale = new Vector3(k, k, 1f);
-                if (!it.Go.activeSelf) it.Go.SetActive(true);
-                visible++;
+                var pos = new Vector3((float)x, (float)(wy + y), (float)z);
+                if (_blades[i].Place(ProjSprite(ProjLayout.BladeTier(i, fire)), pos, ProjLayout.ToDegrees(ProjLayout.BladeAngle(nowSec, i)), k)) visible++;
             }
             return visible;
         }
@@ -464,29 +327,6 @@ namespace MV.View
             return sp;
         }
 
-        /// <summary>창 선(머리 기준 로컬): 뒤 2.8 m → 머리, XZ 평면 띠 2겹(넓은 반투명 색 + 가는 흰색). 끝은 캔버스 기본 butt.</summary>
-        Mesh SpearLine(bool fire)
-        {
-            var m = fire ? _lineFire : _lineOther;
-            if (m != null) return m;
-            var mb = new MeshBuffer();
-            string el = fire ? "fire" : null;
-            AddBand(mb, ProjLayout.SpearWide, MvColor.WithAlpha(ProjLayout.SpearColor(el), ProjLayout.SpearWideAlpha));
-            AddBand(mb, ProjLayout.SpearCore, MvColor.ToColor32(ProjLayout.SpearCoreColor));
-            m = new Mesh { name = fire ? "SpearLine_Fire" : "SpearLine" };
-            mb.ApplyTo(m);
-            m.RecalculateBounds();
-            if (fire) _lineFire = m; else _lineOther = m;
-            return m;
-        }
-
-        static void AddBand(MeshBuffer mb, double width, Color32 col)
-        {
-            ProjLayout.SpearTailPoint(0, 0, 0, out _, out _, out double tz);
-            float h = (float)(width / 2), z0 = (float)tz;
-            mb.AddQuad(new Vector3(-h, 0f, z0), new Vector3(h, 0f, z0), new Vector3(h, 0f, 0f), new Vector3(-h, 0f, 0f), col);
-        }
-
         void OnDestroy()
         {
             _cts.Cancel();
@@ -495,8 +335,6 @@ namespace MV.View
             foreach (var l in _prefabLeases.Values) l?.Dispose();
             _spriteLeases.Clear();
             _prefabLeases.Clear();
-            if (_lineFire != null) Destroy(_lineFire);
-            if (_lineOther != null) Destroy(_lineOther);
         }
     }
 }
