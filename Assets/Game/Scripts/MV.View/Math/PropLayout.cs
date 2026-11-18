@@ -50,8 +50,6 @@ namespace MV.View
     {
         public const double Spacing = 3.2;
         public const double FenceX = 4.78, PoleX = 4.5, RoadsideX = 4.22;
-        /// <summary>길가 소품 좌우 랜덤 폭(m): x = ±(RoadsideX + (hh − 0.5)·폭). 담장 안쪽 면(약 4.58) 안에 머물게 둔다.</summary>
-        public const double RoadsideJitter = 0.6;
         public const double DoorW = 0.9, DoorH = 1.25, WinW = 0.7, WinH = 0.6;
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace MV.View
             switch (kind)
             {
                 case PropKind.Fence: drawX = sd * FenceX; break;
-                case PropKind.Roadside: drawX = sd * (RoadsideX + (hh - 0.5) * RoadsideJitter); break;
+                case PropKind.Roadside: drawX = sd * RoadsideX + sd * (hh - 0.5) * 0.12; break;
                 case PropKind.Pole: drawX = sd * PoleX; break;
                 default: drawX = x; break;
             }

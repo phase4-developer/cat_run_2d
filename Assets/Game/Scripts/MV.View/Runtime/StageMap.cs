@@ -50,8 +50,13 @@ namespace MV.View
         [Tooltip("계단 정산 옆 시점에서 잘린 끝에 세우는 땅 단면(꺼 둔 채 둔다)")] public Transform SideCut;
 
         [Header("길가 장식")]
-        public SpriteRenderer DecoTemplate;
-        public List<Sprite> DecoSprites = new List<Sprite>();
+        [Tooltip("장식 한 개의 틀 오브젝트(꺼 둔 채 둔다). 복제해서 쓰며, 안의 모든 SpriteRenderer(본체·그림자 등)에 같은 스프라이트를 넣는다")]
+        public GameObject DecoTemplate;
+        [Tooltip("템플릿 안에서 이 이름의 오브젝트는 바닥 그림자로 보고 정렬 그룹 밖(아래 레이어)으로 빼서 길 위 오브젝트를 가리지 않게 한다")]
+        public string DecoShadowName = "Shadow";
+        [Tooltip("그림자를 그릴 정렬 레이어(World보다 먼저 그려지는 바닥 레이어)")] public string DecoShadowLayer = "Ground";
+        [Tooltip("그림자 정렬 순서(같은 레이어의 바닥 판(0)보다 커야 바닥 위에 보인다)")] public int DecoShadowOrder = 10;
+        [Tooltip("장식마다 무작위로 고를 스프라이트")] public List<Sprite> DecoSprites = new List<Sprite>();
         [Tooltip("한쪽 장식 간격(m)")] public float DecoSpacing = 12.6f;
         [Tooltip("길 중심에서 장식까지 거리(m), 아래·위 범위에서 무작위")] public Vector2 DecoX = new Vector2(6.9f, 8.0f);
         [Tooltip("카메라 뒤·앞으로 장식을 둘 범위(m)")] public Vector2 DecoRange = new Vector2(-10f, 110f);
@@ -99,7 +104,99 @@ namespace MV.View
             /// <summary>카메라 쪽 바닥 오른쪽 끝(단면은 잘린 끝과 이 값 중 작은 자리에 선다).</summary>
             public float NearRight = float.PositiveInfinity;
         }
-        readonly List<SpriteRenderer> _decos = new List<SpriteRenderer>();
+        readonly List<DecoView> _decos = new List<DecoView>();
+        /// <summary>판마다 바뀌는 장식 배치 씨앗(<see cref="Reshuffle"/>). 해시 입력에 더한다.</summary>
+        float _decoSeed;
+        readonly int[] _deckA = new int[64], _deckB = new int[64];
+
+        /// <summary>길가 장식 배치(좌우 위치·그림)를 새로 섞는다. 맵을 붙일 때와 로비에 들어올 때(판마다) 부른다.</summary>
+        public void Reshuffle() => _decoSeed = UnityEngine.Random.Range(0, 1000) * 0.731f;
+
+        /// <summary>
+        /// 장식 그림 고르기: 한쪽 줄을 그림 개수만큼씩 묶어 묶음마다 섞은 순서(덱)대로 쓴다.
+        /// 같은 줄에서 같은 그림이 바로 붙어 나오지 않는다(묶음 경계도 확인). k만으로 정해져 프레임마다 같은 값이 나온다.
+        /// </summary>
+        int PickDeco(int k, int side)
+        {
+            int n = Mathf.Min(DecoSprites.Count, _deckA.Length);
+            if (n <= 1) return 0;
+            float off = side * 17.3f + _decoSeed;
+            if (n == 2) return (k + (Hash(off) < 0.5f ? 0 : 1)) & 1;   // 두 장이면 번갈아
+            int b = Mathf.FloorToInt((float)k / n), i = k - b * n;
+            Deck(b, off, n, _deckA);
+            if (_deckA[0] == LastOf(b - 1, off, n)) { int tmp = _deckA[0]; _deckA[0] = _deckA[1]; _deckA[1] = tmp; }
+            return _deckA[i];
+        }
+
+        int LastOf(int b, float off, int n) { Deck(b, off, n, _deckB); return _deckB[n - 1]; }   // n ≥ 3이면 앞 두 칸 교환이 끝 칸을 바꾸지 않는다
+
+        static void Deck(int b, float off, int n, int[] into)
+        {
+            for (int i = 0; i < n; i++) into[i] = i;
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = Mathf.Min(i, (int)(Hash(b * 3.71f + i * 0.917f + off) * (i + 1)));
+                int tmp = into[i]; into[i] = into[j]; into[j] = tmp;
+            }
+        }
+
+        /// <summary>복제한 장식 한 개: 루트(정렬·안개)와 같은 스프라이트를 받는 그림들(본체·그림자).</summary>
+        sealed class DecoView
+        {
+            public GameObject Root;
+            public SpriteRenderer[] Sprites;
+            public DepthSortable Sort;
+            /// <summary>정렬 그룹 밖으로 뺀 그림자 묶음(없으면 null)과 원래 부모·원래 로컬 자세.</summary>
+            public Transform Shadow, ShadowParent;
+            public bool ShadowParentBillboard;
+            public Vector3 ShadowPos, ShadowScale;
+            public Quaternion ShadowRot;
+            public SpriteRenderer[] ShadowSprites;
+            public Color[] ShadowBase;
+        }
+
+        /// <summary>템플릿 복제본에서 그림자 오브젝트를 찾아 바닥 레이어 정렬 그룹으로 옮긴다(복제본을 켜기 전에 부른다).</summary>
+        void DetachShadow(DecoView d)
+        {
+            if (string.IsNullOrEmpty(DecoShadowName)) return;
+            Transform sh = null;
+            foreach (var tr in d.Root.GetComponentsInChildren<Transform>(true))
+                if (tr != d.Root.transform && tr.name == DecoShadowName) { sh = tr; break; }
+            if (sh == null) return;
+            d.ShadowParent = sh.parent;
+            d.ShadowParentBillboard = sh.parent.GetComponent<Billboard>() != null;
+            d.ShadowPos = sh.localPosition; d.ShadowRot = sh.localRotation; d.ShadowScale = sh.localScale;
+            var holder = new GameObject(DecoShadowName + "_Ground");
+            holder.transform.SetParent(d.Root.transform.parent, false);
+            var sg = holder.AddComponent<UnityEngine.Rendering.SortingGroup>();
+            sg.sortingLayerName = DecoShadowLayer;
+            sg.sortingOrder = DecoShadowOrder;
+            sh.SetParent(holder.transform, false);
+            sh.localPosition = Vector3.zero; sh.localRotation = Quaternion.identity; sh.localScale = Vector3.one;
+            d.Shadow = holder.transform;
+            d.ShadowSprites = holder.GetComponentsInChildren<SpriteRenderer>(true);
+            d.ShadowBase = new Color[d.ShadowSprites.Length];
+            for (int i = 0; i < d.ShadowSprites.Length; i++) d.ShadowBase[i] = d.ShadowSprites[i].color;
+        }
+
+        /// <summary>그림자 묶음을 원래 부모 자리에 맞춘다. 부모가 빌보드면 이번 프레임 카메라 회전을 쓴다(빌보드 갱신이 이 뒤에 돌기 때문).</summary>
+        void FollowShadow(DecoView d, float alpha, bool on)
+        {
+            if (d.Shadow == null) return;
+            if (d.Shadow.gameObject.activeSelf != on) d.Shadow.gameObject.SetActive(on);
+            if (!on) return;
+            var p = d.ShadowParent;
+            Quaternion pr = d.ShadowParentBillboard && _cam != null ? _cam.transform.rotation : p.rotation;
+            Vector3 ps = p.lossyScale;
+            d.Shadow.SetPositionAndRotation(p.position + pr * Vector3.Scale(ps, d.ShadowPos), pr * d.ShadowRot);
+            d.Shadow.localScale = Vector3.Scale(ps, d.ShadowScale);
+            for (int i = 0; i < d.ShadowSprites.Length; i++)
+            {
+                var c = d.ShadowBase[i];
+                c.a *= alpha;
+                if (d.ShadowSprites[i].color != c) d.ShadowSprites[i].color = c;
+            }
+        }
         /// <summary>원경 묶음 아래 렌더러와 그 인스턴스 머티리얼(시차로 텍스처를 민다).</summary>
         Renderer[] _farRs = new Renderer[0], _nearRs = new Renderer[0];
         Material[] _farMats = new Material[0], _nearMats = new Material[0];
@@ -114,6 +211,7 @@ namespace MV.View
             _groundY = groundY;
             _orbitE = orbitE;
             _cliff = cliff;
+            Reshuffle();
             if (Backdrop != null) _backdropRot = Backdrop.localRotation;
             if (SideCut != null) { _sideCutSize = new Vector2(SideCut.localScale.x, SideCut.localScale.y); SideCut.gameObject.SetActive(false); }
             if (Ground != null && _high == null)
@@ -145,7 +243,7 @@ namespace MV.View
             foreach (var d in SkyDecos) if (d != null && d.Target != null) d.Base = d.Target.localPosition;
             if (HideBuiltInGround) foreach (var g in FindObjectsByType<GroundStripMesh>(FindObjectsSortMode.None)) g.GetComponent<Renderer>().enabled = false;
             if (HideBuiltInProps) foreach (var p in FindObjectsByType<PropStreamer>(FindObjectsSortMode.None)) p.gameObject.SetActive(false);
-            if (DecoTemplate != null) DecoTemplate.transform.parent.gameObject.SetActive(false);
+            if (DecoTemplate != null) DecoTemplate.SetActive(false);
         }
 
         void OnDestroy()
@@ -340,28 +438,39 @@ namespace MV.View
             int need = (k1 - k0 + 1) * 2;
             while (_decos.Count < need)
             {
-                var root = Instantiate(DecoTemplate.transform.parent.gameObject, DecoTemplate.transform.parent.parent);
+                var root = Instantiate(DecoTemplate, DecoTemplate.transform.parent);   // 템플릿이 꺼져 있어 복제본도 꺼진 채 나온다
+                var dv = new DecoView { Root = root, Sprites = root.GetComponentsInChildren<SpriteRenderer>(true) };
+                DetachShadow(dv);   // 켜기 전에 빼야 정렬 그룹(DepthSortable)이 본체만 잡는다
                 root.SetActive(true);
-                _decos.Add(root.GetComponentInChildren<SpriteRenderer>(true));
+                dv.Sort = root.GetComponentInChildren<DepthSortable>(true);
+                if (dv.Sort != null) dv.Sort.Refresh();
+                _decos.Add(dv);
             }
             int n = 0;
             for (int k = k0; k <= k1; k++)
                 for (int side = -1; side <= 1; side += 2)
                 {
-                    var sr = _decos[n++];
-                    float h = Hash(k * 2.17f + side * 0.73f);
-                    var sp = DecoSprites[Mathf.Min(DecoSprites.Count - 1, (int)(Hash(k * 1.3f + side) * DecoSprites.Count))];
-                    if (sr.sprite != sp) { sr.sprite = sp; var ds = sr.GetComponentInParent<DepthSortable>(); if (ds != null) ds.Refresh(); }
+                    var d = _decos[n++];
+                    float h = Hash(k * 2.17f + side * 0.73f + _decoSeed);
+                    var sp = DecoSprites[PickDeco(k, side)];
+                    bool changed = false;
+                    for (int i = 0; i < d.Sprites.Length; i++)   // 본체·그림자 모두 같은 그림
+                        if (d.Sprites[i].sprite != sp) { d.Sprites[i].sprite = sp; changed = true; }
+                    if (changed && d.Sort != null) d.Sort.Refresh();
                     float x = side * Mathf.Lerp(DecoX.x, DecoX.y, h);
                     float dz = k * DecoSpacing + h * 1.2f;
-                    sr.transform.parent.position = new Vector3(x, groundAt(dz), dz);
+                    d.Root.transform.position = new Vector3(x, groundAt(dz), dz);
                     float a = ClimbOcclusion.NearAlpha(e, x);   // 카메라 쪽 장식은 옆 시점으로 돌수록 흐려진다
-                    var fade = sr.GetComponentInParent<DepthSortable>();
-                    if (fade != null) fade.SetAlphaScale(a);
+                    if (d.Sort != null) d.Sort.SetAlphaScale(a);
                     bool on = a > 0.01f;
-                    if (sr.transform.parent.gameObject.activeSelf != on) sr.transform.parent.gameObject.SetActive(on);
+                    if (d.Root.activeSelf != on) d.Root.SetActive(on);
+                    FollowShadow(d, a, on);
                 }
-            for (; n < _decos.Count; n++) if (_decos[n].transform.parent.gameObject.activeSelf) _decos[n].transform.parent.gameObject.SetActive(false);
+            for (; n < _decos.Count; n++)
+            {
+                if (_decos[n].Root.activeSelf) _decos[n].Root.SetActive(false);
+                FollowShadow(_decos[n], 0f, false);
+            }
         }
 
         static float Hash(float x) { float s = Mathf.Sin(x * 127.1f + 311.7f) * 43758.5453f; return s - Mathf.Floor(s); }

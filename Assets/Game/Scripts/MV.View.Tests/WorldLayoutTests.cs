@@ -118,7 +118,7 @@ namespace MV.View.Tests
             {
                 if (p.Kind == PropKind.Fence) Assert.That(p.DrawX, Is.EqualTo(p.Side * PropLayout.FenceX));
                 if (p.Kind == PropKind.Pole) Assert.That(p.DrawX, Is.EqualTo(p.Side * PropLayout.PoleX));
-                if (p.Kind == PropKind.Roadside) Assert.That(System.Math.Abs(p.DrawX - p.Side * PropLayout.RoadsideX), Is.LessThanOrEqualTo(PropLayout.RoadsideJitter * 0.5 + 1e-12));
+                if (p.Kind == PropKind.Roadside) Assert.That(System.Math.Abs(p.DrawX - p.Side * PropLayout.RoadsideX), Is.LessThanOrEqualTo(0.06 + 1e-12));
                 if (p.Kind == PropKind.House) Assert.That(p.DrawX, Is.EqualTo(p.GenX));
             }
         }

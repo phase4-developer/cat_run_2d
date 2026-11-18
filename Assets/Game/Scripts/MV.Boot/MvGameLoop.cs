@@ -234,6 +234,7 @@ namespace MV.Boot
             _resultPopup = null;
             _mapPopup = null;
             await ApplyThemeAsync(CurrentArea());
+            if (_stageMap != null) _stageMap.Reshuffle();   // 판마다 길가 장식 배치를 새로 섞는다
 
             BuildLobbyTrack();
             MvSound.EnterLobby();
