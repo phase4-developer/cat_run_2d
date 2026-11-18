@@ -2,13 +2,14 @@ using System;
 using jjevol;
 using MV.Run;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MV.UI
 {
     /// <summary>
     /// <c>UIHud_Run</c> 컨트롤러(05 §5.2, 1차: 재화 칩·계단 상자·계단 게이지·무기 카드). 화면 코드는 <see cref="RunHudPresenter"/>,
     /// 겉은 <see cref="IRunHudView"/>(기본 <see cref="RunHudView"/>). 가호 카드 룰렛·가호 줄은 <see cref="BlessingCardsView"/>(런 상태 출처일 때).
-    /// 연료 게이지·등급 미터·HAND는 2차.
+    /// 2차(MV-UI2-HUD): 디자이너 <c>IngameScreen</c>을 자식으로 두면 그 겉(<see cref="IngameHudView"/>)을 쓴다.
     /// </summary>
     public class RunHud : UIHudBase
     {
@@ -25,17 +26,29 @@ namespace MV.UI
         {
             get
             {
-                if (_presenter.View == null) _presenter.SetView(view as IRunHudView ?? GetComponent<IRunHudView>());
+                if (_presenter.View == null) _presenter.SetView(ResolveView());
                 return _presenter;
             }
         }
+
+        /// <summary>겉: 참조 → 같은 오브젝트 → 자식(디자이너 IngameScreen을 중첩한 프리팹, MV-UI2-HUD).</summary>
+        IRunHudView ResolveView()
+        {
+            if (view is IRunHudView v) return v;
+            v = GetComponent<IRunHudView>();
+            return v ?? GetComponentInChildren<IRunHudView>(true);
+        }
+
+        /// <summary>런 상태를 직접 그리는 겉(디자이너 IngameScreen). 있으면 1차 가호 카드 화면을 만들지 않는다.</summary>
+        IRunHudStateView StateView => Presenter.View as IRunHudStateView;
 
         /// <summary>런 시작에 값 출처를 묶는다. 다음 갱신에서 모든 항목을 다시 그린다.</summary>
         public void Bind(IRunHudSource source)
         {
             Presenter.Bind(source);
             var state = source is RunStateHudSource rs ? rs.Current : (Func<RunState>)null;
-            Cards.Bind(state);
+            if (StateView != null) StateView.BindRun(state);
+            else Cards.Bind(state);
             Notice.Bind(state);
             // 런 안내(MvUiToast)는 이 HUD가 보일 때 여기에 띄운다. 숨었으면 로그만(기존 동작).
             MvUiToast.Handler = text => { if (this != null && isActiveAndEnabled) Notice.Toast(text); else Debug.Log("[Toast] " + text); };
@@ -66,7 +79,8 @@ namespace MV.UI
 
         protected virtual void Awake()
         {
-            MvUi.EnsureLayer(gameObject, MvUiLayer.Hud, false); // HUD 전체는 누를 수 없다(드래그가 아래로 지나감)
+            // HUD 전체는 누를 수 없다(드래그가 아래로 지나감). 겉에 버튼(배속 토글 등)이 있으면 그 버튼만 받는다(겉이 나머지 그림의 raycastTarget을 끈다).
+            MvUi.EnsureLayer(gameObject, MvUiLayer.Hud, GetComponentInChildren<Selectable>(true) != null);
         }
 
         protected override void _DrawContents()
@@ -78,6 +92,7 @@ namespace MV.UI
         void LateUpdate()
         {
             Presenter.Tick();
+            StateView?.TickRun(Time.unscaledDeltaTime);
             if (cards) cards.Tick(Time.unscaledDeltaTime);
             if (notice) notice.Tick(Time.unscaledDeltaTime);
         }

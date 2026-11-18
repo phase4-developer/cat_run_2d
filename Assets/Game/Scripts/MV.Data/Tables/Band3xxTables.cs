@@ -210,6 +210,18 @@ namespace MV.Data
         }
 
         /// <summary>맵·종류·보상에 맞는 행의 프리팹. 보상이 맞는 행이 Any 행보다 먼저. 없으면 null.</summary>
+        /// <summary>
+        /// 오브젝트 종류의 프리팹 주소: 이 맵의 <c>305_stageObject</c>(<see cref="Find"/>)가 먼저, 없으면 <c>105.prefab</c>. 둘 다 비면 null(코드 모양).
+        /// 게임(ObjectViewFactory)과 리소스 검사기가 같이 쓴다(MV-FIX-RESCHECK).
+        /// </summary>
+        public static string PrefabFor(MvTables tables, string stageMap, ObjectKindData kind, StageObjectReward reward)
+        {
+            if (kind == null) return null;
+            string p = tables != null ? Find(tables.StageObject.Datas, stageMap, kind.key, reward) : null;
+            if (string.IsNullOrEmpty(p)) p = kind.prefab;
+            return string.IsNullOrEmpty(p) ? null : p;
+        }
+
         public static string Find(IReadOnlyList<StageObjectData> rows, string stageMap, string kind, StageObjectReward reward)
         {
             if (rows == null || string.IsNullOrEmpty(stageMap) || string.IsNullOrEmpty(kind)) return null;

@@ -1,4 +1,5 @@
 using System;
+using MV.Data;
 using UnityEngine;
 
 namespace MV.View
@@ -40,18 +41,18 @@ namespace MV.View
             if (_frames[i] != null) _body.sprite = _frames[i];
         }
 
+        /// <summary>
+        /// 적 프레임(<see cref="EnemyFrameRule"/>, 리소스 검사기와 같은 규칙): 몸 그림의 <see cref="SpriteFrameList"/>에 접두 그림이 있으면 그것(<see cref="EnemyFramePrefab.FromPrefab"/>),
+        /// 없으면 지금 테마 아틀라스에서 접두 + 번호 `frameCount`장.
+        /// </summary>
         Sprite[] Frames(RunObjectView view)
         {
             var o = view.Obj;
-            string prefix = o.Enemy?.sprite;
-            if (string.IsNullOrEmpty(prefix)) return null;
-            if (!prefix.EndsWith("_")) prefix += "_";
-            int count = Math.Max(1, o.Enemy.frameCount);
-            var list = _body.GetComponentInParent<SpriteFrameList>(true);
-            var own = list != null ? list.Pick(prefix, count) : null;
+            var own = EnemyFramePrefab.FromPrefab(_body.transform, o.Enemy);
             if (own != null) return own;
+            string prefix = EnemyFrameRule.Prefix(o.Enemy?.sprite);
             var sprites = view.Ctx.Sprites;
-            return sprites != null ? sprites.GetFrames(view.Ctx.Atlas, prefix, count) : null;
+            return prefix != null && sprites != null ? sprites.GetFrames(view.Ctx.Atlas, prefix, EnemyFrameRule.Count(o.Enemy)) : null;
         }
     }
 }

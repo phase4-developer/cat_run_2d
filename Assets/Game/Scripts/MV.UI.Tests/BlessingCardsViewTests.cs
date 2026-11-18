@@ -35,8 +35,9 @@ namespace MV.UI.Tests
         {
             foreach (var c in T.Card.Datas)
                 if (c.active) Assert.That(ArtExists(c.icon), c.id + " icon 「" + c.icon + "」 그림 없음");
+            // 등급 틀은 디자이너 그림(Art/UI/GUI/Slot/Grade, MV-UI2-HUD)이라 아틀라스 에셋이 묶는 그림에서 찾는다.
             foreach (var r in T.CardTier.Datas)
-                Assert.That(ArtExists(r.frameSprite), r.id + " frameSprite 「" + r.frameSprite + "」 그림 없음");
+                Assert.That(HudArtTestKit.AtlasHas(MvAtlas.UiCard, r.frameSprite), r.id + " frameSprite 「" + r.frameSprite + "」 그림이 Atlas_UI_Card에 없음");
         }
 
         BlessingCardsView NewView(System.Func<RunState> state)

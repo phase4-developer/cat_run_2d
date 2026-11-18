@@ -125,13 +125,8 @@ namespace MV.View
         }
 
         /// <summary>오브젝트의 프리팹 주소: `305_stageObject`(맵·종류·보상) → `105_objectKind.prefab`. 둘 다 없으면 null(코드 모양).</summary>
-        public static string PrefabFor(MvTables tables, string stageMap, RunObject o)
-        {
-            if (o?.Kind == null) return null;
-            string p = tables != null ? StageObjectData.Find(tables.StageObject.Datas, stageMap, o.Kind.key, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any) : null;
-            if (string.IsNullOrEmpty(p)) p = o.Kind.prefab;
-            return string.IsNullOrEmpty(p) ? null : p;
-        }
+        public static string PrefabFor(MvTables tables, string stageMap, RunObject o) =>
+            o?.Kind == null ? null : StageObjectData.PrefabFor(tables, stageMap, o.Kind, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any);
 
         /// <summary>런 칸 보상 → 305 reward(이름 1:1). 이름이 없으면 Any.</summary>
         public static StageObjectReward RewardOf(FieldReward r) => Enum.TryParse(r.ToString(), out StageObjectReward x) ? x : StageObjectReward.Any;

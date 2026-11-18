@@ -96,11 +96,32 @@ namespace MV.Boot
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics() => Current = null;
 
-        void Awake() => Current = this;
+        /// <summary>세션 런 배속(<c>RunSetup.TimeScale</c>). 플레이어 HUD 1x/2x 토글과 테스트 패널 ×1~×3이 바꾸고, 새 런에도 넘긴다.</summary>
+        int _timeScale = 1;
+
+        void Awake()
+        {
+            Current = this;
+            MvRunSpeed.Set = SetTimeScale;
+            MvDebugHooks.SetTimeScale = v => SetTimeScale((int)Math.Round(v));
+        }
+
+        /// <summary>런 배속을 바꾼다. 시뮬이 매 틱 <c>Setup.TimeScale</c>을 읽으므로 다음 틱부터 진행 속도가 바뀌고, HUD는 같은 값을 읽어 표시한다.</summary>
+        public void SetTimeScale(int timeScale)
+        {
+            _timeScale = Math.Max(1, timeScale);
+            var setup = _sim?.State?.Setup;
+            if (setup != null) setup.TimeScale = _timeScale;
+        }
 
         void OnDestroy()
         {
-            if (Current == this) Current = null;
+            if (Current == this)
+            {
+                Current = null;
+                MvRunSpeed.Set = null;
+                MvDebugHooks.SetTimeScale = null;
+            }
             if (_fx != null && MvFx.Player == _fx) MvFx.Install(null);
             _fx = null;
             foreach (var d in _stageLeases) d?.Dispose();
@@ -328,6 +349,7 @@ namespace MV.Boot
             var meta = MvMeta.Current;
             _runSeq = meta != null && meta.IsReady ? meta.BeginRun() : PeekRunSeq();
             _sim = CreateSim(_runSeq, out var snap, out ulong seed);
+            _sim.State.Setup.TimeScale = _timeScale;
             CurrentSeed = seed;
             _lobbySim = null;
             _lobbyObjs.Clear();

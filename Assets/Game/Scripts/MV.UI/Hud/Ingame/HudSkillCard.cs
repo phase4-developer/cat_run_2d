@@ -1,0 +1,119 @@
+using System.Collections.Generic;
+using jjevol;
+using MV.Data;
+using TMPro;
+using UnityEngine;
+
+namespace MV.UI
+{
+    /// <summary>
+    /// 디자이너 <c>Card_Skill</c>(스킬 카드)의 값 연결(MV-UI2-HUD, [HUD] 인게임 Skill Section·Card Pos).
+    /// 롤링 전에는 Question만 보이고(Mask 아래는 끔), 롤링은 <c>Slot_Skill</c> 띠를 한 칸씩 올려 보이고, 확정되면 첫 칸에 고른 카드 그림·제목에 카드 이름.
+    /// 고르는 결과는 시뮬(룰렛)이 정하고, 이 카드는 그 결과를 보인다.
+    /// </summary>
+    public sealed class HudSkillCard : MonoBehaviour
+    {
+        [SerializeField] AddressableImage grade;
+        [SerializeField] RectTransform strip;
+        [SerializeField] AddressableImage[] cells;
+        /// <summary>롤링 전 고정 글(<c>Question Text</c>).</summary>
+        [SerializeField] GameObject question;
+        /// <summary>Mask 아래 카드 바탕 그림(<c>Card Texture (1)</c>). 롤링 전에는 끈다.</summary>
+        [SerializeField] GameObject maskBack;
+        [SerializeField] TMP_Text title;
+
+        Vector2 _stripHome;
+        bool _homeSet;
+
+        public int Tier { get; private set; } = -1;
+        public int CardId { get; private set; }
+        public bool Rolling { get; private set; }
+        public string Title => title ? title.text : null;
+        public string GradeSprite => grade ? grade.spriteName : null;
+        public string FaceSprite => cells != null && cells.Length > 0 && cells[0] ? cells[0].spriteName : null;
+        public bool QuestionShown => question && question.activeSelf;
+        public RectTransform Rect => (RectTransform)transform;
+        public int CellCount => cells?.Length ?? 0;
+
+        void Home()
+        {
+            if (_homeSet || !strip) return;
+            _stripHome = strip.anchoredPosition;
+            _homeSet = true;
+        }
+
+        void SetGrade(MvTables t, int tierIndex)
+        {
+            Tier = tierIndex;
+            var row = HudGrade.CardTier(t, tierIndex);
+            if (row != null) HudImage.Set(grade, MvAtlas.UiCard, row.frameSprite);
+        }
+
+        /// <summary>롤링 전: Question만(디자이너 시퀀스 1). 제목 = 등급 이름.</summary>
+        public void ShowQuestion(MvTables t, int tierIndex)
+        {
+            Home();
+            CardId = 0;
+            Rolling = false;
+            SetGrade(t, tierIndex);
+            if (title) title.text = HudGrade.CardTierName(t, HudGrade.CardTier(t, tierIndex));
+            if (question) question.SetActive(true);
+            if (strip) { strip.gameObject.SetActive(false); strip.anchoredPosition = _stripHome; }
+            if (maskBack) maskBack.SetActive(false);
+        }
+
+        /// <summary>롤링 시작: Question을 끄고 칸에 후보 그림을 채운다(시퀀스 4).</summary>
+        public void BeginRoll(MvTables t, int tierIndex, IReadOnlyList<string> faces)
+        {
+            Home();
+            CardId = 0;
+            Rolling = true;
+            SetGrade(t, tierIndex);
+            if (title) title.text = HudGrade.CardTierName(t, HudGrade.CardTier(t, tierIndex));
+            if (question) question.SetActive(false);
+            if (maskBack) maskBack.SetActive(false);
+            if (strip) { strip.gameObject.SetActive(true); strip.anchoredPosition = _stripHome; }
+            if (cells == null || faces == null || faces.Count == 0) return;
+            for (int i = 0; i < cells.Length; i++) HudImage.Set(cells[i], MvAtlas.UiCard, faces[i % faces.Count]);
+        }
+
+        /// <summary>한 칸 거리(Slot_Skill 첫 두 칸 사이, 레이아웃이 정한 값). 띠를 이만큼 옮기면 둘째 칸이 첫 칸 자리에 온다.</summary>
+        public Vector2 CellStep()
+        {
+            if (cells == null || cells.Length < 2 || !cells[0] || !cells[1]) return Vector2.zero;
+            return (Vector2)(cells[0].rectTransform.localPosition - cells[1].rectTransform.localPosition);
+        }
+
+        /// <summary>띠를 제자리에서 k(0~1)칸 옮긴 자리로.</summary>
+        public void SetStripOffset(float k)
+        {
+            if (!strip) return;
+            Home();
+            strip.anchoredPosition = _stripHome + CellStep() * k;
+        }
+
+        /// <summary>칸 그림을 한 칸 앞으로 당기고(첫 칸 ← 둘째 칸) 마지막 칸에 next를 넣고 띠를 제자리로.</summary>
+        public void Advance(string next)
+        {
+            if (cells == null || cells.Length == 0) return;
+            for (int i = 0; i < cells.Length - 1; i++)
+                if (cells[i] && cells[i + 1]) HudImage.Set(cells[i], cells[i + 1].atlasKey, cells[i + 1].spriteName);
+            HudImage.Set(cells[cells.Length - 1], MvAtlas.UiCard, next);
+            if (strip) strip.anchoredPosition = _stripHome;
+        }
+
+        /// <summary>확정(시퀀스 5): 첫 칸에 카드 그림, 제목에 카드 이름.</summary>
+        public void ShowCard(MvTables t, CardData card)
+        {
+            Home();
+            Rolling = false;
+            CardId = card?.id ?? 0;
+            if (card != null) SetGrade(t, card.tier);
+            if (question) question.SetActive(false);
+            if (maskBack) maskBack.SetActive(false);
+            if (strip) { strip.gameObject.SetActive(true); strip.anchoredPosition = _stripHome; }
+            if (card != null && cells != null && cells.Length > 0) HudImage.Set(cells[0], MvAtlas.UiCard, card.icon);
+            if (title) title.text = HudGrade.CardName(t, card);
+        }
+    }
+}

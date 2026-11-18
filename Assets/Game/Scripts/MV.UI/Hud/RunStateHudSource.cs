@@ -39,6 +39,7 @@ namespace MV.UI
             h.Gold = s.Gold;
             h.Souls = (_savedSouls?.Invoke() ?? 0) + s.Souls;
             h.Dia = s.Dia;
+            h.TimeScale = Math.Max(1, s.Setup?.TimeScale ?? 1);
 
             AreaData area = null;
             if (t != null) foreach (var a in t.Area.Datas) if (a.areaNo == h.AreaNo) { area = a; break; }
