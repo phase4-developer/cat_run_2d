@@ -37,7 +37,7 @@
 | 데이터 | save, data | 보강(필수) | 진행 저장(프로토 `save` 전체), Container 분리 | 고정 |
 | 데이터 | economy | 보강 | 재화 정본 `ResourceService`, `WealthTable`(`01_wealth`) | 고정 |
 | 데이터 | tables, tables.authoring | 보강(필수) | 모든 수치·콘텐츠 표. 사용자 요구 「테이블 구조와 연결해서 세부 수치들을 조정가능」 | tables 고정 / authoring 시험 중 |
-| 다국어 | localization, localization.authoring | 보강 | 모든 문구를 키로. 한국어 기본, 영어 2차 | localization 고정 / authoring 시험 중 |
+| 다국어 | localization, localization.authoring | 보강 | 모든 문구를 키로. 한국어 기본, 영어 함께(2026-11-19 사용자 지시로 2차에서 앞당김, D-LOC-KOEN) | localization 고정 / authoring 시험 중 |
 | 모바일 플랫폼 | platform.core, platform.unity | 요청 | 진동(타격·계단·결과 [선택]), Deep Link | 고정 |
 | 로그인 | platform.login, .google, .apple, .firebase | 요청 | 계정 연결(게스트 → Google/Apple). 서버 저장 전 단계 | 시험 중. SDK 필요 |
 | 통신 | platform.network, .http 또는 .firebase, .network.data | 요청 | 서버 저장·시간·원격 설정. 1차는 **`SetLocalService`로 로컬 스텁**, 공급자 선택은 결정 대기(D-08) | 시험 중 |
