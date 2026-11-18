@@ -63,9 +63,6 @@ namespace MV.Fx.Tests
             float[] xs = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f };
             float[] ys = { 0.008f, 0.034f, 0.078f, 0.141f, 0.227f, 0.335f, 0.467f, 0.624f, 0.804f };
             for (int i = 0; i < xs.Length; i++) Assert.AreEqual(ys[i], fly.Curve.Evaluate(xs[i]), 0.0015f, "fly x=" + xs[i]);
-            Assert.AreEqual(0.033f, fly.CardCurve.Evaluate(0.25f), 0.0015f);
-            Assert.AreEqual(0.164f, fly.CardCurve.Evaluate(0.5f), 0.0015f);
-            Assert.AreEqual(0.471f, fly.CardCurve.Evaluate(0.75f), 0.0015f);
         }
 
         [Test]
@@ -73,7 +70,6 @@ namespace MV.Fx.Tests
         {
             var fly = MvFlyLayer.FromTables(FxTestTables.Load());
             Assert.AreEqual(0.56f, fly.RemoveSec, 1e-5f);
-            Assert.AreEqual(0.62f, fly.CardRemoveSec, 1e-5f);
             var got = new List<string>();
             fly.Arrived += (t, n) => got.Add(t + ":" + n);
             fly.FlyTo(new FlyRequest { Target = FlyTarget.Stair, Amount = 3 });

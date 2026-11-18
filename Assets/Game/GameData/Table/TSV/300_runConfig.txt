@@ -74,9 +74,6 @@ id	name	key	value	unit
 300007013	아이콘 비행 끝 배율	fly.endScale	0.6	배
 300007014	아이콘 비행 끝 투명도	fly.endAlpha	0.4	0~1
 300007015	공방 아이콘 간격	fly.cloneGapMs	70	ms
-300007016	카드 비행 시간	flyCard.time	0.6	s
-300007017	카드 비행 제거 지연	flyCard.removeMs	620	ms
-300007018	카드 비행 곡선	flyCard.bezier	.55/0/.75/.4	곡선
 300008001	배너 시간	banner.time	1.5	s
 300008002	토스트 시간	toast.time	1.4	s
 300008003	토스트 사라짐	toast.fade	0.2	s
@@ -149,17 +146,6 @@ id	name	key	value	unit
 300105017	칼날 각속도	BLADE_ANG_SPEED	5	rad/s
 300105018	뇌우 흔들림(대상 있음)	STORM_JIT_TARGET	0.3	m
 300105019	뇌우 흔들림(대상 없음)	STORM_JIT_FREE	2	m
-300106001	손패 연출 시간 예산	ui.hand.budget	3	s
-300106002	손패 남은 예산 하한	ui.hand.leftMin	0.4	s
-300106003	손패 1장 전달 비용	ui.hand.dealCost	0.12	단위
-300106004	손패 단위 시간 하한	ui.hand.unitMin	0.07	s
-300106005	손패 단위 시간 상한	ui.hand.unitMax	0.54	s
-300106006	손패 전달 간격 상한	ui.hand.dealGapMax	0.05	s
-300106007	손패 전달 간격 계수	ui.hand.dealGapMul	0.12	배
-300106008	손패 머지 시간 계수	ui.hand.mergeMul	0.92	배
-300106009	손패 모으기 이동 계수	ui.hand.moveMul	0.9	배
-300106010	손패 머지 뒤 쉼 상한	ui.hand.afterMax	0.04	s
-300106011	손패 머지 뒤 쉼 계수	ui.hand.afterMul	0.08	배
 300107001	캐릭터 그림 한 칸 시간(디자이너 PDF 재생 규칙)	char.frameSec	0.25	s
 300107002	걷기 내려감 시점(한 칸 안 비율)	char.dipAt	0.5	배
 300107003	걷기 내려감 깊이	char.dipM	0.07	m

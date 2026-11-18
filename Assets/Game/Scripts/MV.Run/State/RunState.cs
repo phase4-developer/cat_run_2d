@@ -125,7 +125,7 @@ namespace MV.Run
         public bool Chosen;
         public double FlyAt = -1;
         public bool Flying;
-        /// <summary>비행 남은 시간(실시간, flyCard 620ms).</summary>
+        /// <summary>비행 남은 시간(실시간, 330 rlFlyMs). HUD 카드 비행이 이 값을 읽는다.</summary>
         public double FlyLeft;
         public bool Applied;
         public int Flips;

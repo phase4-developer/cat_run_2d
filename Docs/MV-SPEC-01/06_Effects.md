@@ -374,9 +374,7 @@
 | 300007013 | fly.endScale | 0.6 | 배 | L1739 |
 | 300007014 | fly.endAlpha | 0.4 | 0~1 | L1739 |
 | 300007015 | fly.cloneGapMs | 70 | ms | L2052 |
-| 300007016 | flyCard.time | 0.6 | s | L563 |
-| 300007017 | flyCard.removeMs | 620 | ms | L2389 |
-| 300007018 | flyCard.bezier | .55,0,.75,.4 | 곡선 | L563 |
+| — | (룰렛 카드 비행 시간·곡선) | 0.6 · .55,0,.75,.4 | s · 곡선 | L563. HUD Card Pos 섹션 프리팹 직렬화 기본값(300 `flyCard.*` 삭제, MV-UI3-HUD3). 제거 지연 620 ms는 시뮬 값 330 `rlFlyMs` 하나만 둔다 |
 
 ## 6.9 배너·토스트·플래시
 

@@ -79,9 +79,6 @@ namespace MV.Data
         public const string Fly_EndScale = "fly.endScale";
         public const string Fly_EndAlpha = "fly.endAlpha";
         public const string Fly_CloneGapMs = "fly.cloneGapMs";
-        public const string FlyCard_Time = "flyCard.time";
-        public const string FlyCard_RemoveMs = "flyCard.removeMs";
-        public const string FlyCard_Bezier = "flyCard.bezier";
         public const string Banner_Time = "banner.time";
         public const string Toast_Time = "toast.time";
         public const string Toast_Fade = "toast.fade";
@@ -160,17 +157,6 @@ namespace MV.Data
         public const string STORM_JIT_TARGET = "STORM_JIT_TARGET";
         /// <summary>폭풍 착탄 x·z 흔들림 반폭(대상 없을 때, 04 §4.9.3 L2168).</summary>
         public const string STORM_JIT_FREE = "STORM_JIT_FREE";
-        public const string Ui_Hand_Budget = "ui.hand.budget";
-        public const string Ui_Hand_LeftMin = "ui.hand.leftMin";
-        public const string Ui_Hand_DealCost = "ui.hand.dealCost";
-        public const string Ui_Hand_UnitMin = "ui.hand.unitMin";
-        public const string Ui_Hand_UnitMax = "ui.hand.unitMax";
-        public const string Ui_Hand_DealGapMax = "ui.hand.dealGapMax";
-        public const string Ui_Hand_DealGapMul = "ui.hand.dealGapMul";
-        public const string Ui_Hand_MergeMul = "ui.hand.mergeMul";
-        public const string Ui_Hand_MoveMul = "ui.hand.moveMul";
-        public const string Ui_Hand_AfterMax = "ui.hand.afterMax";
-        public const string Ui_Hand_AfterMul = "ui.hand.afterMul";
         /// <summary>캐릭터 그림 한 칸 시간(디자이너 PDF 재생 규칙, MV-SPEC-02 ArtResourcePlan §3).</summary>
         public const string Char_FrameSec = "char.frameSec";
         /// <summary>걷기 내려감 시점(한 칸 안 비율).</summary>
@@ -278,9 +264,6 @@ namespace MV.Data
             Fly_EndScale,
             Fly_EndAlpha,
             Fly_CloneGapMs,
-            FlyCard_Time,
-            FlyCard_RemoveMs,
-            FlyCard_Bezier,
             Banner_Time,
             Toast_Time,
             Toast_Fade,
@@ -353,17 +336,6 @@ namespace MV.Data
             BLADE_ANG_SPEED,
             STORM_JIT_TARGET,
             STORM_JIT_FREE,
-            Ui_Hand_Budget,
-            Ui_Hand_LeftMin,
-            Ui_Hand_DealCost,
-            Ui_Hand_UnitMin,
-            Ui_Hand_UnitMax,
-            Ui_Hand_DealGapMax,
-            Ui_Hand_DealGapMul,
-            Ui_Hand_MergeMul,
-            Ui_Hand_MoveMul,
-            Ui_Hand_AfterMax,
-            Ui_Hand_AfterMul,
             Char_FrameSec,
             Char_DipAt,
             Char_DipM,
