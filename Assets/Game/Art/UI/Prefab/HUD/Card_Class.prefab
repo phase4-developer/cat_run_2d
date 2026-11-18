@@ -54,9 +54,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 566926181254957499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -75,6 +75,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: 
+  m_SpriteName: 
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &780020874011862615
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,6 +1422,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2253943200108481459}
+  - component: {fileID: 1979326238865626154}
   m_Layer: 5
   m_Name: Card_Class
   m_TagString: Untagged
@@ -1446,3 +1455,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 275, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1979326238865626154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7601106424748207430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7494e06ef2934145a4d663e1c42b508a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grade: {fileID: 1328184121686713390}
+  floorCount: {fileID: 4912485568718485470}
+  progress: {fileID: 1319292479317617223}
+  title: {fileID: 4124068492742437483}
+  level: {fileID: 6811300376035540336}
