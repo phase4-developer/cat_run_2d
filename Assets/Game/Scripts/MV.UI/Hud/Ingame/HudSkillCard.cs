@@ -10,8 +10,9 @@ namespace MV.UI
     /// 디자이너 <c>Card_Skill</c>(스킬 카드)의 값 연결(MV-UI2-HUD, [HUD] 인게임 Skill Section·Card Pos).
     /// 롤링 전에는 Question만 보이고(Mask 아래는 끔), 롤링은 <c>Slot_Skill</c> 띠를 한 칸씩 올려 보이고, 확정되면 첫 칸에 고른 카드 그림·제목에 카드 이름.
     /// 고르는 결과는 시뮬(룰렛)이 정하고, 이 카드는 그 결과를 보인다.
+    /// 섹션은 <see cref="ShowUI(in SkillCardData)"/>로 켜고 정지 상태(「?」 또는 확정 카드)를 그린다. 롤링은 <see cref="BeginRoll"/>·<see cref="Advance"/>(공용 부품 MV-UI3-HUD2).
     /// </summary>
-    public sealed class HudSkillCard : MonoBehaviour
+    public sealed class HudSkillCard : UIBase
     {
         [SerializeField] AddressableImage grade;
         [SerializeField] RectTransform strip;
@@ -34,6 +35,21 @@ namespace MV.UI
         public bool QuestionShown => question && question.activeSelf;
         public RectTransform Rect => (RectTransform)transform;
         public int CellCount => cells?.Length ?? 0;
+
+        SkillCardData _data;
+
+        /// <summary>데이터를 넣고 켜서 그린다. Card가 없으면 「?」(롤링 전), 있으면 확정 카드.</summary>
+        public void ShowUI(in SkillCardData data)
+        {
+            _data = data;
+            ShowUI();
+        }
+
+        protected override void _DrawContents()
+        {
+            if (_data.Card != null) ShowCard(_data.Tables, _data.Card);
+            else ShowQuestion(_data.Tables, _data.TierIndex);
+        }
 
         void Home()
         {
@@ -114,6 +130,21 @@ namespace MV.UI
             if (strip) { strip.gameObject.SetActive(true); strip.anchoredPosition = _stripHome; }
             if (card != null && cells != null && cells.Length > 0) HudImage.Set(cells[0], MvAtlas.UiCard, card.icon);
             if (title) title.text = HudGrade.CardName(t, card);
+        }
+    }
+
+    /// <summary>스킬 카드 정지 상태 데이터: 등급 번호(115_cardTier)와 확정 카드(없으면 「?」).</summary>
+    public readonly struct SkillCardData
+    {
+        public readonly MvTables Tables;
+        public readonly int TierIndex;
+        public readonly CardData Card;
+
+        public SkillCardData(MvTables tables, int tierIndex, CardData card)
+        {
+            Tables = tables;
+            TierIndex = tierIndex;
+            Card = card;
         }
     }
 }

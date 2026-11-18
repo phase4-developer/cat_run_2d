@@ -9,8 +9,9 @@ namespace MV.UI
     /// <summary>
     /// 디자이너 <c>Card_Class</c>(계단 등급 카드)의 값 연결(MV-UI2-HUD, [HUD] 인게임 ClimbStair).
     /// 등급 틀 = 115_cardTier.frameSprite, 계단 수 = 그 등급 need, 게이지 = 그 등급까지 채움, 제목 = 등급 이름, 숫자 = tierIndex + 1. 카드 그림(별자리)은 프리팹 그대로.
+    /// 섹션은 <see cref="ShowUI(in ClimbCardData)"/>로 켜고 그린다(공용 부품 MV-UI3-HUD2).
     /// </summary>
-    public sealed class HudClimbCard : MonoBehaviour
+    public sealed class HudClimbCard : UIBase
     {
         [SerializeField] AddressableImage grade;
         [SerializeField] TMP_Text floorCount;
@@ -24,8 +25,25 @@ namespace MV.UI
         public string GradeSprite => grade ? grade.spriteName : null;
         public RectTransform Rect => (RectTransform)transform;
 
+        ClimbCardData _data;
+
+        /// <summary>데이터를 넣고 켜서 그린다(등급 + 게이지).</summary>
+        public void ShowUI(in ClimbCardData data)
+        {
+            _data = data;
+            ShowUI();
+        }
+
+        protected override void _DrawContents()
+        {
+            Set(_data.Tables, _data.TierIndex);
+            SetFill(_data.Fill01);
+        }
+
+        /// <summary>켜고 끄지 않고 등급만 지금 그린다(화면 조합 전 기존 호출용).</summary>
         public void Set(MvTables t, int tierIndex)
         {
+            _data = new ClimbCardData(t, tierIndex, _data.Fill01);
             Tier = tierIndex;
             var row = HudGrade.CardTier(t, tierIndex);
             if (row == null) return;
@@ -37,7 +55,23 @@ namespace MV.UI
 
         public void SetFill(float fill01)
         {
+            _data = new ClimbCardData(_data.Tables, _data.TierIndex, fill01);
             if (progress) progress.normalizedValue = Mathf.Clamp01(fill01);
+        }
+    }
+
+    /// <summary>계단 등급 카드 표시 데이터: 115_cardTier 등급 번호와 게이지(0~1).</summary>
+    public readonly struct ClimbCardData
+    {
+        public readonly MvTables Tables;
+        public readonly int TierIndex;
+        public readonly float Fill01;
+
+        public ClimbCardData(MvTables tables, int tierIndex, float fill01)
+        {
+            Tables = tables;
+            TierIndex = tierIndex;
+            Fill01 = fill01;
         }
     }
 }
