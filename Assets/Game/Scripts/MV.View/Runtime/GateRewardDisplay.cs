@@ -23,8 +23,8 @@ namespace MV.View
 
     /// <summary>
     /// 문 위 보상 카드 묶음의 부모(MV-UI3-HUD9, 사용자 2026-11-19 「부모 클래스 만들어서 추후 다른 타입 … 추가 대비」).
-    /// 장 수만큼 카드 원본(<see cref="GateRewardCard"/>)을 풀에서 꺼내 두 기둥 사이(왼쪽 끝 = <see cref="_leftX"/>, 오른쪽 끝 = <see cref="_rightX"/>)에
-    /// 한 줄 <see cref="_columns"/>장씩 놓고, 넘치면 위로 줄을 늘린다. 통과(<c>Done</c>)하는 순간 카드마다 화면 자리를 <see cref="Released"/>로 넘기고 숨긴다
+    /// 장 수만큼(상한 <see cref="_maxCards"/>) 카드 원본(<see cref="GateRewardCard"/>)을 풀에서 꺼내 왼쪽 기둥(<see cref="_leftX"/>)부터 오른쪽으로 겹쳐 놓고,
+    /// 오른쪽 기둥(<see cref="_rightX"/>)을 넘으면 위 줄로 올린다(왼쪽 정렬, 사용자 2026-11-19 스크린샷). 통과(<c>Done</c>)하는 순간 카드마다 화면 자리를 <see cref="Released"/>로 넘기고 숨긴다
     /// (HUD가 같은 자리·같은 크기 UI 카드로 바꿔 날린다, 알파 변화 없음).
     /// 자식 클래스는 종류·장 수·그림만 정한다. 배치·크기 값은 프리팹 직렬화 필드(연출 값)다.
     /// </summary>
@@ -32,16 +32,16 @@ namespace MV.View
     {
         [Tooltip("카드 원본(꺼 둔 카드). 장 수만큼 복제해 풀에서 꺼낸다.")]
         [SerializeField] GateRewardCard _template;
-        [Tooltip("한 줄 장 수. 넘치면 위 줄로 쌓는다.")]
-        [SerializeField] int _columns = 4;
-        [Tooltip("줄의 왼쪽 끝 카드 가운데 x(m, 묶음 기준) = 왼쪽 기둥.")]
+        [Tooltip("보일 카드 상한(장). 통과 때 HUD로 넘기는 장 수도 이 값까지다(표 300 CRAFT_ICON_MAX를 옮김, 사용자 2026-11-19 「표값 그냥 지우고 … 프리팹 인스펙터 값으로」).")]
+        [SerializeField] int _maxCards = 999;
+        [Tooltip("줄 첫 카드 가운데 x(m, 묶음 기준) = 왼쪽 기둥. 여기서부터 오른쪽으로 놓는다.")]
         [SerializeField] float _leftX = -1.25f;
-        [Tooltip("줄의 오른쪽 끝 카드 가운데 x(m, 묶음 기준) = 오른쪽 기둥.")]
+        [Tooltip("줄 마지막 카드 가운데 x 한계(m) = 오른쪽 기둥. 넘으면 위 줄.")]
         [SerializeField] float _rightX = 1.25f;
-        [Tooltip("위 줄 간격(m).")]
-        [SerializeField] float _rowStep = 0.5f;
+        [Tooltip("카드 간격(m): x = 옆(카드 너비보다 작으면 겹친다), y = 위 줄.")]
+        [SerializeField] Vector2 _step = new Vector2(0.42f, 0.35f);
         [Tooltip("카드 크기(m). HUD 스택 칸(170×150)과 같은 비율.")]
-        [SerializeField] Vector2 _cardSize = new Vector2(0.85f, 0.75f);
+        [SerializeField] Vector2 _cardSize = new Vector2(0.79f, 0.7f);
 
         /// <summary>통과 때 카드 화면 자리(종류, 카드들). Boot 다리가 HUD로 넘긴다. 받는 쪽은 목록을 그 자리에서 읽고 보관하지 않는다.</summary>
         public static event Action<GateRewardKind, IReadOnlyList<GateCardRelease>> Released;
@@ -59,6 +59,9 @@ namespace MV.View
         public GateRewardCard Template => _template;
         public IReadOnlyList<GateRewardCard> Cards => _shown;
         public Vector2 CardSize => _cardSize;
+        public int MaxCards => _maxCards;
+        /// <summary>한 줄 장 수 = 왼쪽 기둥부터 오른쪽 기둥까지 간격 x로 들어가는 수.</summary>
+        public int Columns => _step.x > 0 ? Mathf.Max(1, Mathf.FloorToInt((_rightX - _leftX) / _step.x + 1e-4f) + 1) : 1;
 
         public abstract GateRewardKind Kind { get; }
 
@@ -98,7 +101,7 @@ namespace MV.View
                 if (_shown.Count > 0) Release(view);
                 return;
             }
-            int n = Math.Max(0, Count(o));
+            int n = Mathf.Clamp(Count(o), 0, Mathf.Max(0, _maxCards));
             Sprite frame = null, icon = null;
             if (n > 0) Look(view, out frame, out icon);
             Show(view, n, frame, icon);
@@ -163,18 +166,17 @@ namespace MV.View
         }
 
         /// <summary>
-        /// i번째 카드 자리: 아래 줄부터 한 줄 <see cref="_columns"/>장, 줄마다 왼쪽 끝 = 왼쪽 기둥·오른쪽 끝 = 오른쪽 기둥으로 고르게(한 장이면 가운데).
-        /// 아래 줄 카드가 위 줄 카드 앞에 그려진다.
+        /// i번째 카드 자리: 아래 줄부터 왼쪽 기둥에서 오른쪽으로 간격 x씩(왼쪽 정렬), 한 줄 <see cref="Columns"/>장이 차면 위 줄.
+        /// 뒤 카드가 앞 카드 위에 겹치고, 아래 줄 카드가 위 줄 카드 앞에 그려진다.
         /// </summary>
         void Place(GateRewardCard c, int i, int n)
         {
-            int cols = Mathf.Max(1, _columns);
+            int cols = Columns;
             int rows = (n + cols - 1) / cols;
             int row = i / cols, col = i % cols;
-            int inRow = row < rows - 1 ? cols : n - row * cols;
-            float x = inRow <= 1 ? (_leftX + _rightX) * 0.5f : Mathf.Lerp(_leftX, _rightX, col / (float)(inRow - 1));
+            float x = _leftX + col * _step.x;
             var p = _template.transform.localPosition;
-            c.transform.localPosition = new Vector3(p.x + x, p.y + row * _rowStep, p.z + row * 0.001f - col * 0.0001f);
+            c.transform.localPosition = new Vector3(p.x + x, p.y + row * _step.y, p.z + row * 0.001f - col * 0.0001f);
             int order = BaseOrder() + 2 * ((rows - 1 - row) * cols + col);
             c.Paint(_frame, _icon, _cardSize, order);
         }

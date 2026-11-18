@@ -553,7 +553,7 @@ namespace MV.View.Tests
 
         /// <summary>
         /// 무기문 위 카드 묶음(MV-UI3-HUD9, 임시 리소스, 사용자 2026-11-19 「CreaftGate용 … 다른덴 추가하지마」): Obj_CraftGate 변형에만 있다.
-        /// 장 수 = Made + Extra(상한 없음), 한 줄 끝 카드가 두 기둥(왼쪽·오른쪽 끝 x)에 맞고 넘치면 위 줄, 통과(Done)하면 카드마다 화면 자리를 넘기고 숨긴다.
+        /// 장 수 = Made + Extra(상한 = 프리팹 MaxCards), 왼쪽 기둥부터 오른쪽으로 왼쪽 정렬하고 오른쪽 기둥을 넘으면 위 줄, 통과(Done)하면 카드마다 화면 자리를 넘기고 숨긴다.
         /// </summary>
         [Test]
         public void CraftGateBundle_ShowsMadePlusExtra_ReleasesOnPass()
@@ -575,17 +575,22 @@ namespace MV.View.Tests
             Assert.That(bundle.Template.Frame, Is.Not.Null, "카드 틀 참조");
             Assert.That(bundle.Template.Icon, Is.Not.Null, "카드 그림 참조");
             Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
-            Assert.AreEqual(8, bundle.Shown, "Made + Extra");
+            Assert.AreEqual(System.Math.Min(8, bundle.MaxCards), bundle.Shown, "Made + Extra(프리팹 상한까지)");
 
-            // 아래 줄 끝 카드 = 두 기둥, 넘친 카드는 위 줄
+            // 왼쪽 정렬: 첫 장 = 왼쪽 기둥, 오른쪽으로 같은 간격, 오른쪽 기둥을 넘기 전에 위 줄
             var cards = bundle.Cards;
             float x0 = cards[0].transform.localPosition.x, y0 = cards[0].transform.localPosition.y;
             int cols = 0;
             foreach (var c in cards) if (UnityEngine.Mathf.Approximately(c.transform.localPosition.y, y0)) cols++;
+            Assert.AreEqual(bundle.Columns, cols, "한 줄 장 수 = 기둥 사이에 간격으로 들어가는 수");
             Assert.That(cols, Is.GreaterThan(1).And.LessThan(8), "한 줄에 늘어뜨리지 않고 줄을 늘린다");
             Assert.AreEqual(-1.25f, x0, 1e-4f, "왼쪽 끝 = 왼쪽 기둥");
-            Assert.AreEqual(1.25f, cards[cols - 1].transform.localPosition.x, 1e-4f, "오른쪽 끝 = 오른쪽 기둥");
+            float gap = cards[1].transform.localPosition.x - x0;
+            Assert.Greater(gap, 0f);
+            Assert.LessOrEqual(cards[cols - 1].transform.localPosition.x, 1.25f + 1e-4f, "오른쪽 기둥을 넘지 않는다");
+            Assert.Greater(cards[cols - 1].transform.localPosition.x + gap, 1.25f, "한 장 더 놓으면 오른쪽 기둥을 넘는다");
             Assert.Greater(cards[cols].transform.localPosition.y, y0, "넘치면 위 줄");
+            Assert.AreEqual(x0, cards[cols].transform.localPosition.x, 1e-4f, "위 줄도 왼쪽 기둥부터");
 
             gate.Made = 3; gate.Extra = 0;
             rig.Frame(0.1, objs);

@@ -182,7 +182,7 @@ Transform:
   m_GameObject: {fileID: 4410235511000200001}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.3, z: 0}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -202,11 +202,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MV.View::MV.View.CraftGateBundle
   _template: {fileID: 4410235511000200006}
-  _columns: 4
+  _maxCards: 999
   _leftX: -1.25
   _rightX: 1.25
-  _rowStep: 0.55
-  _cardSize: {x: 0.85, y: 0.75}
+  _step: {x: 0.42, y: 0.35}
+  _cardSize: {x: 0.79, y: 0.7}
 --- !u!1 &4410235511000200004
 GameObject:
   m_ObjectHideFlags: 0
