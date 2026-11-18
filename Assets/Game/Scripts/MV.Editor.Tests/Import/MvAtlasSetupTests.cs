@@ -60,8 +60,13 @@ namespace MV.Editor.Tests
             Assert.That(MvArtRules.TextureLabelFor("Tex_Lobby_Room"), Is.EqualTo("lobby"));
         }
 
+        /// <summary>
+        /// 규칙 폴더마다 아틀라스 에셋이 있다. 패킹 대상·설정은 에셋(Inspector)이 정본이라 규칙값과 같을 필요가 없다(MV-UI2-ATLAS,
+        /// 2026-11-18 사용자 「Unity Inspector에서 설정한 패킹 대상, Padding, Tight Packing, Include in Build 등을 자동으로 덮어쓰지 않습니다」).
+        /// 규칙과 다른 값·빠진 규칙 폴더는 보고만 남긴다.
+        /// </summary>
         [Test]
-        public void EveryArtFolder_HasSpriteAtlasV2_WithSpecSettings()
+        public void EveryArtFolder_HasSpriteAtlasV2()
         {
             var folders = MvArtSetup.FindAtlasFolders();
             Assert.That(folders.Count, Is.GreaterThan(0));
@@ -70,41 +75,76 @@ namespace MV.Editor.Tests
             {
                 var spec = MvArtRules.SpecFor(pair.Key);
                 if (!File.Exists(spec.AssetPath)) { failures.Add(spec.Name + ": 파일 없음 " + spec.AssetPath); continue; }
-
-                var wanted = new HashSet<string>(pair.Value.Select(AssetDatabase.AssetPathToGUID));
-                var packables = MvArtSetup.ReadPackableGuids(spec.AssetPath);
-                if (!packables.SetEquals(wanted)) failures.Add($"{spec.Name}: packables {packables.Count} ≠ 폴더 {wanted.Count}");
-
                 if (!(AssetImporter.GetAtPath(spec.AssetPath) is SpriteAtlasImporter importer)) { failures.Add(spec.Name + ": SpriteAtlasImporter 아님"); continue; }
+
+                var packables = MvArtSetup.ReadPackableGuids(spec.AssetPath);
+                int missing = pair.Value.Count(p => !packables.Contains(AssetDatabase.AssetPathToGUID(p)));
                 var diff = MvArtSetup.AtlasDifferences(importer, spec);
-                if (diff.Count > 0) failures.Add(spec.Name + ": " + string.Join(", ", diff));
+                if (missing > 0 || diff.Count > 0)
+                    TestContext.WriteLine($"[보고] {spec.Name}: 빠진 규칙 폴더 {missing}, 규칙과 다른 값 {string.Join(", ", diff)}");
             }
             Assert.That(failures, Is.Empty, string.Join("\n", failures));
         }
 
+        /// <summary>
+        /// 완료 조건 1: 아틀라스를 손으로 고친 뒤 Art 파일을 다시 Import해도 그 값이 남는다. 실제 아틀라스 하나의 Padding·Include in Build·
+        /// 패킹 대상을 바꾸고, 규칙 폴더의 PNG를 다시 Import(후처리 → <see cref="MvArtSetup.EnsureAll"/>)한 뒤 값을 본다. 끝나면 파일을 원래 바이트로 되돌린다.
+        /// </summary>
         [Test]
-        public void WorldThemeAtlas_ImporterValues()
+        public void ManualAtlasEdit_SurvivesArtReimport()
         {
-            var importer = (SpriteAtlasImporter)AssetImporter.GetAtPath("Assets/Game/Addressables/Local/WorldAtlas/Atlas_World_Theme_market.spriteatlasv2");
-            Assert.That(importer, Is.Not.Null);
-            Assert.That(importer.includeInBuild, Is.False, "Include in Build 끔(Addressables가 로드)");
-            Assert.That(importer.packingSettings.enableRotation, Is.False);
-            Assert.That(importer.packingSettings.enableTightPacking, Is.True);
-            Assert.That(importer.packingSettings.padding, Is.EqualTo(8));
-            Assert.That(importer.textureSettings.generateMipMaps, Is.True);
-            foreach (var platform in new[] { "Android", "iPhone" })
+            var folders = MvArtSetup.FindAtlasFolders();
+            Assert.That(folders.ContainsKey("Atlas_UI_Hud"), "Atlas_UI_Hud 규칙 폴더");
+            var spec = MvArtRules.SpecFor("Atlas_UI_Hud");
+            string metaPath = spec.AssetPath + ".meta";
+            byte[] atlasBytes = File.ReadAllBytes(spec.AssetPath), metaBytes = File.ReadAllBytes(metaPath);
+            string png = Directory.GetFiles(folders["Atlas_UI_Hud"][0], "*.png", SearchOption.AllDirectories).First().Replace('\\', '/');
+            const string extra = "Assets/Game/Art/UI/GUI/Slot/Grade";
+            string extraGuid = AssetDatabase.AssetPathToGUID(extra);
+            Assert.That(extraGuid, Is.Not.Empty, extra);
+            try
             {
-                var p = importer.GetPlatformSettings(platform);
-                Assert.That(p.overridden, Is.True, platform);
-                Assert.That(p.format, Is.EqualTo(TextureImporterFormat.ASTC_6x6), platform);
-                Assert.That(p.maxTextureSize, Is.EqualTo(2048), platform);
-            }
+                var importer = (SpriteAtlasImporter)AssetImporter.GetAtPath(spec.AssetPath);
+                var pack = importer.packingSettings;
+                int padding = pack.padding == 2 ? 8 : 2;
+                pack.padding = padding;
+                importer.packingSettings = pack;
+                importer.includeInBuild = true;
+                importer.SaveAndReimport();
+                var atlas = AssetDatabase.LoadAssetAtPath<UnityEngine.U2D.SpriteAtlas>(spec.AssetPath);
+                Assert.That(atlas, Is.Not.Null);
+                var asset = SpriteAtlasAsset.Load(spec.AssetPath);
+                asset.Add(new UnityEngine.Object[] { AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(extra) });
+                SpriteAtlasAsset.Save(asset, spec.AssetPath);
+                AssetDatabase.ImportAsset(spec.AssetPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
 
-            var icon = (SpriteAtlasImporter)AssetImporter.GetAtPath("Assets/Game/Addressables/Local/UIAtlas/Atlas_UI_Icon.spriteatlasv2");
-            Assert.That(icon, Is.Not.Null);
-            Assert.That(icon.GetPlatformSettings("Android").format, Is.EqualTo(TextureImporterFormat.ASTC_4x4));
-            Assert.That(icon.textureSettings.generateMipMaps, Is.False);
-            Assert.That(icon.packingSettings.enableTightPacking, Is.False);
+                AssetDatabase.ImportAsset(png, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+                var r = MvArtSetup.EnsureAll();
+
+                var after = (SpriteAtlasImporter)AssetImporter.GetAtPath(spec.AssetPath);
+                Assert.That(after.packingSettings.padding, Is.EqualTo(padding), "Padding 유지\n" + r);
+                Assert.That(after.includeInBuild, Is.True, "Include in Build 유지");
+                Assert.That(MvArtSetup.ReadPackableGuids(spec.AssetPath), Does.Contain(extraGuid), "Inspector에서 넣은 패킹 대상(Art/UI) 유지");
+                Assert.That(MvArtSetup.PackedPngPaths(spec.AssetPath).Any(p => p.StartsWith(extra + "/")), "패킹 대상 PNG 목록에 Art/UI 그림");
+            }
+            finally
+            {
+                File.WriteAllBytes(spec.AssetPath, atlasBytes);
+                File.WriteAllBytes(metaPath, metaBytes);
+                AssetDatabase.ImportAsset(spec.AssetPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            }
+        }
+
+        /// <summary>규칙값은 없는 아틀라스를 처음 만들 때만 쓴다: 규칙 표 자체(SpecFor)는 그대로 시험한다(<see cref="AtlasSpec_FollowsSpecTable"/>).</summary>
+        [Test]
+        public void EnsureAll_DoesNotWriteExistingAtlases()
+        {
+            var before = MvArtSetup.FindAtlasAssets().ToDictionary(p => p.Key, p => File.ReadAllText(p.Value) + File.ReadAllText(p.Value + ".meta"));
+            var r = MvArtSetup.EnsureAll();
+            Assert.That(r.AtlasSettingsFixed, Is.EqualTo(0), r.ToString());
+            foreach (var p in MvArtSetup.FindAtlasAssets())
+                if (before.TryGetValue(p.Key, out var text))
+                    Assert.That(File.ReadAllText(p.Value) + File.ReadAllText(p.Value + ".meta"), Is.EqualTo(text), p.Key + " 바뀜");
         }
 
         [Test]
