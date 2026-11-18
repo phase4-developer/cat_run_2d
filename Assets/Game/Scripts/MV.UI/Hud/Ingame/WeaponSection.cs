@@ -270,7 +270,7 @@ namespace MV.UI
                         g.ResetLook();
                         if (Animate)
                         {
-                            g.rectTransform.DOAnchorPos(to, a.MoveSec).SetEase(Ease.InQuad).SetUpdate(true).SetTarget(g);
+                            AnchorTo(g.rectTransform, to, a.MoveSec).SetEase(Ease.InQuad).SetTarget(g);
                             g.PlayGather(a.Duration, gatherScale);
                         }
                         else g.rectTransform.anchoredPosition = to;
@@ -304,6 +304,10 @@ namespace MV.UI
 
         static bool Animate => Application.isPlaying;
 
+        /// <summary>anchoredPosition 보간(DOTween UI 모듈 없이 코어만 쓴다). 실시간.</summary>
+        static Tween AnchorTo(RectTransform rt, Vector2 to, float sec) =>
+            DOTween.To(() => rt.anchoredPosition, v => rt.anchoredPosition = v, to, sec).SetUpdate(true);
+
         /// <summary>
         /// 손패 순서대로 자리를 정한다(디자이너 Stack 세로 배치 값: 위 여백·간격, 반대 순서 = 위 칸이 앞).
         /// dealt = 방금 들어온 칸(아래·오른쪽에서 나타남), placed = 이미 다른 자리에 놓인 칸(머지 결과).
@@ -329,7 +333,7 @@ namespace MV.UI
                 if (snap || !Animate) { rt.anchoredPosition = to; continue; }
                 // 머지 결과(placed)는 모인 자리에서 출발한다.
                 if (s == dealt) rt.anchoredPosition = to + new Vector2(rt.rect.width * dealFromRight, -h * dealFromBelow);
-                rt.DOAnchorPos(to, moveSec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(rt);
+                AnchorTo(rt, to, moveSec).SetEase(Ease.OutQuad).SetTarget(rt);
             }
             OrderSiblings();
         }
