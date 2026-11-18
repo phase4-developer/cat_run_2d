@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using jjevol;
@@ -30,12 +29,16 @@ namespace MV.Boot
     /// Game 씬 게임 루프(10 §10.3, MV-PLAY-INT): 로비 → 런 → 지도 → 결과 → 로비를 한 씬에서 돈다(런 끝 순서 MV-SPEC-02 01 §12-3).
     /// <see cref="GameInitializer"/>가 붙이고 <see cref="InitAsync"/>를 기다린다. `WorldRoot`(월드·`GameCamera`)는 Game 씬에 직접 놓여 있고
     /// 초기화기가 그 참조를 넘긴다(2026-11-16, 에디터에서 월드·카메라를 직접 보고 고치기 위해 Addressables 생성을 뺐다).
-    /// 로비 = 트랙 위 같은 화면(MV-SPEC-02 01 §3 [원작], 사용자 2026-11-12 「로비를 트랙 화면으로 바꿔야해」): 다음 런과 같은 순번·시드로
-    /// 런 상태를 미리 만들어(Tick하지 않음) 시작점부터 `lobby.objZMax` 안 오브젝트와 걷는 냥법사를 월드 카메라 로비 자세로 그린다.
-    /// 출발하면 런을 새로 만들고 카메라가 로비 자세에서 런 자세로 쓸어 간다(02 §2.2.2). 아지트 방(옛 `LobbyStage`·`LobbyCamera`)은 2026-11-16 삭제했다.
-    /// 런 프레임: 입력 → <see cref="RunSim.Tick"/> → <see cref="RunSim.DrainEvents"/> 한 번 → 같은 목록을 소리·이펙트·월드 뷰에 넘긴다. HUD는 상태를 직접 읽는다.
+    /// 이 클래스는 단계(<see cref="MvLoopPhase"/>) 전환과 시험 훅만 가진다. 일은 모듈이 한다:
+    /// <list type="bullet">
+    /// <item><see cref="MvStageLoader"/>: 지역 맵 프리팹·테마</item>
+    /// <item><see cref="MvLobbyTrack"/>: 로비 트랙(다음 런 미리보기)</item>
+    /// <item><see cref="MvRunFactory"/>: 런 순번·시드 → 시뮬</item>
+    /// <item><see cref="MvRunFrame"/>: 런 한 프레임(입력·Tick·이벤트 전달)</item>
+    /// <item><see cref="MvRunEndFlow"/>: 지도 → 결과 → 정산</item>
+    /// <item><see cref="MvLoopFx"/>: 연출 재생기 설치</item>
+    /// </list>
     /// 카드 룰렛은 MV.Run이 스스로 고르고(04 §4.8.4), 신 선택은 로비(저장)라 런이 플레이어 선택을 기다리는 곳은 아직 없다.
-    /// 교체 지점: 선택을 기다리는 런 상태가 생기면 <see cref="TickRun"/>에서 「// 1차 자동 선택:」으로 첫 선택지를 고르고 선택 UI는 MV-UI 2차가 붙인다.
     /// </summary>
     public sealed class MvGameLoop : MonoBehaviour
     {
@@ -47,22 +50,22 @@ namespace MV.Boot
         /// <summary>이 루프에서 결과까지 간 런 수.</summary>
         public int RunsFinished { get; private set; }
         /// <summary>이 루프에서 결과 팝업을 열라고 한 횟수(런 끝 지도 닫힘 → 결과, 시험이 읽는다).</summary>
-        public int ResultOpens { get; private set; }
+        public int ResultOpens => _end.ResultOpens;
         /// <summary>정산 명령을 부른 횟수(받기 1번 = 1).</summary>
-        public int SettleCount { get; private set; }
-        public bool LastSettleOk { get; private set; }
+        public int SettleCount => _end.SettleCount;
+        public bool LastSettleOk => _end.LastSettleOk;
         /// <summary>마지막 런 종료 사유(<see cref="FinishReason"/> 이름).</summary>
         public string LastFinishReason { get; private set; }
         public long CurrentRunSeq => _runSeq;
         public ulong CurrentSeed { get; private set; }
         /// <summary>로비 트랙에 깐 오브젝트 수(시험·QA용).</summary>
-        public int LobbyObjectCount => _lobbyObjs.Count;
+        public int LobbyObjectCount => _lobby.ObjectCount;
         /// <summary>로비 트랙 미리보기 런의 프레임 수(Tick하지 않으니 0, 없으면 −1. 시험·QA용).</summary>
-        public long LobbyFrame => _lobbySim != null ? _lobbySim.State.Frame : -1;
+        public long LobbyFrame => _lobby.Frame;
         /// <summary>화면을 그리는 카메라가 월드 카메라인지(로비·런 같은 화면, 시험용).</summary>
         public bool WorldCameraActive => _world != null && _world.Rig.Cam.enabled && _world.gameObject.activeInHierarchy;
         /// <summary>파티클 머티리얼 2개(<see cref="MvFx.MatNormalAddress"/>·<see cref="MvFx.MatAddAddress"/>)를 읽었는지.</summary>
-        public bool FxMaterialsLoaded { get; private set; }
+        public bool FxMaterialsLoaded => _fx.MaterialsLoaded;
 
         // ---- 시험 훅(PlayMode 시험이 쓴다. 실제 플레이에서는 기본값) ----
         /// <summary>한 프레임에 돌릴 Tick 수(기본 1).</summary>
@@ -74,23 +77,16 @@ namespace MV.Boot
 
         MvTables _tables;
         WorldView _world;
-        RunSim _lobbySim;
-        readonly List<RunObject> _lobbyObjs = new List<RunObject>(64);
-        readonly List<IDisposable> _leases = new List<IDisposable>();
-        /// <summary>이 루프가 세운 연출 재생기. 루프(씬)가 사라지면 함께 내린다(FxRoot·카메라 리그를 들고 있다).</summary>
-        MvFxPlayer _fx;
-        readonly LoopViewSource _viewSource = new LoopViewSource();
-        MvRunInputReader _input;
+        readonly MvLoopViewSource _viewSource = new MvLoopViewSource();
+        readonly MvLobbyTrack _lobby = new MvLobbyTrack();
+        readonly MvRunEndFlow _end = new MvRunEndFlow();
+        readonly MvLoopFx _fx = new MvLoopFx();
+        MvStageLoader _stage;
+        MvRunFrame _frame;
         LobbyScreen _lobbyScreen;
-        ResultPopup _resultPopup;
-        MapPopup _mapPopup;
         RunSim _sim;
         long _runSeq;
         int _savedArea, _savedSouls;
-        int _themeId = int.MinValue;
-        int _stageArea = int.MinValue;
-        StageMap _stageMap;
-        readonly List<IDisposable> _stageLeases = new List<IDisposable>();
         CancellationToken _ct;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -122,12 +118,8 @@ namespace MV.Boot
                 MvRunSpeed.Set = null;
                 MvDebugHooks.SetTimeScale = null;
             }
-            if (_fx != null && MvFx.Player == _fx) MvFx.Install(null);
-            _fx = null;
-            foreach (var d in _stageLeases) d?.Dispose();
-            _stageLeases.Clear();
-            foreach (var d in _leases) d?.Dispose();
-            _leases.Clear();
+            _fx.Dispose();
+            _stage?.Dispose();
         }
 
         // ═════════ 준비 ═════════
@@ -146,13 +138,14 @@ namespace MV.Boot
                 if (ui) await ui.StartInitAsync(_ct);
                 Alive();
 
-                _input = new MvRunInputReader(tables.RunConfig.D(RunConfigKeys.DRAG_SCREEN_M));
+                _frame = new MvRunFrame(tables);
+                _stage = new MvStageLoader(tables, _world, _viewSource, Alive);
 
                 _world.Init(tables, _viewSource);
-                await ApplyThemeAsync(CurrentArea());
+                await _stage.ApplyAsync(CurrentArea(), _ct);
                 Alive();
 
-                await InstallFxAsync();
+                await _fx.InstallAsync(transform, _world, () => _sim?.State, Alive, _ct);
                 Alive();
                 await EnterLobbyAsync();
             }
@@ -173,76 +166,20 @@ namespace MV.Boot
             if (!this) throw new OperationCanceledException(_ct);
         }
 
-        async UniTask InstallFxAsync()
-        {
-            var fxRoot = new GameObject("FxRoot").transform;
-            fxRoot.SetParent(transform, false);
-            var normal = await LoadMaterialAsync(MvFx.MatNormalAddress);
-            Alive();
-            var add = await LoadMaterialAsync(MvFx.MatAddAddress);
-            Alive();
-            FxMaterialsLoaded = normal != null && add != null;
-            if (!FxMaterialsLoaded) Debug.LogWarning("[MvGameLoop] 우다다 머티리얼을 찾지 못했습니다(" + MvFx.MatNormalAddress + ", " + MvFx.MatAddAddress + ").");
-            _fx = MvFx.InstallDefault(fxRoot, _world.Rig, () => _sim?.State, normal, add);
-        }
-
-        async UniTask<Material> LoadMaterialAsync(string address)
-        {
-            var lease = await AddressableScope.Get<Material>(address, _ct);
-            if (lease == null) return null;
-            _leases.Add(lease);
-            return lease.Asset;
-        }
-
         /// <summary>
         /// 화면 카메라: 로비·런 모두 씬의 `GameCamera`(월드 카메라)가 그리고 UI는 그 위에 겹친다
         /// (UIManagerCreater.mainCamera를 바꾸면 다음 LateUpdate에 다시 붙는다).
         /// </summary>
-        void UseCamera(Camera cam)
+        static void UseCamera(Camera cam)
         {
             var ui = GameBootstrap.Ui;
             if (ui) ui.mainCamera = cam;
         }
 
-        int CurrentArea()
+        static int CurrentArea()
         {
             var store = MvSave.Current;
             return store != null && !store.IsDisposed ? store.Progress.Area : 0;
-        }
-
-        async UniTask ApplyThemeAsync(int area)
-        {
-            AreaData row = null;
-            foreach (var a in _tables.Area.Datas) if (a.areaNo == area + 1) { row = a; break; }
-            await LoadStageMapAsync(area, row);
-            if (row == null || row.themeId == _themeId) return;
-            var theme = _tables.Theme.Get(row.themeId);
-            if (theme == null) return;
-            _themeId = row.themeId;
-            if (!await _world.SetThemeAsync(theme, _ct)) Debug.LogWarning("[MvGameLoop] 테마 그림 일부를 불러오지 못했습니다: " + theme.key);
-        }
-
-        /// <summary>
-        /// 지역이 바뀌면 그 지역 행의 `302_area.stageMap` 맵 프리팹을 월드 아래에 불러오고 이전 맵은 지운다.
-        /// 행·주소가 없거나 로드에 실패하면 오류로 드러낸다(대체 지면으로 가리지 않는다).
-        /// </summary>
-        async UniTask LoadStageMapAsync(int area, AreaData row)
-        {
-            if (area == _stageArea || _world == null) return;
-            _stageArea = area;
-            foreach (var d in _stageLeases) d?.Dispose();
-            _stageLeases.Clear();
-            _stageMap = null;
-            if (_world.Objects != null) _world.Objects.SetStage(_tables, row?.stageMap);   // 맵별 오브젝트 프리팹(305 → 105.prefab)
-            if (row == null || string.IsNullOrEmpty(row.stageMap)) { Debug.LogError($"[MvGameLoop] 302_area 지역 {area + 1}의 stageMap이 없습니다"); return; }
-            var r = await AddressableScope.InstantiateWithLease(row.stageMap, _world.transform, _ct);
-            Alive();
-            if (r.instance == null) { Debug.LogError("[MvGameLoop] 스테이지 맵 로드 실패: " + row.stageMap); return; }
-            if (r.destroyOnDispose != null) _stageLeases.Add(r.destroyOnDispose);
-            if (r.lease != null) _stageLeases.Add(r.lease);
-            _stageMap = r.instance.GetComponent<StageMap>();
-            if (_stageMap != null) _stageMap.Bind(_world.Rig.Cam, () => (float)_viewSource.Camera.Wy, () => _world.Rig.Ready ? _world.Rig.Model.OrbitE : 0,
-                () => _viewSource.TryGetCliff(out var cliff) ? cliff : (CliffInfo?)null);
         }
 
         // ═════════ 로비 ═════════
@@ -252,70 +189,22 @@ namespace MV.Boot
             Phase = MvLoopPhase.Loading;
             _sim = null;
             _viewSource.Run = null;
-            _resultPopup = null;
-            _mapPopup = null;
-            await ApplyThemeAsync(CurrentArea());
-            if (_stageMap != null) _stageMap.Reshuffle();   // 판마다 길가 장식 배치를 새로 섞는다
+            _end.Clear();
+            await _stage.ApplyAsync(CurrentArea(), _ct);
+            if (_stage.Map != null) _stage.Map.Reshuffle();   // 판마다 길가 장식 배치를 새로 섞는다
 
-            BuildLobbyTrack();
+            // 로비 트랙: 다음 런 순번·시드로 미리보기 런을 만든다(Tick하지 않음, 순번을 쓰지 않는다). 월드 카메라는 로비 자세(Run = null).
+            var preview = MvRunFactory.Create(_tables, _world, MvRunFactory.PeekRunSeq(_tables), out _, out _);
+            _world.gameObject.SetActive(true);
+            _world.Rig.Init(_tables, _viewSource);
+            _world.Rig.Cam.enabled = true;
+            UseCamera(_world.Rig.Cam);
+            _lobby.Build(preview, _tables, _world);
             MvSound.EnterLobby();
 
             _lobbyScreen = await MvUiNav.OpenLobbyAsync(new LobbyViewData { OnStart = OnLobbyStart });
             if (_lobbyScreen == null) throw new InvalidOperationException("로비 화면을 열지 못했습니다.");
             Phase = MvLoopPhase.Lobby;
-        }
-
-        /// <summary>
-        /// 로비 트랙: 다음 런 순번(마지막 정산 + 1)·시드로 런 상태를 만들어(Tick하지 않음, 순번을 쓰지 않는다) 시작점부터
-        /// `lobby.objZMax` 안 오브젝트만 깐다. 월드 카메라는 로비 자세로 선다(<see cref="LoopViewSource"/> Run = null).
-        /// </summary>
-        void BuildLobbyTrack()
-        {
-            _lobbySim = CreateSim(PeekRunSeq(), out _, out _);
-            var s = _lobbySim.State;
-            LobbyTrack.Pick(s.Objs, s.Base, _tables.RunConfig.D(RunConfigKeys.Lobby_ObjZMax), _lobbyObjs);
-            _world.gameObject.SetActive(true);
-            _world.Rig.Init(_tables, _viewSource);
-            _world.Rig.Cam.enabled = true;
-            UseCamera(_world.Rig.Cam);
-            _world.RebuildProps(s.Base, Math.Max(0, s.Gz - s.Base), false, s.WorldY);
-            SyncLobbyTrack();
-        }
-
-        /// <summary>로비 한 프레임: 깐 오브젝트와 제자리 걷기 냥법사(런 단계 Run → Walk)를 맞춘다.</summary>
-        void SyncLobbyTrack()
-        {
-            if (_lobbySim == null) return;
-            var s = _lobbySim.State;
-            _world.SyncObjects(_lobbyObjs, s.P.Z, s.WorldY);
-            _world.SyncCats(s);
-        }
-
-        /// <summary>다음 런 순번 미리보기(<see cref="MvMeta.BeginRun"/>을 부르지 않는다). 마지막 정산 순번 + 1.</summary>
-        long PeekRunSeq()
-        {
-            var store = MvSave.Current;
-            bool hasSave = store != null && !store.IsDisposed;
-            var snap = hasSave ? MvRunSnapshot.FromStore(store, _tables.FloorCount())
-                : MvRunSnapshot.Defaults(MvBootSave.CreateConfig(_tables));
-            return snap.LastSettledRunSeq + 1;
-        }
-
-        /// <summary>런 순번 → 저장 스냅숏·시드로 런 시뮬을 만든다(로비 미리보기와 런 시작이 같은 배치를 쓴다).</summary>
-        RunSim CreateSim(long runSeq, out MvRunSnapshot snap, out ulong seed)
-        {
-            var store = MvSave.Current;
-            bool hasSave = store != null && !store.IsDisposed;
-            snap = hasSave ? MvRunSnapshot.FromStore(store, _tables.FloorCount())
-                : MvRunSnapshot.Defaults(MvBootSave.CreateConfig(_tables));
-            seed = MvRunSnapshot.SeedFor(runSeq);
-            var builder = new RunLevelBuilder();
-            var ctx = MvRunStart.CreateContext(snap, _tables, seed);
-            if (hasSave) ctx.MetaModifiers = MV.Content.MvResearch.Modifiers(store, _tables); // 연구 단계 → 런 메타 능력치(MV-META-RESEARCH)
-            var sim = RunSim.Create(ctx, new MainRunRule(builder), new Pcg32Rng(seed), builder);
-            // 투사체 판정 = 오브젝트 프리팹 Collider(Unity Physics). 월드에 판정 세계가 없으면 런을 시작하지 않는다.
-            sim.HitQuery = _world.Hits != null ? _world.Hits : throw new InvalidOperationException("WorldView에 RunHitWorld가 없습니다(오브젝트 뷰 필요).");
-            return sim;
         }
 
         /// <summary>로비 출발(시험·키 입력). 로비가 떠 있으면 런이 이 프레임에 시작된다.</summary>
@@ -347,16 +236,15 @@ namespace MV.Boot
         void StartRun()
         {
             var meta = MvMeta.Current;
-            _runSeq = meta != null && meta.IsReady ? meta.BeginRun() : PeekRunSeq();
-            _sim = CreateSim(_runSeq, out var snap, out ulong seed);
+            _runSeq = meta != null && meta.IsReady ? meta.BeginRun() : MvRunFactory.PeekRunSeq(_tables);
+            _sim = MvRunFactory.Create(_tables, _world, _runSeq, out var snap, out ulong seed);
             _sim.State.Setup.TimeScale = _timeScale;
             CurrentSeed = seed;
-            _lobbySim = null;
-            _lobbyObjs.Clear();
+            _lobby.Clear();
             _savedArea = snap.Area;
             _savedSouls = snap.Souls;
             RunFrames = 0;
-            _input.Reset();
+            _frame.Reset();
 
             _viewSource.Run = new RunStateViewSource(_sim.State, _tables);   // 카메라가 로비 자세에서 런 자세로 쓸어 간다(02 §2.2.2)
             var s = _sim.State;
@@ -370,49 +258,16 @@ namespace MV.Boot
         {
             if (Phase == MvLoopPhase.Lobby)
             {
-                SyncLobbyTrack();
+                _lobby.Sync(_world);
                 if (MvRunInputReader.StartKeyPressed()) PressStart();
                 return;
             }
             if (Phase != MvLoopPhase.Run && Phase != MvLoopPhase.Result) return;
             if (_sim == null) return;
-            TickRun();
-        }
-
-        /// <summary>한 프레임: 입력 → Tick(×<see cref="TicksPerFrame"/>) → 이벤트 한 번 → 소리·이펙트·월드.</summary>
-        void TickRun()
-        {
-            var s = _sim.State;
-            RunInput input;
-            if (Phase != MvLoopPhase.Run) input = RunInput.None;
-            else if (ScriptedDrag != null)
-            {
-                var tx = ScriptedDrag(RunFrames);
-                input = tx.HasValue ? RunInput.Drag(tx.Value) : RunInput.None;
-            }
-            else input = _input.Read(s);
-
-            double dt = FixedDt ?? Time.unscaledDeltaTime;
-            int n = Math.Max(1, TicksPerFrame);
-            for (int i = 0; i < n; i++)
-            {
-                _sim.Tick(dt, input);
-                if (s.Phase == RunPhase.Result) break;
-            }
-            if (Phase == MvLoopPhase.Run) RunFrames++;
-
-            var events = _sim.DrainEvents();
-            MvSound.OnRunEvents(events);
-            MvFx.OnRunEvents(events);
-            _world.OnRunEvents(events);   // 오브젝트 맞음·우물 벽돌 빠짐(06 §6.13)
-            foreach (var e in events)
-                if (e.Type == RunEventType.ClimbStart)   // 계단 위 새 지형(정본 buildEnv(len, from, cliff))
-                    _world.RebuildProps(e.Z, Math.Max(0, s.Gz - e.Z), true, s.WorldY + e.Amount2);
-                else if (e.Type == RunEventType.Toast) MvUiToast.Show(RunToastText.Of(e));   // 모은 마나 없음·5 미만 냥파워 없음 등(런 HUD가 띄움)
-            _world.SyncObjects(s.Objs, s.P.Z, s.WorldY);
-            _world.SyncCats(s);   // 플레이어·친구 고양이(02 §2.1.4)
-
-            if (Phase == MvLoopPhase.Run && s.Phase == RunPhase.Result) FinishRun();
+            bool playing = Phase == MvLoopPhase.Run;
+            _frame.Step(_sim, _world, playing, ScriptedDrag, RunFrames, FixedDt, TicksPerFrame);
+            if (playing) RunFrames++;
+            if (playing && _sim.State.Phase == RunPhase.Result) FinishRun();
         }
 
         // ═════════ 결과 ═════════
@@ -430,115 +285,22 @@ namespace MV.Boot
                 return;
             }
             var data = ResultViewData.Create(r, _runSeq, _savedArea, _savedSouls, _tables);
-            var meta = MvMeta.Current;
-            data.Settler = new CountingSettler(this, meta != null && meta.IsReady ? null : NoSaveSettler.Instance);
-            data.OnCollected = OnCollected;
-            OpenMapThenResultAsync(data).Forget(Debug.LogException);
-        }
-
-        /// <summary>
-        /// 런 끝 흐름(MV-SPEC-02 01 §12-3 [원작], Q-24): ① 지도 → ② 결과 → ③ 로비(<see cref="OnCollected"/>).
-        /// 지도(<see cref="MapPopup"/>)를 닫으면 결과를 연다. 지도를 열지 못하면 결과로 바로 간다.
-        /// </summary>
-        async UniTask OpenMapThenResultAsync(ResultViewData data)
-        {
-            bool resultOpened = false;
-            void OpenResult()
-            {
-                if (resultOpened || Phase != MvLoopPhase.Result) return;
-                resultOpened = true;
-                ResultOpens++;
-                _mapPopup = null;
-                OpenResultAsync(data).Forget(Debug.LogException);
-            }
-
-            _mapPopup = await MvUiNav.OpenMapAsync(new MetaPopupData { OnClosed = OpenResult }, playClick: false);
-            if (_mapPopup == null)
-            {
-                Debug.LogWarning("[MvGameLoop] 지도를 열지 못했습니다. 결과로 바로 갑니다.");
-                OpenResult();
-            }
+            // 전면 광고(result.ShowInterstitial)는 2차(MV-PLAT-ADS, D-90).
+            _end.Begin(data, () => Phase == MvLoopPhase.Result, _ => EnterLobbyAsync().Forget(Debug.LogException));
         }
 
         /// <summary>런 끝 지도가 열려 있다(결과 전, 시험용).</summary>
-        public bool MapOpen => Phase == MvLoopPhase.Result && _mapPopup != null;
+        public bool MapOpen => _end.MapOpen;
 
         /// <summary>런 끝 지도 닫기(시험용). 닫으면 결과가 열린다.</summary>
-        public bool PressMapClose()
-        {
-            if (!MapOpen) return false;
-            _mapPopup.Presenter.PressClose();
-            return true;
-        }
+        public bool PressMapClose() => _end.PressMapClose();
 
         /// <summary>뒤로 가기·Esc(시험용): Framework <c>UIManager</c>의 뒤로 가기 처리를 그대로 부른다.</summary>
         public UniTask PressBack() => UIManager.Instance.HandleBackButtonAsync();
 
-        async UniTask OpenResultAsync(ResultViewData data)
-        {
-            _resultPopup = await MvUiNav.OpenResultAsync(data);
-            if (_resultPopup == null) throw new InvalidOperationException("결과 팝업을 열지 못했습니다.");
-        }
-
         /// <summary>결과 「받기」(시험용). 팝업이 열려 있으면 정산 1번 → 로비.</summary>
-        public bool PressCollect()
-        {
-            if (Phase != MvLoopPhase.Result || _resultPopup == null) return false;
-            _resultPopup.PressCollect();
-            return true;
-        }
+        public bool PressCollect() => _end.PressCollect();
 
-        public bool ResultOpen => Phase == MvLoopPhase.Result && _resultPopup != null;
-
-        void OnCollected(MvSettleResult result)
-        {
-            if (Phase != MvLoopPhase.Result) return;
-            // 전면 광고(result.ShowInterstitial)는 2차(MV-PLAT-ADS, D-90).
-            EnterLobbyAsync().Forget(Debug.LogException);
-        }
-
-        /// <summary>정산 1번을 세고 실제 정산기(기본 MvMeta.Current)에 넘긴다.</summary>
-        sealed class CountingSettler : IResultSettler
-        {
-            readonly MvGameLoop _loop;
-            readonly IResultSettler _inner;
-
-            public CountingSettler(MvGameLoop loop, IResultSettler inner)
-            {
-                _loop = loop;
-                _inner = inner ?? MvMetaResultSettler.Instance;
-            }
-
-            public MvSettleResult Settle(MvRunOutcome outcome, int mul)
-            {
-                _loop.SettleCount++;
-                // 런 안 퀘스트 카운터(계단·벽)는 outcome에 실려 정산 저장에 함께 쓴다(따로 기록 요청을 보내지 않는다).
-                var r = _inner.Settle(outcome, mul);
-                _loop.LastSettleOk = r != null && r.Ok;
-                return r;
-            }
-        }
-
-        /// <summary>저장이 없을 때(복구 대기·데이터 없음): 정산하지 않고 실패 결과를 돌려준다(진행을 바꾸지 않는다).</summary>
-        sealed class NoSaveSettler : IResultSettler
-        {
-            public static readonly NoSaveSettler Instance = new NoSaveSettler();
-            public MvSettleResult Settle(MvRunOutcome outcome, int mul) => new MvSettleResult { Mul = mul };
-        }
-
-        /// <summary>월드 뷰 공급원: 런이 있으면 그 상태, 없으면 로비 자세.</summary>
-        sealed class LoopViewSource : IWorldViewSource
-        {
-            public RunStateViewSource Run;
-
-            public CameraInput Camera => Run != null ? Run.Camera : new CameraInput { Mode = WorldViewMode.Lobby };
-
-            public bool TryGetCliff(out CliffInfo cliff)
-            {
-                if (Run != null) return Run.TryGetCliff(out cliff);
-                cliff = default;
-                return false;
-            }
-        }
+        public bool ResultOpen => _end.ResultOpen;
     }
 }
