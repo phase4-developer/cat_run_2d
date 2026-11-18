@@ -92,10 +92,8 @@ MonoBehaviour:
   currencies:
   - wealthType: gold
     slot: {fileID: 7898285066616250659}
-    iconDummy: {fileID: 835037565799948205}
   - wealthType: dia
     slot: {fileID: 331560770775667334}
-    iconDummy: {fileID: 7103037072863800328}
   equipSlot: {fileID: 4061869031817155475}
   stack: {fileID: 6307608403524073821}
   stairGrade: {fileID: 10547949895669787}
@@ -252,6 +250,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002}
     m_Modifications:
+    - target: {fileID: 835037565799947233, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7103037072863799364, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 559330387813458941, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -750,11 +756,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 439519704141644163, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
   m_PrefabInstance: {fileID: 1100}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &835037565799948205 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 835037565799947233, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &856544028955081873 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 856544028955080925, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
@@ -1230,11 +1231,6 @@ MonoBehaviour:
 --- !u!1 &6994052075688354236 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6994052075688355312, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7103037072863800328 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7103037072863799364, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
   m_PrefabInstance: {fileID: 1100}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &7197873183595557292 stripped

@@ -24,8 +24,6 @@ namespace MV.UI
         public string wealthType;
         /// <summary><c>Slot_Currency</c> 루트의 공용 재화 칸.</summary>
         public HudCurrencySlot slot;
-        /// <summary>디자이너 자리표시 아이콘(<c>Icon_Dummy</c>, 표 아이콘 위에 그려짐). 표 아이콘이 있으면 끈다. 공용 부품으로 옮길지 결정 대기.</summary>
-        public GameObject iconDummy;
     }
 
     /// <summary>디자이너 <c>Element_MainUpgrade_*</c> 1칸. 표 행과는 <see cref="key"/>(<c>10_lobbyUpgrade.key</c>)로 짝짓는다.</summary>
@@ -333,7 +331,6 @@ namespace MV.UI
                 if (c == null || !c.slot) continue;
                 if (string.IsNullOrEmpty(c.wealthType)) { c.slot.HideUI(); continue; }
                 c.slot.ShowUI(new CurrencySlotData(t, c.wealthType, c.slot.ValueText)); // 글자는 SetWealth가 먼저 넣은 값
-                if (c.iconDummy && HudCurrencySlot.IconOf(t, c.wealthType) != null) c.iconDummy.SetActive(false);
             }
         }
 
