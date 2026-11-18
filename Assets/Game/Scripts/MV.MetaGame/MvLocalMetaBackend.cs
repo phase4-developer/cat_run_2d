@@ -254,6 +254,7 @@ namespace MV.Meta
         {
             var row = _t.AreaUpgrade.ByKey(key);
             if (row == null || !row.active) return MvMetaResponse.Reject(MvMetaErrors.UnknownKey, key);
+            if (S.Rebirth.Lv < row.needRebirth) return MvMetaResponse.Reject(MvMetaErrors.Locked, key);
             int bought = S.AreaUp.GetLevel(key);
             var lv = ToJObject(S.AreaUp.Levels);
             lv[key] = bought + 1;
@@ -264,6 +265,7 @@ namespace MV.Meta
         {
             var row = _t.RebirthPerk.ByKey(key);
             if (row == null || !row.active) return MvMetaResponse.Reject(MvMetaErrors.UnknownKey, key);
+            if (S.Rebirth.Lv < row.needRebirth) return MvMetaResponse.Reject(MvMetaErrors.Locked, key);
             int bought = S.Rebirth.GetPerk(key);
             var perks = ToJObject(S.Rebirth.Perks);
             perks[key] = bought + 1;
