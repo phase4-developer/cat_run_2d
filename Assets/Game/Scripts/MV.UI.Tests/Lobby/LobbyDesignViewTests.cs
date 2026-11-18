@@ -135,6 +135,10 @@ namespace MV.UI.Tests
                 var dummy = c.slot.transform.Find("Icon_Dummy");
                 Assert.That(dummy, Is.Not.Null, c.wealthType);
                 Assert.That(dummy.gameObject.activeSelf, Is.False, c.wealthType + ": 로비 래퍼 프리팹이 Icon_Dummy를 꺼 둠(코드 제어 없음, 사용자 2026-11-19)");
+                var icon = c.slot.transform.Find("Icon");
+                Assert.That(icon, Is.Not.Null, c.wealthType);
+                Assert.That(icon.gameObject.activeSelf, Is.True, c.wealthType + ": 디자이너 원본이 꺼 둔 표 아이콘 칸 Icon을 래퍼 프리팹이 켬(둘 다 꺼지면 아이콘이 안 보임)");
+                Assert.That(c.slot.IconSprite, Is.EqualTo(HudCurrencySlot.IconOf(T, c.wealthType)), c.wealthType + ": 01_wealth.icon");
                 Assert.That(c.slot.WealthType, Is.EqualTo(c.wealthType), "SetState가 공용 칸에 재화 종류를 넣음");
                 if (expect.TryGetValue(c.wealthType, out var v)) Assert.That(c.slot.ValueText, Is.EqualTo(v), c.wealthType + ": SetWealth 글자가 SetState 뒤에도 남음");
             }
