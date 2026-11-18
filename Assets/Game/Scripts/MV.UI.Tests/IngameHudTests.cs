@@ -213,8 +213,8 @@ namespace MV.UI.Tests
 
             // 재화 칸 그림 = 01_wealth.icon(상단 줄이 종류를 넘긴다, 로비와 같은 컴포넌트)
             view.TopBar.BindTables(T);
-            Assert.AreEqual(T.Wealth.Get("gold").icon, view.TopBar.Gold.IconSprite);
-            Assert.AreEqual(T.Wealth.Get("dia").icon, view.TopBar.Dia.IconSprite);
+            Assert.AreEqual(HudCurrencySlot.IconOf(T, "gold"), view.TopBar.Gold.IconSprite);
+            Assert.AreEqual(HudCurrencySlot.IconOf(T, "dia"), view.TopBar.Dia.IconSprite);
         }
 
         [Test]
