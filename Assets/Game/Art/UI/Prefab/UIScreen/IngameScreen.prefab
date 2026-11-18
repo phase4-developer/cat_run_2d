@@ -3516,6 +3516,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 7431286054410923874}
   - component: {fileID: 9010080087563386607}
   m_Layer: 5
   m_Name: Grade Step Section
@@ -5244,14 +5245,8 @@ MonoBehaviour:
   stair: {fileID: 7431286054410923873}
   cardPos: {fileID: 4296539063756947053}
   climbStair: {fileID: 9119664277454892412}
-  gradeSection: {fileID: 8032430310997250833}
-  holderOut: {fileID: 6164295013679586239}
-  holderPrev: {fileID: 6146881827200662977}
-  holderCurrent: {fileID: 3684744233962758750}
-  holderNext: {fileID: 1676877138718950930}
-  holderIn: {fileID: 6540623355427045290}
+  gradeStep: {fileID: 7431286054410923874}
   skillSection: {fileID: 7343300302770266304}
-  climbShiftSec: 0.3
   rollStepSec: 0.06
 --- !u!114 &7431286054410923872
 MonoBehaviour:
@@ -5335,3 +5330,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ff4c731a0bc42fb860812633a95d0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7431286054410923874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8032430310997250833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c590a38eaa84b1287c0b39f16c59a4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  holderOut: {fileID: 6164295013679586239}
+  holderPrev: {fileID: 6146881827200662977}
+  holderCurrent: {fileID: 3684744233962758750}
+  holderNext: {fileID: 1676877138718950930}
+  holderIn: {fileID: 6540623355427045290}
+  cardPrefab: {fileID: 1979326238865626154, guid: af6b90b1f9287b140a115aa8c6e167dc, type: 3}
+  shiftSec: 0.3
