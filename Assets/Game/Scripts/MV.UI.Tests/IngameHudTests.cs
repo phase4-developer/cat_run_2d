@@ -39,7 +39,8 @@ namespace MV.UI.Tests
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(HudPath);
             Assert.That(prefab, Is.Not.Null, HudPath);
-            var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            // 런타임(Addressables Instantiate)과 같이 일반 복제로 만든다. 프리팹 인스턴스는 에디터에서 자식 부모 변경이 막힌다.
+            var go = Object.Instantiate(prefab);
             _made.Add(go);
             var ctrl = go.GetComponent("RunHud");
             Assert.That(ctrl, Is.Not.Null, "RunHud");
@@ -156,14 +157,15 @@ namespace MV.UI.Tests
             Assert.That(view.SkillCard, Is.Not.Null, "Skill Section/Card_Skill");
             foreach (var slot in hud.GetComponentsInChildren<HudWeaponSlot>(true)) AssertRefs(slot);
             foreach (var card in hud.GetComponentsInChildren<HudClimbCard>(true)) AssertRefs(card);
-            foreach (var card in hud.GetComponentsInChildren<HudSkillCard>(true)) AssertRefs(card);
+            // maskBack(Card Texture (1))은 디자이너가 일부 인스턴스에서 지운 선택 항목이라 빼고 본다(코드가 없으면 건너뜀).
+            foreach (var card in hud.GetComponentsInChildren<HudSkillCard>(true)) AssertRefs(card, "maskBack");
         }
 
-        static void AssertRefs(Object o)
+        static void AssertRefs(Object o, params string[] optional)
         {
             var it = new SerializedObject(o).GetIterator();
             while (it.NextVisible(true))
-                if (it.propertyType == SerializedPropertyType.ObjectReference && it.propertyPath != "m_Script")
+                if (it.propertyType == SerializedPropertyType.ObjectReference && it.propertyPath != "m_Script" && System.Array.IndexOf(optional, it.propertyPath) < 0)
                     Assert.That(it.objectReferenceValue, Is.Not.Null, o.name + "." + it.propertyPath);
         }
 
