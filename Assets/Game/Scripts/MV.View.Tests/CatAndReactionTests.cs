@@ -577,18 +577,19 @@ namespace MV.View.Tests
             Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
             Assert.AreEqual(System.Math.Min(8, bundle.MaxCards), bundle.Shown, "Made + Extra(프리팹 상한까지)");
 
-            // 왼쪽 정렬: 첫 장 = 왼쪽 기둥, 오른쪽으로 같은 간격, 오른쪽 기둥을 넘기 전에 위 줄
+            // 기둥 사이 왼쪽 정렬: 첫 장 왼쪽 끝 = 왼쪽 기둥 안쪽 면, 오른쪽으로 같은 간격, 카드 오른쪽 끝이 오른쪽 기둥 안쪽 면을 넘기 전에 위 줄
             var cards = bundle.Cards;
             float x0 = cards[0].transform.localPosition.x, y0 = cards[0].transform.localPosition.y;
             int cols = 0;
             foreach (var c in cards) if (UnityEngine.Mathf.Approximately(c.transform.localPosition.y, y0)) cols++;
             Assert.AreEqual(bundle.Columns, cols, "한 줄 장 수 = 기둥 사이에 간격으로 들어가는 수");
             Assert.That(cols, Is.GreaterThan(1).And.LessThan(8), "한 줄에 늘어뜨리지 않고 줄을 늘린다");
-            Assert.AreEqual(-1.25f, x0, 1e-4f, "왼쪽 끝 = 왼쪽 기둥");
+            float half = bundle.CardSize.x * 0.5f;
+            Assert.AreEqual(bundle.LeftX, x0 - half, 1e-4f, "첫 카드 왼쪽 끝 = 왼쪽 기둥 안쪽 면");
             float gap = cards[1].transform.localPosition.x - x0;
             Assert.Greater(gap, 0f);
-            Assert.LessOrEqual(cards[cols - 1].transform.localPosition.x, 1.25f + 1e-4f, "오른쪽 기둥을 넘지 않는다");
-            Assert.Greater(cards[cols - 1].transform.localPosition.x + gap, 1.25f, "한 장 더 놓으면 오른쪽 기둥을 넘는다");
+            Assert.LessOrEqual(cards[cols - 1].transform.localPosition.x + half, bundle.RightX + 1e-4f, "카드 오른쪽 끝이 오른쪽 기둥 안쪽 면을 넘지 않는다");
+            Assert.Greater(cards[cols - 1].transform.localPosition.x + gap + half, bundle.RightX, "한 장 더 놓으면 오른쪽 기둥을 넘는다");
             Assert.Greater(cards[cols].transform.localPosition.y, y0, "넘치면 위 줄");
             Assert.AreEqual(x0, cards[cols].transform.localPosition.x, 1e-4f, "위 줄도 왼쪽 기둥부터");
 

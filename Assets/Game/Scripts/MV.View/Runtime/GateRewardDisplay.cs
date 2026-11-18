@@ -23,8 +23,8 @@ namespace MV.View
 
     /// <summary>
     /// 문 위 보상 카드 묶음의 부모(MV-UI3-HUD9, 사용자 2026-11-19 「부모 클래스 만들어서 추후 다른 타입 … 추가 대비」).
-    /// 장 수만큼(상한 <see cref="_maxCards"/>) 카드 원본(<see cref="GateRewardCard"/>)을 풀에서 꺼내 왼쪽 기둥(<see cref="_leftX"/>)부터 오른쪽으로 겹쳐 놓고,
-    /// 오른쪽 기둥(<see cref="_rightX"/>)을 넘으면 위 줄로 올린다(왼쪽 정렬, 사용자 2026-11-19 스크린샷). 통과(<c>Done</c>)하는 순간 카드마다 화면 자리를 <see cref="Released"/>로 넘기고 숨긴다
+    /// 장 수만큼(상한 <see cref="_maxCards"/>) 카드 원본(<see cref="GateRewardCard"/>)을 풀에서 꺼내 두 기둥 사이에 놓는다: 첫 카드 왼쪽 끝 = 왼쪽 기둥 안쪽 면(<see cref="_leftX"/>),
+    /// 오른쪽으로 간격 x씩, 카드 오른쪽 끝이 오른쪽 기둥 안쪽 면(<see cref="_rightX"/>)을 넘으면 위 줄(왼쪽 정렬, 사용자 2026-11-19 「시작 위치도 기둥 사이」). 통과(<c>Done</c>)하는 순간 카드마다 화면 자리를 <see cref="Released"/>로 넘기고 숨긴다
     /// (HUD가 같은 자리·같은 크기 UI 카드로 바꿔 날린다, 알파 변화 없음).
     /// 자식 클래스는 종류·장 수·그림만 정한다. 배치·크기 값은 프리팹 직렬화 필드(연출 값)다.
     /// </summary>
@@ -34,14 +34,14 @@ namespace MV.View
         [SerializeField] GateRewardCard _template;
         [Tooltip("보일 카드 상한(장). 통과 때 HUD로 넘기는 장 수도 이 값까지다(표 300 CRAFT_ICON_MAX를 옮김, 사용자 2026-11-19 「표값 그냥 지우고 … 프리팹 인스펙터 값으로」).")]
         [SerializeField] int _maxCards = 999;
-        [Tooltip("줄 첫 카드 가운데 x(m, 묶음 기준) = 왼쪽 기둥. 여기서부터 오른쪽으로 놓는다.")]
-        [SerializeField] float _leftX = -1.25f;
-        [Tooltip("줄 마지막 카드 가운데 x 한계(m) = 오른쪽 기둥. 넘으면 위 줄.")]
-        [SerializeField] float _rightX = 1.25f;
+        [Tooltip("놓는 칸 왼쪽 끝 x(m, 묶음 기준) = 왼쪽 기둥 안쪽 면. 첫 카드 왼쪽 끝이 여기.")]
+        [SerializeField] float _leftX = -0.735f;
+        [Tooltip("놓는 칸 오른쪽 끝 x(m) = 오른쪽 기둥 안쪽 면. 카드 오른쪽 끝이 넘으면 위 줄.")]
+        [SerializeField] float _rightX = 0.735f;
         [Tooltip("카드 간격(m): x = 옆(카드 너비보다 작으면 겹친다), y = 위 줄.")]
         [SerializeField] Vector2 _step = new Vector2(0.42f, 0.35f);
         [Tooltip("카드 크기(m). HUD 스택 칸(170×150)과 같은 비율.")]
-        [SerializeField] Vector2 _cardSize = new Vector2(0.79f, 0.7f);
+        [SerializeField] Vector2 _cardSize = new Vector2(0.57f, 0.5f);
 
         /// <summary>통과 때 카드 화면 자리(종류, 카드들). Boot 다리가 HUD로 넘긴다. 받는 쪽은 목록을 그 자리에서 읽고 보관하지 않는다.</summary>
         public static event Action<GateRewardKind, IReadOnlyList<GateCardRelease>> Released;
@@ -60,8 +60,10 @@ namespace MV.View
         public IReadOnlyList<GateRewardCard> Cards => _shown;
         public Vector2 CardSize => _cardSize;
         public int MaxCards => _maxCards;
-        /// <summary>한 줄 장 수 = 왼쪽 기둥부터 오른쪽 기둥까지 간격 x로 들어가는 수.</summary>
-        public int Columns => _step.x > 0 ? Mathf.Max(1, Mathf.FloorToInt((_rightX - _leftX) / _step.x + 1e-4f) + 1) : 1;
+        public float LeftX => _leftX;
+        public float RightX => _rightX;
+        /// <summary>한 줄 장 수 = 기둥 사이 폭에 카드가 간격 x로 들어가는 수(최소 1).</summary>
+        public int Columns => _step.x > 0 ? Mathf.Max(1, Mathf.FloorToInt((_rightX - _leftX - _cardSize.x) / _step.x + 1e-4f) + 1) : 1;
 
         public abstract GateRewardKind Kind { get; }
 
@@ -174,7 +176,7 @@ namespace MV.View
             int cols = Columns;
             int rows = (n + cols - 1) / cols;
             int row = i / cols, col = i % cols;
-            float x = _leftX + col * _step.x;
+            float x = _leftX + _cardSize.x * 0.5f + col * _step.x;
             var p = _template.transform.localPosition;
             c.transform.localPosition = new Vector3(p.x + x, p.y + row * _step.y, p.z + row * 0.001f - col * 0.0001f);
             int order = BaseOrder() + 2 * ((rows - 1 - row) * cols + col);
