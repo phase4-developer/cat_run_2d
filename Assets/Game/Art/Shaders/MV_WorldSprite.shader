@@ -36,7 +36,10 @@ Shader "MV/WorldSprite"
                 float3 positionWS = TransformObjectToWorld(v.positionOS.xyz);
                 o.positionCS = TransformWorldToHClip(positionWS);
                 o.fog = MvFogK(positionWS);
+                // SpriteRenderer.color는 Unity 6에서 unity_SpriteColor로 들어온다. 색은 쓰지 않고(프리팹 색 영향 없음) 알파만 곱한다:
+                // 먼 끝 등장 페이드·옆 시점 페이드·가림 페이드(DepthSorter)가 SpriteRenderer.color 알파로 들어온다.
                 o.color = v.color;
+                o.color.a *= unity_SpriteColor.a;
                 o.uv = v.uv;
                 return o;
             }

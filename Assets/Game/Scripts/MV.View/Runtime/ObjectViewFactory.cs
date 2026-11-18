@@ -1085,7 +1085,7 @@ namespace MV.View
                 case ObjectShape.Mouse:
                 {
                     // 적 프리팹(그림 자리·크기·Hitbox) + 테마 프레임. 프레임 넘김 = 102_enemy.fps.
-                    v.Frames ??= EnemyFrames(o);
+                    v.Frames ??= EnemyFrames(o, p);
                     if (p?.Body != null && v.Frames != null && v.Frames.Length > 0)
                     {
                         double fps = o.Enemy != null ? o.Enemy.fps : 0;
@@ -1113,13 +1113,21 @@ namespace MV.View
             if (v.Rig != null) v.Rig.SetFill(o.HasHp ? o.Hp : 1, o.HasHp ? o.Max : 1);
         }
 
-        /// <summary>적 프레임: 지금 테마 아틀라스에서 `102_enemy.sprite` 접두 + 번호, `frameCount`장.</summary>
-        Sprite[] EnemyFrames(RunObject o)
+        /// <summary>
+        /// 적 프레임: `102_enemy.sprite` 접두 + 번호, `frameCount`장. 프리팹 몸 그림의 <see cref="SpriteFrameList"/>에 그 접두 그림이 있으면 그것(스테이지 전용 리소스),
+        /// 없으면 지금 테마 아틀라스에서 찾는다.
+        /// </summary>
+        Sprite[] EnemyFrames(RunObject o, PrefabParts p)
         {
             string prefix = o.Enemy?.sprite;
-            if (string.IsNullOrEmpty(prefix) || _sprites == null) return null;
+            if (string.IsNullOrEmpty(prefix)) return null;
             if (!prefix.EndsWith("_")) prefix += "_";
-            return _sprites.GetFrames(_atlas, prefix, Math.Max(1, o.Enemy.frameCount));
+            int count = Math.Max(1, o.Enemy.frameCount);
+            var list = p?.Body != null ? p.Body.GetComponentInParent<SpriteFrameList>(true) : null;
+            var own = list != null ? list.Pick(prefix, count) : null;
+            if (own != null) return own;
+            if (_sprites == null) return null;
+            return _sprites.GetFrames(_atlas, prefix, count);
         }
 
         /// <summary>맞음 눌림 크기 (1 + 0.07k, 1 − 0.08k, 1 + 0.07k)(updObjMesh L1468).</summary>

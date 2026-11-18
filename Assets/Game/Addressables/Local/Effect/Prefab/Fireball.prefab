@@ -104,6 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MV.Fx::MV.Fx.MvFxParticleBind
   Tint: 0
   Lighten: 0.4
+  Source: 0
   RingOnly: 0
   ScaleBurst: 0
   ScaleBy: 0
@@ -453,7 +454,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -506,7 +507,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -4954,7 +4955,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a04bdc20bf9d1437a9822d3825c8a038, type: 2}
+  - {fileID: 2100000, guid: f87e3717c0cbd453cbfc6237ed789d74, type: 2}
   - {fileID: 2100000, guid: bf114b674e9a60448b25215d940ed2f4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -5348,7 +5349,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -5401,7 +5402,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -9791,7 +9792,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9aaa13d175bcf1c4b8acc4d930ee06ee, type: 2}
+  - {fileID: 2100000, guid: c4688bd660fc74fabae727f0ce7a3515, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

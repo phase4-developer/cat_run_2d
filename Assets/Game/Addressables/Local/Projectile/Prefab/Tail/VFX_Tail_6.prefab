@@ -79,13 +79,13 @@ TrailRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: -2
+  m_SortingOrder: 8
   m_MaskInteraction: 0
   m_Time: 0.2
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.16
+    widthMultiplier: 0.24
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -248,13 +248,13 @@ TrailRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: -1
+  m_SortingOrder: 9
   m_MaskInteraction: 0
   m_Time: 0.2
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.22
+    widthMultiplier: 0.32999998
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -5231,7 +5231,7 @@ ParticleSystemRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: 2
+  m_SortingOrder: 12
   m_MaskInteraction: 0
   m_RenderMode: 5
   m_MeshDistribution: 0
@@ -10088,7 +10088,7 @@ ParticleSystemRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: -1
+  m_SortingOrder: 9
   m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -10200,13 +10200,13 @@ TrailRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: -2
+  m_SortingOrder: 8
   m_MaskInteraction: 0
   m_Time: 0.2
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.19
+    widthMultiplier: 0.285
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -10332,6 +10332,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4581139424608765114, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_SortingOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: ShapeModule.m_Scale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: ShapeModule.m_Scale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.48
+      objectReference: {fileID: 0}
     - target: {fileID: 5010324599034792622, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
       value: 0.56688833
@@ -10363,6 +10387,18 @@ PrefabInstance:
     - target: {fileID: 8048444742823696448, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
       propertyPath: m_Parameters.widthMultiplier
       value: 0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 8498302747282055517, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8498302747282055517, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8498302747282055517, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8498302747282055517, guid: 945447e88564f41cb91f29455ded7e09, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10445,7 +10481,7 @@ MonoBehaviour:
   - {fileID: 6561642047294523261}
   - {fileID: 6552725295102912308}
   - {fileID: 963931958016379615}
-  Radius: 0.28
+  Radius: 0.42000002
   Wavelength: 2.4
   Wobble: 0.35
   RampDistance: 0.6
