@@ -58,7 +58,7 @@ namespace MV.Boot
             if (row == null || string.IsNullOrEmpty(row.stageMap)) { Debug.LogError($"[MvStageLoader] 302_area 지역 {area + 1}의 stageMap이 없습니다"); return; }
             var r = await AddressableScope.InstantiateWithLease(row.stageMap, _world.transform, ct);
             _alive();
-            if (r.instance == null) { Debug.LogError("[MvStageLoader] 스테이지 맵 로드 실패: " + row.stageMap); return; }
+            if (r.instance == null) { Debug.LogWarning("[MvStageLoader] 스테이지 맵 로드 실패: " + row.stageMap); return; }
             if (r.destroyOnDispose != null) _leases.Add(r.destroyOnDispose);
             if (r.lease != null) _leases.Add(r.lease);
             Map = r.instance.GetComponent<StageMap>();

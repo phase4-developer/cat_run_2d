@@ -56,7 +56,7 @@ namespace MV.View
             if (_tint != null) _tint.Init(_rig.Cam, _screenMultiply);
             if (_objects != null) _objects.Init(_cfg, _rig.Cam.transform, _sprites, FxAtlas);
             if (_screen != null) _screen.Init(_cfg, _rig.Cam, _sprites, FxAtlas);
-            // 하위 관리자는 모두 WorldRoot 프리팹의 자식이다. 없으면 만들지 않고 프리팹 경로와 자식 이름을 오류로 알린다.
+            // 하위 관리자는 모두 WorldRoot 프리팹의 자식이다. 없으면 만들지 않고 프리팹 경로와 자식 이름을 경고로 알린다.
             var spriteMat = _objects != null ? _objects.SpriteMaterial : null;
             if (Has(_cats, "Cats", nameof(CharacterPresenter))) _cats.Init(tables, _cfg, _sprites, spriteMat);
             if (Has(_projs, "Projectiles", nameof(ProjectileView))) _projs.Init(tables, _cfg, _sprites, spriteMat, FxAtlas);
@@ -70,7 +70,7 @@ namespace MV.View
         bool Has(Object part, string child, string type)
         {
             if (part != null) return true;
-            Debug.LogError($"[WorldView] {PrefabPath}에 자식 {child}({type})가 없거나 WorldView에 연결되지 않았습니다. 만들지 않습니다.", this);
+            Debug.LogWarning($"[WorldView] {PrefabPath}에 자식 {child}({type})가 없거나 WorldView에 연결되지 않았습니다. 만들지 않습니다.", this);
             return false;
         }
 

@@ -58,7 +58,7 @@ namespace MV.UI
             {
                 if (notice) return notice;
                 notice = GetComponentInChildren<ClimbNoticeView>(true);
-                if (!notice) Debug.LogError("[RunHud] 계단 안내 프리팹(HUD_ClimbNotice)이 자식에 없습니다.", this);
+                if (!notice) Debug.LogWarning("[RunHud] 계단 안내 프리팹(HUD_ClimbNotice)이 자식에 없습니다.", this);
                 return notice;
             }
         }

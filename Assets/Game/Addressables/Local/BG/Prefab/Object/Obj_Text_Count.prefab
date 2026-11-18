@@ -83,7 +83,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: 5
+  m_SortingOrder: 105
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &2267972883595004547
@@ -262,7 +262,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: 5
+  m_SortingOrder: 105
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: d059b49fb50c97c418918c7e0b19d641, type: 3}
   m_Color: {r: 1, g: 0.6901961, b: 0.3529412, a: 1}
@@ -357,7 +357,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: 5
+  m_SortingOrder: 105
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &7059969738496119866
@@ -496,6 +496,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8996763789592010812}
+  - component: {fileID: 7300200000000000001}
   m_Layer: 0
   m_Name: Obj_Text_Count
   m_TagString: Untagged
@@ -601,7 +602,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: 4
+  m_SortingOrder: 104
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: d059b49fb50c97c418918c7e0b19d641, type: 3}
   m_Color: {r: 0.16470589, g: 0.101960786, b: 0.18039216, a: 0.8}
@@ -613,3 +614,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &7300200000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6392658425363057222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7387361f988e4dd098839331512fbf74, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: MV.View::MV.View.CountLabel
+  _title: {fileID: 7059969738496119866}
+  _number: {fileID: 2267972883595004547}
+  _gauge: {fileID: 8526265881284180830}
+  _pivot: {fileID: 3236871238491511533}

@@ -113,13 +113,13 @@ namespace MV.UI
             return Color.white;
         }
 
-        /// <summary>프리팹 참조가 모두 있으면 처음 색을 기억하고 글자를 숨긴다. 빠졌으면 오류로 드러낸다(코드로 대신 만들지 않는다).</summary>
+        /// <summary>프리팹 참조가 모두 있으면 처음 색을 기억하고 글자를 숨긴다. 빠졌으면 경고로 드러낸다(코드로 대신 만들지 않는다).</summary>
         bool Ready()
         {
             if (_ready) return true;
             if (!labelRoot || !label || !toastRoot || !toastBg || !toast)
             {
-                Debug.LogError("[ClimbNoticeView] 프리팹 참조가 비었습니다(HUD_ClimbNotice).", this);
+                Debug.LogWarning("[ClimbNoticeView] 프리팹 참조가 비었습니다(HUD_ClimbNotice).", this);
                 enabled = false;
                 return false;
             }

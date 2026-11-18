@@ -32,7 +32,7 @@ namespace MV.View.Tests
             Factory = go.AddComponent<ObjectViewFactory>();
             Factory.Init(ViewTestTables.Config(), camGo.transform, new WorldSpriteCache(), WorldView.FxAtlas);
             Factory.SetTheme(ViewTestTables.Theme("market"));
-            Factory.LabelText = _ => null;   // TMP 글꼴 없이
+            Factory.HideLabels = true;   // TMP 글꼴 없이
             Factory.PrefabLoader = (a, ct) => UniTask.FromResult(new PrefabHandle(assetOf(a), null));
             Factory.SetStage(t, StageMap);
             World = go.AddComponent<RunHitWorld>();

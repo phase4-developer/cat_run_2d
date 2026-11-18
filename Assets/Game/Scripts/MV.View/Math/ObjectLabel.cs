@@ -34,8 +34,6 @@ namespace MV.View
         public static readonly LabelContent Hidden = new LabelContent(false, false, null, null, NoGauge);
         public const float NoGauge = -1f;
 
-        /// <summary>프리팹 없는 오브젝트용 한 줄 글자: 숫자, 없으면 제목. 안 보이면 null.</summary>
-        public string Line => !Visible ? null : Number ?? Title;
     }
 
     /// <summary>

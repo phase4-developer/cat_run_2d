@@ -75,7 +75,7 @@ namespace MV.View
             if (_disposed) { lease?.Dispose(); return; }
             if (lease == null || lease.Asset == null || lease.Asset.GetComponent<CharacterRig>() == null)
             {
-                Debug.LogError(lease == null || lease.Asset == null
+                Debug.LogWarning(lease == null || lease.Asset == null
                     ? $"CharacterPool: 프리팹 로드 실패 {address}"
                     : $"CharacterPool: {address}에 {nameof(CharacterRig)}가 없습니다");
                 lease?.Dispose();
