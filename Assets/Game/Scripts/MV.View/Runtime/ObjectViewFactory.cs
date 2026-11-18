@@ -28,7 +28,7 @@ namespace MV.View
     /// 프리팹에 붙은 모듈(<see cref="RunObjectModule"/>)이 정하고, 이 관리자는 종류를 보고 동작을 고르지 않는다.
     /// <see cref="Sync"/>: 그리기 범위(PZ+objDrawBack ~ PZ+objDrawFront)의 살아 있는 오브젝트에 뷰를 붙이고(프리팹 주소별 풀), 뷰 뿌리를 시뮬 위치에 놓고,
     /// 빠진 뷰는 모듈이 회수를 막지 않을 때(<see cref="RunObjectView.ReleaseReady"/>) 돌려준다. 뷰 뿌리 = SortingGroup + <see cref="DepthSortable"/>(순위 Object, 탐침 +sort.objProbeY, 편향 105.sortBias).
-    /// 프리팹 주소가 없거나(305·105 빈칸) 로드에 실패한 오브젝트는 만들지 않고 그리지 않으며, 표 위치·주소를 오류 로그로 한 번 알린다(대체 그림 없음).
+    /// 프리팹 주소가 없거나(305·105 빈칸) 로드에 실패한 오브젝트는 만들지 않고 그리지 않으며, 표 위치·주소를 경고 로그로 한 번 알린다(대체 그림 없음).
     /// 투사체 판정(<see cref="RunHitWorld"/>)은 시뮬 틱마다 <see cref="PlaceHitTargets"/>로 범위 안 뷰를 만들고 뿌리를 그 틱의 시뮬 위치에 놓는다(등록·해제는 뷰 연결·회수).
     /// </summary>
     [DefaultExecutionOrder(55)]
@@ -154,7 +154,7 @@ namespace MV.View
             if (h.Asset == null)
             {
                 // 실패는 다시 시도하지 않는다(표 주소 오류를 드러낸다). 그 오브젝트는 그리지 않는다.
-                Debug.LogError($"[ObjectViewFactory] 오브젝트 프리팹 로드 실패 — 주소 {address}: {AddressHint(address)}");
+                Debug.LogWarning($"[ObjectViewFactory] 오브젝트 프리팹 로드 실패 — 주소 {address}: {AddressHint(address)}");
                 h.Release?.Dispose();
                 _prefabs[address] = default;
                 return;
@@ -296,7 +296,7 @@ namespace MV.View
             string kind = o.Kind?.key ?? "(종류 없음)";
             string reward = o.IsField ? RewardOf(o.Rew).ToString() : StageObjectReward.Any.ToString();
             if (!_noPrefab.Add(_stageMap + "|" + kind + "|" + reward)) return;
-            Debug.LogError($"[ObjectViewFactory] 오브젝트 프리팹 주소가 없어 만들지 않습니다 — 종류 {kind}, 스테이지 맵 {_stageMap ?? "(없음)"}, 보상 {reward}. " +
+            Debug.LogWarning($"[ObjectViewFactory] 오브젝트 프리팹 주소가 없어 만들지 않습니다 — 종류 {kind}, 스테이지 맵 {_stageMap ?? "(없음)"}, 보상 {reward}. " +
                 $"{StageObjectData.Table}(stageMap·kind·reward) 행의 prefab 또는 {ObjectKindData.Table}.prefab에 주소를 넣고, {AddressHint("<주소>")}", this);
         }
 

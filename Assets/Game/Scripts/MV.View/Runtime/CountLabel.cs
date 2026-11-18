@@ -42,7 +42,7 @@ namespace MV.View
             if (_bound) return;
             _bound = true;
             if (_title == null || _number == null || _gauge == null || _pivot == null)
-                Debug.LogError($"[CountLabel] {name}: 글자판 참조가 비었습니다(제목 {_title != null}·숫자 {_number != null}·막대 {_gauge != null}·피벗 {_pivot != null}). " +
+                Debug.LogWarning($"[CountLabel] {name}: 글자판 참조가 비었습니다(제목 {_title != null}·숫자 {_number != null}·막대 {_gauge != null}·피벗 {_pivot != null}). " +
                     $"{PrefabPath}의 CountLabel Inspector에서 연결하세요. 빈 칸은 그리지 않습니다.", this);
             if (_pivot != null) _pivotScale = _pivot.localScale;
             if (_title != null) _titleText = _title.text;

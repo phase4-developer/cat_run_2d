@@ -175,11 +175,11 @@ namespace MV.View.Tests
             var arch = t.StageObject.Datas.First(r => r.kind == "arch");
             f.SetStage(t, arch.stageMap);
             var objs = new List<RunObject> { Make(t, "arch", 1, 15), Make(t, "tower", 2, 20), Make(t, "cardbox", 3, 25), Make(t, "enemy", 4, 30) };
-            // cardbox는 305·105 프리팹이 비어 있다 → 만들지 않고, 채울 표 칸과 프리팹 위치를 오류로 한 번만 알린다.
-            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(
+            // cardbox는 305·105 프리팹이 비어 있다 → 만들지 않고, 채울 표 칸과 프리팹 위치를 경고로 한 번만 알린다.
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(
                 "프리팹 주소가 없어 만들지 않습니다 — 종류 cardbox.*" + StageObjectData.Table + ".*" + ObjectKindData.Table + ".*Assets/Game/Addressables/Local/"));
             f.Sync(objs, 0, 0, 0);
-            f.Sync(objs, 0, 0, 0);   // 같은 종류는 다시 알리지 않는다(LogAssert: 오류 1개)
+            f.Sync(objs, 0, 0, 0);   // 같은 종류는 다시 알리지 않는다(LogAssert: 경고 1개)
             Assert.That(f.TryPrefabView(1, out string a1, out _), Is.True);
             Assert.That(a1, Is.EqualTo(arch.prefab));
             Assert.That(f.TryPrefabView(2, out string a2, out _), Is.True);

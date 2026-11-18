@@ -211,7 +211,7 @@ namespace MV.View
             if (lease == null || lease.Asset == null)
             {
                 // 다시 시도하지 않는다(표 주소 오류를 드러낸다). 그 등급 칸은 그리지 않는다.
-                Debug.LogError("[ClimbStairView] 계단 칸 프리팹 로드 실패: " + address);
+                Debug.LogWarning("[ClimbStairView] 계단 칸 프리팹 로드 실패: " + address);
                 lease?.Dispose();
                 return;
             }

@@ -72,7 +72,7 @@ namespace MV.View
             Instance = inst;
             inst.transform.localPosition = Vector3.zero;   // 프리팹 뿌리 = 뷰 뿌리 = 시뮬 위치
             if (inst.GetComponentInChildren<Billboard>(true) == null && s_reported.Add("billboard:" + Prefab))
-                Debug.LogError("[RunObjectView] 오브젝트 프리팹에 Billboard가 없습니다(카메라를 볼 이미지 묶음에 붙여야 함): " + Prefab);
+                Debug.LogWarning("[RunObjectView] 오브젝트 프리팹에 Billboard가 없습니다(카메라를 볼 이미지 묶음에 붙여야 함): " + Prefab);
             // 연출은 빌보드 묶음(그림)만 움직인다. 프리팹 뿌리와 그 아래 Hitbox는 시뮬 위치에 그대로 둔다.
             foreach (var b in inst.GetComponentsInChildren<Billboard>(true)) AddPoseTarget(b.transform);
             _hitCols.Clear();
@@ -118,7 +118,7 @@ namespace MV.View
             if (_hitCols.Count == 0)
             {
                 if (s_reported.Add("hitbox:" + Prefab))
-                    Debug.LogError($"[RunObjectView] 피격 가능 종류 {Obj.Kind.key}의 프리팹 {Prefab}에 {nameof(RunHitbox)}(Collider)가 없습니다(맞지 않음).");
+                    Debug.LogWarning($"[RunObjectView] 피격 가능 종류 {Obj.Kind.key}의 프리팹 {Prefab}에 {nameof(RunHitbox)}(Collider)가 없습니다(맞지 않음).");
                 return;
             }
             Ctx.Hits.Register(Obj, _hitCols);
@@ -188,7 +188,7 @@ namespace MV.View
 
         /// <summary>
         /// 글자판(매 프레임). 내용은 <see cref="ObjectLabel.Of"/>(105.labelKind, 표가 정한다), 그림은 프리팹 글자판(<see cref="CountLabel"/>)만 쓴다.
-        /// 글자판을 품지 않은 프리팹은 글자를 띄우지 않고, 표가 글자를 요구하면 프리팹 주소를 오류로 한 번 알린다(대체 글자를 만들지 않는다).
+        /// 글자판을 품지 않은 프리팹은 글자를 띄우지 않고, 표가 글자를 요구하면 프리팹 주소를 경고로 한 번 알린다(대체 글자를 만들지 않는다).
         /// </summary>
         void UpdateLabel(double playerZ)
         {
@@ -196,7 +196,7 @@ namespace MV.View
             var c = Dying || o == null || Ctx.HideLabels ? LabelContent.Hidden : ObjectLabel.Of(o, playerZ, Ctx.Cfg.ArchLabelHide, Ctx.WallRows.Ahead(o), Ctx.GoldMul);
             if (Board != null) { Board.Apply(c); return; }
             if (c.Visible && Instance != null && o?.Kind != null && s_reported.Add("label:" + Prefab))
-                Debug.LogError($"[RunObjectView] 오브젝트 프리팹 {Prefab}에 글자판 프리팹(Obj_Text_Count)이 없어 글자를 띄우지 않습니다(105 {o.Kind.key} labelKind {o.Kind.labelKind}). " +
+                Debug.LogWarning($"[RunObjectView] 오브젝트 프리팹 {Prefab}에 글자판 프리팹(Obj_Text_Count)이 없어 글자를 띄우지 않습니다(105 {o.Kind.key} labelKind {o.Kind.labelKind}). " +
                     $"글자판을 프리팹에 중첩하세요: {CountLabel.PrefabPath}", this);
         }
 

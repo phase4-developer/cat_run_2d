@@ -74,7 +74,7 @@ namespace MV.View
             if (_toyPrefab == null || _spearPrefab == null || _bladePrefab == null
                 || !_toyPrefab.HasRefs || !_spearPrefab.HasRefs || !_bladePrefab.HasRefs)
             {
-                Debug.LogError("[ProjectileView] 투사체 프리팹(Proj_Toy·Proj_Spear·Proj_OrbBlade) 참조가 비었습니다.", this);
+                Debug.LogWarning("[ProjectileView] 투사체 프리팹(Proj_Toy·Proj_Spear·Proj_OrbBlade) 참조가 비었습니다.", this);
                 return;
             }
             _tables = tables;
@@ -160,10 +160,10 @@ namespace MV.View
             {
                 var lease = await AddressableScope.GetPrefab(address, ct);
                 if (this == null) { lease?.Dispose(); return; }
-                if (lease == null || lease.Asset == null) { Debug.LogError($"ProjectileView: 프리팹 로드 실패 {address}"); lease?.Dispose(); return; }
+                if (lease == null || lease.Asset == null) { Debug.LogWarning($"ProjectileView: 프리팹 로드 실패 {address}"); lease?.Dispose(); return; }
                 if (address == _projPrefab && lease.Asset.GetComponent<ProjectileRig>() == null)
                 {
-                    Debug.LogError($"ProjectileView: {address}에 {nameof(ProjectileRig)}가 없습니다");
+                    Debug.LogWarning($"ProjectileView: {address}에 {nameof(ProjectileRig)}가 없습니다");
                     lease.Dispose();
                     return;
                 }
