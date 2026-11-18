@@ -286,6 +286,7 @@ namespace MV.UI.Tests
             view.TickRun(0);
             Assert.That(view.PosCards.Count(c => c.gameObject.activeSelf), Is.EqualTo(1));
             Assert.AreEqual(pick.id, view.PosCards[0].CardId, "얻은 카드가 Card Pos에");
+            Assert.That(view.PosCards[0].FaceVisible, Is.True, "Card Pos 자리 카드에 그림이 보인다(원본에서 꺼진 Mask를 켠다)");
         }
     }
 }
