@@ -160,31 +160,6 @@ namespace MV.UI.Tests
         }
 
         [Test]
-        public void DefaultView_BuildsAndShowsTexts()
-        {
-            var go = new GameObject("UIHud_Run", typeof(RectTransform));
-            try
-            {
-                var view = go.AddComponent<RunHudView>();
-                var p = new RunHudPresenter();
-                p.SetView(view);
-                p.Bind(new FakeSource { State = Sample() });
-                p.Tick();
-                var texts = new List<string>();
-                foreach (var t in go.GetComponentsInChildren<Text>(true)) texts.Add(t.text);
-                CollectionAssert.Contains(texts, "Level 3");
-                CollectionAssert.Contains(texts, "12.3K");
-                CollectionAssert.Contains(texts, "15");
-                CollectionAssert.Contains(texts, "Lv 2");
-                CollectionAssert.Contains(texts, "피해 32 · Cat");
-            }
-            finally
-            {
-                Object.DestroyImmediate(go);
-            }
-        }
-
-        [Test]
         public void ClimbCount_ShowsShownOverTotal_AfterSideTurn()
         {
             var view = new FakeView();

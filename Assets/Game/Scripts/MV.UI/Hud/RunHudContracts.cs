@@ -68,7 +68,7 @@ namespace MV.UI
 
     /// <summary>
     /// 런 상태를 직접 읽어 계단 등급 카드·카드 룰렛·얻은 카드·지팡이 머지를 그리는 겉(MV-UI2-HUD).
-    /// 있으면 <see cref="RunHud"/>는 1차 <see cref="BlessingCardsView"/>를 만들지 않는다. 시뮬 값은 읽기만 한다.
+    /// 시뮬 값은 읽기만 한다.
     /// </summary>
     public interface IRunHudStateView
     {

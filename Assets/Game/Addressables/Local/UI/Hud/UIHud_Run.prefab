@@ -30,6 +30,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2002}
+  - {fileID: 3002}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 0}
+  notice: {fileID: 3003}
 --- !u!1001 &2001
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72,3 +74,36 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5104436407027939213, guid: 9b3dcb92216463c4c8c1bb3d4e9ad9cf, type: 3}
   m_PrefabInstance: {fileID: 2001}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1002}
+    m_Modifications:
+    - target: {fileID: 7300100000000000101, guid: 21b26f8479594294a6fc150b093c14dc, type: 3}
+      propertyPath: m_Name
+      value: HUD_ClimbNotice
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 21b26f8479594294a6fc150b093c14dc, type: 3}
+--- !u!224 &3002 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7300100000000000102, guid: 21b26f8479594294a6fc150b093c14dc, type: 3}
+  m_PrefabInstance: {fileID: 3001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7300100000000000103, guid: 21b26f8479594294a6fc150b093c14dc, type: 3}
+  m_PrefabInstance: {fileID: 3001}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b29c8d1006e4653a130d648eedfcd5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
