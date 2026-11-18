@@ -110,7 +110,7 @@ namespace MV.Data
         public const string Table = "103_item";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Int("tier", true).Int("sort").Bool("active")
             .Int("dmg", true).Color("col").Color("gradeCol").Bool("spin").Res("icon", MvAtlas.UiIcon)
-            .Res("projSprite", MvAtlas.Address).Res("projTail", MvAtlas.Address).Str("lookName");
+            .Res("projSprite", MvAtlas.Address).Res("projTail", MvAtlas.Address).Res("projCenter", MvAtlas.Address).Str("lookName");
 
         public int tier { get; private set; }
         public int dmg { get; private set; }
@@ -122,6 +122,8 @@ namespace MV.Data
         public string projSprite { get; private set; }
         /// <summary>마법탄 꼬리 프리팹 주소(`VFX_Tail_n`). 마법탄 프리팹 proj_Image 아래에 끼운다.</summary>
         public string projTail { get; private set; }
+        /// <summary>마법탄 가운데 이펙트 프리팹 주소(`VFX_Center_n`, 노션 11/18 추가 요청). 꼬리처럼 proj_Image 아래에 끼운다. 안 쓰는 등급은 빈 프리팹.</summary>
+        public string projCenter { get; private set; }
         public string lookName { get; private set; }
 
         public ItemData(TSVRow r) : base(r) { }
@@ -137,6 +139,7 @@ namespace MV.Data
             icon = S(r, "icon");
             projSprite = S(r, "projSprite");
             projTail = S(r, "projTail");
+            projCenter = S(r, "projCenter");
             lookName = S(r, "lookName");
         }
     }
