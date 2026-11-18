@@ -850,6 +850,17 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 값 표기(정본 `f(l)`: `l×10%`, `l`, `220+l×20%`, `100−l×5%` 등)는 표에서 정해야 한다 → `13_areaUpgrade`·`14_rebirthPerk`에 `valueFormat`(예 `{0}%`)·`valueBase`·`valueStep` 열 필요([07](07_Tables.md)).
 
+**디자이너 겉(MV-UI2-AREAUP, 노션 [팝업] Area 업그레이드, 2026-11-19)**: 래퍼 `UIPopup_AreaUpgrade`가 디자이너 `Popup_AreaUpgrade`(Art/UI/Prefab/UIPopup)를 중첩하고 `AreaUpgradeDesignView`가 값만 넣는다(원본 무변경, 로비 구조안 A와 같음). 위 틀 표(막·부제·보유 행 글)는 디자이너 시안에 없어 그리지 않는다.
+
+| 디자이너 요소 | 값 |
+|---|---|
+| Currency(`Slot_Currency` ×2) | 골드·다이아(`01_wealth.type` gold·dia), 공용 `HudCurrencySlot` |
+| `Slot_AreaLabel` | 현재 Area(`302_area` 이름·Zone 번호), 공용 `HudAreaLabel` |
+| `Banner_AdsReward` | 보상 글 `ui.aup.adGain` 「x{0}」(`08_adPlacement dia` 보상), 버튼 = 무료 광고(남은 횟수 0이면 꺼짐, 남은 횟수 글은 시안에 없어 숨김) |
+| Upgrade List Scroll View | `13_areaUpgrade` active 행(sort)마다 `Element_Upgrade` 1칸(첫 칸 원형 + `ObjectPool`, 칸 수는 표 행 수) |
+| `Element_Upgrade`(공용, 환생 업그레이드도 씀) | 루트 `UpgradeElement`: 이름 `name:<id>`, `ui.aup.lv` 「Lv.{0}」, 현재 → 다음 값(`valueFormat`), 가격 숫자. 상태: 살 수 있음 / 부족 = `Disable` 켬·누름 막음 / MAX = `Disable` 켬·가격 자리 `ui.common.max` 「MAX」·다음 값 숨김 / 잠김(`needRebirth` > 부활 레벨) = `Button_Lock` 켬·`Element_UnlockRebirth`(루트 `UnlockRebirthBadge`)에 필요 수 |
+| 칸 전체 `Lock`(시안 「Require」 줄) | 노션 설명이 없어 손대지 않음(디자이너 기본 꺼짐) |
+
 ## 5.9 부활 — `UIPopup_Rebirth`
 
 `RebirthPopup : UIPopup`, 층 500. 정본 `#rbPanel`(L703~709, CSS L365~369), `renderRb`(L2543~2557), `doRebirth`(L2559~2564). `.pnl` 틀(§5.8), `--pc = #ff9a5a`.

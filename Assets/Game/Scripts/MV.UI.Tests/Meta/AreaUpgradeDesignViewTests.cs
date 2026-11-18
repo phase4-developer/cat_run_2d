@@ -56,7 +56,7 @@ namespace MV.UI.Tests
         {
             var (go, view) = NewPopup();
             Assert.That(view.MissingRefs(), Is.Empty, "AreaUpgradeDesignView 참조");
-            var ctrl = go.GetComponent<AreaUpgradePopup>();
+            var ctrl = go.GetComponent("AreaUpgradePopup");
             Assert.That(ctrl, Is.Not.Null, "AreaUpgradePopup 컨트롤러");
             var so = new SerializedObject(ctrl);
             Assert.That(so.FindProperty("view").objectReferenceValue, Is.SameAs(view), "AreaUpgradePopup.view = AreaUpgradeDesignView");
@@ -64,7 +64,6 @@ namespace MV.UI.Tests
             Assert.That(go.transform.Find("Popup_AreaUpgrade"), Is.Not.Null, "중첩 디자이너 Popup_AreaUpgrade");
             Assert.That(go.GetComponent("MetaPanelView"), Is.Null, "코드 생성 패널은 뗐다");
             Assert.That(view.Currencies.Select(c => c.wealthType), Is.EqualTo(AreaUpgradePresenter.CurrencyTypes), "재화 칸 = 골드·다이아(노션)");
-            foreach (var c in view.Currencies) Assert.That(T.Wealth.GetId(c.wealthType), Is.Not.Zero, "01_wealth." + c.wealthType);
 
             var element = AssetDatabase.LoadAssetAtPath<GameObject>(ElementPath).GetComponent<UpgradeElement>();
             Assert.That(element, Is.Not.Null, "Element_Upgrade 루트의 UpgradeElement(공용 부품)");

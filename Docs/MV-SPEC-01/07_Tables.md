@@ -1507,6 +1507,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | levelPriceGroup | int | 11~18 |
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
 | costBase / costGrowth | float | 생성 도구 전용 round(base × 1.6^L) |
+| needRebirth | int | 구매에 필요한 부활 레벨(`save.rb.lv`). 0 = 잠김 없음. 모자라면 칸이 잠김 버튼(필요 수 표시)이고 구매는 `meta.locked`로 거절(MV-UI2-AREAUP, 노션 [팝업] Area 업그레이드 「환생 조건」). 기획서에 값이 없어 전 행 **더미** 0 |
 
 | id | key | max | perLv | statKey | valueFormat | valueBase | valueStep | levelPriceGroup | costBase | 이름 |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -1535,6 +1536,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | levelPriceGroup | int | 21~29 |
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
 | costBase / costGrowth | float | 생성 도구 전용 round(base × 1.5^L) |
+| needRebirth | int | 13_areaUpgrade와 같음(공용 칸 `Element_Upgrade` 잠김). 전 행 **더미** 0 |
 
 | id | key | max | base | perLv | floor | statKey | valueFormat | valueBase | valueStep | levelPriceGroup | costBase | 이름 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
