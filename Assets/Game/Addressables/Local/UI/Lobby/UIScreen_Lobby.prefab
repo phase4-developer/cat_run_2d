@@ -94,15 +94,11 @@ MonoBehaviour:
   - {fileID: 2123773868477989506}
   currencies:
   - wealthType: gold
-    root: {fileID: 6392334254947088866}
-    icon: {fileID: 300157849163830505}
+    slot: {fileID: 7898285066616250659}
     iconDummy: {fileID: 835037565799948205}
-    value: {fileID: 3163456043046065951}
   - wealthType: dia
-    root: {fileID: 3581358460413430343}
-    icon: {fileID: 7867779002613786444}
+    slot: {fileID: 331560770775667334}
     iconDummy: {fileID: 7103037072863800328}
-    value: {fileID: 4819821554516108474}
   equipSlot: {fileID: 4061869031817155475}
   stack: {fileID: 6307608403524073821}
   stairGrade: {fileID: 10547949895669787}
@@ -761,17 +757,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &300157849163830505 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 300157849163829413, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
 --- !u!1 &412979637524199047 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 412979637524198091, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
@@ -1010,17 +995,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
---- !u!114 &3163456043046065951 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3163456043046064979, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &3355026788986245191 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3355026788986246155, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
@@ -1059,11 +1033,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
---- !u!1 &3581358460413430343 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3581358460413431307, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4061869031817155475 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4061869031817156575, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
@@ -1177,17 +1146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &4819821554516108474 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4819821554516107510, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &5541023512676913783 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5541023512676914747, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
@@ -1284,11 +1242,6 @@ MonoBehaviour:
 --- !u!224 &6307608403524073821 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6307608403524074769, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6392334254947088866 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6392334254947089838, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
   m_PrefabInstance: {fileID: 1100}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6593387579522063257 stripped
@@ -1394,17 +1347,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
---- !u!114 &7867779002613786444 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7867779002613785344, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
 --- !u!1 &8011167070185498956 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8011167070185499904, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
@@ -1546,3 +1488,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!114 &7898285066616250659 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7898285066616251759, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff4c731a0bc42fb860812633a95d0e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &331560770775667334 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 331560770775668426, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff4c731a0bc42fb860812633a95d0e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

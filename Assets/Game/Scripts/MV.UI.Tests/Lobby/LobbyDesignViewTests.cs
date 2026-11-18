@@ -125,9 +125,16 @@ namespace MV.UI.Tests
         {
             var (_, view) = NewLobby();
             view.SetWealth("10", "20", "30");
+            var s = new LobbyState { Level = 0, AreaNo = 1, ZoneNo = 1, Deck = System.Array.Empty<int>() };
+            view.SetState(s, T);
             var expect = new Dictionary<string, string> { ["gold"] = "10", ["rescueCat"] = "20", ["dia"] = "30" };
             foreach (var c in view.Currencies)
-                if (expect.TryGetValue(c.wealthType, out var v)) Assert.That(c.value.text, Is.EqualTo(v), c.wealthType);
+            {
+                Assert.That(c.slot, Is.Not.Null, c.wealthType + ": 공용 재화 칸 HudCurrencySlot(인게임과 같은 컴포넌트)");
+                Assert.That(c.slot.gameObject.name, Does.StartWith("Slot_Currency"), c.wealthType);
+                Assert.That(c.slot.WealthType, Is.EqualTo(c.wealthType), "SetState가 공용 칸에 재화 종류를 넣음");
+                if (expect.TryGetValue(c.wealthType, out var v)) Assert.That(c.slot.ValueText, Is.EqualTo(v), c.wealthType + ": SetWealth 글자가 SetState 뒤에도 남음");
+            }
             Assert.That(view.Currencies.Count(c => expect.ContainsKey(c.wealthType)), Is.EqualTo(view.Currencies.Count), "칸의 재화는 로비가 읽는 01_wealth.type");
         }
 

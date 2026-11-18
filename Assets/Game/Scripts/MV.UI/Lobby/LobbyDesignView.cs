@@ -31,18 +31,19 @@ namespace MV.UI
         }
     }
 
-    /// <summary>디자이너 공용 모듈 <c>Slot_Currency</c> 1칸. 보일 재화는 <see cref="wealthType"/>(<c>01_wealth.type</c>)로 Inspector에서 정한다.</summary>
+    /// <summary>
+    /// 디자이너 공용 모듈 <c>Slot_Currency</c> 1칸. 그리기는 인게임과 같은 공용 부품 <see cref="HudCurrencySlot"/>가 맡고,
+    /// 로비는 보일 재화(<see cref="wealthType"/>, <c>01_wealth.type</c>)만 Inspector에서 정한다.
+    /// </summary>
     [Serializable]
     public sealed class LobbyCurrencyParts
     {
         /// <summary><c>01_wealth.type</c>(gold·dia·rescueCat …). 비우면 칸을 끈다.</summary>
         public string wealthType;
-        public GameObject root;
-        /// <summary>재화 아이콘(<c>01_wealth.icon</c>, Atlas_UI_Icon).</summary>
-        public AddressableImage icon;
-        /// <summary>디자이너 자리표시 아이콘(<c>Icon_Dummy</c>). 표 아이콘을 넣으면 끈다.</summary>
+        /// <summary><c>Slot_Currency</c> 루트의 공용 재화 칸.</summary>
+        public HudCurrencySlot slot;
+        /// <summary>디자이너 자리표시 아이콘(<c>Icon_Dummy</c>, 표 아이콘 위에 그려짐). 표 아이콘이 있으면 끈다. 공용 부품으로 옮길지 결정 대기.</summary>
         public GameObject iconDummy;
-        public TMP_Text value;
     }
 
     /// <summary>디자이너 <c>Element_MainUpgrade_*</c> 1칸. 표 행과는 <see cref="key"/>(<c>10_lobbyUpgrade.key</c>)로 짝짓는다.</summary>
@@ -176,9 +177,7 @@ namespace MV.UI
             else for (int i = 0; i < currencies.Length; i++)
             {
                 var c = currencies[i];
-                Need(c?.root, "currencies[" + i + "].root");
-                Need(c?.value, "currencies[" + i + "].value");
-                Need(c?.icon, "currencies[" + i + "].icon");
+                Need(c?.slot, "currencies[" + i + "].slot");
             }
             Need(equipSlot, nameof(equipSlot));
             Need(stack, nameof(stack));
@@ -318,12 +317,12 @@ namespace MV.UI
             if (currencies == null) return;
             foreach (var c in currencies)
             {
-                if (c == null || !c.value) continue;
+                if (c == null || !c.slot) continue;
                 switch (c.wealthType)
                 {
-                    case "gold": c.value.text = gold; break;           // 01_wealth.type
-                    case "rescueCat": c.value.text = souls; break;
-                    case "dia": c.value.text = dia; break;
+                    case "gold": c.slot.SetText(gold); break;           // 01_wealth.type
+                    case "rescueCat": c.slot.SetText(souls); break;
+                    case "dia": c.slot.SetText(dia); break;
                 }
             }
         }
@@ -347,12 +346,10 @@ namespace MV.UI
             if (currencies == null) return;
             foreach (var c in currencies)
             {
-                if (c == null) continue;
-                var row = t != null && !string.IsNullOrEmpty(c.wealthType) ? t.Wealth.Get(c.wealthType) : null;
-                if (c.root) c.root.SetActive(!string.IsNullOrEmpty(c.wealthType));
-                if (row == null || string.IsNullOrEmpty(row.icon)) continue;
-                HudImage.Set(c.icon, MvAtlas.UiIcon, row.icon);
-                if (c.iconDummy) c.iconDummy.SetActive(false);
+                if (c == null || !c.slot) continue;
+                if (string.IsNullOrEmpty(c.wealthType)) { c.slot.HideUI(); continue; }
+                c.slot.ShowUI(new CurrencySlotData(t, c.wealthType, c.slot.ValueText)); // 글자는 SetWealth가 먼저 넣은 값
+                if (c.iconDummy && HudCurrencySlot.IconOf(t, c.wealthType) != null) c.iconDummy.SetActive(false);
             }
         }
 
