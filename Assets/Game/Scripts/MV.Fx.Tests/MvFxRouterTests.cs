@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using MV.Data;
@@ -154,9 +154,10 @@ namespace MV.Fx.Tests
             Assert.AreEqual(2f, o.Spawns[0].Grav); Assert.AreEqual(1.5f, o.Spawns[0].Pos.y, 1e-5f);
             Assert.AreEqual(1, o.Flies.Count); Assert.AreEqual(FlyTarget.Stair, o.Flies[0].Target); Assert.AreEqual(3, o.Flies[0].Amount);
 
-            // L2052 동료 관문: 아이콘 min(n,5)개 70ms 간격
+            // L2052 동료 관문: 아이콘 min(n, CRAFT_ICON_MAX)개, fly.cloneGapMs 간격(상한·간격은 표 값)
             o = Route(t, World(), 0f, Ev(RunEventType.GateTake, 7, K(t, "cgate"), a: 7));
-            CollectionAssert.AreEqual(new[] { 0, 70, 140, 210, 280 }, o.Flies.Select(f => f.DelayMs).ToArray());
+            int craftMax = t.RunConfig.I(RunConfigKeys.CRAFT_ICON_MAX), craftGap = t.RunConfig.I(RunConfigKeys.Fly_CloneGapMs);
+            CollectionAssert.AreEqual(Enumerable.Range(0, System.Math.Min(7, craftMax)).Select(i => i * craftGap).ToArray(), o.Flies.Select(f => f.DelayMs).ToArray());
 
             // L2175 신 대폭발(fire): fireball 3 + boom 4.4 + boom 흰 2.2 noRing + 플래시 0.35/60ms
             o = Route(t, World(), 0f, Ev(RunEventType.GodBlast, x: 0, z: 5, key: "fire"));
