@@ -899,7 +899,6 @@ MonoBehaviour:
   Ground: {fileID: 1574244162335499184}
   GroundSnap: 44
   HideBuiltInGround: 1
-  HideBuiltInProps: 1
   NearGround: {fileID: 7929966308103593954}
   SideCut: {fileID: 7669878943561748533}
   ShadowLightDir: {x: 0.55, y: -1, z: 0.45}
