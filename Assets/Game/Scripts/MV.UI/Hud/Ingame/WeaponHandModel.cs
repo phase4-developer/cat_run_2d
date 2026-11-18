@@ -120,13 +120,19 @@ namespace MV.UI
             Sort();
         }
 
-        /// <summary>handDeliver: 대기열에 {전달 n장, 단계 t}와 {연쇄}를 넣는다.</summary>
+        /// <summary>
+        /// handDeliver: 대기열에 1장씩 {전달 1장, 단계 t}·{연쇄}를 n번 넣는다. 한 장이 맨 밑에 들어올 때마다 밑에서부터 머지가 끝난 뒤 다음 장이 들어온다
+        /// (사용자 2026-11-19 「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」, 전부 넣은 뒤 한꺼번에 머지하지 않는다).
+        /// </summary>
         public void Deliver(int n, int tier)
         {
             if (n <= 0) return;
             tier = Math.Max(1, Math.Min(_maxTier, tier));
-            _queue.Add(new Job { Deal = true, N = n, Tier = tier });
-            _queue.Add(new Job { Deal = false });
+            for (int i = 0; i < n; i++)
+            {
+                _queue.Add(new Job { Deal = true, N = 1, Tier = tier });
+                _queue.Add(new Job { Deal = false });
+            }
         }
 
         /// <summary>handUnit: 지금 1단위 시간 u.</summary>
@@ -198,10 +204,10 @@ namespace MV.UI
             if (tier < 1) return false;
             float u = Unit(now);
             var ids = new int[_mergeN];
-            int k = 0;
-            // 그 등급의 앞 MERGE_N장(먼저 받은 것부터).
-            foreach (var c in _cards)
-                if (c.Tier == tier && k < _mergeN) ids[k++] = c.Id;
+            int k = _mergeN;
+            // 그 등급의 맨 밑 MERGE_N장(가장 늦게 받은 것들 = 스택 맨 아래, 밑에서부터 머지). ids는 위→아래 순서.
+            for (int i = _cards.Count - 1; i >= 0 && k > 0; i--)
+                if (_cards[i].Tier == tier) ids[--k] = _cards[i].Id;
             _gather = ids;
             _gatherTier = tier;
             float md = u * _timing.mergeMul;

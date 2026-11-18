@@ -78,7 +78,6 @@ namespace MV.Data
         public const string Fly_StartScale = "fly.startScale";
         public const string Fly_EndScale = "fly.endScale";
         public const string Fly_EndAlpha = "fly.endAlpha";
-        public const string Fly_CloneGapMs = "fly.cloneGapMs";
         public const string Banner_Time = "banner.time";
         public const string Toast_Time = "toast.time";
         public const string Toast_Fade = "toast.fade";
@@ -121,7 +120,6 @@ namespace MV.Data
         public const string WELL_BRICK_DIV = "WELL_BRICK_DIV";
         public const string WELL_BRICK_LIFE = "WELL_BRICK_LIFE";
         public const string ORE_ICON_GAP_MS = "ORE_ICON_GAP_MS";
-        public const string CRAFT_ICON_MAX = "CRAFT_ICON_MAX";
         public const string CP_MAX = "CP_MAX";
         public const string PLAYABLE_AREAS = "PLAYABLE_AREAS";
         public const string TOK_BASE = "TOK_BASE";
@@ -263,7 +261,6 @@ namespace MV.Data
             Fly_StartScale,
             Fly_EndScale,
             Fly_EndAlpha,
-            Fly_CloneGapMs,
             Banner_Time,
             Toast_Time,
             Toast_Fade,
@@ -304,7 +301,6 @@ namespace MV.Data
             WELL_BRICK_DIV,
             WELL_BRICK_LIFE,
             ORE_ICON_GAP_MS,
-            CRAFT_ICON_MAX,
             CP_MAX,
             PLAYABLE_AREAS,
             TOK_BASE,

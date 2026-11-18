@@ -48,7 +48,7 @@ namespace MV.UI
         [Header("문 카드 줄서기(MV-UI3-HUD9, 참고 영상)")]
         [Tooltip("스택 맨 아래 칸과 줄 첫 카드 사이 빈칸(px). 줄 카드 실루엣이 다 보이게 띄운다.")] [SerializeField] float queueGap = 40f;
         [Tooltip("문 위 카드 자리 → 줄 자리 비행 초")] [SerializeField] float launchSec = 0.4f;
-        [Tooltip("카드마다 출발 간격 초")] [SerializeField] float launchGapSec = 0.04f;
+        [Tooltip("카드마다 출발 간격 초(표 300 fly.cloneGapMs 70 ms를 옮김, 사용자 2026-11-19 「프리팹으로 관리」)")] [SerializeField] float launchGapSec = 0.07f;
         [Tooltip("받을 장이 없는데 줄에 남은 카드(거절된 장)를 치우기까지 초")] [SerializeField] float queueHoldSec = 2f;
 
         Func<RunState> _state;

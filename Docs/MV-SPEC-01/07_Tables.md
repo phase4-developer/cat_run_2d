@@ -395,7 +395,7 @@ MvTables.Current = tables;
 | WELL_BRICK_DIV | 0.1 | 배 | [프로토] L1471 | 조각 1개 기준 = gaugeNeed × 0.1 |
 | WELL_BRICK_LIFE | 0.26 | s(게임) | [프로토] L1872 | 조각 튐 |
 | ORE_ICON_GAP_MS | 60 | ms | [프로토] L1878~1886 | 벽돌이 안 보일 때 아이콘 간격 |
-| CRAFT_ICON_MAX | 999 | 개 | [프로토] L2051 5 → 사용자 2026-11-19 「날아가는 것도 만든 장 수 그대로」(키 유지, 값만 크게) | 공방 비행 아이콘 수 상한(사실상 없음, 만든 장 수 그대로 날린다) |
+| ~~CRAFT_ICON_MAX~~ | (삭제) | 개 | [프로토] L2051 5 → 사용자 2026-11-19 「날아가는 것도 만든 장 수 그대로」 → 같은 날 「표값 그냥 지우고 … 프리팹 인스펙터 값으로」 | 표에서 삭제. 무기문 위 카드 상한은 `Obj_CraftGate` 묶음 프리팹 `CraftGateBundle._maxCards`(999) 하나로 관리하고 HUD는 넘겨받은 장 수를 그대로 쓴다 |
 
 **그룹 104 레벨·필드·정산** (`300104xxx`)
 
@@ -1688,6 +1688,8 @@ id	group	targetLevel	priceType	priceId	priceValue
 ### 7.8.10 01_wealth — 재화
 
 Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, ConsumeTypeId: 1)`.
+
+> 결정 D-GRADE-TABLE(2026-11-19, 원장 「확정 결정」): 보상 칸 등급 틀을 위해 `grade` 열(등급 번호 → 새 등급 표 → `09_uiResource` `grade.N`)을 더한다. 표 구조는 결과 팝업 계약에서 이 절과 새 등급 표 절에 함께 적는다. 값은 정해질 때까지 더미.
 
 | 열 | 타입 | 뜻 |
 |---|---|---|

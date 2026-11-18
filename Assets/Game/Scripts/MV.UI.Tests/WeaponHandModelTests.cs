@@ -74,6 +74,22 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void Deliver_OneAtATime_MergesBottomThreeBeforeNextCard_ThenChainsUp()
+        {
+            // 사용자 2026-11-19: 한 장씩 밑에 들어오고, 밑에서 3장이 되면 바로 합쳐지고, 그게 위 카드와 3장이 되면 또 합쳐진다(다 넣고 한꺼번에 머지하지 않는다).
+            var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12);
+            m.Reset(new[] { 0, 2, 2 }, 0);   // 위에서부터 2, 2, 1, 1
+            m.Deliver(4, 1);
+            var (_, actions) = RunToIdle(m, 0);
+            var kinds = string.Join(",", actions.Select(a => a.Kind == HandActionKind.Dealt ? "D" : a.Kind == HandActionKind.GatherStart ? "G" : "M"));
+            Assert.That(kinds, Is.EqualTo("D,G,M,G,M,D,D,D,G,M"), "1장 → 밑 3장 머지 → 위 2등급과 연쇄 → 다음 장들");
+            var first = actions.First(a => a.Kind == HandActionKind.GatherStart);
+            var bottomThree = first.Gathered;
+            Assert.That(bottomThree.Last(), Is.EqualTo(actions[0].Card.Id), "방금 맨 밑에 들어온 장이 모으는 묶음에 든다");
+            Assert.That(m.Cards.Select(c => c.Tier), Is.EqualTo(new[] { 3, 2 }));
+        }
+
+        [Test]
         public void MaxTier_StacksWithoutMerging()
         {
             var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 2);
