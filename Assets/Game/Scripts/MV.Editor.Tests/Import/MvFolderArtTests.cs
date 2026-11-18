@@ -46,7 +46,7 @@ namespace MV.Editor.Tests.Import
             Assert.That(failures, Is.Empty, string.Join("\n", failures));
         }
 
-        /// <summary>MV-VIEW-PROJ-2: 103_item projSprite·projTail과 300 proj.prefab이 투사체 그룹에 등록된 주소다.</summary>
+        /// <summary>MV-VIEW-PROJ-2: 103_item projSprite·projTail·projCenter와 300 proj.prefab이 투사체 그룹에 등록된 주소다.</summary>
         [Test]
         public void ProjectileTableColumns_ReferenceProjectileGroup()
         {
@@ -64,6 +64,7 @@ namespace MV.Editor.Tests.Import
             {
                 Check(row.id + ".projSprite", row.projSprite);
                 Check(row.id + ".projTail", row.projTail);
+                Check(row.id + ".projCenter", row.projCenter);
             }
             Check("300 " + MV.Data.RunConfigKeys.Proj_Prefab, tables.RunConfig.Raw(MV.Data.RunConfigKeys.Proj_Prefab));
             Assert.That(failures, Is.Empty, string.Join("\n", failures));

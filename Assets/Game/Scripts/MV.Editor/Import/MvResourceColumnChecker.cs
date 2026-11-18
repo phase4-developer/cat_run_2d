@@ -102,6 +102,7 @@ namespace MV.Editor.Import
             ["sprite"] = MvAtlas.Theme,
             ["projSprite"] = MvAtlas.Theme,
             ["projTail"] = MvAtlas.Address,
+            ["projCenter"] = MvAtlas.Address,
             ["spriteSoul"] = MvAtlas.Theme,
             ["worldBadge"] = MvAtlas.Theme,
             ["lobbySprite"] = MvAtlas.WorldLobby,
