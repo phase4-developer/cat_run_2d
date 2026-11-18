@@ -48,6 +48,8 @@ namespace MV.UI
         public Image priceIcon;
         public TMP_Text priceText;
         public GameObject redDot;
+        /// <summary>디자이너가 정한 가격 글자색(처음 그릴 때 기억). 비용이 모자라지 않으면 이 색으로 되돌린다.</summary>
+        [NonSerialized] public Color? priceTextColor;
     }
 
     /// <summary>
@@ -89,6 +91,11 @@ namespace MV.UI
 
         [Header("Bottom")]
         [SerializeField] LobbyUpgradeParts[] upgrades;
+        /// <summary>
+        /// 비용이 모자랄 때 강화 칸 가격 글자색(사용자 2026-11-19 「재화가 부족하면 하단 레이블 색깔 빨갛게」, 기획서엔 색 값 없음).
+        /// 기본값은 Framework <c>PriceLabel.insufficientColor</c>와 같다(나중에 PriceBtn으로 옮길 때 같은 색).
+        /// </summary>
+        [SerializeField] Color priceShortColor = new Color(1f, 0.38f, 0.45f);
         [SerializeField] Button rebirthButton;
         [SerializeField] Slider rebirthUnlock;
         [SerializeField] TMP_Text rebirthUnlockCount;
@@ -413,7 +420,12 @@ namespace MV.UI
                 if (p.nextValue && u.NextValue.Length > 0) p.nextValue.text = u.NextValue;
                 if (p.maxText) p.maxText.SetActive(u.Max);
                 if (p.price) p.price.SetActive(!u.Max);
-                if (p.priceText) p.priceText.text = u.PriceValue;
+                if (p.priceText)
+                {
+                    p.priceText.text = u.PriceValue;
+                    p.priceTextColor ??= p.priceText.color;
+                    p.priceText.color = u.PriceShort ? priceShortColor : p.priceTextColor.Value;
+                }
                 if (u.PriceIcon.Length > 0) SetSprite(p.priceIcon, MvAtlas.UiIcon, u.PriceIcon);
                 if (u.IconIsItem && u.Icon.Length > 0) SetSprite(p.icon, MvAtlas.UiIcon, u.Icon);
             }
@@ -485,5 +497,6 @@ namespace MV.UI
         /// <summary>시험·QA: 그 칸에 넣으려는 그림 이름(없으면 null).</summary>
         public string WantedSprite(Image img) => img && _wanted.TryGetValue(img, out var w) ? w.sprite : null;
         public Image StairGradeImage => stairGrade;
+        public Color PriceShortColor => priceShortColor;
     }
 }
