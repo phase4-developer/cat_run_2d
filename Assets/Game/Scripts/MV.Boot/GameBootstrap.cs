@@ -23,8 +23,8 @@ namespace MV.Boot
 
     /// <summary>
     /// Boot 씬의 시작 순서(기획서 10 §10.7).
-    /// 1~6단계(+ 런 코어 연결 MvBootMeta), 8단계(UI)·9단계(소리·로컬 서버), 10단계를 돈다(MV-PLAY-INT).
-    /// 7단계(다국어)는 아직 없어 문구는 키 그대로다(MvUiBoot.ConfigureOptions). 광고·로그인은 2차(D-90).
+    /// 1~6단계(+ 런 코어 연결 MvBootMeta), 7단계(다국어), 8단계(UI)·9단계(소리·로컬 서버), 10단계를 돈다(MV-PLAY-INT).
+    /// 7단계(다국어)는 MvBootLocalization(MV-LOC). 광고·로그인은 2차(D-90).
     /// </summary>
     public sealed class GameBootstrap : MonoBehaviour
     {
@@ -102,7 +102,9 @@ namespace MV.Boot
                 // 6 뒤. 영속 변경 진입점(MV-META). 저장을 못 열었으면 MvMeta.Current는 null로 두고 저장이 열릴 때 만든다.
                 MvBootMeta.Attach(MV.Data.MvTables.Current);
 
-                // 7. 다국어: 아직 없다(문구 키 그대로). 연결되면 8단계 앞에서 InitLocalization.
+                // 7. 다국어(MV-LOC): 언어 저장 연결 → InitLocalization → UI·표 문구 연결. 실패해도 시작은 계속한다(대체 문구).
+                try { await MvBootLocalization.InitAsync(); }
+                catch (Exception locError) { Debug.LogError("[GameBootstrap] 다국어 초기화 실패: " + locError); }
 
                 // 8. UI 정적 옵션 → ui.StartInitAsync(). 화면은 Game 씬 루프가 연다.
                 Ui = ui;

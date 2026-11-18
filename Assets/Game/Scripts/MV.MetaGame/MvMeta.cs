@@ -323,6 +323,9 @@ namespace MV.Meta
         /// <summary>설정 소리 끄기를 저장한다(<c>mvSettings.muted</c>). 소리 모듈 값은 화면이 바꾼다(이 명령은 저장만).</summary>
         public MvMetaResponse SetMuted(bool muted) => Send(new MvMetaRequest(MvMetaRequestNames.SetMuted, new JObject { ["muted"] = muted }));
 
+        /// <summary>고른 언어를 저장한다(<c>mvSettings.language</c>). 언어 바꾸기는 LocalizationManager가 하고 이 명령은 저장만.</summary>
+        public MvMetaResponse SetLanguage(string code) => Send(new MvMetaRequest(MvMetaRequestNames.SetLanguage, new JObject { ["language"] = code }));
+
         public MvMetaResponse RecordModePlay(string contentKey) =>
             Send(new MvMetaRequest(MvMetaRequestNames.RecordModePlay, new JObject { ["key"] = contentKey }));
 
