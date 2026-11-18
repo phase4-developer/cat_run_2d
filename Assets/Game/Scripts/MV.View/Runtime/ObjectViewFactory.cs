@@ -474,6 +474,12 @@ namespace MV.View
             for (int i = 0; i < events.Count; i++)
             {
                 var e = events[i];
+                if (HitDebug.On && (e.Type == RunEventType.Hit || e.Type == RunEventType.GateFill) && _views.TryGetValue(e.ObjId, out var dv) && dv.Obj?.Kind != null
+                    && (dv.Obj.Kind.labelKind == LabelKind.StairGate || dv.Obj.Kind.labelKind == LabelKind.CraftGate))
+                {
+                    var g = dv.Obj;
+                    HitDebug.Log($"{e.Type} {g.Kind.key}#{g.Id} 피해={e.Amount} → N={g.N} Made={g.Made}+{g.Extra} Prog={g.Prog:F2} | 글자판={(dv.Board != null ? "프리팹" : "없음")} 숫자={(dv.Board != null && dv.Board.Number != null ? dv.Board.Number.text : "-")}");
+                }
                 if (e.Type != RunEventType.Hit && e.Type != RunEventType.WellFlush && e.Type != RunEventType.Break) continue;
                 if (!_views.TryGetValue(e.ObjId, out var v) || v.Obj == null) continue;
                 if (e.Type == RunEventType.Hit)
