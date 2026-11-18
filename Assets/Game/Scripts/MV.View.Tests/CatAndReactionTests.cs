@@ -552,7 +552,7 @@ namespace MV.View.Tests
         }
 
         /// <summary>
-        /// 무기문 위 카드 묶음(MV-UI3-HUD9, 임시 리소스): 장 수 = 글자판 숫자와 같은 Made + Extra(상한 없음), 통과(Done)하면 숨긴다.
+        /// 무기문 위 카드 묶음(MV-UI3-HUD9, 임시 리소스 — 원본 Obj_StairGate에 두고 무기문 변형이 물려받음, 계단문은 장 수 0이라 안 보임): 장 수 = 글자판 숫자와 같은 Made + Extra(상한 없음), 통과(Done)하면 숨긴다.
         /// 카드는 프리팹 안 꺼 둔 원본을 복제해 풀에서 꺼내고, 줄면 돌려준다.
         /// </summary>
         [Test]

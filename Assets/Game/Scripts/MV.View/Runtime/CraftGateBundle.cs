@@ -9,6 +9,7 @@ namespace MV.View
     /// 무기문(cgate) 위 무기 카드 묶음(MV-UI3-HUD9, 사용자 결정 2026-11-19 「둘로 나눔」·「만든 장 수 그대로」·「임시 묶음 만들기」).
     /// 장 수 = 글자판 숫자와 같은 Made + Extra(상한 없음), 그림 = 지금 런 무기 단계(Bt)의 103_item.icon(Atlas_UI_Icon).
     /// 통과(<c>Done</c>)하면 숨긴다. 통과 뒤 스택까지 나는 카드는 HUD(<c>WeaponSection</c>)가 그린다.
+    /// 자리: 원본 <c>Obj_StairGate</c>의 글자판 옆 자식 <c>WeaponBundle_Temp</c>(무기문 <c>Obj_CraftGate</c>는 변형이라 물려받는다, 계단문은 장 수 0이라 보이지 않는다).
     /// 임시 리소스: 카드 원본은 프리팹 자식 <see cref="_template"/>(꺼 둔 SpriteRenderer)이고 배치 값은 이 컴포넌트 직렬화 필드다.
     /// 디자이너 묶음 리소스가 오면 프리팹만 바꾼다(코드로 그림을 그리지 않는다).
     /// </summary>
