@@ -35,28 +35,17 @@ namespace MV.UI
 
         [Header("ClimbStair")]
         [SerializeField] GameObject climbStair;
-        [SerializeField] GameObject gradeSection;
-        [SerializeField] RectTransform holderOut;
-        [SerializeField] RectTransform holderPrev;
-        [SerializeField] RectTransform holderCurrent;
-        [SerializeField] RectTransform holderNext;
-        [SerializeField] RectTransform holderIn;
+        /// <summary>계단 등급 카드 섹션(<c>Grade Step Section</c>, MV-UI3-HUD6).</summary>
+        [SerializeField] GradeStepSection gradeStep;
         [SerializeField] RectTransform skillSection;
 
         [Header("연출 시간(초, 1배속 기준 — 계단·롤링은 배속만큼 빨라진다)")]
-        [SerializeField] float climbShiftSec = 0.3f;
         [SerializeField] float rollStepSec = 0.06f;
 
         Func<RunState> _state;
         RunState _run;
         MvTables T => _run?.Tables;
         bool _ready;
-
-        HudClimbCard _climbTemplate;
-        readonly List<HudClimbCard> _climbPool = new List<HudClimbCard>();
-        readonly List<HudClimbCard> _climbCards = new List<HudClimbCard>();
-        ClimbState _climb;
-        int _climbCur = int.MinValue;
 
         HudSkillCard _skill;
         RouletteState _rl;
@@ -72,7 +61,8 @@ namespace MV.UI
 
         // ---- 시험·QA ----
         public WeaponSection Weapon => weapon;
-        public IReadOnlyList<HudClimbCard> ClimbCards => _climbCards;
+        public GradeStepSection GradeStep => gradeStep;
+        public IReadOnlyList<HudClimbCard> ClimbCards => gradeStep ? gradeStep.Cards : (IReadOnlyList<HudClimbCard>)Array.Empty<HudClimbCard>();
         public HudSkillCard SkillCard { get { Init(); return _skill; } }
         public IReadOnlyList<HudSkillCard> PosCards => _posCards;
         public TopBarSection TopBar => topBar;
@@ -88,20 +78,7 @@ namespace MV.UI
             foreach (var g in GetComponentsInChildren<Graphic>(true)) g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null;
             if (topBar) topBar.BindTables(MvTables.Current);
 
-            foreach (var h in new[] { holderPrev, holderCurrent })
-            {
-                var card = h ? h.GetComponentInChildren<HudClimbCard>(true) : null;
-                if (!card) continue;
-                if (!_climbTemplate || h == holderCurrent) _climbTemplate = card;
-                // Holder에 늘어난 크기를 고정하고(가운데 기준) 구간 공통 부모로 옮긴다. 자리·크기는 Holder 사이 보간(Fit)으로 정한다.
-                var rt = card.Rect;
-                var size = rt.rect.size;
-                rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(.5f, .5f);
-                if (size.x > 1 && size.y > 1) rt.sizeDelta = size;
-                card.transform.SetParent(gradeSection ? gradeSection.transform : h, false);
-                card.gameObject.SetActive(false);
-                _climbPool.Add(card);
-            }
+            if (gradeStep) gradeStep.CurrentChanged += OnClimbCurrent;
             _skill = skillSection ? skillSection.GetComponentInChildren<HudSkillCard>(true) : null;
 
             if (cardPos)
@@ -178,14 +155,14 @@ namespace MV.UI
             if (s != _run) { _run = s; ResetRun(); if (topBar && s?.Tables != null) topBar.BindTables(s.Tables); }
             if (weapon) weapon.Tick(dt);
             if (s == null) return;
-            TickClimb(s);
+            if (gradeStep) gradeStep.Tick(s, Speed);
             TickRoulette(s);
             TickCardPos(s);
             bool rolling = s.Roulette != null && _focus >= 0;
             bool climbing = s.Phase == RunPhase.Climb && s.Climb != null;
             bool anyFly = _flown.Count > 0;
             if (climbStair) climbStair.SetActive(climbing || rolling);
-            if (gradeSection) gradeSection.SetActive(climbing);
+            if (gradeStep) gradeStep.gameObject.SetActive(climbing);
             if (skillSection) skillSection.gameObject.SetActive(climbing || rolling);
             // 디자이너 시퀀스: 계단·롤링 동안 Top·Mid를 끄고, 카드가 Card Pos로 날기 시작하면 다시 켠다.
             bool hide = climbing || (s.Roulette != null && !anyFly);
@@ -196,10 +173,7 @@ namespace MV.UI
         void ResetRun()
         {
             StopAllCoroutines();
-            _climb = null;
-            _climbCur = int.MinValue;
-            foreach (var c in _climbCards) Release(c);
-            _climbCards.Clear();
+            if (gradeStep) gradeStep.ResetRun();
             _rl = null;
             _focus = -1;
             _roll?.Kill();
@@ -213,116 +187,10 @@ namespace MV.UI
 
         float Speed => _run?.Setup != null ? Math.Max(1, _run.Setup.TimeScale) : 1;
 
-        // ---------------- 계단 등급 카드(Out → Prev → Current → Next → In) ----------------
-
-        void TickClimb(RunState s)
+        /// <summary>계단 Current 등급이 바뀌면 스킬 카드를 그 등급 「?」로.</summary>
+        void OnClimbCurrent(int cur)
         {
-            var c = s.Phase == RunPhase.Climb ? s.Climb : null;
-            if (c == null) { _climb = null; return; }
-            if (c != _climb) { _climb = c; _climbCur = int.MinValue; }
-            int cur = HudGrade.ClimbCurrent(T, c.Tier, c.Rem, out float fill);
-            if (cur < 0) return;
-            if (cur != _climbCur)
-            {
-                ShiftClimb(cur, _climbCur == int.MinValue || cur < _climbCur);
-                _climbCur = cur;
-                if (_skill) _skill.ShowQuestion(T, cur);
-            }
-            foreach (var card in _climbCards)
-                card.SetFill(card.Tier < cur ? 1 : card.Tier > cur ? 0 : fill);
-        }
-
-        RectTransform HolderFor(int slot) => slot switch
-        {
-            -2 => holderOut,
-            -1 => holderPrev,
-            0 => holderCurrent,
-            1 => holderNext,
-            _ => holderIn,
-        };
-
-        /// <summary>
-        /// 등급이 오르면 카드가 한 칸씩 밀린다(Prev → Out으로 사라짐, Current → Prev, Next → Current, In에서 새 카드 → Next). 위치·크기는 Holder 사이 보간.
-        /// snap이면(시작·카드 확정 뒤 다시 세기) 바로 놓는다.
-        /// </summary>
-        void ShiftClimb(int cur, bool snap)
-        {
-            int max = HudGrade.CardTierMax(T);
-            float sec = climbShiftSec / Speed;
-            if (snap)
-            {
-                foreach (var c in _climbCards) Release(c);
-                _climbCards.Clear();
-            }
-            for (int i = _climbCards.Count - 1; i >= 0; i--)
-            {
-                var card = _climbCards[i];
-                int slot = card.Tier - cur;
-                if (slot >= -1) { Move(card.Rect, HolderFor(slot), sec, null); continue; }
-                _climbCards.RemoveAt(i);
-                Move(card.Rect, holderOut, sec, () => Release(card));
-            }
-            for (int tier = Math.Max(0, cur - 1); tier <= Math.Min(max, cur + 1); tier++)
-            {
-                if (_climbCards.Exists(c => c.Tier == tier)) continue;
-                var card = Get();
-                if (!card) break;
-                card.Set(T, tier);
-                _climbCards.Add(card);
-                if (snap) { Place(card.Rect, HolderFor(tier - cur)); continue; }
-                Place(card.Rect, holderIn);
-                Move(card.Rect, HolderFor(tier - cur), sec, null);
-            }
-        }
-
-        HudClimbCard Get()
-        {
-            foreach (var c in _climbPool)
-                if (!c.gameObject.activeSelf && !_climbCards.Contains(c)) { c.gameObject.SetActive(true); return c; }
-            if (!_climbTemplate) return null;
-            var card = Instantiate(_climbTemplate, gradeSection ? gradeSection.transform : _climbTemplate.transform.parent, false);
-            card.gameObject.SetActive(true);
-            _climbPool.Add(card);
-            return card;
-        }
-
-        void Release(HudClimbCard card)
-        {
-            if (!card) return;
-            Kill(card.Rect);
-            card.gameObject.SetActive(false);
-        }
-
-        /// <summary>card를 target 자리·크기로(같은 부모 공간에서 target 중심, 크기는 target에 맞춘 배율).</summary>
-        static void Fit(RectTransform card, RectTransform target, out Vector3 localPos, out float scale)
-        {
-            var space = card.parent;
-            localPos = space.InverseTransformPoint(target.TransformPoint(target.rect.center));
-            var size = card.rect.size;
-            Vector2 world = Vector2.Scale(target.rect.size, target.lossyScale);
-            Vector2 unit = Vector2.Scale(size, space.lossyScale);
-            scale = size.x > 1 && size.y > 1 && world.x > 1 && world.y > 1 ? Mathf.Min(world.x / unit.x, world.y / unit.y) : 1f;
-        }
-
-        static void Place(RectTransform card, RectTransform target)
-        {
-            if (!target) return;
-            Kill(card);
-            Fit(card, target, out var pos, out float scale);
-            card.localPosition = pos;
-            card.localScale = Vector3.one * scale;
-        }
-
-        static void Move(RectTransform card, RectTransform target, float sec, TweenCallback done)
-        {
-            if (!target) { done?.Invoke(); return; }
-            Kill(card);
-            Fit(card, target, out var pos, out float scale);
-            if (sec <= 0 || !Animate) { card.localPosition = pos; card.localScale = Vector3.one * scale; done?.Invoke(); return; }
-            DOTween.Sequence().SetUpdate(true).SetTarget(card)
-                .Join(card.DOLocalMove(pos, sec).SetEase(Ease.OutCubic))
-                .Join(card.DOScale(scale, sec).SetEase(Ease.OutCubic))
-                .OnComplete(done);
+            if (_skill) _skill.ShowQuestion(T, cur);
         }
 
         // ---------------- 스킬 롤링 → 확정 → Card Pos ----------------
@@ -401,7 +269,7 @@ namespace MV.UI
             clone.ShowCard(T, k.Pick);
             _flies.Add(clone.gameObject);
             if (!target) { Discard(clone.gameObject); return; }
-            Move(clone.Rect, target.Rect, (float)Math.Max(0, k.FlyLeft), () => { if (clone) Discard(clone.gameObject); });
+            HudRectMotion.Move(clone.Rect, target.Rect, (float)Math.Max(0, k.FlyLeft), () => { if (clone) Discard(clone.gameObject); });
         }
 
         /// <summary>Card Pos index번째 카드(Holder_Card가 모자라면 첫 Holder를 복제).</summary>
