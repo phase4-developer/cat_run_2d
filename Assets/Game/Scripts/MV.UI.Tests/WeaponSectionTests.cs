@@ -141,7 +141,7 @@ namespace MV.UI.Tests
                 Assert.Less(y, prev, "줄은 스택 맨 아래 칸 밑으로 차례로 선다");
                 prev = y;
                 Assert.AreEqual(1f, q.transform.localScale.x, 1e-4f, "도착하면 스택 칸 크기");
-                foreach (var g in q.GetComponentsInChildren<Graphic>(true))
+                foreach (var g in q.GetComponentsInChildren<Graphic>(false))   // 켜진 그림만(꺼 둔 머지 플래시는 제외)
                     Assert.AreEqual(1f, g.canvasRenderer.GetAlpha(), 1e-4f, "알파 변화 없음");
             }
 
