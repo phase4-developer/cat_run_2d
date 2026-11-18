@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using MV.Data;
 using MV.Run;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MV.UI.Tests
 {
@@ -11,6 +13,8 @@ namespace MV.UI.Tests
     /// </summary>
     public sealed class ClimbNoticeViewTests
     {
+        const string PrefabPath = "Assets/Game/Art/UI/Prefab/HUD/HUD_ClimbNotice.prefab";
+
         readonly List<GameObject> _made = new List<GameObject>();
 
         [TearDown]
@@ -24,9 +28,12 @@ namespace MV.UI.Tests
 
         ClimbNoticeView NewView(System.Func<RunState> state)
         {
-            var go = new GameObject("ClimbNotice", typeof(RectTransform));
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            Assert.That(prefab, Is.Not.Null, PrefabPath);
+            var go = Object.Instantiate(prefab);
             _made.Add(go);
-            var v = go.AddComponent<ClimbNoticeView>();
+            var v = go.GetComponent<ClimbNoticeView>();
+            Assert.That(v, Is.Not.Null, "프리팹 뿌리의 ClimbNoticeView");
             v.Bind(state);
             return v;
         }
@@ -95,12 +102,23 @@ namespace MV.UI.Tests
         }
 
         [Test]
-        public void Toast_UsesHtmlPanelAndInk_LabelAt40Percent()
+        public void Prefab_StartsWithHtmlPanelAndInk_LabelAt40Percent()
         {
-            // 새 HTML #toast background = --panel(v16 :root 덮어씀 rgba(18,15,26,.68)), color = --ink #fbf6ec. SIDE.label y = H·0.4.
-            Assert.That(ClimbNoticeView.ToastPanel, Is.EqualTo(new Color(18 / 255f, 15 / 255f, 26 / 255f, .68f)));
-            Assert.That(ColorUtility.ToHtmlStringRGB(ClimbNoticeView.ToastInk), Is.EqualTo("FBF6EC"));
-            Assert.That(ClimbNoticeView.LabelY, Is.EqualTo(.4f));
+            // 처음 값은 새 HTML: #toast background = --panel(v16 :root 덮어씀 rgba(18,15,26,.68)), color = --ink #fbf6ec, y 58%. SIDE.label y = H·0.4.
+            // 디자이너가 프리팹에서 바꾸면 이 시험도 함께 바꾼다(모양의 정본은 프리팹).
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            Assert.That(prefab, Is.Not.Null, PrefabPath);
+            var so = new SerializedObject(prefab.GetComponent<ClimbNoticeView>());
+            var bg = (Image)so.FindProperty("toastBg").objectReferenceValue;
+            var ink = (TMPro.TMP_Text)so.FindProperty("toast").objectReferenceValue;
+            var label = (RectTransform)so.FindProperty("labelRoot").objectReferenceValue;
+            var toast = (RectTransform)so.FindProperty("toastRoot").objectReferenceValue;
+            var panel = new Color(18 / 255f, 15 / 255f, 26 / 255f, .68f);
+            for (int i = 0; i < 4; i++) Assert.That(bg.color[i], Is.EqualTo(panel[i]).Within(1e-4), "패널 색 " + i);
+            Assert.That(ColorUtility.ToHtmlStringRGB(ink.color), Is.EqualTo("FBF6EC"));
+            Assert.That(label.anchorMin.y, Is.EqualTo(.6f).Within(1e-5), "화면 위에서 40%");
+            Assert.That(toast.anchorMin.y, Is.EqualTo(.42f).Within(1e-5), "화면 위에서 58%");
+            foreach (var g in prefab.GetComponentsInChildren<Graphic>(true)) Assert.That(g.raycastTarget, Is.False, g.name + ": 누르기를 막지 않음");
         }
     }
 }

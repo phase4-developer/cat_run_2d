@@ -143,7 +143,6 @@ namespace MV.UI.Tests
         public void RunHudPrefab_UsesDesignerIngameScreen_WithAllReferences()
         {
             var (hud, view) = NewHud();
-            Assert.That(hud.GetComponentsInChildren<RunHudView>(true), Is.Empty, "1차 코드 겉을 만들지 않는다");
             var so = new SerializedObject(view);
             var it = so.GetIterator();
             var missing = new List<string>();
@@ -159,6 +158,12 @@ namespace MV.UI.Tests
             foreach (var card in hud.GetComponentsInChildren<HudClimbCard>(true)) AssertRefs(card);
             // maskBack(Card Texture (1))은 디자이너가 일부 인스턴스에서 지운 선택 항목이라 빼고 본다(코드가 없으면 건너뜀).
             foreach (var card in hud.GetComponentsInChildren<HudSkillCard>(true)) AssertRefs(card, "maskBack");
+            // 계단 정산 글자·런 안내도 자식 프리팹(HUD_ClimbNotice)이다. RunHud가 실행 중에 만들지 않는다.
+            var notices = hud.GetComponentsInChildren<ClimbNoticeView>(true);
+            Assert.That(notices.Length, Is.EqualTo(1), "자식 프리팹 HUD_ClimbNotice");
+            AssertRefs(notices[0]);
+            Assert.That(new SerializedObject(hud.GetComponent("RunHud")).FindProperty("notice").objectReferenceValue, Is.SameAs(notices[0]), "RunHud.notice 직렬화 참조");
+            Assert.That(notices[0].transform.GetSiblingIndex(), Is.EqualTo(hud.transform.childCount - 1), "HUD 맨 위(마지막 자식)");
         }
 
         static void AssertRefs(Object o, params string[] optional)
