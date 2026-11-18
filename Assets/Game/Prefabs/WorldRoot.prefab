@@ -36,6 +36,8 @@ Transform:
   - {fileID: 1150}
   - {fileID: 1310}
   - {fileID: 1410}
+  - {fileID: 1510}
+  - {fileID: 1610}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1160
@@ -59,6 +61,8 @@ MonoBehaviour:
   _screen: {fileID: 1220}
   _cats: {fileID: 1320}
   _projs: {fileID: 1420}
+  _stairs: {fileID: 1520}
+  _hits: {fileID: 1620}
 --- !u!1 &1020
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +448,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spriteMaterial: {fileID: 2100000, guid: 6272a9793e83450f8ea262e6b8d1bce5, type: 2}
-  _vertexColorMaterial: {fileID: 2100000, guid: 5e61aaef53a94bf6943bcfb3b2dd10e7, type: 2}
   _labelMaterial: {fileID: 0}
 --- !u!1 &1300
 GameObject:
@@ -538,3 +541,91 @@ MonoBehaviour:
   _toyPrefab: {fileID: 6100000000000825005, guid: d7266dd6c7f34aba85f2d9b6ca511ac0, type: 3}
   _spearPrefab: {fileID: 6100000000000900005, guid: b5dd2908e191428293aa7d5cbb4dad44, type: 3}
   _bladePrefab: {fileID: 6100000000000466005, guid: 687e2c2172c944fa8a2b2089710d56cf, type: 3}
+--- !u!1 &1500
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1510}
+  - component: {fileID: 1520}
+  m_Layer: 0
+  m_Name: ClimbStairs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1510
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1010}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d0240f9ada644a38a901f0c69e6e8c0, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!1 &1600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1610}
+  - component: {fileID: 1620}
+  m_Layer: 0
+  m_Name: HitWorld
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1610
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1010}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0cc56572dd34ae39f283bfece1fe974, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:

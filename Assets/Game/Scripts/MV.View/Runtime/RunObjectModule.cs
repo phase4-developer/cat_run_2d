@@ -78,7 +78,7 @@ namespace MV.View
         public WorldSpriteCache Sprites;
         /// <summary>지금 테마 아틀라스(`304_theme.worldAtlas`)와 fx 아틀라스.</summary>
         public string Atlas, FxAtlas;
-        public Material SpriteMaterial, VertexColorMaterial, LabelMaterial;
+        public Material SpriteMaterial, LabelMaterial;
         /// <summary>투사체 판정 등록처. 없으면(시험·로비) 등록하지 않는다.</summary>
         public RunHitWorld Hits;
         /// <summary>결계 블록 글자판 「+골드」 배율(정본 `goldMul()` L1492).</summary>

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace MV.View.Tests
 {
     /// <summary>
-    /// 티켓 03 순수 계산: 지면 띠(02 §2.4.3), 상자 빌보드(02 §2.6.4).
+    /// 티켓 03 순수 계산: 지면 띠(02 §2.4.3).
     /// </summary>
     public sealed class WorldLayoutTests
     {
@@ -94,39 +94,6 @@ namespace MV.View.Tests
             Assert.That(b.Quads.Any(q => q.Part == GroundPart.SnowL && q.A.z >= 4 && q.A.z < 6), Is.False);
             Assert.That(b.Quads.Any(q => q.Part == GroundPart.SnowR && q.A.z >= 4 && q.A.z < 6), Is.True);
             Assert.That(b.Quads.Any(q => q.Part == GroundPart.SnowL && q.A.z >= 2 && q.A.z < 4), Is.True);
-        }
-
-        [Test]
-        public void BoxShape_ReferenceThicknessAndClamps()
-        {
-            var house = BoxBillboardBuilder.Shape(4.6, 2.2, 3.6, double.PositiveInfinity);
-            Assert.That(house.T, Is.EqualTo(1.152).Within(1e-12), "집 윗면 두께 고정");
-            Assert.That(house.Line, Is.EqualTo(0.035).Within(1e-12));
-            Assert.That(house.ShadeW, Is.EqualTo(0.184).Within(1e-12));
-            Assert.That(BoxBillboardBuilder.Shape(1.2, 0.6, 0.8, double.PositiveInfinity).T, Is.EqualTo(0.256).Within(1e-12), "우다다 입구 계단");
-            var near = BoxBillboardBuilder.Shape(4.6, 2.2, 3.6, 10);   // s = 10 px/m: 1 px = 0.1 m
-            Assert.That(near.Line, Is.EqualTo(0.1).Within(1e-12), "1 px 하한");
-            Assert.That(near.Highlight, Is.EqualTo(0.132).Within(1e-12));
-            var big = BoxBillboardBuilder.Shape(4.6, 2.2, 3.6, 200);
-            Assert.That(big.Line, Is.EqualTo(0.015).Within(1e-12), "3 px 상한");
-        }
-
-        [Test]
-        public void BoxBuild_PartOrderAndColors()
-        {
-            var mb = new MeshBuffer();
-            BoxBillboardBuilder.Build(mb, 4.6, 2.2, 3.6, "#c8a8e8", null, double.PositiveInfinity, "#4a3446");
-            // 그늘 4 + 윗면 4 + 윗면 외곽선 16 + 정면 4 + 하이라이트 4 + 정면 외곽선 16
-            Assert.That(mb.VertexCount, Is.EqualTo(48));
-            Assert.That(mb.Colors[0], Is.EqualTo(MvColor.ToColor32(MvColor.Shade("#c8a8e8", -0.28))), "그늘 띠 먼저");
-            Assert.That(mb.Colors[4], Is.EqualTo(MvColor.ToColor32(MvColor.Shade("#c8a8e8", 0.18))), "윗면 기본색");
-            Assert.That(mb.Colors[24], Is.EqualTo(MvColor.ToColor32(MvColor.Shade("#c8a8e8", -0.14))), "정면 아래");
-            Assert.That(mb.Colors[26], Is.EqualTo(MvColor.ToColor32(MvColor.Shade("#c8a8e8", 0.04))), "정면 위");
-            Assert.That(mb.Triangles.Count % 3, Is.EqualTo(0));
-            mb.Clear();
-            BoxBillboardBuilder.Build(mb, 4.6, 2.2, 3.6, "#c8a8e8", "#a05050", double.PositiveInfinity, "#4a3446", outline: false);
-            Assert.That(mb.VertexCount, Is.EqualTo(16));
-            Assert.That(mb.Colors[4], Is.EqualTo(MvColor.ToColor32("#a05050")), "topCol");
         }
     }
 }

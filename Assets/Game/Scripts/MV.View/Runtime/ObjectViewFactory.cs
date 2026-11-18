@@ -10,9 +10,6 @@ using UnityEngine.Rendering;
 
 namespace MV.View
 {
-    /// <summary>오브젝트 그림 모양(정본 `drawObj` L3099 분기). 프리팹이 없는 종류의 코드 모양(<see cref="ProceduralObjectLook"/>)에 쓴다.</summary>
-    public enum ObjectShape : byte { Single, Junk, RollGate, WarpGate, Well, Stair, CoinPile, CatnipPot, Mouse }
-
     /// <summary>불러온 오브젝트 프리팹 원본과 반환 손잡이(<see cref="ObjectViewFactory.PrefabLoader"/> 결과). <see cref="Release"/>가 null이면 반환할 것이 없다.</summary>
     public readonly struct PrefabHandle
     {
@@ -29,8 +26,9 @@ namespace MV.View
     /// <summary>
     /// 런 오브젝트 뷰 관리자(02 §2.10, 03 §3.5.3): 생성·시뮬 오브젝트 연결·풀 대여/반환·회수만 한다. 오브젝트별 그림·동작은 뷰(<see cref="RunObjectView"/>)와
     /// 프리팹에 붙은 모듈(<see cref="RunObjectModule"/>)이 정하고, 이 관리자는 종류를 보고 동작을 고르지 않는다.
-    /// <see cref="Sync"/>: 그리기 범위(PZ+objDrawBack ~ PZ+objDrawFront)의 살아 있는 오브젝트에 뷰를 붙이고(프리팹 주소별·코드 모양별 풀), 뷰 뿌리를 시뮬 위치에 놓고,
+    /// <see cref="Sync"/>: 그리기 범위(PZ+objDrawBack ~ PZ+objDrawFront)의 살아 있는 오브젝트에 뷰를 붙이고(프리팹 주소별 풀), 뷰 뿌리를 시뮬 위치에 놓고,
     /// 빠진 뷰는 모듈이 회수를 막지 않을 때(<see cref="RunObjectView.ReleaseReady"/>) 돌려준다. 뷰 뿌리 = SortingGroup + <see cref="DepthSortable"/>(순위 Object, 탐침 +sort.objProbeY, 편향 105.sortBias).
+    /// 프리팹 주소가 없거나(305·105 빈칸) 로드에 실패한 오브젝트는 만들지 않고 그리지 않으며, 표 위치·주소를 오류 로그로 한 번 알린다(대체 그림 없음).
     /// 투사체 판정(<see cref="RunHitWorld"/>)은 시뮬 틱마다 <see cref="PlaceHitTargets"/>로 범위 안 뷰를 만들고 뿌리를 그 틱의 시뮬 위치에 놓는다(등록·해제는 뷰 연결·회수).
     /// </summary>
     [DefaultExecutionOrder(55)]
@@ -40,7 +38,6 @@ namespace MV.View
         public const string Star = "Fx_Star4";
 
         [SerializeField] Material _spriteMaterial;
-        [SerializeField] Material _vertexColorMaterial;
         [SerializeField] Material _labelMaterial;
         /// <summary>글자판 공유 TMP 머티리얼(계단 칸 번호도 같이 쓴다).</summary>
         public Material LabelMaterial => _labelMaterial;
@@ -67,7 +64,6 @@ namespace MV.View
 
         readonly ObjectViewContext _ctx = new ObjectViewContext();
         readonly Dictionary<int, RunObjectView> _views = new Dictionary<int, RunObjectView>(64);
-        readonly Dictionary<ObjectShape, Stack<RunObjectView>> _shapePool = new Dictionary<ObjectShape, Stack<RunObjectView>>();
         readonly Dictionary<string, Stack<RunObjectView>> _prefabPool = new Dictionary<string, Stack<RunObjectView>>();
         readonly Dictionary<string, PrefabHandle> _prefabs = new Dictionary<string, PrefabHandle>();
         readonly HashSet<string> _prefabLoading = new HashSet<string>();
@@ -89,7 +85,6 @@ namespace MV.View
             _ctx.Sprites = sprites;
             _ctx.FxAtlas = fxAtlas;
             _ctx.SpriteMaterial = _spriteMaterial;
-            _ctx.VertexColorMaterial = _vertexColorMaterial;
             _ctx.LabelMaterial = _labelMaterial;
         }
 
@@ -124,7 +119,7 @@ namespace MV.View
             foreach (var s in tables.StageObject.Datas) if (s.stageMap == stageMap) Preload(s.prefab);
         }
 
-        /// <summary>오브젝트의 프리팹 주소: `305_stageObject`(맵·종류·보상) → `105_objectKind.prefab`. 둘 다 없으면 null(코드 모양).</summary>
+        /// <summary>오브젝트의 프리팹 주소: `305_stageObject`(맵·종류·보상) → `105_objectKind.prefab`. 둘 다 없으면 null(그리지 않음).</summary>
         public static string PrefabFor(MvTables tables, string stageMap, RunObject o) =>
             o?.Kind == null ? null : StageObjectData.PrefabFor(tables, stageMap, o.Kind, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any);
 
@@ -162,7 +157,7 @@ namespace MV.View
             if (h.Asset == null)
             {
                 // 실패는 다시 시도하지 않는다(표 주소 오류를 드러낸다). 그 오브젝트는 그리지 않는다.
-                Debug.LogError("[ObjectViewFactory] 오브젝트 프리팹 로드 실패: " + address);
+                Debug.LogError($"[ObjectViewFactory] 오브젝트 프리팹 로드 실패 — 주소 {address}: {AddressHint(address)}");
                 h.Release?.Dispose();
                 _prefabs[address] = default;
                 return;
@@ -193,39 +188,16 @@ namespace MV.View
             _views.Clear();
         }
 
-        static readonly ObjectShape?[] s_shapeOfData = BuildShapeMap();
-        static readonly HashSet<ObjectViewShape> s_warnedShapes = new HashSet<ObjectViewShape>();
-        /// <summary>이 관리자가 이미 알린 「피격 가능인데 프리팹 없음」 종류(관리자마다 한 번, 실행 순서와 무관).</summary>
-        readonly HashSet<string> _noPrefabHittable = new HashSet<string>();
+        /// <summary>이 관리자가 이미 알린 「프리팹 주소 없음」(맵·종류·보상마다 한 번, 실행 순서와 무관).</summary>
+        readonly HashSet<string> _noPrefab = new HashSet<string>();
 
-        /// <summary>MV.Data `ObjectViewShape` → `ObjectShape`(이름 1:1). 이름이 없는 값은 null.</summary>
-        static ObjectShape?[] BuildShapeMap()
-        {
-            var values = (ObjectViewShape[])Enum.GetValues(typeof(ObjectViewShape));
-            int max = 0;
-            foreach (var v in values) max = Math.Max(max, (int)v);
-            var map = new ObjectShape?[max + 1];
-            foreach (var v in values)
-                if (Enum.TryParse(v.ToString(), out ObjectShape shape)) map[(int)v] = shape;
-            return map;
-        }
-
-        /// <summary>
-        /// 모양 선택: `105_objectKind.viewShape`(07 §7.5.2)만 읽는다. 표 값에 맞는 모양이 없으면 기본 모양(Single) + 경고 1번.
-        /// </summary>
-        public static ObjectShape ShapeOf(ObjectKindData k)
-        {
-            if (k == null) return ObjectShape.Single;
-            int i = (int)k.viewShape;
-            if (i >= 0 && i < s_shapeOfData.Length && s_shapeOfData[i].HasValue) return s_shapeOfData[i].Value;
-            if (s_warnedShapes.Add(k.viewShape))
-                Debug.LogWarning($"[ObjectViewFactory] 105 {k.key}: viewShape {k.viewShape}에 맞는 ObjectShape가 없어 Single로 그린다");
-            return ObjectShape.Single;
-        }
+        /// <summary>프리팹 위치 안내: Addressables 주소 = 파일 이름(확장자 제외), 오브젝트 프리팹은 앱에 넣는 Local 그룹 폴더 아래에 둔다(10 §10.6).</summary>
+        public static string AddressHint(string address) =>
+            $"Assets/Game/Addressables/Local/<분류>/…/{address}.prefab 이 Local_<분류> 그룹에 있어야 합니다(주소 = 파일 이름)";
 
         bool InRange(RunObject o, double pz) => o.Z >= pz + _ctx.Cfg.ObjDrawBack && o.Z <= pz + _ctx.Cfg.ObjDrawFront;
 
-        /// <summary>오브젝트의 뷰(없거나 같은 번호의 다른 오브젝트면 새로 연결). 오브젝트 번호는 런마다 1부터 다시 쓴다.</summary>
+        /// <summary>오브젝트의 뷰(없거나 같은 번호의 다른 오브젝트면 새로 연결). 오브젝트 번호는 런마다 1부터 다시 쓴다. 프리팹 주소가 없으면 null(만들지 않음).</summary>
         RunObjectView ViewFor(RunObject o)
         {
             if (_views.TryGetValue(o.Id, out var v))
@@ -233,7 +205,9 @@ namespace MV.View
                 if (v.Obj == o) return v;
                 Release(v);
             }
-            _views[o.Id] = v = Show(o);
+            string prefab = PrefabFor(_tables, _stageMap, o);
+            if (prefab == null) { ReportNoPrefab(o); _views.Remove(o.Id); return null; }
+            _views[o.Id] = v = Show(o, prefab);
             return v;
         }
 
@@ -258,6 +232,7 @@ namespace MV.View
                 var o = objs[i];
                 if (o == null || o.Dead || !InRange(o, pz)) continue;
                 var v = ViewFor(o);
+                if (v == null) continue;
                 v.Stamp = _stamp;
                 Place(v, o, groundY);
                 EnsureInstance(v);
@@ -287,6 +262,7 @@ namespace MV.View
                 var o = s.Objs[i];
                 if (o == null || o.Dead || o.Kind == null || o.Kind.hittable == Hittable.Never || !InRange(o, _lastPz)) continue;
                 var v = ViewFor(o);
+                if (v == null) continue;
                 v.Stamp = _stamp;
                 EnsureInstance(v);
                 Place(v, o, s.WorldY);
@@ -313,27 +289,24 @@ namespace MV.View
         {
             v.Unbind();
             v.gameObject.SetActive(false);
-            if (v.Prefab != null)
-            {
-                if (!_prefabPool.TryGetValue(v.Prefab, out var ps)) _prefabPool[v.Prefab] = ps = new Stack<RunObjectView>();
-                ps.Push(v);
-                return;
-            }
-            var shape = v.Module<ProceduralObjectLook>().Shape;
-            if (!_shapePool.TryGetValue(shape, out var st)) _shapePool[shape] = st = new Stack<RunObjectView>();
-            st.Push(v);
+            if (!_prefabPool.TryGetValue(v.Prefab, out var ps)) _prefabPool[v.Prefab] = ps = new Stack<RunObjectView>();
+            ps.Push(v);
         }
 
-        RunObjectView Show(RunObject o)
+        /// <summary>프리팹 주소가 없는 오브젝트: 만들지 않고, 어느 표 칸을 채워야 하는지 한 번 알린다.</summary>
+        void ReportNoPrefab(RunObject o)
         {
-            string prefab = PrefabFor(_tables, _stageMap, o);
-            var shape = ShapeOf(o.Kind);
-            // 스테이지가 정해진(게임 구성) 관리자에서만 알린다. 시뮬 벽은 늘 보상 칸이라 305 프리팹이 있고, cardbox는 모드 전용(MV.Run이 만들지 않음)이다.
-            if (prefab == null && _stageMap != null && o.Kind != null && o.Kind.hittable != Hittable.Never && _noPrefabHittable.Add(o.Kind.key))
-                Debug.LogError($"[ObjectViewFactory] 피격 가능 종류 {o.Kind.key}에 프리팹이 없어 판정 형상이 없습니다(코드 모양으로 그리고 맞지 않음).");
+            string kind = o.Kind?.key ?? "(종류 없음)";
+            string reward = o.IsField ? RewardOf(o.Rew).ToString() : StageObjectReward.Any.ToString();
+            if (!_noPrefab.Add(_stageMap + "|" + kind + "|" + reward)) return;
+            Debug.LogError($"[ObjectViewFactory] 오브젝트 프리팹 주소가 없어 만들지 않습니다 — 종류 {kind}, 스테이지 맵 {_stageMap ?? "(없음)"}, 보상 {reward}. " +
+                $"{StageObjectData.Table}(stageMap·kind·reward) 행의 prefab 또는 {ObjectKindData.Table}.prefab에 주소를 넣고, {AddressHint("<주소>")}", this);
+        }
+
+        RunObjectView Show(RunObject o, string prefab)
+        {
             Stack<RunObjectView> st;
-            bool pooled = prefab != null ? _prefabPool.TryGetValue(prefab, out st) : _shapePool.TryGetValue(shape, out st);
-            RunObjectView v = pooled && st.Count > 0 ? st.Pop() : Create(prefab, shape);
+            RunObjectView v = _prefabPool.TryGetValue(prefab, out st) && st.Count > 0 ? st.Pop() : Create(prefab);
             v.Stamp = _stamp;
             v.gameObject.SetActive(true);
             v.Bind(o);
@@ -342,10 +315,10 @@ namespace MV.View
             return v;
         }
 
-        /// <summary>새 뷰 뿌리: SortingGroup + DepthSortable + <see cref="RunObjectView"/>. 프리팹이 없으면 코드 모양 그림과 눌림·쓰러짐 모듈을 붙인다.</summary>
-        RunObjectView Create(string prefab, ObjectShape shape)
+        /// <summary>새 뷰 뿌리: SortingGroup + DepthSortable + <see cref="RunObjectView"/>. 그림·동작은 프리팹 인스턴스(<see cref="EnsureInstance"/>)의 모듈이 맡는다.</summary>
+        RunObjectView Create(string prefab)
         {
-            var go = new GameObject(prefab ?? shape.ToString());
+            var go = new GameObject(prefab);
             go.SetActive(false);
             go.transform.SetParent(transform, false);
             var sg = go.AddComponent<SortingGroup>();
@@ -354,13 +327,6 @@ namespace MV.View
             ds.Rank = DepthMath.RankObject;
             var v = go.AddComponent<RunObjectView>();
             v.Setup(_ctx, prefab);
-            if (prefab == null)
-            {
-                var look = go.AddComponent<ProceduralObjectLook>();
-                look.Setup(v, shape);
-                v.AddModule(look);
-                v.AddModule(go.AddComponent<ObjectMotion>());
-            }
             return v;
         }
     }

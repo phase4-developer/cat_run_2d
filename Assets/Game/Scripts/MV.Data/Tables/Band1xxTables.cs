@@ -8,8 +8,8 @@ namespace MV.Data
     public enum RewardSource { Row, FieldCell, Enemy }
     public enum SpritePick { Single, JunkCycle, Anim }
     /// <summary>
-    /// 오브젝트 그림 모양(07 §7.5.2 `viewShape`). 이름은 MV.View `ObjectShape`와 1:1 —
-    /// MV.View가 `ObjectViewFactory.ShapeOf`의 key·컴포넌트 분기 대신 이 값을 읽는다(교체는 MV-VIEW).
+    /// 오브젝트 그림 모양(07 §7.5.2 `viewShape`). MV.View 코드 모양(프리팹 없을 때 대체 그림)을 지운 뒤로 뷰는 이 값을 읽지 않는다.
+    /// 그림은 305·105 prefab 주소의 프리팹이 정한다. 열 정리(표 구조 변경)는 사용자 승인 뒤.
     /// </summary>
     public enum ObjectViewShape { Single, Junk, RollGate, WarpGate, Well, Stair, CoinPile, CatnipPot, Mouse }
     public enum LabelKind { None, WellText, StairText, StairGate, CraftGate, Arch, WallCell, EnemyHp, BoxHp }

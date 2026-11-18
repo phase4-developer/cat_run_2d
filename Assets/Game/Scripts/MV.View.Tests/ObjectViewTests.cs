@@ -77,31 +77,7 @@ namespace MV.View.Tests
             Assert.That(a, Is.EqualTo(alpha).Within(1e-9));
         }
 
-        [Test]
-        public void ShapeOf_CoversProtoKinds()
-        {
-            var t = ViewTestTables.Load();
-            Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("wall")), Is.EqualTo(ObjectShape.Junk));
-            Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("tower")), Is.EqualTo(ObjectShape.Well));
-            Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("arch")), Is.EqualTo(ObjectShape.WarpGate));
-            Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("stair")), Is.EqualTo(ObjectShape.Stair));
-            Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("sgate")), Is.EqualTo(ObjectShape.RollGate));
-            Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("coin")), Is.EqualTo(ObjectShape.CoinPile));
-            Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("gem")), Is.EqualTo(ObjectShape.CatnipPot));
-            Assert.That(ObjectViewFactory.ShapeOf(t.ObjectKind.ByKey("enemy")), Is.EqualTo(ObjectShape.Mouse));
-        }
-
-        [Test]
-        public void ShapeOf_ReadsViewShapeColumn()
-        {
-            foreach (ObjectViewShape v in System.Enum.GetValues(typeof(ObjectViewShape)))
-                Assert.That(System.Enum.TryParse(v.ToString(), out ObjectShape _), Is.True, "ObjectViewShape ↔ ObjectShape 1:1: " + v);
-            foreach (var k in ViewTestTables.Load().ObjectKind.Sorted)
-                Assert.That(ObjectViewFactory.ShapeOf(k).ToString(), Is.EqualTo(k.viewShape.ToString()), k.key);
-
-            var edited = ViewTestTables.WithCell(ObjectKindData.Table, "cardbox", "viewShape", "Well");
-            Assert.That(ObjectViewFactory.ShapeOf(edited.ObjectKind.ByKey("cardbox")), Is.EqualTo(ObjectShape.Well), "표만 바꿔도 모양이 바뀐다");
-        }
+        static string StageMap(MvTables t) => t.StageObject.Datas.First(r => r.kind == "arch").stageMap;
 
         ObjectViewFactory MakeFactory(out Camera cam)
         {
@@ -126,12 +102,14 @@ namespace MV.View.Tests
             var t = ViewTestTables.Load();
             var cfg = ViewTestTables.Config();
             var f = MakeFactory(out _);
+            f.SetStage(t, StageMap(t));
             var objs = new List<RunObject>();
             int id = 1;
             foreach (var key in new[] { "wall", "tower", "arch", "stair", "sgate", "coin", "gem" })
             {
                 var o = RunObjectFactory.Create(t, t.ObjectKind.ByKey(key), 0, 10 + id * 5);
                 o.Id = id++;
+                if (key == "wall") { o.Idx = 0; o.Rew = FieldReward.Gold; }   // 필드 벽 = 305 보상 행
                 objs.Add(o);
             }
             var far = RunObjectFactory.Create(t, t.ObjectKind.ByKey("wall"), 0, cfg.ObjDrawFront + 50);
@@ -156,25 +134,6 @@ namespace MV.View.Tests
             Assert.That(f.ViewCount, Is.EqualTo(0), "지나간 오브젝트는 뷰를 돌려준다");
         }
 
-        [Test]
-        public void Well_BricksSortedFarFirstInsideGroup()
-        {
-            var t = ViewTestTables.CodeShapes();
-            var f = MakeFactory(out var cam);
-            var o = RunObjectFactory.Create(t, t.ObjectKind.ByKey("tower"), 0, 20);
-            o.Id = 1;
-            f.Sync(new List<RunObject> { o }, 0, 0, 0);
-            var root = f.ViewOf(1).transform;
-            var parts = root.GetComponentsInChildren<SpriteRenderer>(true).Where(r => r.sortingOrder >= 1 && r.name != "P0").ToList();
-            Assert.That(parts.Count, Is.EqualTo(53));
-            Assert.That(parts.Select(p => p.sortingOrder).OrderBy(x => x), Is.EqualTo(Enumerable.Range(1, 53)));
-            var fwd = cam.transform.forward;
-            float D(SpriteRenderer r) => Vector3.Dot(r.transform.position - cam.transform.position, fwd);
-            var byOrder = parts.OrderBy(p => p.sortingOrder).ToList();
-            for (int i = 1; i < byOrder.Count; i++)
-                Assert.That(D(byOrder[i - 1]), Is.GreaterThanOrEqualTo(D(byOrder[i]) - 1e-4f), "먼 벽돌이 먼저");
-        }
-
         // ---------------- 오브젝트 프리팹(105.prefab · 305_stageObject) ----------------
 
         static RunObject Make(MvTables t, string key, int id, double z)
@@ -185,7 +144,7 @@ namespace MV.View.Tests
         }
 
         [Test]
-        public void PrefabFor_StageRowFirst_ThenKindPrefab_ElseCodeShape()
+        public void PrefabFor_StageRowFirst_ThenKindPrefab_ElseNull()
         {
             var t = ViewTestTables.Load();
             var wall = Make(t, "wall", 1, 10);
@@ -201,7 +160,7 @@ namespace MV.View.Tests
                 var o = Make(t, k.key, 2, 10);
                 bool staged = t.StageObject.Datas.Any(r => r.kind == k.key && r.reward == StageObjectReward.Any);
                 string expected = string.IsNullOrEmpty(k.prefab) ? null : k.prefab;
-                if (!staged) Assert.That(ObjectViewFactory.PrefabFor(t, "Stage1", o), Is.EqualTo(expected), k.key + ": 105.prefab(빈칸 = 코드 모양)");
+                if (!staged) Assert.That(ObjectViewFactory.PrefabFor(t, "Stage1", o), Is.EqualTo(expected), k.key + ": 105.prefab(빈칸 = null, 만들지 않음)");
                 Assert.That(ObjectViewFactory.PrefabFor(t, null, o), Is.EqualTo(expected), k.key + ": 맵이 없으면 105만");
             }
             var archRow = t.StageObject.Datas.First(r => r.kind == "arch");
@@ -209,22 +168,25 @@ namespace MV.View.Tests
         }
 
         [Test]
-        public void SetStage_ObjectsWithPrefabUsePrefabView_OthersKeepCodeShape()
+        public void SetStage_ObjectsWithPrefabUsePrefabView_NoPrefabNotCreated()
         {
             var t = ViewTestTables.Load();
             var f = MakeFactory(out _);
             var arch = t.StageObject.Datas.First(r => r.kind == "arch");
             f.SetStage(t, arch.stageMap);
             var objs = new List<RunObject> { Make(t, "arch", 1, 15), Make(t, "tower", 2, 20), Make(t, "cardbox", 3, 25), Make(t, "enemy", 4, 30) };
-            // cardbox는 피격 가능인데 프리팹이 없어 맞지 않는다 → 게임 구성(스테이지 지정) 관리자는 오류로 한 번 알린다.
-            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex("cardbox.*프리팹이 없어"));
+            // cardbox는 305·105 프리팹이 비어 있다 → 만들지 않고, 채울 표 칸과 프리팹 위치를 오류로 한 번만 알린다.
+            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(
+                "프리팹 주소가 없어 만들지 않습니다 — 종류 cardbox.*" + StageObjectData.Table + ".*" + ObjectKindData.Table + ".*Assets/Game/Addressables/Local/"));
             f.Sync(objs, 0, 0, 0);
+            f.Sync(objs, 0, 0, 0);   // 같은 종류는 다시 알리지 않는다(LogAssert: 오류 1개)
             Assert.That(f.TryPrefabView(1, out string a1, out _), Is.True);
             Assert.That(a1, Is.EqualTo(arch.prefab));
             Assert.That(f.TryPrefabView(2, out string a2, out _), Is.True);
             Assert.That(a2, Is.EqualTo(t.ObjectKind.ByKey("tower").prefab));
-            Assert.That(f.TryPrefabView(3, out string a3, out _), Is.True);
-            Assert.That(a3, Is.Null, "105.prefab 빈칸은 코드 모양");
+            Assert.That(f.TryPrefabView(3, out _, out _), Is.False, "프리팹 주소가 없으면 뷰를 만들지 않는다");
+            Assert.That(f.ViewOf(3), Is.Null);
+            Assert.That(f.ViewCount, Is.EqualTo(3));
             Assert.That(f.TryPrefabView(4, out string a4, out _), Is.True);
             Assert.That(a4, Is.EqualTo("Obj_Enemy"), "적은 프리팹(그림 자리·Hitbox)");
             Assert.That(f.ViewOf(1).GetComponent<DepthSortable>(), Is.Not.Null, "프리팹 뷰도 같은 정렬 루트");
@@ -328,11 +290,11 @@ namespace MV.View.Tests
             var wv = prefab.GetComponent<WorldView>();
             Assert.That(wv, Is.Not.Null);
             var so = new SerializedObject(wv);
-            foreach (var field in new[] { "_rig", "_sorter", "_ground", "_tint", "_screenMultiply", "_objects", "_screen", "_cats" })
+            foreach (var field in new[] { "_rig", "_sorter", "_ground", "_tint", "_screenMultiply", "_objects", "_screen", "_cats", "_projs", "_stairs", "_hits" })
                 Assert.That(so.FindProperty(field).objectReferenceValue, Is.Not.Null, field);
             Assert.That(prefab.GetComponentInChildren<CameraRig>().GetComponent<Camera>(), Is.Not.Null);
             var objs = new SerializedObject(prefab.GetComponentInChildren<ObjectViewFactory>());
-            foreach (var field in new[] { "_spriteMaterial", "_vertexColorMaterial" })
+            foreach (var field in new[] { "_spriteMaterial" })
                 Assert.That(objs.FindProperty(field).objectReferenceValue, Is.Not.Null, "ObjectViewFactory." + field);
             Assert.That(prefab.GetComponentInChildren<GroundStripMesh>().GetComponent<MeshRenderer>().sharedMaterial, Is.Not.Null);
             var cats = new SerializedObject(prefab.GetComponentInChildren<CharacterPresenter>());
