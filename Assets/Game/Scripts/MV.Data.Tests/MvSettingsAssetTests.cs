@@ -41,6 +41,7 @@ namespace MV.Data.Tests
         }
 
         [TestCase(MvCharacterSettings.AssetPath, "runSpeed", "runSpeed: ")]
+        [TestCase(MvCharacterSettings.AssetPath, "projSpeed", "projSpeed: ")]
         [TestCase(MvCameraSettings.AssetPath, "run.posY", "posY: ")]
         public void InspectorEdit_Save_WritesAssetFile(string path, string property, string yamlKey)
         {
