@@ -575,6 +575,8 @@ namespace MV.View.Tests
             Assert.That(bundle.Template.Frame, Is.Not.Null, "카드 틀 참조");
             Assert.That(bundle.Template.Icon, Is.Not.Null, "카드 그림 참조");
             Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
+            Assert.That(bundle.LabelIcon, Is.Not.Null, "레이블 옆 작은 무기 카드(LabelIcon_Temp)");
+            Assert.That(bundle.LabelIcon.gameObject.activeSelf && bundle.LabelIcon.Frame != null && bundle.LabelIcon.Icon != null, Is.True, "레이블 옆 카드는 켜 두고 틀·그림 참조가 있다");
             Assert.AreEqual(System.Math.Min(8, bundle.MaxCards), bundle.Shown, "Made + Extra(프리팹 상한까지)");
 
             // 기둥 사이 가운데 정렬: 같은 간격, 꽉 찬 줄은 기둥 안쪽 면을 넘지 않고 한 장 더 놓으면 넘는다, 줄마다 기둥 사이 가운데
