@@ -11,3 +11,15 @@
 9003002	로비 지도 버튼	lobby.side.map	3	2	1	Atlas_UI_Icon	UI_Emoji_Map	
 9003003	로비 컨텐츠 버튼	lobby.side.content	3	3	1	Atlas_UI_Lobby	UI_Icon_Content	
 9004001	화면 비네트	stage.vignette	4	1	1			Tex_Lobby_Vignette
+9005001	등급 틀 1	grade.1	5	1	1	Atlas_UI_Card	Grade_1	
+9005002	등급 틀 2	grade.2	5	2	1	Atlas_UI_Card	Grade_2	
+9005003	등급 틀 3	grade.3	5	3	1	Atlas_UI_Card	Grade_3	
+9005004	등급 틀 4	grade.4	5	4	1	Atlas_UI_Card	Grade_4	
+9005005	등급 틀 5	grade.5	5	5	1	Atlas_UI_Card	Grade_5	
+9005006	등급 틀 6	grade.6	5	6	1	Atlas_UI_Card	Grade_6	
+9005007	등급 틀 7	grade.7	5	7	1	Atlas_UI_Card	Grade_7	
+9005008	등급 틀 8	grade.8	5	8	1	Atlas_UI_Card	Grade_8	
+9005009	등급 틀 9	grade.9	5	9	1	Atlas_UI_Card	Grade_9	
+9005010	등급 틀 10	grade.10	5	10	1	Atlas_UI_Card	Grade_10	
+9005011	등급 틀 11	grade.11	5	11	1	Atlas_UI_Card	Grade_11	
+9005012	등급 틀 12	grade.12	5	12	1	Atlas_UI_Card	Grade_12	

@@ -42,8 +42,8 @@ namespace MV.Editor.Tests
             var dir = MvTableLoader.TsvDirectory;
             string Read(string table) => File.ReadAllText(Path.Combine(dir, table + ".txt"), new UTF8Encoding(false));
 
-            var item = Read("103_item").Replace("UI_Icon_Weapon_1\t", "UI_Icon_Weapon_Nope\t").Replace("UI_Icon_Weapon_2\t", "ui_icon_weapon_2\t")
-                .Replace("UI_Icon_Weapon_3\t", "UI_Icon_Only_In_Card\t");
+            var item = Read("103_item").Replace("\tweapon_0\t", "\tUI_Icon_Weapon_Nope\t").Replace("\tweapon_1\t", "\tWeapon_1\t")
+                .Replace("\tweapon_2\t", "\tUI_Icon_Only_In_Card\t");
             var theme = Read("304_theme").Replace("World_Prop_Snowman", "World_Prop_Fake");
             var kind = Read("105_objectKind").Replace("World_Obj_Arch_Post_Gold", "World_Obj_Only_Somewhere");
             var ui = Read("09_uiResource").Replace("Atlas_UI_Icon\tUI_Emoji_Close\t", "Atlas_UI_Nope\tUI_Emoji_NotYet\t");
@@ -79,9 +79,9 @@ namespace MV.Editor.Tests
             Assert.That(unextracted.Any(e => e.Table == "113_god" && e.Value == "Tex_God_Sagittarius"), Is.True, "없는 주소는 미추출 경고");
 
             // 이름은 있는데 틀림 → 오류
-            var cased = errors.FirstOrDefault(e => e.Table == "103_item" && e.Value == "ui_icon_weapon_2");
+            var cased = errors.FirstOrDefault(e => e.Table == "103_item" && e.Value == "Weapon_1");
             Assert.That(cased, Is.Not.Null, "대소문자 다른 이름");
-            Assert.That(cased.Message, Does.Contain("UI_Icon_Weapon_2"));
+            Assert.That(cased.Message, Does.Contain("weapon_1"));
             var wrongAtlas = errors.FirstOrDefault(e => e.Table == "103_item" && e.Value == "UI_Icon_Only_In_Card");
             Assert.That(wrongAtlas, Is.Not.Null, "다른 아틀라스에만 있는 이름");
             Assert.That(wrongAtlas.Message, Does.Contain(MvAtlas.UiCard));
