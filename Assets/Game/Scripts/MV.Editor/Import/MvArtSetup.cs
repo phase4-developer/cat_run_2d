@@ -35,6 +35,12 @@ namespace MV.Editor.Import
     /// 아틀라스·임포트·Addressables를 폴더 규칙에서 멱등으로 맞춘다(기획서 03 §3.2.8, §3.8). 제품 도구.
     /// 1) 추출 PNG 임포트 값 2) `Art/(Source|Temp)/Sprite/Atlas_*` 폴더마다 SpriteAtlas v2 3) Local_UIAtlas·Local_WorldAtlas·Local_Texture 그룹(이름만 Remote, 경로는 Local — 사용자 「원격 에셋은 안쓸거니 다 로컬로」)과 주소·라벨.
     /// 같은 입력이면 아무것도 쓰지 않는다. 전역 설정(프로필·빌드 경로·카탈로그)과 Default Local Group은 건드리지 않는다.
+    /// <para>
+    /// 아틀라스 소유권(MV-UI2-ATLAS, 2026-11-18 사용자 「기존 Sprite Atlas 에셋의 설정을 정본으로 취급합니다」): 이미 있는 아틀라스 에셋의
+    /// 패킹 대상·Padding·Tight·Include in Build·플랫폼 형식은 Inspector에서 정한 값이 정본이고 자동 실행은 쓰지 않는다.
+    /// 자동 실행은 없는 아틀라스를 처음 만들 때만 규칙값을 넣고, 이미 있는 아틀라스는 규칙 폴더가 빠졌는지 알림(<see cref="MvEnsureResult.Notes"/>)만 남긴다.
+    /// 규칙값으로 되돌리기는 메뉴 「MV/Art/Reset Atlases To Rules」(확인 창)로만 한다.
+    /// </para>
     /// </summary>
     public static class MvArtSetup
     {
@@ -45,6 +51,16 @@ namespace MV.Editor.Import
 
         [MenuItem("MV/Art/Ensure Import·Atlas·Addressables")]
         static void EnsureFromMenu() => Debug.Log($"{LogTag} {EnsureAll()}");
+
+        /// <summary>이미 있는 아틀라스의 패킹 대상·설정을 규칙값으로 덮어쓴다. 사람이 고른 경우에만(확인 창).</summary>
+        [MenuItem("MV/Art/Reset Atlases To Rules (덮어쓰기)")]
+        static void ResetAtlasesFromMenu()
+        {
+            if (!EditorUtility.DisplayDialog("아틀라스 규칙값으로 되돌리기",
+                    "이미 있는 아틀라스의 패킹 대상·Padding·Tight·Include in Build·플랫폼 형식을 코드 규칙값으로 덮어씁니다.\nInspector에서 바꾼 값이 사라집니다.",
+                    "덮어쓰기", "취소")) return;
+            Debug.Log($"{LogTag} {EnsureAll(overwriteAtlases: true)}");
+        }
 
         /// <summary>배치 진입점(`-executeMethod MV.Editor.Import.MvArtSetup.RunBatch`). 바뀐 것이 없을 때까지 최대 3회.</summary>
         public static void RunBatch()
@@ -80,7 +96,8 @@ namespace MV.Editor.Import
             };
         }
 
-        public static MvEnsureResult EnsureAll()
+        /// <param name="overwriteAtlases">true면 이미 있는 아틀라스도 규칙 폴더·규칙값으로 덮어쓴다(메뉴 「Reset Atlases To Rules」 전용). 자동 실행은 false.</param>
+        public static MvEnsureResult EnsureAll(bool overwriteAtlases = false)
         {
             var r = new MvEnsureResult();
             if (s_running) return r;
@@ -89,8 +106,8 @@ namespace MV.Editor.Import
             {
                 MvArtManifest.Invalidate();
                 EnsureImportSettings(r);
-                EnsureAtlases(r);
-                EnsureCharacterAtlases(r);
+                EnsureAtlases(r, overwriteAtlases);
+                EnsureCharacterAtlases(r, overwriteAtlases);
                 EnsureAddressables(r);
                 if (r.Changed) AssetDatabase.SaveAssets();
             }
@@ -169,34 +186,42 @@ namespace MV.Editor.Import
             return set;
         }
 
-        static void EnsureAtlases(MvEnsureResult r)
+        /// <summary>
+        /// 아틀라스 에셋이 실제로 묶는 PNG 경로(패킹 대상이 폴더면 그 아래 PNG 전부, 파일이면 그 파일). 에셋이 정본이므로
+        /// 규칙 폴더 밖(예: `Art/UI/...`)을 Inspector에서 넣은 것도 포함한다.
+        /// </summary>
+        public static List<string> PackedPngPaths(string atlasPath)
+        {
+            var list = new List<string>();
+            if (!File.Exists(atlasPath)) return list;
+            foreach (var guid in ReadPackableGuids(atlasPath))
+            {
+                string p = AssetDatabase.GUIDToAssetPath(guid);
+                if (string.IsNullOrEmpty(p)) continue;
+                if (Directory.Exists(p))
+                    list.AddRange(Directory.GetFiles(p, "*.png", SearchOption.AllDirectories).Select(f => f.Replace('\\', '/')));
+                else if (p.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) list.Add(p);
+            }
+            return list;
+        }
+
+        /// <summary>프로젝트의 모든 아틀라스 에셋(UI·월드·캐릭터 폴더): 이름(확장자 제외) → 경로.</summary>
+        public static SortedDictionary<string, string> FindAtlasAssets()
+        {
+            var map = new SortedDictionary<string, string>(StringComparer.Ordinal);
+            foreach (var folder in new[] { MvArtRules.UiAtlasFolder, MvArtRules.WorldAtlasFolder, MvArtRules.CharacterAtlasFolder })
+            {
+                if (!Directory.Exists(folder)) continue;
+                foreach (var file in Directory.GetFiles(folder, "*" + MvArtRules.AtlasExtension))
+                    map[Path.GetFileNameWithoutExtension(file)] = file.Replace('\\', '/');
+            }
+            return map;
+        }
+
+        static void EnsureAtlases(MvEnsureResult r, bool overwrite)
         {
             foreach (var pair in FindAtlasFolders())
-            {
-                var spec = MvArtRules.SpecFor(pair.Key);
-                var wanted = new HashSet<string>(pair.Value.Select(AssetDatabase.AssetPathToGUID).Where(g => !string.IsNullOrEmpty(g)), StringComparer.Ordinal);
-                if (wanted.Count != pair.Value.Count)
-                {
-                    r.Notes.Add($"{spec.Name}: 폴더 GUID 없음(임포트 전) — 다음 회차");
-                    continue;
-                }
-
-                if (!File.Exists(spec.AssetPath) || !ReadPackableGuids(spec.AssetPath).SetEquals(wanted))
-                {
-                    WriteAtlas(spec, pair.Value);
-                    r.AtlasesWritten++;
-                }
-
-                if (!(AssetImporter.GetAtPath(spec.AssetPath) is SpriteAtlasImporter importer))
-                {
-                    r.Notes.Add($"{spec.Name}: SpriteAtlasImporter 없음 — 다음 회차");
-                    continue;
-                }
-                if (AtlasDifferences(importer, spec).Count == 0) continue;
-                ApplyAtlas(importer, spec);
-                importer.SaveAndReimport();
-                r.AtlasSettingsFixed++;
-            }
+                EnsureOneAtlas(r, MvArtRules.SpecFor(pair.Key), pair.Value, overwrite, "폴더");
 
             foreach (var folder in new[] { MvArtRules.UiAtlasFolder, MvArtRules.WorldAtlasFolder })
             {
@@ -211,36 +236,53 @@ namespace MV.Editor.Import
         }
 
         /// <summary>캐릭터 묶음마다 SpriteAtlas v2 1개(<see cref="MvCharacterArt.FindAtlasSets"/>). 묶을 것은 PNG 파일이다.</summary>
-        static void EnsureCharacterAtlases(MvEnsureResult r)
+        /// <summary>
+        /// 아틀라스 1개. 파일이 없으면 규칙 묶음·규칙값으로 처음 만든다. 있으면 <paramref name="overwrite"/>일 때만 규칙대로 덮어쓰고,
+        /// 아니면 규칙 묶음 중 빠진 것만 알린다(에셋이 정본, 쓰지 않음).
+        /// </summary>
+        static void EnsureOneAtlas(MvEnsureResult r, MvAtlasSpec spec, List<string> wantedPaths, bool overwrite, string what)
+        {
+            var wanted = new HashSet<string>(wantedPaths.Select(AssetDatabase.AssetPathToGUID).Where(g => !string.IsNullOrEmpty(g)), StringComparer.Ordinal);
+            if (wanted.Count != wantedPaths.Count)
+            {
+                r.Notes.Add($"{spec.Name}: {what} GUID 없음(임포트 전) — 다음 회차");
+                return;
+            }
+
+            bool exists = File.Exists(spec.AssetPath);
+            if (exists && !overwrite)
+            {
+                var have = ReadPackableGuids(spec.AssetPath);
+                var missing = wantedPaths.Where(p => !have.Contains(AssetDatabase.AssetPathToGUID(p))).ToList();
+                if (missing.Count > 0)
+                    r.Notes.Add($"{spec.Name}: 규칙 {what} {missing.Count}개가 패킹 대상에 없음(자동으로 넣지 않음, Inspector에서 추가): {string.Join(", ", missing.Take(3))}{(missing.Count > 3 ? " …" : "")}");
+                return;
+            }
+
+            if (!exists || !ReadPackableGuids(spec.AssetPath).SetEquals(wanted))
+            {
+                WriteAtlas(spec, wantedPaths);
+                r.AtlasesWritten++;
+            }
+            if (!(AssetImporter.GetAtPath(spec.AssetPath) is SpriteAtlasImporter importer))
+            {
+                r.Notes.Add($"{spec.Name}: SpriteAtlasImporter 없음 — 다음 회차");
+                return;
+            }
+            if (AtlasDifferences(importer, spec).Count == 0) return;
+            ApplyAtlas(importer, spec);
+            importer.SaveAndReimport();
+            r.AtlasSettingsFixed++;
+        }
+
+        static void EnsureCharacterAtlases(MvEnsureResult r, bool overwrite)
         {
             var sets = MvCharacterArt.FindAtlasSets();
             if (sets.Count == 0) return;
             if (!AssetDatabase.IsValidFolder(MvArtRules.CharacterAtlasFolder))
                 AssetDatabase.CreateFolder(MvArtRules.CharacterRoot, Path.GetFileName(MvArtRules.CharacterAtlasFolder));
             foreach (var pair in sets)
-            {
-                var spec = MvArtRules.CharacterSpecFor(pair.Key);
-                var wanted = new HashSet<string>(pair.Value.Select(AssetDatabase.AssetPathToGUID).Where(g => !string.IsNullOrEmpty(g)), StringComparer.Ordinal);
-                if (wanted.Count != pair.Value.Count)
-                {
-                    r.Notes.Add($"{spec.Name}: PNG GUID 없음(임포트 전) — 다음 회차");
-                    continue;
-                }
-                if (!File.Exists(spec.AssetPath) || !ReadPackableGuids(spec.AssetPath).SetEquals(wanted))
-                {
-                    WriteAtlas(spec, pair.Value);
-                    r.AtlasesWritten++;
-                }
-                if (!(AssetImporter.GetAtPath(spec.AssetPath) is SpriteAtlasImporter importer))
-                {
-                    r.Notes.Add($"{spec.Name}: SpriteAtlasImporter 없음 — 다음 회차");
-                    continue;
-                }
-                if (AtlasDifferences(importer, spec).Count == 0) continue;
-                ApplyAtlas(importer, spec);
-                importer.SaveAndReimport();
-                r.AtlasSettingsFixed++;
-            }
+                EnsureOneAtlas(r, MvArtRules.CharacterSpecFor(pair.Key), pair.Value, overwrite, "PNG");
             if (Directory.Exists(MvArtRules.CharacterAtlasFolder))
                 foreach (var file in Directory.GetFiles(MvArtRules.CharacterAtlasFolder, "*" + MvArtRules.AtlasExtension))
                 {

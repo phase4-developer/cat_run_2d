@@ -36,6 +36,14 @@ namespace MV.Editor.Import
                 c._sprites[pair.Key] = names;
                 if (File.Exists(MvArtRules.SpecFor(pair.Key).AssetPath)) c._atlasAssets.Add(pair.Key);
             }
+            // 아틀라스 에셋이 정본(MV-UI2-ATLAS): Inspector에서 넣은 규칙 폴더 밖 그림(예: Art/UI)도 그 아틀라스의 스프라이트다.
+            foreach (var pair in MvArtSetup.FindAtlasAssets())
+            {
+                if (!c._sprites.TryGetValue(pair.Key, out var names))
+                    c._sprites[pair.Key] = names = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var png in MvArtSetup.PackedPngPaths(pair.Value)) names.Add(Path.GetFileNameWithoutExtension(png));
+                c._atlasAssets.Add(pair.Key);
+            }
 
             var settings = AddressableAssetSettingsDefaultObject.Settings;
             if (settings != null)

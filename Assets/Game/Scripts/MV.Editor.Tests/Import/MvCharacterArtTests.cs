@@ -51,8 +51,9 @@ namespace MV.Editor.Tests.Import
         }
 
         [Test]
-        public void CharacterAtlases_ExistWithSpecSettings()
+        public void CharacterAtlases_Exist()
         {
+            // 패킹 대상·설정은 아틀라스 에셋이 정본(MV-UI2-ATLAS). 규칙과 다른 값은 보고만 한다.
             var failures = new List<string>();
             foreach (var pair in MvCharacterArt.FindAtlasSets())
             {
@@ -60,9 +61,9 @@ namespace MV.Editor.Tests.Import
                 var importer = AssetImporter.GetAtPath(spec.AssetPath) as SpriteAtlasImporter;
                 if (importer == null) { failures.Add(pair.Key + ": 아틀라스 없음"); continue; }
                 var diff = MvArtSetup.AtlasDifferences(importer, spec);
-                if (diff.Count > 0) failures.Add(pair.Key + ": " + string.Join(", ", diff));
-                var wanted = new HashSet<string>(pair.Value.Select(AssetDatabase.AssetPathToGUID));
-                if (!MvArtSetup.ReadPackableGuids(spec.AssetPath).SetEquals(wanted)) failures.Add(pair.Key + ": 묶음 PNG 다름");
+                var have = MvArtSetup.ReadPackableGuids(spec.AssetPath);
+                int missing = pair.Value.Count(p => !have.Contains(AssetDatabase.AssetPathToGUID(p)));
+                if (diff.Count > 0 || missing > 0) TestContext.WriteLine($"[보고] {pair.Key}: 빠진 PNG {missing}, 규칙과 다른 값 {string.Join(", ", diff)}");
             }
             Assert.That(failures, Is.Empty, string.Join("\n", failures));
         }
