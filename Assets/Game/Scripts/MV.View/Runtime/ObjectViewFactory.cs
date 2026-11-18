@@ -10,168 +10,103 @@ using UnityEngine.Rendering;
 
 namespace MV.View
 {
-    /// <summary>오브젝트 그림 모양(정본 `drawObj` L3099 분기).</summary>
+    /// <summary>오브젝트 그림 모양(정본 `drawObj` L3099 분기). 프리팹이 없는 종류의 코드 모양(<see cref="ProceduralObjectLook"/>)에 쓴다.</summary>
     public enum ObjectShape : byte { Single, Junk, RollGate, WarpGate, Well, Stair, CoinPile, CatnipPot, Mouse }
 
+    /// <summary>불러온 오브젝트 프리팹 원본과 반환 손잡이(<see cref="ObjectViewFactory.PrefabLoader"/> 결과). <see cref="Release"/>가 null이면 반환할 것이 없다.</summary>
+    public readonly struct PrefabHandle
+    {
+        public readonly GameObject Asset;
+        public readonly IDisposable Release;
+
+        public PrefabHandle(GameObject asset, IDisposable release)
+        {
+            Asset = asset;
+            Release = release;
+        }
+    }
+
     /// <summary>
-    /// 런 오브젝트 → 스프라이트 뷰(02 §2.10, 03 §3.5.3). <see cref="Sync"/>가 매 프레임 그리기 범위(PZ+objDrawBack ~ PZ+objDrawFront)의
-    /// 살아 있는 오브젝트에 뷰를 붙이고(모양별 풀), 빠진 것은 돌려준다. 뷰 루트 = SortingGroup + <see cref="DepthSortable"/>
-    /// (순위 Object, 탐침 +sort.objProbeY, 편향 105.sortBias). 우물 벽돌은 그룹 안에서 <see cref="DepthMath.RankFarFirst"/>로 정렬.
+    /// 런 오브젝트 뷰 관리자(02 §2.10, 03 §3.5.3): 생성·시뮬 오브젝트 연결·풀 대여/반환·회수만 한다. 오브젝트별 그림·동작은 뷰(<see cref="RunObjectView"/>)와
+    /// 프리팹에 붙은 모듈(<see cref="RunObjectModule"/>)이 정하고, 이 관리자는 종류를 보고 동작을 고르지 않는다.
+    /// <see cref="Sync"/>: 그리기 범위(PZ+objDrawBack ~ PZ+objDrawFront)의 살아 있는 오브젝트에 뷰를 붙이고(프리팹 주소별·코드 모양별 풀), 뷰 뿌리를 시뮬 위치에 놓고,
+    /// 빠진 뷰는 모듈이 회수를 막지 않을 때(<see cref="RunObjectView.ReleaseReady"/>) 돌려준다. 뷰 뿌리 = SortingGroup + <see cref="DepthSortable"/>(순위 Object, 탐침 +sort.objProbeY, 편향 105.sortBias).
+    /// 투사체 판정(<see cref="RunHitWorld"/>)은 시뮬 틱마다 <see cref="PlaceHitTargets"/>로 범위 안 뷰를 만들고 뿌리를 그 틱의 시뮬 위치에 놓는다(등록·해제는 뷰 연결·회수).
     /// </summary>
     [DefaultExecutionOrder(55)]
     public sealed class ObjectViewFactory : MonoBehaviour
     {
         public const string WorldLayer = "World";
-        public const string StairArrow = "World_Obj_Stair_Arrow", Star = "Fx_Star4";
-        /// <summary>프리팹 글자판(`Obj_Text_Count`)이 없는 오브젝트의 TMP 글자판 높이·글자 크기 m [추정: 정본 labelPlane 위치는 캡처 대조로 조정].</summary>
-        public const float LabelY = 2.2f, LabelSize = 0.5f;
+        public const string Star = "Fx_Star4";
 
         [SerializeField] Material _spriteMaterial;
         [SerializeField] Material _vertexColorMaterial;
         [SerializeField] Material _labelMaterial;
         /// <summary>글자판 공유 TMP 머티리얼(계단 칸 번호도 같이 쓴다).</summary>
         public Material LabelMaterial => _labelMaterial;
+        /// <summary>월드 스프라이트 공유 머티리얼(고양이 뷰가 프리팹 값이 없을 때 빌린다).</summary>
+        public Material SpriteMaterial => _spriteMaterial;
 
         /// <summary>
         /// 글자판 문구 덮어쓰기(시험·Localization 연결 지점). 있으면 이 값이 한 줄 글자가 되고 null이면 글자판(프리팹 글자판 포함)을 숨긴다.
         /// 없으면 <see cref="ObjectLabel.Of"/>.
         /// </summary>
-        public Func<RunObject, string> LabelText;
+        public Func<RunObject, string> LabelText { get => _ctx.LabelText; set => _ctx.LabelText = value; }
 
         /// <summary>결계 블록 글자판 「+골드」에 곱할 골드 배율(정본 `goldMul()` L1492). 통합 코드가 런 상태에서 매 프레임 넣는다.</summary>
-        public double GoldMul = 1;
+        public double GoldMul { get => _ctx.GoldMul; set => _ctx.GoldMul = value; }
 
-        /// <summary>오브젝트 프리팹 로더(주소 → 임대). 기본은 Addressables. 시험은 로드 없이 뷰 구조만 보도록 바꾼다.</summary>
-        public Func<string, CancellationToken, UniTask<AddressableLease<GameObject>>> PrefabLoader = AddressableScope.GetPrefab;
+        /// <summary>오브젝트 프리팹 로더(주소 → 원본). 기본은 Addressables. 시험은 에셋 원본을 바로 주거나 로드 없이 뷰 구조만 본다.</summary>
+        public Func<string, CancellationToken, UniTask<PrefabHandle>> PrefabLoader = LoadAddressable;
 
-        sealed class View
+        static async UniTask<PrefabHandle> LoadAddressable(string address, CancellationToken ct)
         {
-            public GameObject Go;
-            public RunObject Obj;
-            public ObjectShape Shape;
-            public DepthSortable Ds;
-            public WorldLabel Label;
-            /// <summary>오브젝트 프리팹이 품은 글자판(`Obj_Text_Count`). 없으면 null이고 <see cref="Label"/>을 쓴다.</summary>
-            public CountLabel Board;
-            public readonly List<SpriteRenderer> Parts = new List<SpriteRenderer>(8);
-            public readonly List<Vector3> Base = new List<Vector3>(8);
-            public Sprite[] Frames;
-            public double[] Depth;
-            public int[] Order, Scratch;
-            public int Stamp;
-            // ---- 맞음 반응(06 §6.13) ----
-            /// <summary>흔들림·번쩍 남은 시간(초).</summary>
-            public double Shake, Flash;
-            /// <summary>장애물 흰 섬광 칸(slot 2)이 있는가(생선 비석은 없음, L3612 return).</summary>
-            public bool HasJunkFlash;
-            /// <summary>우물 벽돌별 숨김 남은 시간·다시 자람(0~1).</summary>
-            public double[] Gone, Grow;
-            /// <summary>롤 관문 반지름(가로·세로 m).</summary>
-            public double Rx, Ry;
-            public bool Gold;
-            // ---- 프리팹 뷰(105.prefab · 305_stageObject) ----
-            /// <summary>프리팹 주소. null = 코드 모양(<see cref="Shape"/>)으로 그린다.</summary>
-            public string Prefab;
-            /// <summary>프리팹 인스턴스(로드 전에는 null, 로드되면 EnsureInstance가 만든다).</summary>
-            public GameObject Inst;
-            public ObjectPrefabRig Rig;
-            // ---- 새 HTML 동작(2026-11-13 연출 정본) ----
-            /// <summary>맞음 눌림 k(106.punch에서 시작, 초당 9씩 줄어듦).</summary>
-            public double Punch;
-            /// <summary>종이 쓰러짐 경과 초(−1 = 살아 있음). 0.6초 동안 뷰를 남겨 쓰러뜨린다.</summary>
-            public double Die = -1;
-            public int DieDir;
-            public Vector3 DieAt;
-            public PrefabParts P;
+            var lease = await AddressableScope.GetPrefab(address, ct);
+            return new PrefabHandle(lease != null ? lease.Asset : null, lease);
         }
 
-        /// <summary>
-        /// 프리팹 자식 이름으로 찾은 움직이는 부분(디자이너 프리팹 = 그림 정본, 동작 = 새 HTML). 없는 자식은 null로 두고 건너뛴다.
-        /// </summary>
-        sealed class PrefabParts
-        {
-            public Vector3 InstScale = Vector3.one;
-            /// <summary>프리팹에 붙어 있는 빌보드(카메라를 보는 이미지 묶음). 흔들림·눌림·가라앉기·쓰러짐은 이 묶음만 움직인다(판정 Hitbox는 그대로).</summary>
-            public Billboard[] Boards;
-            /// <summary>빌보드 묶음의 프리팹 기본 위치·배율. 연출은 이 값에 더하고 곱한다.</summary>
-            public Vector3[] BoardPos, BoardScale;
-            /// <summary>투사체 판정 형상: 프리팹 안 <see cref="RunHitbox"/>의 Collider(판정 정본, <see cref="RunHitWorld"/>).</summary>
-            public Collider[] HitCols;
-            /// <summary>빛(수정탑·포탈·생선 비석 Glow)과 기본 색.</summary>
-            public SpriteRenderer Glow;
-            public Color GlowBase;
-            /// <summary>수정탑 구슬 묶음(Orbs)과 구슬(Orb_i). 빠짐·다시 자람은 벽돌과 같은 규칙.</summary>
-            public Transform Pile;
-            public Vector3 PileBase;
-            public Transform[] Orbs;
-            public Vector3[] OrbScale;
-            public double[] Gone, Grow;
-            /// <summary>게이트 마법 막(Curtain)과 기본 색.</summary>
-            public SpriteRenderer Curtain;
-            public Color CurtainBase;
-            /// <summary>포탈 점선 고리(Circle_Spin).</summary>
-            public Transform Spin;
-            public Quaternion SpinBase;
-            /// <summary>결계 블록 상자 그림(Body/Chest_i). 줄(bar) 순서로 하나만 켠다.</summary>
-            public GameObject[] Chests;
-            /// <summary>반짝이(게이트 막 위·포탈 둘레).</summary>
-            public SpriteRenderer[] Sparks;
-            /// <summary>적 몸 그림(Image). 프레임은 지금 테마 아틀라스의 `102_enemy.sprite` 프레임을 `102_enemy.fps`로 넘긴다.</summary>
-            public SpriteRenderer Body;
-        }
-
-        /// <summary>포탈 반짝이 색 `#fff4c0`(drawPortal L3735).</summary>
-        static readonly Color s_portalSpark = new Color(1f, 0xf4 / 255f, 0xc0 / 255f, 1f);
-
-        /// <summary>롤 관문 배경 높이(가운데 y = 1.4, 세로 반지름 1.4), 롤 반지름 0.25(L3633).</summary>
-        const double GateCy = 1.4, GateRy = 1.4, GateRoll = 0.25;
-        /// <summary>`Fx_Stripe.png`(64×16) 안 불투명 영역 56×4 px 비율 [측정]. 줄 길이·굵기를 이 영역으로 맞춘다.</summary>
-        const float StripeFillX = 56f / 64f, StripeFillY = 4f / 16f;
-        public const string FlashEllipse = "Fx_FlashEllipse", Stripe = "Fx_Stripe", GlowLin = "Fx_Glow_Lin", Square = "Fx_Square";
-
-        readonly List<int> _brickPool = new List<int>(64);
-        readonly System.Random _brickRng = new System.Random(0x5EED);   // 표시 전용(정본 Math.random). 규칙 난수와 무관.
-        double _lastMs = -1;
-
-        readonly Dictionary<int, View> _views = new Dictionary<int, View>(64);
-        readonly Dictionary<ObjectShape, Stack<View>> _pool = new Dictionary<ObjectShape, Stack<View>>();
-        readonly List<int> _drop = new List<int>(16);
-        readonly Dictionary<int, List<int>> _wallRows = new Dictionary<int, List<int>>(16);
-        readonly List<WellBrick> _bricks = new List<WellBrick>(64);
-        readonly MeshBuffer _mb = new MeshBuffer();
-
-        readonly Dictionary<string, Stack<View>> _prefabPool = new Dictionary<string, Stack<View>>();
-        readonly Dictionary<string, AddressableLease<GameObject>> _prefabs = new Dictionary<string, AddressableLease<GameObject>>();
+        readonly ObjectViewContext _ctx = new ObjectViewContext();
+        readonly Dictionary<int, RunObjectView> _views = new Dictionary<int, RunObjectView>(64);
+        readonly Dictionary<ObjectShape, Stack<RunObjectView>> _shapePool = new Dictionary<ObjectShape, Stack<RunObjectView>>();
+        readonly Dictionary<string, Stack<RunObjectView>> _prefabPool = new Dictionary<string, Stack<RunObjectView>>();
+        readonly Dictionary<string, PrefabHandle> _prefabs = new Dictionary<string, PrefabHandle>();
         readonly HashSet<string> _prefabLoading = new HashSet<string>();
+        readonly List<int> _drop = new List<int>(16);
         readonly CancellationTokenSource _cts = new CancellationTokenSource();
         MvTables _tables;
         string _stageMap;
-
-        ViewConfig _cfg;
-        Transform _cam;
-        WorldSpriteCache _sprites;
-        string _atlas, _fxAtlas;
         int _stamp;
+        double _lastMs = -1;
         /// <summary>마지막 <see cref="Sync"/>의 카메라 기준 z(PZ). 그 전에는 NaN.</summary>
         double _lastPz = double.NaN;
 
         public int ViewCount => _views.Count;
-        /// <summary>월드 스프라이트 공유 머티리얼(고양이 뷰가 프리팹 값이 없을 때 빌린다).</summary>
-        public Material SpriteMaterial => _spriteMaterial;
 
         public void Init(ViewConfig cfg, Transform camera, WorldSpriteCache sprites, string fxAtlas)
         {
-            _cfg = cfg;
-            _cam = camera;
-            _sprites = sprites;
-            _fxAtlas = fxAtlas;
-            ObjectLayout.WellBricks(_bricks);
+            _ctx.Cfg = cfg;
+            _ctx.Cam = camera;
+            _ctx.Sprites = sprites;
+            _ctx.FxAtlas = fxAtlas;
+            _ctx.SpriteMaterial = _spriteMaterial;
+            _ctx.VertexColorMaterial = _vertexColorMaterial;
+            _ctx.LabelMaterial = _labelMaterial;
+        }
+
+        /// <summary>
+        /// 투사체 판정 연결: 뷰가 연결·회수될 때 그 프리팹 Hitbox를 <paramref name="hits"/>에 등록·해제하고,
+        /// <paramref name="hits"/>는 시뮬 틱마다 <see cref="PlaceHitTargets"/>를 부른 뒤 질의한다.
+        /// </summary>
+        public void ConnectHits(RunHitWorld hits)
+        {
+            _ctx.Hits = hits;
+            if (hits != null) hits.Init(PlaceHitTargets);
         }
 
         /// <summary>테마 아틀라스(`304_theme.worldAtlas`, 미리 로드). 뷰는 다시 만든다.</summary>
         public void SetTheme(ThemeData theme)
         {
-            _atlas = theme?.worldAtlas;
+            _ctx.Atlas = theme?.worldAtlas;
             Clear();
         }
 
@@ -193,17 +128,6 @@ namespace MV.View
         public static string PrefabFor(MvTables tables, string stageMap, RunObject o) =>
             o?.Kind == null ? null : StageObjectData.PrefabFor(tables, stageMap, o.Kind, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any);
 
-        /// <summary>지금 스테이지에서 오브젝트가 쓰는 프리팹 주소(<see cref="PrefabFor"/>). 투사체 판정 형상(<see cref="RunHitWorld"/>)도 같은 프리팹에서 온다.</summary>
-        public string PrefabAddress(RunObject o) => PrefabFor(_tables, _stageMap, o);
-
-        /// <summary>로드된 프리팹 원본. 아직 로드 전이면 로드를 시작하고 null, 로드 실패면 null.</summary>
-        public GameObject LoadedPrefab(string address)
-        {
-            if (string.IsNullOrEmpty(address)) return null;
-            if (!_prefabs.TryGetValue(address, out var lease)) { Preload(address); return null; }
-            return lease != null ? lease.Asset : null;
-        }
-
         /// <summary>런 칸 보상 → 305 reward(이름 1:1). 이름이 없으면 Any.</summary>
         public static StageObjectReward RewardOf(FieldReward r) => Enum.TryParse(r.ToString(), out StageObjectReward x) ? x : StageObjectReward.Any;
 
@@ -214,9 +138,12 @@ namespace MV.View
             instance = null;
             if (!_views.TryGetValue(objId, out var v)) return false;
             address = v.Prefab;
-            instance = v.Inst;
+            instance = v.Instance;
             return true;
         }
+
+        /// <summary>오브젝트 하나의 뷰 뿌리(시험·QA용). 없으면 null.</summary>
+        public GameObject ViewOf(int objId) => _views.TryGetValue(objId, out var v) ? v.gameObject : null;
 
         void Preload(string address)
         {
@@ -227,154 +154,36 @@ namespace MV.View
 
         async UniTaskVoid LoadPrefabAsync(string address, CancellationToken ct)
         {
-            AddressableLease<GameObject> lease = null;
-            try { lease = await PrefabLoader(address, ct); }
+            PrefabHandle h = default;
+            try { h = await PrefabLoader(address, ct); }
             catch (OperationCanceledException) { }
-            if (this == null || ct.IsCancellationRequested) { lease?.Dispose(); return; }
+            if (this == null || ct.IsCancellationRequested) { h.Release?.Dispose(); return; }
             _prefabLoading.Remove(address);
-            if (lease == null || lease.Asset == null)
+            if (h.Asset == null)
             {
                 // 실패는 다시 시도하지 않는다(표 주소 오류를 드러낸다). 그 오브젝트는 그리지 않는다.
                 Debug.LogError("[ObjectViewFactory] 오브젝트 프리팹 로드 실패: " + address);
-                lease?.Dispose();
-                _prefabs[address] = null;
+                h.Release?.Dispose();
+                _prefabs[address] = default;
                 return;
             }
-            _prefabs[address] = lease;
+            _prefabs[address] = h;
         }
 
-        /// <summary>프리팹이 로드됐으면 인스턴스를 뷰 루트 아래에 만든다(빌보드, 단계 그림 rig). 로드 전이면 아무것도 안 그린다.</summary>
-        void EnsureInstance(View v)
+        /// <summary>프리팹이 로드됐으면 인스턴스를 뷰 뿌리 아래에 만들어 뷰에 붙인다. 로드 전이면 아무것도 안 그린다.</summary>
+        void EnsureInstance(RunObjectView v)
         {
-            if (v.Inst != null || v.Prefab == null) return;
-            if (!_prefabs.TryGetValue(v.Prefab, out var lease)) { Preload(v.Prefab); return; }
-            if (lease == null || lease.Asset == null) return;
-            v.Inst = Instantiate(lease.Asset, v.Go.transform, false);
-            // 빌보드는 프리팹이 정한다: 서 있는 이미지를 빈 부모 `Billboard` 하나로 묶고 그 부모에만 붙인다(바닥에 까는 이미지는 묶음 밖). 코드는 붙이지 않는다.
-            if (v.Inst.GetComponentInChildren<Billboard>(true) == null && s_noBillboard.Add(v.Prefab))
-                Debug.LogError("[ObjectViewFactory] 오브젝트 프리팹에 Billboard가 없습니다(카메라를 볼 이미지 자식에 붙여야 함): " + v.Prefab);
-            v.Rig = v.Inst.GetComponent<ObjectPrefabRig>();
-            v.P = BuildParts(v);
-            v.Board = CountLabel.Find(v.Inst.transform);
-            v.Ds.Refresh();
-        }
-
-        /// <summary>프리팹 자식을 이름으로 찾아 동작 부분을 모은다. 반짝이는 fx 아틀라스 `Fx_Star4`로 만든다.</summary>
-        PrefabParts BuildParts(View v)
-        {
-            var it = v.Inst.transform;
-            var p = new PrefabParts { InstScale = it.localScale, Boards = v.Inst.GetComponentsInChildren<Billboard>(true) };
-            p.BoardPos = new Vector3[p.Boards.Length];
-            p.BoardScale = new Vector3[p.Boards.Length];
-            for (int i = 0; i < p.Boards.Length; i++) { p.BoardPos[i] = p.Boards[i].transform.localPosition; p.BoardScale[i] = p.Boards[i].transform.localScale; }
-            var cols = new List<Collider>();
-            foreach (var hb in v.Inst.GetComponentsInChildren<RunHitbox>(true)) cols.AddRange(hb.GetComponentsInChildren<Collider>(true));
-            p.HitCols = cols.ToArray();
-            var glow = Deep(it, "Glow");
-            if (glow != null && glow.TryGetComponent(out p.Glow)) p.GlowBase = p.Glow.color;
-            switch (v.Shape)
-            {
-                case ObjectShape.Well:
-                {
-                    p.Pile = Deep(it, "Orbs");
-                    if (p.Pile != null)
-                    {
-                        p.PileBase = p.Pile.localPosition;
-                        var orbs = new List<Transform>();
-                        for (int i = 0; ; i++) { var t = p.Pile.Find("Orb_" + i); if (t == null) break; orbs.Add(t); }
-                        p.Orbs = orbs.ToArray();
-                        p.OrbScale = new Vector3[p.Orbs.Length];
-                        for (int i = 0; i < p.Orbs.Length; i++) p.OrbScale[i] = p.Orbs[i].localScale;
-                        p.Gone = new double[p.Orbs.Length];
-                        p.Grow = new double[p.Orbs.Length];
-                        for (int i = 0; i < p.Grow.Length; i++) p.Grow[i] = 1;
-                    }
-                    break;
-                }
-                case ObjectShape.RollGate:
-                {
-                    var c = Deep(it, "Curtain");
-                    if (c != null && c.TryGetComponent(out p.Curtain)) p.CurtainBase = p.Curtain.color;
-                    // 막 위 반짝이는 막과 같은 빌보드 묶음 안에 둔다(묶음이 카메라를 보므로 따로 돌리지 않는다).
-                    var board = p.Boards.Length > 0 ? p.Boards[0].transform : it;
-                    p.Sparks = MakeSparks(board, ObjectReaction.GateSparks, Color.white, board == it);
-                    break;
-                }
-                case ObjectShape.Stair:
-                {
-                    p.Spin = Deep(it, "Circle_Spin");
-                    if (p.Spin != null) p.SpinBase = p.Spin.localRotation;
-                    // 포탈 반짝이는 바닥 원 둘레(월드 축)라 빌보드 인스턴스가 아니라 뷰 루트 아래에 각자 빌보드로 둔다.
-                    p.Sparks = MakeSparks(v.Go.transform, ObjectReaction.PortalSparks, s_portalSpark, true);
-                    break;
-                }
-                case ObjectShape.Mouse:
-                {
-                    var img = EnemyFramePrefab.FindBody(it);
-                    if (img != null) img.TryGetComponent(out p.Body);
-                    break;
-                }
-                case ObjectShape.Junk:
-                {
-                    var body = Deep(it, "Body");
-                    if (body != null)
-                    {
-                        var list = new List<GameObject>();
-                        for (int i = 0; ; i++) { var t = body.Find("Chest_" + i); if (t == null) break; list.Add(t.gameObject); }
-                        p.Chests = list.ToArray();
-                    }
-                    break;
-                }
-            }
-            return p;
-        }
-
-        /// <summary>이름으로 자식을 찾는다(빌보드 묶음 아래까지). 없으면 null.</summary>
-        static Transform Deep(Transform t, string name)
-        {
-            for (int i = 0; i < t.childCount; i++)
-            {
-                var c = t.GetChild(i);
-                if (c.name == name) return c;
-                var d = Deep(c, name);
-                if (d != null) return d;
-            }
-            return null;
-        }
-
-        SpriteRenderer[] MakeSparks(Transform parent, int n, Color color, bool billboard)
-        {
-            var sprite = _sprites != null ? _sprites.Get(_fxAtlas, Star) : null;
-            var arr = new SpriteRenderer[n];
-            for (int i = 0; i < n; i++)
-            {
-                var go = new GameObject("Spark" + i);
-                go.transform.SetParent(parent, false);
-                if (billboard) go.AddComponent<Billboard>();
-                var sr = go.AddComponent<SpriteRenderer>();
-                sr.sprite = sprite;
-                if (_spriteMaterial != null) sr.sharedMaterial = _spriteMaterial;
-                sr.color = color;
-                sr.sortingOrder = 50;   // 그룹 안 그림 위(정본은 막·마법진 위에 그린다)
-                arr[i] = sr;
-            }
-            return arr;
-        }
-
-        static void SetSpark(SpriteRenderer sr, Vector3 local, double radius)
-        {
-            if (sr == null) return;
-            var tr = sr.transform;
-            tr.localPosition = local;
-            float w = sr.sprite != null ? Mathf.Max(0.0001f, sr.sprite.bounds.size.x) : 1f;
-            tr.localScale = Vector3.one * (float)(2 * Math.Max(0, radius) / w);
+            if (v.Instance != null || v.Prefab == null) return;
+            if (!_prefabs.TryGetValue(v.Prefab, out var h)) { Preload(v.Prefab); return; }
+            if (h.Asset == null) return;
+            v.AttachInstance(Instantiate(h.Asset, v.transform, false));
         }
 
         void OnDestroy()
         {
             _cts.Cancel();
             _cts.Dispose();
-            foreach (var l in _prefabs.Values) l?.Dispose();
+            foreach (var h in _prefabs.Values) h.Release?.Dispose();
             _prefabs.Clear();
         }
 
@@ -384,9 +193,10 @@ namespace MV.View
             _views.Clear();
         }
 
-        static readonly HashSet<string> s_noBillboard = new HashSet<string>();
         static readonly ObjectShape?[] s_shapeOfData = BuildShapeMap();
         static readonly HashSet<ObjectViewShape> s_warnedShapes = new HashSet<ObjectViewShape>();
+        /// <summary>이 관리자가 이미 알린 「피격 가능인데 프리팹 없음」 종류(관리자마다 한 번, 실행 순서와 무관).</summary>
+        readonly HashSet<string> _noPrefabHittable = new HashSet<string>();
 
         /// <summary>MV.Data `ObjectViewShape` → `ObjectShape`(이름 1:1). 이름이 없는 값은 null.</summary>
         static ObjectShape?[] BuildShapeMap()
@@ -398,26 +208,6 @@ namespace MV.View
             foreach (var v in values)
                 if (Enum.TryParse(v.ToString(), out ObjectShape shape)) map[(int)v] = shape;
             return map;
-        }
-
-        /// <summary>
-        /// 투사체 판정 형상(<see cref="RunHitWorld"/>): 오브젝트 프리팹 안 <see cref="RunHitbox"/>의 Collider. 판정 정본은 화면에 있는 그 Collider 하나다.
-        /// 뷰 뿌리를 시뮬 위치 (x, <paramref name="worldY"/>, z)에 놓고 돌려준다(시뮬은 한 프레임에 여러 번 돌 수 있어 판정 직전마다 맞춘다).
-        /// 그리기 범위(<see cref="Sync"/>와 같은 범위) 밖·프리팹 로드 전·쓰러지는 중이면 null. 범위 안인데 뷰가 아직 없으면 여기서 만든다.
-        /// </summary>
-        public IReadOnlyList<Collider> HitShape(RunObject o, double worldY)
-        {
-            if (o == null || _cfg == null) return null;
-            if (!_views.TryGetValue(o.Id, out var v) || v.Obj != o)
-            {
-                if (double.IsNaN(_lastPz) || o.Z < _lastPz + _cfg.ObjDrawBack || o.Z > _lastPz + _cfg.ObjDrawFront) return null;
-                if (v != null) Release(v);
-                _views[o.Id] = v = Show(o, worldY);
-                v.Stamp = _stamp;
-            }
-            if (v.Inst == null || v.P == null || v.Die >= 0) return null;
-            v.Go.transform.position = new Vector3((float)o.X, (float)worldY, (float)o.Z);
-            return v.P.HitCols;
         }
 
         /// <summary>
@@ -433,68 +223,80 @@ namespace MV.View
             return ObjectShape.Single;
         }
 
+        bool InRange(RunObject o, double pz) => o.Z >= pz + _ctx.Cfg.ObjDrawBack && o.Z <= pz + _ctx.Cfg.ObjDrawFront;
+
+        /// <summary>오브젝트의 뷰(없거나 같은 번호의 다른 오브젝트면 새로 연결). 오브젝트 번호는 런마다 1부터 다시 쓴다.</summary>
+        RunObjectView ViewFor(RunObject o)
+        {
+            if (_views.TryGetValue(o.Id, out var v))
+            {
+                if (v.Obj == o) return v;
+                Release(v);
+            }
+            _views[o.Id] = v = Show(o);
+            return v;
+        }
+
+        static void Place(RunObjectView v, RunObject o, double groundY) => v.transform.position = new Vector3((float)o.X, (float)groundY, (float)o.Z);
+
         /// <summary>
         /// 매 프레임: 그리기 범위의 살아 있는 오브젝트에 뷰를 맞춘다. <paramref name="pz"/> = 카메라 기준 z(PZ),
         /// <paramref name="playerZ"/> = 플레이어 z(관문 흐려짐), <paramref name="groundY"/> = 지면 높이.
         /// </summary>
         public void Sync(IReadOnlyList<RunObject> objs, double pz, double playerZ, double groundY)
         {
-            if (_cfg == null || objs == null) return;
+            if (_ctx.Cfg == null || objs == null) return;
             _stamp++;
             _lastPz = pz;
             double nowMs = Time.realtimeSinceStartupAsDouble * 1000.0;
             double dt = _lastMs < 0 ? 0 : Math.Max(0, Math.Min(0.1, (nowMs - _lastMs) / 1000.0));
             _lastMs = nowMs;
-            CollectWallRows(objs);
+            var frame = new ObjectFrame(nowMs / 1000.0, dt, playerZ);
+            _ctx.WallRows.Collect(objs);
             for (int i = 0; i < objs.Count; i++)
             {
                 var o = objs[i];
-                if (o == null || o.Dead || o.Z < pz + _cfg.ObjDrawBack || o.Z > pz + _cfg.ObjDrawFront) continue;
-                // 오브젝트 번호는 런마다 1부터 다시 쓴다(로비 트랙·새 런). 번호가 같아도 다른 오브젝트면 이전 뷰를 돌려주고 새로 만든다.
-                if (_views.TryGetValue(o.Id, out var v) && v.Obj != o) { Release(v); v = null; }
-                if (v == null) _views[o.Id] = v = Show(o, groundY);
+                if (o == null || o.Dead || !InRange(o, pz)) continue;
+                var v = ViewFor(o);
                 v.Stamp = _stamp;
-                v.Go.transform.position = new Vector3((float)o.X, (float)groundY, (float)o.Z);
-                Animate(v, nowMs, playerZ, dt);
-                UpdateLabel(v, o, playerZ);
+                Place(v, o, groundY);
+                EnsureInstance(v);
+                v.Tick(frame);
             }
             _drop.Clear();
             foreach (var kv in _views)
             {
-                if (kv.Value.Stamp == _stamp) continue;
-                // 종이 쓰러짐(paperDie): 죽은 오브젝트 뷰를 0.6초 남겨 쓰러뜨린 뒤 돌려준다.
-                if (kv.Value.Die >= 0 && kv.Value.Die < ObjectReaction.DieSec) { AnimateDie(kv.Value, dt); continue; }
+                var v = kv.Value;
+                if (v.Stamp == _stamp) continue;
+                // 범위·목록에서 빠진 뷰: 모듈이 회수를 막으면(종이 쓰러짐 등) 그 연출만 이어 가고, 아니면 돌려준다.
+                if (!v.ReleaseReady) { v.Tick(frame); continue; }
                 _drop.Add(kv.Key);
             }
             for (int i = 0; i < _drop.Count; i++) { Release(_views[_drop[i]]); _views.Remove(_drop[i]); }
         }
 
-        /// <summary>오브젝트 하나의 뷰 루트(시험·QA용). 없으면 null.</summary>
-        public GameObject ViewOf(int objId) => _views.TryGetValue(objId, out var v) ? v.Go : null;
-
-        /// <summary>시험·QA: 뷰의 흔들림·번쩍 남은 시간. 뷰가 없으면 false.</summary>
-        public bool TryReaction(int objId, out double shake, out double flash)
+        /// <summary>
+        /// 투사체 판정 직전(시뮬 틱마다, <see cref="RunHitWorld.Prepare"/>): 그리기 범위의 살아 있는 피격 가능 오브젝트에 뷰를 만들고(틱 사이에 생긴 오브젝트도)
+        /// 뷰 뿌리를 그 틱의 시뮬 위치 (x, WorldY, z)에 놓는다. 그림 연출은 하지 않는다(화면 갱신은 <see cref="Sync"/>).
+        /// </summary>
+        public void PlaceHitTargets(RunState s)
         {
-            shake = flash = 0;
-            if (!_views.TryGetValue(objId, out var v)) return false;
-            shake = v.Shake;
-            flash = v.Flash;
-            return true;
-        }
-
-        /// <summary>시험·QA: 우물 뷰에서 지금 빠져 있는(숨김) 벽돌 수.</summary>
-        public int GoneBricks(int objId)
-        {
-            if (!_views.TryGetValue(objId, out var v) || v.Gone == null) return 0;
-            int n = 0;
-            for (int i = 0; i < v.Gone.Length; i++) if (v.Gone[i] > 0) n++;
-            return n;
+            if (_ctx.Cfg == null || s == null || double.IsNaN(_lastPz)) return;
+            for (int i = 0; i < s.Objs.Count; i++)
+            {
+                var o = s.Objs[i];
+                if (o == null || o.Dead || o.Kind == null || o.Kind.hittable == Hittable.Never || !InRange(o, _lastPz)) continue;
+                var v = ViewFor(o);
+                v.Stamp = _stamp;
+                EnsureInstance(v);
+                Place(v, o, s.WorldY);
+            }
         }
 
         /// <summary>
-        /// 런 이벤트 → 뷰 반응(06 §6.13). 통합 코드가 <see cref="Sync"/> 전에 같은 프레임의 이벤트 목록을 넘긴다.
-        /// Hit: `106_hitReaction.objShake` → 흔들림 0.12 s(장애물·우물), `flash` → 롤 관문 번쩍 0.1 s. WellFlush: 벽돌 A개를 빼서 2.2 s 숨김.
-        /// 뷰가 없는(그리기 범위 밖) 오브젝트의 이벤트는 버린다.
+        /// 런 이벤트 → 그 오브젝트 뷰의 모듈(06 §6.13). 통합 코드가 <see cref="Sync"/> 전에 같은 프레임의 이벤트 목록을 넘긴다.
+        /// 오브젝트를 가리키는 이벤트(<see cref="RunEvent.TargetsObjectId"/>, 규칙 정본은 RunEvent)만 넘기고, 뷰가 없는(그리기 범위 밖) 오브젝트의 이벤트는 버린다.
+        /// 그 이벤트에 무엇을 할지는 모듈이 정한다.
         /// </summary>
         public void OnRunEvents(IReadOnlyList<RunEvent> events)
         {
@@ -502,761 +304,64 @@ namespace MV.View
             for (int i = 0; i < events.Count; i++)
             {
                 var e = events[i];
-                if (e.Type != RunEventType.Hit && e.Type != RunEventType.WellFlush && e.Type != RunEventType.Break) continue;
-                if (!_views.TryGetValue(e.ObjId, out var v) || v.Obj == null) continue;
-                if (e.Type == RunEventType.Hit)
-                {
-                    var r = v.Obj.Reaction;
-                    if (r == null) continue;
-                    if (r.objShake > 0 && (v.Shape == ObjectShape.Junk || v.Shape == ObjectShape.Well)) v.Shake = ObjectReaction.ShakeSec;
-                    if (r.flash && v.Shape == ObjectShape.RollGate) v.Flash = ObjectReaction.FlashSec;
-                    if (r.punch > 0) v.Punch = r.punch;   // 새 HTML hit: o.punch = 106.punch
-                }
-                else if (e.Type == RunEventType.Break) StartDie(v);
-                else if (v.Shape == ObjectShape.Well)
-                {
-                    if (v.P != null && v.P.Orbs != null) FlushOrbs(v.P, Math.Max(1, e.A));
-                    else FlushBricks(v, Math.Max(1, e.A));
-                }
+                if (!e.TargetsObjectId || !_views.TryGetValue(e.ObjId, out var v) || v.Obj == null) continue;
+                v.OnRunEvent(e);
             }
         }
 
-        /// <summary>정본 `flushBricks` L1861: 보이는 벽돌을 층 높은 순(잡동사니 먼저)으로 늘어놓고 앞 10개 안에서 무작위로 n개를 뺀다.</summary>
-        void FlushBricks(View v, int n)
+        void Release(RunObjectView v)
         {
-            if (v.Gone == null) return;
-            _brickPool.Clear();
-            for (int layer = 5; layer >= 0; layer--)
-                for (int i = 0; i < _bricks.Count && i < v.Gone.Length; i++)
-                    if (_bricks[i].Layer == layer && v.Gone[i] <= 0) _brickPool.Add(i);
-            for (int k = 0; k < n && _brickPool.Count > 0; k++)
-            {
-                int at = Math.Min(_brickPool.Count - 1, (int)Math.Floor(_brickRng.NextDouble() * Math.Min(_brickPool.Count, ObjectReaction.BrickPickTop)));
-                int b = _brickPool[at];
-                _brickPool.RemoveAt(at);
-                v.Gone[b] = ObjectReaction.BrickGoneSec;
-                v.Grow[b] = 0;
-            }
-        }
-
-        /// <summary>프리팹 수정탑: 보이는 구슬 중 무작위 n개를 빼서 2.2초 숨긴다(정본 flushBricks와 같은 규칙, 튀는 조각·게이지 비행은 MvFxRouter).</summary>
-        void FlushOrbs(PrefabParts p, int n)
-        {
-            _brickPool.Clear();
-            for (int i = 0; i < p.Orbs.Length; i++) if (p.Gone[i] <= 0) _brickPool.Add(i);
-            for (int k = 0; k < n && _brickPool.Count > 0; k++)
-            {
-                int at = Math.Min(_brickPool.Count - 1, (int)Math.Floor(_brickRng.NextDouble() * Math.Min(_brickPool.Count, ObjectReaction.BrickPickTop)));
-                int b = _brickPool[at];
-                _brickPool.RemoveAt(at);
-                p.Gone[b] = ObjectReaction.BrickGoneSec;
-                p.Grow[b] = 0;
-            }
-        }
-
-        /// <summary>시험·QA: 프리팹 수정탑에서 지금 빠져 있는 구슬 수.</summary>
-        public int GoneOrbs(int objId)
-        {
-            if (!_views.TryGetValue(objId, out var v) || v.P == null || v.P.Gone == null) return 0;
-            int n = 0;
-            for (int i = 0; i < v.P.Gone.Length; i++) if (v.P.Gone[i] > 0) n++;
-            return n;
-        }
-
-        /// <summary>시험·QA: 맞음 눌림 k와 쓰러짐 경과 초(−1 = 살아 있음).</summary>
-        public bool TryMotion(int objId, out double punch, out double die)
-        {
-            punch = 0; die = -1;
-            if (!_views.TryGetValue(objId, out var v)) return false;
-            punch = v.Punch;
-            die = v.Die;
-            return true;
-        }
-
-        void StartDie(View v)
-        {
-            if (v.Die >= 0) return;
-            v.Die = 0;
-            v.DieDir = ObjectReaction.DieDir(v.Obj.Z, v.Obj.X);
-            v.DieAt = v.Go.transform.position;
-            v.Punch = 0;
-            if (v.Label != null) v.Label.gameObject.SetActive(false);
-            if (v.Board != null) v.Board.Apply(LabelContent.Hidden);
-        }
-
-        /// <summary>종이 쓰러짐(paperDie L3663): 뛰어오르며 가로로 뒤집히고, 세로로 눌리며 기울고, 뒤 40%에서 사라진다.</summary>
-        void AnimateDie(View v, double dt)
-        {
-            v.Die += dt;
-            double k = Math.Min(1, v.Die / ObjectReaction.DieSec);
-            ObjectReaction.DiePose(k, v.DieDir, out double hop, out double sx, out double sy, out double roll, out double alpha);
-            // 정본 캔버스 회전(시계 +)을 Unity z 회전(반시계 +)으로.
-            float deg = (float)(-roll * 180 / Math.PI);
-            if (v.Inst != null && v.P != null)
-            {
-                PoseBoards(v.P, new Vector3(0, (float)hop, 0), new Vector3((float)sx, (float)sy, 1));
-                for (int i = 0; i < v.P.Boards.Length; i++) v.P.Boards[i].Roll = deg;
-            }
-            else
-            {
-                v.Go.transform.position = v.DieAt + new Vector3(0, (float)hop, 0);
-                v.Go.transform.localScale = new Vector3((float)sx, (float)sy, 1);
-                for (int i = 0; i < v.Parts.Count; i++)
-                    if (v.Parts[i].TryGetComponent(out Billboard b)) b.Roll = deg;
-            }
-            v.Ds.SetAlphaScale((float)alpha);
-        }
-
-        /// <summary>풀에서 다시 쓰는 뷰의 동작 상태를 처음으로 돌린다.</summary>
-        static void ResetMotion(View v)
-        {
-            v.Punch = 0;
-            v.Die = -1;
-            v.Go.transform.localScale = Vector3.one;
-            for (int i = 0; i < v.Parts.Count; i++)
-                if (v.Parts[i].TryGetComponent(out Billboard b)) b.Roll = 0;
-            var p = v.P;
-            if (p == null || v.Inst == null) return;
-            v.Inst.transform.localScale = p.InstScale;
-            PoseBoards(p, Vector3.zero, Vector3.one);
-            for (int i = 0; i < p.Boards.Length; i++) p.Boards[i].Roll = 0;
-            if (p.Gone != null)
-                for (int i = 0; i < p.Gone.Length; i++) { p.Gone[i] = 0; p.Grow[i] = 1; p.Orbs[i].localScale = p.OrbScale[i]; }
-        }
-
-        void Release(View v)
-        {
-            // 돌려줄 때 동작을 처음으로(흔들림·번쩍·눌림·쓰러짐·빠진 구슬). 다시 꺼낼 때도 Show가 한 번 더 맞춘다.
-            v.Shake = v.Flash = 0;
-            ResetMotion(v);
-            if (v.Inst != null) v.Inst.transform.localPosition = Vector3.zero;
-            v.Ds.SetAlphaScale(1f);
-            v.Go.SetActive(false);
-            v.Obj = null;
+            v.Unbind();
+            v.gameObject.SetActive(false);
             if (v.Prefab != null)
             {
-                if (!_prefabPool.TryGetValue(v.Prefab, out var ps)) _prefabPool[v.Prefab] = ps = new Stack<View>();
+                if (!_prefabPool.TryGetValue(v.Prefab, out var ps)) _prefabPool[v.Prefab] = ps = new Stack<RunObjectView>();
                 ps.Push(v);
                 return;
             }
-            if (!_pool.TryGetValue(v.Shape, out var st)) _pool[v.Shape] = st = new Stack<View>();
+            var shape = v.Module<ProceduralObjectLook>().Shape;
+            if (!_shapePool.TryGetValue(shape, out var st)) _shapePool[shape] = st = new Stack<RunObjectView>();
             st.Push(v);
         }
 
-        View Show(RunObject o, double groundY)
+        RunObjectView Show(RunObject o)
         {
-            var shape = ShapeOf(o.Kind);
             string prefab = PrefabFor(_tables, _stageMap, o);
-            View v;
-            Stack<View> st;
-            bool pooled = prefab != null ? _prefabPool.TryGetValue(prefab, out st) : _pool.TryGetValue(shape, out st);
-            if (pooled && st.Count > 0) v = st.Pop();
-            else
-            {
-                var go = new GameObject(prefab ?? shape.ToString());
-                go.transform.SetParent(transform, false);
-                var sg = go.AddComponent<SortingGroup>();
-                sg.sortingLayerName = WorldLayer;
-                v = new View { Go = go, Shape = shape, Prefab = prefab, Ds = go.AddComponent<DepthSortable>() };
-                v.Ds.Rank = DepthMath.RankObject;
-            }
-            v.Obj = o;
-            v.Frames = null;   // 테마가 바뀌었을 수 있다(적 프레임은 지금 테마 아틀라스)
-            v.Ds.SortOffsetY = (float)_cfg.ObjProbeY;
-            v.Ds.Bias = o.Kind != null ? (float)o.Kind.sortBias : 0f;
-            v.Ds.SetAlphaScale(1f);
-            v.Shake = v.Flash = 0;
-            v.HasJunkFlash = false;
-            ResetMotion(v);
-            v.Go.transform.position = new Vector3((float)o.X, (float)groundY, (float)o.Z);
-            for (int i = 0; i < v.Parts.Count; i++) v.Parts[i].gameObject.SetActive(false);
-            v.Base.Clear();
-            if (v.Prefab != null)
-            {
-                EnsureInstance(v);
-                if (v.Inst != null) v.Inst.transform.localPosition = Vector3.zero;
-            }
-            else Build(v, o);
-            if (v.Label != null) v.Label.gameObject.SetActive(false);
-            v.Go.SetActive(true);
+            var shape = ShapeOf(o.Kind);
+            // 스테이지가 정해진(게임 구성) 관리자에서만 알린다. 시뮬 벽은 늘 보상 칸이라 305 프리팹이 있고, cardbox는 모드 전용(MV.Run이 만들지 않음)이다.
+            if (prefab == null && _stageMap != null && o.Kind != null && o.Kind.hittable != Hittable.Never && _noPrefabHittable.Add(o.Kind.key))
+                Debug.LogError($"[ObjectViewFactory] 피격 가능 종류 {o.Kind.key}에 프리팹이 없어 판정 형상이 없습니다(코드 모양으로 그리고 맞지 않음).");
+            Stack<RunObjectView> st;
+            bool pooled = prefab != null ? _prefabPool.TryGetValue(prefab, out st) : _shapePool.TryGetValue(shape, out st);
+            RunObjectView v = pooled && st.Count > 0 ? st.Pop() : Create(prefab, shape);
+            v.Stamp = _stamp;
+            v.gameObject.SetActive(true);
+            v.Bind(o);
+            EnsureInstance(v);
             v.Ds.Refresh();
             return v;
         }
 
-        string SpriteAt(RunObject o, int i)
+        /// <summary>새 뷰 뿌리: SortingGroup + DepthSortable + <see cref="RunObjectView"/>. 프리팹이 없으면 코드 모양 그림과 눌림·쓰러짐 모듈을 붙인다.</summary>
+        RunObjectView Create(string prefab, ObjectShape shape)
         {
-            var list = o.Kind?.sprite;
-            if (list == null || list.Count == 0) return null;
-            return list[((i % list.Count) + list.Count) % list.Count];
-        }
-
-        SpriteRenderer Part(View v, int slot, string atlas, string sprite, Vector3 local, int order, bool flipX = false)
-        {
-            while (v.Parts.Count <= slot)
+            var go = new GameObject(prefab ?? shape.ToString());
+            go.SetActive(false);
+            go.transform.SetParent(transform, false);
+            var sg = go.AddComponent<SortingGroup>();
+            sg.sortingLayerName = WorldLayer;
+            var ds = go.AddComponent<DepthSortable>();
+            ds.Rank = DepthMath.RankObject;
+            var v = go.AddComponent<RunObjectView>();
+            v.Setup(_ctx, prefab);
+            if (prefab == null)
             {
-                var go = new GameObject("P" + v.Parts.Count);
-                go.transform.SetParent(v.Go.transform, false);
-                go.AddComponent<Billboard>();
-                var r = go.AddComponent<SpriteRenderer>();
-                r.sharedMaterial = _spriteMaterial;
-                v.Parts.Add(r);
+                var look = go.AddComponent<ProceduralObjectLook>();
+                look.Setup(v, shape);
+                v.AddModule(look);
+                v.AddModule(go.AddComponent<ObjectMotion>());
             }
-            while (v.Base.Count <= slot) v.Base.Add(Vector3.zero);
-            var sr = v.Parts[slot];
-            sr.sprite = _sprites != null ? _sprites.Get(atlas, sprite) : null;
-            sr.flipX = flipX;
-            sr.sortingOrder = order;
-            sr.color = Color.white;
-            sr.transform.localPosition = local;
-            sr.transform.localScale = Vector3.one;
-            sr.transform.localRotation = Quaternion.identity;
-            sr.gameObject.SetActive(sr.sprite != null);
-            v.Base[slot] = local;
-            return sr;
-        }
-
-        void Build(View v, RunObject o)
-        {
-            switch (v.Shape)
-            {
-                case ObjectShape.Junk: BuildJunk(v, o); break;
-                case ObjectShape.RollGate: BuildRollGate(v, o); break;
-                case ObjectShape.WarpGate: BuildWarpGate(v, o); break;
-                case ObjectShape.Well: BuildWell(v, o); break;
-                case ObjectShape.Stair:
-                    // 정본 drawBlackHole L3203: 먼 단부터 i = 2, 1, 0. 단 앵커 z = 0.3 + i·0.8 − d/2(d 0.8).
-                    for (int i = 2; i >= 0; i--) Part(v, 2 - i, _atlas, SpriteAt(o, i), new Vector3(0, 0, (float)(0.3 + i * 0.8 - 0.4)), 2 - i);
-                    Part(v, 3, _atlas, StairArrow, new Vector3(0, 2.4f, 0.6f), 3);
-                    break;
-                case ObjectShape.CoinPile:
-                    for (int i = 0; i < s_churu.Length / 3; i++)
-                    {
-                        var p = Part(v, i, _atlas, SpriteAt(o, i), new Vector3((float)s_churu[i * 3], (float)-s_churu[i * 3 + 1], 0), i);
-                        p.transform.localRotation = Quaternion.Euler(0, 0, (float)(-s_churu[i * 3 + 2] * Mathf.Rad2Deg));
-                    }
-                    break;
-                case ObjectShape.CatnipPot:
-                    Part(v, 0, _atlas, SpriteAt(o, 0), Vector3.zero, 0);
-                    Part(v, 1, _fxAtlas, Star, new Vector3(0.1f, 1.37f, 0), 1);
-                    break;
-                default:
-                    Part(v, 0, _atlas, SpriteAt(o, 0), Vector3.zero, 0);
-                    break;
-            }
-        }
-
-        /// <summary>츄르 더미 6개 (dx, dy, rot) — 정본 L3109, 크기 단위 c = 1 m(캔버스 y 아래 +).</summary>
-        static readonly double[] s_churu = { -0.42, -0.12, -0.5, 0.4, -0.1, 0.45, 0, -0.22, 0.08, -0.2, -0.46, -0.25, 0.24, -0.44, 0.35, 0.02, -0.7, -0.08 };
-
-        void BuildJunk(View v, RunObject o)
-        {
-            ObjectLayout.JunkJitter(o.Idx, o.Bar, out double jx, out double sc);
-            bool soul = o.Rew == FieldReward.Soul && o.IsField;
-            string sprite = soul ? o.Kind.spriteSoul : SpriteAt(o, ObjectLayout.JunkSpriteIndex(Math.Max(0, o.Lane), Math.Max(0, o.Row), Math.Max(0, o.Bar), Math.Max(0, o.Idx)));
-            var body = Part(v, 0, _atlas, sprite, new Vector3((float)jx, (float)ObjectLayout.JunkLiftY, (float)ObjectLayout.JunkFrontZ), 0);
-            body.transform.localScale = Vector3.one * (float)sc;
-            if (soul) return;
-            // 맞음 흰 섬광(L3629): 그림 발 위 0.6q, 반지름 1.1q × 0.8q, 알파 0.35. 흔들리는 동안만 켠다.
-            var fl = Part(v, 2, _fxAtlas, FlashEllipse,
-                new Vector3((float)jx, (float)(ObjectLayout.JunkLiftY + ObjectReaction.JunkFlashY * sc), (float)ObjectLayout.JunkFrontZ), 2);
-            if (fl.sprite != null)
-            {
-                var b = fl.sprite.bounds.size;
-                fl.transform.localScale = new Vector3((float)(2 * ObjectReaction.JunkFlashRx * sc) / Mathf.Max(0.0001f, b.x),
-                    (float)(2 * ObjectReaction.JunkFlashRy * sc) / Mathf.Max(0.0001f, b.y), 1f);
-                fl.color = new Color(1f, 1f, 1f, (float)ObjectReaction.JunkFlashAlpha);
-                v.HasJunkFlash = true;
-            }
-            fl.gameObject.SetActive(false);
-            if (!o.IsField) return;
-            Part(v, 1, _atlas, ObjectLayout.BadgeSprite(o.Rew),
-                new Vector3((float)(jx + ObjectLayout.BadgeX * sc), (float)(ObjectLayout.JunkLiftY + ObjectLayout.BadgeY * sc), (float)ObjectLayout.JunkFrontZ), 1);
-        }
-
-        void BuildRollGate(View v, RunObject o)
-        {
-            // 정본 drawRollGate L3632: 가운데 (0, 1.4), rx = hw·1.02, ry = 1.4, 롤 반지름 0.25. 배경 둥근 모서리는 사각형 근사.
-            bool stairGate = o.Kind.key == "sgate";
-            string tint = o.Kind.tint != null && o.Kind.tint.Count > 0 ? o.Kind.tint[0] : (stairGate ? "#6fd27a" : "#f08ab0");
-            double rx = Math.Max(0.1, o.Hw) * 1.02, ry = GateRy, r = GateRoll, cy = GateCy;
-            v.Rx = rx;
-            v.Ry = ry;
-            float x0 = (float)-rx, x1 = (float)rx, y0 = (float)-ry, y1 = (float)ry;
-            // 배경 그라데이션: 평소(아래 `55`)와 번쩍(아래 `aa`) 두 장을 만들어 켜고 끈다(런 중 메쉬 다시 쓰기 없음).
-            for (int f = 0; f < 2; f++)
-            {
-                var bg = MeshChild(v.Go.transform, f == 0 ? "Bg" : "BgFlash");
-                bg.localPosition = new Vector3(0, (float)cy, 0);
-                _mb.Clear();
-                Color32 top = MvColor.WithAlpha(tint, ObjectReaction.GateBgTop),
-                    bottom = MvColor.WithAlpha(tint, f == 0 ? ObjectReaction.GateBgBottom : ObjectReaction.GateBgBottomFlash);
-                _mb.AddQuad(new Vector3(x0, y0), new Vector3(x1, y0), new Vector3(x1, y1), new Vector3(x0, y1), bottom, bottom, top, top);
-                bg.GetComponent<VertexColorFog>().Bind(_mb, f == 0 ? "RollGateBg" : "RollGateBgFlash");
-                bg.GetComponent<MeshRenderer>().sortingOrder = 0;
-                bg.gameObject.SetActive(f == 0);
-            }
-            // 위로 흐르는 흰 줄 5개(L3635): 배경 위·롤 아래, 관문 면(XY 평면)에 둔다.
-            for (int i = 0; i < ObjectReaction.GateStripes; i++)
-            {
-                var sr = Flat(v.Go.transform, StripeName(i), _fxAtlas, Stripe, 1);
-                if (sr.sprite == null) continue;
-                var b = sr.sprite.bounds.size;
-                sr.transform.localScale = new Vector3((float)(rx * ObjectReaction.StripeHalfW * 2) / Mathf.Max(0.0001f, b.x * StripeFillX),
-                    (float)ObjectReaction.StripeThick / Mathf.Max(0.0001f, b.y * StripeFillY), 1f);
-                sr.color = new Color(1f, 1f, 1f, (float)ObjectReaction.StripeAlpha);
-            }
-            int slot = 0, ny = Math.Max(2, (int)Math.Round(ry * 2 / (r * 1.9))), nx = Math.Max(2, (int)Math.Round(rx * 2 / (r * 1.9)));
-            for (int k = 0; k <= ny; k++)
-            {
-                float y = (float)(cy - ry + k * (ry * 2 / ny));   // 정본 c.y + ry − k·… (캔버스 아래 +) → 아래부터 위로
-                Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3(x0, y, 0), 2); slot++;
-                Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3(x1, y, 0), 2); slot++;
-            }
-            for (int k = 1; k < nx; k++) { Part(v, slot, _atlas, SpriteAt(o, slot), new Vector3((float)(-rx + k * (rx * 2 / nx)), (float)(cy + ry), 0), 2); slot++; }
-        }
-
-        /// <summary>
-        /// 빌보드가 아닌 평면 스프라이트 자식(이름으로 찾고 없으면 만든다). 관문 면(XY 평면)에 붙는 줄·흰 줄용. 그림이 없으면 끈다.
-        /// </summary>
-        SpriteRenderer Flat(Transform root, string name, string atlas, string sprite, int order)
-        {
-            var t = root.Find(name);
-            SpriteRenderer sr;
-            if (t == null)
-            {
-                var go = new GameObject(name);
-                go.transform.SetParent(root, false);
-                sr = go.AddComponent<SpriteRenderer>();
-                sr.sharedMaterial = _spriteMaterial;
-            }
-            else sr = t.GetComponent<SpriteRenderer>();
-            sr.sprite = _sprites != null ? _sprites.Get(atlas, sprite) : null;
-            sr.sortingOrder = order;
-            sr.color = Color.white;
-            sr.flipX = false;
-            sr.transform.localPosition = Vector3.zero;
-            sr.transform.localRotation = Quaternion.identity;
-            sr.transform.localScale = Vector3.one;
-            sr.gameObject.SetActive(sr.sprite != null);
-            return sr;
-        }
-
-
-        void BuildWarpGate(View v, RunObject o)
-        {
-            bool gold = o.Kind.key == "archGoal";
-            string p1 = gold ? WarpGateLayout.P1Gold : WarpGateLayout.P1, p2 = gold ? WarpGateLayout.P2Gold : WarpGateLayout.P2;
-            var boxes = WarpGateLayout.Boxes;
-            for (int i = 0; i < boxes.Length; i++)
-            {
-                var b = boxes[i];
-                var t = MeshChild(v.Go.transform, "Box" + i);
-                if (t.GetComponent<Billboard>() == null) t.gameObject.AddComponent<Billboard>();
-                t.localPosition = new Vector3((float)b.X, (float)b.Y, (float)(-b.D / 2));   // 앵커 = 앞면 아래 가운데
-                _mb.Clear();
-                BoxBillboardBuilder.Build(_mb, b.W, b.H, b.D, p1, p2, double.PositiveInfinity, _cfg.OutlineColor);
-                t.GetComponent<VertexColorFog>().Bind(_mb, "GateBox");
-                t.GetComponent<MeshRenderer>().sortingOrder = i == 4 ? 3 : 1;
-            }
-            // 기둥(원근 기울기 포함 그림, 왼쪽 flipX)은 받침 위·중간 발판 아래(정본 순서: 받침 → 기둥 → 중간 발판).
-            Part(v, 0, _atlas, SpriteAt(o, 0), new Vector3((float)-WarpGateLayout.PostX, 0, 0), 0, true);
-            Part(v, 1, _atlas, SpriteAt(o, 0), new Vector3((float)WarpGateLayout.PostX, 0, 0), 0);
-            // 매달린 장난감 줄(L3221, 관문 면 XY 평면) → 공. 줄은 발판 위, 공은 줄 위.
-            for (int i = 0; i < 3; i++)
-            {
-                var str = Flat(v.Go.transform, StringName(i), _fxAtlas, Square, 4);
-                if (str.sprite != null) str.color = MvColor.ToColor32(_cfg.OutlineColor);
-                Part(v, 2 + i, _atlas, "World_Obj_Arch_Toy_" + i, new Vector3((float)WarpGateLayout.ToyDx[i], (float)ObjectReaction.ToyBallY, 0), 5);
-            }
-            // 금빛 관문: 광륜(L3215, 맨 먼저)·기둥 위 별(L3223, 맨 나중).
-            v.Gold = gold;
-            if (gold)
-            {
-                var glow = Part(v, 5, _fxAtlas, GlowLin, new Vector3(0, (float)ObjectReaction.GlowY, 0), -1);
-                if (glow.sprite != null)
-                {
-                    glow.transform.localScale = Vector3.one * ((float)(ObjectReaction.GlowR * 2) / Mathf.Max(0.0001f, glow.sprite.bounds.size.x));
-                    var c = (Color)MvColor.ToColor32(ObjectReaction.GlowColor);
-                    c.a = 1f;   // Fx_Glow_Lin 중심 알파 ≈ 0.45(정본 0.55) [근사]
-                    glow.color = c;
-                }
-                for (int s = 0; s < 2; s++)
-                {
-                    var star = Part(v, 6 + s, _fxAtlas, Star, new Vector3((float)(s == 0 ? -WarpGateLayout.PostX : WarpGateLayout.PostX), (float)ObjectReaction.StarY, 0), 6);
-                    star.color = MvColor.ToColor32(ObjectReaction.StarColor);
-                }
-            }
-        }
-
-        void BuildWell(View v, RunObject o)
-        {
-            Part(v, 0, _atlas, SpriteAt(o, 0), new Vector3(0, 1.25f, 0), 0);
-            int n = _bricks.Count;
-            if (v.Depth == null || v.Depth.Length != n) { v.Depth = new double[n]; v.Order = new int[n]; v.Scratch = new int[n]; }
-            if (v.Gone == null || v.Gone.Length != n) { v.Gone = new double[n]; v.Grow = new double[n]; }
-            for (int i = 0; i < n; i++) { v.Gone[i] = 0; v.Grow[i] = 1; }
-            for (int i = 0; i < n; i++)
-            {
-                var b = _bricks[i];
-                Part(v, 1 + i, _atlas, (b.Junk ? "World_Obj_Well_Junk_" : "World_Obj_Well_Brick_") + b.Variant, new Vector3((float)b.X, (float)b.Y, (float)b.Z), 1 + i);
-            }
-        }
-
-        /// <summary>
-        /// 글자판 맞추기(매 프레임). 내용은 <see cref="ObjectLabel.Of"/>, 그림은 오브젝트 프리팹이 품은 글자판(<see cref="CountLabel"/>)이 먼저이고
-        /// 없으면(코드 모양·프리팹 로드 전) TMP 한 줄 글자판(숫자, 없으면 제목)을 쓴다.
-        /// </summary>
-        void UpdateLabel(View v, RunObject o, double playerZ)
-        {
-            var c = v.Die >= 0 ? LabelContent.Hidden : ObjectLabel.Of(o, playerZ, _cfg.ArchLabelHide, WallAhead(o), GoldMul);
-            string line = c.Line;
-            if (LabelText != null)
-            {
-                line = LabelText(o);
-                if (line == null) c = LabelContent.Hidden;
-            }
-            if (v.Board != null)
-            {
-                v.Board.Apply(c);
-                if (v.Label != null && v.Label.gameObject.activeSelf) v.Label.gameObject.SetActive(false);
-                return;
-            }
-            // 프리팹 오브젝트는 로드 전에 그림이 없으므로 글자판도 없다(로드되면 프리팹 글자판, 프리팹에 없을 때만 TMP 한 줄).
-            if (line == null || (v.Prefab != null && v.Inst == null))
-            {
-                if (v.Label != null && v.Label.gameObject.activeSelf) v.Label.gameObject.SetActive(false);
-                return;
-            }
-            if (v.Label == null)
-            {
-                v.Label = WorldLabel.Create(v.Go.transform, "Label", LabelSize, _labelMaterial);
-                v.Label.transform.localPosition = new Vector3(0, LabelY, 0);
-                v.Label.GetComponent<Renderer>().sortingOrder = CountLabel.SortBase;   // 그룹 안 맨 위(정본 편향 −0.05와 같은 결과)
-                v.Ds.Refresh();
-            }
-            v.Label.SetText(line);
-            if (!v.Label.gameObject.activeSelf) v.Label.gameObject.SetActive(true);
-        }
-
-        /// <summary>같은 골목·같은 줄(bar·lane)마다 살아 있는 결계 블록의 행 번호(오름차순). 블록 글자판 「앞쪽 2칸만」 판정에 쓴다.</summary>
-        void CollectWallRows(IReadOnlyList<RunObject> objs)
-        {
-            foreach (var l in _wallRows.Values) l.Clear();
-            for (int i = 0; i < objs.Count; i++)
-            {
-                var o = objs[i];
-                if (o == null || o.Dead || o.Kind == null || o.Kind.labelKind != LabelKind.WallCell) continue;
-                int key = WallKey(o);
-                if (!_wallRows.TryGetValue(key, out var list)) _wallRows[key] = list = new List<int>(16);
-                list.Add(o.Row);
-            }
-            foreach (var l in _wallRows.Values) if (l.Count > 1) l.Sort();
-        }
-
-        /// <summary>이 블록 앞(행 번호가 작은 쪽)에 살아 있는 같은 줄 블록 수(정본 L1488 `w.row &lt; o.row &amp;&amp; !w.dead`).</summary>
-        int WallAhead(RunObject o)
-        {
-            if (o.Kind == null || o.Kind.labelKind != LabelKind.WallCell || !_wallRows.TryGetValue(WallKey(o), out var list)) return 0;
-            int n = 0;
-            for (int i = 0; i < list.Count && list[i] < o.Row; i++) n++;
-            return n;
-        }
-
-        static int WallKey(RunObject o) => o.Bar * 1024 + o.Lane;
-
-        Transform MeshChild(Transform root, string name)
-        {
-            var t = root.Find(name);
-            if (t == null)
-            {
-                var go = new GameObject(name, typeof(MeshFilter), typeof(MeshRenderer), typeof(VertexColorFog));
-                t = go.transform;
-                t.SetParent(root, false);
-                go.GetComponent<MeshRenderer>().sharedMaterial = _vertexColorMaterial;
-            }
-            t.gameObject.SetActive(true);
-            return t;
-        }
-
-        void Animate(View v, double nowMs, double playerZ, double dt)
-        {
-            var o = v.Obj;
-            double t = nowMs / 1000.0;
-            if (v.Shake > 0) v.Shake = Math.Max(0, v.Shake - dt);
-            if (v.Flash > 0) v.Flash = Math.Max(0, v.Flash - dt);
-            if (v.Punch > 0) v.Punch = ObjectReaction.PunchStep(v.Punch, dt);
-            if (v.Prefab != null) AnimatePrefab(v, o, playerZ, t, dt);
-            else switch (v.Shape)
-            {
-                case ObjectShape.WarpGate:
-                    bool shown = WarpGateLayout.Alpha(playerZ - o.Z, out double a);
-                    v.Ds.SetAlphaScale(shown ? (float)a : 0f);
-                    for (int i = 0; i < 3; i++)
-                    {
-                        var b = v.Base[2 + i];
-                        double sw = WarpGateLayout.ToySway(i, t);
-                        v.Parts[2 + i].transform.localPosition = new Vector3(b.x + (float)sw, b.y, b.z);
-                        PlaceString(v.Go.transform.Find(StringName(i)), WarpGateLayout.ToyDx[i], sw);
-                    }
-                    if (v.Gold)
-                        for (int s = 0; s < 2 && 6 + s < v.Parts.Count; s++)
-                        {
-                            var star = v.Parts[6 + s];
-                            if (star.sprite == null) continue;
-                            star.transform.localScale = Vector3.one * (float)(2 * ObjectReaction.StarRadius(t) / Mathf.Max(0.0001f, star.sprite.bounds.size.x));
-                        }
-                    break;
-                case ObjectShape.Stair:
-                    var ab = v.Base[3];
-                    v.Parts[3].transform.localPosition = new Vector3(ab.x, ab.y + Mathf.Sin((float)(t * 5)) * 0.25f, ab.z);
-                    break;
-                case ObjectShape.CoinPile:
-                {
-                    // 크기 k = 0.55 + 0.45·hp/max(L1525): 츄르 자리·크기 모두 k배(정본 c = s·body.scale.y).
-                    float k = o.HasHp ? (float)ObjectReaction.PickupScale(o.Hp, o.Max, o.Dead) : 1f;
-                    for (int i = 0; i < v.Parts.Count && i < 6; i++)
-                    {
-                        var b = v.Base[i];
-                        v.Parts[i].transform.localPosition = new Vector3(b.x * k, (b.y - (float)(Math.Sin(nowMs / 500.0 + i) * 0.02)) * k, b.z);
-                        v.Parts[i].transform.localScale = Vector3.one * k;
-                    }
-                    break;
-                }
-                case ObjectShape.CatnipPot:
-                {
-                    float k = o.HasHp ? (float)ObjectReaction.PickupScale(o.Hp, o.Max, o.Dead) : 1f;
-                    if (v.Parts.Count > 0) v.Parts[0].transform.localScale = Vector3.one * k;
-                    if (v.Parts.Count > 1 && v.Parts[1].sprite != null)
-                    {
-                        float r = (float)(0.14 * (0.8 + 0.2 * Math.Sin(nowMs / 200.0)));
-                        var b = v.Base[1];
-                        v.Parts[1].transform.localPosition = new Vector3(b.x * k, b.y * k, b.z);
-                        v.Parts[1].transform.localScale = Vector3.one * (2 * r * k / Mathf.Max(0.0001f, v.Parts[1].sprite.bounds.size.x));
-                    }
-                    break;
-                }
-                case ObjectShape.Well:
-                    AnimateBricks(v, dt);
-                    SortBricks(v);
-                    break;
-                case ObjectShape.Junk:
-                {
-                    // 벽 흔들림(L1484): 그림 전체 x += sin(shake·90)·0.05, 흔들리는 동안 흰 섬광(L3629).
-                    bool on = v.Shake > 0;
-                    if (on) v.Go.transform.position += new Vector3((float)ObjectReaction.WallShakeX(v.Shake), 0, 0);
-                    if (v.HasJunkFlash && v.Parts.Count > 2 && v.Parts[2].gameObject.activeSelf != on) v.Parts[2].gameObject.SetActive(on);
-                    break;
-                }
-                case ObjectShape.RollGate:
-                    AnimateRollGate(v, t);
-                    break;
-            }
-            if (v.Prefab == null) v.Go.transform.localScale = PunchScale(v.Punch);
-        }
-
-        /// <summary>
-        /// 프리팹 뷰: 로드되면 인스턴스를 만들고 새 HTML 동작을 프리팹 자식에 입힌다(그림 = 디자이너 프리팹, 동작 = 새 HTML 2026-11-13).
-        /// 공통: 맞음 눌림(punch), 체력 단계 그림(<see cref="ObjectPrefabRig"/>). 결계문 흐려짐(WarpGate), 게이트 가라앉기·막 번쩍·반짝이(RollGate),
-        /// 수정탑 흔들림·빛·구슬 맥동·빠짐(Well), 포탈 고리 회전·반짝이·빛(Stair), 결계 블록 자리 흔들기·흔들림·상자 그림·생선 빛(Junk).
-        /// </summary>
-        void AnimatePrefab(View v, RunObject o, double playerZ, double t, double dt)
-        {
-            EnsureInstance(v);
-            if (v.Inst == null) return;
-            var p = v.P;
-            float sx = 0f, dy = 0f, jx = 0f, jz = 0f;
-            switch (v.Shape)
-            {
-                case ObjectShape.WarpGate:
-                {
-                    bool shown = WarpGateLayout.Alpha(playerZ - o.Z, out double a);
-                    v.Ds.SetAlphaScale(shown ? (float)a : 0f);
-                    break;
-                }
-                case ObjectShape.RollGate:
-                {
-                    dy = (float)ObjectReaction.GateSinkY(o.Sink);
-                    v.Ds.SetAlphaScale(ObjectReaction.GateHidden(o.Sink) ? 0f : 1f);
-                    if (p?.Curtain != null) v.Ds.SetBaseColor(p.Curtain, Alpha(p.CurtainBase, ObjectReaction.CurtainRatio(v.Flash > 0)));
-                    if (p?.Sparks != null)
-                        for (int i = 0; i < p.Sparks.Length; i++)
-                        {
-                            double ph = ObjectReaction.GateSparkPhase(t, i);
-                            var at = new Vector3((float)ObjectReaction.GateSparkX(i, o.Z, o.Hw), (float)(ObjectReaction.GatePanelH * ph), -0.05f);
-                            SetSpark(p.Sparks[i], at, ObjectReaction.GateSparkR * (1 - ph));
-                        }
-                    break;
-                }
-                case ObjectShape.Well:
-                    if (p == null) break;
-                    if (p.Glow != null) v.Ds.SetBaseColor(p.Glow, Alpha(p.GlowBase, ObjectReaction.TowerGlowRatio(t)));
-                    if (p.Pile != null) p.Pile.localPosition = p.PileBase + new Vector3((float)ObjectReaction.WellShakeX(v.Shake), 0, 0);
-                    if (p.Orbs != null)
-                        for (int i = 0; i < p.Orbs.Length; i++)
-                        {
-                            double sc = ObjectReaction.BrickStep(ref p.Gone[i], ref p.Grow[i], dt);
-                            p.Orbs[i].localScale = p.OrbScale[i] * (float)(sc * ObjectReaction.OrbPulse(t, i));
-                        }
-                    break;
-                case ObjectShape.Stair:
-                    if (p == null) break;
-                    if (p.Spin != null) p.Spin.localRotation = p.SpinBase * Quaternion.Euler(0, 0, (float)(t * ObjectReaction.PortalSpin * 180 / Math.PI));
-                    if (p.Glow != null) v.Ds.SetBaseColor(p.Glow, Alpha(p.GlowBase, ObjectReaction.PortalGlowRatio(o.Used)));
-                    if (p.Sparks != null)
-                        for (int i = 0; i < p.Sparks.Length; i++)
-                        {
-                            double k = ObjectReaction.PortalSparkPhase(t, i), a = ObjectReaction.PortalSparkAngle(t, i);
-                            var at = new Vector3((float)(Math.Cos(a) * ObjectReaction.PortalSparkRing), (float)(k * ObjectReaction.PortalSparkH), (float)(Math.Sin(a) * ObjectReaction.PortalSparkRing));
-                            SetSpark(p.Sparks[i], at, ObjectReaction.PortalSparkR * (1 - k));
-                        }
-                    break;
-                case ObjectShape.Mouse:
-                {
-                    // 적 프리팹(그림 자리·크기·Hitbox) + 테마 프레임. 프레임 넘김 = 102_enemy.fps.
-                    v.Frames ??= EnemyFrames(o, p);
-                    if (p?.Body != null && v.Frames != null && v.Frames.Length > 0)
-                    {
-                        double fps = o.Enemy != null ? o.Enemy.fps : 0;
-                        int f = fps > 0 ? (int)(Math.Floor(t * fps) % v.Frames.Length) : 0;
-                        if (v.Frames[f] != null) p.Body.sprite = v.Frames[f];
-                    }
-                    break;
-                }
-                case ObjectShape.Junk:
-                {
-                    sx = (float)ObjectReaction.WallShakeX(v.Shake);
-                    ObjectReaction.WallJitter(o.Idx, o.Bar, out double wjx, out double wjz);
-                    jx = (float)wjx; jz = (float)wjz;   // 자리 흔들기도 그림만(판정은 시뮬 위치)
-                    if (p?.Chests != null && p.Chests.Length > 0)
-                    {
-                        int pick = Math.Max(0, o.Bar) % p.Chests.Length;   // 정본 chest(bar % 3), 개수 = 프리팹 Chest_ 자식 수
-                        for (int i = 0; i < p.Chests.Length; i++) if (p.Chests[i].activeSelf != (i == pick)) p.Chests[i].SetActive(i == pick);
-                    }
-                    if (p?.Glow != null) v.Ds.SetBaseColor(p.Glow, Alpha(p.GlowBase, ObjectReaction.FishGlowRatio(t)));
-                    break;
-                }
-            }
-            // 연출은 빌보드 묶음(그림)만 움직인다. 프리팹 뿌리와 그 아래 Hitbox는 시뮬 위치에 그대로 둔다.
-            if (p != null) PoseBoards(p, new Vector3(sx + jx, dy, jz), PunchScale(v.Punch));
-            if (v.Rig != null) v.Rig.SetFill(o.HasHp ? o.Hp : 1, o.HasHp ? o.Max : 1);
-        }
-
-        /// <summary>
-        /// 적 프레임(<see cref="EnemyFrameRule"/>, 리소스 검사기와 같은 규칙): 프리팹 몸 그림의 <see cref="SpriteFrameList"/>에 접두 그림이 있으면 그것(스테이지 전용 리소스),
-        /// 없으면 지금 테마 아틀라스에서 접두 + 번호 `frameCount`장. 여기서는 아틀라스 로딩만 맡는다.
-        /// </summary>
-        Sprite[] EnemyFrames(RunObject o, PrefabParts p)
-        {
-            var own = EnemyFramePrefab.FromPrefab(p?.Body != null ? p.Body.transform : null, o.Enemy);
-            if (own != null) return own;
-            string prefix = EnemyFrameRule.Prefix(o.Enemy?.sprite);
-            if (prefix == null || _sprites == null) return null;
-            return _sprites.GetFrames(_atlas, prefix, EnemyFrameRule.Count(o.Enemy));
-        }
-
-        /// <summary>맞음 눌림 크기 (1 + 0.07k, 1 − 0.08k, 1 + 0.07k)(updObjMesh L1468).</summary>
-        /// <summary>빌보드 묶음 = 기본 위치 + <paramref name="offset"/>, 기본 배율 × <paramref name="scale"/>.</summary>
-        static void PoseBoards(PrefabParts p, Vector3 offset, Vector3 scale)
-        {
-            if (p.Boards == null || p.BoardPos == null) return;
-            for (int i = 0; i < p.Boards.Length; i++)
-            {
-                var tr = p.Boards[i].transform;
-                tr.localPosition = p.BoardPos[i] + offset;
-                tr.localScale = Vector3.Scale(p.BoardScale[i], scale);
-            }
-        }
-
-        static Vector3 PunchScale(double k)
-        {
-            float g = (float)(k * ObjectReaction.PunchGrow), s = (float)(k * ObjectReaction.PunchSquash);
-            return new Vector3(1 + g, 1 - s, 1 + g);
-        }
-
-        static Color Alpha(Color c, double ratio)
-        {
-            c.a = Mathf.Clamp01(c.a * (float)ratio);
-            return c;
-        }
-
-        static readonly string[] s_stringNames = { "String0", "String1", "String2" };
-        static readonly string[] s_stripeNames = { "Stripe0", "Stripe1", "Stripe2", "Stripe3", "Stripe4" };
-        static string StringName(int i) => s_stringNames[i];
-        static string StripeName(int i) => s_stripeNames[i];
-
-        /// <summary>장난감 줄: 발판 (dx, 4.6) → 공 (dx + sw, 3.3) 선분을 관문 면 위 얇은 사각형으로.</summary>
-        static void PlaceString(Transform str, double dx, double sw)
-        {
-            if (str == null || !str.gameObject.activeSelf) return;
-            var sr = str.GetComponent<SpriteRenderer>();
-            if (sr == null || sr.sprite == null) return;
-            double ax = dx, ay = ObjectReaction.ToyTopY, bx = dx + sw, by = ObjectReaction.ToyBallY;
-            double len = Math.Sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
-            var size = sr.sprite.bounds.size;
-            str.localPosition = new Vector3((float)((ax + bx) / 2), (float)((ay + by) / 2), 0);
-            str.localRotation = Quaternion.Euler(0, 0, (float)(Math.Atan2(by - ay, bx - ax) * 180 / Math.PI) + 90f);
-            str.localScale = new Vector3((float)ObjectReaction.ToyStringThick / Mathf.Max(0.0001f, size.x), (float)len / Mathf.Max(0.0001f, size.y), 1f);
-        }
-
-        /// <summary>우물: 벽돌 숨김·다시 자람(L1474~1475)과 더미 흔들림 x(L1477).</summary>
-        static void AnimateBricks(View v, double dt)
-        {
-            if (v.Gone == null) return;
-            float sx = (float)ObjectReaction.WellShakeX(v.Shake);
-            int n = Math.Min(v.Gone.Length, v.Parts.Count - 1);
-            for (int i = 0; i < n; i++)
-            {
-                double sc = ObjectReaction.BrickStep(ref v.Gone[i], ref v.Grow[i], dt);
-                var tr = v.Parts[1 + i].transform;
-                var b = v.Base[1 + i];
-                tr.localPosition = new Vector3(b.x + sx, b.y, b.z);
-                tr.localScale = Vector3.one * (float)sc;
-            }
-        }
-
-        /// <summary>롤 관문: 번쩍 배경 바꾸기, 흰 줄 흐름, 통과 뒤 가라앉기(안쪽 y −sink·6, 0.5 넘으면 숨김, L1503).</summary>
-        static void AnimateRollGate(View v, double t)
-        {
-            var o = v.Obj;
-            var root = v.Go.transform;
-            float dy = (float)ObjectReaction.GateSinkY(o.Sink);
-            v.Ds.SetAlphaScale(ObjectReaction.GateHidden(o.Sink) ? 0f : 1f);
-            bool flash = v.Flash > 0;
-            var bg = root.Find("Bg");
-            if (bg != null)
-            {
-                bg.localPosition = new Vector3(0, (float)GateCy + dy, 0);
-                if (bg.gameObject.activeSelf == flash) bg.gameObject.SetActive(!flash);
-            }
-            var bgFlash = root.Find("BgFlash");
-            if (bgFlash != null)
-            {
-                bgFlash.localPosition = new Vector3(0, (float)GateCy + dy, 0);
-                if (bgFlash.gameObject.activeSelf != flash) bgFlash.gameObject.SetActive(flash);
-            }
-            for (int i = 0; i < ObjectReaction.GateStripes; i++)
-            {
-                var s = root.Find(StripeName(i));
-                if (s == null || !s.gameObject.activeSelf) continue;
-                s.localPosition = new Vector3(0, (float)(GateCy + ObjectReaction.StripeY(i, t, v.Ry)) + dy, 0);
-            }
-            if (dy != 0)
-                for (int i = 0; i < v.Parts.Count && i < v.Base.Count; i++)
-                {
-                    var b = v.Base[i];
-                    v.Parts[i].transform.localPosition = new Vector3(b.x, b.y + dy, b.z);
-                }
-        }
-
-        /// <summary>우물 벽돌 그룹 안 정렬: 카메라 깊이 내림차순(먼 것 먼저, 정본 `list.sort((a,b)=>b.d−a.d)`).</summary>
-        void SortBricks(View v)
-        {
-            if (_cam == null || v.Depth == null) return;
-            Vector3 cp = _cam.position, fwd = _cam.forward;
-            int n = v.Depth.Length;
-            for (int i = 0; i < n; i++) v.Depth[i] = Vector3.Dot(v.Parts[1 + i].transform.position - cp, fwd);
-            DepthMath.RankFarFirst(v.Depth, n, v.Order, v.Scratch);
-            for (int i = 0; i < n; i++) v.Parts[1 + i].sortingOrder = 1 + v.Order[i];
+            return v;
         }
     }
 }

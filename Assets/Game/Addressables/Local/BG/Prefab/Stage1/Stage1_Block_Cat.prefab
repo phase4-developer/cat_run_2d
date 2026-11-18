@@ -301,6 +301,8 @@ GameObject:
   m_Component:
   - component: {fileID: 995722791351186635}
   - component: {fileID: 5035194411194399633}
+  - component: {fileID: 2199748790905687842}
+  - component: {fileID: 8506676568918562990}
   m_Layer: 0
   m_Name: Stage1_Block_Cat
   m_TagString: Untagged
@@ -893,3 +895,29 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8996763789592010812, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
   m_PrefabInstance: {fileID: 147254792339070209}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2199748790905687842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2572092359591244906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5df55a71314ab8a681fe40e0bcd759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8506676568918562990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2572092359591244906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf238298c5140e88fc30272fd38b3f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chests: []
+  _glow: {fileID: 1226772979141669682}

@@ -69,6 +69,33 @@ namespace MV.Run
             Amount = amount; Amount2 = amount2; Amount3 = amount3; Flag = flag; Quiet = quiet; Color = color; Key = key; Ids = ids; Ids2 = ids2;
         }
 
+        /// <summary>
+        /// <see cref="ObjId"/>가 런 오브젝트 번호인 종류인가(위 목록 정본). 투사체 번호(Fire·ProjImpact·ProjRemoved)와 번호 없는 종류는 아니다.
+        /// 오브젝트 화면 반응은 이 판정을 지난 이벤트만 그 오브젝트 뷰로 받는다.
+        /// </summary>
+        public static bool TargetsObject(RunEventType t)
+        {
+            switch (t)
+            {
+                case RunEventType.Hit:
+                case RunEventType.Break:
+                case RunEventType.GateFill:
+                case RunEventType.GateTake:
+                case RunEventType.GateMiss:
+                case RunEventType.WellFlush:
+                case RunEventType.Steal:
+                case RunEventType.Blocked:
+                case RunEventType.GodProc:
+                case RunEventType.BurnTick:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>이 이벤트가 오브젝트 하나를 가리키는가(<see cref="TargetsObject(RunEventType)"/>이고 번호가 있음).</summary>
+        public bool TargetsObjectId => ObjId != 0 && TargetsObject(Type);
+
         /// <summary>바이트 비교용 고정 표기(04 §4.17.2-6).</summary>
         public override string ToString()
         {

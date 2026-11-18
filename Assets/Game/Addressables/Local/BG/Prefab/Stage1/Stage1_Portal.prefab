@@ -4855,6 +4855,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4423935046143989316}
   - component: {fileID: 2881840947564677147}
+  - component: {fileID: 8772916203973558598}
+  - component: {fileID: 3128766478844172812}
   m_Layer: 0
   m_Name: Stage1_Portal
   m_TagString: Untagged
@@ -24534,3 +24536,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8996763789592010812, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
   m_PrefabInstance: {fileID: 5090381548481262212}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8772916203973558598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017244270075531286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5df55a71314ab8a681fe40e0bcd759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3128766478844172812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017244270075531286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa72727676b447085eca6224f211ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

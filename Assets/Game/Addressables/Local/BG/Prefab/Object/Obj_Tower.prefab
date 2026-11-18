@@ -102,6 +102,8 @@ GameObject:
   - component: {fileID: 2491863830710172205}
   - component: {fileID: 6946858427315941833}
   - component: {fileID: 8473768072148343428}
+  - component: {fileID: 1561318639736955127}
+  - component: {fileID: 1120484207165641099}
   m_Layer: 0
   m_Name: Obj_Tower
   m_TagString: Untagged
@@ -15529,3 +15531,34 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8996763789592010812, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
   m_PrefabInstance: {fileID: 6635237898434388264}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1561318639736955127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404329338729850597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5df55a71314ab8a681fe40e0bcd759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1120484207165641099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404329338729850597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaa8af012a5423aa273b913515b6f57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _glow: {fileID: 8070529178187374710}
+  _pile: {fileID: 662742823794486712}
+  _orbs:
+  - {fileID: 8749842048022287363}
+  - {fileID: 1360536738384911113}
+  - {fileID: 6814642945945631012}
+  - {fileID: 6673239110067976253}

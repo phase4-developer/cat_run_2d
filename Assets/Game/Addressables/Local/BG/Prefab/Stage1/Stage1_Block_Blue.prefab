@@ -58,6 +58,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2527529124372497199}
   - component: {fileID: 14415312326663950}
+  - component: {fileID: 8393367784147181625}
+  - component: {fileID: 4193672052114004260}
   m_Layer: 0
   m_Name: Stage1_Block_Blue
   m_TagString: Untagged
@@ -540,3 +542,29 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8996763789592010812, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
   m_PrefabInstance: {fileID: 3600169330881874952}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8393367784147181625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3695844143322965704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5df55a71314ab8a681fe40e0bcd759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4193672052114004260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3695844143322965704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf238298c5140e88fc30272fd38b3f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chests: []
+  _glow: {fileID: 0}

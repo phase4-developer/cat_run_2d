@@ -6,61 +6,61 @@ using UnityEngine;
 namespace MV.View
 {
     /// <summary>
-    /// 투사체 공간 충돌 검출(<see cref="IProjectileHitQuery"/>)을 Unity Physics로 한다. 판정 형상 = 화면에 있는 오브젝트 프리팹 안 <see cref="RunHitbox"/>의 Collider 그대로다(복사본 없음).
-    /// 오브젝트 연출(흔들림·눌림·가라앉기·쓰러짐)은 프리팹 안 빌보드 묶음만 움직이므로 Hitbox는 프리팹 뿌리 = 시뮬 위치에 있다(<see cref="ObjectViewFactory"/>).
-    /// 순서: 시뮬 위치 갱신(이동 AI) → <see cref="Prepare"/>(오브젝트 뿌리를 (x, WorldY, z)로 맞추고 <see cref="Physics.SyncTransforms"/> 한 번) → 투사체마다 <see cref="Cast"/> → 시뮬이 피해 반영.
+    /// 투사체 공간 충돌 검출(<see cref="IProjectileHitQuery"/>)을 Unity Physics로 한다. 하는 일은 물리 질의와 Collider → 오브젝트 연결뿐이다.
+    /// 판정 형상 = 오브젝트 프리팹 안 <see cref="RunHitbox"/>의 Collider 그대로(복사본 없음). 등록·해제는 뷰가 오브젝트에 연결·회수될 때 한 번씩 한다(<see cref="RunObjectView"/>).
+    /// 순서(시뮬 틱마다): 시뮬 위치 갱신(이동 AI) → <see cref="Prepare"/>(대상 위치 맞추기 콜백 → 살아 있는 등록 대상만 질의 대상으로, <see cref="Physics.SyncTransforms"/> 한 번)
+    /// → 투사체마다 <see cref="Cast"/> → 시뮬이 관통·중복 금지·피해를 반영(규칙 정본은 시뮬).
     /// 투사체 높이 = WorldY + <see cref="ProjLayout.ProjY"/>(그림과 같은 높이). 구간 검사 = Raycast(이동 구간) + 시작점 겹침 검사.
     /// 여러 Collider가 한 대상이면 대상 단위로 가장 앞 진입 z만 낸다. 순서는 Physics 반환 순서가 아니라 (진입 z, Id)로 정렬한다.
-    /// 프리팹이 없거나 프리팹에 Hitbox가 없는 피격 가능 오브젝트는 맞지 않고 오류 로그를 남긴다(다른 크기로 대신하지 않는다).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class RunHitWorld : MonoBehaviour, IProjectileHitQuery
     {
-        /// <summary>오브젝트 → 판정 Collider(뿌리를 시뮬 위치에 맞춘 뒤). 그리기 범위 밖·로드 전이면 null, 프리팹에 Hitbox가 없으면 빈 목록.</summary>
-        public delegate IReadOnlyList<Collider> HitShapeOf(RunObject o, double worldY);
-
-        HitShapeOf _shapeOf;
-        Func<RunObject, string> _addressOf;
+        Action<RunState> _placeTargets;
+        readonly Dictionary<RunObject, IReadOnlyList<Collider>> _registered = new Dictionary<RunObject, IReadOnlyList<Collider>>();
         readonly Dictionary<Collider, RunObject> _owner = new Dictionary<Collider, RunObject>();
         readonly Dictionary<RunObject, double> _first = new Dictionary<RunObject, double>();
         readonly HashSet<RunObject> _live = new HashSet<RunObject>();
-        readonly HashSet<string> _reported = new HashSet<string>(StringComparer.Ordinal);
         RaycastHit[] _rays = new RaycastHit[32];
         Collider[] _overlap = new Collider[16];
         double _y;
 
-        /// <summary>지난 <see cref="Prepare"/>에서 판정 Collider를 가진 오브젝트 수(시험·QA).</summary>
+        /// <summary>지난 <see cref="Prepare"/>에서 판정 Collider를 가진 살아 있는 오브젝트 수(시험·QA).</summary>
         public int LiveCount => _live.Count;
+        /// <summary>등록된 오브젝트 수(시험·QA).</summary>
+        public int RegisteredCount => _registered.Count;
 
-        /// <param name="shapeOf">오브젝트 → 프리팹 안 판정 Collider(<see cref="ObjectViewFactory.HitShape"/>).</param>
-        /// <param name="addressOf">오브젝트 → 프리팹 주소(<see cref="ObjectViewFactory.PrefabAddress"/>). 프리팹 없는 종류를 알리는 데만 쓴다.</param>
-        public void Init(HitShapeOf shapeOf, Func<RunObject, string> addressOf)
+        /// <param name="placeTargets">틱마다 질의 전에 대상(뷰 뿌리)을 그 틱의 시뮬 위치에 놓는다(<see cref="ObjectViewFactory.PlaceHitTargets"/>).</param>
+        public void Init(Action<RunState> placeTargets)
         {
-            _shapeOf = shapeOf ?? throw new ArgumentNullException(nameof(shapeOf));
-            _addressOf = addressOf ?? throw new ArgumentNullException(nameof(addressOf));
+            _placeTargets = placeTargets ?? throw new ArgumentNullException(nameof(placeTargets));
+        }
+
+        /// <summary>오브젝트의 판정 Collider 등록(뷰 연결 때). 같은 오브젝트를 다시 등록하면 바꾼다.</summary>
+        public void Register(RunObject o, IReadOnlyList<Collider> colliders)
+        {
+            if (o == null || colliders == null) return;
+            _registered[o] = colliders;
+        }
+
+        /// <summary>등록 해제(뷰 회수 때).</summary>
+        public void Unregister(RunObject o)
+        {
+            if (o != null) _registered.Remove(o);
         }
 
         public void Prepare(RunState s)
         {
-            if (_shapeOf == null) throw new InvalidOperationException("RunHitWorld.Init 전입니다.");
+            if (_placeTargets == null) throw new InvalidOperationException("RunHitWorld.Init 전입니다.");
+            _placeTargets(s);
             _owner.Clear();
             _live.Clear();
             _y = s.WorldY + ProjLayout.ProjY;
-            foreach (var o in s.Objs)
+            foreach (var kv in _registered)
             {
-                if (o == null || o.Dead || o.Kind == null || o.Kind.hittable == MV.Data.Hittable.Never) continue;
-                var cols = _shapeOf(o, s.WorldY);
-                if (cols == null)
-                {
-                    if (_addressOf(o) == null)
-                        Report("noprefab:" + o.Kind.key, $"[RunHitWorld] 피격 가능 종류 {o.Kind.key}에 프리팹이 없어 판정 형상이 없습니다(맞지 않음).");
-                    continue;
-                }
-                if (cols.Count == 0)
-                {
-                    Report("nohitbox:" + o.Kind.key, $"[RunHitWorld] 프리팹 {_addressOf(o)}에 {nameof(RunHitbox)}(Collider)가 없습니다(맞지 않음).");
-                    continue;
-                }
+                var o = kv.Key;
+                if (o.Dead || o.Kind == null || o.Kind.hittable == MV.Data.Hittable.Never) continue;
+                var cols = kv.Value;
                 for (int i = 0; i < cols.Count; i++) if (cols[i] != null) _owner[cols[i]] = o;
                 _live.Add(o);
             }
@@ -106,13 +106,9 @@ namespace MV.View
             }
         }
 
-        void Report(string key, string message)
-        {
-            if (_reported.Add(key)) Debug.LogError(message);
-        }
-
         void OnDestroy()
         {
+            _registered.Clear();
             _owner.Clear();
             _first.Clear();
             _live.Clear();

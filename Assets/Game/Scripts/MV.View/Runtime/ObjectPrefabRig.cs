@@ -5,9 +5,9 @@ namespace MV.View
     /// <summary>
     /// 오브젝트 프리팹(`105_objectKind.prefab`, `305_stageObject.prefab`)의 줄어드는 단계 그림(노션 「신작 배경 리소스 관리」:
     /// 츄르 더미 Pile_1~3, 블루 마법석 Crystal_L·C·R). 남은 체력 비율만큼 앞에서부터 켠다. 단계 수 = 배열 길이(프리팹이 정한다).
-    /// 이 컴포넌트가 없는 프리팹은 단계 없이 통째로 그린다.
+    /// 이 컴포넌트가 없는 프리팹은 단계 없이 통째로 그린다. 오브젝트 모듈(<see cref="RunObjectModule"/>): 매 프레임 시뮬 체력으로 맞춘다.
     /// </summary>
-    public sealed class ObjectPrefabRig : MonoBehaviour
+    public sealed class ObjectPrefabRig : RunObjectModule
     {
         [Tooltip("남은 체력이 줄면 뒤에서부터 끄는 그림(앞 = 마지막까지 남는 것)")]
         [SerializeField] GameObject[] _stages;
@@ -23,6 +23,15 @@ namespace MV.View
             int k = (int)System.Math.Ceiling(n * hp / max);
             return System.Math.Max(1, System.Math.Min(n, k));
         }
+
+        public override void OnTick(RunObjectView view, in ObjectFrame f)
+        {
+            var o = view.Obj;
+            SetFill(o.HasHp ? o.Hp : 1, o.HasHp ? o.Max : 1);
+        }
+
+        /// <summary>회수: 단계 그림을 모두 켠다(프리팹 기본).</summary>
+        public override void OnUnbind(RunObjectView view) => SetFill(1, 1);
 
         /// <summary>체력 비율로 단계 그림을 켜고 끈다.</summary>
         public void SetFill(double hp, double max)
