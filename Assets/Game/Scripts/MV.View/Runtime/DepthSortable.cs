@@ -48,6 +48,10 @@ namespace MV.View
         int _index = -1;
 
         float _alphaScale = 1f;
+        /// <summary>가림 페이드 알파(<see cref="DepthSorter"/>가 매 프레임 넣는다). 그림 알파·안개 알파에 곱한다.</summary>
+        float _occludeAlpha = 1f;
+
+        internal void SetOccludeAlpha(float a) => _occludeAlpha = a;
         float _lastK = -1f, _lastPop = -1f;
 
         /// <summary>안개색(카메라 배경 = 테마 fog). <see cref="DepthSorter"/>가 매 프레임 넣는다.</summary>
@@ -167,7 +171,7 @@ namespace MV.View
         internal void ApplyFog(float k, float pop)
         {
             if (!Fog) { k = 0f; pop = 1f; }
-            float a = (1f - k) * _alphaScale, p = pop * _alphaScale;
+            float a = (1f - k) * _alphaScale * _occludeAlpha, p = pop * _alphaScale * _occludeAlpha;
             if (Mathf.Abs(a - _lastAlpha) < 1f / 255f && Mathf.Abs(p - _lastPop) < 1f / 255f && Mathf.Abs(k - _lastK) < 1f / 255f) return;
             _lastAlpha = a; _lastPop = p; _lastK = k;
             for (int i = 0; i < _sprites.Length; i++)
@@ -186,7 +190,7 @@ namespace MV.View
         internal void ApplyFogAlpha(float a)
         {
             if (!Fog) a = 1f;
-            a *= _alphaScale;
+            a *= _alphaScale * _occludeAlpha;
             if (Mathf.Abs(a - _lastAlpha) < 1f / 255f) return;
             _lastAlpha = a;
             for (int i = 0; i < _sprites.Length; i++)
