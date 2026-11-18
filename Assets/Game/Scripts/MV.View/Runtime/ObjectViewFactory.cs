@@ -299,7 +299,7 @@ namespace MV.View
 
         /// <summary>
         /// 런 이벤트 → 그 오브젝트 뷰의 모듈(06 §6.13). 통합 코드가 <see cref="Sync"/> 전에 같은 프레임의 이벤트 목록을 넘긴다.
-        /// 오브젝트를 가리키는 이벤트(Hit·WellFlush·Break)만 넘기고(다른 이벤트의 번호는 투사체 등이다), 뷰가 없는(그리기 범위 밖) 오브젝트의 이벤트는 버린다.
+        /// 오브젝트를 가리키는 이벤트(<see cref="RunEvent.TargetsObjectId"/>, 규칙 정본은 RunEvent)만 넘기고, 뷰가 없는(그리기 범위 밖) 오브젝트의 이벤트는 버린다.
         /// 그 이벤트에 무엇을 할지는 모듈이 정한다.
         /// </summary>
         public void OnRunEvents(IReadOnlyList<RunEvent> events)
@@ -308,8 +308,7 @@ namespace MV.View
             for (int i = 0; i < events.Count; i++)
             {
                 var e = events[i];
-                if (e.ObjId == 0 || !_views.TryGetValue(e.ObjId, out var v) || v.Obj == null) continue;
-                if (e.Type != RunEventType.Hit && e.Type != RunEventType.WellFlush && e.Type != RunEventType.Break) continue;
+                if (!e.TargetsObjectId || !_views.TryGetValue(e.ObjId, out var v) || v.Obj == null) continue;
                 v.OnRunEvent(e);
             }
         }

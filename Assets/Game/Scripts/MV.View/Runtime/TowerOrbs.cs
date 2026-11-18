@@ -28,6 +28,9 @@ namespace MV.View
         /// <summary>흔들림 남은 초.</summary>
         public double Shake => _shake;
 
+        /// <summary>프리팹이 정한 구슬 수.</summary>
+        public int OrbCount => _orbs != null ? _orbs.Length : 0;
+
         /// <summary>지금 빠져 있는(숨김) 구슬 수(시험·QA).</summary>
         public int GoneCount
         {

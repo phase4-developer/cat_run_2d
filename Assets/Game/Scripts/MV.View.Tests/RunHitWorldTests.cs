@@ -351,6 +351,46 @@ namespace MV.View.Tests
             Assert.That(hits.Select(h => h.Obj.Id), Is.EqualTo(new[] { b.Id }), "다시 쓴 뷰의 Hitbox는 새 오브젝트로 맞는다");
         }
 
+        /// <summary>
+        /// 이벤트 대상 정본은 <see cref="RunEvent.TargetsObject"/> 한 곳이다. 오브젝트 번호와 투사체 번호는 따로 1부터 세므로 늘 겹친다(RunState.NextObjId·NextProjId).
+        /// 관리자가 모르는 새 모듈도 프리팹에 붙이기만 하면 오브젝트 대상 이벤트(관리자에 나열 없는 GateFill·Steal·BurnTick 포함)를 받고,
+        /// 같은 번호의 투사체 이벤트·번호 없는 이벤트·뷰 없는 번호는 받지 않는다.
+        /// </summary>
+        [Test]
+        public void ObjectEvents_ReachUnknownPrefabModule_ProjectileIdsDoNot()
+        {
+            var prefab = TestPrefab(Vector3.one, Quaternion.identity, (new Vector3(0, 1, 0), new Vector3(2, 2, 1)));
+            prefab.AddComponent<RecordingObjectModule>();
+            var rig = new HitWorldRig(_t, a => prefab);
+            _rigs.Add(rig);
+            var s = NewState();
+            var a1 = Kind(s, "tower", 1, 0, 10);
+            Kind(s, "tower", 2, 0, 14);
+            rig.Frame(0, s.Objs);
+            var rec = rig.Factory.ViewOf(1).GetComponent<RunObjectView>().Module<RecordingObjectModule>();
+            var other = rig.Factory.ViewOf(2).GetComponent<RunObjectView>().Module<RecordingObjectModule>();
+            Assert.That(rec, Is.Not.Null, "프리팹 인스턴스의 새 모듈을 뷰가 읽음");
+
+            rig.Factory.OnRunEvents(new List<RunEvent>
+            {
+                new RunEvent(RunEventType.Fire, objId: 1),          // 투사체 1번
+                new RunEvent(RunEventType.ProjImpact, objId: 1),
+                new RunEvent(RunEventType.ProjRemoved, objId: 1),
+                new RunEvent(RunEventType.Hitstop, amount: 0.1),     // 번호 없음
+                new RunEvent(RunEventType.Hit, objId: 0),
+                new RunEvent(RunEventType.Hit, objId: 99),           // 뷰 없음
+                new RunEvent(RunEventType.Hit, objId: 1, kindId: a1.Kind.id),
+                new RunEvent(RunEventType.GateFill, objId: 1),
+                new RunEvent(RunEventType.Steal, objId: 1),
+                new RunEvent(RunEventType.BurnTick, objId: 1),
+                new RunEvent(RunEventType.Break, objId: 1, kindId: a1.Kind.id),
+            });
+            Assert.That(rec.Got, Is.EqualTo(new[] { RunEventType.Hit, RunEventType.GateFill, RunEventType.Steal, RunEventType.BurnTick, RunEventType.Break }),
+                "오브젝트 대상만, 발생 순서 그대로");
+            Assert.That(rec.GotFor, Is.All.SameAs(a1), "그 오브젝트에 연결된 뷰로만");
+            Assert.That(other.Got, Is.Empty, "다른 오브젝트 뷰는 받지 않음");
+        }
+
         /// <summary>연출(흔들림·눌림·자리 흔들기)은 그림 묶음만 움직이고 Hitbox는 시뮬 위치 그대로다.</summary>
         [Test]
         public void HitMotion_MovesBoardsOnly_HitboxStays()

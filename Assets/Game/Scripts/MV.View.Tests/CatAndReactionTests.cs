@@ -18,10 +18,13 @@ namespace MV.View.Tests
     public sealed class CatAndReactionTests
     {
         readonly List<GameObject> _made = new List<GameObject>();
+        readonly List<HitWorldRig> _rigs = new List<HitWorldRig>();
 
         [TearDown]
         public void TearDown()
         {
+            foreach (var r in _rigs) r.Dispose();
+            _rigs.Clear();
             foreach (var go in _made) if (go != null) Object.DestroyImmediate(go);
             _made.Clear();
         }
@@ -473,63 +476,103 @@ namespace MV.View.Tests
             return f;
         }
 
-        // 반응 상태는 그 오브젝트 뷰의 모듈이 가진다(관리자는 모르고 묻지 않는다). 코드 모양 뷰 = ProceduralObjectLook(흔들림·번쩍·벽돌) + ObjectMotion(눌림·쓰러짐).
+        // 반응 상태는 그 오브젝트 뷰의 모듈이 가진다(관리자는 모르고 묻지 않는다).
         static RunObjectView ViewComp(ObjectViewFactory f, int id) => f.ViewOf(id) != null ? f.ViewOf(id).GetComponent<RunObjectView>() : null;
 
-        static ProceduralObjectLook LookOf(ObjectViewFactory f, int id) => ViewComp(f, id)?.Module<ProceduralObjectLook>();
-
-        static bool TryReaction(ObjectViewFactory f, int id, out double shake, out double flash)
-        {
-            var l = LookOf(f, id);
-            shake = l != null ? l.Shake : 0;
-            flash = l != null ? l.Flash : 0;
-            return l != null;
-        }
-
-        static bool TryMotion(ObjectViewFactory f, int id, out double punch, out double die)
-        {
-            var m = ViewComp(f, id)?.Module<ObjectMotion>();
-            punch = m != null ? m.Punch : 0;
-            die = m != null ? m.Die : -1;
-            return m != null;
-        }
-
-        static int GoneBricks(ObjectViewFactory f, int id) => LookOf(f, id)?.GoneBricks ?? 0;
+        static T Mod<T>(ObjectViewFactory f, int id) where T : RunObjectModule => ViewComp(f, id)?.Module<T>();
 
         static RunObject Obj(MvTables t, string key, int id, double z)
         {
             var o = RunObjectFactory.Create(t, t.ObjectKind.ByKey(key), 0, z);
             o.Id = id;
+            if (key == "wall")
+            {
+                o.Idx = 0;                  // 필드 벽(305 보상 행)
+                o.Rew = FieldReward.Gold;   // → Stage1_Block_Gold
+            }
             return o;
         }
 
-        [Test]
-        public void HitAndWellFlush_DriveReactionsFromTable()
+        /// <summary>게임과 같은 경로: 관리자 → 305·105 프리팹 주소 → 실제 프리팹 인스턴스 → 프리팹 모듈.</summary>
+        HitWorldRig PrefabRig(MvTables t)
         {
-            var t = ViewTestTables.CodeShapes();   // 우물 벽돌은 코드 모양(105.prefab 빈칸)일 때만 있다
-            var f = MakeFactory();
+            var rig = new HitWorldRig(t);
+            _rigs.Add(rig);
+            return rig;
+        }
+
+        /// <summary>프레임 사이 실시간 경과(Sync dt는 실시간, 한 번에 최대 0.1초).</summary>
+        static void Frames(HitWorldRig rig, IReadOnlyList<RunObject> objs, int n)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                System.Threading.Thread.Sleep(20);
+                rig.Frame(0, objs);
+            }
+        }
+
+        static Transform Board(ObjectViewFactory f, int id) => f.ViewOf(id).GetComponentInChildren<Billboard>(true).transform;
+
+        static Transform Hitbox(ObjectViewFactory f, int id) => f.ViewOf(id).GetComponentInChildren<RunHitbox>(true).transform;
+
+        /// <summary>
+        /// 실제 프리팹 모듈이 오브젝트 대상 이벤트만 받아 표대로 반응한다: 블록 흔들림(WallBlockFx), 관문 막 번쩍(GateCurtainFx),
+        /// 수정탑 흔들림·구슬 빠짐(TowerOrbs). 같은 번호를 실은 투사체 이벤트와 뷰 없는 번호는 아무 뷰에도 가지 않는다.
+        /// </summary>
+        [Test]
+        public void PrefabModules_ReactToObjectEventsOnly_FromTable()
+        {
+            var t = ViewTestTables.Load();
+            var rig = PrefabRig(t);
+            var f = rig.Factory;
             var objs = new List<RunObject> { Obj(t, "wall", 1, 15), Obj(t, "sgate", 2, 20), Obj(t, "tower", 3, 25) };
-            f.Sync(objs, 0, 0, 0);
+            rig.Frame(0, objs);
+            Assert.That(f.TryPrefabView(1, out string a1, out var i1) && i1 != null, Is.True, "블록 프리팹 인스턴스");
+            Assert.That(a1, Is.EqualTo("Stage1_Block_Gold"));
+            Assert.That(f.TryPrefabView(2, out _, out var i2) && i2 != null, Is.True, "관문 프리팹 인스턴스");
+            Assert.That(f.TryPrefabView(3, out _, out var i3) && i3 != null, Is.True, "수정탑 프리팹 인스턴스");
+            var wall = Mod<WallBlockFx>(f, 1);
+            var gate = Mod<GateCurtainFx>(f, 2);
+            var tower = Mod<TowerOrbs>(f, 3);
+            Assert.That(wall, Is.Not.Null, "블록 프리팹 WallBlockFx");
+            Assert.That(gate, Is.Not.Null, "관문 프리팹 GateCurtainFx");
+            Assert.That(tower, Is.Not.Null, "수정탑 프리팹 TowerOrbs");
+            Assert.That(gate.Curtain, Is.Not.Null, "막 그림이 프리팹 안 직렬화 참조로 연결");
+            Assert.That(tower.OrbCount, Is.GreaterThan(3), "구슬 참조");
+
+            // 투사체 번호(Fire·ProjImpact·ProjRemoved)는 오브젝트 번호와 겹쳐도 오브젝트 뷰로 가지 않는다(RunEvent.TargetsObject).
+            f.OnRunEvents(new List<RunEvent>
+            {
+                new RunEvent(RunEventType.Fire, objId: 1),
+                new RunEvent(RunEventType.ProjImpact, objId: 2),
+                new RunEvent(RunEventType.ProjRemoved, objId: 3),
+            });
+            Assert.That(wall.Shake, Is.EqualTo(0));
+            Assert.That(gate.Flash, Is.EqualTo(0));
+            Assert.That(tower.Shake, Is.EqualTo(0));
+            Assert.That(Mod<ObjectMotion>(f, 1).Punch, Is.EqualTo(0), "투사체 이벤트로 눌리지 않음");
+
             f.OnRunEvents(new List<RunEvent>
             {
                 new RunEvent(RunEventType.Hit, objId: 1, kindId: objs[0].Kind.id),
                 new RunEvent(RunEventType.Hit, objId: 2, kindId: objs[1].Kind.id),
+                new RunEvent(RunEventType.Hit, objId: 3, kindId: objs[2].Kind.id),
                 new RunEvent(RunEventType.WellFlush, objId: 3, a: 3, amount: 10),
                 new RunEvent(RunEventType.Hit, objId: 99),
             });
-            Assert.That(TryReaction(f, 1, out double shake, out double flash), Is.True);
-            Assert.That(shake, Is.EqualTo(objs[0].Reaction.objShake > 0 ? ObjectReaction.ShakeSec : 0), "106 objShake → 흔들림");
-            Assert.That(TryReaction(f, 2, out _, out flash), Is.True);
-            Assert.That(flash, Is.EqualTo(objs[1].Reaction.flash ? ObjectReaction.FlashSec : 0), "106 flash → 관문 번쩍");
-            Assert.That(GoneBricks(f, 3), Is.EqualTo(3), "벽돌 3개 빠짐");
+            Assert.That(wall.Shake, Is.EqualTo(objs[0].Reaction.objShake > 0 ? ObjectReaction.ShakeSec : 0), "106 objShake → 블록 흔들림");
+            Assert.That(gate.Flash, Is.EqualTo(objs[1].Reaction.flash ? ObjectReaction.FlashSec : 0), "106 flash → 관문 막 번쩍");
+            Assert.That(tower.Shake, Is.EqualTo(objs[2].Reaction.objShake > 0 ? ObjectReaction.ShakeSec : 0), "106 objShake → 구슬 묶음 흔들림");
+            Assert.That(tower.GoneCount, Is.EqualTo(3), "구슬 3개 빠짐");
             f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.WellFlush, objId: 3, a: 60) });
-            Assert.That(GoneBricks(f, 3), Is.EqualTo(53), "남은 벽돌보다 많으면 있는 만큼만");
+            Assert.That(tower.GoneCount, Is.EqualTo(tower.OrbCount), "남은 구슬보다 많으면 있는 만큼만");
         }
 
+        /// <summary>눌림(106.punch)은 실제 프리팹의 빌보드 묶음 크기만 바꾸고, 뷰 뿌리와 Hitbox Collider의 위치·크기는 그대로다.</summary>
         [Test]
         public void Hit_PunchFromTable_MatchesNewHtml()
         {
-            var t = ViewTestTables.CodeShapes();
+            var t = ViewTestTables.Load();
             // 새 HTML hit(2026-11-13 연출 정본): o.punch 벽 1, 금화·원석 1, 게이트 0.5, 수정탑 0.6. 흔들림 벽·수정탑.
             Assert.AreEqual(1, t.HitReaction.ByKey("damageWall").punch);
             Assert.AreEqual(1, t.HitReaction.ByKey("damageBox").punch);
@@ -539,45 +582,56 @@ namespace MV.View.Tests
             Assert.Greater(t.HitReaction.ByKey("chargeWell").objShake, 0);
             Assert.Greater(t.HitReaction.ByKey("damageWall").objShake, 0);
 
-            var f = MakeFactory();
+            var rig = PrefabRig(t);
+            var f = rig.Factory;
             var objs = new List<RunObject> { Obj(t, "wall", 1, 15), Obj(t, "sgate", 2, 20) };
-            f.Sync(objs, 0, 0, 0);
+            rig.Frame(0, objs);
+            var board = Board(f, 1);
+            var hb = Hitbox(f, 1);
+            var hbCol = hb.GetComponent<Collider>();
+            Physics.SyncTransforms();
+            Vector3 boardScale = board.localScale, hbPos = hb.position, hbScale = hb.lossyScale;
+            var hbBounds = hbCol.bounds;
             f.OnRunEvents(new List<RunEvent>
             {
                 new RunEvent(RunEventType.Hit, objId: 1, kindId: objs[0].Kind.id),
                 new RunEvent(RunEventType.Hit, objId: 2, kindId: objs[1].Kind.id),
             });
-            Assert.That(TryMotion(f, 1, out double p1, out double d1), Is.True);
-            Assert.AreEqual(objs[0].Reaction.punch, p1, "106 punch → 눌림 시작값");
-            Assert.AreEqual(-1, d1);
-            Assert.That(TryMotion(f, 2, out double p2, out _), Is.True);
-            Assert.AreEqual(objs[1].Reaction.punch, p2);
-            f.Sync(objs, 0, 0, 0);
+            Assert.AreEqual(objs[0].Reaction.punch, Mod<ObjectMotion>(f, 1).Punch, "106 punch → 눌림 시작값");
+            Assert.AreEqual(-1, Mod<ObjectMotion>(f, 1).Die);
+            Assert.AreEqual(objs[1].Reaction.punch, Mod<ObjectMotion>(f, 2).Punch);
+            Frames(rig, objs, 1);
             Assert.AreEqual(Vector3.one, f.ViewOf(1).transform.localScale, "뷰 뿌리는 그대로(판정·위치 기준)");
-            var s = LookOf(f, 1).Look.localScale;   // 눌림은 그림 묶음만
-            Assert.Greater(s.x, 1f, "눌림: 가로로 넓어지고");
-            Assert.Less(s.y, 1f, "세로로 눌린다");
+            var s = board.localScale;   // 눌림은 그림 묶음만
+            Assert.Greater(s.x, boardScale.x, "눌림: 가로로 넓어지고");
+            Assert.Less(s.y, boardScale.y, "세로로 눌린다");
+            Physics.SyncTransforms();
+            Assert.That(hb.position, Is.EqualTo(hbPos), "Hitbox 위치 그대로");
+            Assert.That(hb.lossyScale, Is.EqualTo(hbScale), "Hitbox 크기 그대로");
+            Assert.That(hbCol.bounds.center, Is.EqualTo(hbBounds.center), "Collider 범위 그대로");
+            Assert.That(hbCol.bounds.size, Is.EqualTo(hbBounds.size));
         }
 
         [Test]
         public void Break_KeepsViewForPaperDie_ThenReleases()
         {
-            var t = ViewTestTables.CodeShapes();
-            var f = MakeFactory();
+            var t = ViewTestTables.Load();
+            var rig = PrefabRig(t);
+            var f = rig.Factory;
             var wall = Obj(t, "wall", 1, 15);
             var objs = new List<RunObject> { wall };
-            f.Sync(objs, 0, 0, 0);
+            rig.Frame(0, objs);
             f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Break, objId: 1, kindId: wall.Kind.id) });
             wall.Dead = true;
-            f.Sync(objs, 0, 0, 0);
+            rig.Frame(0, objs);
             Assert.That(f.ViewOf(1), Is.Not.Null, "죽어도 0.6초는 쓰러지는 그림이 남는다(paperDie)");
-            Assert.That(TryMotion(f, 1, out _, out double die), Is.True);
-            Assert.GreaterOrEqual(die, 0);
+            Assert.That(Mod<ObjectMotion>(f, 1).Die, Is.GreaterThanOrEqualTo(0));
+            Assert.That(ViewComp(f, 1).Dying, Is.True);
             // Sync의 dt는 실시간(한 번에 최대 0.1초)이라 0.6초가 지나도록 여러 번 부른다.
             for (int i = 0; i < 12 && f.ViewOf(1) != null; i++)
             {
                 System.Threading.Thread.Sleep(110);
-                f.Sync(objs, 0, 0, 0);
+                rig.Frame(0, objs);
             }
             Assert.That(f.ViewOf(1), Is.Null, "다 쓰러지면 뷰를 돌려준다");
         }
@@ -764,31 +818,57 @@ namespace MV.View.Tests
         }
 
         /// <summary>
-        /// 런마다 오브젝트 번호를 1부터 다시 쓴다. 같은 번호의 새 오브젝트가 이전 뷰의 흔들림·눌림·쓰러짐을 이어받지 않는다
+        /// 런마다 오브젝트 번호를 1부터 다시 쓴다. 같은 번호의 새 오브젝트는 관리자가 이전 뷰를 회수해 풀에서 다시 꺼내고,
+        /// 실제 프리팹 모듈의 흔들림·번쩍·눌림·구슬 빠짐과 빌보드 묶음 자세가 처음으로 돌아간다
         /// (2026-11-14 사용자 「장애물 흔들림 처리가 오브젝트 재활용해서 스폰할때 살짝 보이는거 같아」).
         /// </summary>
         [Test]
         public void SameIdNewObject_StartsWithoutPreviousMotion()
         {
-            var t = ViewTestTables.CodeShapes();
-            var f = MakeFactory();
-            var oldWall = Obj(t, "wall", 1, 15);
-            f.Sync(new List<RunObject> { oldWall }, 0, 0, 0);
-            f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Hit, objId: 1, kindId: oldWall.Kind.id) });
-            Assert.That(TryReaction(f, 1, out double shake0, out _), Is.True);
-            Assert.Greater(shake0, 0, "이전 런: 맞아서 흔들리는 중");
+            var t = ViewTestTables.Load();
+            var rig = PrefabRig(t);
+            var f = rig.Factory;
+            var old = new List<RunObject> { Obj(t, "wall", 1, 15), Obj(t, "sgate", 2, 20), Obj(t, "tower", 3, 25) };
+            rig.Frame(0, old);
+            var views = new[] { ViewComp(f, 1), ViewComp(f, 2), ViewComp(f, 3) };
+            var boardPos = new Vector3[3];
+            var boardScale = new Vector3[3];
+            for (int i = 0; i < 3; i++)
+            {
+                boardPos[i] = Board(f, i + 1).localPosition;
+                boardScale[i] = Board(f, i + 1).localScale;
+            }
+            f.OnRunEvents(new List<RunEvent>
+            {
+                new RunEvent(RunEventType.Hit, objId: 1, kindId: old[0].Kind.id),
+                new RunEvent(RunEventType.Hit, objId: 2, kindId: old[1].Kind.id),
+                new RunEvent(RunEventType.Hit, objId: 3, kindId: old[2].Kind.id),
+                new RunEvent(RunEventType.WellFlush, objId: 3, a: 2),
+            });
+            Frames(rig, old, 1);
+            Assert.Greater(Mod<WallBlockFx>(f, 1).Shake, 0, "이전 런: 맞아서 흔들리는 중");
+            Assert.Greater(Mod<GateCurtainFx>(f, 2).Flash, 0, "이전 런: 막 번쩍");
+            Assert.Greater(Mod<ObjectMotion>(f, 1).Punch, 0, "이전 런: 눌림");
+            Assert.That(Mod<TowerOrbs>(f, 3).GoneCount, Is.EqualTo(2), "이전 런: 구슬 빠짐");
+            Assert.That(Board(f, 1).localScale, Is.Not.EqualTo(boardScale[0]), "이전 런: 그림 묶음 눌림");
 
-            var newWall = Obj(t, "wall", 1, 18);   // 새 런, 같은 번호
-            f.Sync(new List<RunObject> { newWall }, 0, 0, 0);
-            Assert.That(TryReaction(f, 1, out double shake, out double flash), Is.True);
-            Assert.AreEqual(0, shake, "새 오브젝트는 흔들림 없이 시작");
-            Assert.AreEqual(0, flash);
-            Assert.That(TryMotion(f, 1, out double punch, out double die), Is.True);
-            Assert.AreEqual(0, punch);
-            Assert.AreEqual(-1, die);
-            Assert.AreEqual(Vector3.one, f.ViewOf(1).transform.localScale);
-            Assert.AreEqual(Vector3.one, LookOf(f, 1).Look.localScale, "그림 묶음도 눌림 없이");
-            Assert.AreEqual(Vector3.zero, LookOf(f, 1).Look.localPosition, "그림 묶음 흔들림 없이");
+            var fresh = new List<RunObject> { Obj(t, "wall", 1, 18), Obj(t, "sgate", 2, 22), Obj(t, "tower", 3, 27) };   // 새 런, 같은 번호
+            rig.Frame(0, fresh);
+            for (int i = 0; i < 3; i++)
+            {
+                string k = fresh[i].Kind.key;
+                Assert.That(ViewComp(f, i + 1), Is.SameAs(views[i]), k + ": 풀에서 같은 뷰를 다시 씀");
+                Assert.That(ViewComp(f, i + 1).Obj, Is.SameAs(fresh[i]));
+                Assert.AreEqual(0, Mod<ObjectMotion>(f, i + 1).Punch, k + ": 눌림 없이");
+                Assert.AreEqual(-1, Mod<ObjectMotion>(f, i + 1).Die);
+                Assert.AreEqual(Vector3.one, f.ViewOf(i + 1).transform.localScale);
+                Assert.That(Board(f, i + 1).localScale, Is.EqualTo(boardScale[i]), k + ": 그림 묶음 크기 처음");
+            }
+            Assert.AreEqual(0, Mod<WallBlockFx>(f, 1).Shake, "새 오브젝트는 흔들림 없이 시작");
+            Assert.AreEqual(0, Mod<GateCurtainFx>(f, 2).Flash, "막 번쩍 없이");
+            Assert.AreEqual(0, Mod<TowerOrbs>(f, 3).Shake);
+            Assert.AreEqual(0, Mod<TowerOrbs>(f, 3).GoneCount, "구슬 모두 다시 보임");
+            Assert.That(Board(f, 1).localPosition, Is.EqualTo(boardPos[0]), "블록 그림 묶음 흔들림 없이(자리 흔들기만)");
             Assert.AreEqual(18f, f.ViewOf(1).transform.position.z, 1e-4f, "새 오브젝트 자리");
         }
 
@@ -797,12 +877,40 @@ namespace MV.View.Tests
         {
             var t = ViewTestTables.WithCell(HitReactionData.Table, "damageWall", "objShake", "0");
             t.BuildIndexes();
-            var f = MakeFactory();
+            var rig = PrefabRig(t);
             var wall = Obj(t, "wall", 1, 15);
-            f.Sync(new List<RunObject> { wall }, 0, 0, 0);
-            f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Hit, objId: 1, kindId: wall.Kind.id) });
-            Assert.That(TryReaction(f, 1, out double shake, out _), Is.True);
-            Assert.That(shake, Is.EqualTo(0), "표만 바꿔도 흔들림이 꺼진다(D-87)");
+            rig.Frame(0, new List<RunObject> { wall });
+            rig.Factory.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Hit, objId: 1, kindId: wall.Kind.id) });
+            var fx = Mod<WallBlockFx>(rig.Factory, 1);
+            Assert.That(fx, Is.Not.Null, "실제 블록 프리팹 모듈");
+            Assert.That(fx.Shake, Is.EqualTo(0), "표만 바꿔도 흔들림이 꺼진다(D-87)");
+        }
+
+        /// <summary>
+        /// 예비 경로: 프리팹이 없는 종류(cardbox 등)는 관리자가 코드 모양(<see cref="ProceduralObjectLook"/> + <see cref="ObjectMotion"/>)을 붙인다.
+        /// 프리팹 모듈과 같은 이벤트 흐름으로 반응하는지만 본다(우물 벽돌은 코드 모양에만 있다).
+        /// </summary>
+        [Test]
+        public void CodeShapeFallback_ReactsThroughSameModuleFlow()
+        {
+            var t = ViewTestTables.CodeShapes();
+            var f = MakeFactory();
+            var objs = new List<RunObject> { Obj(t, "wall", 1, 15), Obj(t, "tower", 3, 25) };
+            f.Sync(objs, 0, 0, 0);
+            var look = Mod<ProceduralObjectLook>(f, 1);
+            Assert.That(look, Is.Not.Null, "프리팹 없음 → 코드 모양");
+            Assert.That(Mod<ObjectMotion>(f, 1), Is.Not.Null);
+            f.OnRunEvents(new List<RunEvent>
+            {
+                new RunEvent(RunEventType.Hit, objId: 1, kindId: objs[0].Kind.id),
+                new RunEvent(RunEventType.WellFlush, objId: 3, a: 3, amount: 10),
+            });
+            Assert.That(look.Shake, Is.EqualTo(objs[0].Reaction.objShake > 0 ? ObjectReaction.ShakeSec : 0));
+            Assert.AreEqual(objs[0].Reaction.punch, Mod<ObjectMotion>(f, 1).Punch);
+            Assert.That(Mod<ProceduralObjectLook>(f, 3).GoneBricks, Is.EqualTo(3), "벽돌 3개 빠짐");
+            f.Sync(objs, 0, 0, 0);
+            Assert.AreEqual(Vector3.one, f.ViewOf(1).transform.localScale, "뷰 뿌리는 그대로");
+            Assert.Less(look.Look.localScale.y, 1f, "눌림은 그림 묶음만");
         }
     }
 }
