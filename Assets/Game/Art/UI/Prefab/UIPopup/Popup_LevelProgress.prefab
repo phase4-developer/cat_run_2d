@@ -444,6 +444,7 @@ GameObject:
   - component: {fileID: 5689298424820426554}
   - component: {fileID: 8994907116901609002}
   - component: {fileID: 5693283301581947282}
+  - component: {fileID: 7301100000000000055}
   m_Layer: 5
   m_Name: Popup_LevelProgress
   m_TagString: Untagged
@@ -598,6 +599,7 @@ GameObject:
   - component: {fileID: 475497658132610349}
   - component: {fileID: 8974997263969168435}
   - component: {fileID: 1035088438833935552}
+  - component: {fileID: 7301100000000000066}
   m_Layer: 5
   m_Name: Button_Close
   m_TagString: Untagged
@@ -6091,3 +6093,73 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2963886648090610226, guid: 0cead497a1c4d38458b2d83386a5276c, type: 3}
   m_PrefabInstance: {fileID: 8142289314644423632}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7301100000000000066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965117343439416483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1035088438833935552}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7301100000000000055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750380480380246543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da96630dc2047638c9a0d26f77d3c69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.LevelProgressView
+  scrollRect: {fileID: 7804576189248450277}
+  content: {fileID: 8074918502450901736}
+  backgroundGroup: {fileID: 3814565965159886899}
+  areaPrefab: {fileID: 7301100000000000044, guid: 1d4acf018e499c149b3fbcf917848ed3, type: 3}
+  backgroundPrefab: {fileID: 7301100000000000033, guid: 0cead497a1c4d38458b2d83386a5276c, type: 3}
+  progressBar: {fileID: 9185294671820590616}
+  indicatorHolder: {fileID: 238075884855587984}
+  indicator: {fileID: 5097866178198345267}
+  soulsText: {fileID: 5026493186872700401}
+  closeRoot: {fileID: 527917444720159667}
+  closeButton: {fileID: 7301100000000000066}
+  riseDelay: 0.3
+  riseDuration: 1
+  autoCloseHold: 0.8

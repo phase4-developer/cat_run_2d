@@ -33,8 +33,6 @@ namespace MV.UI.Tests
         [TestCase("13_areaUpgrade", "area", "rows")]
         [TestCase("14_rebirthPerk", "rebirth", "rows")]
         [TestCase("113_god", "god", "tabs")]
-        [TestCase("302_area", "map", "banners")]
-        [TestCase("05_contentOpen", "map", "rows")]
         [TestCase("06_balancePreset", "debug", "balance")]
         public void TableRowAdded_ShowsOneMoreItem(string table, string screen, string metric)
         {

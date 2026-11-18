@@ -566,6 +566,7 @@ zoneIndex(0기반, 보상 `ValuePerZone` 계산) = Zone을 sort 순으로 늘어
 | fieldSeedArea | int | areaNo − 1 | fieldSpec 시드에 넣는 A(0기반). 정본은 「클램프 전 A」 = areaNo − 1 |
 | bgm | sound | 빈칸 | 비우면 Zone 값 |
 | mapIcon | res | 빈칸 | 지도 Area 배너 아이콘(기본 아틀라스 `Atlas_UI_Lobby`) |
+| mapColor | color | 빈칸 | 지도(LevelProgress) Area 배경색 `#RRGGBB`. 비우면 디자이너 색 그대로. Area 1~6은 노션 「[팝업] LevelProgress」 견본 색, 7부터는 **더미**(견본 6색 반복, 결정 후보). 사용자 2026-11-19 「302_area에 색 열 추가」(MV-UI3-LVPROG) |
 | bg | res | 빈칸 | 배너 배경(`Tex_*` 주소, AddressableTexture) |
 | clearRewardType / Id / Value | consume | 빈칸 | 개방 순간 보상. 정본에 없음 → 빈칸 [프로토] |
 | firstClearRewardType / Id / Value | consume | 빈칸 | 첫 Area 아치 도달 보상(확장용) |
