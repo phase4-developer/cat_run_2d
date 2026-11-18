@@ -17,6 +17,7 @@ namespace MV.View.Tests
         const string StageMap = "Stage1";
         static readonly string[] GateKeys = { "sgate", "cgate" };
         readonly List<GameObject> _made = new List<GameObject>();
+        readonly List<HitWorldRig> _rigs = new List<HitWorldRig>();
         MvTables _t;
 
         [SetUp]
@@ -25,6 +26,8 @@ namespace MV.View.Tests
         [TearDown]
         public void TearDown()
         {
+            foreach (var r in _rigs) r.Dispose();
+            _rigs.Clear();
             foreach (var go in _made) if (go != null) Object.DestroyImmediate(go);
             _made.Clear();
         }
@@ -91,20 +94,10 @@ namespace MV.View.Tests
         {
             var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } }, _t, new Pcg32Rng(1), new RunLevelBuilder());
             var s = sim.State;
-            var go = new GameObject("HitWorldTest");
-            _made.Add(go);
-            var w = go.AddComponent<RunHitWorld>();
-            GameObject gateInst = null;
-            w.Init((o, wy) =>
-            {
-                string a = ObjectViewFactory.PrefabFor(_t, StageMap, o);
-                if (a == null) return null;
-                if (gateInst == null) { gateInst = Object.Instantiate(LoadPrefab(a)); _made.Add(gateInst); }
-                gateInst.transform.position = new Vector3((float)o.X, (float)wy, (float)o.Z);
-                var cols = new List<Collider>();
-                foreach (var hb in gateInst.GetComponentsInChildren<RunHitbox>(true)) cols.AddRange(hb.GetComponentsInChildren<Collider>(true));
-                return cols;
-            }, o => ObjectViewFactory.PrefabFor(_t, StageMap, o));
+            var rig = new HitWorldRig(_t);   // 게임과 같은 판정 경로(관리자 → 뷰 연결 → 게이트 프리팹 Hitbox 등록)
+            _rigs.Add(rig);
+            rig.Frame(s.P.Z);
+            var w = rig.World;
             sim.HitQuery = w;
             s.Objs.Clear();
             s.Projs.Clear();

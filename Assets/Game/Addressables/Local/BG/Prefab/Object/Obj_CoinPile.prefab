@@ -549,6 +549,7 @@ GameObject:
   - component: {fileID: 2218799235433293714}
   - component: {fileID: 8659811705148741679}
   - component: {fileID: 3581620000000000101}
+  - component: {fileID: 6909062526400888092}
   m_Layer: 0
   m_Name: Obj_CoinPile
   m_TagString: Untagged
@@ -833,3 +834,15 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8996763789592010812, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
   m_PrefabInstance: {fileID: 1439257607391257188}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6909062526400888092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8877599958285687923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5df55a71314ab8a681fe40e0bcd759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

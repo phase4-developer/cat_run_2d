@@ -115,7 +115,7 @@ namespace MV.View.Tests
             f.Init(ViewTestTables.Config(), camGo.transform, new WorldSpriteCache(), WorldView.FxAtlas);
             f.SetTheme(ViewTestTables.Theme("market"));
             f.LabelText = _ => null;   // TMP 글꼴 없이 구조만 본다
-            f.PrefabLoader = (a, ct) => Cysharp.Threading.Tasks.UniTask.Never<jjevol.AddressableLease<GameObject>>(ct);   // 프리팹 로드 없이 뷰 구조만
+            f.PrefabLoader = (a, ct) => Cysharp.Threading.Tasks.UniTask.Never<PrefabHandle>(ct);   // 프리팹 로드 없이 뷰 구조만
             return f;
         }
 
@@ -225,6 +225,50 @@ namespace MV.View.Tests
             Assert.That(f.TryPrefabView(4, out string a4, out _), Is.True);
             Assert.That(a4, Is.EqualTo("Obj_Enemy"), "적은 프리팹(그림 자리·Hitbox)");
             Assert.That(f.ViewOf(1).GetComponent<DepthSortable>(), Is.Not.Null, "프리팹 뷰도 같은 정렬 루트");
+        }
+
+        /// <summary>
+        /// 오브젝트 동작은 프리팹 컴포넌트로 구성한다: 표가 쓰는 오브젝트 프리팹마다 모듈(<see cref="RunObjectModule"/>)이 붙어 있고,
+        /// 모듈이 가리키는 그림(빛·막·구슬·몸 그림 등)은 이름 찾기가 아니라 같은 프리팹 안 참조다. 피격 가능 종류의 프리팹은 Hitbox가 그림 묶음 밖에 있다.
+        /// </summary>
+        [Test]
+        public void ObjectPrefabs_BehaviourIsPrefabModules_WithInPrefabReferences()
+        {
+            var t = ViewTestTables.Load();
+            var used = new Dictionary<string, bool>();   // 주소 → 피격 가능 종류가 쓰는가
+            foreach (var k in t.ObjectKind.Datas)
+                if (!string.IsNullOrEmpty(k.prefab)) used[k.prefab] = (used.TryGetValue(k.prefab, out bool h) && h) || k.hittable != Hittable.Never;
+            foreach (var s in t.StageObject.Datas)
+            {
+                if (string.IsNullOrEmpty(s.prefab)) continue;
+                var k = t.ObjectKind.ByKey(s.kind);
+                used[s.prefab] = (used.TryGetValue(s.prefab, out bool h) && h) || (k != null && k.hittable != Hittable.Never);
+            }
+            Assert.That(used, Is.Not.Empty);
+            foreach (var kv in used)
+            {
+                var prefab = HitWorldRig.LoadPrefab(kv.Key);
+                Assert.That(prefab, Is.Not.Null, kv.Key);
+                var mods = prefab.GetComponentsInChildren<RunObjectModule>(true);
+                Assert.That(mods, Is.Not.Empty, kv.Key + ": 모듈 없음");
+                Assert.That(prefab.GetComponentsInChildren<ObjectMotion>(true).Length, Is.EqualTo(1), kv.Key + ": 눌림·쓰러짐(ObjectMotion) 1개");
+                foreach (var m in mods)
+                {
+                    var it = new SerializedObject(m).GetIterator();
+                    while (it.NextVisible(true))
+                    {
+                        if (it.propertyType != SerializedPropertyType.ObjectReference || it.objectReferenceValue == null || it.name == "m_Script") continue;
+                        var obj = it.objectReferenceValue;
+                        var tr = obj is Component c ? c.transform : obj is GameObject g ? g.transform : null;
+                        Assert.That(tr != null && tr.IsChildOf(prefab.transform), Is.True, $"{kv.Key}: {m.GetType().Name}.{it.propertyPath}는 프리팹 안을 가리켜야 함");
+                    }
+                }
+                if (!kv.Value) continue;
+                var hbs = prefab.GetComponentsInChildren<RunHitbox>(true);
+                Assert.That(hbs, Is.Not.Empty, kv.Key + ": 피격 가능 종류의 Hitbox");
+                foreach (var hb in hbs)
+                    Assert.That(hb.GetComponentInParent<Billboard>(true), Is.Null, kv.Key + ": Hitbox는 그림 묶음(빌보드) 밖");
+            }
         }
 
         [TestCase(3, 10, 10, 3)]

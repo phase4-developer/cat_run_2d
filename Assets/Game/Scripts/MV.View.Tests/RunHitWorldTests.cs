@@ -15,8 +15,9 @@ namespace MV.View.Tests
     /// </summary>
     public sealed class RunHitWorldTests
     {
-        const string StageMap = "Stage1";
+        const string StageMap = HitWorldRig.StageMap;
         readonly List<GameObject> _made = new List<GameObject>();
+        readonly List<HitWorldRig> _rigs = new List<HitWorldRig>();
         MvTables _t;
 
         [SetUp]
@@ -25,53 +26,25 @@ namespace MV.View.Tests
         [TearDown]
         public void TearDown()
         {
+            foreach (var r in _rigs) r.Dispose();
+            _rigs.Clear();
             foreach (var go in _made) if (go != null) Object.DestroyImmediate(go);
             _made.Clear();
         }
 
-        static GameObject LoadPrefab(string address)
-        {
-            foreach (var guid in AssetDatabase.FindAssets(address + " t:Prefab"))
-            {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                if (Path.GetFileNameWithoutExtension(path) == address) return AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            }
-            return null;
-        }
+        static GameObject LoadPrefab(string address) => HitWorldRig.LoadPrefab(address);
 
-        /// <summary>
-        /// 판정 세계 + 시험용 판정 형상 공급: 오브젝트마다 프리팹 인스턴스 하나를 시뮬 위치에 두고 그 안 <see cref="RunHitbox"/> Collider를 준다
-        /// (게임에서는 <see cref="ObjectViewFactory.HitShape"/>가 화면 뷰 인스턴스로 같은 일을 한다).
-        /// </summary>
-        RunHitWorld MakeWorld(System.Func<RunObject, string> addressOf, System.Func<string, GameObject> assetOf)
+        /// <summary>게임과 같은 판정 경로(관리자 → 뷰 연결 → 프리팹 Hitbox 등록 → 질의). <paramref name="assetOf"/>가 null이면 실제 프리팹 에셋.</summary>
+        RunHitWorld MakeWorld(System.Func<string, GameObject> assetOf = null, double pz = 0)
         {
-            var go = new GameObject("HitWorldTest");
-            _made.Add(go);
-            var w = go.AddComponent<RunHitWorld>();
-            var inst = new Dictionary<int, GameObject>();
-            w.Init((o, wy) =>
-            {
-                string a = addressOf(o);
-                if (a == null) return null;
-                if (!inst.TryGetValue(o.Id, out var g))
-                {
-                    var prefab = assetOf(a);
-                    if (prefab == null) return null;
-                    g = Object.Instantiate(prefab);
-                    g.SetActive(true);
-                    _made.Add(g);
-                    inst[o.Id] = g;
-                }
-                g.transform.position = new Vector3((float)o.X, (float)wy, (float)o.Z);
-                var cols = new List<Collider>();
-                foreach (var hb in g.GetComponentsInChildren<RunHitbox>(true)) cols.AddRange(hb.GetComponentsInChildren<Collider>(true));
-                return cols;
-            }, addressOf);
-            return w;
+            var rig = new HitWorldRig(_t, assetOf);
+            _rigs.Add(rig);
+            rig.Frame(pz);
+            return rig.World;
         }
 
         /// <summary>실제 게임 경로: 305 → 105.prefab 주소, 프리팹 원본은 에셋.</summary>
-        RunHitWorld RealWorld() => MakeWorld(o => ObjectViewFactory.PrefabFor(_t, StageMap, o), LoadPrefab);
+        RunHitWorld RealWorld(double pz = 0) => MakeWorld(null, pz);
 
         RunState NewState() => new RunState(new RunSetup(), _t, new Pcg32Rng(1));
 
@@ -178,6 +151,8 @@ namespace MV.View.Tests
             var root = new GameObject("TestPrefab");
             _made.Add(root);
             root.transform.localScale = rootScale;
+            root.transform.position = new Vector3(0, -1000, 0);   // 원본은 장면에서 맞지 않게(인스턴스는 뷰 뿌리에 0으로 놓인다)
+            new GameObject("Billboard", typeof(Billboard)).transform.SetParent(root.transform, false);   // 프리팹 규칙: 그림 묶음
             var hb = new GameObject("Hitbox");
             hb.transform.SetParent(root.transform, false);
             hb.transform.localRotation = hitboxRot;
@@ -189,11 +164,10 @@ namespace MV.View.Tests
                 c.size = b.size;
                 c.isTrigger = true;
             }
-            root.SetActive(false);   // 원본은 장면에서 맞지 않게
             return root;
         }
 
-        RunHitWorld WorldOf(GameObject prefab) => MakeWorld(o => "test", a => prefab);
+        RunHitWorld WorldOf(GameObject prefab) => MakeWorld(a => prefab);
 
         [Test]
         public void EditedCollider_ChangesRange_WithoutTableChange()
@@ -259,15 +233,16 @@ namespace MV.View.Tests
         {
             var s = NewState();
             const int n = 60;
-            for (int i = 0; i < n; i++) Wall(s, 1000 - i, 0, 10 + i * 4);   // 뒤로 갈수록 Id가 작다(Id 순서와 z 순서가 반대)
-            var w = RealWorld();
+            const double gap = 1.45;   // 벽 Collider 깊이 1.1보다 넓게, 60개가 그리기 범위(pz 8 → 6~98 m) 안에
+            for (int i = 0; i < n; i++) Wall(s, 1000 - i, 0, 10 + i * gap);   // 뒤로 갈수록 Id가 작다(Id 순서와 z 순서가 반대)
+            var w = RealWorld(8);
             w.Prepare(s);
             for (int i = 0; i < 40; i++)
             {
                 var d = new GameObject("Distractor" + i);
                 _made.Add(d);
                 d.AddComponent<BoxCollider>().size = new Vector3(2, 4, 0.5f);
-                d.transform.position = new Vector3(0, (float)ProjLayout.ProjY, 5 + i * 6);
+                d.transform.position = new Vector3(0, (float)ProjLayout.ProjY, (float)(9.5 + i * 2.2));
             }
             for (int i = 0; i < 20; i++)
             {
@@ -277,7 +252,7 @@ namespace MV.View.Tests
                 d.transform.position = new Vector3(0, (float)ProjLayout.ProjY, 10);
             }
             Physics.SyncTransforms();
-            var hits = Cast(w, s, 0, 0, 10 + n * 4);
+            var hits = Cast(w, s, 0, 0, 10 + n * gap);
             Assert.That(hits.Select(h => h.Obj.Id), Is.EqualTo(Enumerable.Range(0, n).Select(i => 1000 - i)), "대상 60개 모두, 진입 z 순");
             for (int i = 1; i < hits.Count; i++) Assert.That(hits[i].Z, Is.GreaterThan(hits[i - 1].Z));
             var inside = Cast(w, s, 0, 10, 10.2);
@@ -291,7 +266,7 @@ namespace MV.View.Tests
         {
             var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } }, _t, new Pcg32Rng(1), new RunLevelBuilder());
             var s = sim.State;
-            var w = RealWorld();
+            var w = RealWorld(s.P.Z);
             sim.HitQuery = w;
             s.Objs.Clear();
             s.Projs.Clear();
@@ -304,6 +279,98 @@ namespace MV.View.Tests
             for (int i = 0; i < 120 && !b.Dead; i++) sim.Tick(1.0 / 60, RunInput.None);
             Assert.That(b.HitIds, Is.EqualTo(new[] { front.Id, back.Id }), "앞 → 뒤, 한 번씩");
             Assert.That(b.Dead, Is.True, "관통 1 = 두 대상 뒤 소멸");
+        }
+
+        /// <summary>
+        /// 프레임당 여러 틱(게임 40틱, MvGameLoop.TicksPerFrame): 화면 갱신(Sync) 없이 도는 틱 사이에 생긴 대상도 그 틱의 판정 직전에 뷰·Hitbox가 준비돼 맞는다.
+        /// </summary>
+        [Test]
+        public void TicksWithinOneFrame_NewTargetHittableBeforeNextFrame()
+        {
+            var sim = RunSim.Create(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 } }, _t, new Pcg32Rng(1), new RunLevelBuilder());
+            var s = sim.State;
+            var w = RealWorld(s.P.Z);   // 프레임 한 번(이후 Sync 없음)
+            sim.HitQuery = w;
+            s.Objs.Clear();
+            s.Projs.Clear();
+            double px = s.P.X;
+            var b = new RunProjectile { Id = 999990, X = px, Z = s.P.Z, Sz = s.P.Z, D = 1, Pierce = 0 };
+            s.Projs.Add(b);
+            const int ticksPerFrame = 40;
+            RunObject wall = null;
+            for (int i = 0; i < ticksPerFrame && !b.Dead; i++)
+            {
+                if (i == 5)
+                {
+                    wall = Wall(s, 1003, px, b.Z + 2);   // 프레임 중간 틱에 생김
+                    wall.Hp = wall.Max = 1e12;
+                }
+                sim.Tick(1.0 / 60, RunInput.None);
+            }
+            Assert.That(wall, Is.Not.Null);
+            Assert.That(b.HitIds, Does.Contain(wall.Id), "같은 프레임 안 다음 틱에서 맞는다");
+        }
+
+        /// <summary>
+        /// 회수 흐름: 쓰러지는 동안(ObjectMotion이 회수를 막음)은 뷰가 남지만 판정 대상이 아니고, 회수되면 등록이 풀리며,
+        /// 풀에서 다시 쓴 뷰는 새 오브젝트로 다시 등록돼 맞는다.
+        /// </summary>
+        [Test]
+        public void BreakHoldsRelease_ThenUnregisters_AndPoolReuseRegistersNewObject()
+        {
+            var rig = new HitWorldRig(_t);
+            _rigs.Add(rig);
+            var s = NewState();
+            var a = Wall(s, 1, 0, 10);
+            rig.Frame(0, s.Objs);
+            Assert.That(rig.World.RegisteredCount, Is.EqualTo(1), "연결 때 Hitbox 등록");
+            var first = rig.Factory.ViewOf(1);
+            Assert.That(first.GetComponent<RunObjectView>().Module<ObjectMotion>(), Is.Not.Null, "블록 프리팹에 ObjectMotion 모듈");
+
+            rig.Factory.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Break, objId: 1, kindId: a.Kind.id) });
+            a.Dead = true;
+            rig.Frame(0, s.Objs);
+            Assert.That(rig.Factory.ViewOf(1), Is.Not.Null, "쓰러지는 동안 회수 막음");
+            rig.World.Prepare(s);
+            Assert.That(rig.World.LiveCount, Is.EqualTo(0), "죽은 오브젝트는 판정 대상 아님");
+            Assert.That(Cast(rig.World, s, 0, 0, 30), Is.Empty);
+            for (int i = 0; i < 12 && rig.Factory.ViewOf(1) != null; i++)
+            {
+                System.Threading.Thread.Sleep(110);   // Sync dt는 실시간(한 번에 최대 0.1초)
+                rig.Frame(0, s.Objs);
+            }
+            Assert.That(rig.Factory.ViewOf(1), Is.Null, "다 쓰러지면 회수");
+            Assert.That(rig.World.RegisteredCount, Is.EqualTo(0), "회수 때 등록 해제");
+
+            var b = Wall(s, 2, 0, 12);
+            rig.Frame(0, s.Objs);
+            Assert.That(rig.Factory.ViewOf(2), Is.SameAs(first), "풀에서 같은 뷰를 다시 씀");
+            Assert.That(rig.World.RegisteredCount, Is.EqualTo(1), "새 오브젝트로 다시 등록");
+            rig.World.Prepare(s);
+            var hits = Cast(rig.World, s, 0, 0, 30);
+            Assert.That(hits.Select(h => h.Obj.Id), Is.EqualTo(new[] { b.Id }), "다시 쓴 뷰의 Hitbox는 새 오브젝트로 맞는다");
+        }
+
+        /// <summary>연출(흔들림·눌림·자리 흔들기)은 그림 묶음만 움직이고 Hitbox는 시뮬 위치 그대로다.</summary>
+        [Test]
+        public void HitMotion_MovesBoardsOnly_HitboxStays()
+        {
+            var rig = new HitWorldRig(_t);
+            _rigs.Add(rig);
+            var s = NewState();
+            var a = Wall(s, 1, 0, 10);
+            rig.Frame(0, s.Objs);
+            var root = rig.Factory.ViewOf(1).transform;
+            var hb = root.GetComponentInChildren<RunHitbox>(true).transform;
+            var board = root.GetComponentInChildren<Billboard>(true).transform;
+            Vector3 hbPos = hb.position, hbScale = hb.lossyScale, boardBase = board.localPosition;
+            a.Bar = 3; a.Idx = 2;   // 자리 흔들기가 0이 아니게
+            rig.Factory.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Hit, objId: 1, kindId: a.Kind.id) });
+            System.Threading.Thread.Sleep(20);
+            rig.Frame(0, s.Objs);
+            Assert.That(board.localPosition, Is.Not.EqualTo(boardBase), "그림 묶음은 움직인다");
+            Assert.That(hb.position, Is.EqualTo(hbPos), "Hitbox 위치 그대로");
+            Assert.That(hb.lossyScale, Is.EqualTo(hbScale), "Hitbox 크기 그대로(눌림 없음)");
         }
     }
 }

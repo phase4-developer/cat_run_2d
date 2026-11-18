@@ -469,9 +469,32 @@ namespace MV.View.Tests
             f.Init(ViewTestTables.Config(), camGo.transform, new WorldSpriteCache(), WorldView.FxAtlas);
             f.SetTheme(ViewTestTables.Theme("market"));
             f.LabelText = _ => null;
-            f.PrefabLoader = (a, ct) => Cysharp.Threading.Tasks.UniTask.Never<jjevol.AddressableLease<GameObject>>(ct);   // 프리팹 로드 없이 뷰 구조만
+            f.PrefabLoader = (a, ct) => Cysharp.Threading.Tasks.UniTask.Never<PrefabHandle>(ct);   // 프리팹 로드 없이 뷰 구조만
             return f;
         }
+
+        // 반응 상태는 그 오브젝트 뷰의 모듈이 가진다(관리자는 모르고 묻지 않는다). 코드 모양 뷰 = ProceduralObjectLook(흔들림·번쩍·벽돌) + ObjectMotion(눌림·쓰러짐).
+        static RunObjectView ViewComp(ObjectViewFactory f, int id) => f.ViewOf(id) != null ? f.ViewOf(id).GetComponent<RunObjectView>() : null;
+
+        static ProceduralObjectLook LookOf(ObjectViewFactory f, int id) => ViewComp(f, id)?.Module<ProceduralObjectLook>();
+
+        static bool TryReaction(ObjectViewFactory f, int id, out double shake, out double flash)
+        {
+            var l = LookOf(f, id);
+            shake = l != null ? l.Shake : 0;
+            flash = l != null ? l.Flash : 0;
+            return l != null;
+        }
+
+        static bool TryMotion(ObjectViewFactory f, int id, out double punch, out double die)
+        {
+            var m = ViewComp(f, id)?.Module<ObjectMotion>();
+            punch = m != null ? m.Punch : 0;
+            die = m != null ? m.Die : -1;
+            return m != null;
+        }
+
+        static int GoneBricks(ObjectViewFactory f, int id) => LookOf(f, id)?.GoneBricks ?? 0;
 
         static RunObject Obj(MvTables t, string key, int id, double z)
         {
@@ -494,13 +517,13 @@ namespace MV.View.Tests
                 new RunEvent(RunEventType.WellFlush, objId: 3, a: 3, amount: 10),
                 new RunEvent(RunEventType.Hit, objId: 99),
             });
-            Assert.That(f.TryReaction(1, out double shake, out double flash), Is.True);
+            Assert.That(TryReaction(f, 1, out double shake, out double flash), Is.True);
             Assert.That(shake, Is.EqualTo(objs[0].Reaction.objShake > 0 ? ObjectReaction.ShakeSec : 0), "106 objShake → 흔들림");
-            Assert.That(f.TryReaction(2, out _, out flash), Is.True);
+            Assert.That(TryReaction(f, 2, out _, out flash), Is.True);
             Assert.That(flash, Is.EqualTo(objs[1].Reaction.flash ? ObjectReaction.FlashSec : 0), "106 flash → 관문 번쩍");
-            Assert.That(f.GoneBricks(3), Is.EqualTo(3), "벽돌 3개 빠짐");
+            Assert.That(GoneBricks(f, 3), Is.EqualTo(3), "벽돌 3개 빠짐");
             f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.WellFlush, objId: 3, a: 60) });
-            Assert.That(f.GoneBricks(3), Is.EqualTo(53), "남은 벽돌보다 많으면 있는 만큼만");
+            Assert.That(GoneBricks(f, 3), Is.EqualTo(53), "남은 벽돌보다 많으면 있는 만큼만");
         }
 
         [Test]
@@ -524,13 +547,14 @@ namespace MV.View.Tests
                 new RunEvent(RunEventType.Hit, objId: 1, kindId: objs[0].Kind.id),
                 new RunEvent(RunEventType.Hit, objId: 2, kindId: objs[1].Kind.id),
             });
-            Assert.That(f.TryMotion(1, out double p1, out double d1), Is.True);
+            Assert.That(TryMotion(f, 1, out double p1, out double d1), Is.True);
             Assert.AreEqual(objs[0].Reaction.punch, p1, "106 punch → 눌림 시작값");
             Assert.AreEqual(-1, d1);
-            Assert.That(f.TryMotion(2, out double p2, out _), Is.True);
+            Assert.That(TryMotion(f, 2, out double p2, out _), Is.True);
             Assert.AreEqual(objs[1].Reaction.punch, p2);
             f.Sync(objs, 0, 0, 0);
-            var s = f.ViewOf(1).transform.localScale;
+            Assert.AreEqual(Vector3.one, f.ViewOf(1).transform.localScale, "뷰 뿌리는 그대로(판정·위치 기준)");
+            var s = LookOf(f, 1).Look.localScale;   // 눌림은 그림 묶음만
             Assert.Greater(s.x, 1f, "눌림: 가로로 넓어지고");
             Assert.Less(s.y, 1f, "세로로 눌린다");
         }
@@ -547,7 +571,7 @@ namespace MV.View.Tests
             wall.Dead = true;
             f.Sync(objs, 0, 0, 0);
             Assert.That(f.ViewOf(1), Is.Not.Null, "죽어도 0.6초는 쓰러지는 그림이 남는다(paperDie)");
-            Assert.That(f.TryMotion(1, out _, out double die), Is.True);
+            Assert.That(TryMotion(f, 1, out _, out double die), Is.True);
             Assert.GreaterOrEqual(die, 0);
             // Sync의 dt는 실시간(한 번에 최대 0.1초)이라 0.6초가 지나도록 여러 번 부른다.
             for (int i = 0; i < 12 && f.ViewOf(1) != null; i++)
@@ -751,18 +775,20 @@ namespace MV.View.Tests
             var oldWall = Obj(t, "wall", 1, 15);
             f.Sync(new List<RunObject> { oldWall }, 0, 0, 0);
             f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Hit, objId: 1, kindId: oldWall.Kind.id) });
-            Assert.That(f.TryReaction(1, out double shake0, out _), Is.True);
+            Assert.That(TryReaction(f, 1, out double shake0, out _), Is.True);
             Assert.Greater(shake0, 0, "이전 런: 맞아서 흔들리는 중");
 
             var newWall = Obj(t, "wall", 1, 18);   // 새 런, 같은 번호
             f.Sync(new List<RunObject> { newWall }, 0, 0, 0);
-            Assert.That(f.TryReaction(1, out double shake, out double flash), Is.True);
+            Assert.That(TryReaction(f, 1, out double shake, out double flash), Is.True);
             Assert.AreEqual(0, shake, "새 오브젝트는 흔들림 없이 시작");
             Assert.AreEqual(0, flash);
-            Assert.That(f.TryMotion(1, out double punch, out double die), Is.True);
+            Assert.That(TryMotion(f, 1, out double punch, out double die), Is.True);
             Assert.AreEqual(0, punch);
             Assert.AreEqual(-1, die);
             Assert.AreEqual(Vector3.one, f.ViewOf(1).transform.localScale);
+            Assert.AreEqual(Vector3.one, LookOf(f, 1).Look.localScale, "그림 묶음도 눌림 없이");
+            Assert.AreEqual(Vector3.zero, LookOf(f, 1).Look.localPosition, "그림 묶음 흔들림 없이");
             Assert.AreEqual(18f, f.ViewOf(1).transform.position.z, 1e-4f, "새 오브젝트 자리");
         }
 
@@ -775,7 +801,7 @@ namespace MV.View.Tests
             var wall = Obj(t, "wall", 1, 15);
             f.Sync(new List<RunObject> { wall }, 0, 0, 0);
             f.OnRunEvents(new List<RunEvent> { new RunEvent(RunEventType.Hit, objId: 1, kindId: wall.Kind.id) });
-            Assert.That(f.TryReaction(1, out double shake, out _), Is.True);
+            Assert.That(TryReaction(f, 1, out double shake, out _), Is.True);
             Assert.That(shake, Is.EqualTo(0), "표만 바꿔도 흔들림이 꺼진다(D-87)");
         }
     }

@@ -82,13 +82,13 @@ namespace MV.View
             _stairs.Init(tables, _cfg, _rig.Cam, _objects != null ? _objects.LabelMaterial : null);
             if (_objects != null)
             {
-                if (_hits == null)   // 판정 형상 복사본을 담는 곳(설정 값 없음). 프리팹에 없으면 만든다.
+                if (_hits == null)   // 투사체 판정 질의(설정 값 없음). 프리팹에 없으면 만든다.
                 {
                     var go = new GameObject("HitWorld");
                     go.transform.SetParent(transform, false);
                     _hits = go.AddComponent<RunHitWorld>();
                 }
-                _hits.Init(_objects.HitShape, _objects.PrefabAddress);
+                _objects.ConnectHits(_hits);   // 뷰 연결·회수 때 프리팹 Hitbox 등록·해제, 틱마다 대상 위치 맞추기
             }
         }
 
