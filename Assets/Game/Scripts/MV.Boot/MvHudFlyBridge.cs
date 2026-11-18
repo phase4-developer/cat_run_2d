@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using MV.Fx;
 using MV.UI;
+using MV.View;
 using UnityEngine;
 
 namespace MV.Boot
@@ -29,6 +31,7 @@ namespace MV.Boot
             player.Flies.Anchors = b;
             player.FlyArrived += b.OnArrived;
             MvHudFly.InFlight = b.CountOf;
+            GateRewardDisplay.Released += OnGateReleased;
             return b;
         }
 
@@ -39,6 +42,23 @@ namespace MV.Boot
             if (a.Length != h.Length) return false;
             for (int i = 0; i < a.Length; i++) if (a[i] != h[i]) return false;
             return true;
+        }
+
+        static readonly List<Rect> s_rects = new List<Rect>(16);
+
+        /// <summary>문 위 보상 카드 통과(MV.View) → HUD 카드 출발(MV.UI). 종류별 받을 곳: 무기 = 손패 스택.</summary>
+        static void OnGateReleased(GateRewardKind kind, IReadOnlyList<GateCardRelease> cards)
+        {
+            HudFlyTarget target;
+            switch (kind)
+            {
+                case GateRewardKind.Weapon: target = HudFlyTarget.Hand; break;
+                default: return;
+            }
+            s_rects.Clear();
+            foreach (var c in cards) s_rects.Add(new Rect(c.Screen - c.Size * 0.5f, c.Size));
+            MvHudFly.RaiseLaunched(target, s_rects);
+            s_rects.Clear();
         }
 
         int CountOf(HudFlyTarget t) => _player.Flies != null ? _player.Flies.CountOf((FlyTarget)(int)t) : 0;
@@ -70,6 +90,7 @@ namespace MV.Boot
 
         public void Dispose()
         {
+            GateRewardDisplay.Released -= OnGateReleased;
             if (_player != null)
             {
                 _player.FlyArrived -= OnArrived;

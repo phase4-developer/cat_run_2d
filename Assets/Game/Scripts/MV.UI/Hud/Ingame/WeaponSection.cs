@@ -15,7 +15,8 @@ namespace MV.UI
     /// 무기 섹션(<c>IngameScreen/Mid/Weapon</c>, MV-UI3-HUD4, HUD_구조_설계안 3.3 WeaponSection·7.4).
     /// 장착 칸 + 손패 스택. 스택 칸은 <c>Slot_Weapon_Stack</c> 프리팹 에셋을 원본으로 <see cref="ObjectPool{T}"/>에서 꺼내 손패 장 수만큼만 보인다(시작 = 시작 무기 1장).
     /// 손패 순서·시간은 <see cref="WeaponHandModel"/>(04 §4.10, 05 §5.3), 모양은 디자이너 Stack의 세로 배치 값(간격·위 여백)을 읽어 섹션이 직접 놓는다.
-    /// 무기문 통과 때 날아오는 카드(<see cref="HudFlyTarget.Hand"/>)도 이 섹션이 그리고, 도착한 만큼 손패에 넣는다.
+    /// 무기문 통과 때 문 위 카드가 같은 자리·같은 크기 UI 카드로 바뀌어(<see cref="MvHudFly.Launched"/>, 알파 변화 없음) 스택 맨 아래 칸보다 조금 밑에
+    /// 한 줄로 줄을 서고, 시뮬이 준 장마다 맨 앞 카드부터 위로 올라가 스택에 들어간다(참고 영상, 사용자 2026-11-19).
     /// 시뮬 값은 읽기만 한다.
     /// </summary>
     public sealed class WeaponSection : UIBase, IHudFlyHandler
@@ -44,6 +45,12 @@ namespace MV.UI
         [Tooltip("장착 칸 등급 상승 튐 크기")] [SerializeField] float equipPopScale = 1.15f;
         [Tooltip("장착 칸 등급 상승 튐 초")] [SerializeField] float equipPopSec = 0.25f;
 
+        [Header("문 카드 줄서기(MV-UI3-HUD9, 참고 영상)")]
+        [Tooltip("스택 맨 아래 칸과 줄 첫 카드 사이 빈칸(px). 줄 카드 실루엣이 다 보이게 띄운다.")] [SerializeField] float queueGap = 40f;
+        [Tooltip("문 위 카드 자리 → 줄 자리 비행 초")] [SerializeField] float launchSec = 0.4f;
+        [Tooltip("카드마다 출발 간격 초")] [SerializeField] float launchGapSec = 0.04f;
+        [Tooltip("받을 장이 없는데 줄에 남은 카드(거절된 장)를 치우기까지 초")] [SerializeField] float queueHoldSec = 2f;
+
         Func<RunState> _state;
         RunState _run;
         MvTables T => _run?.Tables;
@@ -57,7 +64,12 @@ namespace MV.UI
         readonly List<HandAction> _actions = new List<HandAction>();
         readonly List<HudWeaponSlot> _gathering = new List<HudWeaponSlot>();
         readonly Queue<int> _units = new Queue<int>();   // 받을 장(단계), 시뮬 WeaponDeliver
-        int _credits;                                    // 도착한 비행 수
+        int _credits;                                    // 도착한 비행 수(비행 층 Hand)
+
+        sealed class Queued { public HudWeaponSlot Slot; public bool Arrived; }
+        readonly List<Queued> _queue = new List<Queued>();   // 스택 밑 줄(앞 = 위, 먼저 들어간다)
+        int _reserved;                                       // 줄 앞에서 받을 장으로 잡아 둔 카드 수
+        float _queueIdle;
         int _equipTier;
         int[] _counts;
         double _now;
@@ -75,8 +87,11 @@ namespace MV.UI
             }
         }
         public IReadOnlyList<HandCard> Hand => _model != null ? _model.Cards : (IReadOnlyList<HandCard>)Array.Empty<HandCard>();
-        public bool Busy => _model != null && !_model.Idle || _units.Count > 0 || _gathering.Count > 0;
+        public bool Busy => _model != null && !_model.Idle || _units.Count > 0 || _gathering.Count > 0 || _queue.Count > 0;
         public int PendingUnits => _units.Count;
+        /// <summary>스택 밑 줄 카드(앞 = 위).</summary>
+        public IEnumerable<HudWeaponSlot> QueueSlots { get { foreach (var q in _queue) yield return q.Slot; } }
+        public int QueuedCards => _queue.Count;
         public int ActiveFlies => _flies.Count;
         public HudWeaponSlot StackPrefab => stackPrefab;
 
@@ -116,12 +131,14 @@ namespace MV.UI
             {
                 MvHudEvents.OnEvent += OnRunEvent;
                 MvHudFly.Arrived += OnFlyArrived;
+                MvHudFly.Launched += OnLaunched;
                 MvHudFly.Register(HudFlyTarget.Hand, this);
             }
             else
             {
                 MvHudEvents.OnEvent -= OnRunEvent;
                 MvHudFly.Arrived -= OnFlyArrived;
+                MvHudFly.Launched -= OnLaunched;
                 MvHudFly.Unregister(HudFlyTarget.Hand, this);
             }
             return true;
@@ -154,6 +171,7 @@ namespace MV.UI
             _actions.Clear();
             _model.Step(_now, realDt, _actions);
             foreach (var a in _actions) Play(a);
+            DropLeftovers(realDt);
             Resync(s);
         }
 
@@ -163,6 +181,10 @@ namespace MV.UI
             _slots.Clear();
             foreach (var kv in _flies) _pool.Release(kv.Value);
             _flies.Clear();
+            foreach (var q in _queue) _pool.Release(q.Slot);
+            _queue.Clear();
+            _reserved = 0;
+            _queueIdle = 0;
             _gathering.Clear();
             _units.Clear();
             _credits = 0;
@@ -213,24 +235,46 @@ namespace MV.UI
         }
 
         /// <summary>
-        /// 시뮬이 준 장을 날아온 만큼 손패에 넣는다(도착 = 지급, 설계안 7.4). 날고 있는 것이 없으면 남은 장을 바로 넣는다
-        /// (비행 없는 지급·비행 층이 없을 때). 남은 도착은 버린다(거절된 장).
+        /// 시뮬이 준 장을 줄에 도착한 카드(또는 비행 층 도착) 만큼 손패에 넣는다(도착 = 지급, 설계안 7.4). 줄 카드는 받을 장으로 잡아 두고(<see cref="_reserved"/>)
+        /// 손패 모델이 전달할 때 맨 앞 카드가 스택으로 올라간다. 날고 있는 것이 없으면 남은 장을 바로 넣는다(문 카드 없는 지급·비행 층이 없을 때).
         /// </summary>
         void Feed()
         {
-            int flying = MvHudFly.CountInFlight(HudFlyTarget.Hand);
-            while (_units.Count > 0 && (_credits > 0 || flying == 0))
+            int arrived = 0;
+            foreach (var q in _queue) if (q.Arrived) arrived++;
+            int ready = arrived - _reserved;
+            int flying = _queue.Count - arrived + MvHudFly.CountInFlight(HudFlyTarget.Hand);
+            while (_units.Count > 0 && (ready > 0 || _credits > 0 || flying == 0))
             {
                 int tier = _units.Peek(), n = 0;
-                while (_units.Count > 0 && _units.Peek() == tier && (_credits > 0 || flying == 0))
+                while (_units.Count > 0 && _units.Peek() == tier && (ready > 0 || _credits > 0 || flying == 0))
                 {
                     _units.Dequeue();
-                    if (_credits > 0) _credits--;
+                    if (ready > 0) { ready--; _reserved++; }
+                    else if (_credits > 0) _credits--;
                     n++;
                 }
                 _model.Deliver(n, tier);
             }
             if (_units.Count == 0 && flying == 0) _credits = 0;
+        }
+
+        /// <summary>받을 장이 없는데 줄에 남은 카드(시뮬이 거절한 장)는 잠시 뒤 치운다. 잡아 둔 카드는 남긴다.</summary>
+        void DropLeftovers(float dt)
+        {
+            bool allArrived = true;
+            foreach (var q in _queue) if (!q.Arrived) { allArrived = false; break; }
+            if (_queue.Count <= _reserved || _units.Count > 0 || !allArrived || !_model.Idle) { _queueIdle = 0; return; }
+            _queueIdle += dt;
+            if (_queueIdle < queueHoldSec) return;
+            _queueIdle = 0;
+            while (_queue.Count > _reserved)
+            {
+                int last = _queue.Count - 1;
+                _pool.Release(_queue[last].Slot);
+                _queue.RemoveAt(last);
+            }
+            LayoutQueue();
         }
 
         // ---------------- 손패 연출 ----------------
@@ -251,9 +295,25 @@ namespace MV.UI
             {
                 case HandActionKind.Dealt:
                 {
-                    var s = Rent(a.Card);
-                    Layout(snap: false, dealt: s);
-                    if (Animate) s.PlayDeal(dealFadeSec);
+                    if (_reserved > 0 && _queue.Count > 0)
+                    {
+                        // 줄 맨 앞 카드가 그대로 스택 자리로 올라간다(알파·크기 변화 없음).
+                        var q = _queue[0];
+                        _queue.RemoveAt(0);
+                        _reserved--;
+                        var s = q.Slot;
+                        DOTween.Kill(s.rectTransform);
+                        s.transform.localScale = Vector3.one;
+                        s.Set(T, a.Card.Tier, DmgMul());
+                        _slots[a.Card.Id] = s;
+                        Layout(snap: false);
+                    }
+                    else
+                    {
+                        var s = Rent(a.Card);
+                        Layout(snap: false, dealt: s);
+                        if (Animate) s.PlayDeal(dealFadeSec);
+                    }
                     break;
                 }
                 case HandActionKind.GatherStart:
@@ -300,6 +360,7 @@ namespace MV.UI
                 }
             }
             if (a.TopTierUp) DrawEquip(pop: true);
+            LayoutQueue();
         }
 
         static bool Animate => Application.isPlaying;
@@ -365,7 +426,90 @@ namespace MV.UI
                 .Append(t.DOScale(1f, equipPopSec * .4f).SetEase(Ease.InQuad));
         }
 
-        // ---------------- 날아오는 카드(IHudFlyHandler) ----------------
+        // ---------------- 문 카드 줄서기(MV-UI3-HUD9) ----------------
+
+        float SlotHeight() => stackPrefab ? ((RectTransform)stackPrefab.transform).rect.height : 0;
+
+        /// <summary>줄 k번째 자리(스택 기준 anchoredPosition, 위 가운데 기준): 스택 맨 아래 칸 밑 <see cref="queueGap"/> 띄우고 칸 간격으로 아래로.</summary>
+        Vector2 QueueAt(int k)
+        {
+            float h = SlotHeight();
+            float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
+            int n = _model != null ? _model.Cards.Count : 0;
+            return new Vector2(0, -top - n * (h + spacing) - queueGap - k * (h + spacing));
+        }
+
+        /// <summary>도착한 줄 카드를 자리로(스택이 늘고 줄 앞이 빠지면 나머지는 그대로, 머지로 스택이 줄면 위로 당겨진다).</summary>
+        void LayoutQueue()
+        {
+            for (int k = 0; k < _queue.Count; k++)
+            {
+                var q = _queue[k];
+                if (!q.Arrived) continue;   // 나는 중인 카드는 도착하면 다시 맞춘다
+                var rt = q.Slot.rectTransform;
+                var to = QueueAt(k);
+                if (rt.anchoredPosition == to) continue;
+                DOTween.Kill(rt);
+                if (!Animate) rt.anchoredPosition = to;
+                else AnchorTo(rt, to, moveSec).SetEase(Ease.OutQuad).SetTarget(rt);
+            }
+        }
+
+        /// <summary>
+        /// 문 위 카드가 HUD 카드로 바뀐다(구독은 SetSubscribe, 시험은 직접 부른다). 카드마다 같은 화면 자리·같은 크기로 스택 칸을 세우고(알파 1)
+        /// 스택 밑 줄 자리로 날린다. 손패 지급은 시뮬 WeaponDeliver가 오면 <see cref="Feed"/>가 한다.
+        /// </summary>
+        public void OnLaunched(HudFlyTarget target, IReadOnlyList<Rect> cards)
+        {
+            Init();
+            if (target != HudFlyTarget.Hand || _model == null || !stack || cards == null) return;
+            var cam = Cam();
+            float h = SlotHeight();
+            float screenH = ScreenHeight(h, cam);
+            var anchorRef = new Vector2(stack.rect.center.x, stack.rect.yMax);
+            int tier = _units.Count > 0 ? _units.Peek() : _run != null ? _run.Bt : 1;
+            for (int i = 0; i < cards.Count; i++)
+            {
+                var r = cards[i];
+                var s = _pool.Get();
+                if (s.transform.parent != stack) s.transform.SetParent(stack, false);
+                s.transform.SetAsLastSibling();
+                s.Set(T, tier, DmgMul());
+                var rt = s.rectTransform;
+                rt.anchorMin = rt.anchorMax = new Vector2(.5f, 1f);
+                rt.pivot = new Vector2(.5f, 1f);
+                float scale = screenH > 0 && r.height > 0 ? r.height / screenH : 1f;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(stack, r.center, cam, out var local);
+                rt.anchoredPosition = local - anchorRef + new Vector2(0, h * scale * .5f);
+                s.transform.localScale = new Vector3(scale, scale, 1f);
+                var q = new Queued { Slot = s };
+                _queue.Add(q);
+                var to = QueueAt(_queue.Count - 1);
+                if (!Animate)
+                {
+                    rt.anchoredPosition = to;
+                    s.transform.localScale = Vector3.one;
+                    q.Arrived = true;
+                    continue;
+                }
+                float delay = i * launchGapSec;
+                DOTween.Sequence().SetUpdate(true).SetTarget(rt)
+                    .Insert(delay, AnchorTo(rt, to, launchSec).SetEase(Ease.InOutQuad))
+                    .Insert(delay, s.transform.DOScale(1f, launchSec).SetEase(Ease.InOutQuad))
+                    .OnComplete(() => { q.Arrived = true; LayoutQueue(); });
+            }
+            _queueIdle = 0;
+        }
+
+        /// <summary>스택 안 높이 h를 화면 px 높이로.</summary>
+        float ScreenHeight(float h, Camera cam)
+        {
+            var p0 = RectTransformUtility.WorldToScreenPoint(cam, stack.TransformPoint(Vector3.zero));
+            var p1 = RectTransformUtility.WorldToScreenPoint(cam, stack.TransformPoint(new Vector3(0, h, 0)));
+            return Vector2.Distance(p0, p1);
+        }
+
+        // ---------------- 날아오는 카드(IHudFlyHandler, 비행 층 Hand) ----------------
 
         public bool TryGetRect(out Vector2 center, out Vector2 size)
         {

@@ -154,10 +154,9 @@ namespace MV.Fx.Tests
             Assert.AreEqual(2f, o.Spawns[0].Grav); Assert.AreEqual(1.5f, o.Spawns[0].Pos.y, 1e-5f);
             Assert.AreEqual(1, o.Flies.Count); Assert.AreEqual(FlyTarget.Stair, o.Flies[0].Target); Assert.AreEqual(3, o.Flies[0].Amount);
 
-            // L2052 동료 관문: 아이콘 min(n, CRAFT_ICON_MAX)개, fly.cloneGapMs 간격(상한·간격은 표 값)
+            // 무기문: 불꽃만. 카드는 문 위 카드 묶음이 HUD 카드로 바뀌어 날아가므로 라우터는 날리지 않는다(MV-UI3-HUD9)
             o = Route(t, World(), 0f, Ev(RunEventType.GateTake, 7, K(t, "cgate"), a: 7));
-            int craftMax = t.RunConfig.I(RunConfigKeys.CRAFT_ICON_MAX), craftGap = t.RunConfig.I(RunConfigKeys.Fly_CloneGapMs);
-            CollectionAssert.AreEqual(Enumerable.Range(0, System.Math.Min(7, craftMax)).Select(i => i * craftGap).ToArray(), o.Flies.Select(f => f.DelayMs).ToArray());
+            Assert.AreEqual(0, o.Flies.Count);
 
             // L2175 신 대폭발(fire): fireball 3 + boom 4.4 + boom 흰 2.2 noRing + 플래시 0.35/60ms
             o = Route(t, World(), 0f, Ev(RunEventType.GodBlast, x: 0, z: 5, key: "fire"));
@@ -188,12 +187,10 @@ namespace MV.Fx.Tests
         [Test]
         public void RunConfigValuesComeFromTable()
         {
-            // CRAFT_ICON_MAX·fly.cloneGapMs·DMG_MAX를 표에서만 바꿔도 라우터가 따른다(코드 상수·대체값 없음).
-            var t = FxTestTables.WithCells(RunConfigData.Table, ("CRAFT_ICON_MAX", "value", "2"), ("fly.cloneGapMs", "value", "40"), ("DMG_MAX", "value", "500"));
+            // DMG_MAX를 표에서만 바꿔도 라우터가 따른다(코드 상수·대체값 없음).
+            var t = FxTestTables.WithCells(RunConfigData.Table, ("DMG_MAX", "value", "500"));
             t.BuildIndexes();
-            var o = Route(t, World(), 0f, Ev(RunEventType.GateTake, 7, K(t, "cgate"), a: 7));
-            CollectionAssert.AreEqual(new[] { 0, 40 }, o.Flies.Select(f => f.DelayMs).ToArray());
-            o = Route(t, World(), 0f, Ev(RunEventType.Hit, 2, K(t, "enemy"), amount: 12345));
+            var o = Route(t, World(), 0f, Ev(RunEventType.Hit, 2, K(t, "enemy"), amount: 12345));
             Assert.AreEqual("500", o.Pops[0].Text);
         }
 
