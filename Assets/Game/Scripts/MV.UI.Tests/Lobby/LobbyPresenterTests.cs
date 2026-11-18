@@ -182,5 +182,26 @@ namespace MV.UI.Tests
             Assert.AreEqual(stage, LobbyFacilities.Stage(port, facility, out int got));
             Assert.AreEqual(extra, got);
         }
+
+        /// <summary>디자이너 칸 값: 가격 숫자·재화 아이콘, 부활 해금 진행 = Level(실패 횟수) / 05_contentOpen 사용 조건 Level.</summary>
+        [Test]
+        public void Draw_FillsDesignerSlotValues()
+        {
+            var t = MetaUiTestKit.Base();
+            var p = Make(new Port(t));
+            foreach (var u in p.Model.Upgrades)
+            {
+                Assert.AreEqual("25", u.PriceValue, u.Key);
+                Assert.That(u.PriceIcon, Is.Not.Empty, u.Key + ": 01_wealth.icon");
+            }
+            Assert.IsTrue(p.Model.Upgrades.Single(u => u.Key == "weapon").IconIsItem);
+
+            int need = 0;
+            foreach (var c in t.ContentOpen.ByKey(LobbyPresenter.RebirthUnlockKey).openConditions)
+                if (c.type == UnlockConditionType.Level) need = c.value;
+            Assert.AreEqual(3, p.Model.Rebirth.UnlockNow, "Source.Level");
+            Assert.AreEqual(need, p.Model.Rebirth.UnlockNeed);
+            Assert.That(need, Is.GreaterThan(0), "부활 사용 조건에 Level이 있다");
+        }
     }
 }

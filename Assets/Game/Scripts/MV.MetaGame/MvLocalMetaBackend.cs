@@ -131,10 +131,12 @@ namespace MV.Meta
             int areaAfter = pass ? area + 1 : area;
             int runsAfter = s.Progress.Runs + 1;
             int levelAfter = s.Progress.Level + 1;
+            int failsAfter = s.Progress.Fails + (pass || zoneEnd ? 0 : 1); // Area를 깨지 못한 정산만 센다
             var progress = new JObject
             {
                 ["level"] = levelAfter,
                 ["runs"] = runsAfter,
+                ["fails"] = failsAfter,
                 ["lastSettledRunSeq"] = seq,
                 ["cp"] = pass ? 0 : Math.Max(s.Progress.Cp, cpRun),
                 ["area"] = areaAfter,
@@ -157,7 +159,7 @@ namespace MV.Meta
                 data[MvSaveKeys.AreaUp] = new JObject { ["lv"] = null };
             }
 
-            IReadOnlyList<string> newly = WriteUnlocks(data, UnlockProgress(), new MvUnlockProgress(areaAfter, runsAfter, levelAfter));
+            IReadOnlyList<string> newly = WriteUnlocks(data, UnlockProgress(), new MvUnlockProgress(areaAfter, runsAfter, failsAfter));
             var result = new JObject
             {
                 ["areaBefore"] = area, ["areaAfter"] = areaAfter, ["pass"] = pass, ["zoneEnd"] = zoneEnd, ["mul"] = mul,
@@ -183,11 +185,11 @@ namespace MV.Meta
 
         // ───────── 해금(07 §7.8.9) ─────────
 
-        /// <summary>지금 저장의 해금 진행 값(Area·런 정산 수·Level).</summary>
+        /// <summary>지금 저장의 해금 진행 값(Area·런 정산 수·Level). 조건 Level은 실패 횟수(<see cref="MvProgressContainer.Fails"/>)로 판정한다.</summary>
         internal MvUnlockProgress UnlockProgress()
         {
             var p = S.Progress;
-            return new MvUnlockProgress(p.Area, p.Runs, p.Level);
+            return new MvUnlockProgress(p.Area, p.Runs, p.Fails);
         }
 
         /// <summary>해금 단계(판정은 <see cref="MvUnlockRules"/> 한 곳).</summary>
@@ -502,14 +504,18 @@ namespace MV.Meta
             return MvMetaResponse.Success(data, new JObject { ["wealthId"] = id, ["amount"] = amount });
         }
 
-        /// <summary>Level +1(정본 lvUp L3865). Level 조건(07 §7.8.9)으로 열리는 sticky 기능은 정산과 같이 기록한다.</summary>
+        /// <summary>
+        /// Level +1(정본 lvUp L3865). 판 번호(<c>level</c>)와 로비·해금 Level(실패 횟수 <c>fails</c>)을 함께 올린다.
+        /// Level 조건(07 §7.8.9)으로 열리는 sticky 기능은 정산과 같이 기록한다.
+        /// </summary>
         private MvMetaResponse DebugLevelUp()
         {
             MvUnlockProgress before = UnlockProgress();
-            int level = before.Level + 1;
-            var data = new JObject { [MvSaveKeys.Progress] = new JObject { ["level"] = level } };
-            IReadOnlyList<string> newly = WriteUnlocks(data, before, new MvUnlockProgress(before.Area, before.Runs, level));
-            return MvMetaResponse.Success(data, new JObject { ["level"] = level, ["newlyOpened"] = new JArray(newly.Cast<object>().ToArray()) });
+            int fails = before.Level + 1;
+            int level = S.Progress.Level + 1;
+            var data = new JObject { [MvSaveKeys.Progress] = new JObject { ["level"] = level, ["fails"] = fails } };
+            IReadOnlyList<string> newly = WriteUnlocks(data, before, new MvUnlockProgress(before.Area, before.Runs, fails));
+            return MvMetaResponse.Success(data, new JObject { ["level"] = level, ["fails"] = fails, ["newlyOpened"] = new JArray(newly.Cast<object>().ToArray()) });
         }
 
         /// <summary>부활 바로 열기(정본 rbOpen L3866: 열림 + 쌓인 조각 +10). 열림은 sticky 기록(<c>mvUnlock.opened</c>)으로 남긴다.</summary>
@@ -549,7 +555,7 @@ namespace MV.Meta
             var progress = new JObject();
             if (after.Area != before.Area) { progress["area"] = after.Area; progress["cp"] = null; }
             if (after.Runs != before.Runs) progress["runs"] = after.Runs;
-            if (after.Level != before.Level) progress["level"] = after.Level;
+            if (after.Level != before.Level) progress["fails"] = after.Level; // 해금 Level = 실패 횟수
             if (progress.HasValues) data[MvSaveKeys.Progress] = progress;
             IReadOnlyList<string> newly = WriteUnlocks(data, before, after);
             return MvMetaResponse.Success(data, new JObject

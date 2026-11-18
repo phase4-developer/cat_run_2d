@@ -56,6 +56,7 @@ namespace MV.Save
                 ["cp"] = R.Int(v["cp"], 0, 0, c.CpMax),
                 ["bars"] = Bars(v["bars"], c),
                 ["runs"] = R.Int(v["runs"], 0),
+                ["fails"] = R.Int(v["fails"], 0, 0),
                 ["zoneClear"] = R.Bool(v["zoneClear"], false),
                 ["escaped"] = R.Bool(v["escaped"], false),
                 ["bestArea"] = Math.Max(area, R.Int(v["bestArea"], 0)),

@@ -8,6 +8,7 @@ namespace MV.UI
     /// <summary>로비가 읽는 영속 값(05 §5.4.2 1차: Level·Area·재화).</summary>
     public struct LobbyState
     {
+        /// <summary>로비 Level = Area를 깨지 못한 정산 수(<c>mvProgress.fails</c>).</summary>
         public int Level;
         /// <summary>1기반 Area 번호(<c>save.area + 1</c>).</summary>
         public int AreaNo;
@@ -18,6 +19,12 @@ namespace MV.UI
         public long Dia;
         /// <summary>현재 Area <c>302_area.needSouls</c>.</summary>
         public int NeedSouls;
+        /// <summary>현재 Area의 <c>302_area.id</c>(이름·그림 조회). 없으면 0.</summary>
+        public int AreaId;
+        /// <summary>1기반 Zone 번호(<c>301_zone</c> 순서).</summary>
+        public int ZoneNo;
+        /// <summary>시작 덱(<c>mvLobby.deck</c>, 등급별 장수). 읽기 전용으로 쓴다. 없으면 null.</summary>
+        public int[] Deck;
     }
 
     public interface ILobbySource
@@ -59,6 +66,14 @@ namespace MV.UI
         void SetWealth(string gold, string souls, string dia);
     }
 
+    /// <summary>
+    /// 원값을 직접 그리는 겉(디자이너 LobbyScreen 연결 <see cref="LobbyDesignView"/>). 컨트롤러가 <see cref="ILobbyView"/> 문자열과 함께 넘긴다.
+    /// </summary>
+    public interface ILobbyStateView
+    {
+        void SetState(in LobbyState state, MvTables tables);
+    }
+
     /// <summary>저장(<see cref="MvSave.Current"/>)과 표(<see cref="MvTables.Current"/>)에서 로비 값을 읽는다.</summary>
     public sealed class MvSaveLobbySource : ILobbySource
     {
@@ -69,16 +84,22 @@ namespace MV.UI
             s = default;
             MvSaveStore store = MvSave.Current;
             if (store == null || store.IsDisposed) return false;
-            s.Level = store.Progress.Level;
+            s.Level = store.Progress.Fails; // 로비 Level = 실패 횟수(사용자 2026-11-19, 해금 조건 Level과 같은 값)
             s.AreaNo = store.Progress.Area + 1;
             s.Gold = store.Wealth.Get("gold");   // 01_wealth.type
             s.Souls = store.Wealth.Get("rescueCat");
             s.Dia = store.Wealth.Get("dia");
             s.AreaName = "";
+            var deck = store.Lobby.Deck;
+            s.Deck = new int[deck.Count];
+            for (int i = 0; i < deck.Count; i++) s.Deck[i] = deck[i];
             var tables = MvTables.Current;
             if (tables != null)
+            {
                 foreach (var a in tables.Area.Datas)
-                    if (a.areaNo == s.AreaNo) { s.NeedSouls = a.needSouls; s.AreaName = MvUiText.Name(a.id, ""); break; }
+                    if (a.areaNo == s.AreaNo) { s.NeedSouls = a.needSouls; s.AreaId = a.id; s.AreaName = MvUiText.Name(a.id, ""); break; }
+                s.ZoneNo = MV.Meta.MvMetaRules.ZoneIndex(tables, store.Progress.Area) + 1;
+            }
             return true;
         }
 
