@@ -13,36 +13,19 @@ using UnityEngine.UI;
 
 namespace MV.UI
 {
-    /// <summary>디자이너 공용 모듈 <c>Slot_AreaLabel</c>(Area 그림·Zone·Area 이름) 연결 칸.</summary>
-    [Serializable]
-    public sealed class LobbyAreaLabelParts
-    {
-        public Image areaTexture;
-        /// <summary>「Zone {0}」(노션). 디자이너가 꺼 둔 상태면 켜고 끄지 않고 글만 넣는다.</summary>
-        public TMP_Text zoneText;
-        public TMP_Text areaText;
-
-        public const string ZoneFormat = "Zone {0}";
-
-        public void Set(int zoneNo, string areaName)
-        {
-            if (zoneText) zoneText.text = string.Format(ZoneFormat, zoneNo);
-            if (areaText) areaText.text = areaName ?? "";
-        }
-    }
-
-    /// <summary>디자이너 공용 모듈 <c>Slot_Currency</c> 1칸. 보일 재화는 <see cref="wealthType"/>(<c>01_wealth.type</c>)로 Inspector에서 정한다.</summary>
+    /// <summary>
+    /// 디자이너 공용 모듈 <c>Slot_Currency</c> 1칸. 그리기는 인게임과 같은 공용 부품 <see cref="HudCurrencySlot"/>가 맡고,
+    /// 로비는 보일 재화(<see cref="wealthType"/>, <c>01_wealth.type</c>)만 Inspector에서 정한다.
+    /// </summary>
     [Serializable]
     public sealed class LobbyCurrencyParts
     {
         /// <summary><c>01_wealth.type</c>(gold·dia·rescueCat …). 비우면 칸을 끈다.</summary>
         public string wealthType;
-        public GameObject root;
-        /// <summary>재화 아이콘(<c>01_wealth.icon</c>, Atlas_UI_Icon).</summary>
-        public AddressableImage icon;
-        /// <summary>디자이너 자리표시 아이콘(<c>Icon_Dummy</c>). 표 아이콘을 넣으면 끈다.</summary>
+        /// <summary><c>Slot_Currency</c> 루트의 공용 재화 칸.</summary>
+        public HudCurrencySlot slot;
+        /// <summary>디자이너 자리표시 아이콘(<c>Icon_Dummy</c>, 표 아이콘 위에 그려짐). 표 아이콘이 있으면 끈다. 공용 부품으로 옮길지 결정 대기.</summary>
         public GameObject iconDummy;
-        public TMP_Text value;
     }
 
     /// <summary>디자이너 <c>Element_MainUpgrade_*</c> 1칸. 표 행과는 <see cref="key"/>(<c>10_lobbyUpgrade.key</c>)로 짝짓는다.</summary>
@@ -81,7 +64,7 @@ namespace MV.UI
 
         [Header("Top")]
         [SerializeField] TMP_Text levelText;
-        [SerializeField] LobbyAreaLabelParts areaLabel = new LobbyAreaLabelParts();
+        [SerializeField] HudAreaLabel areaLabel;
         /// <summary>설정 버튼. 설정 팝업이 아직 없어 기획서 설정 자리(05 §5.14 소리 켜고 끄기)로 보낸다.</summary>
         [SerializeField] Button settingButton;
         [SerializeField] Button speedButton;
@@ -116,7 +99,7 @@ namespace MV.UI
         [SerializeField] GameObject rebirthCoolComplete;
         [SerializeField] TMP_Text rebirthReward;
         [SerializeField] Button areaUpgradeButton;
-        [SerializeField] LobbyAreaLabelParts areaUpgradeLabel = new LobbyAreaLabelParts();
+        [SerializeField] HudAreaLabel areaUpgradeLabel;
         [SerializeField] GameObject areaUpgradeDot;
 
         // 문구: 노션 [HUD] 로비스크린 서식(키 자리 ui.lobby.*)
@@ -156,7 +139,9 @@ namespace MV.UI
         public bool RebirthShown => rebirthButton && rebirthButton.gameObject.activeSelf;
         public bool RebirthUnlockShown => rebirthUnlock && rebirthUnlock.gameObject.activeSelf;
         public bool AreaUpgradeDotShown => areaUpgradeDot && areaUpgradeDot.activeSelf;
-        public string AreaNameText => areaLabel?.areaText ? areaLabel.areaText.text : null;
+        public string AreaNameText => areaLabel ? areaLabel.AreaText : null;
+        public HudAreaLabel AreaLabel => areaLabel;
+        public HudAreaLabel AreaUpgradeLabel => areaUpgradeLabel;
 
         /// <summary>직렬화 참조 중 빈 칸 이름(시험·QA: 디자이너가 오브젝트를 지우면 여기 나온다).</summary>
         public List<string> MissingRefs()
@@ -165,9 +150,8 @@ namespace MV.UI
             void Need(UnityEngine.Object o, string name) { if (!o) miss.Add(name); }
             Need(startArea, nameof(startArea));
             Need(levelText, nameof(levelText));
-            Need(areaLabel?.areaText, "areaLabel.areaText");
-            Need(areaLabel?.zoneText, "areaLabel.zoneText");
-            Need(areaLabel?.areaTexture, "areaLabel.areaTexture");
+            Need(areaLabel, nameof(areaLabel));
+            if (areaLabel && !areaLabel.HasRefs) miss.Add("areaLabel(HudAreaLabel 참조)");
             Need(settingButton, nameof(settingButton));
             Need(speedButton, nameof(speedButton));
             if (speedStates == null || speedStates.Length == 0) miss.Add(nameof(speedStates));
@@ -176,9 +160,7 @@ namespace MV.UI
             else for (int i = 0; i < currencies.Length; i++)
             {
                 var c = currencies[i];
-                Need(c?.root, "currencies[" + i + "].root");
-                Need(c?.value, "currencies[" + i + "].value");
-                Need(c?.icon, "currencies[" + i + "].icon");
+                Need(c?.slot, "currencies[" + i + "].slot");
             }
             Need(equipSlot, nameof(equipSlot));
             Need(stack, nameof(stack));
@@ -217,7 +199,8 @@ namespace MV.UI
             Need(rebirthCoolComplete, nameof(rebirthCoolComplete));
             Need(rebirthReward, nameof(rebirthReward));
             Need(areaUpgradeButton, nameof(areaUpgradeButton));
-            Need(areaUpgradeLabel?.areaText, "areaUpgradeLabel.areaText");
+            Need(areaUpgradeLabel, nameof(areaUpgradeLabel));
+            if (areaUpgradeLabel && !areaUpgradeLabel.HasRefs) miss.Add("areaUpgradeLabel(HudAreaLabel 참조)");
             Need(areaUpgradeDot, nameof(areaUpgradeDot));
             return miss;
         }
@@ -318,12 +301,12 @@ namespace MV.UI
             if (currencies == null) return;
             foreach (var c in currencies)
             {
-                if (c == null || !c.value) continue;
+                if (c == null || !c.slot) continue;
                 switch (c.wealthType)
                 {
-                    case "gold": c.value.text = gold; break;           // 01_wealth.type
-                    case "rescueCat": c.value.text = souls; break;
-                    case "dia": c.value.text = dia; break;
+                    case "gold": c.slot.SetText(gold); break;           // 01_wealth.type
+                    case "rescueCat": c.slot.SetText(souls); break;
+                    case "dia": c.slot.SetText(dia); break;
                 }
             }
         }
@@ -336,8 +319,8 @@ namespace MV.UI
             _tables = t;
             string area = s.AreaName;
             if (string.IsNullOrEmpty(area)) area = "Area " + s.AreaNo;
-            areaLabel?.Set(s.ZoneNo, area);
-            areaUpgradeLabel?.Set(s.ZoneNo, area);
+            if (areaLabel) areaLabel.ShowUI(new AreaLabelData(s.ZoneNo, area));
+            if (areaUpgradeLabel) areaUpgradeLabel.ShowUI(new AreaLabelData(s.ZoneNo, area));
             DrawCurrencies(t);
             DrawWeapons(t, s.Deck);
         }
@@ -347,12 +330,10 @@ namespace MV.UI
             if (currencies == null) return;
             foreach (var c in currencies)
             {
-                if (c == null) continue;
-                var row = t != null && !string.IsNullOrEmpty(c.wealthType) ? t.Wealth.Get(c.wealthType) : null;
-                if (c.root) c.root.SetActive(!string.IsNullOrEmpty(c.wealthType));
-                if (row == null || string.IsNullOrEmpty(row.icon)) continue;
-                HudImage.Set(c.icon, MvAtlas.UiIcon, row.icon);
-                if (c.iconDummy) c.iconDummy.SetActive(false);
+                if (c == null || !c.slot) continue;
+                if (string.IsNullOrEmpty(c.wealthType)) { c.slot.HideUI(); continue; }
+                c.slot.ShowUI(new CurrencySlotData(t, c.wealthType, c.slot.ValueText)); // 글자는 SetWealth가 먼저 넣은 값
+                if (c.iconDummy && HudCurrencySlot.IconOf(t, c.wealthType) != null) c.iconDummy.SetActive(false);
             }
         }
 

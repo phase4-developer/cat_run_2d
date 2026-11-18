@@ -125,10 +125,41 @@ namespace MV.UI.Tests
         {
             var (_, view) = NewLobby();
             view.SetWealth("10", "20", "30");
+            var s = new LobbyState { Level = 0, AreaNo = 1, ZoneNo = 1, Deck = System.Array.Empty<int>() };
+            view.SetState(s, T);
             var expect = new Dictionary<string, string> { ["gold"] = "10", ["rescueCat"] = "20", ["dia"] = "30" };
             foreach (var c in view.Currencies)
-                if (expect.TryGetValue(c.wealthType, out var v)) Assert.That(c.value.text, Is.EqualTo(v), c.wealthType);
+            {
+                Assert.That(c.slot, Is.Not.Null, c.wealthType + ": 공용 재화 칸 HudCurrencySlot(인게임과 같은 컴포넌트)");
+                Assert.That(c.slot.gameObject.name, Does.StartWith("Slot_Currency"), c.wealthType);
+                Assert.That(c.slot.WealthType, Is.EqualTo(c.wealthType), "SetState가 공용 칸에 재화 종류를 넣음");
+                if (expect.TryGetValue(c.wealthType, out var v)) Assert.That(c.slot.ValueText, Is.EqualTo(v), c.wealthType + ": SetWealth 글자가 SetState 뒤에도 남음");
+            }
             Assert.That(view.Currencies.Count(c => expect.ContainsKey(c.wealthType)), Is.EqualTo(view.Currencies.Count), "칸의 재화는 로비가 읽는 01_wealth.type");
+        }
+
+        /// <summary>프리팹 단위 관리: 공용 Slot_AreaLabel은 루트 HudAreaLabel 하나가 그리고, 로비는 그 컴포넌트에 데이터만 넘긴다.</summary>
+        [Test]
+        public void AreaLabel_IsSharedPrefabRootComponent()
+        {
+            var common = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Art/UI/Prefab/Common/Slot_AreaLabel.prefab");
+            Assert.That(common, Is.Not.Null);
+            var part = common.GetComponent<HudAreaLabel>();
+            Assert.That(part, Is.Not.Null, "Slot_AreaLabel 루트의 HudAreaLabel");
+            Assert.That(part.HasRefs, Is.True, "Area 그림·Zone·Area 글자 참조");
+
+            var (_, view) = NewLobby();
+            foreach (var label in new[] { view.AreaLabel, view.AreaUpgradeLabel })
+            {
+                Assert.That(label, Is.Not.Null);
+                Assert.That(label.gameObject.name, Does.StartWith("Slot_AreaLabel"));
+            }
+            view.SetState(new LobbyState { AreaNo = 2, ZoneNo = 3, AreaName = "테스트", Deck = System.Array.Empty<int>() }, T);
+            foreach (var label in new[] { view.AreaLabel, view.AreaUpgradeLabel })
+            {
+                Assert.That(label.ZoneText, Is.EqualTo(string.Format(HudAreaLabel.ZoneFormat, 3)));
+                Assert.That(label.AreaText, Is.EqualTo("테스트"));
+            }
         }
 
         [Test]
