@@ -39,6 +39,10 @@ namespace MV.View
         Collider[] _overlap = new Collider[16];
         double _y;
         int _stamp;
+        // 임시 진단(MV-DIAG-GATE, HitDebug): 오브젝트마다 남기는 근접 로그 수 상한, Prepare 요약 간격.
+        const int DbgPerObject = 12, DbgSummaryEvery = 300;
+        readonly Dictionary<int, int> _dbgNear = new Dictionary<int, int>();
+        readonly List<Collider> _dbgCols = new List<Collider>();
 
         /// <summary>지금 판정 형상을 가진 오브젝트 수(시험·QA).</summary>
         public int LiveCount => _entries.Count;
@@ -81,8 +85,14 @@ namespace MV.View
             }
             _drop.Clear();
             foreach (var kv in _entries) if (kv.Value.Stamp != _stamp) _drop.Add(kv.Key);
-            foreach (int id in _drop) { Release(_entries[id]); _entries.Remove(id); }
+            foreach (int id in _drop) { Release(_entries[id]); _entries.Remove(id); _dbgNear.Remove(id); }
             Physics.SyncTransforms();
+            if (HitDebug.On && _stamp % DbgSummaryEvery == 1)
+            {
+                int hittable = 0;
+                foreach (var o in s.Objs) if (o != null && !o.Dead && o.Kind != null && o.Kind.hittable != MV.Data.Hittable.Never) hittable++;
+                HitDebug.Log($"Prepare #{_stamp}: 피격 가능 오브젝트 {hittable}개, 판정 형상 {_entries.Count}개, 투사체 {s.Projs.Count}개, 투사체 높이 y={_y:F2}, 플레이어 z={s.P.Z:F2}");
+            }
         }
 
         public void Cast(RunState s, double x, double z0, double z1, List<ProjectileHit> hits)
@@ -105,6 +115,29 @@ namespace MV.View
             int start = hits.Count;
             foreach (var kv in _first) hits.Add(new ProjectileHit(kv.Key.Obj, kv.Value));
             hits.Sort(start, hits.Count - start, HitOrder.Instance);
+            if (HitDebug.On) DebugNear(x, z0, z1);
+        }
+
+        /// <summary>임시 진단: 게이트 근처를 지나는 투사체 구간마다 Ray와 Hitbox 위치, Raycast 결과를 남긴다(게이트당 최대 <see cref="DbgPerObject"/>번).</summary>
+        void DebugNear(double x, double z0, double z1)
+        {
+            foreach (var e in _entries.Values)
+            {
+                if (e.Stamp != _stamp) continue;
+                var o = e.Obj;
+                var lk = o.Kind.labelKind;
+                if (lk != MV.Data.LabelKind.StairGate && lk != MV.Data.LabelKind.CraftGate) continue;
+                if (Math.Abs(x - o.X) > 3 || z1 < o.Z - 1.5 || z0 > o.Z + 1.5) continue;
+                _dbgNear.TryGetValue(o.Id, out int n);
+                if (n >= DbgPerObject) continue;
+                _dbgNear[o.Id] = n + 1;
+                e.Go.GetComponentsInChildren(true, _dbgCols);
+                var sb = new System.Text.StringBuilder();
+                foreach (var c in _dbgCols)
+                    sb.Append($" [{c.name} 켜짐={c.enabled && c.gameObject.activeInHierarchy} 중심={c.bounds.center:F2} 크기={c.bounds.size:F2} 등록={_owner.ContainsKey(c)}]");
+                string res = _first.TryGetValue(e, out double hz) ? $"맞음(진입 z={hz:F2})" : "안 맞음";
+                HitDebug.Log($"{o.Kind.key}#{o.Id} 근처 탄: Ray 시작=({x:F2}, {_y:F2}, {z0:F2}) → z {z1:F2} | 게이트 시뮬 위치=({o.X:F2}, {o.Z:F2}) Done={o.Done} | Collider {_dbgCols.Count}개:{sb} | Raycast {res}");
+            }
         }
 
         void Note(Collider c, double z)
@@ -145,6 +178,9 @@ namespace MV.View
             var e = new Entry { Obj = o, Address = address, Go = go };
             go.GetComponentsInChildren(true, _cols);
             foreach (var c in _cols) _owner[c] = e;
+            var lk = o.Kind.labelKind;
+            if (lk == MV.Data.LabelKind.StairGate || lk == MV.Data.LabelKind.CraftGate)
+                HitDebug.Log($"판정 형상 생성: {o.Kind.key}#{o.Id} 프리팹={address} Collider {_cols.Count}개 시뮬 위치=({o.X:F2}, {o.Z:F2})");
             return e;
         }
 
