@@ -33,17 +33,22 @@ namespace MV.UI.Tests
             public bool TryRead(out RunHudState state) { state = State; return true; }
         }
 
-        (RunHud hud, IngameHudView view) NewHud()
+        // RunHud(UIHudBase 파생)는 이 시험 어셈블리가 참조하지 않는 jjevol 어셈블리에 걸려 타입으로 쓰지 않는다(asmdef는 통합 Writer).
+        // RunHud.ResolveView와 같은 규칙(참조가 비면 자식의 IRunHudView)으로 겉을 찾고, 화면 코드는 같은 RunHudPresenter를 쓴다.
+        (GameObject hud, IngameHudView view) NewHud()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(HudPath);
             Assert.That(prefab, Is.Not.Null, HudPath);
             var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             _made.Add(go);
-            var hud = go.GetComponent<RunHud>();
-            Assert.That(hud, Is.Not.Null, "RunHud");
-            var view = hud.Presenter.View as IngameHudView;
+            var ctrl = go.GetComponent("RunHud");
+            Assert.That(ctrl, Is.Not.Null, "RunHud");
+            Assert.That(new SerializedObject(ctrl).FindProperty("view").objectReferenceValue, Is.Null, "참조가 비어 자식 겉을 쓴다");
+            var views = go.GetComponentsInChildren<IRunHudView>(true);
+            Assert.That(views.Length, Is.EqualTo(1), "겉은 하나");
+            var view = views[0] as IngameHudView;
             Assert.That(view, Is.Not.Null, "UIHud_Run 겉 = 자식 IngameScreen의 IngameHudView");
-            return (hud, view);
+            return (go, view);
         }
 
         static RunState NewState()
@@ -165,13 +170,15 @@ namespace MV.UI.Tests
         [Test]
         public void IngameHud_ShowsValuesInDesignerFormats_AndSpeedMatchesState()
         {
-            var (hud, view) = NewHud();
+            var (_, view) = NewHud();
             var src = new FakeSource
             {
                 State = new RunHudState { Level = 3, Gold = 12345, Dia = 7, Stairs = 15, GaugeLv = 2, GaugeFill = .5f, WeaponTier = 3, TimeScale = 2 },
             };
-            hud.Presenter.Bind(src);
-            hud.Presenter.Tick();
+            var p = new RunHudPresenter();
+            p.SetView(view);
+            p.Bind(src);
+            p.Tick();
             Assert.AreEqual("Level 3", view.LevelText);
             Assert.AreEqual("12.3K", view.GoldText);
             Assert.AreEqual("7", view.DiaText);
@@ -184,7 +191,7 @@ namespace MV.UI.Tests
             view.ClickSpeed();
             Assert.AreEqual(1, asked, "2x에서 누르면 1x 요청");
             var s = src.State; s.TimeScale = 1; src.State = s;
-            hud.Presenter.Tick();
+            p.Tick();
             Assert.AreEqual(0, view.ShownSpeedState, "표시는 런 배속 값을 따른다");
             view.ClickSpeed();
             Assert.AreEqual(2, asked);
