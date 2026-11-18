@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MV.Data;
 using NUnit.Framework;
 using UnityEditor;
@@ -49,7 +49,7 @@ namespace MV.UI.Tests
         public void WeaponSlot_ShowUI_ActivatesAndDrawsTableRow()
         {
             var slot = NewHidden<HudWeaponSlot>("HUD/Slot_Weapon.prefab");
-            AssertRefs(slot);
+            AssertRefs(slot, "flash", "sparkle");   // 머지 연출 리소스(선택, 디자이너 리소스 대기)
             ItemData item = null;
             foreach (var it in T.Item.Datas) if (it.tier == 2) { item = it; break; }
             Assert.That(item, Is.Not.Null, "103_item tier 2");
