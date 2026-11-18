@@ -62,6 +62,13 @@ namespace MV.View.Tests
                 Assert.That(side.x, Is.EqualTo(c["stepD"]).Within(0.01), address + " 옆판 폭 = stepD");
                 Assert.That(side.y, Is.EqualTo(c["stepH"]).Within(0.01), address + " 옆판 높이 = stepH");
                 Assert.That(p.transform.Find("Top"), Is.Not.Null, address + " 윗판");
+                // 정렬 부품·칸 번호 글자는 프리팹이 원본(실행 중에 붙이거나 만들지 않는다)
+                Assert.That(p.GetComponent<UnityEngine.Rendering.SortingGroup>(), Is.Not.Null, address + " SortingGroup");
+                Assert.That(p.GetComponent<DepthSortable>(), Is.Not.Null, address + " DepthSortable");
+                var number = p.GetComponentInChildren<WorldLabel>(true);
+                Assert.That(number, Is.Not.Null, address + " 칸 번호 글자(WorldLabel)");
+                Assert.That(number.GetComponent<Billboard>(), Is.Not.Null, address + " 번호 빌보드");
+                Assert.That(number.Text.font, Is.Not.Null, address + " 번호 글꼴");
             }
         }
 
@@ -85,7 +92,7 @@ namespace MV.View.Tests
             var go = new GameObject("Stairs");
             _made.Add(go);
             var v = go.AddComponent<ClimbStairView>();
-            v.Init(t, ViewTestTables.Config(), cam, null);
+            v.Init(t, ViewTestTables.Config(), cam);
             v.UseTemplates(Prefab);
             return v;
         }

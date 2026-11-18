@@ -25,12 +25,12 @@ namespace MV.View
     public sealed class ClimbStairView : MonoBehaviour
     {
         /// <summary>새 HTML 칸 번호 글자: 높이 0.28 m, 꼭대기 아래 0.45 m, 옆면 바깥 0.01 m. 옆 시점 비율 = (카메라 x − 반폭)/3 m, 0.05 이하면 안 그림.</summary>
-        public const float NumberSize = 0.28f, NumberBelowTop = 0.45f, NumberOut = 0.01f, SideFadeM = 3f, SideMin = 0.05f;
+        public const float NumberBelowTop = 0.45f, NumberOut = 0.01f, SideFadeM = 3f, SideMin = 0.05f;
         /// <summary>막 생긴 칸의 최소 크기(크기 0 변환을 피하는 값, 눈에는 안 보임).</summary>
         const float MinPop = 1e-3f;
         /// <summary>칸 번호는 블록 안 다른 그림 위에 그린다(정렬 그룹 안 순서).</summary>
-        const int NumberOrder = 10;
         const string FrontName = "Front", SideName = "Side", TopName = "Top";
+        const string PrefabFolder = "Assets/Game/Addressables/Local/BG/Prefab/Object/";
 
         public Func<string, CancellationToken, UniTask<AddressableLease<GameObject>>> PrefabLoader = AddressableScope.GetPrefab;
 
@@ -55,11 +55,12 @@ namespace MV.View
         }
 
         bool _warnedSimple;
+        /// <summary>정렬 부품이 빠져 그리지 않는 계단 칸 프리팹·이미 경고한 프리팹(프리팹마다 한 번).</summary>
+        readonly HashSet<GameObject> _badTemplates = new HashSet<GameObject>(), _warnedTemplates = new HashSet<GameObject>();
 
         MvTables _t;
         ViewConfig _cfg;
         Camera _cam;
-        Material _labelMaterial;
         /// <summary>칸 종류별 프리팹 주소: [0] = 첫 등급 아래(330 stepPrefab), [tierIndex + 1] = 115 climbStep.</summary>
         string[] _addresses = Array.Empty<string>();
         double _stepH, _stepD, _halfW, _popSec, _popBack, _lap;
@@ -87,12 +88,11 @@ namespace MV.View
         /// <summary>시험·QA: 칸 i의 프리팹 주소(오르기 시작 뒤).</summary>
         public string AddressOf(int i) => i >= 0 && i < _kind.Count ? _addresses[_kind[i]] : null;
 
-        public void Init(MvTables tables, ViewConfig cfg, Camera cam, Material labelMaterial)
+        public void Init(MvTables tables, ViewConfig cfg, Camera cam)
         {
             _t = tables ?? throw new ArgumentNullException(nameof(tables));
             _cfg = cfg ?? throw new ArgumentNullException(nameof(cfg));
             _cam = cam;
-            _labelMaterial = labelMaterial;
             var c = tables.Climb.Config() ?? throw new InvalidOperationException(ClimbData.Table + ": 설정 행(default)이 없습니다");
             int tiers = 0;
             foreach (var r in tables.CardTier.Datas) tiers = Math.Max(tiers, r.tierIndex + 1);
@@ -157,11 +157,12 @@ namespace MV.View
                 var template = Template(kind);
                 if (template == null) continue;   // 그 등급 프리팹을 아직 불러오는 중
                 var blk = Take(kind, template);
+                if (blk == null) continue;   // 프리팹 부품이 빠진 등급(경고 1번)
                 blocks++;
                 blk.Go.transform.position = new Vector3(0, (float)foot, (float)zs);
                 blk.Go.transform.localScale = new Vector3(pop, pop, pop);
                 SetHeight(blk, h);
-                if (sideK > SideMin)
+                if (blk.Number != null && sideK > SideMin)
                 {
                     blk.Number.gameObject.SetActive(true);
                     blk.Number.transform.localPosition = new Vector3((float)_halfW + NumberOut, h - NumberBelowTop, (float)(_stepD * 0.5));
@@ -169,7 +170,7 @@ namespace MV.View
                     blk.Number.SetOpacity(sideK);
                     numbers++;
                 }
-                else if (blk.Number.gameObject.activeSelf) blk.Number.gameObject.SetActive(false);
+                else if (blk.Number != null && blk.Number.gameObject.activeSelf) blk.Number.gameObject.SetActive(false);
             }
             for (int k = 0; k < _pools.Count; k++)
                 for (int i = _used[k]; i < _pools[k].Count; i++) Park(_pools[k][i]);
@@ -227,21 +228,29 @@ namespace MV.View
                 if (!b.Go.activeSelf) b.Go.SetActive(true);
                 return b;
             }
+            if (_badTemplates.Contains(template)) return null;
+            var sg = template.GetComponent<SortingGroup>();
+            var ds0 = template.GetComponent<DepthSortable>();
+            bool hasNumber = template.GetComponentInChildren<WorldLabel>(true) != null;
+            if ((sg == null || ds0 == null || !hasNumber) && _warnedTemplates.Add(template))
+            {
+                // 프리팹에 없는 부품은 만들지 않는다. 정렬 부품이 빠지면 그 등급 칸은 그리지 않고, 번호 글자만 빠지면 번호 없이 그린다.
+                Debug.LogWarning($"[ClimbStairView] 계단 칸 프리팹 {template.name}에 빠진 부품이 있습니다(SortingGroup {sg != null}·DepthSortable {ds0 != null}·번호 글자 WorldLabel {hasNumber}). " +
+                    $"{PrefabFolder}의 프리팹에 넣어 주세요. 만들지 않습니다.", this);
+            }
+            if (sg == null || ds0 == null) { _badTemplates.Add(template); return null; }
             var go = Instantiate(template, transform, false);
-            var sg = go.GetComponent<SortingGroup>();
-            if (sg == null) sg = go.AddComponent<SortingGroup>();
-            sg.sortingLayerName = ObjectViewFactory.WorldLayer;
+            go.GetComponent<SortingGroup>().sortingLayerName = ObjectViewFactory.WorldLayer;
             var ds = go.GetComponent<DepthSortable>();
-            if (ds == null) ds = go.AddComponent<DepthSortable>();
+            var number = go.GetComponentInChildren<WorldLabel>(true);
             ds.Rank = DepthMath.RankObject;
             ds.SortOffsetY = (float)_cfg.ObjProbeY;
             var top = go.transform.Find(TopName);
             var blk = new Block { Go = go, Ds = ds,
                 Front = MakeFace(go.transform.Find(FrontName)), Side = MakeFace(go.transform.Find(SideName)),
                 Top = top, TopY = top != null ? top.localPosition.y : 0f };
-            blk.Number = WorldLabel.Create(go.transform, "Number", NumberSize, _labelMaterial);   // 정렬·안개 기본 색을 잡기 전에 붙인다
-            blk.Number.Text.sortingOrder = NumberOrder;
-            blk.Number.gameObject.SetActive(false);
+            blk.Number = number;   // 글꼴·크기·정렬 순서는 프리팹 값
+            if (number != null) number.gameObject.SetActive(false);
             ds.Refresh();
             pool.Add(blk);
             _used[kind]++;

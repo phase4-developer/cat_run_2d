@@ -60,7 +60,7 @@ namespace MV.View
             var spriteMat = _objects != null ? _objects.SpriteMaterial : null;
             if (Has(_cats, "Cats", nameof(CharacterPresenter))) _cats.Init(tables, _cfg, _sprites, spriteMat);
             if (Has(_projs, "Projectiles", nameof(ProjectileView))) _projs.Init(tables, _cfg, _sprites, spriteMat, FxAtlas);
-            if (Has(_stairs, "ClimbStairs", nameof(ClimbStairView))) _stairs.Init(tables, _cfg, _rig.Cam, _objects != null ? _objects.LabelMaterial : null);
+            if (Has(_stairs, "ClimbStairs", nameof(ClimbStairView))) _stairs.Init(tables, _cfg, _rig.Cam);
             if (_objects != null && Has(_hits, "HitWorld", nameof(RunHitWorld)))
                 _objects.ConnectHits(_hits);   // 뷰 연결·회수 때 프리팹 Hitbox 등록·해제, 틱마다 대상 위치 맞추기
         }

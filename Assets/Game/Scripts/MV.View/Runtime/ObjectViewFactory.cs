@@ -38,9 +38,6 @@ namespace MV.View
         public const string Star = "Fx_Star4";
 
         [SerializeField] Material _spriteMaterial;
-        [SerializeField] Material _labelMaterial;
-        /// <summary>글자판 공유 TMP 머티리얼(계단 칸 번호도 같이 쓴다).</summary>
-        public Material LabelMaterial => _labelMaterial;
         /// <summary>월드 스프라이트 공유 머티리얼(고양이 뷰가 프리팹 값이 없을 때 빌린다).</summary>
         public Material SpriteMaterial => _spriteMaterial;
 
@@ -82,7 +79,6 @@ namespace MV.View
             _ctx.Sprites = sprites;
             _ctx.FxAtlas = fxAtlas;
             _ctx.SpriteMaterial = _spriteMaterial;
-            _ctx.LabelMaterial = _labelMaterial;
         }
 
         /// <summary>
