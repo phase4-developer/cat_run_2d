@@ -360,7 +360,7 @@ namespace MV.View.Tests
         public void ObjectEvents_ReachUnknownPrefabModule_ProjectileIdsDoNot()
         {
             var prefab = TestPrefab(Vector3.one, Quaternion.identity, (new Vector3(0, 1, 0), new Vector3(2, 2, 1)));
-            prefab.AddComponent<RecordingObjectModule>();
+            Assert.That(prefab.AddComponent<RecordingObjectModule>(), Is.Not.Null, "시험용 모듈을 붙일 수 있어야 한다");
             var rig = new HitWorldRig(_t, a => prefab);
             _rigs.Add(rig);
             var s = NewState();
@@ -411,6 +411,23 @@ namespace MV.View.Tests
             Assert.That(board.localPosition, Is.Not.EqualTo(boardBase), "그림 묶음은 움직인다");
             Assert.That(hb.position, Is.EqualTo(hbPos), "Hitbox 위치 그대로");
             Assert.That(hb.lossyScale, Is.EqualTo(hbScale), "Hitbox 크기 그대로(눌림 없음)");
+        }
+
+        /// <summary>
+        /// 시험용 모듈: 관리자가 모르는 새 모듈이 받은 이벤트를 적는다(모듈 확장 때 관리자를 고치지 않아도 되는지 확인).
+        /// 시험 클래스 안 중첩 클래스로 둔다. 같은 이름의 스크립트 파일로 두면 Editor 전용 어셈블리(MV.View.Tests)의 스크립트 자산이 되어
+        /// Unity가 GameObject에 붙이기를 거부한다(「Can't add script behaviour … because it is an editor script」, 잡 87aa0e2ec2c5).
+        /// </summary>
+        sealed class RecordingObjectModule : RunObjectModule
+        {
+            public readonly List<RunEventType> Got = new List<RunEventType>();
+            public readonly List<RunObject> GotFor = new List<RunObject>();
+
+            public override void OnRunEvent(RunObjectView view, in RunEvent e)
+            {
+                Got.Add(e.Type);
+                GotFor.Add(view.Obj);
+            }
         }
     }
 }
