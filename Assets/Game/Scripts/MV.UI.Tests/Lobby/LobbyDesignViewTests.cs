@@ -132,6 +132,9 @@ namespace MV.UI.Tests
             {
                 Assert.That(c.slot, Is.Not.Null, c.wealthType + ": 공용 재화 칸 HudCurrencySlot(인게임과 같은 컴포넌트)");
                 Assert.That(c.slot.gameObject.name, Does.StartWith("Slot_Currency"), c.wealthType);
+                var dummy = c.slot.transform.Find("Icon_Dummy");
+                Assert.That(dummy, Is.Not.Null, c.wealthType);
+                Assert.That(dummy.gameObject.activeSelf, Is.False, c.wealthType + ": 로비 래퍼 프리팹이 Icon_Dummy를 꺼 둠(코드 제어 없음, 사용자 2026-11-19)");
                 Assert.That(c.slot.WealthType, Is.EqualTo(c.wealthType), "SetState가 공용 칸에 재화 종류를 넣음");
                 if (expect.TryGetValue(c.wealthType, out var v)) Assert.That(c.slot.ValueText, Is.EqualTo(v), c.wealthType + ": SetWealth 글자가 SetState 뒤에도 남음");
             }
