@@ -5,6 +5,7 @@ using MV.Run;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MV.UI.Tests
 {
@@ -114,6 +115,48 @@ namespace MV.UI.Tests
             w.OnFlyArrived(HudFlyTarget.Hand, 1);
             w.Tick(0.01f);
             Assert.AreEqual(0, w.PendingUnits);
+        }
+
+        /// <summary>
+        /// 문 카드 줄서기(MV-UI3-HUD9): 문 위 카드가 HUD 카드로 바뀌면 스택 맨 아래 칸보다 밑에 한 줄로 서고(알파 1), 시뮬이 준 장마다 맨 앞 카드가
+        /// 그대로(같은 칸 객체) 스택으로 올라간다. 받을 장보다 많이 선 카드는 잠시 뒤 치운다.
+        /// </summary>
+        [Test]
+        public void Launch_QueuesBelowStack_ThenSameSlotsEnterUpward()
+        {
+            var w = NewSection(out var s);
+            s.W[1] = 1;
+            w.Tick(0);
+            var rects = new List<Rect> { new Rect(100, 900, 60, 50), new Rect(170, 900, 60, 50), new Rect(240, 900, 60, 50) };
+            w.OnLaunched(HudFlyTarget.Gold, rects);
+            Assert.AreEqual(0, w.QueuedCards, "다른 대상은 받지 않는다");
+            w.OnLaunched(HudFlyTarget.Hand, rects);
+            Assert.AreEqual(3, w.QueuedCards);
+            var queued = w.QueueSlots.ToList();
+            var bottom = w.StackSlots.Last().rectTransform.anchoredPosition.y;
+            float prev = bottom;
+            foreach (var q in queued)
+            {
+                var y = q.rectTransform.anchoredPosition.y;
+                Assert.Less(y, prev, "줄은 스택 맨 아래 칸 밑으로 차례로 선다");
+                prev = y;
+                Assert.AreEqual(1f, q.transform.localScale.x, 1e-4f, "도착하면 스택 칸 크기");
+                foreach (var g in q.GetComponentsInChildren<Graphic>(true))
+                    Assert.AreEqual(1f, g.canvasRenderer.GetAlpha(), 1e-4f, "알파 변화 없음");
+            }
+
+            int mergeN = T.RunConfig.I(RunConfigKeys.MERGE_N);
+            HudWeaponHand.Add(s.W, 1, mergeN, null);   // 시뮬은 2장만 받았다(1장은 거절)
+            HudWeaponHand.Add(s.W, 1, mergeN, null);
+            w.OnRunEvent(new RunEvent(RunEventType.WeaponDeliver, a: 2, b: 1));
+            for (int i = 0; i < 2000 && w.StackSlots.Count() < 2; i++) w.Tick(0.005f);
+            Assert.That(w.StackSlots.ToList(), Does.Contain(queued[0]), "줄 맨 앞 카드가 그대로 스택으로 들어간다(새 칸을 꺼내지 않는다)");
+            Assert.AreEqual(1f, queued[0].transform.localScale.x, 1e-4f);
+            RunUntilIdle(w);
+            Assert.AreEqual(0, w.QueuedCards, "받지 못한 카드는 치운다");
+            var expect = new List<int>();
+            for (int t = s.W.Length - 1; t >= 1; t--) for (int k = 0; k < s.W[t]; k++) expect.Add(t);
+            Assert.That(w.Hand.Select(c => c.Tier), Is.EqualTo(expect), "손패 = 시뮬");
         }
 
         [Test]

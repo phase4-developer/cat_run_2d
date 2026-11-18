@@ -109,16 +109,9 @@ namespace MV.Fx
                     string key = clone ? "run.cloneGatePass" : "run.statGatePass";
                     var row = Grp(t, o, key);
                     o.Spawns.Add(FromRow(row, V(ob.X, 1.5 + wy, ob.Z)));
-                    if (e.A > 0)
-                    {
-                        if (clone)
-                        {
-                            int gap = t.RunConfig.I(RunConfigKeys.Fly_CloneGapMs), max = t.RunConfig.I(RunConfigKeys.CRAFT_ICON_MAX);
-                            for (int i = 0; i < Math.Min(e.A, max); i++)
-                                o.Flies.Add(new FlyRequest { Target = FlyTarget.Hand, World = V(ob.X + Rnd(-0.5f, 0.5f), 2 + wy, ob.Z), DelayMs = i * gap, Amount = 1 });
-                        }
-                        else o.Flies.Add(new FlyRequest { Target = FlyTarget.Stair, World = V(ob.X, 2 + wy, ob.Z), Amount = e.A });
-                    }
+                    // 무기문(cgate) 카드는 문 위 카드 묶음(MV.View CraftGateBundle)이 통과 순간 HUD 카드로 바뀌어 날아간다(MV-UI3-HUD9, 사용자 2026-11-19
+                    // 「알파값도 없이 그냥 똑같은 자리에 UI로 대체」). 여기서 따로 아이콘을 날리지 않는다(잔상 원인).
+                    if (e.A > 0 && !clone) o.Flies.Add(new FlyRequest { Target = FlyTarget.Stair, World = V(ob.X, 2 + wy, ob.Z), Amount = e.A });
                     break;
                 }
                 case RunEventType.WellFlush: // L1861~1880

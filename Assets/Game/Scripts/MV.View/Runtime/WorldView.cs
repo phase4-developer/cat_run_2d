@@ -81,6 +81,7 @@ namespace MV.View
             bool ok = await _sprites.LoadAtlasAsync(theme.worldAtlas, ct);
             ok &= await _sprites.LoadAtlasAsync(FxAtlas, ct);
             ok &= await _sprites.LoadAtlasAsync(MvAtlas.UiIcon, ct);   // 무기문 위 카드 묶음(UI 아이콘 그대로, 테마와 무관해 반환하지 않는다)
+            ok &= await _sprites.LoadAtlasAsync(MvAtlas.UiCard, ct);   // 무기문 위 카드 묶음 등급 틀(09_uiResource 등급 틀, 반환하지 않는다)
             string prev = _themeAtlas;
             _themeAtlas = theme.worldAtlas;
             _rig.SetTheme(theme);
@@ -111,13 +112,18 @@ namespace MV.View
             bool off = state == null || _rig == null || !_rig.Ready;
             double now = Time.realtimeSinceStartupAsDouble;
             if (_objects != null && !off) _objects.GoldMul = RunFormulas.GoldMul(state);   // 결계 블록 글자판 「+골드」(정본 L1492)
-            if (_objects != null && !off) _objects.GateWeaponIcon = WeaponIcon(state);
+            if (_objects != null && !off)
+            {
+                _objects.GateWeaponIcon = WeaponIcon(state);
+                _objects.GateWeaponFrameAtlas = _frameAtlas;
+                _objects.GateWeaponFrame = _frame;
+            }
             if (_cats != null) { if (off) _cats.Hide(); else _cats.Sync(state, now, _rig.Model.OrbitE); }
             if (_projs != null) { if (off) _projs.Hide(); else _projs.Sync(state, now); }
             if (_stairs != null) { if (off) _stairs.Hide(); else _stairs.Sync(state); }
         }
 
-        /// <summary>지금 런 무기 단계(Bt)의 103_item.icon. 같은 단계면 다시 찾지 않는다.</summary>
+        /// <summary>지금 런 무기 단계(Bt)의 103_item.icon(등급 틀 <see cref="_frame"/>도 함께 고른다). 같은 단계면 다시 찾지 않는다.</summary>
         string WeaponIcon(RunState state)
         {
             if (state.Tables == null) return null;
@@ -126,12 +132,15 @@ namespace MV.View
             _iconTables = state.Tables;
             _icon = null;
             foreach (var it in state.Tables.Item.Datas) if (it.tier == state.Bt) { _icon = it.icon; break; }
+            var fr = MvUiGrade.Frame(state.Tables, state.Bt);   // HUD 무기 칸과 같은 규칙(등급 번호 = 103_item.tier)
+            _frameAtlas = fr?.atlas;
+            _frame = fr?.sprite;
             return _icon;
         }
 
         int _iconTier = -1;
         MvTables _iconTables;
-        string _icon;
+        string _icon, _frameAtlas, _frame;
 
         /// <summary>런 이벤트 → 월드 뷰 반응(오브젝트 맞음·우물 벽돌 빠짐, 06 §6.13). <see cref="SyncObjects"/> 전에 같은 프레임 목록으로 부른다.</summary>
         public void OnRunEvents(System.Collections.Generic.IReadOnlyList<RunEvent> events)

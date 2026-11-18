@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MV.UI
@@ -33,6 +34,14 @@ namespace MV.UI
         /// <summary>비행 도착(대상, 값). 다리가 비행 층 도착을 넘긴다.</summary>
         public static event Action<HudFlyTarget, int> Arrived;
 
+        /// <summary>
+        /// 월드 카드가 HUD 카드로 바뀌는 순간(대상, 카드별 화면 자리 px 왼아래 원점). 무기문 위 카드 묶음을 통과하면 Boot 다리가 넘긴다.
+        /// 받는 섹션은 같은 자리·같은 크기로 UI 카드를 세워 날린다(알파 변화 없음). 목록은 그 자리에서 읽고 보관하지 않는다.
+        /// </summary>
+        public static event Action<HudFlyTarget, IReadOnlyList<Rect>> Launched;
+
+        public static void RaiseLaunched(HudFlyTarget target, IReadOnlyList<Rect> cards) => Launched?.Invoke(target, cards);
+
         public static void Register(HudFlyTarget target, IHudFlyHandler handler) => s_handlers[(int)target] = handler;
 
         /// <summary>자기가 건 것만 푼다(다른 섹션이 이미 바꿔 걸었으면 그대로 둔다).</summary>
@@ -54,6 +63,7 @@ namespace MV.UI
             Array.Clear(s_handlers, 0, s_handlers.Length);
             InFlight = null;
             Arrived = null;
+            Launched = null;
         }
     }
 }

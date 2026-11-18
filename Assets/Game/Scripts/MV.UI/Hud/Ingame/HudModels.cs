@@ -9,24 +9,11 @@ namespace MV.UI
     /// </summary>
     public static class HudGrade
     {
-        /// <summary>09_uiResource 「등급 틀」 묶음. 행의 sort = 등급 번호(1부터, 디자이너 Grade_N).</summary>
-        public const int FrameGroup = 5;
+        /// <summary>09_uiResource 「등급 틀」 묶음(<see cref="MvUiGrade.FrameGroup"/>).</summary>
+        public const int FrameGroup = MvUiGrade.FrameGroup;
 
-        /// <summary>
-        /// 등급 번호 grade(1부터)의 틀 그림 행. 그 번호 행이 없으면 그 아래 가장 큰 번호 행(모자란 그림은 이전 그림을 다시 쓴다), 그것도 없으면 첫 행. 표에 묶음이 없으면 null.
-        /// </summary>
-        public static UiResourceData Frame(MvTables t, int grade)
-        {
-            if (t == null) return null;
-            UiResourceData best = null, first = null;
-            foreach (var r in t.UiResource.GetGroup(FrameGroup))
-            {
-                if (!r.active) continue;
-                if (first == null || r.sort < first.sort) first = r;
-                if (r.sort <= grade && (best == null || r.sort > best.sort)) best = r;
-            }
-            return best ?? first;
-        }
+        /// <summary>등급 번호 grade(1부터)의 틀 그림 행(<see cref="MvUiGrade.Frame"/>, 무기문 위 카드 묶음과 같은 규칙).</summary>
+        public static UiResourceData Frame(MvTables t, int grade) => MvUiGrade.Frame(t, grade);
 
         /// <summary>115 행(tierIndex). 없으면 null.</summary>
         public static CardTierData CardTier(MvTables t, int tierIndex)

@@ -552,11 +552,11 @@ namespace MV.View.Tests
         }
 
         /// <summary>
-        /// 무기문 위 카드 묶음(MV-UI3-HUD9, 임시 리소스 — 원본 Obj_StairGate에 두고 무기문 변형이 물려받음, 계단문은 장 수 0이라 안 보임): 장 수 = 글자판 숫자와 같은 Made + Extra(상한 없음), 통과(Done)하면 숨긴다.
-        /// 카드는 프리팹 안 꺼 둔 원본을 복제해 풀에서 꺼내고, 줄면 돌려준다.
+        /// 무기문 위 카드 묶음(MV-UI3-HUD9, 임시 리소스, 사용자 2026-11-19 「CreaftGate용 … 다른덴 추가하지마」): Obj_CraftGate 변형에만 있다.
+        /// 장 수 = Made + Extra(상한 없음), 한 줄 끝 카드가 두 기둥(왼쪽·오른쪽 끝 x)에 맞고 넘치면 위 줄, 통과(Done)하면 카드마다 화면 자리를 넘기고 숨긴다.
         /// </summary>
         [Test]
-        public void CraftGateBundle_ShowsMadePlusExtra_HidesAfterPass()
+        public void CraftGateBundle_ShowsMadePlusExtra_ReleasesOnPass()
         {
             var t = ViewTestTables.Load();
             var rig = PrefabRig(t);
@@ -564,21 +564,45 @@ namespace MV.View.Tests
             var gate = Obj(t, "cgate", 1, 20);
             gate.Made = 6;
             gate.Extra = 2;
-            var objs = new List<RunObject> { gate };
+            var stair = Obj(t, "sgate", 2, 24);
+            var objs = new List<RunObject> { gate, stair };
             rig.Frame(0, objs);
+            Assert.That(Mod<GateRewardDisplay>(f, 2), Is.Null, "계단문에는 묶음이 없다(무기문 전용)");
             var bundle = Mod<CraftGateBundle>(f, 1);
             Assert.That(bundle, Is.Not.Null, "Obj_CraftGate 프리팹 CraftGateBundle");
+            Assert.AreEqual(GateRewardKind.Weapon, bundle.Kind);
             Assert.That(bundle.Template, Is.Not.Null, "카드 원본 직렬화 참조");
+            Assert.That(bundle.Template.Frame, Is.Not.Null, "카드 틀 참조");
+            Assert.That(bundle.Template.Icon, Is.Not.Null, "카드 그림 참조");
             Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
             Assert.AreEqual(8, bundle.Shown, "Made + Extra");
+
+            // 아래 줄 끝 카드 = 두 기둥, 넘친 카드는 위 줄
+            var cards = bundle.Cards;
+            float x0 = cards[0].transform.localPosition.x, y0 = cards[0].transform.localPosition.y;
+            int cols = 0;
+            foreach (var c in cards) if (UnityEngine.Mathf.Approximately(c.transform.localPosition.y, y0)) cols++;
+            Assert.That(cols, Is.GreaterThan(1).And.LessThan(8), "한 줄에 늘어뜨리지 않고 줄을 늘린다");
+            Assert.AreEqual(-1.25f, x0, 1e-4f, "왼쪽 끝 = 왼쪽 기둥");
+            Assert.AreEqual(1.25f, cards[cols - 1].transform.localPosition.x, 1e-4f, "오른쪽 끝 = 오른쪽 기둥");
+            Assert.Greater(cards[cols].transform.localPosition.y, y0, "넘치면 위 줄");
 
             gate.Made = 3; gate.Extra = 0;
             rig.Frame(0.1, objs);
             Assert.AreEqual(3, bundle.Shown, "줄면 풀로 돌려준다");
 
-            gate.Done = true;
-            rig.Frame(0.2, objs);
-            Assert.AreEqual(0, bundle.Shown, "통과하면 숨김(나는 카드는 HUD)");
+            var got = new List<int>();
+            System.Action<GateRewardKind, IReadOnlyList<GateCardRelease>> on = (k, list) => got.Add(list.Count);
+            GateRewardDisplay.Released += on;
+            try
+            {
+                gate.Done = true;
+                rig.Frame(0.2, objs);
+                rig.Frame(0.3, objs);
+            }
+            finally { GateRewardDisplay.Released -= on; }
+            Assert.AreEqual(0, bundle.Shown, "통과하면 숨김(HUD 카드로 바뀐다)");
+            Assert.That(got, Is.EqualTo(new[] { 3 }), "통과 순간 한 번, 보이던 장 수만큼 넘긴다");
         }
 
         /// <summary>눌림(106.punch)은 실제 프리팹의 빌보드 묶음 크기만 바꾸고, 뷰 뿌리와 Hitbox Collider의 위치·크기는 그대로다.</summary>
@@ -747,15 +771,34 @@ namespace MV.View.Tests
                 // 변형 프리팹(예: Obj_CraftGate ← Obj_StairGate)은 파일에 원본 구조가 없다. 원본 파일을 읽고 변형이 덮어쓴 회전만 얹는다.
                 // 구조를 바꾼 변형(오브젝트·컴포넌트 추가·삭제)은 이 글자 읽기로 판정할 수 없으므로 통과시키지 않고 오류로 낸다.
                 var rotOverride = new Dictionary<string, Dictionary<string, string>>();
+                // 변형이 더한 오브젝트(m_AddedGameObjects, 예: Obj_CraftGate의 무기 카드 묶음)는 변형 파일에 문서로 있고,
+                // 부모는 원본 오브젝트를 가리키는 stripped Transform이다. 그 문서를 원본 구조에 붙여 같이 읽는다(바깥 변형 한 단계만).
+                var addedDocs = new List<string>();
                 string text = File.ReadAllText(files[0]).Replace("\r\n", "\n");
                 for (int depth = 0; ; depth++)
                 {
                     var src = M(text, @"m_SourcePrefab: \{fileID: \d+, guid: ([0-9a-f]{32})");
-                    bool variant = src.Success && !System.Text.RegularExpressions.Regex.IsMatch(text, @"\n--- !u!1 &\d+\n");
+                    // 변형 = 뿌리가 부모 없는 PrefabInstance인 파일(더한 오브젝트 문서가 있어도 변형이다).
+                    bool variant = src.Success && System.Text.RegularExpressions.Regex.IsMatch(text, @"PrefabInstance:\n(?:  .*\n)*?    m_TransformParent: \{fileID: 0\}");
                     if (!variant) break;
                     Assert.Less(depth, 8, a + ": 변형 프리팹 단계가 너무 깊다");
-                    foreach (var list in new[] { "m_RemovedComponents", "m_RemovedGameObjects", "m_AddedGameObjects", "m_AddedComponents" })
+                    foreach (var list in new[] { "m_RemovedComponents", "m_RemovedGameObjects", "m_AddedComponents" })
                         Assert.IsTrue(M(text, list + @": \[\]").Success, a + ": 구조를 바꾼 변형 프리팹(" + list + ")은 이 시험이 읽지 못한다");
+                    if (!M(text, @"m_AddedGameObjects: \[\]").Success)
+                    {
+                        Assert.AreEqual(0, depth, a + ": 더한 오브젝트는 바깥 변형 한 단계만 읽는다");
+                        var strippedSrc = new Dictionary<string, string>();
+                        foreach (var d in System.Text.RegularExpressions.Regex.Split(text, @"\n(?=--- !u!)"))
+                        {
+                            var h = M(d, @"^--- !u!(\d+) &(\d+)( stripped)?");
+                            if (!h.Success || h.Groups[1].Value == "1001") continue;
+                            if (h.Groups[3].Success) strippedSrc[h.Groups[2].Value] = M(d, @"m_CorrespondingSourceObject: \{fileID: (\d+)").Groups[1].Value;
+                            else addedDocs.Add(d);
+                        }
+                        for (int k = 0; k < addedDocs.Count; k++)
+                            foreach (var kv in strippedSrc)
+                                addedDocs[k] = addedDocs[k].Replace("m_Father: {fileID: " + kv.Key + "}", "m_Father: {fileID: " + kv.Value + "}");
+                    }
                     foreach (System.Text.RegularExpressions.Match o in System.Text.RegularExpressions.Regex.Matches(text,
                         @"- target: \{fileID: (\d+), guid: [0-9a-f]{32}, type: 3\}\n\s+propertyPath: m_LocalRotation\.([xyzw])\n\s+value: (\S+)"))
                     {
@@ -774,7 +817,8 @@ namespace MV.View.Tests
                     foreach (var kv in axes) q = System.Text.RegularExpressions.Regex.Replace(q, @"(?<=[{ ])" + kv.Key + @": [^,}]+", kv.Key + ": " + kv.Value);
                     return q;
                 }
-                var docs = System.Text.RegularExpressions.Regex.Split(text, @"\n(?=--- !u!)");
+                var docs = new List<string>(System.Text.RegularExpressions.Regex.Split(text, @"\n(?=--- !u!)"));
+                docs.AddRange(addedDocs);
                 var trOfGo = new Dictionary<string, string>();
                 var rot = new Dictionary<string, string>();
                 var father = new Dictionary<string, string>();
