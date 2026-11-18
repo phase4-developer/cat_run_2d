@@ -52,6 +52,29 @@ namespace MV.UI
         public double WeaponDmg;
         /// <summary>고양이 모습 짧은 이름(<c>103_item.lookName</c>). 없으면 빈 문자열.</summary>
         public string LookName;
+
+        /// <summary>런 배속(<c>RunSetup.TimeScale</c>, 1 이상). 시뮬이 실제로 쓰는 값이라 표시와 진행 속도가 같다.</summary>
+        public int TimeScale;
+    }
+
+    /// <summary>
+    /// 값을 원값 그대로 받는 겉(MV-UI2-HUD, 디자이너 <c>IngameScreen</c>: 등급 그림·숫자 서식이 1차 겉과 다르다).
+    /// 프레젠터는 값이 바뀐 프레임마다 <see cref="IRunHudView"/> 호출 뒤 이것도 부른다.
+    /// </summary>
+    public interface IRunHudRawView
+    {
+        void SetState(in RunHudState state);
+    }
+
+    /// <summary>
+    /// 런 상태를 직접 읽어 계단 등급 카드·카드 룰렛·얻은 카드·지팡이 머지를 그리는 겉(MV-UI2-HUD).
+    /// 있으면 <see cref="RunHud"/>는 1차 <see cref="BlessingCardsView"/>를 만들지 않는다. 시뮬 값은 읽기만 한다.
+    /// </summary>
+    public interface IRunHudStateView
+    {
+        void BindRun(System.Func<MV.Run.RunState> state);
+        /// <summary>실시간 dt(초).</summary>
+        void TickRun(float dt);
     }
 
     /// <summary>

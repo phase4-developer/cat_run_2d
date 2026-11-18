@@ -57,11 +57,17 @@ namespace MV.UI
                 v.SetMergeHint(MergeHintText(s.MergeN));
             if (all || s.ClimbShown != _last.ClimbShown || s.ClimbN != _last.ClimbN || !Mathf.Approximately(s.ClimbAlpha, _last.ClimbAlpha))
                 v.SetClimbCount(s.ClimbN > 0 ? ClimbCountText(s.ClimbShown, s.ClimbN) : "", s.ClimbN > 0 ? s.ClimbAlpha : 0);
+            if (v is IRunHudRawView raw && (all || Changed(s, _last))) raw.SetState(s);
 
             _last = s;
             _drawn = true;
             return true;
         }
+
+        static bool Changed(in RunHudState a, in RunHudState b) =>
+            a.Level != b.Level || a.Gold != b.Gold || a.Dia != b.Dia || a.Souls != b.Souls || a.Stairs != b.Stairs || a.Flying != b.Flying
+            || a.GaugeLv != b.GaugeLv || !Mathf.Approximately(a.GaugeFill, b.GaugeFill) || a.TimeScale != b.TimeScale
+            || a.WeaponTier != b.WeaponTier || a.WeaponDmg != b.WeaponDmg || a.ClimbShown != b.ClimbShown || a.ClimbN != b.ClimbN;
 
         // 문구: 키 자리 ui:ui.hud.* (LocalizationManager.GetLoc 교체 지점, 05 §5.2.2~5.2.6)
         public static string LevelText(int level) => "Level " + level;            // ui.hud.level
