@@ -3,6 +3,7 @@ using System.Linq;
 using MV.Data;
 using MV.Run;
 using NUnit.Framework;
+using UnityEngine.TestTools;
 using UnityEditor;
 using UnityEngine;
 
@@ -215,6 +216,8 @@ namespace MV.View.Tests
             var arch = t.StageObject.Datas.First(r => r.kind == "arch");
             f.SetStage(t, arch.stageMap);
             var objs = new List<RunObject> { Make(t, "arch", 1, 15), Make(t, "tower", 2, 20), Make(t, "cardbox", 3, 25), Make(t, "enemy", 4, 30) };
+            // cardbox는 피격 가능인데 프리팹이 없어 맞지 않는다 → 게임 구성(스테이지 지정) 관리자는 오류로 한 번 알린다.
+            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex("cardbox.*프리팹이 없어"));
             f.Sync(objs, 0, 0, 0);
             Assert.That(f.TryPrefabView(1, out string a1, out _), Is.True);
             Assert.That(a1, Is.EqualTo(arch.prefab));

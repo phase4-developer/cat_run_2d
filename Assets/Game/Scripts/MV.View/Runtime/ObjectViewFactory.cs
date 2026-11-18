@@ -200,7 +200,8 @@ namespace MV.View
 
         static readonly ObjectShape?[] s_shapeOfData = BuildShapeMap();
         static readonly HashSet<ObjectViewShape> s_warnedShapes = new HashSet<ObjectViewShape>();
-        static readonly HashSet<string> s_noPrefabHittable = new HashSet<string>();
+        /// <summary>이 관리자가 이미 알린 「피격 가능인데 프리팹 없음」 종류(관리자마다 한 번, 실행 순서와 무관).</summary>
+        readonly HashSet<string> _noPrefabHittable = new HashSet<string>();
 
         /// <summary>MV.Data `ObjectViewShape` → `ObjectShape`(이름 1:1). 이름이 없는 값은 null.</summary>
         static ObjectShape?[] BuildShapeMap()
@@ -332,7 +333,8 @@ namespace MV.View
         {
             string prefab = PrefabFor(_tables, _stageMap, o);
             var shape = ShapeOf(o.Kind);
-            if (prefab == null && o.Kind != null && o.Kind.hittable != Hittable.Never && s_noPrefabHittable.Add(o.Kind.key))
+            // 스테이지가 정해진(게임 구성) 관리자에서만 알린다. 시뮬 벽은 늘 보상 칸이라 305 프리팹이 있고, cardbox는 모드 전용(MV.Run이 만들지 않음)이다.
+            if (prefab == null && _stageMap != null && o.Kind != null && o.Kind.hittable != Hittable.Never && _noPrefabHittable.Add(o.Kind.key))
                 Debug.LogError($"[ObjectViewFactory] 피격 가능 종류 {o.Kind.key}에 프리팹이 없어 판정 형상이 없습니다(코드 모양으로 그리고 맞지 않음).");
             Stack<RunObjectView> st;
             bool pooled = prefab != null ? _prefabPool.TryGetValue(prefab, out st) : _shapePool.TryGetValue(shape, out st);
