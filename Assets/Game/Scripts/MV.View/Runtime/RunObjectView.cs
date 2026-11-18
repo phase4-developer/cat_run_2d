@@ -14,9 +14,6 @@ namespace MV.View
     [DisallowMultipleComponent]
     public sealed class RunObjectView : MonoBehaviour
     {
-        /// <summary>프리팹 글자판(`Obj_Text_Count`)이 없는 오브젝트의 TMP 글자판 높이·글자 크기 m [추정: 정본 labelPlane 위치는 캡처 대조로 조정].</summary>
-        public const float LabelY = 2.2f, LabelSize = 0.5f;
-
         readonly List<RunObjectModule> _modules = new List<RunObjectModule>(8);
         readonly List<Transform> _poseTargets = new List<Transform>(2);
         readonly List<Vector3> _posePos = new List<Vector3>(2), _poseScale = new List<Vector3>(2);
@@ -24,7 +21,6 @@ namespace MV.View
         readonly List<Collider> _hitCols = new List<Collider>(4);
         float _appliedRoll;
         bool _hitRegistered;
-        WorldLabel _line;
         static readonly HashSet<string> s_reported = new HashSet<string>();
 
         public RunObject Obj { get; private set; }
@@ -102,7 +98,6 @@ namespace MV.View
             Ds.SortOffsetY = (float)Ctx.Cfg.ObjProbeY;
             Ds.Bias = o.Kind != null ? (float)o.Kind.sortBias : 0f;
             Ds.SetAlphaScale(1f);
-            if (_line != null) _line.gameObject.SetActive(false);
             if (Instance != null) Instance.transform.localPosition = Vector3.zero;
             BindModules();
         }
@@ -192,39 +187,17 @@ namespace MV.View
         }
 
         /// <summary>
-        /// 글자판(매 프레임). 내용은 <see cref="ObjectLabel.Of"/>(105.labelKind, 표가 정한다), 그림은 프리팹 글자판(<see cref="CountLabel"/>)이 먼저이고
-        /// 없으면(코드 모양) TMP 한 줄 글자판(숫자, 없으면 제목). 프리팹 오브젝트는 로드 전에 그림이 없으므로 글자판도 없다.
+        /// 글자판(매 프레임). 내용은 <see cref="ObjectLabel.Of"/>(105.labelKind, 표가 정한다), 그림은 프리팹 글자판(<see cref="CountLabel"/>)만 쓴다.
+        /// 글자판을 품지 않은 프리팹은 글자를 띄우지 않고, 표가 글자를 요구하면 프리팹 주소를 오류로 한 번 알린다(대체 글자를 만들지 않는다).
         /// </summary>
         void UpdateLabel(double playerZ)
         {
             var o = Obj;
-            var c = Dying || o == null ? LabelContent.Hidden : ObjectLabel.Of(o, playerZ, Ctx.Cfg.ArchLabelHide, Ctx.WallRows.Ahead(o), Ctx.GoldMul);
-            string line = c.Line;
-            if (Ctx.LabelText != null && o != null)
-            {
-                line = Ctx.LabelText(o);
-                if (line == null) c = LabelContent.Hidden;
-            }
-            if (Board != null)
-            {
-                Board.Apply(c);
-                if (_line != null && _line.gameObject.activeSelf) _line.gameObject.SetActive(false);
-                return;
-            }
-            if (Dying || line == null || (Prefab != null && Instance == null))
-            {
-                if (_line != null && _line.gameObject.activeSelf) _line.gameObject.SetActive(false);
-                return;
-            }
-            if (_line == null)
-            {
-                _line = WorldLabel.Create(transform, "Label", LabelSize, Ctx.LabelMaterial);
-                _line.transform.localPosition = new Vector3(0, LabelY, 0);
-                _line.GetComponent<Renderer>().sortingOrder = CountLabel.SortBase;   // 그룹 안 맨 위(정본 편향 −0.05와 같은 결과)
-                Ds.Refresh();
-            }
-            _line.SetText(line);
-            if (!_line.gameObject.activeSelf) _line.gameObject.SetActive(true);
+            var c = Dying || o == null || Ctx.HideLabels ? LabelContent.Hidden : ObjectLabel.Of(o, playerZ, Ctx.Cfg.ArchLabelHide, Ctx.WallRows.Ahead(o), Ctx.GoldMul);
+            if (Board != null) { Board.Apply(c); return; }
+            if (c.Visible && Instance != null && o?.Kind != null && s_reported.Add("label:" + Prefab))
+                Debug.LogError($"[RunObjectView] 오브젝트 프리팹 {Prefab}에 글자판 프리팹(Obj_Text_Count)이 없어 글자를 띄우지 않습니다(105 {o.Kind.key} labelKind {o.Kind.labelKind}). " +
+                    $"글자판을 프리팹에 중첩하세요: {CountLabel.PrefabPath}", this);
         }
 
         static class ListPool

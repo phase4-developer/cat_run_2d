@@ -44,11 +44,8 @@ namespace MV.View
         /// <summary>월드 스프라이트 공유 머티리얼(고양이 뷰가 프리팹 값이 없을 때 빌린다).</summary>
         public Material SpriteMaterial => _spriteMaterial;
 
-        /// <summary>
-        /// 글자판 문구 덮어쓰기(시험·Localization 연결 지점). 있으면 이 값이 한 줄 글자가 되고 null이면 글자판(프리팹 글자판 포함)을 숨긴다.
-        /// 없으면 <see cref="ObjectLabel.Of"/>.
-        /// </summary>
-        public Func<RunObject, string> LabelText { get => _ctx.LabelText; set => _ctx.LabelText = value; }
+        /// <summary>글자판을 모두 숨긴다(시험: TMP 글꼴 없이 구조만 볼 때). 글자 내용은 늘 <see cref="ObjectLabel.Of"/>(105.labelKind).</summary>
+        public bool HideLabels { get => _ctx.HideLabels; set => _ctx.HideLabels = value; }
 
         /// <summary>결계 블록 글자판 「+골드」에 곱할 골드 배율(정본 `goldMul()` L1492). 통합 코드가 런 상태에서 매 프레임 넣는다.</summary>
         public double GoldMul { get => _ctx.GoldMul; set => _ctx.GoldMul = value; }

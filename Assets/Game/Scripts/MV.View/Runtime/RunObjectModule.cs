@@ -84,7 +84,7 @@ namespace MV.View
         /// <summary>결계 블록 글자판 「+골드」 배율(정본 `goldMul()` L1492).</summary>
         public double GoldMul = 1;
         /// <summary>글자판 문구 덮어쓰기(시험·Localization). 있으면 이 값이 한 줄 글자, null이면 글자판을 숨긴다.</summary>
-        public Func<RunObject, string> LabelText;
+        public bool HideLabels;
         public readonly WallRowIndex WallRows = new WallRowIndex();
         /// <summary>표시 전용 난수(정본 Math.random). 규칙 난수와 무관.</summary>
         public readonly System.Random FxRng = new System.Random(0x5EED);

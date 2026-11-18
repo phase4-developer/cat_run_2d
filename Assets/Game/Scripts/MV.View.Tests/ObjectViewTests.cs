@@ -91,7 +91,7 @@ namespace MV.View.Tests
             var f = go.AddComponent<ObjectViewFactory>();
             f.Init(ViewTestTables.Config(), camGo.transform, new WorldSpriteCache(), WorldView.FxAtlas);
             f.SetTheme(ViewTestTables.Theme("market"));
-            f.LabelText = _ => null;   // TMP 글꼴 없이 구조만 본다
+            f.HideLabels = true;   // TMP 글꼴 없이 구조만 본다
             f.PrefabLoader = (a, ct) => Cysharp.Threading.Tasks.UniTask.Never<PrefabHandle>(ct);   // 프리팹 로드 없이 뷰 구조만
             return f;
         }
