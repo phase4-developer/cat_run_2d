@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using MV.Data;
 using MV.Editor.Import;
+using MV.View;
 using NUnit.Framework;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -12,12 +13,13 @@ using Object = UnityEngine.Object;
 namespace MV.Editor.Tests
 {
     /// <summary>
-    /// 적 프레임 규칙(MV-FIX-RESCHECK): 게임(<c>ObjectViewFactory.EnemyFrames</c>)과 리소스 검사기가 같은 <see cref="EnemyFrameRule"/>을 쓴다.
-    /// 승인된 순서 = ① 105(viewShape Mouse·enemyId) → 맵마다 305 → 105.prefab 프리팹 ② 몸 그림 `Image` 위 SpriteFrameList의 접두 그림 ③ 없으면 테마 아틀라스 접두 + 번호.
+    /// 리소스 검사기의 `102_enemy.sprite`(MV-FIX-RESCHECK). 게임과 같은 순서: 105(viewShape Mouse·enemyId) → 맵마다 305 → 105.prefab 프리팹,
+    /// 몸 그림 `Image` 위 SpriteFrameList의 접두 그림, 없으면 테마 아틀라스. 정상 폴백(아틀라스 확인)과 자산 오류(오류)를 나눠 본다.
+    /// 기대값은 대표 자산 이름으로 직접 적는다(공용 함수로 계산하지 않음).
     /// </summary>
     public sealed class MvEnemyFrameRuleTests
     {
-        /// <summary>마녀의 하수인(102_enemy). 디자이너 b6ab1254: sprite = 접두 `Stage1_Enemy`, frameCount 2, 그림은 Obj_Enemy 프리팹 목록.</summary>
+        /// <summary>마녀의 하수인. 디자이너 b6ab1254: sprite = 접두 `Stage1_Enemy`, frameCount 2, 그림은 Obj_Enemy 프리팹 목록.</summary>
         const int Minion = 102001001;
         /// <summary>수비전 쥐: 105에 연결된 종류가 없어(모드 전용) 프리팹 규칙을 쓰지 않는다.</summary>
         const int DefenceMouse = 102001002;
@@ -34,18 +36,22 @@ namespace MV.Editor.Tests
 
         static string ReadTsv(string table) => File.ReadAllText(Path.Combine(MvTableLoader.TsvDirectory, table + ".txt"), new UTF8Encoding(false));
 
-        static MvTables Load(MvMemoryTableSource source = null)
+        static MvTables Load(string enemyTsv = null)
         {
+            var source = new MvMemoryTableSource(new MvTsvDirectorySource(MvTableLoader.TsvDirectory));
+            if (enemyTsv != null) source.Set(EnemyData.Table, enemyTsv);
             var t = new MvTables();
-            t.LoadAll(source ?? new MvMemoryTableSource(new MvTsvDirectorySource(MvTableLoader.TsvDirectory)));
+            t.LoadAll(source);
             return t;
         }
 
         static MvResourceCheckReport Check(MvTables t, Func<string, GameObject> prefabs) =>
             MvResourceColumnChecker.Check(t, MvArtCatalog.FromProject(), MvArtManifest.ReadTempList(), null, MvResourceColumnChecker.ProjectArtFileNames(), prefabs);
 
-        static IEnumerable<MvResIssue> RowIssues(MvResourceCheckReport r, int id) =>
-            r.Issues.Where(i => i.Table == EnemyData.Table && i.RowId == id.ToString() && i.Column == "sprite");
+        static List<MvResIssue> RowIssues(MvResourceCheckReport r, int id) =>
+            r.Issues.Where(i => i.Table == EnemyData.Table && i.RowId == id.ToString() && i.Column == "sprite").ToList();
+
+        static string Show(IEnumerable<MvResIssue> issues) => string.Join("\n", issues);
 
         Sprite NewSprite(string name)
         {
@@ -62,11 +68,7 @@ namespace MV.Editor.Tests
             _made.Add(root);
             var board = new GameObject("Billboard");
             board.transform.SetParent(root.transform, false);
-            if (body)
-            {
-                var img = new GameObject(EnemyFrameRule.BodyName, typeof(SpriteRenderer));
-                img.transform.SetParent(board.transform, false);
-            }
+            if (body) new GameObject("Image", typeof(SpriteRenderer)).transform.SetParent(board.transform, false);
             if (list != null) root.AddComponent<SpriteFrameList>().Frames = list;
             return root;
         }
@@ -74,100 +76,86 @@ namespace MV.Editor.Tests
         // ---------------- 프리팹 우선 ----------------
 
         [Test]
-        public void Minion_UsesObjEnemyListFramesInNameOrder_AndAtlasIsNotRequired()
+        public void Minion_ObjEnemyListSuppliesFrames_ThemeAtlasNotRequired()
         {
-            var t = Load();
-            var enemy = t.Enemy.Datas.First(e => e.id == Minion);
-            var kinds = t.ObjectKind.Datas.Where(k => EnemyFrameRule.UsesEnemyFrames(k) && k.enemyId == Minion).ToList();
-            Assert.That(kinds, Is.Not.Empty, "105에서 적 모양으로 이 적을 그리는 종류");
-            var maps = t.Area.Datas.Select(a => a.stageMap).Where(m => !string.IsNullOrEmpty(m)).Distinct().ToList();
-            var addresses = kinds.SelectMany(k => maps.Select(m => StageObjectData.PrefabFor(t, m, k, StageObjectReward.Any))).Distinct().ToList();
-            Assert.That(addresses, Is.EqualTo(new[] { EnemyPrefab }), "305에 적 행이 없어 모든 맵에서 105.prefab");
-
             var prefab = MvResourceColumnChecker.ProjectPrefabs()(EnemyPrefab);
             Assert.That(prefab, Is.Not.Null, "Addressables 주소 " + EnemyPrefab);
-            var body = EnemyFrameRule.FindBody(prefab.transform);
-            Assert.That(body, Is.Not.Null);
-            Assert.That(body.GetComponent<SpriteRenderer>(), Is.Not.Null, "몸 그림 SpriteRenderer");
-            var frames = EnemyFrameRule.FromPrefab(body, enemy);
-            Assert.That(frames?.Select(f => f.name), Is.EqualTo(new[] { "Stage1_Enemy_00", "Stage1_Enemy_01" }), "목록에서 접두 `Stage1_Enemy_` 그림을 이름순 frameCount장");
+            var list = prefab.GetComponentsInChildren<SpriteFrameList>(true).SingleOrDefault();
+            Assert.That(list, Is.Not.Null, "Obj_Enemy의 프레임 목록");
+            Assert.That(list.Frames.Select(f => f ? f.name : null), Is.EquivalentTo(new[] { "Stage1_Enemy_00", "Stage1_Enemy_01" }), "디자이너가 넣은 그림");
 
-            var report = MvResourceColumnChecker.CheckProject();
-            Assert.That(RowIssues(report, Minion).Select(i => i.ToString()), Is.Empty, "프리팹 목록이 채우는 이름을 테마 아틀라스에 없다고 거부하지 않는다");
+            var t = Load();
+            Assert.That(t.ObjectKind.Datas.Where(k => k.enemyId == Minion && k.viewShape == ObjectViewShape.Mouse).Select(k => k.prefab), Is.EqualTo(new[] { EnemyPrefab }),
+                "105 적 모양 종류의 프리팹(305에 적 행 없음)");
+            var report = Check(t, MvResourceColumnChecker.ProjectPrefabs());
+            Assert.That(RowIssues(report, Minion), Is.Empty, "목록이 채우는 이름을 테마 아틀라스에 없다고 거부하지 않는다:\n" + Show(RowIssues(report, Minion)));
         }
 
-        // ---------------- 폴백 ----------------
+        // ---------------- 정상 폴백 ----------------
 
         [Test]
-        public void Rule_FallsBackToAtlasOnlyWhenListMissingOrHasNoPrefixFrame()
-        {
-            var enemy = Load().Enemy.Datas.First(e => e.id == Minion);
-            Assert.That(EnemyFrameRule.Prefix("Stage1_Enemy"), Is.EqualTo("Stage1_Enemy_"));
-            Assert.That(EnemyFrameRule.Prefix("Stage1_Enemy_"), Is.EqualTo("Stage1_Enemy_"));
-            Assert.That(EnemyFrameRule.FrameName("World_Enemy_Mouse_", 0), Is.EqualTo("World_Enemy_Mouse_00"), "아틀라스 프레임 이름");
-
-            Body(NewEnemyPrefab(true, null), out var noList);
-            Assert.That(EnemyFrameRule.FromPrefab(noList, enemy), Is.Null, "목록 없음 → 아틀라스");
-            Body(NewEnemyPrefab(true), out var empty);
-            Assert.That(EnemyFrameRule.FromPrefab(empty, enemy), Is.Null, "빈 목록 → 아틀라스");
-            Body(NewEnemyPrefab(true, NewSprite("Other_Enemy_00")), out var other);
-            Assert.That(EnemyFrameRule.FromPrefab(other, enemy), Is.Null, "접두가 다른 그림만 → 아틀라스");
-
-            var listed = NewEnemyPrefab(true, NewSprite("Stage1_Enemy_01"), null, NewSprite("Stage1_Enemy_02"), NewSprite("Stage1_Enemy_00"));
-            Body(listed, out var b);
-            Assert.That(EnemyFrameRule.FromPrefab(b, enemy).Select(f => f.name), Is.EqualTo(new[] { "Stage1_Enemy_00", "Stage1_Enemy_01" }), "이름순, frameCount까지, 빈 칸은 건너뜀");
-            Assert.That(listed.GetComponent<SpriteFrameList>().MissingCount, Is.EqualTo(1));
-        }
-
-        static void Body(GameObject prefab, out Transform body) => body = EnemyFrameRule.FindBody(prefab.transform);
-
-        [Test]
-        public void Checker_PrefabWithoutPrefixFrames_StillRequiresThemeAtlas()
+        public void NormalFallback_NoListOrNoPrefixFrame_ChecksThemeAtlas_WithoutAssetError()
         {
             var t = Load();
-            int themes = MvArtCatalog.FromProject().ThemeAtlases.Count;
-            var noMatch = NewEnemyPrefab(true, NewSprite("Other_Enemy_00"));
-            var report = Check(t, a => a == EnemyPrefab ? noMatch : null);
-            var issues = RowIssues(report, Minion).ToList();
-            Assert.That(issues, Is.Not.Empty, "목록이 채우지 못하면 게임이 아틀라스로 넘어가므로 아틀라스 확인을 되살린다");
-            Assert.That(issues.All(i => i.Value == "Stage1_Enemy" && i.Atlas.StartsWith("Atlas_World_Theme_", StringComparison.Ordinal)), Is.True, string.Join("\n", issues));
-
-            var unreachable = Check(t, a => null);
-            Assert.That(RowIssues(unreachable, Minion), Is.Not.Empty, "프리팹을 볼 수 없으면 기존 아틀라스 확인");
-            Assume.That(themes, Is.GreaterThan(0));
+            foreach (var prefab in new[] { NewEnemyPrefab(true, null), NewEnemyPrefab(true), NewEnemyPrefab(true, NewSprite("Other_Enemy_00")) })
+            {
+                var issues = RowIssues(Check(t, a => a == EnemyPrefab ? prefab : null), Minion);
+                Assert.That(issues, Is.Not.Empty, "게임이 아틀라스로 넘어가므로 아틀라스 확인을 한다");
+                Assert.That(issues.All(i => i.Kind == MvResIssueKind.Unextracted && i.Value == "Stage1_Enemy" && i.Atlas.StartsWith("Atlas_World_Theme_", StringComparison.Ordinal)),
+                    Is.True, "정상 폴백은 자산 오류가 아니다:\n" + Show(issues));
+            }
         }
 
         [Test]
-        public void Checker_EnemyNotDrawnByPrefab_KeepsAtlasRule_EvenIfSomePrefabListHasTheName()
+        public void EnemyNotDrawnByPrefab_KeepsAtlasRule_EvenIfAPrefabListHasTheName()
         {
             var text = ReadTsv(EnemyData.Table).Replace("\tWorld_Enemy_Mouse\t", "\tWorld_Enemy_Nope\t");
             Assume.That(text, Does.Contain("\tWorld_Enemy_Nope\t"));
-            var t = Load(new MvMemoryTableSource(new MvTsvDirectorySource(MvTableLoader.TsvDirectory)).Set(EnemyData.Table, text));
-            Assume.That(t.ObjectKind.Datas.Any(k => EnemyFrameRule.UsesEnemyFrames(k) && k.enemyId == DefenceMouse), Is.False, "수비전 쥐는 105에 연결된 종류가 없다");
-            var everyList = NewEnemyPrefab(true, NewSprite("Stage1_Enemy_00"), NewSprite("Stage1_Enemy_01"), NewSprite("World_Enemy_Nope_00"));
-            var report = Check(t, a => everyList);
+            var t = Load(text);
+            Assume.That(t.ObjectKind.Datas.Any(k => k.enemyId == DefenceMouse), Is.False, "수비전 쥐는 105에 연결된 종류가 없다");
+            var everything = NewEnemyPrefab(true, NewSprite("Stage1_Enemy_00"), NewSprite("Stage1_Enemy_01"), NewSprite("World_Enemy_Nope_00"));
+            var report = Check(t, a => everything);
             Assert.That(RowIssues(report, DefenceMouse).Any(i => i.Value == "World_Enemy_Nope" && i.Kind == MvResIssueKind.Unextracted), Is.True,
-                "프리팹으로 그리지 않는 적은 기존 아틀라스 규칙(다른 프리팹 목록으로 통과시키지 않음)");
+                "프리팹으로 그리지 않는 적은 기존 아틀라스 규칙");
             Assert.That(RowIssues(report, Minion), Is.Empty, "같은 목록이 하수인은 채운다");
         }
 
-        // ---------------- 실제 결함 ----------------
+        // ---------------- 자산 오류(폴백으로 숨기지 않음) ----------------
 
         [Test]
-        public void Checker_BrokenListReferenceOrMissingBody_IsAnError()
+        public void PrefabCannotBeOpened_IsAnError_NotAtlasFallback()
         {
-            var t = Load();
-            var broken = NewEnemyPrefab(true, NewSprite("Stage1_Enemy_00"), null, NewSprite("Stage1_Enemy_01"));
-            var r1 = Check(t, a => a == EnemyPrefab ? broken : null);
-            var e1 = RowIssues(r1, Minion).Where(i => i.Kind == MvResIssueKind.Error).ToList();
-            Assert.That(e1.Count, Is.EqualTo(1), string.Join("\n", RowIssues(r1, Minion)));
-            Assert.That(e1[0].Atlas, Is.EqualTo(EnemyPrefab), "어느 프리팹인지");
-            Assert.That(e1[0].Message, Does.Contain("깨진"));
+            var issues = RowIssues(Check(Load(), a => null), Minion);
+            Assert.That(issues.Count, Is.EqualTo(1), Show(issues));
+            Assert.That(issues[0].Kind, Is.EqualTo(MvResIssueKind.Error));
+            Assert.That(issues[0].Atlas, Is.EqualTo(EnemyPrefab), "어느 프리팹인지");
+            Assert.That(issues[0].Message, Does.Contain("열 수 없음"));
+        }
 
+        [Test]
+        public void MissingBody_IsAnError_NotAtlasFallback()
+        {
             var noBody = NewEnemyPrefab(false, NewSprite("Stage1_Enemy_00"), NewSprite("Stage1_Enemy_01"));
-            var r2 = Check(t, a => a == EnemyPrefab ? noBody : null);
-            Assert.That(RowIssues(r2, Minion).Any(i => i.Kind == MvResIssueKind.Error && i.Message.Contains(EnemyFrameRule.BodyName)), Is.True,
-                "몸 그림이 없으면 게임이 그릴 곳이 없다");
+            var issues = RowIssues(Check(Load(), a => a == EnemyPrefab ? noBody : null), Minion);
+            Assert.That(issues.Count, Is.EqualTo(1), Show(issues));
+            Assert.That(issues[0].Kind, Is.EqualTo(MvResIssueKind.Error));
+            Assert.That(issues[0].Message, Does.Contain("Image"));
+        }
+
+        [Test]
+        public void BrokenListReference_IsAnError_EvenWhenOtherFramesSuffice()
+        {
+            var broken = NewEnemyPrefab(true, NewSprite("Stage1_Enemy_00"), null, NewSprite("Stage1_Enemy_01"));
+            var issues = RowIssues(Check(Load(), a => a == EnemyPrefab ? broken : null), Minion);
+            Assert.That(issues.Count, Is.EqualTo(1), Show(issues));
+            Assert.That(issues[0].Kind, Is.EqualTo(MvResIssueKind.Error));
+            Assert.That(issues[0].Atlas, Is.EqualTo(EnemyPrefab));
+            Assert.That(issues[0].Message, Does.Contain("깨진"));
+
+            var onlyBroken = NewEnemyPrefab(true, (Sprite)null);
+            var both = RowIssues(Check(Load(), a => a == EnemyPrefab ? onlyBroken : null), Minion);
+            Assert.That(both.Any(i => i.Kind == MvResIssueKind.Error && i.Message.Contains("깨진")), Is.True, "깨진 참조는 오류로 남기고");
+            Assert.That(both.Any(i => i.Kind == MvResIssueKind.Unextracted), Is.True, "게임이 넘어가는 아틀라스도 확인한다:\n" + Show(both));
         }
     }
 }

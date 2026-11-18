@@ -310,7 +310,7 @@ namespace MV.View
                 }
                 case ObjectShape.Mouse:
                 {
-                    var img = EnemyFrameRule.FindBody(it);
+                    var img = EnemyFramePrefab.FindBody(it);
                     if (img != null) img.TryGetComponent(out p.Body);
                     break;
                 }
@@ -1147,7 +1147,7 @@ namespace MV.View
         /// </summary>
         Sprite[] EnemyFrames(RunObject o, PrefabParts p)
         {
-            var own = EnemyFrameRule.FromPrefab(p?.Body != null ? p.Body.transform : null, o.Enemy);
+            var own = EnemyFramePrefab.FromPrefab(p?.Body != null ? p.Body.transform : null, o.Enemy);
             if (own != null) return own;
             string prefix = EnemyFrameRule.Prefix(o.Enemy?.sprite);
             if (prefix == null || _sprites == null) return null;

@@ -310,9 +310,14 @@ namespace MV.Editor.Import
         }
 
         /// <summary>
-        /// 적 프레임(<see cref="EnemyFrameRule"/>, 게임 <c>ObjectViewFactory.EnemyFrames</c>와 같은 규칙). 이 적을 그리는 프리팹(105 viewShape Mouse·enemyId →
-        /// 맵마다 305 → 105.prefab)을 모두 보고, 모두 프리팹 목록으로 채워지면 true(아틀라스 확인 안 함). 하나라도 아틀라스로 넘어가거나
-        /// 프리팹으로 그리지 않는 적·프리팹을 볼 수 없는 경우는 false(기존 테마 아틀라스 확인). 목록의 깨진 참조·몸 그림 없음은 오류.
+        /// 적 프레임(이름 규칙 <see cref="EnemyFrameRule"/>, 프리팹 구조 <see cref="MV.View.EnemyFramePrefab"/> — 게임 <c>ObjectViewFactory.EnemyFrames</c>와 같은 함수).
+        /// 이 적을 그리는 프리팹(105 viewShape Mouse·enemyId → 맵마다 305 → 105.prefab)마다 결과를 셋으로 나눈다.
+        /// <list type="bullet">
+        /// <item>프리팹 목록이 채움: 아틀라스를 보지 않는다.</item>
+        /// <item>정상 폴백(목록 없음·빈 목록·접두 그림 없음, 또는 프리팹 없이 코드 모양): 게임이 테마 아틀라스를 쓰므로 기존 아틀라스 확인.</item>
+        /// <item>자산 오류(주소의 프리팹을 열 수 없음·몸 그림 없음·목록의 비었거나 깨진 참조): 오류로 알린다. 폴백으로 덮지 않는다.</item>
+        /// </list>
+        /// true면 아틀라스 확인을 건너뛴다. 프리팹 조회 수단이 없거나(<c>prefabs</c> 없음) 프리팹 규칙으로 그리지 않는 적이면 false(기존 규칙).
         /// </summary>
         static bool EnemyFramesFromPrefabs(Ctx ctx, string column, string value)
         {
@@ -335,25 +340,29 @@ namespace MV.Editor.Import
             }
             if (addresses.Count == 0) return false;   // 프리팹 규칙으로 그리지 않는 적(예: 모드 전용) — 기존 아틀라스 규칙
 
-            bool allFromPrefab = true;
+            bool needAtlas = false;
             foreach (var address in addresses)
             {
-                var prefab = address != null ? ctx.Prefabs(address) : null;
-                if (prefab == null) { allFromPrefab = false; continue; }   // 프리팹 주소 자체는 105·305 prefab 열 확인이 본다
+                if (address == null) { needAtlas = true; continue; }   // 프리팹 없이 코드 모양 — 기존 아틀라스 규칙
                 ctx.Report.Checked++;
-                var body = EnemyFrameRule.FindBody(prefab.transform);
-                if (body == null)
+                var prefab = ctx.Prefabs(address);
+                if (prefab == null)
                 {
-                    ctx.Add(MvResIssueKind.Error, column, value, address, $"적 프리팹에 몸 그림 `{EnemyFrameRule.BodyName}` 자식이 없음");
-                    allFromPrefab = false;
+                    ctx.Add(MvResIssueKind.Error, column, value, address, "적 프리팹을 열 수 없음(Addressables 주소·프리팹 자산 확인)");
                     continue;
                 }
-                var list = EnemyFrameRule.FrameList(body);
+                var body = MV.View.EnemyFramePrefab.FindBody(prefab.transform);
+                if (body == null || body.GetComponent<SpriteRenderer>() == null)
+                {
+                    ctx.Add(MvResIssueKind.Error, column, value, address, $"적 프리팹에 몸 그림 `{MV.View.EnemyFramePrefab.BodyName}`(SpriteRenderer)이 없음");
+                    continue;
+                }
+                var list = MV.View.EnemyFramePrefab.FrameList(body);
                 if (list != null && list.MissingCount > 0)
                     ctx.Add(MvResIssueKind.Error, column, value, address, $"적 프리팹 SpriteFrameList에 비었거나 깨진 그림 참조 {list.MissingCount}칸");
-                if (EnemyFrameRule.FromPrefab(body, enemy) == null) allFromPrefab = false;
+                if (MV.View.EnemyFramePrefab.FromPrefab(body, enemy) == null) needAtlas = true;   // 목록 없음·접두 그림 없음 → 게임은 테마 아틀라스
             }
-            return allFromPrefab;
+            return !needAtlas;
         }
 
         static void CheckSprite(Ctx ctx, string column, string name, string atlas)

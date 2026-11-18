@@ -6,6 +6,7 @@
         "UnityEditor.TestRunner",
         "MV.Core",
         "MV.Data",
+        "MV.View",
         "MV.Editor",
         "JJEvol.Tables.Runtime",
         "JJEvol.Data.Runtime",
