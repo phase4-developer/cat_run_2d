@@ -5,6 +5,7 @@ using MV.Meta;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MV.UI.Tests
 {
@@ -142,6 +143,48 @@ namespace MV.UI.Tests
 
             view.Elements[1].OkButton.onClick.Invoke(); // 잠김: 버튼 숨김·누름 무시
             Assert.That(port.BuyCalls, Is.EqualTo(1));
+        }
+
+        /// <summary>
+        /// 목록(스크롤 뷰) 위에 그려지는 장식 그림이 입력을 가로채지 않는다(사용자 확인 「스크롤도 안되고 버튼도 안눌려」).
+        /// 그리는 순서(계층 순서)가 스크롤 뷰보다 뒤인 그림 중 버튼이 아닌 것은 목록 영역과 겹치면 raycastTarget이 꺼져 있어야 한다.
+        /// </summary>
+        [Test]
+        public void NoRaycastBlocker_DrawnOverList()
+        {
+            var (go, _) = NewPopup();
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(1080, 1920);
+            var scroll = go.GetComponentInChildren<ScrollRect>(true);
+            Assert.That(scroll, Is.Not.Null, "목록 ScrollRect");
+            Rect listRect = WorldRect((RectTransform)scroll.transform);
+            Assert.That(listRect.width > 1 && listRect.height > 1, Is.True, "목록 영역 크기");
+
+            var graphics = go.GetComponentsInChildren<Graphic>(true);
+            int last = -1;
+            for (int i = 0; i < graphics.Length; i++)
+                if (graphics[i].transform == scroll.transform || graphics[i].transform.IsChildOf(scroll.transform)) last = i;
+            var blockers = new List<string>();
+            for (int i = last + 1; i < graphics.Length; i++)
+            {
+                var g = graphics[i];
+                if (!g.raycastTarget || !g.enabled || !g.gameObject.activeInHierarchy) continue;
+                if (g.GetComponentInParent<Selectable>(true) != null) continue;
+                Rect r = WorldRect(g.rectTransform);
+                if (!r.Overlaps(listRect)) continue;
+                float w = Mathf.Min(r.xMax, listRect.xMax) - Mathf.Max(r.xMin, listRect.xMin);
+                float h = Mathf.Min(r.yMax, listRect.yMax) - Mathf.Max(r.yMin, listRect.yMin);
+                if (w > 1 && h > 1) blockers.Add(g.name);
+            }
+            Assert.That(blockers, Is.Empty, "목록 위를 덮어 입력을 막는 그림");
+        }
+
+        static Rect WorldRect(RectTransform t)
+        {
+            var c = new Vector3[4];
+            t.GetWorldCorners(c);
+            return Rect.MinMaxRect(c[0].x, c[0].y, c[2].x, c[2].y);
         }
     }
 }
