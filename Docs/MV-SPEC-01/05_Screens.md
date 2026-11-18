@@ -620,7 +620,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 | 단계 | 일·연출 | L |
 |---|---|---|
-| 전달 | 대기열 1장을 손패에 넣고 정렬. 새 카드는 제자리보다 ch 아래에서 나타나 위치 .28s ease + `wdeal` .25s ease-out(불투명 0·오른쪽 35% → 원래). 무기문 통과로 받은 장은 문에서 스택으로 날아온 카드가 **도착할 때마다 1장씩** 대기열에 들어간다(날아가는 장 수 = 만든 장 수, 300 `CRAFT_ICON_MAX` 999·그림 상한 없음, 사용자 2026-11-19 「날아가는 것도 만든 장 수 그대로」). 날고 있는 카드가 없으면 받은 장을 바로 넣는다 | L1180, L1211~1213, L501 |
+| 전달 | 대기열 1장을 손패에 넣고 정렬. 새 카드는 제자리보다 ch 아래에서 나타나 위치 .28s ease + `wdeal` .25s ease-out(불투명 0·오른쪽 35% → 원래). 무기문 통과로 받은 장은 문 위 카드가 같은 자리·같은 크기 UI 카드로 바뀌어(알파 변화 없음) 스택 맨 아래 칸 밑에 한 줄로 서고, 한 장씩 맨 밑으로 들어간다. 밑에서 MERGE_N장이 되면 바로 합쳐지고 그 결과가 위 카드와 다시 MERGE_N장이 되면 또 합쳐진 뒤 다음 장이 들어간다(사용자 2026-11-19 「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」). 장 수 상한·출발 간격은 프리팹 값(`CraftGateBundle._maxCards`·`WeaponSection.launchGapSec`). 날고 있는 카드가 없으면 받은 장을 바로 넣는다 | L1180, L1211~1213, L501 |
 | 머지 찾기 | 3장 이상인 **가장 낮은 등급**. 없으면 끝 | L1183~1186 |
 | 모으기 | 그 등급 앞 3장이 2번째 카드 자리로 이동(`md×0.9`, ease-in) + `wmg`(md, ease-in, 끝 유지: 60% 밝기 1.7 → 100% 밝기 3·`scale 1.06`). 층 220 안 맨 앞 | L1187~1191, L502~503, L572 |
 | 결과 | md 뒤 3장 제거, 다음 등급 1장을 모인 자리에 넣고 정렬 → 제자리로 .28s. `wmerged`(`max(0.15, u)`, ease-out: 0% `scale 1.3`·밝기 3·빛 4u `--gc` → 없음) + 결과 칸 위 반짝임(참고 영상). 소리 `merge`. 밝기·반짝임 그림은 `Slot_Weapon.prefab`의 `flash`·`sparkle` 자식(디자이너 리소스 필요, 없으면 크기 연출만) | L1192~1194, L1214~1221, L504~505 |
@@ -849,6 +849,17 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 | 닫기 | 닫힘 → 로비 다시 그림(덱 제외) | L2573 |
 
 값 표기(정본 `f(l)`: `l×10%`, `l`, `220+l×20%`, `100−l×5%` 등)는 표에서 정해야 한다 → `13_areaUpgrade`·`14_rebirthPerk`에 `valueFormat`(예 `{0}%`)·`valueBase`·`valueStep` 열 필요([07](07_Tables.md)).
+
+**디자이너 겉(MV-UI2-AREAUP, 노션 [팝업] Area 업그레이드, 2026-11-19)**: 래퍼 `UIPopup_AreaUpgrade`가 디자이너 `Popup_AreaUpgrade`(Art/UI/Prefab/UIPopup)를 중첩하고 `AreaUpgradeDesignView`가 값만 넣는다(원본 무변경, 로비 구조안 A와 같음). 위 틀 표(막·부제·보유 행 글)는 디자이너 시안에 없어 그리지 않는다.
+
+| 디자이너 요소 | 값 |
+|---|---|
+| Currency(`Slot_Currency` ×2) | 골드·다이아(`01_wealth.type` gold·dia), 공용 `HudCurrencySlot` |
+| `Slot_AreaLabel` | 현재 Area(`302_area` 이름·Zone 번호), 공용 `HudAreaLabel` |
+| `Banner_AdsReward` | 보상 글 `ui.aup.adGain` 「x{0}」(`08_adPlacement dia` 보상), 버튼 = 무료 광고(남은 횟수 0이면 꺼짐, 남은 횟수 글은 시안에 없어 숨김) |
+| Upgrade List Scroll View | `13_areaUpgrade` active 행(sort)마다 `Element_Upgrade` 1칸(첫 칸 원형 + `ObjectPool`, 칸 수는 표 행 수) |
+| `Element_Upgrade`(공용, 환생 업그레이드도 씀) | 루트 `UpgradeElement`: 이름 `name:<id>`, `ui.aup.lv` 「Lv.{0}」, 현재 → 다음 값(`valueFormat`), 가격 숫자. 상태: 살 수 있음 / 부족 = `Disable` 켬·누름 막음 / MAX = `Disable` 켬·가격 자리 `ui.common.max` 「MAX」·다음 값 숨김 / 잠김(`needRebirth` > 부활 레벨) = `Button_Lock` 켬·`Element_UnlockRebirth`(루트 `UnlockRebirthBadge`)에 필요 수 |
+| 칸 전체 `Lock`(시안 「Require」 줄) | 노션 설명이 없어 손대지 않음(디자이너 기본 꺼짐) |
 
 ## 5.9 부활 — `UIPopup_Rebirth`
 

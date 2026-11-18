@@ -221,11 +221,17 @@ namespace MV.Meta
             return MvMetaRules.NextPrice(Tables, row.levelPriceGroup, Level(growth, key));
         }
 
-        /// <summary>버튼 활성: MAX 아님 && 비용 재화 충분(정본은 실패 문구 없이 비활성).</summary>
+        /// <summary>구매에 필요한 부활 레벨(<see cref="IRebirthLocked.needRebirth"/>). 잠김 열이 없는 표·행이면 0.</summary>
+        public int NeedRebirth(MvGrowth growth, string key) => Row(growth, key) is IRebirthLocked r ? r.needRebirth : 0;
+
+        /// <summary>부활 레벨이 <see cref="NeedRebirth"/>보다 낮아 살 수 없다(노션 잠김 버튼).</summary>
+        public bool IsRebirthLocked(MvGrowth growth, string key) => IsReady && Store.Rebirth.Lv < NeedRebirth(growth, key);
+
+        /// <summary>버튼 활성: MAX 아님 && 환생 잠김 아님 && 비용 재화 충분(정본은 실패 문구 없이 비활성).</summary>
         public bool CanBuy(MvGrowth growth, string key)
         {
             var price = NextPrice(growth, key);
-            return price != null && IsReady && CanAfford(price);
+            return price != null && IsReady && !IsRebirthLocked(growth, key) && CanAfford(price);
         }
 
         public bool CanAfford(IReadOnlyList<MvConsume> price)

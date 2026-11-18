@@ -62,6 +62,10 @@ namespace MV.UI
         bool IsMax(MvGrowth growth, string key);
         IReadOnlyList<ConsumeData> NextPrice(MvGrowth growth, string key);
         bool CanBuy(MvGrowth growth, string key);
+        /// <summary>구매에 필요한 부활 레벨(표 <c>needRebirth</c>, 없으면 0). 기본 구현은 0(시험 가짜가 고치지 않아도 되게).</summary>
+        int NeedRebirth(MvGrowth growth, string key) => 0;
+        /// <summary>부활 레벨이 모자라 잠겼는지.</summary>
+        bool IsRebirthLocked(MvGrowth growth, string key) => RebirthLevel < NeedRebirth(growth, key);
         /// <summary>구매 1번. 로비 강화(<see cref="MvGrowth.Lobby"/>)는 <see cref="MetaResult.HasLobbyBuy"/>와 Lv·등급을 함께 돌려준다.</summary>
         MetaResult Buy(MvGrowth growth, string key);
 
@@ -142,6 +146,8 @@ namespace MV.UI
         public bool IsMax(MvGrowth growth, string key) => M == null || M.IsMax(growth, key);
         public IReadOnlyList<ConsumeData> NextPrice(MvGrowth growth, string key) => M?.NextPrice(growth, key);
         public bool CanBuy(MvGrowth growth, string key) => Ready && M.CanBuy(growth, key);
+        public int NeedRebirth(MvGrowth growth, string key) => M?.NeedRebirth(growth, key) ?? 0;
+        public bool IsRebirthLocked(MvGrowth growth, string key) => Ready && M.IsRebirthLocked(growth, key);
         public MetaResult Buy(MvGrowth growth, string key)
         {
             if (!Ready) return MetaResult.Fail(MvMetaErrors.NoStore);
