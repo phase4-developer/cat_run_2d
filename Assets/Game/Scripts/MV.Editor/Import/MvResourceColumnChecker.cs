@@ -121,7 +121,27 @@ namespace MV.Editor.Import
             var source = new MvTsvDirectorySource(MvTableLoader.TsvDirectory);
             var tables = new MvTables();
             tables.LoadAll(source);
-            return Check(tables, MvArtCatalog.FromProject(), MvArtManifest.ReadTempList(), source.ReadHeaders, ProjectArtFileNames());
+            return Check(tables, MvArtCatalog.FromProject(), MvArtManifest.ReadTempList(), source.ReadHeaders, ProjectArtFileNames(), ProjectPrefabs());
+        }
+
+        /// <summary>프로젝트 Addressables 주소 → 프리팹 자산(에디터 조회). 주소가 없거나 프리팹이 아니면 null.</summary>
+        public static Func<string, GameObject> ProjectPrefabs()
+        {
+            var paths = new Dictionary<string, string>(StringComparer.Ordinal);
+            var settings = UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject.Settings;
+            if (settings != null)
+                foreach (var group in settings.groups.Where(g => g != null))
+                foreach (var entry in group.entries)
+                    if (!string.IsNullOrEmpty(entry.address)) paths[entry.address] = entry.AssetPath;
+            var cache = new Dictionary<string, GameObject>(StringComparer.Ordinal);
+            return address =>
+            {
+                if (string.IsNullOrEmpty(address)) return null;
+                if (cache.TryGetValue(address, out var go)) return go;
+                go = paths.TryGetValue(address, out var path) ? AssetDatabase.LoadAssetAtPath<GameObject>(path) : null;
+                cache[address] = go;
+                return go;
+            };
         }
 
         /// <summary>프로젝트의 모든 그림 파일 이름(확장자 없음). 「이름이 어디에도 없음」 판정에 쓴다.</summary>
@@ -140,14 +160,16 @@ namespace MV.Editor.Import
         /// <param name="tempList">temp_art_list.tsv 이름 → 갈래. 갈래 `A`는 미추출로 센다.</param>
         /// <param name="headers">표 원문 열 이름(스키마 밖 리소스 열 찾기). 없으면 스키마만 본다.</param>
         /// <param name="artFiles">프로젝트의 그림 파일 이름(<see cref="ProjectArtFileNames"/>). 없으면 카탈로그(아틀라스 그림·주소)만 본다.</param>
+        /// <param name="prefabs">프리팹 주소 → 프리팹(<see cref="ProjectPrefabs"/>). 적 프레임처럼 프리팹이 그림을 직접 갖는 열을 게임과 같은 규칙으로 본다. 없으면 아틀라스만 본다.</param>
         public static MvResourceCheckReport Check(MvTables tables, MvArtCatalog catalog, IReadOnlyDictionary<string, string> tempList,
-            Func<string, IReadOnlyList<string>> headers = null, ISet<string> artFiles = null)
+            Func<string, IReadOnlyList<string>> headers = null, ISet<string> artFiles = null, Func<string, GameObject> prefabs = null)
         {
             var report = new MvResourceCheckReport();
             var ctx = new Ctx
             {
                 Catalog = catalog, TempList = tempList ?? new Dictionary<string, string>(), Report = report,
                 ArtFiles = artFiles ?? new HashSet<string>(StringComparer.Ordinal),
+                Tables = tables, Prefabs = prefabs,
             };
 
             var theme = tables.Find(ThemeTable);
@@ -196,6 +218,8 @@ namespace MV.Editor.Import
             public MvResourceCheckReport Report;
             public List<string> ThemeAtlases;
             public ISet<string> ArtFiles;
+            public MvTables Tables;
+            public Func<string, GameObject> Prefabs;
             public string Table;
             public string RowId;
             public TSVRow Row;
@@ -270,6 +294,9 @@ namespace MV.Editor.Import
                 return;
             }
 
+            // 102_enemy.sprite: 게임은 EnemyFrameRule 순서(프리팹 목록 → 테마 아틀라스)로 찾는다. 프리팹 목록이 모두 채우면 아틀라스를 강제하지 않는다.
+            if (ctx.Table == EnemyData.Table && column == "sprite" && EnemyFramesFromPrefabs(ctx, column, raw.Trim())) return;
+
             var atlas = defaultAtlas;
             var overrideAtlas = (ctx.Row.Get("atlas") ?? "").Trim();
             if (overrideAtlas.StartsWith("Atlas_", StringComparison.Ordinal)) atlas = overrideAtlas;
@@ -280,6 +307,53 @@ namespace MV.Editor.Import
                     foreach (var themeAtlas in ctx.ThemeAtlases) CheckSprite(ctx, column, part, themeAtlas);
                 else CheckSprite(ctx, column, part, atlas);
             }
+        }
+
+        /// <summary>
+        /// 적 프레임(<see cref="EnemyFrameRule"/>, 게임 <c>ObjectViewFactory.EnemyFrames</c>와 같은 규칙). 이 적을 그리는 프리팹(105 viewShape Mouse·enemyId →
+        /// 맵마다 305 → 105.prefab)을 모두 보고, 모두 프리팹 목록으로 채워지면 true(아틀라스 확인 안 함). 하나라도 아틀라스로 넘어가거나
+        /// 프리팹으로 그리지 않는 적·프리팹을 볼 수 없는 경우는 false(기존 테마 아틀라스 확인). 목록의 깨진 참조·몸 그림 없음은 오류.
+        /// </summary>
+        static bool EnemyFramesFromPrefabs(Ctx ctx, string column, string value)
+        {
+            if (ctx.Tables == null || ctx.Prefabs == null) return false;
+            var enemy = ctx.Tables.Enemy.Datas.FirstOrDefault(e => e.id.ToString(CultureInfo.InvariantCulture) == ctx.RowId);
+            if (enemy == null) return false;
+
+            var maps = ctx.Tables.Area.Datas.Select(a => a.stageMap).Where(m => !string.IsNullOrEmpty(m)).Distinct().ToList();
+            if (maps.Count == 0) maps.Add(null);
+            var addresses = new List<string>();
+            foreach (var kind in ctx.Tables.ObjectKind.Datas)
+            {
+                if (!EnemyFrameRule.UsesEnemyFrames(kind) || kind.enemyId != enemy.id) continue;
+                foreach (var map in maps)
+                foreach (StageObjectReward reward in Enum.GetValues(typeof(StageObjectReward)))
+                {
+                    var a = StageObjectData.PrefabFor(ctx.Tables, map, kind, reward);
+                    if (!addresses.Contains(a)) addresses.Add(a);
+                }
+            }
+            if (addresses.Count == 0) return false;   // 프리팹 규칙으로 그리지 않는 적(예: 모드 전용) — 기존 아틀라스 규칙
+
+            bool allFromPrefab = true;
+            foreach (var address in addresses)
+            {
+                var prefab = address != null ? ctx.Prefabs(address) : null;
+                if (prefab == null) { allFromPrefab = false; continue; }   // 프리팹 주소 자체는 105·305 prefab 열 확인이 본다
+                ctx.Report.Checked++;
+                var body = EnemyFrameRule.FindBody(prefab.transform);
+                if (body == null)
+                {
+                    ctx.Add(MvResIssueKind.Error, column, value, address, $"적 프리팹에 몸 그림 `{EnemyFrameRule.BodyName}` 자식이 없음");
+                    allFromPrefab = false;
+                    continue;
+                }
+                var list = EnemyFrameRule.FrameList(body);
+                if (list != null && list.MissingCount > 0)
+                    ctx.Add(MvResIssueKind.Error, column, value, address, $"적 프리팹 SpriteFrameList에 비었거나 깨진 그림 참조 {list.MissingCount}칸");
+                if (EnemyFrameRule.FromPrefab(body, enemy) == null) allFromPrefab = false;
+            }
+            return allFromPrefab;
         }
 
         static void CheckSprite(Ctx ctx, string column, string name, string atlas)

@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MV.View
+namespace MV.Data
 {
     /// <summary>
     /// 프리팹에 직접 넣어 두는 프레임 그림 목록(스테이지 전용 리소스처럼 테마 아틀라스에 없는 그림용).
-    /// 적은 `102_enemy.sprite` 접두(예: Stage1_Enemy → Stage1_Enemy_00, _01 …)로 이 목록에서 먼저 찾고, 없으면 테마 아틀라스에서 찾는다.
+    /// 적은 `102_enemy.sprite` 접두(예: Stage1_Enemy → Stage1_Enemy_00, _01 …)로 이 목록에서 먼저 찾고, 없으면 테마 아틀라스에서 찾는다(<see cref="EnemyFrameRule"/>).
     /// 넘기는 속도는 `102_enemy.fps`, 장수는 `frameCount`(목록에 있는 만큼까지).
+    /// 게임(MV.View)과 리소스 검사기(MV.Editor)가 같은 규칙을 쓰도록 둘 다 참조하는 MV.Data에 둔다(MV-FIX-RESCHECK).
     /// </summary>
     public sealed class SpriteFrameList : MonoBehaviour
     {
@@ -25,6 +26,17 @@ namespace MV.View
             list.Sort((a, b) => string.CompareOrdinal(a.name, b.name));
             if (count > 0 && list.Count > count) list.RemoveRange(count, list.Count - count);
             return list.ToArray();
+        }
+
+        /// <summary>목록 칸 중 비어 있거나 깨진 참조(그림이 지워짐) 수.</summary>
+        public int MissingCount
+        {
+            get
+            {
+                int n = 0;
+                if (Frames != null) foreach (var s in Frames) if (s == null) n++;
+                return n;
+            }
         }
     }
 }

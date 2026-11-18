@@ -190,13 +190,8 @@ namespace MV.View
         }
 
         /// <summary>오브젝트의 프리팹 주소: `305_stageObject`(맵·종류·보상) → `105_objectKind.prefab`. 둘 다 없으면 null(코드 모양).</summary>
-        public static string PrefabFor(MvTables tables, string stageMap, RunObject o)
-        {
-            if (o?.Kind == null) return null;
-            string p = tables != null ? StageObjectData.Find(tables.StageObject.Datas, stageMap, o.Kind.key, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any) : null;
-            if (string.IsNullOrEmpty(p)) p = o.Kind.prefab;
-            return string.IsNullOrEmpty(p) ? null : p;
-        }
+        public static string PrefabFor(MvTables tables, string stageMap, RunObject o) =>
+            o?.Kind == null ? null : StageObjectData.PrefabFor(tables, stageMap, o.Kind, o.IsField ? RewardOf(o.Rew) : StageObjectReward.Any);
 
         /// <summary>지금 스테이지에서 오브젝트가 쓰는 프리팹 주소(<see cref="PrefabFor"/>). 투사체 판정 형상(<see cref="RunHitWorld"/>)도 같은 프리팹에서 온다.</summary>
         public string PrefabAddress(RunObject o) => PrefabFor(_tables, _stageMap, o);
@@ -315,7 +310,7 @@ namespace MV.View
                 }
                 case ObjectShape.Mouse:
                 {
-                    var img = Deep(it, "Image");
+                    var img = EnemyFrameRule.FindBody(it);
                     if (img != null) img.TryGetComponent(out p.Body);
                     break;
                 }
@@ -1147,20 +1142,16 @@ namespace MV.View
         }
 
         /// <summary>
-        /// 적 프레임: `102_enemy.sprite` 접두 + 번호, `frameCount`장. 프리팹 몸 그림의 <see cref="SpriteFrameList"/>에 그 접두 그림이 있으면 그것(스테이지 전용 리소스),
-        /// 없으면 지금 테마 아틀라스에서 찾는다.
+        /// 적 프레임(<see cref="EnemyFrameRule"/>, 리소스 검사기와 같은 규칙): 프리팹 몸 그림의 <see cref="SpriteFrameList"/>에 접두 그림이 있으면 그것(스테이지 전용 리소스),
+        /// 없으면 지금 테마 아틀라스에서 접두 + 번호 `frameCount`장. 여기서는 아틀라스 로딩만 맡는다.
         /// </summary>
         Sprite[] EnemyFrames(RunObject o, PrefabParts p)
         {
-            string prefix = o.Enemy?.sprite;
-            if (string.IsNullOrEmpty(prefix)) return null;
-            if (!prefix.EndsWith("_")) prefix += "_";
-            int count = Math.Max(1, o.Enemy.frameCount);
-            var list = p?.Body != null ? p.Body.GetComponentInParent<SpriteFrameList>(true) : null;
-            var own = list != null ? list.Pick(prefix, count) : null;
+            var own = EnemyFrameRule.FromPrefab(p?.Body != null ? p.Body.transform : null, o.Enemy);
             if (own != null) return own;
-            if (_sprites == null) return null;
-            return _sprites.GetFrames(_atlas, prefix, count);
+            string prefix = EnemyFrameRule.Prefix(o.Enemy?.sprite);
+            if (prefix == null || _sprites == null) return null;
+            return _sprites.GetFrames(_atlas, prefix, EnemyFrameRule.Count(o.Enemy));
         }
 
         /// <summary>맞음 눌림 크기 (1 + 0.07k, 1 − 0.08k, 1 + 0.07k)(updObjMesh L1468).</summary>

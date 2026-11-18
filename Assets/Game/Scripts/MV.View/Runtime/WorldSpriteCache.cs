@@ -108,7 +108,7 @@ namespace MV.View
         public Sprite[] GetFrames(string atlasKey, string prefix, int count)
         {
             var arr = new Sprite[count];
-            for (int i = 0; i < count; i++) arr[i] = Get(atlasKey, prefix + i.ToString("00"));
+            for (int i = 0; i < count; i++) arr[i] = Get(atlasKey, MV.Data.EnemyFrameRule.FrameName(prefix, i));
             return arr;
         }
 
