@@ -520,6 +520,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 7431286054410923876}
   - component: {fileID: 4296539063756947053}
   - component: {fileID: 4806990740985581602}
   - component: {fileID: 8857599186664467361}
@@ -962,6 +963,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 7431286054410923875}
   - component: {fileID: 7343300302770266304}
   - component: {fileID: 6302992184788540724}
   m_Layer: 5
@@ -5243,11 +5245,10 @@ MonoBehaviour:
   mid: {fileID: 1344421506128573404}
   weapon: {fileID: 7431286054410923871}
   stair: {fileID: 7431286054410923873}
-  cardPos: {fileID: 4296539063756947053}
+  cardPos: {fileID: 7431286054410923876}
   climbStair: {fileID: 9119664277454892412}
   gradeStep: {fileID: 7431286054410923874}
-  skillSection: {fileID: 7343300302770266304}
-  rollStepSec: 0.06
+  skillRoll: {fileID: 7431286054410923875}
 --- !u!114 &7431286054410923872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5358,3 +5359,60 @@ MonoBehaviour:
   holderIn: {fileID: 6540623355427045290}
   cardPrefab: {fileID: 1979326238865626154, guid: af6b90b1f9287b140a115aa8c6e167dc, type: 3}
   shiftSec: 0.3
+--- !u!114 &7431286054410923875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2409405281846132547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71cba3e08b44fdebd8e2ab52d44ff73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  card: {fileID: 4328883088699080736}
+  rollStepSec: 0.06
+--- !u!114 &7431286054410923876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085335658889830785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4595c352a2f34f108e027b50e4535b03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  flyPrefab: {fileID: 786592541403325356, guid: f98f4df2500d0fb419f23038ed0429f5, type: 3}
+  flyParent: {fileID: 5104436407027939213}
+--- !u!114 &4328883088699080736 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 786592541403325356, guid: f98f4df2500d0fb419f23038ed0429f5, type: 3}
+  m_PrefabInstance: {fileID: 3961410121762595724}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d0e97f166484f85b874b25c384a8ef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

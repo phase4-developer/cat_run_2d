@@ -159,6 +159,11 @@ namespace MV.UI.Tests
             Assert.That(view.GradeStep, Is.Not.Null, "ClimbStair/Grade Step Section 계단 카드 섹션");
             AssertRefs(view.GradeStep);
             Assert.That(PrefabUtility.IsPartOfPrefabAsset(view.GradeStep.CardPrefab), Is.True, "계단 카드 복제 원본 = Card_Class.prefab 에셋");
+            Assert.That(view.SkillRoll, Is.Not.Null, "ClimbStair/Skill Section 스킬 롤링 섹션");
+            AssertRefs(view.SkillRoll);
+            Assert.That(view.CardPos, Is.Not.Null, "Mid/Card Pos 얻은 카드 섹션");
+            AssertRefs(view.CardPos);
+            Assert.That(PrefabUtility.IsPartOfPrefabAsset(view.CardPos.FlyPrefab), Is.True, "나는 카드 복제 원본 = Card_Skill.prefab 에셋");
             Assert.That(view.Weapon, Is.Not.Null, "Mid/Weapon 무기 섹션");
             AssertRefs(view.Weapon);
             Assert.That(view.Weapon.Equip, Is.Not.Null, "Equip/Slot_Weapon");
