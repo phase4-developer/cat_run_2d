@@ -22,8 +22,24 @@ namespace MV.View
         [Header("하늘·원경 (카메라를 따라감)")]
         public Transform Backdrop;
         [Tooltip("카메라 앞 거리(m). 바닥 끝보다 멀어야 한다.")] public float BackdropDistance = 110f;
-        public Renderer SkylineFar, SkylineNear;
+        [Tooltip("원경 묶음 오브젝트(먼 겹·가까운 겹). 아래의 모든 렌더러(그림·그림자)를 같은 시차로 민다")] public GameObject SkylineFar, SkylineNear;
         [Tooltip("원경 시차(웹 프로토: 먼 겹 0.5, 가까운 겹 1.0) — 카메라 x 1m당 텍스처 이동량")] public float FarParallax = 0.004f, NearParallax = 0.008f;
+
+        [Header("하늘 장식 (원경과 함께 이동)")]
+        [Tooltip("원경 무늬와 같이 밀리는 장식(Backdrop 자식 스프라이트 등). +로 개수를 늘려 추가한다")]
+        public List<SkyDecoEntry> SkyDecos = new List<SkyDecoEntry>();
+
+        public enum SkyLayer { Near, Far }
+
+        /// <summary>하늘 장식 한 개: 따라갈 원경 겹과 이동 배율. 원경 무늬 반복 간격마다 반대편에서 다시 나타난다.</summary>
+        [Serializable]
+        public sealed class SkyDecoEntry
+        {
+            [Tooltip("움직일 장식 오브젝트")] public Transform Target;
+            [Tooltip("따라갈 원경 겹(가까운 겹이 더 많이 움직인다)")] public SkyLayer Follow = SkyLayer.Near;
+            [Tooltip("원경 이동량에 곱하는 배율(1 = 원경 무늬와 똑같이, 0.5 = 절반만)")] public float Speed = 1f;
+            [NonSerialized] public Vector3 Base;
+        }
 
         [Header("바닥 (카메라 z를 따라감)")]
         public Transform Ground;
@@ -33,9 +49,16 @@ namespace MV.View
         [Tooltip("계단 정산 옆 시점에서 오른쪽 끝을 잘라 줄이는 카메라 쪽 바닥 판(왼쪽 끝은 그대로)")] public Transform NearGround;
         [Tooltip("계단 정산 옆 시점에서 잘린 끝에 세우는 땅 단면(꺼 둔 채 둔다)")] public Transform SideCut;
 
+        [Header("바닥 그림자 (PlanarShadow 공통 설정)")]
+        [Tooltip("빛이 나아가는 방향. y는 음수(위→아래), x·z가 클수록 그림자가 그쪽으로 길어진다")] public Vector3 ShadowLightDir = new Vector3(0.55f, -1f, 0.45f);
+        [Tooltip("그림자 색(알파 = 진하기)")] public Color ShadowColor = new Color(0f, 0f, 0f, 0.5f);
+        [Tooltip("그림자 정렬 레이어(World보다 먼저 그려지는 바닥 레이어)")] public string ShadowLayer = "Ground";
+        [Tooltip("그림자 정렬 순서(같은 레이어 바닥 판(0)보다 커야 바닥 위에 보인다)")] public int ShadowOrder = 10;
+
         [Header("길가 장식")]
-        public SpriteRenderer DecoTemplate;
-        public List<Sprite> DecoSprites = new List<Sprite>();
+        [Tooltip("장식 한 개의 틀 오브젝트(꺼 둔 채 둔다). 복제해서 쓰며, 안의 모든 SpriteRenderer(본체·그림자 등)에 같은 스프라이트를 넣는다")]
+        public GameObject DecoTemplate;
+        [Tooltip("장식마다 무작위로 고를 스프라이트")] public List<Sprite> DecoSprites = new List<Sprite>();
         [Tooltip("한쪽 장식 간격(m)")] public float DecoSpacing = 12.6f;
         [Tooltip("길 중심에서 장식까지 거리(m), 아래·위 범위에서 무작위")] public Vector2 DecoX = new Vector2(6.9f, 8.0f);
         [Tooltip("카메라 뒤·앞으로 장식을 둘 범위(m)")] public Vector2 DecoRange = new Vector2(-10f, 110f);
@@ -83,12 +106,57 @@ namespace MV.View
             /// <summary>카메라 쪽 바닥 오른쪽 끝(단면은 잘린 끝과 이 값 중 작은 자리에 선다).</summary>
             public float NearRight = float.PositiveInfinity;
         }
-        readonly List<SpriteRenderer> _decos = new List<SpriteRenderer>();
-        Material _farMat, _nearMat;
+        readonly List<DecoView> _decos = new List<DecoView>();
+        /// <summary>판마다 바뀌는 장식 배치 씨앗(<see cref="Reshuffle"/>). 해시 입력에 더한다.</summary>
+        float _decoSeed;
+        readonly int[] _deckA = new int[64], _deckB = new int[64];
+
+        /// <summary>길가 장식 배치(좌우 위치·그림)를 새로 섞는다. 맵을 붙일 때와 로비에 들어올 때(판마다) 부른다.</summary>
+        public void Reshuffle() => _decoSeed = UnityEngine.Random.Range(0, 1000) * 0.731f;
 
         /// <summary>
-        /// 게임 루프가 부른다. groundY = 지금 지면 높이(계단을 오르면 올라간다). orbitE = 옆 시점 돌기 진행(<see cref="CameraModel.OrbitE"/>, 없으면 가림 처리 안 함).
-        /// cliff = 정산 절벽(없으면 null, 한 층).
+        /// 장식 그림 고르기: 한쪽 줄을 그림 개수만큼씩 묶어 묶음마다 섞은 순서(덱)대로 쓴다.
+        /// 같은 줄에서 같은 그림이 바로 붙어 나오지 않는다(묶음 경계도 확인). k만으로 정해져 프레임마다 같은 값이 나온다.
+        /// </summary>
+        int PickDeco(int k, int side)
+        {
+            int n = Mathf.Min(DecoSprites.Count, _deckA.Length);
+            if (n <= 1) return 0;
+            float off = side * 17.3f + _decoSeed;
+            if (n == 2) return (k + (Hash(off) < 0.5f ? 0 : 1)) & 1;   // 두 장이면 번갈아
+            int b = Mathf.FloorToInt((float)k / n), i = k - b * n;
+            Deck(b, off, n, _deckA);
+            if (_deckA[0] == LastOf(b - 1, off, n)) { int tmp = _deckA[0]; _deckA[0] = _deckA[1]; _deckA[1] = tmp; }
+            return _deckA[i];
+        }
+
+        int LastOf(int b, float off, int n) { Deck(b, off, n, _deckB); return _deckB[n - 1]; }   // n ≥ 3이면 앞 두 칸 교환이 끝 칸을 바꾸지 않는다
+
+        static void Deck(int b, float off, int n, int[] into)
+        {
+            for (int i = 0; i < n; i++) into[i] = i;
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = Mathf.Min(i, (int)(Hash(b * 3.71f + i * 0.917f + off) * (i + 1)));
+                int tmp = into[i]; into[i] = into[j]; into[j] = tmp;
+            }
+        }
+
+        /// <summary>복제한 장식 한 개: 루트(정렬·안개)와 같은 스프라이트를 받는 그림들(본체·그림자).</summary>
+        sealed class DecoView
+        {
+            public GameObject Root;
+            public SpriteRenderer[] Sprites;
+            public DepthSortable Sort;
+        }
+
+        /// <summary>원경 묶음(먼 겹·가까운 겹) 아래 렌더러와 각자의 인스턴스 머티리얼(텍스처 밀기용).</summary>
+        Renderer[] _farRs = new Renderer[0], _nearRs = new Renderer[0];
+        Material[] _farMats = new Material[0], _nearMats = new Material[0];
+
+        /// <summary>
+        /// 게임 루프가 맵을 붙일 때 부른다: 카메라, 지면 높이, 계단 정산 옆 시점 진행도(0~1), 절벽 정보.
+        /// 바닥 복제(아래층)·옹벽·원경 재질·하늘 장식 기준 위치를 준비하고, 기존 지면·소품·장식 템플릿을 숨긴다.
         /// </summary>
         public void Bind(Camera cam, Func<float> groundY, Func<double> orbitE = null, Func<CliffInfo?> cliff = null)
         {
@@ -96,6 +164,7 @@ namespace MV.View
             _groundY = groundY;
             _orbitE = orbitE;
             _cliff = cliff;
+            Reshuffle();
             if (Backdrop != null) _backdropRot = Backdrop.localRotation;
             if (SideCut != null) { _sideCutSize = new Vector2(SideCut.localScale.x, SideCut.localScale.y); SideCut.gameObject.SetActive(false); }
             if (Ground != null && _high == null)
@@ -122,23 +191,26 @@ namespace MV.View
                     wall.SetActive(false);
                 }
             }
-            if (SkylineFar != null) _farMat = SkylineFar.material;
-            if (SkylineNear != null) _nearMat = SkylineNear.material;
+            Collect(SkylineFar, out _farRs, out _farMats);
+            Collect(SkylineNear, out _nearRs, out _nearMats);
+            foreach (var d in SkyDecos) if (d != null && d.Target != null) d.Base = d.Target.localPosition;
+            ApplyShadowSettings();
             if (HideBuiltInGround) foreach (var g in FindObjectsByType<GroundStripMesh>(FindObjectsSortMode.None)) g.GetComponent<Renderer>().enabled = false;
             if (HideBuiltInProps) foreach (var p in FindObjectsByType<PropStreamer>(FindObjectsSortMode.None)) p.gameObject.SetActive(false);
-            if (DecoTemplate != null) DecoTemplate.transform.parent.gameObject.SetActive(false);
+            if (DecoTemplate != null) DecoTemplate.SetActive(false);
         }
 
         void OnDestroy()
         {
             // 숨겼던 기존 지면을 되살린다(다른 스테이지 맵으로 바뀔 때)
             if (HideBuiltInGround) foreach (var g in FindObjectsByType<GroundStripMesh>(FindObjectsSortMode.None)) if (g) g.GetComponent<Renderer>().enabled = true;
-            if (_farMat != null) Destroy(_farMat);
-            if (_nearMat != null) Destroy(_nearMat);
+            foreach (var m in _farMats) if (m != null) Destroy(m);
+            foreach (var m in _nearMats) if (m != null) Destroy(m);
         }
 
         void LateUpdate()
         {
+            ApplyShadowSettings();
             if (_cam == null) return;
             var c = _cam.transform.position;
             float gy = _groundY != null ? _groundY() : 0f;
@@ -162,8 +234,9 @@ namespace MV.View
                 Backdrop.position = new Vector3(c.x + f.x * dist, far, c.z + f.z * dist);
                 Backdrop.rotation = Quaternion.LookRotation(f, Vector3.up) * _backdropRot;
                 float span = 2f * dist * Mathf.Tan(_cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * _cam.aspect;   // 그 거리에서 보이는 가로(m)
-                if (_farMat != null) _farMat.mainTextureOffset = new Vector2(c.x * FarParallax + YawShift(SkylineFar, _farMat, yaw, span, FarPar), 0f);
-                if (_nearMat != null) _nearMat.mainTextureOffset = new Vector2(c.x * NearParallax + YawShift(SkylineNear, _nearMat, yaw, span, NearPar), 0f);
+                for (int i = 0; i < _farMats.Length; i++) _farMats[i].mainTextureOffset = new Vector2(c.x * FarParallax + YawShift(_farRs[i], _farMats[i], yaw, span, FarPar), 0f);
+                for (int i = 0; i < _nearMats.Length; i++) _nearMats[i].mainTextureOffset = new Vector2(c.x * NearParallax + YawShift(_nearRs[i], _nearMats[i], yaw, span, NearPar), 0f);
+                MoveSkyDecos();
             }
             if (_high != null)
             {
@@ -185,6 +258,38 @@ namespace MV.View
         }
 
         /// <summary>새 HTML 원경 yaw 이동을 텍스처 u로: 화면 이동 yaw·1.3·(0.7 + par·0.3)화면 → 보이는 가로 span(m) → 판 가로·반복 수.</summary>
+        /// <summary>
+        /// 하늘 장식을 따라갈 원경 겹과 같은 양만큼 옮긴다. 원경 텍스처 u가 du 밀리면 무늬는 −du × 반복 간격(m)만큼 움직인다.
+        /// 반복 간격 = 원경 폭 / 텍스처 반복 수. 그 간격으로 감싸서 화면 밖으로 나간 장식이 반대편에서 다시 나온다.
+        /// </summary>
+        void MoveSkyDecos()
+        {
+            for (int k = 0; k < SkyDecos.Count; k++)
+            {
+                var d = SkyDecos[k];
+                if (d == null || d.Target == null) continue;
+                var rs = d.Follow == SkyLayer.Far ? _farRs : _nearRs;
+                var ms = d.Follow == SkyLayer.Far ? _farMats : _nearMats;
+                if (ms.Length == 0 || rs[0] == null) continue;
+                float texScale = Mathf.Max(0.0001f, ms[0].mainTextureScale.x);
+                float period = Mathf.Abs(rs[0].transform.lossyScale.x) / texScale;
+                if (period <= 0f) continue;
+                float shift = -ms[0].mainTextureOffset.x * period * d.Speed;
+                float x = Mathf.Repeat(shift + period * 0.5f, period) - period * 0.5f;
+                var p = d.Base;
+                p.x += x;
+                d.Target.localPosition = p;
+            }
+        }
+
+        /// <summary>원경 묶음 아래 렌더러(꺼진 것 포함)와 인스턴스 머티리얼을 모은다.</summary>
+        static void Collect(GameObject root, out Renderer[] rs, out Material[] ms)
+        {
+            rs = root != null ? root.GetComponentsInChildren<Renderer>(true) : new Renderer[0];
+            ms = new Material[rs.Length];
+            for (int i = 0; i < rs.Length; i++) ms[i] = rs[i].material;
+        }
+
         static float YawShift(Renderer r, Material m, float yaw, float span, float par)
         {
             float width = r != null ? Mathf.Abs(r.transform.lossyScale.x) : 0f;
@@ -288,28 +393,45 @@ namespace MV.View
             int need = (k1 - k0 + 1) * 2;
             while (_decos.Count < need)
             {
-                var root = Instantiate(DecoTemplate.transform.parent.gameObject, DecoTemplate.transform.parent.parent);
+                var root = Instantiate(DecoTemplate, DecoTemplate.transform.parent);   // 템플릿이 꺼져 있어 복제본도 꺼진 채 나온다
+                var dv = new DecoView { Root = root, Sprites = root.GetComponentsInChildren<SpriteRenderer>(true) };
                 root.SetActive(true);
-                _decos.Add(root.GetComponentInChildren<SpriteRenderer>(true));
+                dv.Sort = root.GetComponentInChildren<DepthSortable>(true);
+                if (dv.Sort != null) dv.Sort.Refresh();
+                _decos.Add(dv);
             }
             int n = 0;
             for (int k = k0; k <= k1; k++)
                 for (int side = -1; side <= 1; side += 2)
                 {
-                    var sr = _decos[n++];
-                    float h = Hash(k * 2.17f + side * 0.73f);
-                    var sp = DecoSprites[Mathf.Min(DecoSprites.Count - 1, (int)(Hash(k * 1.3f + side) * DecoSprites.Count))];
-                    if (sr.sprite != sp) { sr.sprite = sp; var ds = sr.GetComponentInParent<DepthSortable>(); if (ds != null) ds.Refresh(); }
+                    var d = _decos[n++];
+                    float h = Hash(k * 2.17f + side * 0.73f + _decoSeed);
+                    var sp = DecoSprites[PickDeco(k, side)];
+                    bool changed = false;
+                    for (int i = 0; i < d.Sprites.Length; i++)   // 본체·그림자 모두 같은 그림
+                        if (d.Sprites[i].sprite != sp) { d.Sprites[i].sprite = sp; changed = true; }
+                    if (changed && d.Sort != null) d.Sort.Refresh();
                     float x = side * Mathf.Lerp(DecoX.x, DecoX.y, h);
                     float dz = k * DecoSpacing + h * 1.2f;
-                    sr.transform.parent.position = new Vector3(x, groundAt(dz), dz);
+                    d.Root.transform.position = new Vector3(x, groundAt(dz), dz);
                     float a = ClimbOcclusion.NearAlpha(e, x);   // 카메라 쪽 장식은 옆 시점으로 돌수록 흐려진다
-                    var fade = sr.GetComponentInParent<DepthSortable>();
-                    if (fade != null) fade.SetAlphaScale(a);
+                    if (d.Sort != null) d.Sort.SetAlphaScale(a);
                     bool on = a > 0.01f;
-                    if (sr.transform.parent.gameObject.activeSelf != on) sr.transform.parent.gameObject.SetActive(on);
+                    if (d.Root.activeSelf != on) d.Root.SetActive(on);
                 }
-            for (; n < _decos.Count; n++) if (_decos[n].transform.parent.gameObject.activeSelf) _decos[n].transform.parent.gameObject.SetActive(false);
+            for (; n < _decos.Count; n++)
+            {
+                if (_decos[n].Root.activeSelf) _decos[n].Root.SetActive(false);
+            }
+        }
+
+        /// <summary>바닥 그림자 공통 설정을 <see cref="PlanarShadow"/>에 넣는다(인스펙터에서 바꾸면 바로 반영).</summary>
+        void ApplyShadowSettings()
+        {
+            PlanarShadow.LightDir = ShadowLightDir;
+            PlanarShadow.ShadowColor = ShadowColor;
+            PlanarShadow.SortingLayer = ShadowLayer;
+            PlanarShadow.SortingOrder = ShadowOrder;
         }
 
         static float Hash(float x) { float s = Mathf.Sin(x * 127.1f + 311.7f) * 43758.5453f; return s - Mathf.Floor(s); }

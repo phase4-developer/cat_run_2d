@@ -28,13 +28,15 @@ namespace MV.View.Tests
         [TestCase(13, 12)]
         public void ProjSpriteAndTail_ReadItemTable_TopTierAboveMax(int tier, int drawnTier)
         {
-            // 노션 「신작 이펙트 리소스 관리」: 무기 n단계 = projectile_(n−1) + VFX_Tail_(n−1). 표 최고 등급 위는 최고 등급.
+            // 노션 「신작 이펙트 리소스 관리」: 무기 n단계 = projectile_(n−1) + VFX_Tail_(n−1) + VFX_Center_(n−1). 표 최고 등급 위는 최고 등급.
             var t = ViewTestTables.Load();
             var names = ProjLayout.NamesByTier(t);
             var tails = ProjLayout.TailsByTier(t);
+            var centers = ProjLayout.CentersByTier(t);
             var row = t.Item.Datas.First(r => r.tier == drawnTier);
             Assert.That(ProjLayout.ProjSpriteName(tier, names), Is.EqualTo(row.projSprite));
             Assert.That(ProjLayout.ProjSpriteName(tier, tails), Is.EqualTo(row.projTail));
+            Assert.That(ProjLayout.ProjSpriteName(tier, centers), Is.EqualTo(row.projCenter));
             Assert.That(ProjLayout.ProjSpriteName(tier, null), Is.Null, "표 없음 = 그리지 않음(대체 이름 없음)");
         }
 
@@ -52,6 +54,43 @@ namespace MV.View.Tests
             Assert.That(rig.Image, Is.Not.Null, "ProjectileRig._image");
             Assert.That(rig.Card, Is.Not.Null, "ProjectileRig._card");
             Assert.That(rig.Card.IsChildOf(rig.Image.transform), Is.False, "카드 자리는 그림과 따로 돈다");
+            // 노션 11/18 추가 요청 「Projectile 프리팹의 rotation x값 35」
+            Assert.That(prefab.transform.localEulerAngles.x, Is.EqualTo(35f).Within(1e-3f), "루트 rotation x");
+        }
+
+        /// <summary>노션 11/18 「VFX_Center 출력」: 꼬리·가운데 이펙트가 proj_Image 아래에 하나씩 붙고, 주소가 바뀌면 바뀐다. 빈 프리팹도 붙는다.</summary>
+        [Test]
+        public void Rig_TailAndCenter_AttachUnderImage()
+        {
+            var root = new UnityEngine.GameObject("ProjRigTest");
+            var src = new UnityEngine.GameObject("Src");
+            try
+            {
+                var image = new UnityEngine.GameObject("proj_Image", typeof(UnityEngine.SpriteRenderer));
+                image.transform.SetParent(root.transform, false);
+                var rig = root.AddComponent<ProjectileRig>();
+                typeof(ProjectileRig).GetField("_image", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    .SetValue(rig, image.GetComponent<UnityEngine.SpriteRenderer>());
+                rig.SetTail("T0", src);
+                rig.SetCenter("C0", src);
+                Assert.That(image.transform.childCount, Is.EqualTo(2));
+                Assert.That(rig.TailAddress, Is.EqualTo("T0"));
+                Assert.That(rig.CenterAddress, Is.EqualTo("C0"));
+                Assert.That(image.transform.Find("C0"), Is.Not.Null, "가운데는 proj_Image 아래");
+                rig.SetCenter("C1", src);
+                Assert.That(image.transform.childCount, Is.EqualTo(2), "옛 가운데를 지우고 새로 붙인다");
+                Assert.That(image.transform.Find("C0"), Is.Null);
+                Assert.That(image.transform.Find("T0"), Is.Not.Null, "꼬리는 그대로");
+                rig.ResetTrails();
+                rig.SetCenter("C2", null);
+                Assert.That(rig.CenterAddress, Is.Null);
+                Assert.That(image.transform.childCount, Is.EqualTo(1));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(root);
+                UnityEngine.Object.DestroyImmediate(src);
+            }
         }
 
         [Test]
@@ -61,6 +100,7 @@ namespace MV.View.Tests
             int max = t.Item.Datas.Max(r => r.tier);
             Assert.That(ProjLayout.NamesByTier(t).Length - 1, Is.EqualTo(max), "등급 수는 103 행에서");
             Assert.That(ProjLayout.TailsByTier(t).Length - 1, Is.EqualTo(max));
+            Assert.That(ProjLayout.CentersByTier(t).Length - 1, Is.EqualTo(max));
         }
 
         [Test]

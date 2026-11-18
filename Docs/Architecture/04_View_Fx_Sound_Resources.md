@@ -142,7 +142,7 @@
 
 **`ProjectileView`** — `Runtime/ProjectileView.cs`, order 57.
 - 풀: `_active : Dictionary<int projId, Item>`, `_free : Stack<Item>`, 최대 `MaxProjs = 64`(`:27`, 주석상 [창작] 값 — 표에 없음). 회전 장난감은 별도 고정 배열 `_blades`(개수 = `OrbConfig.Count`, 표).
-- `Init`(`:83-113`): 등급별 그림 주소 `ProjLayout.NamesByTier`(`103_item.projSprite`), 꼬리 `TailsByTier`(`103_item.projTail`), 마법탄 프리팹 `300_runConfig proj.prefab`. `LoadArt()`(`:115-121`)로 **Init 때 전부 미리 로드**: 프리팹 `AddressableScope.GetPrefab`, 그림 `AddressableScope.Get<Sprite>`(단독 Sprite 주소 `projectile_N`).
+- `Init`(`:83-113`): 등급별 그림 주소 `ProjLayout.NamesByTier`(`103_item.projSprite`), 꼬리 `TailsByTier`(`103_item.projTail`), 가운데 이펙트 `CentersByTier`(`103_item.projCenter`, proj_Image 아래 꼬리와 같은 자리), 마법탄 프리팹 `300_runConfig proj.prefab`. `LoadArt()`(`:115-121`)로 **Init 때 전부 미리 로드**: 프리팹 `AddressableScope.GetPrefab`, 그림 `AddressableScope.Get<Sprite>`(단독 Sprite 주소 `projectile_N`).
 - `Sync(RunState, now)`(`:240-273`): `s.Projs` 각 투사체를 id로 찾고 없으면 `Rent()`(free에서 Pop 또는 새로 `Make`, 64 초과면 그리지 않음), `Fresh = true`. 이번 스탬프에 안 보인 항목은 `Release`(SetActive false + free Push). 창(Spear)은 선 메쉬 2겹 + 머리 스프라이트(`Atlas_Fx_Common`), 장난감은 `EnsureRig`(`:173`)로 프리팹 인스턴스를 항목에 1번 붙이고 `rig.SetSprite/SetTail/SetSpin`. **재사용 첫 프레임 `Fresh`면 `rig.ResetTrails()`**로 이전 위치에서 꼬리 선이 이어지지 않게 한다(`:322-326` 부근).
 - `OnDestroy`(`:437-447`): 모든 sprite/prefab lease Dispose, 선 메쉬 Destroy.
 
@@ -284,7 +284,7 @@
 | 6 | `MV.View/Runtime/WorldSpriteCache.cs:35` | `Get<SpriteAtlas>` | 테마 `304_theme.worldAtlas`, `Atlas_Fx_Common`, `116_charLook.atlas/wheelAtlas` | 테마 적용 시(선행 로드), 캐릭터는 필요 시 | `ReleaseAtlas`(테마 교체·캐릭터 LRU 밖) 또는 `WorldView.OnDestroy` |
 | 7 | `MV.View/Runtime/ObjectViewFactory.cs:202-220` | `PrefabLoader`=`GetPrefab` | `105_objectKind.prefab` 전체 + `305_stageObject.prefab`(이 맵) | `SetStage` 때 Preload, 그 밖은 처음 보일 때 | `_prefabs`에 영구 보관(맵이 바뀌어도 이전 맵 것 반환 안 함), OnDestroy에서 Dispose. 실패는 null로 고정 |
 | 8 | `MV.View/Character/CharacterPool.cs:69` | `GetPrefab` | `116_charLook.prefab` | 캐릭터가 처음 그 행을 쓸 때 | Pool Dispose(Presenter 파괴·재 Init)까지 |
-| 9 | `MV.View/Runtime/ProjectileView.cs:138, 152` | `Get<Sprite>`, `GetPrefab` | `300 proj.prefab`, `103_item.projSprite`, `103_item.projTail` | Init 때 전부 | OnDestroy |
+| 9 | `MV.View/Runtime/ProjectileView.cs:138, 152` | `Get<Sprite>`, `GetPrefab` | `300 proj.prefab`, `103_item.projSprite`, `103_item.projTail`, `103_item.projCenter` | Init 때 전부 | OnDestroy |
 | 10 | `MV.View/Runtime/ClimbStairView.cs:197-208` | `PrefabLoader`=`GetPrefab` | `330_climb.stepPrefab` | 첫 계단 Sync 때 지연 | OnDestroy |
 | 11 | `MV.View/Runtime/LobbyStage.cs:75` | `Get<Texture2D>` + 아틀라스 | `Tex_Lobby_Room`, `Atlas_World_Lobby(_2)` | (현재 루프 미사용) | OnDestroy·재 Load |
 | 12 | Framework EffectManager | 내부 | `04_effect.prefab` | 첫 `Play` 때 | 그 타입 인스턴스가 모두 사라지면 |

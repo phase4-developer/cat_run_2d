@@ -41,6 +41,15 @@ namespace MV.View
 
         public void SetSource(IWorldViewSource source) => _source = source;
 
+        /// <summary>플레이어(고양이) 발밑 위치(Unity 월드). 공급원이 없으면 false. 가림 페이드(<see cref="DepthSorter"/>)의 기준.</summary>
+        public bool TryGetFocus(out Vector3 p)
+        {
+            if (_source == null) { p = default; return false; }
+            var c = _source.Camera;
+            p = new Vector3((float)c.Px, (float)(c.Wy + (c.Mode == WorldViewMode.Climb ? c.ClimbPy : 0)), (float)c.Pz);
+            return true;
+        }
+
         /// <summary>테마 `fog` = 배경색(02 §2.1.4, 하늘 없음 D-44).</summary>
         public void SetTheme(ThemeData theme)
         {

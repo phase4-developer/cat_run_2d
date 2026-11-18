@@ -52,6 +52,7 @@ namespace MV.View
             _cfg = ViewConfig.From(tables.RunConfig);
             _rig.Init(tables, source);
             _sorter.Init(_cfg, _rig.Cam);
+            _sorter.SetFocus(_rig.TryGetFocus);
             _ground.Init(_cfg, tables, _rig, source);
             _props.Init(_cfg, _rig, _sprites, FxAtlas);
             if (_tint != null) _tint.Init(_rig.Cam, _screenMultiply);

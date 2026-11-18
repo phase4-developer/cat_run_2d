@@ -165,7 +165,7 @@ for (const b of R.projs){
 
 | 항목 | 규칙 | → 표.열 |
 |---|---|---|
-| 속도 | 20 m/s | `300_runConfig.PROJ_SPEED`=20 |
+| 속도 | 20 m/s | `MvCharacterSettings.projSpeed`=20(2026-11-18 `300_runConfig.PROJ_SPEED`에서 옮김) |
 | 사거리 | 22m × (1 + 0.1·aup.range). 출발 z 기준 | `300_runConfig.PROJ_RANGE`=22, `13_areaUpgrade[range].perLv`=0.1 |
 | 가로 판정 | `|b.x − o.x| ≤ o.hw` (탄 반경 0) | `105_objectKind.hw` |
 | 세로 판정 | 이번 프레임 이동 구간 [b.z, nzb]와 대상 [z−hd, z+hd]가 겹치는 대상 중 **앞면(z−hd)이 가장 작은 것 1개**. 동률이면 `R.objs` 앞쪽 | `105_objectKind.hd` |

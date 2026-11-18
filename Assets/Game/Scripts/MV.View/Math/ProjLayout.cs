@@ -36,6 +36,9 @@ namespace MV.View
         /// <summary>등급 → 꼬리 프리팹 주소 표(`103_item.projTail`, 노션 「신작 이펙트 리소스 관리」). 빈 등급은 바로 아래 등급 꼬리. 고르는 등급은 <see cref="ArtTier"/>.</summary>
         public static string[] TailsByTier(MvTables tables) => ColumnByTier(tables, it => it.projTail);
 
+        /// <summary>등급 → 가운데 이펙트 프리팹 주소 표(`103_item.projCenter`, 노션 11/18 추가 요청). 빈 셀은 바로 아래 등급 값. 안 쓰는 등급은 빈 프리팹을 적는다.</summary>
+        public static string[] CentersByTier(MvTables tables) => ColumnByTier(tables, it => it.projCenter);
+
         static string[] ColumnByTier(MvTables tables, Func<ItemData, string> column)
         {
             var items = tables?.Item?.Sorted;

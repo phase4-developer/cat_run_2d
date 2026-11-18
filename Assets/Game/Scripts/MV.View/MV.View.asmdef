@@ -12,7 +12,8 @@
         "Unity.TextMeshPro",
         "Unity.Addressables",
         "Unity.ResourceManager",
-        "JJEvol.Tables.Runtime"
+        "JJEvol.Tables.Runtime",
+        "DOTweenPro.Scripts"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

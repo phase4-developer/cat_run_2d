@@ -31,6 +31,10 @@ namespace MV.Fx
         public LineRenderer Core;
         public ParticleSystem Joints;
         public ParticleSystem Impact;
+        [Tooltip("번개 줄기 상단(시작점)에 띄울 구름. 하늘에서 내리꽂을 때(시작점이 끝점보다 Cloud Min Drop 이상 위)만 나온다")]
+        public ParticleSystem Cloud;
+        [Tooltip("구름을 띄우는 최소 높이 차(m). 적→적 연쇄 번개처럼 옆으로 치는 번개에는 구름을 띄우지 않는다")] public float CloudMinDrop = 1f;
+        [Tooltip("구름 위치 = 시작점 + 이 값(구름 아랫부분에서 줄기가 나오게)")] public Vector3 CloudOffset = new Vector3(0f, 0.25f, 0f);
 
         Vector3 _from, _to;
         float _t = -1f, _jt, _loopT;
@@ -61,6 +65,7 @@ namespace MV.Fx
             _from = from; _to = to; _t = 0f; _jt = 0f; _loopT = 0f;
             Build(true);
             if (Impact != null) { Impact.transform.position = to; Impact.Play(true); }
+            if (Cloud != null && from.y - to.y >= CloudMinDrop) { Cloud.transform.position = from + CloudOffset; Cloud.Play(true); }
         }
 
         void Build(bool emitJoints)

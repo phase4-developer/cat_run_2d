@@ -12,7 +12,7 @@ namespace MV.View
     /// <summary>
     /// 런 투사체 뷰(02 §2.1.4 「던진 장난감 L3804, 회전 장난감 L3800」·「창 궤적 L3802~3803」 행, 정본 `draw2D` L3800~3804).
     /// 던진 장난감 = 마법탄 프리팹(`300 proj.prefab`, 노션 「신작 이펙트 리소스 관리」 투사체 프리팹 구조, <see cref="ProjectileRig"/>)을 빌보드에 세우고
-    /// proj_Image에 등급 그림(`103_item.projSprite` 단독 주소), 그 아래에 등급 꼬리(`103_item.projTail`)를 끼운다. 그림만 로컬 z 회전 −(ms/110 + sz). 크기는 프리팹 그대로.
+    /// proj_Image에 등급 그림(`103_item.projSprite` 단독 주소), 그 아래에 등급 꼬리(`103_item.projTail`)·가운데 이펙트(`103_item.projCenter`)를 끼운다. 그림만 로컬 z 회전 −(ms/110 + sz). 크기는 프리팹 그대로.
     /// 창 = 월드 선 메쉬 2겹 + 머리 빌보드
     /// (`World_Proj_SpearHead_Fire`/`_Bolt`, `Atlas_Fx_Common`), 회전 장난감 = 플레이어 둘레 ORB_COUNT개 빌보드(orb 카드, 등급 그림만).
     /// 그림·프리팹·꼬리는 Init 때 모두 읽기 시작하고, 읽히기 전에는 그 투사체를 그리지 않는다.
@@ -57,6 +57,7 @@ namespace MV.View
         readonly CancellationTokenSource _cts = new CancellationTokenSource();
         string _projPrefab;
         string[] _tails;
+        string[] _centers;
         OrbConfig _orb;
         Sprite _headFire, _headBolt;
         Mesh _lineFire, _lineOther;
@@ -93,6 +94,7 @@ namespace MV.View
             if (_lineMaterial == null) _lineMaterial = _spriteMaterial;
             _names = ProjLayout.NamesByTier(tables);
             _tails = ProjLayout.TailsByTier(tables);
+            _centers = ProjLayout.CentersByTier(tables);
             _projSprites = new Sprite[_names?.Length ?? 0];
             _projPrefab = tables.RunConfig.Raw(RunConfigKeys.Proj_Prefab);
             if (_sprites != null) LoadArt();
@@ -114,13 +116,14 @@ namespace MV.View
             Hide();
         }
 
-        /// <summary>마법탄 프리팹·등급 그림·등급 꼬리를 읽기 시작한다(같은 주소는 한 번). 그림 캐시가 없는 시험에서는 부르지 않는다.</summary>
+        /// <summary>마법탄 프리팹·등급 그림·등급 꼬리·가운데 이펙트를 읽기 시작한다(같은 주소는 한 번). 그림 캐시가 없는 시험에서는 부르지 않는다.</summary>
         void LoadArt()
         {
             var ct = _cts.Token;
             LoadPrefab(_projPrefab, ct);
             if (_names != null) foreach (var n in _names) LoadSprite(n, ct);
             if (_tails != null) foreach (var n in _tails) LoadPrefab(n, ct);
+            if (_centers != null) foreach (var n in _centers) LoadPrefab(n, ct);
             LoadPrefab(SpearFxBolt, ct);
             LoadPrefab(SpearFxFire, ct);
         }
@@ -352,7 +355,7 @@ namespace MV.View
             }
         }
 
-        /// <summary>던진 장난감: 마법탄 프리팹에 등급 그림·꼬리를 넣고 그림만 돌린다. 프리팹·그림이 아직 없으면 그리지 않는다.</summary>
+        /// <summary>던진 장난감: 마법탄 프리팹에 등급 그림·꼬리·가운데 이펙트를 넣고 그림만 돌린다. 프리팹·그림이 아직 없으면 그리지 않는다.</summary>
         bool PlaceToy(Item it, RunProjectile b, double wy, double nowSec)
         {
             if (it.Line.activeSelf) it.Line.SetActive(false);
@@ -369,6 +372,8 @@ namespace MV.View
             rig.SetSprite(sprite);
             string tail = ProjLayout.ProjSpriteName(b.Tier, _tails);
             rig.SetTail(tail, Prefab(tail));
+            string center = ProjLayout.ProjSpriteName(b.Tier, _centers);
+            rig.SetCenter(center, Prefab(center));
             rig.SetSpin(ProjLayout.ToDegrees(ProjLayout.ProjAngle(nowSec, b.Sz)));
             it.Go.transform.position = new Vector3((float)b.X, (float)(wy + ProjLayout.ProjY), (float)b.Z);
             if (!it.Go.activeSelf) it.Go.SetActive(true);
