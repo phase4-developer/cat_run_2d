@@ -27,7 +27,7 @@ namespace MV.Run
             S.Emit(new RunEvent(RunEventType.WeaponHandReset, ids: (int[])S.W.Clone()));
         }
 
-        /// <summary>캐릭터 기본값 사본이 바뀌었으면(에디터 Inspector 수정) 이동 값을 다시 읽는다. 연사는 발사 때마다 <see cref="MvTables.Character"/>를 읽는다.</summary>
+        /// <summary>캐릭터 기본값 사본이 바뀌었으면(에디터 Inspector 수정) 이동 값·마법탄 속도를 다시 읽는다. 연사는 발사 때마다 <see cref="MvTables.Character"/>를 읽는다.</summary>
         void ApplyCharacter()
         {
             _p.ApplyCharacter(T.Character);

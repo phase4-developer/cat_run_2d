@@ -274,7 +274,7 @@ FinishRun → 지도 팝업 → 결과 팝업(ResultViewData: RunResult → MvRu
 4. 본체이고 `Vol % p1 == 0`이면 창 투사체(피해 ×(1+p2·n), 관통 p3) 1발(294-299). 아니면 `Draw(DoubleShot) < dbC`면 좌우 2발(±DBL_SHOT_DX), 아니면 1발.
 5. `AddProj`(310-315): Id 부여, `ProjSpawnDz` 앞에서 출발, `Fire` 이벤트.
 
-**투사체 이동** `MoveProjectiles`: 틱마다 `HitQuery.Prepare` 1회(판정 형상을 시뮬 위치로, `Physics.SyncTransforms` 1회) → 탄마다 `nzb = Z + PROJ_SPEED·dt` 구간을 `HitQuery.Cast`(MV.View `RunHitWorld`: 프리팹 `Hitbox` Collider에 Raycast + 시작점 겹침, (진입 z, Id) 순) → Hittable·아직 안 맞힌 첫 대상 1개 → `ProjImpact` → `Hit(best, b.D, crit, proc:true, …)` → (동행 Chance 판정) → `HitIds`에 추가, `--Pierce < 0`이면 Dead. 사거리(`ProjRange`) 넘으면 Dead. 끝에서 Dead 탄 제거.
+**투사체 이동** `MoveProjectiles`: 틱마다 `HitQuery.Prepare` 1회(판정 형상을 시뮬 위치로, `Physics.SyncTransforms` 1회) → 탄마다 `nzb = Z + ProjSpeed·dt`(`MvCharacterSettings.projSpeed`, 런 중 수정은 `RunParams.ApplyCharacter`로 다음 틱 반영) 구간을 `HitQuery.Cast`(MV.View `RunHitWorld`: 프리팹 `Hitbox` Collider에 Raycast + 시작점 겹침, (진입 z, Id) 순) → Hittable·아직 안 맞힌 첫 대상 1개 → `ProjImpact` → `Hit(best, b.D, crit, proc:true, …)` → (동행 Chance 판정) → `HitIds`에 추가, `--Pierce < 0`이면 Dead. 사거리(`ProjRange`) 넘으면 Dead. 끝에서 Dead 탄 제거.
 
 **피해 적용** `Hit(o, dmg, crit, proc, quiet, color, source)` (`358-417`)
 1. Chill이면 ProcChill 카드 배율(362, 휴면).
@@ -510,7 +510,7 @@ FinishRun → 지도 팝업 → 결과 팝업(ResultViewData: RunResult → MvRu
 
 ### 5.1 표에서 읽는 것 (대표)
 
-- 런 상수 전부 `300_runConfig`(`RunParams.From` 27-63: DtCap, HitStopScale, LANE_X_MAX, RUN_SPEED(_MID), STUCK_END_SEC, WEAPON_STACK_MAX, MAX_CLONES, CLONE_X_MAX, PROJ_SPEED, DMG_MIN/MAX, WELL_*, CP_MAX, PLAYABLE_AREAS, MERGE_N, BURN_TICK, STORM_*, METEOR_*, FIRE_PHASE …), 계단 연출 `330_climb`, 흔들림 `"<prefix>.amp/.time"` 키.
+- 런 상수 전부 `300_runConfig`(`RunParams.From` 27-63: DtCap, HitStopScale, LANE_X_MAX, RUN_SPEED(_MID), STUCK_END_SEC, WEAPON_STACK_MAX, MAX_CLONES, CLONE_X_MAX, DMG_MIN/MAX, WELL_*, CP_MAX, PLAYABLE_AREAS, MERGE_N, BURN_TICK, STORM_*, METEOR_*, FIRE_PHASE …), 계단 연출 `330_climb`, 흔들림 `"<prefix>.amp/.time"` 키.
 - 오브젝트 동작 102·105~109·114, 템플릿 310~314, 필드 303·313, Area 302(hp, sgateM, startGold, needSouls, zoneId, floorGroup), 난이도 06, 무기 103, 카드 110~112·115, 신 113, 드롭 801, 강화 10·11·12·13·14·16, 광고 08, 해금 05, 콘텐츠 400, 퀘스트 410·413·420, 연구 440, 재화 01, 설정 00_config(startGodKey, startDeck, rebirthArmSec, rebirthCooldownSec, adDayUtcOffsetHour, dataVersion).
 - 배열 크기도 표에서: `W` 길이 = `WeaponTierMax+1`, `FireT` 길이 = 1+`CloneCap`, 덱 길이 = 103 tier 최대+1, Floor 수 = `FloorCount()`, 동행 최대 = `MaxCompanions()`.
 

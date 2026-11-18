@@ -16,6 +16,7 @@ MonoBehaviour:
   runSpeedMid: 2.5
   keyMoveSpeed: 9
   moveFollowK: 10
+  projSpeed: 20
   presetFireRates:
   - key: easy
     rate: 0.95
