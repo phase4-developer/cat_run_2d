@@ -7,7 +7,7 @@ namespace MV.View
 {
     /// <summary>
     /// 런 오브젝트 하나의 화면 뷰(뷰 뿌리 = SortingGroup + <see cref="DepthSortable"/>, 관리자가 만들고 풀에서 다시 쓴다).
-    /// 그림과 동작은 뿌리 아래 프리팹 인스턴스의 <see cref="RunObjectModule"/>들이 정한다(프리팹이 없는 종류는 <see cref="ProceduralObjectLook"/>).
+    /// 그림과 동작은 뿌리 아래 프리팹 인스턴스의 <see cref="RunObjectModule"/>들이 정한다(프리팹이 없는 종류는 관리자가 만들지 않는다).
     /// 이 뷰가 하는 일: 모듈 호출 순서, 그림 묶음 자세 적용(<see cref="Pose"/>), 글자판, 판정 Hitbox 등록·해제(연결·회수와 같은 흐름).
     /// 생성·풀 대여/반환·전체 비활성화는 관리자(<see cref="ObjectViewFactory"/>)만 한다. 모듈은 <see cref="ReleaseReady"/>로 회수 가능 여부만 알린다.
     /// </summary>
@@ -87,18 +87,11 @@ namespace MV.View
             if (Obj != null) BindModules();
         }
 
-        /// <summary>코드 모양(<see cref="ProceduralObjectLook"/>)이 그림 묶음을 알린다.</summary>
-        public void AddPoseTarget(Transform t)
+        void AddPoseTarget(Transform t)
         {
             _poseTargets.Add(t);
             _posePos.Add(t.localPosition);
             _poseScale.Add(t.localScale);
-        }
-
-        /// <summary>코드 모양: 뷰 뿌리에 붙인 모듈을 등록한다(프리팹 모듈은 <see cref="AttachInstance"/>가 읽는다).</summary>
-        internal void AddModule(RunObjectModule m)
-        {
-            if (!_modules.Contains(m)) _modules.Add(m);
         }
 
         /// <summary>관리자: 오브젝트에 연결(풀에서 꺼낼 때). 모듈 상태를 처음으로 두고 판정 Hitbox를 등록한다.</summary>

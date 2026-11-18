@@ -115,7 +115,7 @@ namespace MV.Data.Tests
                 Assert.That(th.lineKind, Is.EqualTo(th.deco == "snow" || th.deco == "roof" ? "Bulbs" : "Clothes"), th.key);
                 Assert.That(th.roadsideProps, Is.EqualTo(t.Theme.ByKey(th.deco).roadsideProps), th.key);
             }
-            // 105 viewShape = ObjectViewFactory.ShapeOf 분기.
+            // 105 viewShape 열(뷰는 읽지 않음, 표 값만 확인).
             Assert.That(t.ObjectKind.ByKey("tower").viewShape, Is.EqualTo(ObjectViewShape.Well));
             Assert.That(t.ObjectKind.ByKey("enemy").viewShape, Is.EqualTo(ObjectViewShape.Mouse));
             Assert.That(t.ObjectKind.ByKey("wall").viewShape, Is.EqualTo(ObjectViewShape.Junk));

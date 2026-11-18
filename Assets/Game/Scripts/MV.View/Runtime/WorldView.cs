@@ -25,9 +25,9 @@ namespace MV.View
         /// <summary>런 캐릭터(플레이어·분신). 필드 이름은 예전 CatView 자리(프리팹 참조 유지).</summary>
         [SerializeField] CharacterPresenter _cats;
         [SerializeField] ProjectileView _projs;
-        /// <summary>계단 정산 칸(Obj_ClimbStep 쌓기). 프리팹에 없으면 만든다.</summary>
+        /// <summary>계단 정산 칸(Obj_ClimbStep 쌓기). WorldRoot 프리팹 자식 ClimbStairs.</summary>
         [SerializeField] ClimbStairView _stairs;
-        /// <summary>투사체 판정(프리팹 Collider, Unity Physics). 프리팹에 없으면 만든다.</summary>
+        /// <summary>투사체 판정(프리팹 Collider, Unity Physics). WorldRoot 프리팹 자식 HitWorld.</summary>
         [SerializeField] RunHitWorld _hits;
 
         readonly WorldSpriteCache _sprites = new WorldSpriteCache();
@@ -56,33 +56,22 @@ namespace MV.View
             if (_tint != null) _tint.Init(_rig.Cam, _screenMultiply);
             if (_objects != null) _objects.Init(_cfg, _rig.Cam.transform, _sprites, FxAtlas);
             if (_screen != null) _screen.Init(_cfg, _rig.Cam, _sprites, FxAtlas);
-            if (_cats == null)   // 프리팹에 없으면 만든다(예전 프리팹 호환)
-            {
-                var go = new GameObject("Cats");
-                go.transform.SetParent(transform, false);
-                _cats = go.AddComponent<CharacterPresenter>();
-            }
-            _cats.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null);
-            // 투사체 관리자는 WorldRoot 프리팹의 자식(Projectiles)이다. 없으면 만들지 않고 오류로 드러낸다.
-            if (_projs != null) _projs.Init(tables, _cfg, _sprites, _objects != null ? _objects.SpriteMaterial : null, FxAtlas);
-            else Debug.LogError("[WorldView] WorldRoot 프리팹에 Projectiles(ProjectileView)가 없습니다.", this);
-            if (_stairs == null)   // 프리팹에 없으면 만든다
-            {
-                var go = new GameObject("ClimbStairs");
-                go.transform.SetParent(transform, false);
-                _stairs = go.AddComponent<ClimbStairView>();
-            }
-            _stairs.Init(tables, _cfg, _rig.Cam, _objects != null ? _objects.LabelMaterial : null);
-            if (_objects != null)
-            {
-                if (_hits == null)   // 투사체 판정 질의(설정 값 없음). 프리팹에 없으면 만든다.
-                {
-                    var go = new GameObject("HitWorld");
-                    go.transform.SetParent(transform, false);
-                    _hits = go.AddComponent<RunHitWorld>();
-                }
+            // 하위 관리자는 모두 WorldRoot 프리팹의 자식이다. 없으면 만들지 않고 프리팹 경로와 자식 이름을 오류로 알린다.
+            var spriteMat = _objects != null ? _objects.SpriteMaterial : null;
+            if (Has(_cats, "Cats", nameof(CharacterPresenter))) _cats.Init(tables, _cfg, _sprites, spriteMat);
+            if (Has(_projs, "Projectiles", nameof(ProjectileView))) _projs.Init(tables, _cfg, _sprites, spriteMat, FxAtlas);
+            if (Has(_stairs, "ClimbStairs", nameof(ClimbStairView))) _stairs.Init(tables, _cfg, _rig.Cam, _objects != null ? _objects.LabelMaterial : null);
+            if (_objects != null && Has(_hits, "HitWorld", nameof(RunHitWorld)))
                 _objects.ConnectHits(_hits);   // 뷰 연결·회수 때 프리팹 Hitbox 등록·해제, 틱마다 대상 위치 맞추기
-            }
+        }
+
+        public const string PrefabPath = "Assets/Game/Prefabs/WorldRoot.prefab";
+
+        bool Has(Object part, string child, string type)
+        {
+            if (part != null) return true;
+            Debug.LogError($"[WorldView] {PrefabPath}에 자식 {child}({type})가 없거나 WorldView에 연결되지 않았습니다. 만들지 않습니다.", this);
+            return false;
         }
 
         /// <summary>테마 아틀라스·Fx 아틀라스를 먼저 로드한 뒤 색을 바꾼다(03 §3.8.5·§3.8.8). 이전 테마 아틀라스는 그 뒤 반환.</summary>

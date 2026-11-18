@@ -459,23 +459,6 @@ namespace MV.View.Tests
 
         // ───────── 오브젝트 뷰 이벤트 ─────────
 
-        ObjectViewFactory MakeFactory()
-        {
-            var camGo = new GameObject("TestCam");
-            _made.Add(camGo);
-            camGo.AddComponent<Camera>();
-            camGo.transform.position = new Vector3(0, 13, -9);
-            camGo.transform.LookAt(new Vector3(0, 0.5f, 5.5f));
-            var go = new GameObject("Objects");
-            _made.Add(go);
-            var f = go.AddComponent<ObjectViewFactory>();
-            f.Init(ViewTestTables.Config(), camGo.transform, new WorldSpriteCache(), WorldView.FxAtlas);
-            f.SetTheme(ViewTestTables.Theme("market"));
-            f.LabelText = _ => null;
-            f.PrefabLoader = (a, ct) => Cysharp.Threading.Tasks.UniTask.Never<PrefabHandle>(ct);   // 프리팹 로드 없이 뷰 구조만
-            return f;
-        }
-
         // 반응 상태는 그 오브젝트 뷰의 모듈이 가진다(관리자는 모르고 묻지 않는다).
         static RunObjectView ViewComp(ObjectViewFactory f, int id) => f.ViewOf(id) != null ? f.ViewOf(id).GetComponent<RunObjectView>() : null;
 
@@ -884,33 +867,6 @@ namespace MV.View.Tests
             var fx = Mod<WallBlockFx>(rig.Factory, 1);
             Assert.That(fx, Is.Not.Null, "실제 블록 프리팹 모듈");
             Assert.That(fx.Shake, Is.EqualTo(0), "표만 바꿔도 흔들림이 꺼진다(D-87)");
-        }
-
-        /// <summary>
-        /// 예비 경로: 프리팹이 없는 종류(cardbox 등)는 관리자가 코드 모양(<see cref="ProceduralObjectLook"/> + <see cref="ObjectMotion"/>)을 붙인다.
-        /// 프리팹 모듈과 같은 이벤트 흐름으로 반응하는지만 본다(우물 벽돌은 코드 모양에만 있다).
-        /// </summary>
-        [Test]
-        public void CodeShapeFallback_ReactsThroughSameModuleFlow()
-        {
-            var t = ViewTestTables.CodeShapes();
-            var f = MakeFactory();
-            var objs = new List<RunObject> { Obj(t, "wall", 1, 15), Obj(t, "tower", 3, 25) };
-            f.Sync(objs, 0, 0, 0);
-            var look = Mod<ProceduralObjectLook>(f, 1);
-            Assert.That(look, Is.Not.Null, "프리팹 없음 → 코드 모양");
-            Assert.That(Mod<ObjectMotion>(f, 1), Is.Not.Null);
-            f.OnRunEvents(new List<RunEvent>
-            {
-                new RunEvent(RunEventType.Hit, objId: 1, kindId: objs[0].Kind.id),
-                new RunEvent(RunEventType.WellFlush, objId: 3, a: 3, amount: 10),
-            });
-            Assert.That(look.Shake, Is.EqualTo(objs[0].Reaction.objShake > 0 ? ObjectReaction.ShakeSec : 0));
-            Assert.AreEqual(objs[0].Reaction.punch, Mod<ObjectMotion>(f, 1).Punch);
-            Assert.That(Mod<ProceduralObjectLook>(f, 3).GoneBricks, Is.EqualTo(3), "벽돌 3개 빠짐");
-            f.Sync(objs, 0, 0, 0);
-            Assert.AreEqual(Vector3.one, f.ViewOf(1).transform.localScale, "뷰 뿌리는 그대로");
-            Assert.Less(look.Look.localScale.y, 1f, "눌림은 그림 묶음만");
         }
     }
 }
