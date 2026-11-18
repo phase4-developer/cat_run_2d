@@ -113,7 +113,7 @@ namespace MV.Data
         public const string DBL_SHOT_DX = "DBL_SHOT_DX";
         public const string PROJ_SPAWN_DZ = "PROJ_SPAWN_DZ";
         public const string THROW_T = "THROW_T";
-        public const string PROJ_SPEED = "PROJ_SPEED";
+        // PROJ_SPEED는 2026-11-18 MvCharacterSettings.projSpeed로 옮겼다(표에 두지 않는다).
         public const string PROJ_RANGE = "PROJ_RANGE";
         public const string DMG_MIN = "DMG_MIN";
         public const string DMG_MAX = "DMG_MAX";
@@ -311,7 +311,6 @@ namespace MV.Data
             DBL_SHOT_DX,
             PROJ_SPAWN_DZ,
             THROW_T,
-            PROJ_SPEED,
             PROJ_RANGE,
             DMG_MIN,
             DMG_MAX,

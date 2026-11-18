@@ -184,6 +184,22 @@ namespace MV.Run.Tests
             Assert.AreEqual(1 / (rate * 2), RunFormulas.FireInterval(sim.State), 1e-12, "연사 변경이 발사 간격에 반영되지 않았다");
         }
 
+        /// <summary>마법탄 속도는 표가 아니라 캐릭터 설정 사본에서 읽고, 사본이 바뀌면 런 중에 다시 읽는 같은 함수(<see cref="RunParams.ApplyCharacter"/>)로 바뀐다.</summary>
+        [Test]
+        public void ProjSpeed_ReadsCharacterSettings_AndReappliesOnChange()
+        {
+            var t = RunTestTables.Load(null);
+            Assert.Greater(t.Character.ProjSpeed, 0, "MvCharacterSettings.projSpeed가 비어 있다");
+            Assert.IsFalse(t.RunConfig.Has("PROJ_SPEED"), "PROJ_SPEED가 아직 300_runConfig에 남아 있다(값은 한 곳에만)");
+            var p = RunParams.From(t);
+            Assert.AreEqual(t.Character.ProjSpeed, p.ProjSpeed, 1e-12);
+
+            var ch = t.Character.Clone();
+            ch.ProjSpeed *= 2;
+            p.ApplyCharacter(ch);
+            Assert.AreEqual(ch.ProjSpeed, p.ProjSpeed, 1e-12, "마법탄 속도 변경이 런 상수에 반영되지 않았다");
+        }
+
         [Test]
         public void Wall_BlocksAndFinishes()
         {
