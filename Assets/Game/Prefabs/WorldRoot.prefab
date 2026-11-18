@@ -36,6 +36,7 @@ Transform:
   - {fileID: 1130}
   - {fileID: 1150}
   - {fileID: 1310}
+  - {fileID: 1410}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1160
@@ -59,6 +60,7 @@ MonoBehaviour:
   _objects: {fileID: 1280}
   _screen: {fileID: 1220}
   _cats: {fileID: 1320}
+  _projs: {fileID: 1420}
 --- !u!1 &1020
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,3 +540,50 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   _spriteMaterial: {fileID: 2100000, guid: 6272a9793e83450f8ea262e6b8d1bce5, type: 2}
+--- !u!1 &1400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1410}
+  - component: {fileID: 1420}
+  m_Layer: 0
+  m_Name: Projectiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1010}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5cf0efb93d40c09b6669a43c43ffb3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: MV.View::MV.View.ProjectileView
+  _toyPrefab: {fileID: 6100000000000825005, guid: d7266dd6c7f34aba85f2d9b6ca511ac0, type: 3}
+  _spearPrefab: {fileID: 6100000000000900005, guid: b5dd2908e191428293aa7d5cbb4dad44, type: 3}
+  _bladePrefab: {fileID: 6100000000000466005, guid: 687e2c2172c944fa8a2b2089710d56cf, type: 3}
