@@ -1,0 +1,419 @@
+using System;
+using System.Collections.Generic;
+using DG.Tweening;
+using jjevol;
+using MV.Data;
+using MV.Run;
+using MV.Sound;
+using UnityEngine;
+using UnityEngine.Pool;
+using UnityEngine.UI;
+
+namespace MV.UI
+{
+    /// <summary>
+    /// 무기 섹션(<c>IngameScreen/Mid/Weapon</c>, MV-UI3-HUD4, HUD_구조_설계안 3.3 WeaponSection·7.4).
+    /// 장착 칸 + 손패 스택. 스택 칸은 <c>Slot_Weapon_Stack</c> 프리팹 에셋을 원본으로 <see cref="ObjectPool{T}"/>에서 꺼내 손패 장 수만큼만 보인다(시작 = 시작 무기 1장).
+    /// 손패 순서·시간은 <see cref="WeaponHandModel"/>(04 §4.10, 05 §5.3), 모양은 디자이너 Stack의 세로 배치 값(간격·위 여백)을 읽어 섹션이 직접 놓는다.
+    /// 무기문 통과 때 날아오는 카드(<see cref="HudFlyTarget.Hand"/>)도 이 섹션이 그리고, 도착한 만큼 손패에 넣는다.
+    /// 시뮬 값은 읽기만 한다.
+    /// </summary>
+    public sealed class WeaponSection : UIBase, IHudFlyHandler
+    {
+        [Header("디자이너 계층")]
+        [Tooltip("장착 칸 자리(Equip/Slot_Weapon).")]
+        [SerializeField] RectTransform equipRoot;
+        [Tooltip("손패 스택(Stack). 디자이너 VerticalLayoutGroup 값(간격·위 여백·정렬)을 읽고, 실행 중에는 섹션이 직접 놓는다.")]
+        [SerializeField] RectTransform stack;
+        [Tooltip("스택 칸 복제 원본: Slot_Weapon_Stack.prefab 에셋(화면 안 예시 인스턴스가 아니다).")]
+        [SerializeField] HudWeaponSlot stackPrefab;
+        [Tooltip("날아오는 카드를 둘 부모(보통 Weapon).")]
+        [SerializeField] RectTransform flyParent;
+
+        [Header("손패 시간(04 §4.10, 05 §5.3.2 기본값)")]
+        [SerializeField] WeaponHandTiming timing = new WeaponHandTiming();
+
+        [Header("손패 연출(05 §5.3.3 기본값)")]
+        [Tooltip("자리 이동(정렬·당겨짐) 초 (L1211)")] [SerializeField] float moveSec = 0.28f;
+        [Tooltip("전달 wdeal 초 (L501)")] [SerializeField] float dealFadeSec = 0.25f;
+        [Tooltip("전달: 제자리보다 이 칸 높이 배만큼 아래에서 나타남")] [SerializeField] float dealFromBelow = 1f;
+        [Tooltip("전달: 칸 너비의 이 비율만큼 오른쪽에서 나타남 (wdeal translateX 35%)")] [SerializeField] float dealFromRight = 0.35f;
+        [Tooltip("모으기 끝 크기 (wmg scale 1.06)")] [SerializeField] float gatherScale = 1.06f;
+        [Tooltip("결과 시작 크기 (wmerged scale 1.3)")] [SerializeField] float mergedScale = 1.3f;
+        [Tooltip("결과 연출 최소 초: max(이 값, u) (L1214)")] [SerializeField] float mergedMinSec = 0.15f;
+        [Tooltip("장착 칸 등급 상승 튐 크기")] [SerializeField] float equipPopScale = 1.15f;
+        [Tooltip("장착 칸 등급 상승 튐 초")] [SerializeField] float equipPopSec = 0.25f;
+
+        Func<RunState> _state;
+        RunState _run;
+        MvTables T => _run?.Tables;
+
+        HudWeaponSlot _equip;
+        VerticalLayoutGroup _layout;
+        ObjectPool<HudWeaponSlot> _pool;
+        WeaponHandModel _model;
+        readonly Dictionary<int, HudWeaponSlot> _slots = new Dictionary<int, HudWeaponSlot>();   // 카드 Id → 칸
+        readonly Dictionary<int, HudWeaponSlot> _flies = new Dictionary<int, HudWeaponSlot>();   // 비행 id → 칸
+        readonly List<HandAction> _actions = new List<HandAction>();
+        readonly List<HudWeaponSlot> _gathering = new List<HudWeaponSlot>();
+        readonly Queue<int> _units = new Queue<int>();   // 받을 장(단계), 시뮬 WeaponDeliver
+        int _credits;                                    // 도착한 비행 수
+        int _equipTier;
+        int[] _counts;
+        double _now;
+        bool _ready;
+
+        // ---- 시험·QA ----
+        public HudWeaponSlot Equip { get { Init(); return _equip; } }
+        /// <summary>보이는 스택 칸(위에서부터 = 손패 순서).</summary>
+        public IEnumerable<HudWeaponSlot> StackSlots
+        {
+            get
+            {
+                if (_model == null) yield break;
+                foreach (var c in _model.Cards) if (_slots.TryGetValue(c.Id, out var s)) yield return s;
+            }
+        }
+        public IReadOnlyList<HandCard> Hand => _model != null ? _model.Cards : (IReadOnlyList<HandCard>)Array.Empty<HandCard>();
+        public bool Busy => _model != null && !_model.Idle || _units.Count > 0 || _gathering.Count > 0;
+        public int PendingUnits => _units.Count;
+        public int ActiveFlies => _flies.Count;
+        public HudWeaponSlot StackPrefab => stackPrefab;
+
+        void Awake() => Init();
+
+        void Init()
+        {
+            if (_ready) return;
+            _ready = true;
+            _equip = equipRoot ? equipRoot.GetComponentInChildren<HudWeaponSlot>(true) : null;
+            if (stack)
+            {
+                _layout = stack.GetComponent<VerticalLayoutGroup>();
+                if (_layout) _layout.enabled = false;   // 값만 읽고 놓기는 섹션이(이동 연출)
+                // 디자이너 예시 칸은 프리팹에 그대로 두고 실행 중에만 숨긴다(설계안 7절 결정).
+                foreach (Transform c in stack) c.gameObject.SetActive(false);
+            }
+            if (!stackPrefab) Debug.LogError("[WeaponSection] stackPrefab(Slot_Weapon_Stack.prefab 에셋)이 비어 있습니다.", this);
+            _pool = new ObjectPool<HudWeaponSlot>(
+                () => Instantiate(stackPrefab, stack, false),
+                s => { s.ResetLook(); s.gameObject.SetActive(true); },
+                s => { s.ResetLook(); s.gameObject.SetActive(false); if (s.transform.parent != stack) s.transform.SetParent(stack, false); },
+                s => { if (s) Discard(s.gameObject); },
+                collectionCheck: false);
+        }
+
+        static void Discard(UnityEngine.Object o)
+        {
+            if (Application.isPlaying) Destroy(o);
+            else DestroyImmediate(o);
+        }
+
+        protected override bool SetSubscribe(bool subscribe)
+        {
+            if (!base.SetSubscribe(subscribe)) return false;
+            if (subscribe)
+            {
+                MvHudEvents.OnEvent += OnRunEvent;
+                MvHudFly.Arrived += OnFlyArrived;
+                MvHudFly.Register(HudFlyTarget.Hand, this);
+            }
+            else
+            {
+                MvHudEvents.OnEvent -= OnRunEvent;
+                MvHudFly.Arrived -= OnFlyArrived;
+                MvHudFly.Unregister(HudFlyTarget.Hand, this);
+            }
+            return true;
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            _pool?.Dispose();
+        }
+
+        // ---------------- 런 연결(화면이 런을 넘긴다) ----------------
+
+        public void BindRun(Func<RunState> state)
+        {
+            Init();
+            _state = state;
+            _run = null;
+        }
+
+        /// <summary>실시간 dt(배속과 무관, 05 §5.3.2).</summary>
+        public void Tick(float realDt)
+        {
+            Init();
+            var s = _state?.Invoke();
+            if (s != _run) { _run = s; ResetHand(s?.W); }
+            if (s == null || _model == null) return;
+            _now += realDt;
+            Feed();
+            _actions.Clear();
+            _model.Step(_now, realDt, _actions);
+            foreach (var a in _actions) Play(a);
+            Resync(s);
+        }
+
+        void ResetHand(int[] w)
+        {
+            foreach (var kv in _slots) _pool.Release(kv.Value);
+            _slots.Clear();
+            foreach (var kv in _flies) _pool.Release(kv.Value);
+            _flies.Clear();
+            _gathering.Clear();
+            _units.Clear();
+            _credits = 0;
+            _now = 0;
+            _model = null;
+            if (_run?.Tables == null || w == null) return;
+            int mergeN = T.RunConfig.I(RunConfigKeys.MERGE_N);
+            _model = new WeaponHandModel(timing, mergeN, RunFormulas.WeaponTierMax(T));
+            _model.Reset(w, _now);
+            foreach (var c in _model.Cards) Rent(c);
+            Layout(snap: true);
+            DrawEquip(pop: false);
+        }
+
+        /// <summary>쉬는 중인데 손패가 시뮬과 다르면(예: 시험·연출 없이 값만 바뀜) 시뮬 손패로 바로 맞춘다.</summary>
+        void Resync(RunState s)
+        {
+            if (Busy || _flies.Count > 0 || s.W == null) return;
+            if (_counts == null || _counts.Length != s.W.Length) _counts = new int[s.W.Length];
+            var counts = _counts;
+            Array.Clear(counts, 0, counts.Length);
+            foreach (var c in _model.Cards) if (c.Tier < counts.Length) counts[c.Tier]++;
+            for (int t = 0; t < counts.Length; t++)
+                if (counts[t] != s.W[t]) { ResetHand(s.W); return; }
+        }
+
+        // ---------------- 이벤트 ----------------
+
+        /// <summary>런 이벤트 1개(구독은 SetSubscribe, 시험은 직접 부른다).</summary>
+        public void OnRunEvent(RunEvent e)
+        {
+            if (_model == null) return;
+            switch (e.Type)
+            {
+                case RunEventType.WeaponHandReset:
+                    if (e.Ids != null) ResetHand(e.Ids);
+                    break;
+                case RunEventType.WeaponDeliver:
+                    for (int i = 0; i < e.A; i++) _units.Enqueue(e.B);
+                    break;
+            }
+        }
+
+        /// <summary>비행 도착(구독은 SetSubscribe, 시험은 직접 부른다).</summary>
+        public void OnFlyArrived(HudFlyTarget t, int amount)
+        {
+            if (t == HudFlyTarget.Hand) _credits++;
+        }
+
+        /// <summary>
+        /// 시뮬이 준 장을 날아온 만큼 손패에 넣는다(도착 = 지급, 설계안 7.4). 날고 있는 것이 없으면 남은 장을 바로 넣는다
+        /// (비행 없는 지급·비행 층이 없을 때). 남은 도착은 버린다(거절된 장).
+        /// </summary>
+        void Feed()
+        {
+            int flying = MvHudFly.CountInFlight(HudFlyTarget.Hand);
+            while (_units.Count > 0 && (_credits > 0 || flying == 0))
+            {
+                int tier = _units.Peek(), n = 0;
+                while (_units.Count > 0 && _units.Peek() == tier && (_credits > 0 || flying == 0))
+                {
+                    _units.Dequeue();
+                    if (_credits > 0) _credits--;
+                    n++;
+                }
+                _model.Deliver(n, tier);
+            }
+            if (_units.Count == 0 && flying == 0) _credits = 0;
+        }
+
+        // ---------------- 손패 연출 ----------------
+
+        HudWeaponSlot Rent(HandCard c)
+        {
+            var s = _pool.Get();
+            s.Set(T, c.Tier, DmgMul());
+            _slots[c.Id] = s;
+            return s;
+        }
+
+        double DmgMul() => _run?.Tables != null ? RunFormulas.CardMul(_run, CardEffectType.DmgMul) : 1;
+
+        void Play(in HandAction a)
+        {
+            switch (a.Kind)
+            {
+                case HandActionKind.Dealt:
+                {
+                    var s = Rent(a.Card);
+                    Layout(snap: false, dealt: s);
+                    if (Animate) s.PlayDeal(dealFadeSec);
+                    break;
+                }
+                case HandActionKind.GatherStart:
+                {
+                    _gathering.Clear();
+                    foreach (var id in a.Gathered) if (_slots.TryGetValue(id, out var g)) _gathering.Add(g);
+                    if (_gathering.Count == 0) break;
+                    // 그 등급 앞 3장이 2번째 카드 자리로(md × 0.9, ease-in) + 밝아짐·scale 1.06. 층 맨 앞.
+                    var mid = _gathering[Math.Min(1, _gathering.Count - 1)];
+                    var to = mid.rectTransform.anchoredPosition;
+                    foreach (var g in _gathering)
+                    {
+                        g.transform.SetAsLastSibling();
+                        g.ResetLook();
+                        if (Animate)
+                        {
+                            g.rectTransform.DOAnchorPos(to, a.MoveSec).SetEase(Ease.InQuad).SetUpdate(true).SetTarget(g);
+                            g.PlayGather(a.Duration, gatherScale);
+                        }
+                        else g.rectTransform.anchoredPosition = to;
+                    }
+                    break;
+                }
+                case HandActionKind.Merged:
+                {
+                    Vector2 at = default;
+                    bool has = false;
+                    if (_gathering.Count > 0)
+                    {
+                        at = _gathering[Math.Min(1, _gathering.Count - 1)].rectTransform.anchoredPosition;
+                        has = true;
+                    }
+                    _gathering.Clear();
+                    if (a.Gathered != null)
+                        foreach (var id in a.Gathered)
+                            if (_slots.TryGetValue(id, out var gone)) { _slots.Remove(id); _pool.Release(gone); }
+
+                    var s = Rent(a.Card);
+                    if (has) s.rectTransform.anchoredPosition = at;
+                    Layout(snap: false, placed: has ? s : null);
+                    if (Animate) s.PlayMerged(Math.Max(mergedMinSec, a.Unit), mergedScale);
+                    MvSound.PlayUi(MvUiSound.HandMerge);
+                    break;
+                }
+            }
+            if (a.TopTierUp) DrawEquip(pop: true);
+        }
+
+        static bool Animate => Application.isPlaying;
+
+        /// <summary>
+        /// 손패 순서대로 자리를 정한다(디자이너 Stack 세로 배치 값: 위 여백·간격, 반대 순서 = 위 칸이 앞).
+        /// dealt = 방금 들어온 칸(아래·오른쪽에서 나타남), placed = 이미 다른 자리에 놓인 칸(머지 결과).
+        /// </summary>
+        void Layout(bool snap, HudWeaponSlot dealt = null, HudWeaponSlot placed = null)
+        {
+            if (_model == null || !stack) return;
+            float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
+            var cards = _model.Cards;
+            int n = cards.Count;
+            float y = -top;
+            for (int i = 0; i < n; i++)
+            {
+                if (!_slots.TryGetValue(cards[i].Id, out var s)) continue;
+                var rt = s.rectTransform;
+                rt.anchorMin = rt.anchorMax = new Vector2(.5f, 1f);
+                rt.pivot = new Vector2(.5f, 1f);
+                float h = rt.rect.height;
+                var to = new Vector2(0, y);
+                y -= h + spacing;
+                if (_gathering.Contains(s)) continue;   // 모이는 중인 칸은 모으기 연출이 움직인다
+                DOTween.Kill(rt);
+                if (snap || !Animate) { rt.anchoredPosition = to; continue; }
+                // 머지 결과(placed)는 모인 자리에서 출발한다.
+                if (s == dealt) rt.anchoredPosition = to + new Vector2(rt.rect.width * dealFromRight, -h * dealFromBelow);
+                rt.DOAnchorPos(to, moveSec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(rt);
+            }
+            OrderSiblings();
+        }
+
+        /// <summary>위 칸이 맨 앞(마지막 형제)이 되게 다시 맞춘다(디자이너 반대 순서 배치와 같은 겹침).</summary>
+        void OrderSiblings()
+        {
+            var cards = _model.Cards;
+            for (int i = cards.Count - 1; i >= 0; i--)
+                if (_slots.TryGetValue(cards[i].Id, out var s)) s.transform.SetAsLastSibling();
+            foreach (var g in _gathering) if (g) g.transform.SetAsLastSibling();
+        }
+
+        void DrawEquip(bool pop)
+        {
+            if (!_equip || _model == null) return;
+            int tier = _model.TopTier;
+            _equip.Set(T, tier, DmgMul());
+            bool up = pop && tier > _equipTier;
+            _equipTier = tier;
+            if (!up) return;
+            MvSound.PlayUi(MvUiSound.HandTierUp);
+            if (!Animate) return;
+            var t = _equip.transform;
+            DOTween.Kill(t);
+            t.localScale = Vector3.one;
+            DOTween.Sequence().SetUpdate(true).SetTarget(t)
+                .Append(t.DOScale(equipPopScale, equipPopSec * .6f).SetEase(Ease.OutQuad))
+                .Append(t.DOScale(1f, equipPopSec * .4f).SetEase(Ease.InQuad));
+        }
+
+        // ---------------- 날아오는 카드(IHudFlyHandler) ----------------
+
+        public bool TryGetRect(out Vector2 center, out Vector2 size)
+        {
+            center = size = default;
+            if (!stack) return false;
+            // 도착 = 스택 맨 아래 칸 다음 자리(새 카드가 들어갈 곳).
+            float h = stackPrefab ? ((RectTransform)stackPrefab.transform).rect.height : 0;
+            float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
+            int n = _model != null ? _model.Cards.Count : 0;
+            var local = new Vector2(stack.rect.center.x, stack.rect.yMax - top - n * (h + spacing) - h * .5f);
+            var cam = Cam();
+            center = RectTransformUtility.WorldToScreenPoint(cam, stack.TransformPoint(local));
+            var p0 = RectTransformUtility.WorldToScreenPoint(cam, stack.TransformPoint(local - new Vector2(h, h) * .5f));
+            var p1 = RectTransformUtility.WorldToScreenPoint(cam, stack.TransformPoint(local + new Vector2(h, h) * .5f));
+            size = new Vector2(Mathf.Abs(p1.x - p0.x), Mathf.Abs(p1.y - p0.y));
+            return true;
+        }
+
+        public void Show(int id, int amount)
+        {
+            if (!flyParent || _model == null || _flies.ContainsKey(id)) return;
+            var s = _pool.Get();
+            s.transform.SetParent(flyParent, false);
+            s.transform.SetAsLastSibling();
+            int tier = _units.Count > 0 ? _units.Peek() : _run != null ? _run.Bt : 1;
+            s.Set(T, tier, DmgMul());
+            var rt = s.rectTransform;
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(.5f, .5f);
+            _flies[id] = s;
+        }
+
+        public void Place(int id, Vector2 screen, float scale, float alpha)
+        {
+            if (!_flies.TryGetValue(id, out var s) || !flyParent) return;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(flyParent, screen, Cam(), out var local))
+                s.rectTransform.localPosition = new Vector3(local.x, local.y, 0);
+            s.transform.localScale = Vector3.one * scale;
+            s.SetAlpha(alpha);
+        }
+
+        public void Hide(int id)
+        {
+            if (!_flies.TryGetValue(id, out var s)) return;
+            _flies.Remove(id);
+            _pool.Release(s);
+        }
+
+        Camera Cam()
+        {
+            var c = GetComponentInParent<Canvas>();
+            c = c ? c.rootCanvas : null;
+            return c && c.renderMode != RenderMode.ScreenSpaceOverlay ? c.worldCamera : null;
+        }
+    }
+}

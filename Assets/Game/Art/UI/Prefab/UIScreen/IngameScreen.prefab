@@ -1529,6 +1529,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5202467135730675504}
+  - component: {fileID: 7431286054410923871}
   m_Layer: 5
   m_Name: Weapon
   m_TagString: Untagged
@@ -1557,6 +1558,52 @@ RectTransform:
   m_AnchoredPosition: {x: -25, y: 223.1113}
   m_SizeDelta: {x: 203.7, y: 313.6228}
   m_Pivot: {x: 1, y: 0.5}
+--- !u!114 &7431286054410923871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739442880085033039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c2c3be9bbe947239b95ab77b9c14029, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  equipRoot: {fileID: 1335044354545861129}
+  stack: {fileID: 920744721794198965}
+  stackPrefab: {fileID: 8887057033844321035, guid: 2b1bb52fa6daa9c4ebb7e8355b8d495a, type: 3}
+  flyParent: {fileID: 5202467135730675504}
+  timing:
+    budget: 3
+    leftMin: 0.4
+    dealCost: 0.12
+    unitMin: 0.07
+    unitMax: 0.54
+    dealGapMax: 0.05
+    dealGapMul: 0.12
+    mergeMul: 0.92
+    moveMul: 0.9
+    afterMax: 0.04
+    afterMul: 0.08
+  moveSec: 0.28
+  dealFadeSec: 0.25
+  dealFromBelow: 1
+  dealFromRight: 0.35
+  gatherScale: 1.06
+  mergedScale: 1.3
+  mergedMinSec: 0.15
+  equipPopScale: 1.15
+  equipPopSec: 0.25
 --- !u!1 &3804369872954125828
 GameObject:
   m_ObjectHideFlags: 0
@@ -5198,8 +5245,7 @@ MonoBehaviour:
   goldSlot: {fileID: 4511057362660106336}
   diaSlot: {fileID: 981983169869039328}
   mid: {fileID: 1344421506128573404}
-  equipSlot: {fileID: 481061559222242336}
-  stack: {fileID: 920744721794198965}
+  weapon: {fileID: 7431286054410923871}
   stairGrade: {fileID: 2830996914003023605}
   stairValue: {fileID: 2836234995055786518}
   stairCount: {fileID: 7518927449556166699}
@@ -5218,7 +5264,4 @@ MonoBehaviour:
   holderIn: {fileID: 6540623355427045290}
   skillSection: {fileID: 7343300302770266304}
   climbShiftSec: 0.3
-  weaponAddSec: 0.15
-  weaponMergeSec: 0.2
   rollStepSec: 0.06
-  popScale: 1.15

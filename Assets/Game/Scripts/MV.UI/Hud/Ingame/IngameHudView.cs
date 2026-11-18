@@ -34,10 +34,8 @@ namespace MV.UI
 
         [Header("Mid")]
         [SerializeField] GameObject mid;
-        /// <summary>장착 무기 칸(<c>Equip/Slot_Weapon</c>).</summary>
-        [SerializeField] RectTransform equipSlot;
-        /// <summary>쌓이는 무기(<c>Stack</c>, 자식 <c>Slot_Weapon_Stack</c>).</summary>
-        [SerializeField] RectTransform stack;
+        /// <summary>무기 섹션(<c>Mid/Weapon</c>): 장착 칸·손패 스택·날아오는 카드(MV-UI3-HUD4).</summary>
+        [SerializeField] WeaponSection weapon;
         [SerializeField] AddressableImage stairGrade;
         /// <summary>「+{칸당 계단}」.</summary>
         [SerializeField] TMP_Text stairValue;
@@ -63,10 +61,7 @@ namespace MV.UI
 
         [Header("연출 시간(초, 1배속 기준 — 계단·롤링은 배속만큼 빨라진다)")]
         [SerializeField] float climbShiftSec = 0.3f;
-        [SerializeField] float weaponAddSec = 0.15f;
-        [SerializeField] float weaponMergeSec = 0.2f;
         [SerializeField] float rollStepSec = 0.06f;
-        [SerializeField] float popScale = 1.15f;
 
         // 문구: 디자이너 [HUD] 인게임 서식(키 자리 ui.hud.*)
         public const string StairValueFormat = "+{0}"; // ui.hud.stairPer
@@ -79,10 +74,6 @@ namespace MV.UI
         bool _ready;
 
         TMP_Text _gold, _dia;
-        HudWeaponSlot _equip, _stackTemplate;
-        readonly List<HudWeaponSlot> _stackSlots = new List<HudWeaponSlot>();
-        int[] _hand;
-        bool _handBusy;
 
         HudClimbCard _climbTemplate;
         readonly List<HudClimbCard> _climbPool = new List<HudClimbCard>();
@@ -103,8 +94,7 @@ namespace MV.UI
         int _posStamp = -1;
 
         // ---- 시험·QA ----
-        public HudWeaponSlot Equip { get { Init(); return _equip; } }
-        public IReadOnlyList<HudWeaponSlot> StackSlots { get { Init(); return _stackSlots; } }
+        public WeaponSection Weapon => weapon;
         public IReadOnlyList<HudClimbCard> ClimbCards => _climbCards;
         public HudSkillCard SkillCard { get { Init(); return _skill; } }
         public IReadOnlyList<HudSkillCard> PosCards => _posCards;
@@ -116,7 +106,6 @@ namespace MV.UI
         public string StairValueText => stairValue ? stairValue.text : null;
         public string StairCountText => stairCount ? stairCount.text : null;
         public string GaugeGradeSprite => gaugeGrade ? gaugeGrade.spriteName : null;
-        public bool HandBusy => _handBusy;
 
         void Awake() => Init();
 
@@ -131,16 +120,6 @@ namespace MV.UI
 
             _gold = goldSlot ? goldSlot.GetComponentInChildren<TMP_Text>(true) : null;
             _dia = diaSlot ? diaSlot.GetComponentInChildren<TMP_Text>(true) : null;
-            _equip = equipSlot ? equipSlot.GetComponentInChildren<HudWeaponSlot>(true) : null;
-            if (stack)
-                foreach (Transform c in stack)
-                {
-                    var slot = c.GetComponent<HudWeaponSlot>();
-                    if (!slot) continue;
-                    if (!_stackTemplate) _stackTemplate = slot;
-                    _stackSlots.Add(slot);
-                    slot.gameObject.SetActive(false);
-                }
 
             foreach (var h in new[] { holderPrev, holderCurrent })
             {
@@ -203,12 +182,8 @@ namespace MV.UI
         /// <summary>게이지는 원값(<see cref="SetState"/>)으로 그린다.</summary>
         public void SetGauge(string levelText, string perText, float fill01) { }
 
-        /// <summary>런 상태가 없을 때(시험 출처)만 장착 칸을 직접 채운다. 런 중에는 손패 연출이 그린다.</summary>
-        public void SetWeapon(int tier, string iconSprite, string name, string damageText, Color gradeColor)
-        {
-            Init();
-            if (_run == null && _equip) _equip.Set(null, tier, 1);
-        }
+        /// <summary>장착 칸은 무기 섹션이 손패로 그린다(MV-UI3-HUD4). 값은 받기만 한다.</summary>
+        public void SetWeapon(int tier, string iconSprite, string name, string damageText, Color gradeColor) { }
 
         // ---------------- IRunHudRawView(원값) ----------------
 
@@ -243,6 +218,7 @@ namespace MV.UI
             Init();
             _state = state;
             _run = null;
+            if (weapon) weapon.BindRun(state);
         }
 
         public void TickRun(float dt)
@@ -250,8 +226,8 @@ namespace MV.UI
             Init();
             var s = _state?.Invoke();
             if (s != _run) { _run = s; ResetRun(); }
+            if (weapon) weapon.Tick(dt);
             if (s == null) return;
-            TickHand(s);
             TickClimb(s);
             TickRoulette(s);
             TickCardPos(s);
@@ -270,8 +246,6 @@ namespace MV.UI
         void ResetRun()
         {
             StopAllCoroutines();
-            _handBusy = false;
-            _hand = null;
             _climb = null;
             _climbCur = int.MinValue;
             foreach (var c in _climbCards) Release(c);
@@ -288,98 +262,6 @@ namespace MV.UI
         }
 
         float Speed => _run?.Setup != null ? Math.Max(1, _run.Setup.TimeScale) : 1;
-
-        // ---------------- 지팡이 손패(머지 연출) ----------------
-
-        double DmgMul(RunState s) => s.Tables != null ? RunFormulas.CardMul(s, CardEffectType.DmgMul) : 1;
-
-        void TickHand(RunState s)
-        {
-            if (_handBusy || s.W == null) return;
-            if (_hand == null || _hand.Length != s.W.Length)
-            {
-                _hand = (int[])s.W.Clone();
-                RedrawHand(s);
-                return;
-            }
-            int mergeN = T != null ? T.RunConfig.I(RunConfigKeys.MERGE_N) : 0;
-            var steps = HudWeaponHand.Steps(_hand, s.W, mergeN, s.Bt);
-            if (steps != null && steps.Count == 0) return;
-            if (steps == null || !isActiveAndEnabled || !Animate)
-            {
-                _hand = (int[])s.W.Clone();
-                RedrawHand(s);
-                return;
-            }
-            StartCoroutine(PlayHand(s, steps, mergeN));
-        }
-
-        IEnumerator PlayHand(RunState s, List<HudHandStep> steps, int mergeN)
-        {
-            _handBusy = true;
-            foreach (var step in steps)
-            {
-                if (!step.Merge)
-                {
-                    _hand[step.Tier]++;
-                    RedrawHand(s);
-                    yield return Pop(FindSlots(step.Tier, 1), weaponAddSec);
-                    continue;
-                }
-                // 같은 단계 MERGE_N장이 모여(줄어들며) 윗단계 1장이 튀어나온다.
-                var gather = FindSlots(step.Tier, mergeN);
-                var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
-                foreach (var slot in gather) seq.Join(slot.transform.DOScale(0f, weaponMergeSec * .5f).SetEase(Ease.InBack));
-                yield return seq.WaitForCompletion();
-                HudWeaponHand.ApplyMerge(_hand, step.Tier, mergeN);
-                RedrawHand(s);
-                yield return Pop(FindSlots(step.Tier + 1, 1), weaponMergeSec);
-            }
-            _handBusy = false;
-        }
-
-        YieldInstruction Pop(List<HudWeaponSlot> slots, float sec)
-        {
-            if (slots.Count == 0) return null;
-            var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
-            foreach (var slot in slots)
-            {
-                var t = slot.transform;
-                t.localScale = Vector3.zero;
-                seq.Join(DOTween.Sequence()
-                    .Append(t.DOScale(popScale, sec * .6f).SetEase(Ease.OutQuad))
-                    .Append(t.DOScale(1f, sec * .4f).SetEase(Ease.InQuad)));
-            }
-            return seq.WaitForCompletion();
-        }
-
-        /// <summary>그 단계 칸 n개(스택 아래부터, 모자라면 장착 칸).</summary>
-        List<HudWeaponSlot> FindSlots(int tier, int n)
-        {
-            var list = new List<HudWeaponSlot>();
-            for (int i = _stackSlots.Count - 1; i >= 0 && list.Count < n; i--)
-                if (_stackSlots[i].gameObject.activeSelf && _stackSlots[i].Tier == tier) list.Add(_stackSlots[i]);
-            if (list.Count < n && _equip && _equip.Tier == tier) list.Add(_equip);
-            return list;
-        }
-
-        void RedrawHand(RunState s)
-        {
-            double mul = DmgMul(s);
-            if (_equip) { _equip.Set(T, HudWeaponHand.Equipped(_hand), mul); _equip.transform.localScale = Vector3.one; }
-            var tiers = HudWeaponHand.Stack(_hand);
-            while (_stackSlots.Count < tiers.Count && _stackTemplate)
-                _stackSlots.Add(Instantiate(_stackTemplate, stack, false));
-            for (int i = 0; i < _stackSlots.Count; i++)
-            {
-                var slot = _stackSlots[i];
-                bool on = i < tiers.Count;
-                slot.gameObject.SetActive(on);
-                if (!on) continue;
-                slot.Set(T, tiers[i], mul);
-                slot.transform.localScale = Vector3.one;
-            }
-        }
 
         // ---------------- 계단 등급 카드(Out → Prev → Current → Next → In) ----------------
 
