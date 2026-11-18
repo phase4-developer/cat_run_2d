@@ -11,6 +11,10 @@ namespace MV.View
     {
         [SerializeField] Camera _camera;
         ViewConfig _cfg;
+        static readonly int s_fogColor = Shader.PropertyToID("_MvFogColor");
+        static readonly int s_fogParams = Shader.PropertyToID("_MvFogParams");
+        /// <summary>색 안개 그림이 먼 끝에서 나타나는 거리 m(안개 끝 앞 이만큼 동안 알파 0 → 1).</summary>
+        public const double FogPopLen = 6;
 
         public void Init(ViewConfig cfg, Camera cam)
         {
@@ -22,6 +26,10 @@ namespace MV.View
         {
             if (_cfg == null || _camera == null) return;
             var ct = _camera.transform;
+            // 색 안개 전역값(MV_Fog.hlsl): 안개색 = 카메라 배경(테마 fog), 시작·범위 = view.fogStart·fogRange.
+            DepthSortable.FogColor = _camera.backgroundColor;
+            Shader.SetGlobalColor(s_fogColor, _camera.backgroundColor);
+            Shader.SetGlobalVector(s_fogParams, new Vector4((float)_cfg.FogStart, (float)_cfg.FogRange, 0f, 0f));
             Billboard.SyncAll(ct.rotation);
             SortAll(ct.position, ct.forward, _cfg);
         }
@@ -44,7 +52,7 @@ namespace MV.View
                 s.ApplyVisible(shown);
                 if (!shown) continue;
                 s.ApplyOrder(DepthMath.SortingOrder(dProbe, s.Bias, s.Rank, cfg.SortQuant));
-                s.ApplyFogAlpha((float)DepthMath.FogAlpha(dAnchor, cfg.FogStart, cfg.FogRange));
+                s.ApplyFog((float)DepthMath.FogK(dAnchor, cfg.FogStart, cfg.FogRange), (float)DepthMath.FogPopAlpha(dAnchor, cfg.FogStart, cfg.FogRange, FogPopLen));
             }
         }
     }

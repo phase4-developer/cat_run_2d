@@ -27,6 +27,10 @@ namespace MV.View
         /// <summary>그림 알파 = 1 − fogK(02 §2.4.1). 고양이·이펙트·가산광은 쓰지 않는다.</summary>
         public static double FogAlpha(double d, double fogStart, double fogRange) => 1 - FogK(d, fogStart, fogRange);
 
+        /// <summary>색 안개 그림의 등장 페이드 알파: 안개 끝(fogStart + fogRange) 앞 <paramref name="popLen"/> m 동안 1 → 0. 그 앞은 1.</summary>
+        public static double FogPopAlpha(double d, double fogStart, double fogRange, double popLen) =>
+            popLen <= 0 ? 1 : Math.Max(0, Math.Min(1, (fogStart + fogRange - d) / popLen));
+
         /// <summary>정본 근평면 컷: 앵커 d &lt; nearCut이면 그 그림 전체를 숨긴다.</summary>
         public static bool IsNearCut(double d, double nearCut) => d < nearCut;
 
