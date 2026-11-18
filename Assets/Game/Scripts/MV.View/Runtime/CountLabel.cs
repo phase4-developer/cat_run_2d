@@ -5,19 +5,20 @@ namespace MV.View
 {
     /// <summary>
     /// 글자판 프리팹 `Obj_Text_Count`(디자이너 리소스, 노션 「게이트 카운터 프리팹 설명」)를 채운다.
-    /// 자식 이름: `Title`(제목 TMP) · `Count_Number`(숫자 TMP) · `Count_Gauge`(막대 바탕) ▸ `Gauge_Pivot`(x 배율 0~1 = 채움) ▸ `Gauge_Color`.
-    /// 오브젝트 프리팹이 이 프리팹을 품고 있으면 <see cref="Find"/>가 런타임에 붙인다(프리팹에 미리 붙여 둘 필요 없음).
-    /// 위치·크기·색은 프리팹 값 그대로 두고 글자·보임·막대 길이만 바꾼다. 안개 알파 = opacity × (1 − fogK)(<see cref="IFogAlphaTarget"/>).
+    /// 이 컴포넌트는 글자판 프리팹 뿌리에 붙어 있고, 제목·숫자·막대·막대 피벗은 Inspector 참조다(이름으로 찾지 않는다).
+    /// 오브젝트 프리팹은 글자판 프리팹을 중첩해 품는다. 실행 중에 이 컴포넌트를 붙이거나 만들지 않는다.
+    /// 위치·크기·색·정렬 순서(그룹 안 맨 위 = 100대)는 프리팹 값 그대로 두고 글자·보임·막대 길이만 바꾼다. 안개 알파 = opacity × (1 − fogK)(<see cref="IFogAlphaTarget"/>).
     /// </summary>
     public sealed class CountLabel : MonoBehaviour, IFogAlphaTarget
     {
-        public const string NumberName = "Count_Number", TitleName = "Title", GaugeName = "Count_Gauge", PivotName = "Gauge_Pivot";
-        /// <summary>그룹 안 맨 위(정본 글자판 편향 −0.05와 같은 결과, <see cref="ObjectViewFactory"/> TMP 라벨과 같은 값). 프리팹 안 순서는 이 위에 더한다.</summary>
+        public const string PrefabPath = "Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_Text_Count.prefab";
+        /// <summary>그룹 안 맨 위(정본 글자판 편향 −0.05와 같은 결과). 글자판 프리팹의 정렬 순서가 이 값대에 있고, 한 줄 글자(<see cref="RunObjectView"/>)도 같은 층을 쓴다.</summary>
         public const int SortBase = 100;
 
-        TMP_Text _title, _number;
-        GameObject _gauge;
-        Transform _pivot;
+        [SerializeField] TMP_Text _title;
+        [SerializeField] TMP_Text _number;
+        [SerializeField] GameObject _gauge;
+        [SerializeField] Transform _pivot;
         Vector3 _pivotScale = Vector3.one;
         bool _bound;
         string _titleText, _numberText;
@@ -28,14 +29,11 @@ namespace MV.View
         public GameObject GaugeRoot => _gauge;
         public Transform Pivot => _pivot;
 
-        /// <summary><paramref name="root"/> 아래에서 `Count_Number`를 가진 글자판을 찾아 붙인다. 없으면 null.</summary>
+        /// <summary><paramref name="root"/> 아래 글자판 프리팹의 <see cref="CountLabel"/>. 글자판을 품지 않은 오브젝트면 null.</summary>
         public static CountLabel Find(Transform root)
         {
-            var num = Deep(root, NumberName);
-            if (num == null || num.parent == null) return null;
-            var host = num.parent;
-            if (!host.TryGetComponent(out CountLabel label)) label = host.gameObject.AddComponent<CountLabel>();
-            label.Bind();
+            var label = root.GetComponentInChildren<CountLabel>(true);
+            if (label != null) label.Bind();
             return label;
         }
 
@@ -43,14 +41,10 @@ namespace MV.View
         {
             if (_bound) return;
             _bound = true;
-            var t = transform;
-            _title = Child<TMP_Text>(t, TitleName);
-            _number = Child<TMP_Text>(t, NumberName);
-            var g = t.Find(GaugeName);
-            _gauge = g != null ? g.gameObject : null;
-            _pivot = g != null ? Deep(g, PivotName) : null;
+            if (_title == null || _number == null || _gauge == null || _pivot == null)
+                Debug.LogError($"[CountLabel] {name}: 글자판 참조가 비었습니다(제목 {_title != null}·숫자 {_number != null}·막대 {_gauge != null}·피벗 {_pivot != null}). " +
+                    $"{PrefabPath}의 CountLabel Inspector에서 연결하세요. 빈 칸은 그리지 않습니다.", this);
             if (_pivot != null) _pivotScale = _pivot.localScale;
-            foreach (var r in GetComponentsInChildren<Renderer>(true)) r.sortingOrder += SortBase;
             if (_title != null) _titleText = _title.text;
         }
 
@@ -87,24 +81,6 @@ namespace MV.View
         {
             if (_title != null) _title.alpha = alpha;
             if (_number != null) _number.alpha = alpha;
-        }
-
-        static T Child<T>(Transform t, string name) where T : Component
-        {
-            var c = t.Find(name);
-            return c != null ? c.GetComponent<T>() : null;
-        }
-
-        static Transform Deep(Transform t, string name)
-        {
-            for (int i = 0; i < t.childCount; i++)
-            {
-                var c = t.GetChild(i);
-                if (c.name == name) return c;
-                var d = Deep(c, name);
-                if (d != null) return d;
-            }
-            return null;
         }
     }
 }

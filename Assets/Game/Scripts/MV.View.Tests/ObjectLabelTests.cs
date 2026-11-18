@@ -109,6 +109,21 @@ namespace MV.View.Tests
         [TestCase(2)]
         public void Fmt_MatchesProto(int c) => Assert.That(ObjectLabel.Fmt(s_fmtIn[c]), Is.EqualTo(s_fmtOut[c]));
 
+        /// <summary>글자판 컴포넌트·참조·정렬 순서는 프리팹이 원본이다(실행 중에 붙이거나 이름으로 찾지 않는다).</summary>
+        [Test]
+        public void CountLabelPrefab_HasComponentRefsAndTopSortOrder()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CountLabel.PrefabPath);
+            Assert.That(prefab, Is.Not.Null, CountLabel.PrefabPath);
+            var label = prefab.GetComponent<CountLabel>();
+            Assert.That(label, Is.Not.Null, "글자판 프리팹 뿌리에 CountLabel");
+            var so = new SerializedObject(label);
+            foreach (var field in new[] { "_title", "_number", "_gauge", "_pivot" })
+                Assert.That(so.FindProperty(field).objectReferenceValue, Is.Not.Null, "CountLabel." + field);
+            foreach (var r in prefab.GetComponentsInChildren<Renderer>(true))
+                Assert.That(r.sortingOrder, Is.GreaterThanOrEqualTo(CountLabel.SortBase), r.name + ": 그룹 안 맨 위");
+        }
+
         [Test]
         public void CountLabel_BindsPrefab_FillsNumberAndGauge()
         {
