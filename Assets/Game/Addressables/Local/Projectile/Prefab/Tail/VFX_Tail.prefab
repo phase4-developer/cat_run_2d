@@ -79,13 +79,13 @@ TrailRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: -1
+  m_SortingOrder: 9
   m_MaskInteraction: 0
   m_Time: 0.1
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.16
+    widthMultiplier: 0.24
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -438,7 +438,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.32
+      scalar: 0.48
       minScalar: 0.18
       maxCurve:
         serializedVersion: 2
@@ -823,7 +823,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 1, y: 1, z: 1}
+    m_Scale: {x: 1.5, y: 1.5, z: 1.5}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -902,7 +902,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.5
+      value: 0.75
       mode: 0
       spread: 0
       speed:
@@ -5017,7 +5017,7 @@ ParticleSystemRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingOrder: 11
   m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -5076,7 +5076,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1008127228470054093}
@@ -5163,13 +5163,13 @@ TrailRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1153377294
   m_SortingLayer: 2
-  m_SortingOrder: -2
+  m_SortingOrder: 8
   m_MaskInteraction: 0
   m_Time: 0.1
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.5
+    widthMultiplier: 0.75
     widthCurve:
       serializedVersion: 2
       m_Curve:
