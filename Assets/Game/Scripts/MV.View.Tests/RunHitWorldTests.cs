@@ -417,6 +417,9 @@ namespace MV.View.Tests
         /// 시험용 모듈: 관리자가 모르는 새 모듈이 받은 이벤트를 적는다(모듈 확장 때 관리자를 고치지 않아도 되는지 확인).
         /// 시험 클래스 안 중첩 클래스로 둔다. 같은 이름의 스크립트 파일로 두면 Editor 전용 어셈블리(MV.View.Tests)의 스크립트 자산이 되어
         /// Unity가 GameObject에 붙이기를 거부한다(「Can't add script behaviour … because it is an editor script」, 잡 87aa0e2ec2c5).
+        /// 중첩해도 소속 어셈블리는 그대로(Editor 전용)이고, 스크립트 자산(MonoScript)이 없는 형식이 그 검사를 거치지 않는 Unity 동작에 기댄다(중앙 Unity.md 「자동 시험 환경」, IC-20261118-018).
+        /// 그래서 시험 안에서 만들고 버리는 기록용으로만 쓰고 Inspector·Prefab·Scene에 저장하지 않는다. 이 시험의 PASS는 관리자 → 뷰 → 모듈 이벤트 전달만 보장하고,
+        /// 이 형식의 직렬화·Prefab 자산 연결은 보장하지 않는다. 정상 구성(런타임 플랫폼 시험 어셈블리 `MV.Tests.PlayMode`)은 MV.Run 참조가 없어 asmdef(통합 Writer) 변경이 필요해 쓰지 않았다.
         /// </summary>
         sealed class RecordingObjectModule : RunObjectModule
         {
