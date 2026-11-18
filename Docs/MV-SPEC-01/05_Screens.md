@@ -600,19 +600,19 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ### 5.3.2 시간 규칙 (실시간)
 
-정본 값을 `300_runConfig`(키 묶음 `ui.hand`, [07 §7.3.3](07_Tables.md) 그룹 106)로 둔다. 머지 장수 3은 그룹 104 `MERGE_N`.
+정본 값은 무기 섹션 프리팹 직렬화 필드 `hand.*`(표 키 없음, 2026-11-19 사용자 결정 「이런 연출값은 프리팹 직렬화값으로 사용하고 관련 테이블값은 제거하는게 좋겠어」, MV-UI3-HUD3)의 기본값으로 둔다. 머지 장수 3은 그룹 104 `MERGE_N`.
 
 | 키(제안) | 값 | 뜻 | L |
 |---|---|---|---|
-| `ui.hand.budget` | 3 | 한 묶음(전달+머지)을 이 초 안에 끝냄 | L1162 |
-| `ui.hand.leftMin` | 0.4 | 남은 예산 하한 | L1171 |
-| `ui.hand.dealCost` | 0.12 | 1장 전달 = 0.12단위 | L1172 |
-| `ui.hand.unitMin`·`unitMax` | 0.07·0.54 | 1단위 시간 범위 | L1173 |
-| `ui.hand.dealGapMax` | 0.05 | 전달 간격 = `min(0.05, u×0.12)` | L1180 |
-| `ui.hand.dealGapMul` | 0.12 | 위 식의 `u×0.12` 계수([07 §7.3.3](07_Tables.md) 그룹 106) | L1180 |
-| `ui.hand.mergeMul` | 0.92 | 머지 시간 md = `u × 0.92` | L1188 |
-| `ui.hand.moveMul` | 0.9 | 모으는 이동 = `md × 0.9` | L1189 |
-| `ui.hand.afterMax`·`afterMul` | 0.04·0.08 | 머지 뒤 쉼 = `min(0.04, u×0.08)` | L1194 |
+| `hand.budget` | 3 | 한 묶음(전달+머지)을 이 초 안에 끝냄 | L1162 |
+| `hand.leftMin` | 0.4 | 남은 예산 하한 | L1171 |
+| `hand.dealCost` | 0.12 | 1장 전달 = 0.12단위 | L1172 |
+| `hand.unitMin`·`unitMax` | 0.07·0.54 | 1단위 시간 범위 | L1173 |
+| `hand.dealGapMax` | 0.05 | 전달 간격 = `min(0.05, u×0.12)` | L1180 |
+| `hand.dealGapMul` | 0.12 | 위 식의 `u×0.12` 계수 | L1180 |
+| `hand.mergeMul` | 0.92 | 머지 시간 md = `u × 0.92` | L1188 |
+| `hand.moveMul` | 0.9 | 모으는 이동 = `md × 0.9` | L1189 |
+| `hand.afterMax`·`afterMul` | 0.04·0.08 | 머지 뒤 쉼 = `min(0.04, u×0.08)` | L1194 |
 
 `u = clamp(left / U, 0.07, 0.54)`, `left = max(0.4, 3 − (지금 − t0))`, `U = 남은 머지 수 + 남은 전달 수 × 0.12`(0이면 0.54). 남은 머지 수는 손패+대기열로 「3장 → 다음 등급, 최고 8」을 끝까지 계산(L1163~1169). 완전히 쉬는 동안 `t0` = 지금.
 
@@ -1202,7 +1202,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 | [03](03_ResourcePipeline.md) | 아틀라스 `Atlas_UI_Common/Hud/Lobby/Icon/Card`와 스프라이트 이름, TMP 글꼴 자산 이름, TMP 스프라이트 자산 `TMP_Inline`, 머티리얼 프리셋 `TMP_Mat_*`, 컨텐츠·메타 아이콘 이름 규칙(03 기준 `UI_Icon_*`·`Tex_*`로 통일함. 모드 아이콘 `UI_Icon_Mode_*`, 모드 배경 `Tex_Mode_*`) |
 | [04](04_GameRules.md) | 표시 등급 `HandDisplayModel` 입력 이벤트, 런 dt 상한, 일시정지 중 Tick 정지 |
 | [06](06_Effects.md) | 팝업 글·배너 문구 목록, 플래시 호출, 히트스톱은 UI 시계에 영향 없음 |
-| [07](07_Tables.md) | `09_uiResource` 표(제안, 번호 확정), `103_item.lookName`, `301_zone.mapCol1/mapCol2`, `13_areaUpgrade`·`14_rebirthPerk` 값 표기 열, `300_runConfig` `ui.hand.*` 키, `07_consumeType.iconAtlas/iconColumn`, `08_adPlacement` 행(dia·skip·collect3·interstitial·modeTicket) |
+| [07](07_Tables.md) | `09_uiResource` 표(제안, 번호 확정), `103_item.lookName`, `301_zone.mapCol1/mapCol2`, `13_areaUpgrade`·`14_rebirthPerk` 값 표기 열, `300_runConfig` `hand.*` 키, `07_consumeType.iconAtlas/iconColumn`, `08_adPlacement` 행(dia·skip·collect3·interstitial·modeTicket) |
 | [08](08_Content.md) | `400_content.hudId`(제안)·`banner`, `05_contentOpen` 메타 행의 `key`·아이콘·문구, D-35 결과에 따른 §8.6.3 수정, 메타 화면 `IMetaPanelSource` 내용 |
 | [09](09_Save.md) | 본 해금·본 컨텐츠(NEW), 모드 단계·입장권·광고 횟수(날짜 기준), `settings.muted`, 컨텐츠 메뉴 마지막 탭 |
 | [12](12_Acceptance.md) | 9:16 1080×1920에서 정본 캡처 대조, 이 문서의 「만들지 않는 것」 목록 |

@@ -95,7 +95,7 @@ namespace MV.Fx
     /// </summary>
     public sealed class MvFlyLayer
     {
-        public enum Mode { ToHud, HudToHud, HudToWorld, Card }
+        public enum Mode { ToHud, HudToHud, HudToWorld }
 
         struct Job
         {
@@ -113,10 +113,9 @@ namespace MV.Fx
         readonly List<Job> _jobs = new List<Job>(32);
         int _nextId = 1;
 
-        /// <summary>`300_runConfig` fly.*·flyCard.*(<see cref="FromTables"/>가 채운다, 코드 기본값 없음).</summary>
+        /// <summary>`300_runConfig` fly.*(<see cref="FromTables"/>가 채운다, 코드 기본값 없음). 룰렛 카드 비행은 HUD Card Pos 섹션이 맡는다(MV-UI3-HUD3).</summary>
         public float Time, RemoveSec, StartScale, EndScale, EndAlpha;
-        public float CardTime, CardRemoveSec;
-        public MvCubicBezier Curve, CardCurve;
+        public MvCubicBezier Curve;
         /// <summary>동시 비행 상한(06 §6.14, 24, 표 키 없음). 넘으면 그림 없이 도착 시점만 지킨다.</summary>
         public int MaxIcons = 24;
 
@@ -142,10 +141,7 @@ namespace MV.Fx
                 StartScale = F(RunConfigKeys.Fly_StartScale),
                 EndScale = F(RunConfigKeys.Fly_EndScale),
                 EndAlpha = F(RunConfigKeys.Fly_EndAlpha),
-                CardTime = F(RunConfigKeys.FlyCard_Time),
-                CardRemoveSec = F(RunConfigKeys.FlyCard_RemoveMs) / 1000f,
                 Curve = MvCubicBezier.FromConfig(c, RunConfigKeys.Fly_Bezier),
-                CardCurve = MvCubicBezier.FromConfig(c, RunConfigKeys.FlyCard_Bezier),
             };
         }
 
@@ -169,12 +165,6 @@ namespace MV.Fx
             Mode = Mode.HudToWorld, Target = icon, From = fromCenter, World = world, S0 = 1.1f, S1 = 0.55f, A1 = 1,
         });
 
-        /// <summary>룰렛 카드 비행 `flycard`(0.6 s, `(.55,0,.75,.4)`, 620 ms 제거).</summary>
-        public int FlyCard(Vector2 from, Vector2 to, int cardId) => Add(new Job
-        {
-            Mode = Mode.Card, Target = FlyTarget.Hand, From = from, To = to, Resolved = true, Amount = cardId, S0 = 1, S1 = 1, A1 = 1,
-        });
-
         int Add(Job j)
         {
             j.Id = _nextId++;
@@ -183,7 +173,7 @@ namespace MV.Fx
         }
 
         /// <summary>진행 0~1에서 위치 비율(곡선 적용). 이동 시간이 지나면 1.</summary>
-        public float Progress(float t, bool card = false) => (card ? CardCurve : Curve).Evaluate(Mathf.Clamp01(t / (card ? CardTime : Time)));
+        public float Progress(float t) => Curve.Evaluate(Mathf.Clamp01(t / Time));
 
         public void Step(float realDt)
         {
@@ -202,9 +192,7 @@ namespace MV.Fx
                 if (j.T == 0 && View != null && i < MaxIcons) View.Show(j.Id, j.Target, j.Amount);
                 if (j.T == 0 && dt == 0) dt = 1e-6f;
                 j.T += dt;
-                bool card = j.Mode == Mode.Card;
-                float k = Mathf.Clamp01(j.T / (card ? CardTime : Time));
-                float e = (card ? CardCurve : Curve).Evaluate(k);
+                float e = Curve.Evaluate(Mathf.Clamp01(j.T / Time));
                 if (View != null)
                     View.Place(j.Id, Vector2.LerpUnclamped(j.From, j.To, e), Mathf.LerpUnclamped(j.S0, j.S1, e), Mathf.LerpUnclamped(1, j.A1, e));
                 _jobs[i] = j;
@@ -212,7 +200,7 @@ namespace MV.Fx
             for (int i = _jobs.Count - 1; i >= 0; i--)
             {
                 var j = _jobs[i];
-                if (j.Delay > 0 || j.T < (j.Mode == Mode.Card ? CardRemoveSec : RemoveSec)) continue;
+                if (j.Delay > 0 || j.T < RemoveSec) continue;
                 _jobs.RemoveAt(i);
                 View?.Hide(j.Id);
                 Arrived?.Invoke(j.Target, j.Amount);

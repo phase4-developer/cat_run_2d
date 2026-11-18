@@ -330,7 +330,7 @@ MvTables.Current = tables;
 | 열 | 타입 | 뜻 |
 |---|---|---|
 | id | int | `300{그룹 3}{순번 3}` |
-| key | string | 키 이름. 그룹 001~008은 [02](02_Visual.md)·[06](06_Effects.md)의 소문자 점 표기(`view.fogStart`), 그룹 101~105는 [04](04_GameRules.md)의 UPPER_SNAKE(`RUN_SPEED`), 그룹 106은 [05](05_Screens.md)의 `ui.hand.*` |
+| key | string | 키 이름. 그룹 001~008은 [02](02_Visual.md)·[06](06_Effects.md)의 소문자 점 표기(`view.fogStart`), 그룹 101~105는 [04](04_GameRules.md)의 UPPER_SNAKE(`RUN_SPEED`) |
 | value | string | **문자열로 저장**. `unit = color`면 색, `/`가 있으면 리스트, 그 밖은 double로 읽는다 |
 | unit | string | 단위(`m`, `s`, `ms`, `color`, `배` …) |
 | #근거 | string | 정본 줄·태그(로더 무시) |
@@ -345,11 +345,11 @@ MvTables.Current = tables;
 | 004 | `shake.*.amp/.time` | [06 §6.6](06_Effects.md) | 18 | 흔들림 9종 |
 | 005 | `hitstop.*` | [06 §6.6](06_Effects.md) | 3 | enemyKill 0.03, wallBreak 0.06, coinBreak 0.03 |
 | 006 | `fx.*` | [06](06_Effects.md) | 6 | 입자 상한, brickFlushInterval 0.22 등 |
-| 007 | `pop.*`, `fly.*`, `flyCard.*` | [06](06_Effects.md) | 18 | 숫자 팝업·비행 |
+| 007 | `pop.*`, `fly.*` | [06](06_Effects.md) | 15 | 숫자 팝업·비행(룰렛 카드 비행 `flyCard.*` 3개는 HUD 프리팹 직렬화로 옮겨 삭제, MV-UI3-HUD3) |
 | 008 | `banner.*`, `toast.*`, `flash.*`, `warp.*` | [06](06_Effects.md) | 15 | 배너·토스트·플래시·우다다 화면 |
-| 101~106 | UPPER_SNAKE | **이 문서**(값 근거는 04) | 아래 | 런 규칙 상수 |
+| 101~105 | UPPER_SNAKE | **이 문서**(값 근거는 04) | 아래 | 런 규칙 상수 |
 
-그룹 001~008의 키·값은 02·06 표가 정본이고 이 문서에 옮겨 적지 않는다(두 곳에 값이 있으면 어긋난다). 런 규칙 그룹 101~106은 아래가 정본이다.
+그룹 001~008의 키·값은 02·06 표가 정본이고 이 문서에 옮겨 적지 않는다(두 곳에 값이 있으면 어긋난다). 런 규칙 그룹 101~105는 아래가 정본이다.
 
 **그룹 101 이동·막힘** (`300101xxx`)
 
@@ -438,27 +438,15 @@ MvTables.Current = tables;
 | STORM_JIT_TARGET | 0.3 | m | [프로토] L2168 폭풍 착탄 x 흔들림 반폭(대상 있을 때) |
 | STORM_JIT_FREE | 2 | m | [프로토] L2168 폭풍 착탄 x·z 흔들림 반폭(대상 없을 때) |
 
-**그룹 106 손패 연출 시간** (`300106xxx`) — 키 이름은 [05 §5.3](05_Screens.md) `ui.hand.*`
-
-| key | value | 근거 |
-|---|---|---|
-| ui.hand.budget | 3 | [프로토] L1162 한 묶음(전달+머지) 시간 예산(초) |
-| ui.hand.leftMin | 0.4 | [프로토] L1171 남은 예산 하한 |
-| ui.hand.dealCost | 0.12 | [프로토] L1172 1장 전달 = 0.12단위 |
-| ui.hand.unitMin | 0.07 | [프로토] L1173 1단위 시간 하한 |
-| ui.hand.unitMax | 0.54 | [프로토] L1173 1단위 시간 상한 |
-| ui.hand.dealGapMax | 0.05 | [프로토] L1180 전달 간격 = min(0.05, u × dealGapMul) |
-| ui.hand.dealGapMul | 0.12 | [프로토] L1180 `u×0.12`(05 표에 없던 계수. 값이 dealCost와 같아도 뜻이 달라 따로 둔다) |
-| ui.hand.mergeMul | 0.92 | [프로토] L1188 머지 시간 md = u × 0.92 |
-| ui.hand.moveMul | 0.9 | [프로토] L1189 모으는 이동 = md × 0.9 |
-| ui.hand.afterMax | 0.04 | [프로토] L1194 머지 뒤 쉼 = min(0.04, u × afterMul) |
-| ui.hand.afterMul | 0.08 | [프로토] L1194 |
+**그룹 106 손패 연출 시간**은 삭제했다. 값(예산 3·하한 0.4·전달 0.12·단위 0.07~0.54·간격 0.05/0.12·머지 0.92·이동 0.9·쉼 0.04/0.08, [프로토] L1162~L1194)은 [05 §5.3.2](05_Screens.md)대로 무기 섹션 프리팹 직렬화 필드 `hand.*`(표 키 없음, 2026-11-19 사용자 결정 「이런 연출값은 프리팹 직렬화값으로 사용하고 관련 테이블값은 제거하는게 좋겠어」, MV-UI3-HUD3)의 기본값이다.
 
 머지 장수(3장 → 1장)는 연출 값이 아니라 규칙이라 그룹 104 `MERGE_N`(3, [프로토] L1166·L819, 덱 머지도 같은 값)에 둔다.
 
 키 수: 그룹 101 = 13, 102 = 12, 103 = 6, 104 = 12(`MERGE_N` 포함), 105 = 17, 106 = 11 → **이 문서 소유 키 71개**. 02·06 그룹 001~008 = 95개. 합계 **166개**.
 
 MV-SPEC-02 반영(MV-DATA-SPEC2): 그룹 101 `RUN_SPEED_MID`, 104 `WEAPON_STACK_MAX`·`STUCK_END_SEC` 3개 추가(표 행 수는 `MvTablesLoadTests` 기준 171).
+
+MV-UI3-HUD3: 연출 값 그룹 106 `ui.hand.*` 11개와 007 `flyCard.*` 3개를 프리팹 직렬화로 옮겨 삭제(표 행 수 175 → 161, `MvTablesLoadTests`).
 
 **04 본문 이름 → 실제 키(같은 값을 두 곳에 두지 않는다)**
 
@@ -512,7 +500,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2): 그룹 101 `RUN_SPEED_MID`, 104 `WEAPON_STACK_
 | rlFlipSec | 0.06 | [프로토] L2367 | 얼굴 넘김 간격 |
 | rlSlowWin / rlSlowK | 0.4 / 0.35 | [프로토] L2367 | 마지막 0.4초 감속 |
 | rlFlyDelay | 1.5 | [프로토] L2371 | 확정 → 비행(게임 초) |
-| rlFlyMs | 620 | [프로토] L2375 | 비행 → 적용(실시간 ms). 그림 `flyCard.removeMs`와 같아야 함(검증 경고) |
+| rlFlyMs | 620 | [프로토] L2375 | 비행 → 적용(실시간 ms). HUD 카드 비행도 이 시뮬 값(FlyLeft)을 읽는다(300 `flyCard.*` 삭제, MV-UI3-HUD3) |
 | rlEndPad | 0.3 | [프로토] L2391 | 전부 도착 후 종료 여유 |
 | cmpFrom | 30 | MV-SPEC-02 6-5(Q-07) | 압축 시작 N |
 | riseCap / riseBase / risePerStep / riseLead | 1.5 / 0.5 / 0.1 / 0.4 | MV-SPEC-02 6-5 | 오르기 연출 시간 상한·기본·칸당·앞당김 |
@@ -2174,7 +2162,7 @@ Localization(Unity String Tables)을 `LocalizationManager.GetLoc(collection, key
 | 08 | placement·key 유일, dailyLimit ≥ 0. 화면이 찾는 key(`dia`·`skip`·`collect3`·`interstitial`·`modeTicket`)가 있음 | 오류 |
 | 09 | key 유일, `atlas+sprite`와 `address` 중 하나만 채움 | 오류 |
 | 13·14 | valueFormat에 `{0}`가 정확히 1개 | 오류 |
-| 짝 값 | `330.rlFlyMs = flyCard.removeMs`, `108[sgatePass].delayMs = fly.removeMs`(결과 광고 배수는 `08[collect3].mul` 하나, `00_config.collectAdMul` 삭제) | 경고 |
+| 짝 값 | `108[sgatePass].delayMs = fly.removeMs`(결과 광고 배수는 `08[collect3].mul` 하나, `00_config.collectAdMul` 삭제) | 경고 |
 
 ### 7.13.4 저장 참조(표가 바뀐 뒤 옛 저장을 읽을 때)
 

@@ -685,13 +685,13 @@ for (const u of R.objs) if (breakable(u) && Math.abs(u.x-x) < 3.6+u.hw && Math.a
 | stepHand(dt) | **실시간 dt**. 대기 중이면 `t0 = clock`. deal: 1장 추가 후 `busy = min(0.05, u×0.12)`. cascade: 3장 이상인 **가장 낮은 등급**의 앞 3장을 가운데 카드로 모음 `md = u×0.92`, 끝나면 3장 제거·다음 등급 1장 추가·merge 소리·`busy = min(0.04, u×0.08)`. 더 없으면 큐에서 제거 | L1174~1197 |
 | 등급 상승 표시 | 장착 카드 등급이 오르면 런 중 `pop("변신! ${LOOKS[t-1]}", WGRADE[t-1], 1.15)`, 불꽃, lvup 소리 | L1218~1221 |
 
-| 상수 | 값 | → `300_runConfig` |
+| 상수 | 값 | → 무기 섹션 프리팹 직렬화 `hand.*`(MERGE_N만 `300_runConfig`) |
 |---|---|---|
-| 예산 3초, 최소 남은 시간 0.4 | 3 / 0.4 | `ui.hand.budget`, `ui.hand.leftMin` |
-| 전달 1장 = 0.12단위 | 0.12 | `ui.hand.dealCost` |
-| u 범위 0.07~0.54 | | `ui.hand.unitMin`, `ui.hand.unitMax` |
-| 전달 간격 상한 0.05 | | `ui.hand.dealGapMax`, `ui.hand.dealGapMul` |
-| 머지 시간 u×0.92, 후속 min(0.04, u×0.08) | | `ui.hand.mergeMul`, `ui.hand.afterMax`, `ui.hand.afterMul` |
+| 예산 3초, 최소 남은 시간 0.4 | 3 / 0.4 | `hand.budget`, `hand.leftMin` |
+| 전달 1장 = 0.12단위 | 0.12 | `hand.dealCost` |
+| u 범위 0.07~0.54 | | `hand.unitMin`, `hand.unitMax` |
+| 전달 간격 상한 0.05 | | `hand.dealGapMax`, `hand.dealGapMul` |
+| 머지 시간 u×0.92, 후속 min(0.04, u×0.08) | | `hand.mergeMul`, `hand.afterMax`, `hand.afterMul` |
 | 3장 → 1장 | 3 | `MERGE_N`(그룹 104, 논리 머지 3과 같은 값; `addWeapon`·`deckAdd`도 이 값) |
 
 배치·CSS 수치(카드 한 변 `min(박스폭, W×0.105)`, 최대 높이 화면 34% 등)는 [05](05_Screens.md). 표시 지연을 유지할지는 결정 대기(D-28).
