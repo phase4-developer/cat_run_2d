@@ -45,7 +45,6 @@ namespace MV.View
         public Transform Ground;
         [Tooltip("바닥 판을 옮기는 단위(m). 판석 4.4 · 잔디 4 · 연석 2의 공배수")] public float GroundSnap = 44f;
         [Tooltip("켜면 기존 지면 메쉬(GroundStripMesh)를 숨긴다")] public bool HideBuiltInGround = true;
-        [Tooltip("켜면 기존 길가 소품(PropStreamer)을 숨긴다")] public bool HideBuiltInProps = false;
         [Tooltip("계단 정산 옆 시점에서 오른쪽 끝을 잘라 줄이는 카메라 쪽 바닥 판(왼쪽 끝은 그대로)")] public Transform NearGround;
         [Tooltip("계단 정산 옆 시점에서 잘린 끝에 세우는 땅 단면(꺼 둔 채 둔다)")] public Transform SideCut;
 
@@ -196,7 +195,6 @@ namespace MV.View
             foreach (var d in SkyDecos) if (d != null && d.Target != null) d.Base = d.Target.localPosition;
             ApplyShadowSettings();
             if (HideBuiltInGround) foreach (var g in FindObjectsByType<GroundStripMesh>(FindObjectsSortMode.None)) g.GetComponent<Renderer>().enabled = false;
-            if (HideBuiltInProps) foreach (var p in FindObjectsByType<PropStreamer>(FindObjectsSortMode.None)) p.gameObject.SetActive(false);
             if (DecoTemplate != null) DecoTemplate.SetActive(false);
         }
 

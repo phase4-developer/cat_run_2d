@@ -247,8 +247,6 @@ namespace MV.Boot
             _frame.Reset();
 
             _viewSource.Run = new RunStateViewSource(_sim.State, _tables);   // 카메라가 로비 자세에서 런 자세로 쓸어 간다(02 §2.2.2)
-            var s = _sim.State;
-            _world.RebuildProps(s.Base, Math.Max(0, s.Gz - s.Base), false, s.WorldY);
             Phase = MvLoopPhase.Run;
 
             MvUiNav.EnterRunAsync(new RunStateHudSource(() => _sim?.State, () => _savedSouls, _world.Rig.Model.SideRow?.turnSec ?? 0)).Forget(Debug.LogException);

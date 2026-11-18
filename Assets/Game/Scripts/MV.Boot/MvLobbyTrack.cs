@@ -26,7 +26,6 @@ namespace MV.Boot
             _sim = preview;
             var s = preview.State;
             LobbyTrack.Pick(s.Objs, s.Base, tables.RunConfig.D(RunConfigKeys.Lobby_ObjZMax), _objs);
-            world.RebuildProps(s.Base, Math.Max(0, s.Gz - s.Base), false, s.WorldY);
             Sync(world);
         }
 

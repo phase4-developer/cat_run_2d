@@ -54,9 +54,7 @@ namespace MV.Boot
             MvFx.OnRunEvents(events);
             world.OnRunEvents(events);   // 오브젝트 맞음·우물 벽돌 빠짐(06 §6.13)
             foreach (var e in events)
-                if (e.Type == RunEventType.ClimbStart)   // 계단 위 새 지형(정본 buildEnv(len, from, cliff))
-                    world.RebuildProps(e.Z, Math.Max(0, s.Gz - e.Z), true, s.WorldY + e.Amount2);
-                else if (e.Type == RunEventType.Toast) MvUiToast.Show(RunToastText.Of(e));   // 모은 마나 없음·5 미만 냥파워 없음 등(런 HUD가 띄움)
+                if (e.Type == RunEventType.Toast) MvUiToast.Show(RunToastText.Of(e));   // 모은 마나 없음·5 미만 냥파워 없음 등(런 HUD가 띄움)
             world.SyncObjects(s.Objs, s.P.Z, s.WorldY);
             world.SyncCats(s);   // 플레이어·친구 고양이(02 §2.1.4)
         }

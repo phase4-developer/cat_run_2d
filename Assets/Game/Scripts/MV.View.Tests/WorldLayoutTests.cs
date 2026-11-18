@@ -5,8 +5,7 @@ using NUnit.Framework;
 namespace MV.View.Tests
 {
     /// <summary>
-    /// 티켓 03 순수 계산: 지면 띠(02 §2.4.3), 테마 소품 배치(02 §2.5.2), 상자 빌보드(02 §2.6.4).
-    /// 소품 골든 값은 정본 `buildEnv`·`hash` 식을 Node(V8)로 돌린 결과다.
+    /// 티켓 03 순수 계산: 지면 띠(02 §2.4.3), 상자 빌보드(02 §2.6.4).
     /// </summary>
     public sealed class WorldLayoutTests
     {
@@ -95,112 +94,6 @@ namespace MV.View.Tests
             Assert.That(b.Quads.Any(q => q.Part == GroundPart.SnowL && q.A.z >= 4 && q.A.z < 6), Is.False);
             Assert.That(b.Quads.Any(q => q.Part == GroundPart.SnowR && q.A.z >= 4 && q.A.z < 6), Is.True);
             Assert.That(b.Quads.Any(q => q.Part == GroundPart.SnowL && q.A.z >= 2 && q.A.z < 4), Is.True);
-        }
-
-        [Test]
-        public void Props_MatchReferenceBuildEnvGolden()
-        {
-            var list = new List<PropSpec>();
-            PropLayout.Build(0, 100, false, list);
-            Assert.That(list.Count, Is.EqualTo(336));
-            Assert.That(list.Count(p => p.Kind == PropKind.Fence), Is.EqualTo(83));
-            Assert.That(list.Count(p => p.Kind == PropKind.House), Is.EqualTo(113));
-            Assert.That(list.Count(p => p.Kind == PropKind.Roadside), Is.EqualTo(54));
-            Assert.That(list.Count(p => p.Kind == PropKind.FarHouse), Is.EqualTo(73));
-            Assert.That(list.Count(p => p.Kind == PropKind.Pole), Is.EqualTo(13));
-            AssertProp(list[0], PropKind.Fence, -5.1, -32, 0.20968645839457167);
-            AssertProp(list[1], PropKind.House, -19.274382456525927, -30.5, 0.5511390135652618);
-            AssertProp(list[2], PropKind.Roadside, 6.3114081899882875, -32, 0.03374773104587803);
-            AssertProp(list[7], PropKind.FarHouse, 39.39272942990647, -28.1, 0.34060702862916514);
-            AssertProp(list[50], PropKind.House, 12.505891408392927, 7.899999999999996, 0.6398543323302874);
-            AssertProp(list[335], PropKind.House, 12.616861525813874, 241.49999999999966, 0.5891312750682118);
-            foreach (var p in list)
-            {
-                if (p.Kind == PropKind.Fence) Assert.That(p.DrawX, Is.EqualTo(p.Side * PropLayout.FenceX));
-                if (p.Kind == PropKind.Pole) Assert.That(p.DrawX, Is.EqualTo(p.Side * PropLayout.PoleX));
-                if (p.Kind == PropKind.Roadside) Assert.That(System.Math.Abs(p.DrawX - p.Side * PropLayout.RoadsideX), Is.LessThanOrEqualTo(0.06 + 1e-12));
-                if (p.Kind == PropKind.House) Assert.That(p.DrawX, Is.EqualTo(p.GenX));
-            }
-        }
-
-        static void AssertProp(PropSpec p, PropKind kind, double x, double z, double hh)
-        {
-            Assert.That(p.Kind, Is.EqualTo(kind));
-            Assert.That(p.GenX, Is.EqualTo(x).Within(1e-12));
-            Assert.That(p.Z, Is.EqualTo(z).Within(1e-12));
-            Assert.That(p.Hh, Is.EqualTo(hh).Within(1e-12));
-        }
-
-        [TestCase("market", 20, "World_Prop_Crate_Blue_A")]
-        [TestCase("market", 10, "World_Prop_Crate_Blue_B")]
-        [TestCase("market", 30, "World_Prop_Crate_Red_B")]
-        [TestCase("market", 60, "World_Prop_Pot")]
-        [TestCase("harbor", 30, "World_Prop_Buoy")]
-        [TestCase("harbor", 50, "World_Prop_Crate_Red_Fish")]
-        [TestCase("harbor", 80, "World_Prop_Jar")]
-        [TestCase("snow", 20, "World_Prop_Snowman")]
-        [TestCase("snow", 50, "World_Prop_Jar")]
-        [TestCase("stairs", 10, "World_Prop_Pot")]
-        [TestCase("stairs", 50, "World_Prop_Jar")]
-        [TestCase("stairs", 90, "World_Prop_Bag")]
-        public void RoadsideSprite_FollowsDecoThresholds(string deco, int hhPercent, string sprite)
-        {
-            Assert.That(PropLayout.RoadsideSprite(deco, hhPercent / 100.0), Is.EqualTo(sprite));
-            var th = ViewTestTables.Theme(deco);   // 정본 1~5행은 key = deco
-            Assert.That(PropLayout.RoadsideSprite(th.roadsideProps, th.deco, hhPercent / 100.0), Is.EqualTo(sprite), "304 roadsideProps 목록으로 읽어도 정본과 같다");
-        }
-
-        [Test]
-        public void RoadsideProps_AndLineKind_FollowThemeTable()
-        {
-            foreach (var th in ViewTestTables.Load().Theme.Sorted)
-                for (int h = 0; h < 100; h++)
-                    Assert.That(th.roadsideProps, Does.Contain(PropLayout.RoadsideSprite(th.roadsideProps, th.deco, h / 100.0)), th.key + " hh " + h);
-
-            var props = ViewTestTables.WithCell(MV.Data.ThemeData.Table, "market", "roadsideProps", "World_Prop_Snowman/World_Prop_Bag").Theme.ByKey("market");
-            Assert.That(PropLayout.RoadsideSprite(props.roadsideProps, props.deco, 0.2), Is.EqualTo("World_Prop_Snowman"), "정본 그림이 목록에 없으면 hh 균등 선택");
-            Assert.That(PropLayout.RoadsideSprite(props.roadsideProps, props.deco, 0.7), Is.EqualTo("World_Prop_Bag"));
-            Assert.That(PropLayout.RoadsideSprite(new string[0], "market", 0.2), Is.Null, "빈 목록이면 소품 그림 없음");
-
-            var line = ViewTestTables.WithCell(MV.Data.ThemeData.Table, "market", "lineKind", ClothLineLayout.LineBulbs).Theme.ByKey("market");
-            Assert.That(ClothLineLayout.IsBulbs(line.lineKind), Is.True, "lineKind만 바꿔도 전구줄");
-        }
-
-        [Test]
-        public void House_DimensionsWindowsAndRoof()
-        {
-            var p = new PropSpec { Kind = PropKind.House, Side = 1, GenX = 12, Z = 30, DrawX = 12, Hh = 0.5 };
-            var h = PropLayout.House(p, 0, 3, 2, false, "stairs");
-            Assert.That(h.W, Is.EqualTo(5.8).Within(1e-12));
-            Assert.That(h.H, Is.EqualTo(3.4).Within(1e-12));
-            Assert.That(h.DoorX, Is.EqualTo(0).Within(1e-12));
-            Assert.That(h.Win0 && h.Win1, Is.True);
-            Assert.That(h.Win0X, Is.EqualTo(-1.74).Within(1e-12));
-            Assert.That(h.WallIndex, Is.EqualTo(3 % 3));
-            Assert.That(h.RoofIndex, Is.EqualTo(5 % 2));
-            Assert.That(h.RoofKind, Is.EqualTo(RoofItem.Jars));
-            Assert.That(h.Win0Lit || h.Win1Lit, Is.False, "밤이 아니면 불 없음");
-            Assert.That(h.RoofZ, Is.EqualTo(30 + 3.6 * 0.15).Within(1e-12));
-            Assert.That(PropLayout.House(p, 0, 3, 2, false, "snow").RoofKind, Is.EqualTo(RoofItem.SnowCap));
-            var farP = p; farP.Kind = PropKind.FarHouse; farP.Hh = 0.95;
-            var fh = PropLayout.House(farP, 0, 3, 2, false, "stairs");
-            Assert.That(fh.H, Is.EqualTo(2.2 + 0.95 * 2.4 + 1.2).Within(1e-12));
-            Assert.That(fh.RoofKind, Is.EqualTo(RoofItem.Tank));
-            // 문과 겹치는 창은 뺀다: hh = 0.0 → 문 x = −0.4·w·0.5
-            var p0 = p; p0.Hh = 0.0;
-            var h0 = PropLayout.House(p0, 0, 3, 2, false, "stairs");
-            Assert.That(h0.Win0, Is.EqualTo(System.Math.Abs(h0.Win0X - h0.DoorX) >= 0.9));
-        }
-
-        [Test]
-        public void ClothLines_MatchReferenceGolden()
-        {
-            var cfg = ViewTestTables.Config();
-            var z = new List<double>();
-            PropLayout.ClothLines(0, cfg, z);
-            Assert.That(z, Is.EqualTo(new double[] { 13, 26, 52, 65 }));
-            PropLayout.ClothLines(123.4, cfg, z);
-            Assert.That(z, Is.EqualTo(new double[] { 130, 143, 156, 169 }));
         }
 
         [Test]
