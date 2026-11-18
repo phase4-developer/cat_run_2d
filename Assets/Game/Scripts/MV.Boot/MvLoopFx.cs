@@ -33,7 +33,10 @@ namespace MV.Boot
             MaterialsLoaded = normal != null && add != null;
             if (!MaterialsLoaded) Debug.LogWarning("[MvLoopFx] 우다다 머티리얼을 찾지 못했습니다(" + MvFx.MatNormalAddress + ", " + MvFx.MatAddAddress + ").");
             _player = MvFx.InstallDefault(fxRoot, world.Rig, state, normal, add);
+            _hudFly = MvHudFlyBridge.Attach(_player);   // HUD 비행 그림·도착 자리(MV-UI3-HUD4)
         }
+
+        MvHudFlyBridge _hudFly;
 
         async UniTask<Material> LoadMaterialAsync(string address, CancellationToken ct)
         {
@@ -45,6 +48,8 @@ namespace MV.Boot
 
         public void Dispose()
         {
+            _hudFly?.Dispose();
+            _hudFly = null;
             if (_player != null && MvFx.Player == _player) MvFx.Install(null);
             _player = null;
             foreach (var d in _leases) d?.Dispose();

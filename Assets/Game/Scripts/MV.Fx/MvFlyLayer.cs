@@ -116,7 +116,7 @@ namespace MV.Fx
         /// <summary>`300_runConfig` fly.*(<see cref="FromTables"/>가 채운다, 코드 기본값 없음). 룰렛 카드 비행은 HUD Card Pos 섹션이 맡는다(MV-UI3-HUD3).</summary>
         public float Time, RemoveSec, StartScale, EndScale, EndAlpha;
         public MvCubicBezier Curve;
-        /// <summary>동시 비행 상한(06 §6.14, 24, 표 키 없음). 넘으면 그림 없이 도착 시점만 지킨다.</summary>
+        /// <summary>동시 비행 상한(06 §6.14, 24, 표 키 없음). 넘으면 그림 없이 도착 시점만 지킨다. 무기 카드(Hand)는 상한 없이 그린다.</summary>
         public int MaxIcons = 24;
 
         public IMvFlyView View;
@@ -127,6 +127,14 @@ namespace MV.Fx
         public event Action<FlyTarget, int> Arrived;
 
         public int ActiveCount => _jobs.Count;
+
+        /// <summary>대상별 아직 도착하지 않은 비행 수(지연 중 포함). HUD가 도착과 지급을 맞출 때 쓴다(MV-UI3-HUD4).</summary>
+        public int CountOf(FlyTarget target)
+        {
+            int n = 0;
+            for (int i = 0; i < _jobs.Count; i++) if (_jobs[i].Target == target) n++;
+            return n;
+        }
 
         /// <summary>표에서 만든다. 표가 없거나 키가 없으면 예외(대체값 없음).</summary>
         public static MvFlyLayer FromTables(MvTables t)
@@ -189,7 +197,8 @@ namespace MV.Fx
                     j.Delay = 0;
                 }
                 if (j.T == 0 && !j.Resolved) Resolve(ref j);
-                if (j.T == 0 && View != null && i < MaxIcons) View.Show(j.Id, j.Target, j.Amount);
+                // 무기 카드(Hand)는 만든 장 수 그대로 그린다(사용자 2026-11-19 「날아가는 것도 만든 장 수 그대로」, MV-UI3-HUD4).
+                if (j.T == 0 && View != null && (i < MaxIcons || j.Target == FlyTarget.Hand)) View.Show(j.Id, j.Target, j.Amount);
                 if (j.T == 0 && dt == 0) dt = 1e-6f;
                 j.T += dt;
                 float e = Curve.Evaluate(Mathf.Clamp01(j.T / Time));

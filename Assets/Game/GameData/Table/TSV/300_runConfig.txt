@@ -114,7 +114,7 @@ id	name	key	value	unit
 300103003	벽돌 조각 기준 배율	WELL_BRICK_DIV	0.1	배
 300103004	벽돌 조각 튐 시간	WELL_BRICK_LIFE	0.26	s
 300103005	벽돌 아이콘 간격	ORE_ICON_GAP_MS	60	ms
-300103006	공방 비행 아이콘 상한	CRAFT_ICON_MAX	5	개
+300103006	공방 비행 아이콘 상한	CRAFT_ICON_MAX	999	개
 300104002	체크포인트 상한	CP_MAX	2	
 300104003	플레이 가능 Area 수	PLAYABLE_AREAS	5	개
 300104004	황금 생선 기본	TOK_BASE	1	개

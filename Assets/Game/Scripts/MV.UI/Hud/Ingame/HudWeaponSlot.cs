@@ -1,7 +1,9 @@
+using DG.Tweening;
 using jjevol;
 using MV.Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MV.UI
 {
@@ -32,7 +34,15 @@ namespace MV.UI
         /// <summary>공격력 글자(<c>Slot_Attack/Value Text</c>). 스택 변형에서 꺼져 있으면 넣기만 한다.</summary>
         [SerializeField] TMP_Text attack;
 
+        [Header("머지 연출(디자이너 리소스, 없으면 크기 연출만)")]
+        [Tooltip("머지 때 하얗게 밝아지는 덮개(05 §5.3.3 wmg·wmerged 밝기). 투명도 0으로 둔다.")]
+        [SerializeField] Graphic flash;
+        [Tooltip("머지 결과 칸 위에서 터지는 반짝임(영상 7.3). 꺼 둔 채로 둔다.")]
+        [SerializeField] GameObject sparkle;
+
         public int Tier { get; private set; }
+        public bool HasFlash => flash;
+        public bool HasSparkle => sparkle;
         public string GradeSprite => grade ? grade.spriteName : null;
         public string IconSprite => icon ? icon.spriteName : null;
         public string AttackText => attack ? attack.text : null;
@@ -53,6 +63,77 @@ namespace MV.UI
         {
             _data = new WeaponSlotData(t, tier, dmgMul);
             Draw(t, tier, dmgMul);
+        }
+
+        // ---------------- 연출(무기 섹션이 시간을 정해 부른다, MV-UI3-HUD4) ----------------
+
+        Graphic[] _graphics;
+        static bool s_missingLogged;
+
+        Graphic[] Graphics => _graphics ??= GetComponentsInChildren<Graphic>(true);
+
+        void LogMissingOnce()
+        {
+            if (s_missingLogged || (flash && sparkle)) return;
+            s_missingLogged = true;
+            Debug.LogWarning("[HudWeaponSlot] 머지 연출 리소스 없음: Assets/Game/Art/UI/Prefab/HUD/Slot_Weapon.prefab에 "
+                + (flash ? "" : "흰 덮개(flash) ") + (sparkle ? "" : "반짝임(sparkle) ") + "자식이 없습니다. 크기 연출만 합니다.");
+        }
+
+        /// <summary>그림 전체 투명도(CanvasRenderer, 부품을 더 붙이지 않는다).</summary>
+        public void SetAlpha(float a)
+        {
+            foreach (var g in Graphics) if (g && g != flash) g.canvasRenderer.SetAlpha(a);
+        }
+
+        /// <summary>풀 반환·재사용 전: 연출을 멈추고 제모습으로.</summary>
+        public void ResetLook()
+        {
+            DOTween.Kill(this);
+            DOTween.Kill(transform);
+            transform.localScale = Vector3.one;
+            SetAlpha(1);
+            if (flash) flash.canvasRenderer.SetAlpha(0);
+            if (sparkle) sparkle.SetActive(false);
+        }
+
+        /// <summary>전달: 투명 → 불투명(05 §5.3.3 wdeal, ease-out).</summary>
+        public Tween PlayDeal(float sec)
+        {
+            SetAlpha(0);
+            float a = 0;
+            return DOTween.To(() => a, v => { a = v; SetAlpha(v); }, 1f, sec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(this);
+        }
+
+        /// <summary>모으기: md 동안 밝아지며 scale 1.06(05 §5.3.3 wmg, ease-in, 끝 유지).</summary>
+        public Tween PlayGather(float md, float scale)
+        {
+            LogMissingOnce();
+            var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
+            seq.Join(transform.DOScale(scale, md).SetEase(Ease.InQuad));
+            if (flash)
+            {
+                float a = 0;
+                seq.Join(DOTween.To(() => a, v => { a = v; flash.canvasRenderer.SetAlpha(v); }, 1f, md).SetEase(Ease.InQuad));
+            }
+            return seq;
+        }
+
+        /// <summary>결과: scale 1.3·밝음 → 제모습(05 §5.3.3 wmerged, ease-out) + 반짝임(영상).</summary>
+        public Tween PlayMerged(float sec, float fromScale)
+        {
+            LogMissingOnce();
+            transform.localScale = Vector3.one * fromScale;
+            if (sparkle) { sparkle.SetActive(false); sparkle.SetActive(true); }
+            var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
+            seq.Join(transform.DOScale(1f, sec).SetEase(Ease.OutQuad));
+            if (flash)
+            {
+                float a = 1;
+                flash.canvasRenderer.SetAlpha(1);
+                seq.Join(DOTween.To(() => a, v => { a = v; flash.canvasRenderer.SetAlpha(v); }, 0f, sec).SetEase(Ease.OutQuad));
+            }
+            return seq;
         }
 
         void Draw(MvTables t, int tier, double dmgMul)

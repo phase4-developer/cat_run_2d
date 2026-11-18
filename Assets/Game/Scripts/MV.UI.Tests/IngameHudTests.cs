@@ -9,7 +9,7 @@ using UnityEngine;
 namespace MV.UI.Tests
 {
     /// <summary>
-    /// MV-UI2-HUD: 디자이너 IngameScreen을 런 HUD(UIHud_Run) 겉으로 쓰기 — 등급 그림 매핑, 지팡이 머지 과정, 계단 등급 카드, 스킬 롤링 결과, 배속 토글.
+    /// MV-UI2-HUD(무기 손패는 MV-UI3-HUD4 무기 섹션): 디자이너 IngameScreen을 런 HUD(UIHud_Run) 겉으로 쓰기 — 등급 그림 매핑, 지팡이 머지 과정, 계단 등급 카드, 스킬 롤링 결과, 배속 토글.
     /// 연출(움직임·템포)은 재생 중에만 돌아 여기서는 끝 상태만 본다. 화면 연출 확인은 사람 확인(NOT_RUN 별도).
     /// </summary>
     public sealed class IngameHudTests
@@ -151,10 +151,13 @@ namespace MV.UI.Tests
                     missing.Add(it.propertyPath);
             Assert.That(missing, Is.Empty, "IngameHudView 참조");
             Assert.That(view.SpeedStateCount, Is.GreaterThan(1), "1x/2x 상태 자식");
-            Assert.That(view.Equip, Is.Not.Null, "Equip/Slot_Weapon");
-            Assert.That(view.StackSlots, Is.Not.Empty, "Stack/Slot_Weapon_Stack");
+            Assert.That(view.Weapon, Is.Not.Null, "Mid/Weapon 무기 섹션");
+            AssertRefs(view.Weapon);
+            Assert.That(view.Weapon.Equip, Is.Not.Null, "Equip/Slot_Weapon");
+            Assert.That(PrefabUtility.IsPartOfPrefabAsset(view.Weapon.StackPrefab), Is.True, "스택 복제 원본 = Slot_Weapon_Stack.prefab 에셋");
             Assert.That(view.SkillCard, Is.Not.Null, "Skill Section/Card_Skill");
-            foreach (var slot in hud.GetComponentsInChildren<HudWeaponSlot>(true)) AssertRefs(slot);
+            // flash·sparkle은 디자이너 리소스가 아직 없는 선택 항목(없으면 크기 연출만, 경고 로그).
+            foreach (var slot in hud.GetComponentsInChildren<HudWeaponSlot>(true)) AssertRefs(slot, "flash", "sparkle");
             foreach (var card in hud.GetComponentsInChildren<HudClimbCard>(true)) AssertRefs(card);
             // maskBack(Card Texture (1))은 디자이너가 일부 인스턴스에서 지운 선택 항목이라 빼고 본다(코드가 없으면 건너뜀).
             foreach (var card in hud.GetComponentsInChildren<HudSkillCard>(true)) AssertRefs(card, "maskBack");
@@ -211,19 +214,20 @@ namespace MV.UI.Tests
             var s = NewState();
             view.BindRun(() => s);
 
-            // 지팡이: 장착 = 최고 단계, 스택 = 나머지. 그림은 표(103 icon·등급 틀).
+            // 지팡이(무기 섹션): 장착 = 최고 단계, 스택 = 손패 전부(05 §5.3.1, 높은 단계가 위). 그림은 표(103 icon·등급 틀).
             s.W[1] = 2; s.W[3] = 1;
             view.TickRun(0);
-            Assert.AreEqual(3, view.Equip.Tier);
+            var weapon = view.Weapon;
+            Assert.AreEqual(3, weapon.Equip.Tier);
             var item3 = T.Item.Datas.First(i => i.tier == 3);
-            Assert.AreEqual(item3.icon, view.Equip.IconSprite);
-            Assert.AreEqual(HudGrade.Frame(T, 3).sprite, view.Equip.GradeSprite);
-            Assert.That(view.StackSlots.Where(x => x.gameObject.activeSelf).Select(x => x.Tier), Is.EqualTo(new[] { 1, 1 }));
+            Assert.AreEqual(item3.icon, weapon.Equip.IconSprite);
+            Assert.AreEqual(HudGrade.Frame(T, 3).sprite, weapon.Equip.GradeSprite);
+            Assert.That(weapon.StackSlots.Select(x => x.Tier), Is.EqualTo(new[] { 3, 1, 1 }));
             int mergeN = T.RunConfig.I(RunConfigKeys.MERGE_N);
-            HudWeaponHand.Add(s.W, 1, mergeN, null);   // 시뮬이 넣고 머지한 결과(1단계 3장 → 2단계)
+            HudWeaponHand.Add(s.W, 1, mergeN, null);   // 이벤트 없이 시뮬 값만 바뀜(1단계 3장 → 2단계) → 쉬는 중이면 시뮬 손패로 맞춘다
             view.TickRun(0);
             Assert.AreEqual(s.W[1], 0);
-            Assert.That(view.StackSlots.Where(x => x.gameObject.activeSelf).Select(x => x.Tier), Is.EqualTo(new[] { 2 }), "머지 결과가 손패에 반영");
+            Assert.That(weapon.StackSlots.Select(x => x.Tier), Is.EqualTo(new[] { 3, 2 }), "머지 결과가 손패에 반영");
 
             // 계단: 첫 등급부터, 등급이 오르면 Prev·Current·Next가 한 칸씩.
             var tiers = Tiers();
