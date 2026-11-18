@@ -1687,6 +1687,8 @@ id	group	targetLevel	priceType	priceId	priceValue
 
 Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, ConsumeTypeId: 1)`.
 
+> 결정 D-GRADE-TABLE(2026-11-19, 원장 「확정 결정」): 보상 칸 등급 틀을 위해 `grade` 열(등급 번호 → 새 등급 표 → `09_uiResource` `grade.N`)을 더한다. 표 구조는 결과 팝업 계약에서 이 절과 새 등급 표 절에 함께 적는다. 값은 정해질 때까지 더미.
+
 | 열 | 타입 | 뜻 |
 |---|---|---|
 | id | int | 양의 정수(1~) |
