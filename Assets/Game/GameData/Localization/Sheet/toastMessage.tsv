@@ -1,1 +1,8 @@
 Key	ko	en	ja
+toastMessage.contentEnterFail	입장하지 못했습니다	Couldn't enter	入場できませんでした
+toastMessage.contentNoCount	오늘은 더 입장할 수 없어요	No more entries today	本日はこれ以上入場できません
+toastMessage.locked	아직 열리지 않았어요	Not unlocked yet	まだ解放されていません
+toastMessage.researchNotEnough	캣닢이 부족해요	Not enough Catnip	キャットニップが足りません
+toastMessage.researchBusy	다른 연구가 진행 중이에요	Another research is in progress	他の研究が進行中です
+toastMessage.researchNotDone	아직 연구 중이에요	Still researching	まだ研究中です
+toastMessage.researchMax	최고 단계예요	Max level reached	最高段階です

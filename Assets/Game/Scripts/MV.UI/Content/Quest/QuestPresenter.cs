@@ -36,8 +36,8 @@ namespace MV.UI
         protected override void Build(MetaPanelModel m, MvTables tables)
         {
             var open = tables.ContentOpen.ByKey(MV.Content.MvQuestRules.QuestUnlockKey);
-            m.Title = open != null ? NameOf(open.id, "퀘스트") : "퀘스트"; // name:<05_contentOpen id>
-            m.Currencies = "캣닢 " + MvUiFormat.Fmt(Port.Wealth(MV.Save.MvWealthIds.Dia));
+            m.Title = open != null ? NameOf(open.id, MvUiText.Ui("ui.quest.title")) : MvUiText.Ui("ui.quest.title"); // name:<05_contentOpen id>
+            m.Currencies = MvUiText.WealthNameById(tables, MV.Save.MvWealthIds.Dia) + " " + MvUiFormat.Fmt(Port.Wealth(MV.Save.MvWealthIds.Dia));
 
             var groups = Quest.Groups();
             var categories = groups.Select(g => g.Category).Distinct().OrderBy(c => (int)c).ToList();
@@ -53,7 +53,7 @@ namespace MV.UI
 
             long now = Quest.NowMs;
             long reset = groups.Where(g => g.Category == _tab && g.ResetAtMs > 0).Select(g => g.ResetAtMs).DefaultIfEmpty(0).Min();
-            if (reset > 0) m.Sub = "초기화까지 " + Hms(reset - now); // ui.meta.resetIn
+            if (reset > 0) m.Sub = MvUiText.Ui("ui.meta.resetIn", Hms(reset - now));
 
             bool any = false;
             foreach (var g in groups.Where(g => g.Category == _tab))
@@ -66,14 +66,14 @@ namespace MV.UI
                     var row = m.Add(new MetaRow("q:" + q.Id.ToString(Inv), MetaRowKind.Row, ItemTitle(q))
                     {
                         Value = ProgressText(q),
-                        Desc = RewardText(q.Reward),
+                        Desc = RewardText(q.Reward, tables),
                         Highlight = can,
                         Locked = !g.Open,
                     });
-                    row.Act(ClaimId(q.Id), q.State == QuestItemState.Done ? "완료" : "받기", can); // ui.meta.done / ui.quest.claim
+                    row.Act(ClaimId(q.Id), MvUiText.Ui(q.State == QuestItemState.Done ? "ui.meta.done" : "ui.quest.claim"), can);
                 }
             }
-            if (any) m.Confirm = new MetaAction(ClaimAllId, "모두 받기", true); // ui.meta.claimAll
+            if (any) m.Confirm = new MetaAction(ClaimAllId, MvUiText.Ui("ui.meta.claimAll"), true);
         }
 
         protected override bool OnTab(string tabId)
@@ -137,10 +137,10 @@ namespace MV.UI
         {
             switch (c)
             {
-                case QuestCategory.Daily: return "일일";    // ui.quest.tabDaily
-                case QuestCategory.Monthly: return "월간";  // ui.quest.tabMonthly
-                case QuestCategory.Achievement: return "업적"; // ui.quest.tabAchieve
-                default: return "패스";
+                case QuestCategory.Daily: return MvUiText.Ui("ui.quest.tabDaily");
+                case QuestCategory.Monthly: return MvUiText.Ui("ui.quest.tabMonthly");
+                case QuestCategory.Achievement: return MvUiText.Ui("ui.quest.tabAchieve");
+                default: return MvUiText.Ui("ui.quest.tabPass");
             }
         }
 
@@ -158,50 +158,46 @@ namespace MV.UI
             return MvUiFormat.Fmt(shown) + "/" + MvUiFormat.Fmt(q.Target);
         }
 
-        public static string RewardText(IReadOnlyList<ConsumeData> reward)
+        public static string RewardText(IReadOnlyList<ConsumeData> reward, MvTables tables)
         {
             if (reward == null || reward.Count == 0) return "";
             var sb = new StringBuilder();
             foreach (var r in reward)
             {
                 if (sb.Length > 0) sb.Append("  ");
-                string name = r.Type == ConsumeType.Wealth ? MvUiText.Name(r.Id, WealthFallback(r.Id))
-                    : r.Type == ConsumeType.DailyQuestPoint ? "일일 포인트" // name:consumeType 300
+                string name = r.Type == ConsumeType.Wealth ? MvUiText.WealthNameById(tables, r.Id)
+                    : r.Type == ConsumeType.DailyQuestPoint ? MvUiText.Ui("ui.quest.dailyPoint")
                     : r.Type.ToString();
                 sb.Append(name).Append(" +").Append(MvUiFormat.Fmt(r.Value));
             }
             return sb.ToString();
         }
 
-        static string WealthFallback(int id)
+        /// <summary>카운터 이름 키 <c>ui.quest.clear.&lt;종류&gt;</c>(종류 이름 첫 글자 소문자).</summary>
+        public static string ClearKey(QuestClearType t)
         {
-            switch (id)
-            {
-                case MV.Save.MvWealthIds.Gold: return "츄르";
-                case MV.Save.MvWealthIds.Dia: return "캣닢";
-                case MV.Save.MvWealthIds.Souls: return "생선";
-                case MV.Save.MvWealthIds.Medal: return "메달";
-                default: return id.ToString(Inv);
-            }
+            string n = t.ToString();
+            return "ui.quest.clear." + char.ToLowerInvariant(n[0]) + n.Substring(1);
         }
 
         static string ClearName(QuestClearType t)
         {
             switch (t)
             {
-                case QuestClearType.RunComplete: return "달리기 완료";
-                case QuestClearType.StairClimb: return "계단 오르기";
-                case QuestClearType.WallBreak: return "벽 부수기";
-                case QuestClearType.GoldEarn: return "츄르 모으기";
-                case QuestClearType.SoulEarn: return "생선 모으기";
-                case QuestClearType.WeaponCraft: return "무기 만들기";
-                case QuestClearType.AreaUpgrade: return "장난감 바구니";
-                case QuestClearType.LobbyUpgrade: return "로비 강화";
-                case QuestClearType.AreaOpen: return "Area 열기";
-                case QuestClearType.ModeClear: return "모드 클리어";
-                case QuestClearType.AdWatch: return "광고 보기";
-                case QuestClearType.Rebirth: return "부활";
-                case QuestClearType.DailyPoint: return "일일 포인트";
+                case QuestClearType.RunComplete:
+                case QuestClearType.StairClimb:
+                case QuestClearType.WallBreak:
+                case QuestClearType.GoldEarn:
+                case QuestClearType.SoulEarn:
+                case QuestClearType.WeaponCraft:
+                case QuestClearType.AreaUpgrade:
+                case QuestClearType.LobbyUpgrade:
+                case QuestClearType.AreaOpen:
+                case QuestClearType.ModeClear:
+                case QuestClearType.AdWatch:
+                case QuestClearType.Rebirth:
+                case QuestClearType.DailyPoint:
+                    return MvUiText.Ui(ClearKey(t));
                 default: return t.ToString();
             }
         }

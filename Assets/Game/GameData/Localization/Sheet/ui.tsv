@@ -2,3 +2,56 @@ Key	ko	en	ja
 ui.common.max	MAX	MAX	MAX
 ui.aup.lv	Lv.{0}	Lv.{0}	Lv.{0}
 ui.aup.adGain	x{0}	x{0}	x{0}
+ui.content.title	컨텐츠	Content	コンテンツ
+ui.content.sub	누르면 바로 시작 · 입장권은 매일 다시 채워짐	Tap to start · Tickets refill every day	タップですぐ開始 · チケットは毎日補充
+ui.content.tabMode	모드	Modes	モード
+ui.content.tabMeta	성장	Growth	成長
+ui.content.adInfo	광고 보고 입장권 +{0} · 오늘 {1}회 남음	Watch an ad: Ticket +{0} · {1} left today	広告を見てチケット+{0} · 本日残り{1}回
+ui.content.go	도전	Play	挑戦
+ui.content.new	NEW	NEW	NEW
+ui.content.ticket	입장권 {0}/{1}	Tickets {0}/{1}	チケット {0}/{1}
+ui.content.today	오늘 {0}/{1}	Today {0}/{1}	本日 {0}/{1}
+ui.content.preparing	{0} 준비 중	{0} coming soon	{0} 準備中
+ui.content.lockAt	{0} 달성 시 열려요	Unlocks at {0}	{0}達成で解放
+ui.content.soon	업데이트 예정	Coming soon	アップデート予定
+ui.quest.title	퀘스트	Quests	クエスト
+ui.meta.resetIn	초기화까지 {0}	Resets in {0}	リセットまで {0}
+ui.meta.done	완료	Done	完了
+ui.quest.claim	받기	Claim	受け取る
+ui.meta.claimAll	모두 받기	Claim All	すべて受け取る
+ui.quest.tabDaily	일일	Daily	デイリー
+ui.quest.tabMonthly	월간	Monthly	マンスリー
+ui.quest.tabAchieve	업적	Achievements	実績
+ui.quest.tabPass	패스	Pass	パス
+ui.quest.dailyPoint	일일 포인트	Daily Points	デイリーポイント
+ui.quest.clear.runComplete	달리기 완료	Finish Runs	ラン完了
+ui.quest.clear.stairClimb	계단 오르기	Climb Stairs	階段を登る
+ui.quest.clear.wallBreak	벽 부수기	Break Walls	壁を壊す
+ui.quest.clear.goldEarn	츄르 모으기	Collect Churu	チュールを集める
+ui.quest.clear.soulEarn	생선 모으기	Collect Fish	魚を集める
+ui.quest.clear.weaponCraft	무기 만들기	Craft Weapons	武器を作る
+ui.quest.clear.areaUpgrade	장난감 바구니	Toy Basket	おもちゃかご
+ui.quest.clear.lobbyUpgrade	로비 강화	Lobby Upgrades	ロビー強化
+ui.quest.clear.areaOpen	Area 열기	Open Areas	Area解放
+ui.quest.clear.modeClear	모드 클리어	Clear Modes	モードクリア
+ui.quest.clear.adWatch	광고 보기	Watch Ads	広告を見る
+ui.quest.clear.rebirth	부활	Rebirth	復活
+ui.quest.clear.dailyPoint	일일 포인트	Daily Points	デイリーポイント
+ui.research.title	고양이 공부방	Cat Study Room	ネコの勉強部屋
+ui.research.sub	계열마다 단계를 올려 런 능력치를 키워요 · 한 번에 하나씩	Level up each branch to boost run stats · One at a time	系統ごとに段階を上げてラン能力を強化 · 一度に一つずつ
+ui.research.group	계열 {0}	Branch {0}	系統 {0}
+ui.research.tabReady	받기!	Claim!	受け取り!
+ui.research.tabRunning	연구 중	Researching	研究中
+ui.research.lvOf	Lv {0}/{1}	Lv {0}/{1}	Lv {0}/{1}
+ui.research.sum	{0} +{1} · Lv {2}/{3}	{0} +{1} · Lv {2}/{3}	{0} +{1} · Lv {2}/{3}
+ui.research.lv	Lv {0}	Lv {0}	Lv {0}
+ui.research.start	올리기 · {0}	Upgrade · {0}	強化 · {0}
+ui.research.claim	받기	Claim	受け取る
+ui.research.busy	다른 연구 중	Other research in progress	他の研究中
+ui.stat.dmg	공격력	Attack	攻撃力
+ui.stat.fireRate	공격 속도	Attack Speed	攻撃速度
+ui.stat.range	사거리	Range	射程
+ui.stat.critDmg	치명타 피해	Crit Damage	クリティカルダメージ
+ui.stat.gold	츄르 획득	Churu Gain	チュール獲得
+ui.stat.critChance	치명타 확률	Crit Chance	クリティカル率
+ui.stat.doubleChance	두 번 공격	Double Attack	2回攻撃
