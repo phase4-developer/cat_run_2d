@@ -1,0 +1,13 @@
+id	name	grade
+15001001	Common	1
+15001002	Uncommon	2
+15001003	Rare	3
+15001004	Epic	4
+15001005	Legendary	5
+15001006	Mythic	6
+15001007	Ancient	7
+15001008	Divine	8
+15001009	Celestial	9
+15001010	Immortal	10
+15001011	Eternal	11
+15001012	Transcendent	12

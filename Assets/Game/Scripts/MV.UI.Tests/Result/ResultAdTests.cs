@@ -156,7 +156,6 @@ namespace MV.UI.Tests
 
             Assert.AreEqual(mul, MvMetaResultAd.MulOf(t));
             Assert.AreEqual(0, MvMetaResultAd.MulOf(null), "표가 없으면 기본 배수를 지어내지 않는다");
-            Assert.AreEqual("×" + mul + " 보상", ResultPresenter.AdText(MvMetaResultAd.MulOf(t)));
 
             string title = MvFakeAd.TitleOf(t.AdPlacement.ByKey(MvMetaResultAd.Key), t);
             StringAssert.Contains("×" + mul, title);

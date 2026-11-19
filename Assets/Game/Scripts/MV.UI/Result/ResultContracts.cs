@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MV.Data;
 using MV.Meta;
 using MV.Run;
@@ -21,8 +22,14 @@ namespace MV.UI
         public int ZoneNo;
         /// <summary>현재 Area 1기반 번호. 개방 제목은 AreaNo + 1.</summary>
         public int AreaNo;
+        /// <summary>정산 전 누적 생선(<c>save.souls</c>). 진척도 게이지 출발 값(노션 「이전 → 변화 값으로 보간」).</summary>
+        public int SoulsBefore;
         public int SoulsHave;
         public int SoulsNeed;
+        /// <summary>현재 Area 이름(<c>302_area</c>, 언어팩 <c>name:&lt;id&gt;</c> → 표 name 열). Slot_AreaLabel에 쓴다.</summary>
+        public string AreaName;
+        /// <summary>보상 칸 아이콘·등급을 찾을 표(없으면 칸은 글자만).</summary>
+        public MvTables Tables;
         public double Gold;
         public int Dia;
         public int Tok;
@@ -51,7 +58,9 @@ namespace MV.UI
             {
                 Kind = r.ZoneEnd ? ResultKind.ZoneClear : r.Pass ? ResultKind.AreaOpen : gate ? ResultKind.LevelDone : ResultKind.Fail,
                 AreaNo = savedArea + 1,
+                SoulsBefore = savedSouls,
                 SoulsHave = savedSouls + r.Souls,
+                Tables = tables,
                 Gold = r.Gold,
                 Dia = r.Dia,
                 Tok = r.Tok,
@@ -82,6 +91,7 @@ namespace MV.UI
                     {
                         d.SoulsNeed = a.needSouls;
                         d.ZoneNo = tables.Zone.Get(a.zoneId)?.sort ?? 1;
+                        d.AreaName = MvUiText.Name(a.id, MvUiText.RawName(tables.Area.RawRows, a.id) ?? "");
                         break;
                     }
             return d;
@@ -147,32 +157,60 @@ namespace MV.UI
         }
     }
 
-    /// <summary>결과 겉의 「×N 보상」 광고 버튼 부분. 기존 <see cref="IResultView"/> 구현을 깨지 않도록 나눴다. 기본 겉 <see cref="ResultView"/>는 둘 다 구현한다.</summary>
+    /// <summary>결과 겉의 「×N 보상」 광고 버튼 부분. 기존 <see cref="IResultView"/> 구현을 깨지 않도록 나눴다. 디자이너 겉 <see cref="ResultDesignView"/>는 둘 다 구현한다.</summary>
     public interface IResultAdView
     {
-        /// <summary>「×N 보상」(보상 광고, MV-SPEC-02 01 §12-3).</summary>
+        /// <summary>「×N 보상」(보상 광고, MV-SPEC-02 01 §12-3, 노션 Button_RewardAds).</summary>
         event Action X3Pressed;
-        void SetX3(string text, bool interactable);
+        /// <param name="mul">08_adPlacement 결과 광고 행 mul(글자 「{N}x」).</param>
+        void SetX3(int mul, bool interactable);
     }
 
     /// <summary>결과 겉(D-92). 컨트롤러 <see cref="ResultPopup"/>는 이 인터페이스로만 겉을 만진다.</summary>
     public interface IResultView
     {
-        /// <summary>「괜찮아요」(×1 받기)를 눌렀다.</summary>
+        /// <summary>×1 받기(노션: Backboard 터치)를 했다.</summary>
         event Action CollectPressed;
         void SetTitle(string text, Color color);
-        void SetProgress(string left, string right, float fill01);
-        /// <summary>보상 3칸: 골드·블루 마법석·황금 생선(MV-SPEC-02 01 §12-3). 이름은 <c>01_wealth</c>에서.</summary>
-        void SetRewards(ResultRewardText gold, ResultRewardText dia, ResultRewardText tok);
+        /// <summary>진척도(노션 Progress): 게이지 출발·도착 값, %, 플레이 중인 Area.</summary>
+        void SetProgress(in ResultProgress progress);
+        /// <summary>보상 칸 목록(노션 Reward/Slot_Item). 칸 수는 목록 길이.</summary>
+        void SetRewards(IReadOnlyList<ResultRewardItem> items);
+        /// <summary>통계 줄. 디자이너 시안에 자리가 없어 디자이너 겉은 그리지 않는다(로직 유지).</summary>
         void SetStat(string text);
         void SetCollectInteractable(bool interactable);
     }
 
-    /// <summary>보상 칸 1개의 글: 재화 이름 + 값.</summary>
-    public struct ResultRewardText
+    /// <summary>진척도 값(노션 「Progress : Area 진척 정도를 나타내는 게이지 바」).</summary>
+    public readonly struct ResultProgress
     {
-        public string Name;
-        public string Value;
-        public ResultRewardText(string name, string value) { Name = name; Value = value; }
+        /// <summary>정산 전 채움(0~1). 게이지는 여기서 <see cref="To01"/>까지 오른다.</summary>
+        public readonly float From01;
+        public readonly float To01;
+        /// <summary>「{0}%」에 넣을 정수(소수점 버림).</summary>
+        public readonly int Percent;
+        public readonly int ZoneNo;
+        public readonly string AreaName;
+        /// <summary>기획서 05 §5.6 진행 글(왼쪽·오른쪽). 시안에 자리가 없어 디자이너 겉은 그리지 않는다.</summary>
+        public readonly string Left, Right;
+
+        public ResultProgress(float from01, float to01, int percent, int zoneNo, string areaName, string left, string right)
+        {
+            From01 = from01; To01 = to01; Percent = percent; ZoneNo = zoneNo; AreaName = areaName; Left = left; Right = right;
+        }
+    }
+
+    /// <summary>보상 칸 1개: 재화(<c>01_wealth.type</c>) + 이름 + 수량 글자(숫자 모양까지).</summary>
+    public readonly struct ResultRewardItem
+    {
+        public readonly MvTables Tables;
+        public readonly string WealthType;
+        public readonly string Name;
+        public readonly string Count;
+
+        public ResultRewardItem(MvTables tables, string wealthType, string name, string count)
+        {
+            Tables = tables; WealthType = wealthType; Name = name; Count = count;
+        }
     }
 }

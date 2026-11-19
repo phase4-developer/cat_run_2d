@@ -225,6 +225,7 @@ MvTables.Current = tables;
 | | `12_weaponLevel` | WeaponLevelTable | Meta | 7.8.3 | 07 |
 | | `13_areaUpgrade` | AreaUpgradeTable | Meta, Run | 7.8.4 | 07 |
 | | `14_rebirthPerk` | RebirthPerkTable | Meta, Run | 7.8.5 | 07 |
+| | `15_grade` | GradeData(`MvTables.Grade`) | UI | 7.8.14 | 07 |
 | | `16_levelPrice` | LevelPriceTable(group → level) | Meta | 7.8.6 | 07(그룹 1~24), 08(그룹 301~) |
 | 1xx | `101_cat` | CatTable | View | 7.7.7 | 07 |
 | | `102_enemy` | EnemyTable | Run, View | 7.5.8 | 07 |
@@ -1687,11 +1688,23 @@ id	group	targetLevel	priceType	priceId	priceValue
 - MV-SPEC-02 반영(MV-DATA-SPEC2, Q-21): 사자자리냥 해금(5001004)은 active 0.
 - 판정 시점: Area 개방·런 정산 직후 MV.Meta가 1회. 새로 열리면 `showUnlock` 연출([05](05_Screens.md)).
 
+### 7.8.14 15_grade — 등급(MV-UI3-RESULT, D-GRADE-TABLE)
+
+노션 「[참고] 프로젝트 내 등급 관련 리소스 표」의 등급 1~12. 등급 틀 그림은 `09_uiResource` 그룹 5(`sort` = 등급 번호, `MvUiGrade.Frame`)가 정본이라 이 표에 틀 열을 두지 않는다(같은 값 두 곳 금지). 이름은 언어팩 `name:<id>`.
+
+| 열 | 타입 | 뜻 |
+|---|---|---|
+| id | int | `15001{순번 3}` |
+| name | string | 편집용 영문 이름(Common ~ Transcendent). 화면 이름은 언어팩 `name:<id>` |
+| grade | int | 등급 번호 1~12 = `09_uiResource` 등급 틀 `sort` |
+
+등급을 가진 대상 표는 `gradeId` 열로 이 표 행을 가리킨다(첫 적용 `01_wealth.gradeId`).
+
 ### 7.8.10 01_wealth — 재화
 
 Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, ConsumeTypeId: 1)`.
 
-> 결정 D-GRADE-TABLE(2026-11-19, 원장 「확정 결정」): 보상 칸 등급 틀을 위해 `grade` 열(등급 번호 → 새 등급 표 → `09_uiResource` `grade.N`)을 더한다. 표 구조는 결과 팝업 계약에서 이 절과 새 등급 표 절에 함께 적는다. 값은 정해질 때까지 더미.
+> 결정 D-GRADE-TABLE(2026-11-19, 원장 「확정 결정」): 보상 칸 등급 틀을 위해 `gradeId` 열(→ `15_grade` 행 id → 등급 번호 → `09_uiResource` `grade.N`, §7.8.14)을 더했다(MV-UI3-RESULT). 0 = 등급 없음(디자이너 틀 그대로). 현재 값 gold 15001002(Uncommon)·dia 15001003(Rare)·goldenFish 15001005(Legendary)는 디자이너 시안 틀 색에서 읽은 **임시 값**이고 결정 후보다. 나머지 행은 0.
 
 | 열 | 타입 | 뜻 |
 |---|---|---|
@@ -1701,6 +1714,7 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
 | maxValue | long | 0 = 상한 없음 |
 | chargeShopSectionId | int | 모자랄 때 여는 상점 칸(`702_shopSection`). 0 = 없음 |
+| gradeId | int(FK `15_grade`) | 보상·아이템 칸 등급 틀. 0 = 등급 없음 |
 
 | id | type | icon | maxValue | chargeShopSectionId | 이름 | 근거 |
 |---|---|---|---|---|---|---|
