@@ -781,7 +781,7 @@ income: cost:P=>20+8*(P+1), max:50
 | 키 | 효과 | 비용(츄르 `save.gold`) | max | → 표.열 |
 |---|---|---|---|---|
 | stair 캣타워 | 구매 수 P → `kegStart(P)` = 런 시작 게이지 Lv(1~4)와 진행률 | round(25 × 1.18^P) | 30 (= 7+10+13) | `10_lobbyUpgrade[stair]` max 30, levelPriceGroup 1; 단계 필요 `11_stairLevel.need` = 7/10/13/16; `300_runConfig.LOBBY_STAIR_MAX_LV`=4 |
-| weapon 스크래쳐 | 구매 시 **현재 무기 Level 등급 카드 1장을 시작 덱에 추가**(`deckAdd`, 3장 머지). 무기 Level `wLevel(P).lv` = 런 `R.bt`(공방 제작 등급) | round(30 × 1.043^P) | 149 (= 89 + 60) | `10_lobbyUpgrade[weapon]` max 149, levelPriceGroup 2; `12_weaponLevel.need` = 8/9/11/12/14/16/19/21 (Lv 8 뒤 추가 구매 60회는 max에 포함) |
+| weapon 스크래쳐 | 구매 시 **현재 무기 Level 등급 카드 1장을 시작 덱에 추가**(`deckAdd`, 3장 머지). 무기 Level `wLevel(P).lv` = 런 `R.bt`(공방 제작 등급) | round(30 × 1.043^P) | 149 (= 89 + 60) | `10_lobbyUpgrade[weapon]` max 149, levelPriceGroup 2; `12_weaponLevel.need` = 8/9/11/10/10/…/10 (시작 1장 + 이월 장수 + need = 3의 배수, 2026-11-19 사용자 결정, [07 §7.8.3](07_Tables.md); 마지막 Level 뒤 추가 구매 60회는 max에 포함) |
 | income 생선 건조대 | goldMul × (1 + 0.05P) | 20 + 8(P+1) | 50 | `10_lobbyUpgrade[income]` max 50, levelPriceGroup 3; 효과 `300_runConfig.INCOME_PER_LV`=0.05 |
 
 **`16_levelPrice` 행 생성 규칙**(런타임은 행만 읽는다. P = 현재 구매 수, `targetLevel = P + 1`, `priceType 1`(Wealth), `priceId 1`(츄르)):
