@@ -29,7 +29,8 @@ namespace MV.Sound
         readonly List<MvSoundCue> _cues = new List<MvSoundCue>();
         readonly HashSet<string> _warned = new HashSet<string>(StringComparer.Ordinal);
         long _seq;
-        bool _muted;
+        bool _sfxMuted, _bgmMuted;
+        float _sfxVolume = 1f, _bgmVolume = 1f;
 
         struct Pending
         {
@@ -62,18 +63,59 @@ namespace MV.Sound
         public int PendingCount => _pending.Count;
 
         /// <summary>
-        /// 음소거(정본 ce_mute L1624 → 저장 설정). 켜면 효과음은 호출 자체를 막고(L1678, GAP 기록도 안 함),
-        /// 음악은 트랙만 끄고 계속 흐른다(L1684).
+        /// 효과음 음소거(설정 팝업 SFX Mute). 켜면 효과음은 호출 자체를 막는다(정본 L1678, GAP 기록도 안 함).
         /// </summary>
-        public bool Muted
+        public bool SfxMuted
         {
-            get => _muted;
+            get => _sfxMuted;
+            set => _sfxMuted = value;
+        }
+
+        /// <summary>배경음 음소거(설정 팝업 BGM Mute). 음악은 트랙만 끄고 계속 흐른다(정본 L1684).</summary>
+        public bool BgmMuted
+        {
+            get => _bgmMuted;
             set
             {
-                _muted = value;
+                _bgmMuted = value;
                 _out.SetMusicOn(!value);
             }
         }
+
+        /// <summary>둘 다 음소거(정본 ce_mute L1624). 읽을 때는 둘 다 꺼졌을 때만 true.</summary>
+        public bool Muted
+        {
+            get => _sfxMuted && _bgmMuted;
+            set
+            {
+                SfxMuted = value;
+                BgmMuted = value;
+            }
+        }
+
+        /// <summary>효과음 트랙 볼륨 0~1(설정 팝업 슬라이더). 범위 밖은 자른다.</summary>
+        public float SfxVolume
+        {
+            get => _sfxVolume;
+            set
+            {
+                _sfxVolume = Clamp01(value);
+                _out.SetTrackVolume(false, _sfxVolume);
+            }
+        }
+
+        /// <summary>배경음 트랙 볼륨 0~1(설정 팝업 슬라이더). 범위 밖은 자른다.</summary>
+        public float BgmVolume
+        {
+            get => _bgmVolume;
+            set
+            {
+                _bgmVolume = Clamp01(value);
+                _out.SetTrackVolume(true, _bgmVolume);
+            }
+        }
+
+        static float Clamp01(float v) => float.IsNaN(v) ? 0f : v < 0f ? 0f : v > 1f ? 1f : v;
 
         /// <summary>
         /// 효과음 1회. 정본 <c>SND.play(k)</c>와 같은 순서: 음소거 → 표에 있음 → GAP(묶음 키, gapMs 안이면 버림) → 기록 → 재생.
@@ -81,7 +123,7 @@ namespace MV.Sound
         /// </summary>
         public bool Play(string key)
         {
-            if (_muted || string.IsNullOrEmpty(key)) return false;
+            if (_sfxMuted || string.IsNullOrEmpty(key)) return false;
             var t = _tables();
             if (t == null) return false;
             var row = t.Sound.ByKey(key);

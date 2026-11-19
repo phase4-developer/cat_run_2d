@@ -1554,7 +1554,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -99, y: -700}
+  m_AnchoredPosition: {x: -99, y: -415}
   m_SizeDelta: {x: 170, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &3739442880085033039
@@ -1646,6 +1646,7 @@ MonoBehaviour:
   queueStepRatio: 0.6
   launchSec: 0.4
   launchGapSec: 0.07
+  launchArc: 0.25
   queueHoldSec: 2
 --- !u!1 &3804369872954125828
 GameObject:

@@ -196,12 +196,12 @@ namespace MV.UI
                     MvUiNav.OpenQuestAsync(new QuestPopupData { Port = Data?.Port, OnClosed = Redraw }).Forget(Debug.LogException);
                     break;
                 case LobbySideIds.Sound:
-                    // 설정 자리(05 §5.14 소리 버튼). 저장은 메타 요청 settings.muted(실패해도 이번 실행의 소리는 바뀐 대로 둔다).
-                    MvSound.Muted = !MvSound.Muted;
-                    MvSound.PlayUi(MvUiSound.ButtonClick); // 정본 L3856: 전환 뒤 click
-                    _presenter.Muted = MvSound.Muted;
-                    _presenter.Port.SetMuted(MvSound.Muted);
-                    Redraw();
+                    // 설정 버튼(디자이너 Button Setting) → 설정 팝업(노션 [팝업] 설정, MV-UI2-SETTING). 소리·진동·언어는 팝업이 저장한다.
+                    MvSound.PlayUi(MvUiSound.ButtonClick);
+                    MvUiNav.OpenSettingsAsync(new SettingsPopupData
+                    {
+                        OnClosed = () => { _presenter.Muted = MvSound.Muted; Redraw(); },
+                    }).Forget(Debug.LogException);
                     break;
                 case LobbySideIds.Debug:
                     MvUiNav.OpenDebugAsync(popup).Forget(Debug.LogException);

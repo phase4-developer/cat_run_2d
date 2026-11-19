@@ -62,6 +62,16 @@ namespace MV.Sound
             AudioManager.Instance.SetTrackOn(AudioTrack.Music, on);
         }
 
+        /// <summary>효과음 볼륨은 Sfx·UI 트랙에 같이 준다(정크버스터즈 설정과 같은 방식).</summary>
+        public void SetTrackVolume(bool music, float volume01)
+        {
+            if (!Ready) return;
+            var am = AudioManager.Instance;
+            if (music) { am.SetTrackVolume(AudioTrack.Music, volume01); return; }
+            am.SetTrackVolume(AudioTrack.Sfx, volume01);
+            am.SetTrackVolume(AudioTrack.UI, volume01);
+        }
+
         static async void Observe(Task<AudioSource> task)
         {
             try { await task; }

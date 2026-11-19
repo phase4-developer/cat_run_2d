@@ -143,6 +143,25 @@ namespace MV.Sound.Tests
             Assert.That(_out.Music, Is.EqualTo(new[] { "music:Bgm_Lobby:0:start", "on:false", "on:true" }));
         }
 
+        /// <summary>설정 팝업(MV-UI2-SETTING): 배경음·효과음 Mute 따로, 볼륨은 트랙에 0~1로 자른 값.</summary>
+        [Test]
+        public void SeparateMute_AndTrackVolumes()
+        {
+            var p = Make();
+            p.EnterLobby();
+            p.BgmMuted = true;
+            Assert.That(p.Play("hit"), Is.True, "배경음만 끄면 효과음은 울린다");
+            Assert.That(p.Muted, Is.False, "둘 다 꺼져야 Muted");
+            p.SfxMuted = true;
+            _clock.Now = 5.0;
+            Assert.That(p.Play("hit"), Is.False);
+            Assert.That(p.Muted, Is.True);
+            p.BgmVolume = 0.4f;
+            p.SfxVolume = 2f;
+            Assert.That(_out.Volumes, Is.EqualTo(new[] { "vol:music:0.4", "vol:sfx:1" }));
+            Assert.That(_out.Music, Is.EqualTo(new[] { "music:Bgm_Lobby:0:start", "on:false" }));
+        }
+
         [Test]
         public void RunFinished_FailPlaysAfter350ms_GateWinImmediately()
         {

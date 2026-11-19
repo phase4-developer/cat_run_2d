@@ -77,8 +77,12 @@ namespace MV.Save.Tests
             Assert.That(save.Unlock.SeenUnlock, Is.Empty);
             Assert.That(save.Unlock.SeenNew, Is.Empty);
 
-            // 정본 ce_mute 기본 false. 08·2차 시스템은 빈 상태.
-            Assert.That(save.Settings.Muted, Is.False);
+            // 정본 ce_mute 기본 false. 설정 팝업 기본: 배경음 90·효과음 100(정크버스터즈 0.9·1), 진동 켜짐. 08·2차 시스템은 빈 상태.
+            Assert.That(save.Settings.BgmMute, Is.False);
+            Assert.That(save.Settings.SfxMute, Is.False);
+            Assert.That(save.Settings.BgmVolume, Is.EqualTo(90));
+            Assert.That(save.Settings.SfxVolume, Is.EqualTo(100));
+            Assert.That(save.Settings.Haptic, Is.True);
             Assert.That(save.Settings.ContentTab, Is.EqualTo(""));
             Assert.That(save.Shop.Guarantee, Is.Empty);
             Assert.That(save.Research.RunningKey, Is.Null);

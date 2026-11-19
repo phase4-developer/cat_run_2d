@@ -16,7 +16,8 @@ namespace MV.UI
         {
             if (string.IsNullOrEmpty(key) || UIRuntimeOptions.Localize == null) return fallback;
             string v = UIRuntimeOptions.GetLocalizedString(collection, key);
-            return string.IsNullOrEmpty(v) || v == key ? fallback : v;
+            // 시트 칸은 줄바꿈을 글자 \\n(두 글자)으로 적는다(사본 TSV 한 줄 = 한 키).
+            return string.IsNullOrEmpty(v) || v == key ? fallback : v.Replace("\\n", "\n");
         }
 
         /// <summary>화면 문구 <c>ui</c> 컬렉션(키 = <c>ui.&lt;화면&gt;.&lt;항목&gt;</c>). 없으면 <c>#키</c>(07 §7.12 「문구가 없으면 #키」).</summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using jjevol;
 using MV.Meta;
@@ -50,6 +51,33 @@ namespace MV.Boot
 
             // 표 행 문구(07 §7.12): name·description 컬렉션, 키 = 행 id.
             TableRuntimeOptions.Localization = new MvTableLocalization();
+
+            // 설정 → 언어 팝업(D-LOC-PLAN ③). MV.UI는 Localization을 직접 참조하지 않는다.
+            MV.UI.MvUiLanguage.Service = new MvLanguageService();
+        }
+
+        /// <summary>언어 팝업 입구: Locale 목록·지금 언어·언어 이름·바꾸기(저장은 SaveLanguage 훅).</summary>
+        sealed class MvLanguageService : MV.UI.IMvLanguageService
+        {
+            public IReadOnlyList<string> Codes
+            {
+                get
+                {
+                    var list = new List<string>();
+                    if (!LocalizationSettings.HasSettings) return list;
+                    var locales = LocalizationSettings.AvailableLocales?.Locales;
+                    if (locales == null) return list;
+                    foreach (var l in locales)
+                        if (l != null) list.Add(l.Identifier.Code);
+                    return list;
+                }
+            }
+
+            public string Current => LocalizationManager.GetCurrentLanguageCode();
+
+            public string DisplayName(string code) => LocalizationManager.GetLanguageDisplayName(code);
+
+            public UniTask SetAsync(string code) => LocalizationManager.Instance.SetLanguage(code, true);
         }
 
         static void OnLocalizationEvent(LocalizationEvent e) => UIRuntimeOptions.NotifyLocaleChanged();

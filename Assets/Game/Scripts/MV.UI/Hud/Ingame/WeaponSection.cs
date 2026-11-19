@@ -50,6 +50,7 @@ namespace MV.UI
         [Tooltip("줄 카드끼리 위 끝 사이 거리(칸 높이 배). 스택(-110 px 간격)보다 넓게 띄워 아이콘 실루엣이 보이게 한다(사용자 2026-11-19 「간격도 더 널널하게 해서 아이콘 실루엣은 확인 가능하게」).")] [SerializeField] float queueStepRatio = 0.6f;
         [Tooltip("문 위 카드 자리 → 줄 자리 비행 초")] [SerializeField] float launchSec = 0.4f;
         [Tooltip("카드마다 출발 간격 초(표 300 fly.cloneGapMs 70 ms를 옮김, 사용자 2026-11-19 「프리팹으로 관리」)")] [SerializeField] float launchGapSec = 0.07f;
+        [Tooltip("문 → 줄 비행 곡선 휨(출발~도착 거리 배, 바깥쪽으로 부푼 2차 곡선). 0 = 직선. 사용자 2026-11-19 「너무 직선 말고 … 곡선으로 가는게 더 자연스러울거 같아」.")] [SerializeField] float launchArc = 0.25f;
         [Tooltip("받을 장이 없는데 줄에 남은 카드(거절된 장)를 치우기까지 초")] [SerializeField] float queueHoldSec = 2f;
 
         Func<RunState> _state;
@@ -95,7 +96,7 @@ namespace MV.UI
 
         // ---- 시험·QA ----
         public HudWeaponSlot Equip { get { Init(); return _equip; } }
-        /// <summary>보이는 스택 칸(위에서부터 = 손패 순서).</summary>
+        /// <summary>손패 카드 칸(위에서부터 = 손패 순서). 맨 위 카드 칸은 장착 칸 자리에 숨어 있다(<see cref="TopIsEquip"/>).</summary>
         public IEnumerable<HudWeaponSlot> StackSlots
         {
             get
@@ -350,8 +351,10 @@ namespace MV.UI
                     if (_gathering.Count == 0) break;
                     // 그 등급 3장이 맨 위 카드 자리로 위로 모인다(md × 0.9, ease-in) + 밝아짐·scale 1.06.
                     // 05 §5.3.3 「2번째 카드 자리」 대신 사용자 2026-11-19 「무기 머지 3개가 위로 모여지게 … 뎁스도 제일 위에있는게 유지되야」 → 「그렇게 바꿔」.
-                    var to = _gathering[0].rectTransform.anchoredPosition;   // Gathered는 위 → 아래 순서
+                    // 모을 자리 = 맨 위 카드의 손패 자리(올라오는 중이어도 이동이 끝나기를 기다리지 않는다, 사용자 2026-11-19 「3개 배치되면 그때 바로 머지」).
+                    var to = TargetOf(_gathering[0], out var top, out _) ? top : _gathering[0].rectTransform.anchoredPosition;   // Gathered는 위 → 아래 순서
                     _gatherY = to.y;
+                    _moves.RemoveAll(mv => _gathering.Contains(mv.Slot));   // 올라오던 카드도 곧장 모으는 자리로
                     foreach (var g in _gathering)
                     {
                         g.ResetLook();   // 깊이는 높이 규칙 그대로(위 카드가 앞): 모이는 3장이 바로 위 카드 앞으로 튀어나오지 않는다(사용자 2026-11-19 「마지막 머지할때 뎁스가 이상하게」)
@@ -432,8 +435,8 @@ namespace MV.UI
                 rt.anchorMin = rt.anchorMax = new Vector2(.5f, 1f);
                 rt.pivot = new Vector2(.5f, 1f);
                 float h = rt.rect.height;
-                var to = new Vector2(0, y);
-                y -= h + spacing;
+                var to = NextTarget(i, h, spacing, ref y);
+                SetShown(s, !(i == 0 && TopIsEquip) || IsMoving(s));   // 맨 위 카드 = 장착 칸이 그린다(올라가는 동안만 칸이 보인다)
                 if (_gathering.Contains(s)) continue;   // 모이는 중인 칸은 모으기 연출이 움직인다
                 if (IsMoving(s)) continue;              // 전달 이동 중인 칸은 StepMoves가 지금 목표를 따라 움직인다
                 if (snap || !Animate) { DOTween.Kill(rt); rt.anchoredPosition = to; continue; }
@@ -463,10 +466,46 @@ namespace MV.UI
             for (int i = 0; i < cards.Count; i++)
             {
                 if (!_slots.TryGetValue(cards[i].Id, out var s)) continue;
-                if (s == slot) { to = new Vector2(0, y); index = i; return true; }
-                y -= s.rectTransform.rect.height + spacing;
+                var at = NextTarget(i, s.rectTransform.rect.height, spacing, ref y);
+                if (s == slot) { to = at; index = i; return true; }
             }
             return false;
+        }
+
+        /// <summary>
+        /// 손패 맨 위 카드 = 장착 카드. 장착 칸은 따로 있는 무기가 아니라 손패에서 가장 높은 등급 카드를 위에 크게 강조해 보이는 자리다
+        /// (사용자 2026-11-19 「장착한것도 카드야 별개가 아니라」 「무기 소지 제일 높은 등급이 제일위에 따로 강조해서 표시하는거고」 「무기 같은거 3개가 합쳐지는거고」).
+        /// 그래서 맨 위 카드의 스택 칸은 장착 칸 자리에 숨겨 두고 스택은 2번째 카드부터 그린다. 머지는 장착 카드도 같은 카드로 센다(장착 1장 + 스택 2장 → 장착 칸으로 모인다).
+        /// 장착 칸이 없으면 모두 스택에 그린다.
+        /// </summary>
+        bool TopIsEquip => _equip != null;
+
+        /// <summary>손패 i번째 카드 목표 자리(스택 위 가운데 기준 anchoredPosition). y = 다음 스택 칸 위 끝, 스택 칸이면 내려간다.</summary>
+        Vector2 NextTarget(int i, float h, float spacing, ref float y)
+        {
+            if (i == 0 && TopIsEquip) return EquipAt(h);
+            var to = new Vector2(0, y);
+            y -= h + spacing;
+            return to;
+        }
+
+        static readonly Vector3[] Corners = new Vector3[4];
+
+        /// <summary>장착 칸 가운데에 스택 칸(높이 h, 위 가운데 피벗)을 겹치는 자리.</summary>
+        Vector2 EquipAt(float h)
+        {
+            if (!_equip || !stack) return Vector2.zero;
+            _equip.rectTransform.GetWorldCorners(Corners);
+            var local = (Vector2)stack.InverseTransformPoint((Corners[0] + Corners[2]) * .5f) - new Vector2(stack.rect.center.x, stack.rect.yMax);
+            return local + new Vector2(0, h * .5f);
+        }
+
+        /// <summary>스택에 보이는 장 수(맨 위 카드는 장착 칸이 그린다).</summary>
+        int StackRows(int n) => TopIsEquip ? Math.Max(0, n - 1) : n;
+
+        static void SetShown(HudWeaponSlot s, bool on)
+        {
+            if (s.gameObject.activeSelf != on) s.gameObject.SetActive(on);
         }
 
         static float OutQuad(float u) => 1f - (1f - u) * (1f - u);
@@ -479,7 +518,7 @@ namespace MV.UI
             for (int k = _moves.Count - 1; k >= 0; k--)
             {
                 var m = _moves[k];
-                if (!m.Slot || !TargetOf(m.Slot, out var to, out _)) { _moves.RemoveAt(k); continue; }
+                if (!m.Slot || !TargetOf(m.Slot, out var to, out int idx)) { _moves.RemoveAt(k); continue; }
                 m.T += dt;
                 var rt = m.Slot.rectTransform;
                 bool done;
@@ -490,7 +529,9 @@ namespace MV.UI
                     done = u >= 1f;
                 }
                 rt.anchoredPosition = done ? to : p;
-                if (done) _moves.RemoveAt(k);
+                if (!done) continue;
+                _moves.RemoveAt(k);
+                if (idx == 0 && TopIsEquip) SetShown(m.Slot, false);   // 장착 칸에 닿으면 장착 칸이 그린다
             }
         }
 
@@ -498,7 +539,11 @@ namespace MV.UI
         void FinishMoves()
         {
             foreach (var m in _moves)
-                if (m.Slot && TargetOf(m.Slot, out var to, out _)) m.Slot.rectTransform.anchoredPosition = to;
+                if (m.Slot && TargetOf(m.Slot, out var to, out int idx))
+                {
+                    m.Slot.rectTransform.anchoredPosition = to;
+                    if (idx == 0 && TopIsEquip) SetShown(m.Slot, false);
+                }
             _moves.Clear();
         }
 
@@ -581,17 +626,16 @@ namespace MV.UI
         Vector2 QueueAt(int k, int n)
         {
             float h = SlotHeight();
-            Vector2 first;
+            float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
+            // 스택 맨 아래 칸 바로 밑(칸 높이 × queueGapRatio 띄움).
+            int rows = StackRows(n);
+            var first = new Vector2(0, rows > 0 ? -top - (rows - 1) * (h + spacing) - h - h * queueGapRatio : -top);
             if (queueAnchor && stack)
             {
-                // 지정한 오브젝트 자리(스택 위 가운데 기준 anchoredPosition으로 바꾼다).
-                var local = (Vector2)stack.InverseTransformPoint(queueAnchor.position);
-                first = local - new Vector2(stack.rect.center.x, stack.rect.yMax);
-            }
-            else
-            {
-                float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
-                first = new Vector2(0, n > 0 ? -top - (n - 1) * (h + spacing) - h - h * queueGapRatio : -top);
+                // 지정한 오브젝트 = 줄의 가장 높은 자리와 x(스택 위 가운데 기준 anchoredPosition). 스택이 길어져 그보다 내려오면 스택 밑을 따라 내려간다
+                // (사용자 2026-11-19 「카드가 가는 위치가 너무 아래」: 스택이 짧을 때 멀리 떨어지지 않게).
+                var local = (Vector2)stack.InverseTransformPoint(queueAnchor.position) - new Vector2(stack.rect.center.x, stack.rect.yMax);
+                first = new Vector2(local.x, Mathf.Min(local.y, first.y));
             }
             return first - new Vector2(0, k * h * queueStepRatio);
         }
@@ -650,8 +694,17 @@ namespace MV.UI
                     continue;
                 }
                 float delay = i * launchGapSec;
+                var from = rt.anchoredPosition;
+                var dir = to - from;
+                var bulge = new Vector2(dir.y, -dir.x);                 // 진행 방향의 수직
+                if (bulge.x < 0) bulge = -bulge;                         // 바깥(화면 오른쪽)으로 부푼다
+                var ctrl = (from + to) * .5f + bulge * launchArc;        // |bulge| = 거리
                 DOTween.Sequence().SetUpdate(true).SetTarget(rt)
-                    .Insert(delay, AnchorTo(rt, to, launchSec).SetEase(Ease.InOutQuad))
+                    .Insert(delay, DOTween.To(() => 0f, u =>
+                    {
+                        float a = 1f - u;
+                        rt.anchoredPosition = a * a * from + 2f * a * u * ctrl + u * u * to;
+                    }, 1f, launchSec).SetEase(Ease.InOutQuad).SetUpdate(true))
                     .Insert(delay, s.transform.DOScale(1f, launchSec).SetEase(Ease.InOutQuad))
                     .OnComplete(() => { q.Arrived = true; LayoutQueue(); });
             }
@@ -675,7 +728,7 @@ namespace MV.UI
             // 도착 = 스택 맨 아래 칸 다음 자리(새 카드가 들어갈 곳).
             float h = stackPrefab ? ((RectTransform)stackPrefab.transform).rect.height : 0;
             float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
-            int n = _model != null ? _model.Cards.Count : 0;
+            int n = StackRows(_model != null ? _model.Cards.Count : 0);
             var local = new Vector2(stack.rect.center.x, stack.rect.yMax - top - n * (h + spacing) - h * .5f);
             var cam = Cam();
             center = RectTransformUtility.WorldToScreenPoint(cam, stack.TransformPoint(local));

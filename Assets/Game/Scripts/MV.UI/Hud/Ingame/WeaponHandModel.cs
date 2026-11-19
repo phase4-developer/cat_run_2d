@@ -88,8 +88,6 @@ namespace MV.UI
         /// <summary>모으는 중 = 머지 끝까지, 아니면 머지 뒤 쉼이 끝나기까지 남은 초.</summary>
         double _mergeWait;
         double _settle;
-        /// <summary>카드 id → 자리를 찾기까지 남은 초. 모으는 묶음에 이 카드가 있으면 머지를 미룬다.</summary>
-        readonly Dictionary<int, double> _arriving = new Dictionary<int, double>();
         int[] _gather;
         int _gatherTier;
 
@@ -107,12 +105,12 @@ namespace MV.UI
         /// <summary>정렬된 손패(등급 내림차순, 같은 등급은 먼저 받은 것이 앞).</summary>
         public IReadOnlyList<HandCard> Cards => _cards;
         /// <summary>
-        /// 전달 연출 초(줄 자리에서 곧장 위로 합류). 다음 전달은 기다리지 않고 원래 간격(dealGap)으로 이어지고(사용자 2026-11-19 「기존처럼 딜레이만 살짝있게 연속으로」),
-        /// 머지만 이 시간이 지나 카드가 자리를 찾은 뒤 시작한다. 섹션이 프리팹 연출 값으로 넣는다(0 = 기다리지 않음).
+        /// 전달 연출 초(줄 자리에서 곧장 위로 합류). 다음 전달도 머지도 이 시간을 기다리지 않는다(사용자 2026-11-19 「딜레이만 살짝있게 연속으로」, 「3개 배치되면 그때 바로 머지」).
+        /// <see cref="Settling"/>으로 남은 이동 시간만 알려 준다. 섹션이 프리팹 연출 값으로 넣는다.
         /// </summary>
         public float DealStraightSec { get; set; }
 
-        /// <summary>전달한 카드가 모두 자리를 찾기까지 남은 초. 0보다 크면 머지를 시작하지 않는다.</summary>
+        /// <summary>전달한 카드가 모두 자리를 찾기까지 남은 초(머지는 기다리지 않는다).</summary>
         public double Settling => _settle;
 
         /// <summary>대기열이 비고 모으는 중·머지 뒤 쉼이 아니며 더 머지할 것이 없다.</summary>
@@ -129,7 +127,6 @@ namespace MV.UI
             _dealWait = 0;
             _mergeWait = 0;
             _settle = 0;
-            _arriving.Clear();
             _t0 = now;
             _nextId = 1;
             if (counts == null) return;
@@ -185,17 +182,6 @@ namespace MV.UI
         public void Step(double now, double dt, List<HandAction> actions)
         {
             _settle = Math.Max(0, _settle - dt);
-            if (_arriving.Count > 0)
-            {
-                _ids.Clear();
-                _ids.AddRange(_arriving.Keys);
-                foreach (var id in _ids)
-                {
-                    double left = _arriving[id] - dt;
-                    if (left <= 0) _arriving.Remove(id);
-                    else _arriving[id] = left;
-                }
-            }
             if (Idle)
             {
                 _t0 = now;
@@ -205,7 +191,8 @@ namespace MV.UI
             }
             _dealWait -= dt;
             _mergeWait -= dt;
-            // 전달과 머지는 따로 흐른다: 전달은 간격마다 다음 장, 머지는 모으기·쉼이 끝나고 밑 3장이 자리를 찾았으면 다음 묶음.
+            // 전달과 머지는 따로 흐른다: 전달은 간격마다 다음 장, 머지는 모으기·쉼이 끝나면 3장이 모인 즉시 다음 묶음
+            // (사용자 2026-11-19 「3개 배치되면 그때 바로 머지가 일어나야지 이동이 끝날때까지 기다리고 있고」).
             for (bool more = true; more;)
             {
                 more = false;
@@ -217,7 +204,7 @@ namespace MV.UI
             if (_gather == null && _mergeWait < 0 && LowestMergeTier() < 1) _mergeWait = 0;
         }
 
-        readonly List<int> _ids = new List<int>();
+
 
         void Deal(double now, Job head, List<HandAction> actions)
         {
@@ -231,7 +218,6 @@ namespace MV.UI
             else _queue[0] = head;
             float gap = Math.Min(_timing.dealGapMax, u * _timing.dealGapMul);
             _settle = Math.Max(_settle, Math.Max(0f, DealStraightSec));
-            if (DealStraightSec > 0) _arriving[card.Id] = DealStraightSec;
             _dealWait += gap;
             actions?.Add(new HandAction(HandActionKind.Dealt, card, null, gap, 0, u, TopTier > before));
         }
@@ -242,11 +228,12 @@ namespace MV.UI
             if (tier < 1) return false;
             float u = Unit(now);
             var ids = new int[_mergeN];
-            int k = _mergeN;
-            // 그 등급의 맨 밑 MERGE_N장(가장 늦게 받은 것들 = 스택 맨 아래, 밑에서부터 머지). ids는 위→아래 순서.
-            for (int i = _cards.Count - 1; i >= 0 && k > 0; i--)
-                if (_cards[i].Tier == tier) ids[--k] = _cards[i].Id;
-            foreach (var id in ids) if (_arriving.ContainsKey(id)) return false;   // 아직 자리를 찾는 카드가 있으면 그 뒤에 모은다
+            int k;
+            // 그 등급의 맨 위 MERGE_N장(먼저 받은 것들 = 05 §5.3.3 「그 등급 앞 3장」). 결과 카드는 그 자리에서 위쪽(윗단계 칸)으로 간다.
+            // 사용자 2026-11-19 「머지도 위에 3개 합쳐진거에서 위쪽으로 이동해야하는데 맨 뒤부터 머지가 일어나잖아」. ids는 위→아래 순서.
+            k = 0;
+            for (int i = 0; i < _cards.Count && k < _mergeN; i++)
+                if (_cards[i].Tier == tier) ids[k++] = _cards[i].Id;
             _gather = ids;
             _gatherTier = tier;
             float md = u * _timing.mergeMul;

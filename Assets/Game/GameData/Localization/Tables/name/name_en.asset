@@ -17,7 +17,55 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 8e9138352cc4bbe468cabf6b702d83d4, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 163387284484096
+    m_Localized: Common
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398656
+    m_Localized: Uncommon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398657
+    m_Localized: Rare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398658
+    m_Localized: Epic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398659
+    m_Localized: Legendary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398660
+    m_Localized: Mythic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398661
+    m_Localized: Ancient
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398662
+    m_Localized: Divine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398663
+    m_Localized: Celestial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398664
+    m_Localized: Immortal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398665
+    m_Localized: Eternal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398666
+    m_Localized: Transcendent
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

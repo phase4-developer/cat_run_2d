@@ -45,8 +45,10 @@ namespace MV.Meta
         public const string UseAd = "meta.useAd";
         public const string RecordModePlay = "meta.recordModePlay";
         public const string MarkSeen = "meta.markSeen";
-        /// <summary>소리 끄기 저장(<c>mvSettings.muted</c>). muted = bool.</summary>
-        public const string SetMuted = "meta.setMuted";
+        /// <summary>소리 설정 저장(<c>mvSettings.bgmVolume·sfxVolume·bgmMute·sfxMute</c>). 볼륨 0~100 정수, Mute bool. 빠진 칸은 그대로 둔다.</summary>
+        public const string SetSound = "meta.setSound";
+        /// <summary>진동 저장(<c>mvSettings.haptic</c>). haptic = bool.</summary>
+        public const string SetHaptic = "meta.setHaptic";
         /// <summary>언어 저장(<c>mvSettings.language</c>). language = 언어 코드 문자열.</summary>
         public const string SetLanguage = "meta.setLanguage";
 
