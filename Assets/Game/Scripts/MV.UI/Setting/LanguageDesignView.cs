@@ -17,6 +17,27 @@ namespace MV.UI
         [SerializeField] Button closeButton;
 
         readonly List<string> _codes = new List<string>();
+        List<string> _designLabels; // 시안 버튼 글자(첫 그리기 전 그대로) = 시안 순서
+
+        /// <summary>
+        /// 시안 순서로 언어를 늘어놓는다(노션 [팝업] 언어설정: English → 한국어 → 日本語). 시안 버튼 글자와 언어 이름이 같은 자리에 두고,
+        /// 시안에 없는 언어는 원래 순서대로 뒤에 붙인다. Locale 정렬값이 같으면 Unity가 이름순(English·Japanese·Korean)으로 주기 때문.
+        /// </summary>
+        public static List<string> DesignOrder(IReadOnlyList<string> codes, IReadOnlyList<string> designLabels, Func<string, string> displayName)
+        {
+            var rest = new List<string>(codes ?? Array.Empty<string>());
+            var ordered = new List<string>();
+            if (designLabels != null && displayName != null)
+                foreach (var label in designLabels)
+                {
+                    int k = rest.FindIndex(c => string.Equals(displayName(c), label, StringComparison.Ordinal));
+                    if (k < 0) continue;
+                    ordered.Add(rest[k]);
+                    rest.RemoveAt(k);
+                }
+            ordered.AddRange(rest);
+            return ordered;
+        }
 
         public event Action<string> LanguagePressed;
         public event Action ClosePressed;
@@ -30,7 +51,17 @@ namespace MV.UI
         public void Draw(IReadOnlyList<string> codes, string current, Func<string, string> displayName)
         {
             if (title) title.text = MvUiText.Ui("ui.setting.language");
-            int n = codes?.Count ?? 0;
+            if (_designLabels == null)
+            {
+                _designLabels = new List<string>();
+                foreach (var db in buttons)
+                {
+                    var t = db ? db.GetComponentInChildren<TMP_Text>(true) : null;
+                    if (t) _designLabels.Add(t.text);
+                }
+            }
+            codes = DesignOrder(codes, _designLabels, displayName);
+            int n = codes.Count;
             EnsureButtons(n);
             _codes.Clear();
             for (int i = 0; i < buttons.Count; i++)
@@ -44,7 +75,7 @@ namespace MV.UI
                 _codes.Add(code);
                 var label = b.GetComponentInChildren<TMP_Text>(true);
                 if (label) label.text = displayName != null ? displayName(code) : code;
-                b.interactable = !string.Equals(code, current, StringComparison.OrdinalIgnoreCase);
+                b.interactable = true; // 지금 언어를 눌러도 닫힌다(노션: 버튼 클릭 시 팝업 종료)
                 int index = i;
                 b.onClick.RemoveAllListeners();
                 b.onClick.AddListener(() => LanguagePressed?.Invoke(_codes[index]));
