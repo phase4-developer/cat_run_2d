@@ -11,8 +11,8 @@ namespace MV.Save
     /// </summary>
     public sealed class MvSaveConfig
     {
-        /// <summary><c>00_config.startDeck</c>(정본 L844 DEF.deck). 인덱스 = 무기 등급, 0 미사용.</summary>
-        public int[] StartDeck { get; set; } = { 0, 1, 0, 0, 0, 0, 0, 0, 0 };
+        /// <summary><c>00_config.startDeck</c>(정본 L844 DEF.deck). 인덱스 = 무기 등급, 0 미사용. 시험 기본값은 1등급 1장만 두고, 길이는 Boot가 103_item 상한 + 1로 늘린다(상수 길이 없음).</summary>
+        public int[] StartDeck { get; set; } = { 0, 1 };
         /// <summary><c>00_config.startGodKey</c>(정본 L844 DEF.god).</summary>
         public string StartGodKey { get; set; } = "thunder";
         /// <summary>07 <c>CP_MAX</c>. 체크포인트 상한.</summary>

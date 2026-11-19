@@ -16,6 +16,7 @@ namespace MV.Run.Tests.Rule
         static RunSetup Setup(params CompanionSpec[] comps)
         {
             var s = new RunSetup { Preset = "easy" }; // 발사 횟수 기준은 프로토 easy 연사 2.0(RunTestTables.ProtoEasy, MV-SPEC2-FIX2)
+            s.Deck = RunTestTables.Deck(RunTestTables.Load());
             s.Deck[1] = 1;
             s.Companions.AddRange(comps);
             return s;

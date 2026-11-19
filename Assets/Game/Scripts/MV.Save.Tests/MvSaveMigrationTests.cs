@@ -77,13 +77,13 @@ namespace MV.Save.Tests
         public void ProtoSamples_StaleAdsAndMissingUpFollowProtoLoad()
         {
             var config = MvSaveConfig.CreateDefault();
-            // 표본 2: 광고 날짜가 오늘이 아님 → 사용 수 버림. 덱 길이 9 아님 → 시작 덱.
+            // 표본 2: 광고 날짜가 오늘이 아님 → 사용 수 버림. 덱은 길이와 상관없이 그대로(길이 맞춤은 참조 정리 몫, 상수 9 검사 없음).
             string stale = MvProtoSave.ToPayloadJson(
                 "{\"level\":3,\"up\":{\"stair\":1},\"deck\":[0,1],\"ads\":{\"day\":\"2023-11-13\",\"dia\":0,\"skip\":0},\"rb\":{\"tokens\":7}}",
                 config, MvSaveTestKit.Now);
             Assert.That(MvSaveJson.DeepEquals(MvSaveJson.Pick(stale, MvSaveKeys.Daily), MvSaveJson.Pick(Defaults(), MvSaveKeys.Daily)), Is.True, stale);
             Assert.That(MvSaveJson.DeepEquals(MvSaveJson.Pick(stale, MvSaveKeys.Lobby),
-                "{\"mvLobby\":{\"up\":{\"stair\":1,\"weapon\":0,\"income\":0},\"deck\":[0,1,0,0,0,0,0,0,0]}}"), Is.True, stale);
+                "{\"mvLobby\":{\"up\":{\"stair\":1,\"weapon\":0,\"income\":0},\"deck\":[0,1]}}"), Is.True, stale);
             Assert.That(MvSaveJson.DeepEquals(MvSaveJson.Pick(stale, MvSaveKeys.Unlock), MvSaveJson.Pick(Defaults(), MvSaveKeys.Unlock)), Is.True);
 
             // 표본 3: up이 없으면 정본 load()는 DEF() → 기본값과 같다.

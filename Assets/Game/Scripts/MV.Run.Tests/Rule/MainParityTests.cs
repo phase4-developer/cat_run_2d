@@ -84,8 +84,9 @@ namespace MV.Run.Tests.Rule
                 AupRate = 1, AupRange = 1, AupClone = area >= 2 ? 1 : 0, AupCrit = 1, AupDbl = 1,
                 PerkPower = 1, PerkCrit = 1, PerkObst = 1, PerkDcap = 1,
             };
+            s.Deck = RunTestTables.Deck(RunTestTables.Load());
             s.Deck[1] = 1;
-            s.Deck[Math.Min(8, 1 + area)] += 1;
+            s.Deck[Math.Min(s.Deck.Length - 1, 1 + area)] += 1;   // 상한 = 103_item 상한(상수 없음)
             return s;
         }
 
