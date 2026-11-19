@@ -32,6 +32,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - ui.core
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bdf0df40cec0455aa1fc2b9572fac59a
+    m_Address: UIPopup_Reward
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ui.core
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: effc676ab419462983784dd973b3e58b
     m_Address: UIHud_Run
     m_ReadOnly: 0

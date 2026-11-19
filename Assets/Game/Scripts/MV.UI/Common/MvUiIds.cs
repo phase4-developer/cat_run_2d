@@ -38,5 +38,8 @@ namespace MV.UI
 
         /// <summary><c>UIPopup_SettingLanguage</c>(MV-UI2-SETTING, 설정 → 언어).</summary>
         public const string SettingLanguage = "SettingLanguage";
+
+        /// <summary><c>UIPopup_Reward</c>(MV-UI3-REWARD, 공용 보상획득 팝업).</summary>
+        public const string Reward = "Reward";
     }
 }
