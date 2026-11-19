@@ -209,9 +209,12 @@ namespace MV.UI
         {
             if (_ready) return;
             _ready = true;
-            // 버튼(Selectable) 아래 그림과 출발 영역만 누를 수 있다. 나머지 글·패널은 누름을 받지 않아 출발 영역으로 지나간다(05 §5.4.1).
+            // 버튼(Selectable) 아래 그림과 출발 영역, 상단 Area 이름표만 누를 수 있다. 나머지 글·패널은 누름을 받지 않아 출발 영역으로 지나간다(05 §5.4.1).
             foreach (var g in GetComponentsInChildren<Graphic>(true))
-                g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null || (startArea && g.gameObject == startArea.gameObject);
+                g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null || (startArea && g.gameObject == startArea.gameObject)
+                    || (areaLabel && g.transform.IsChildOf(areaLabel.transform));
+            // 상단 Area 이름표를 누르면 지도(LevelProgress)를 연다(노션 「[팝업] LevelProgress」, 05 §5.10 지도 버튼 자리, MV-UI3-LVPROG).
+            if (areaLabel) areaLabel.Clicked += () => SidePressed?.Invoke(LobbySideIds.Map);
             if (startArea) startArea.Pressed += OnStart;
             if (speedToggle) speedToggle.enabled = false;
             if (speedButton) speedButton.onClick.AddListener(OnSpeedClick);

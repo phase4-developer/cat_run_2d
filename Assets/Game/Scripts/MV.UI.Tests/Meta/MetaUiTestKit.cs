@@ -63,7 +63,6 @@ namespace MV.UI.Tests
                 case "god": return new GodSelectPresenter();
                 case "area": return new AreaUpgradePresenter();
                 case "rebirth": return new RebirthPresenter();
-                case "map": return new MapPresenter();
                 case "unlock": return new FeatureUnlockPresenter();
                 case "debug": return new DebugPanelPresenter();
                 default: throw new ArgumentException(screen);

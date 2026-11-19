@@ -94,7 +94,7 @@ namespace MV.Data
             .Int("sort").Bool("active").Fk("themeId", ThemeData.Table, true).Int("hp", true).Int("needSouls", true)
             .Floats("sgateM").Int("startGold")
             .FkGroup("floorGroup", AreaFloorData.Table).Int("fieldSeedArea").Sound("bgm").Res("mapIcon", MvAtlas.UiLobby)
-            .Res("bg", MvAtlas.Address).Res("stageMap", MvAtlas.Address, true).Consume("clearReward").Consume("firstClearReward");
+            .Color("mapColor").Res("bg", MvAtlas.Address).Res("stageMap", MvAtlas.Address, true).Consume("clearReward").Consume("firstClearReward");
 
         public int areaNo { get; private set; }
         public int zoneId { get; private set; }
@@ -111,6 +111,8 @@ namespace MV.Data
         public int fieldSeedArea { get; private set; }
         public string bgm { get; private set; }
         public string mapIcon { get; private set; }
+        /// <summary>LevelProgress(지도) Area 배경색 hex(MV-UI3-LVPROG, 사용자 2026-11-19 「302_area에 색 열 추가」). Area 1~6은 노션 견본 색, 7부터는 더미(견본 6색 반복).</summary>
+        public string mapColor { get; private set; }
         public string bg { get; private set; }
         /// <summary>런 월드 스테이지 맵 프리팹 주소(`Local/BG/Prefab/Stage{n}/Stage{n}`, 노션 「신작 배경 리소스 관리」). 맵이 아직 없는 지역은 있는 맵을 다시 쓴다(사용자 카드 결정 2026-11-13).</summary>
         public string stageMap { get; private set; }
@@ -133,6 +135,7 @@ namespace MV.Data
             fieldSeedArea = string.IsNullOrEmpty(r.Get("fieldSeedArea")) ? areaNo - 1 : I(r, "fieldSeedArea");
             bgm = S(r, "bgm");
             mapIcon = S(r, "mapIcon");
+            mapColor = S(r, "mapColor");
             bg = S(r, "bg");
             stageMap = S(r, "stageMap");
             clearReward = Consume(r, "clearReward");

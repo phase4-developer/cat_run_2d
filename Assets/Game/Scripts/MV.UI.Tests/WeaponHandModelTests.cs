@@ -90,6 +90,32 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void DealHold_MergeWaitsUntilCardReachesBottomThenRisesToItsSlot()
+        {
+            // 사용자 2026-11-19: 새 카드는 무조건 맨 밑 → 자기 등급 자리로 올라감 → 그 뒤 3장이면 머지.
+            var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealToBottomSec = 0.3f, DealRiseSec = 0.2f };
+            m.Reset(new[] { 0, 1, 2 }, 0);   // 손패 [2, 2, 1]
+            m.Deliver(1, 2);                 // 2등급 1장: 자리 = 1등급 위(맨 밑 아님) → 올라감
+            var actions = new List<HandAction>();
+            m.Step(0, 0.001, actions);
+            Assert.That(actions.Single().Kind, Is.EqualTo(HandActionKind.Dealt));
+            Assert.That(actions[0].Duration, Is.EqualTo(0.5f).Within(1e-5), "맨 밑까지 0.3 + 올라감 0.2");
+            Assert.That(m.Cards.Select(c => c.Tier), Is.EqualTo(new[] { 2, 2, 2, 1 }));
+            actions.Clear();
+            m.Step(0.49, 0.489, actions);
+            Assert.That(actions, Is.Empty, "올라가는 중에는 머지하지 않는다");
+            m.Step(0.51, 0.02, actions);
+            Assert.That(actions.Single().Kind, Is.EqualTo(HandActionKind.GatherStart), "자리를 찾은 뒤 3장 머지");
+
+            var b = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealToBottomSec = 0.3f, DealRiseSec = 0.2f };
+            b.Reset(new[] { 0, 0, 1 }, 0);   // 손패 [2]
+            b.Deliver(1, 1);                 // 1등급: 자리 = 맨 밑 → 올라가지 않음
+            actions.Clear();
+            b.Step(0, 0.001, actions);
+            Assert.That(actions.Single().Duration, Is.EqualTo(0.3f).Within(1e-5), "자리가 맨 밑이면 맨 밑까지만");
+        }
+
+        [Test]
         public void MaxTier_StacksWithoutMerging()
         {
             var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 2);
