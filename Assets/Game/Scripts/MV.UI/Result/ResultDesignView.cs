@@ -24,6 +24,8 @@ namespace MV.UI
         public const string AdRewardFallback = "보상";
         public const string NextKey = "ui.result.next";
         public const string NextFallback = "괜찮아요";
+        public const string ProgressionKey = "ui.result.progression";
+        public const string RewardKey = "ui.result.reward";
 
         [Tooltip("래퍼가 디자이너 팝업 뒤에 둔 전체 막(터치 = ×1 받기)")]
         [SerializeField] Button backboard;
@@ -47,6 +49,12 @@ namespace MV.UI
         [SerializeField] TMP_Text adText;
         [Tooltip("CanvasGroup/Text (TMP) 「No Thanks」 안내 글")]
         [SerializeField] TMP_Text nextText;
+
+        [Header("고정 제목 글자(언어팩 키로 채움)")]
+        [Tooltip("Progression 칸 제목 「Progression」")]
+        [SerializeField] TMP_Text progressionLabel;
+        [Tooltip("Reward 칸 제목 「Reward」")]
+        [SerializeField] TMP_Text rewardLabel;
 
         [Header("연출(임시 값, 노션 연출 확정 뒤 조정)")]
         [Tooltip("열린 뒤 게이지가 오르기 시작할 때까지(초, 실제 시간)")]
@@ -141,6 +149,9 @@ namespace MV.UI
             // 색은 디자이너 글자 스타일을 그대로 쓴다(시안이 모양 정본). 글자만 바꾼다.
             if (title) title.text = text ?? "";
             if (nextText) nextText.text = MvUiText.Get("ui", NextKey, NextFallback);
+            // 디자이너 고정 글자: 키가 없으면 시안 글자를 그대로 둔다.
+            if (progressionLabel) progressionLabel.text = MvUiText.Get("ui", ProgressionKey, progressionLabel.text);
+            if (rewardLabel) rewardLabel.text = MvUiText.Get("ui", RewardKey, rewardLabel.text);
         }
 
         public void SetProgress(in ResultProgress p)

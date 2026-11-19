@@ -86,6 +86,8 @@ MonoBehaviour:
   adButton: {fileID: 1300}
   adText: {fileID: 473472346170631459}
   nextText: {fileID: 6812248202147666586}
+  progressionLabel: {fileID: 7314147870350336722}
+  rewardLabel: {fileID: 1932468268075533550}
   fillDelay: 0.3
   fillDuration: 0.6
   fillCurve:
@@ -378,6 +380,28 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1300}
   m_SourcePrefab: {fileID: 100100000, guid: d1ea26485e2da054c8265619d8d90585, type: 3}
+--- !u!114 &7314147870350336722 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7314147870350337694, guid: d1ea26485e2da054c8265619d8d90585, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!114 &1932468268075533550 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1932468268075532450, guid: d1ea26485e2da054c8265619d8d90585, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &473472346170631459 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 473472346170630511, guid: d1ea26485e2da054c8265619d8d90585, type: 3}

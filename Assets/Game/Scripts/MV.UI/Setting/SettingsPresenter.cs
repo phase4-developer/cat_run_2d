@@ -163,7 +163,7 @@ namespace MV.UI
         public static string SupportMailUrl(string email, string appName, string version, string device, string os, string language)
         {
             string subject = MvUiText.Ui("ui.setting.mailSubject", Dash(appName));
-            string body = MvUiText.Ui("ui.setting.mailBody", Dash(version), Dash(device), Dash(os), Dash(language)).Replace("\\n", "\n");
+            string body = MvUiText.Ui("ui.setting.mailBody", Dash(version), Dash(device), Dash(os), Dash(language));
             return "mailto:" + email + "?subject=" + Uri.EscapeDataString(subject) + "&body=" + Uri.EscapeDataString(body);
         }
 
