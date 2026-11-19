@@ -36,6 +36,18 @@ namespace MV.Sound
             set { if (Player != null) Player.Muted = value; }
         }
 
+        /// <summary>
+        /// 설정 저장값을 소리에 적용(부트·설정 팝업, MV-UI2-SETTING). 정크버스터즈 설정처럼 배경음·효과음을 따로 둔다.
+        /// </summary>
+        public static void ApplySettings(float bgmVolume, float sfxVolume, bool bgmMuted, bool sfxMuted)
+        {
+            if (Player == null) return;
+            Player.BgmVolume = bgmVolume;
+            Player.SfxVolume = sfxVolume;
+            Player.BgmMuted = bgmMuted;
+            Player.SfxMuted = sfxMuted;
+        }
+
         /// <summary>로비 BGM 레이어(정본 toLobby L2473 intensity 0). 부팅 후 첫 로비에서도 부른다.</summary>
         public static void EnterLobby() => Player?.EnterLobby();
 

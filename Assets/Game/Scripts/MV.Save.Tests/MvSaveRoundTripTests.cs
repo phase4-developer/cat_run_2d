@@ -24,7 +24,7 @@ namespace MV.Save.Tests
             "\"mvResearch\":{\"lv\":{\"atk\":1},\"run\":{\"key\":\"hp\",\"finishAt\":1700000600000}}," +
             "\"mvShop\":{\"buys\":{\"starter\":{\"n\":1,\"at\":1700000000000}},\"guarantee\":{\"804001001\":3}}," +
             "\"mvPet\":{\"future\":{\"a\":1}}," +
-            "\"mvSettings\":{\"muted\":true,\"contentTab\":\"mode\"}}";
+            "\"mvSettings\":{\"bgmVolume\":40,\"sfxMute\":true,\"contentTab\":\"mode\"}}";
 
         private static readonly string[] ChangedKeys =
         {
@@ -71,7 +71,8 @@ namespace MV.Save.Tests
             Assert.That(loaded.Research.RunningKey, Is.EqualTo("hp"));
             Assert.That(loaded.Shop.GetGuarantee(804001001), Is.EqualTo(3));
             Assert.That(loaded.Pet.IsEmpty, Is.False);
-            Assert.That(loaded.Settings.Muted, Is.True);
+            Assert.That(loaded.Settings.SfxMute, Is.True);
+            Assert.That(loaded.Settings.BgmVolume, Is.EqualTo(40));
             Assert.That(loaded.Meta.CreatedAt, Is.EqualTo(MvSaveTestKit.Now));
             Assert.That(loaded.Meta.LastSaveAt, Is.EqualTo(MvSaveTestKit.Now + 5000));
         }
@@ -129,7 +130,7 @@ namespace MV.Save.Tests
             Assert.That(MvSaveJson.DeepEquals(
                 MvSaveJson.Without(save.ExportPayloadJson(), MvSaveKeys.Settings),
                 MvSaveJson.Without(defaults, MvSaveKeys.Settings)), Is.True, save.ExportPayloadJson());
-            Assert.That(save.Settings.Muted, Is.True, "소리 설정은 진행 초기화에서 유지");
+            Assert.That(save.Settings.SfxMute, Is.True, "소리 설정은 진행 초기화에서 유지");
             Assert.That(save.Settings.ContentTab, Is.EqualTo("mode"));
             Assert.That(save.Meta.CreatedAt, Is.EqualTo(clock.Now));
 
@@ -137,7 +138,7 @@ namespace MV.Save.Tests
             MvSaveStore again = Track(MvSaveStore.Open(options));
             Assert.That(again.Progress.Level, Is.EqualTo(1));
             Assert.That(again.GetWealth(MvWealthIds.Gold), Is.EqualTo(0));
-            Assert.That(again.Settings.Muted, Is.True);
+            Assert.That(again.Settings.SfxMute, Is.True);
         }
 
         [Test]

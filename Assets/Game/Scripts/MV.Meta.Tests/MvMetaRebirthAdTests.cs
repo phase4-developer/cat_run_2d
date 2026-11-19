@@ -187,29 +187,49 @@ namespace MV.Meta.Tests
             Assert.That(Ads.LastPlacement, Is.EqualTo("rebirth_skip"));
         }
 
-        /// <summary>소리 끄기 저장(<c>mvSettings.muted</c>): 켜고 끄기, 다른 설정 칸 유지, 값 없는 요청은 거절.</summary>
+        /// <summary>소리 설정 저장(설정 팝업): 기본값 90·100·Mute 꺼짐, 저장·다른 칸 유지, 범위 밖·값 없음은 거절.</summary>
         [Test]
-        public void SetMuted_SavesSetting_KeepsContentTab()
+        public void SetSound_SavesSettings_KeepsContentTab_RejectsBadValues()
         {
             SetContainer(MvSaveKeys.Settings, "\"contentTab\":\"mode\"");
-            Assert.That(Meta.SetMuted(true).Ok, Is.True);
-            Assert.That(Store.Settings.Muted, Is.True);
+            Assert.That(Store.Settings.BgmVolume, Is.EqualTo(90), "기본 배경음 90(정크버스터즈 0.9)");
+            Assert.That(Store.Settings.SfxVolume, Is.EqualTo(100));
+            Assert.That(Store.Settings.BgmMute || Store.Settings.SfxMute, Is.False);
+            Assert.That(Meta.SetSound(40, 70, true, false).Ok, Is.True);
+            Assert.That(Store.Settings.BgmVolume, Is.EqualTo(40));
+            Assert.That(Store.Settings.SfxVolume, Is.EqualTo(70));
+            Assert.That(Store.Settings.BgmMute, Is.True);
+            Assert.That(Store.Settings.SfxMute, Is.False);
             Assert.That(Store.Settings.ContentTab, Is.EqualTo("mode"), "다른 설정 칸은 그대로");
-            Assert.That(Meta.SetMuted(false).Ok, Is.True);
-            Assert.That(Store.Settings.Muted, Is.False);
-            Assert.That(Meta.SendDebug(MvMetaRequestNames.SetMuted).Code, Is.EqualTo(MvMetaErrors.BadParams));
+            Assert.That(Meta.SetSound(101, 70, false, false).Code, Is.EqualTo(MvMetaErrors.BadParams));
+            Assert.That(Meta.SetSound(-1, 70, false, false).Code, Is.EqualTo(MvMetaErrors.BadParams));
+            Assert.That(Store.Settings.BgmVolume, Is.EqualTo(40), "거절이면 바뀌지 않음");
+            Assert.That(Meta.SendDebug(MvMetaRequestNames.SetSound).Code, Is.EqualTo(MvMetaErrors.BadParams));
+        }
+
+        /// <summary>진동 저장(<c>mvSettings.haptic</c>): 기본 켜짐, 끄고 켜기, 값 없음은 거절.</summary>
+        [Test]
+        public void SetHaptic_SavesSetting()
+        {
+            SetContainer(MvSaveKeys.Settings, "\"contentTab\":\"mode\"");
+            Assert.That(Store.Settings.Haptic, Is.True, "기본 켜짐");
+            Assert.That(Meta.SetHaptic(false).Ok, Is.True);
+            Assert.That(Store.Settings.Haptic, Is.False);
+            Assert.That(Meta.SetHaptic(true).Ok, Is.True);
+            Assert.That(Store.Settings.Haptic, Is.True);
+            Assert.That(Meta.SendDebug(MvMetaRequestNames.SetHaptic).Code, Is.EqualTo(MvMetaErrors.BadParams));
         }
 
         /// <summary>언어 저장(<c>mvSettings.language</c>, MV-LOC): 저장·다른 칸 유지, 빈 값·이상한 글자·값 없음은 거절.</summary>
         [Test]
         public void SetLanguage_SavesCode_RejectsBadValues()
         {
-            SetContainer(MvSaveKeys.Settings, "\"contentTab\":\"mode\",\"muted\":true");
+            SetContainer(MvSaveKeys.Settings, "\"contentTab\":\"mode\",\"bgmMute\":true");
             Assert.That(Store.Settings.Language, Is.EqualTo(""), "고른 적 없으면 빈 값");
             Assert.That(Meta.SetLanguage("ja").Ok, Is.True);
             Assert.That(Store.Settings.Language, Is.EqualTo("ja"));
             Assert.That(Store.Settings.ContentTab, Is.EqualTo("mode"), "다른 설정 칸은 그대로");
-            Assert.That(Store.Settings.Muted, Is.True);
+            Assert.That(Store.Settings.BgmMute, Is.True);
             Assert.That(Meta.SetLanguage("").Code, Is.EqualTo(MvMetaErrors.BadParams));
             Assert.That(Meta.SetLanguage("en/../x").Code, Is.EqualTo(MvMetaErrors.BadParams));
             Assert.That(Meta.SendDebug(MvMetaRequestNames.SetLanguage).Code, Is.EqualTo(MvMetaErrors.BadParams));

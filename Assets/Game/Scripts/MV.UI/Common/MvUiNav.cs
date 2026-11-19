@@ -97,6 +97,14 @@ namespace MV.UI
         public static async UniTask<ContentMenuPopup> OpenContentMenuAsync(ContentMenuData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.ContentMenu, data ?? new ContentMenuData()) as ContentMenuPopup;
 
+        /// <summary>설정(노션 [팝업] 설정, MV-UI2-SETTING). 로비 설정 버튼이 연다.</summary>
+        public static async UniTask<SettingsPopup> OpenSettingsAsync(SettingsPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.Setting, data ?? new SettingsPopupData()) as SettingsPopup;
+
+        /// <summary>언어 고르기(D-LOC-PLAN ③). 설정 팝업의 언어 버튼이 연다.</summary>
+        public static async UniTask<LanguagePopup> OpenLanguageAsync(LanguagePopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.SettingLanguage, data ?? new LanguagePopupData()) as LanguagePopup;
+
         /// <summary>퀘스트(08 §8.5.1, MV-META-QUEST). 잠김 판정은 로비 버튼(<see cref="LobbyPresenter.QuestSideId"/>)이 한다.</summary>
         public static async UniTask<QuestPopup> OpenQuestAsync(QuestPopupData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.Quest, data ?? new QuestPopupData()) as QuestPopup;
