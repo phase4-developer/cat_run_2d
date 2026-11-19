@@ -65,7 +65,8 @@ namespace MV.UI.Tests
             Assert.That(stack, Is.Not.Null, "Mid/Weapon/Stack");
             int shown = 0;
             foreach (Transform c in stack) if (c.gameObject.activeSelf) shown++;
-            Assert.AreEqual(1, shown, "디자이너 예시 칸은 숨기고 풀에서 꺼낸 칸만 보인다");
+            // 맨 위 카드 = 장착 카드(사용자 2026-11-19 「장착한것도 카드야 별개가 아니라」): 스택에 다시 그리지 않는다.
+            Assert.AreEqual(0, shown, "디자이너 예시 칸은 숨기고, 맨 위 카드는 장착 칸이 그린다");
             Assert.AreEqual(1, w.Equip.Tier);
         }
 
@@ -106,6 +107,8 @@ namespace MV.UI.Tests
             Assert.That(w.Hand.Select(c => c.Tier), Is.EqualTo(expect), "모델 머지 결과 = 시뮬 손패");
             Assert.That(w.StackSlots.Select(x => x.Tier), Is.EqualTo(expect), "칸 = 손패");
             Assert.AreEqual(expect[0], w.Equip.Tier, "장착 = 최고 단계");
+            var shownTiers = w.StackSlots.Where(x => x.gameObject.activeSelf).Select(x => x.Tier);
+            Assert.That(shownTiers, Is.EqualTo(expect.Skip(1)), "스택에는 맨 위(장착) 카드를 빼고 보인다");
         }
 
         [Test]
