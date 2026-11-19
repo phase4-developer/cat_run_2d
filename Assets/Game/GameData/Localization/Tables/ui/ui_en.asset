@@ -30,6 +30,218 @@ MonoBehaviour:
     m_Localized: x{0}
     m_Metadata:
       m_Items: []
+  - m_Id: 125529584660480
+    m_Localized: Content
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214912
+    m_Localized: "Tap to start \xB7 Tickets refill every day"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214913
+    m_Localized: Modes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214914
+    m_Localized: Growth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214915
+    m_Localized: "Watch an ad: Ticket +{0} \xB7 {1} left today"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214916
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214917
+    m_Localized: NEW
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214918
+    m_Localized: Tickets {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214919
+    m_Localized: Today {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214920
+    m_Localized: '{0} coming soon'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214921
+    m_Localized: Unlocks at {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214922
+    m_Localized: Coming soon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214923
+    m_Localized: Quests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214924
+    m_Localized: Resets in {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214925
+    m_Localized: Done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214926
+    m_Localized: Claim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214927
+    m_Localized: Claim All
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214928
+    m_Localized: Daily
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214929
+    m_Localized: Monthly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214930
+    m_Localized: Achievements
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214931
+    m_Localized: Pass
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214932
+    m_Localized: Daily Points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214933
+    m_Localized: Finish Runs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214934
+    m_Localized: Climb Stairs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214935
+    m_Localized: Break Walls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214936
+    m_Localized: Collect Churu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214937
+    m_Localized: Collect Fish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214938
+    m_Localized: Craft Weapons
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214939
+    m_Localized: Toy Basket
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214940
+    m_Localized: Lobby Upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214941
+    m_Localized: Open Areas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214942
+    m_Localized: Clear Modes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214943
+    m_Localized: Watch Ads
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214944
+    m_Localized: Rebirth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214945
+    m_Localized: Daily Points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214946
+    m_Localized: Cat Study Room
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214947
+    m_Localized: "Level up each branch to boost run stats \xB7 One at a time"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214948
+    m_Localized: Branch {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214949
+    m_Localized: Claim!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214950
+    m_Localized: Researching
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214951
+    m_Localized: Lv {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214952
+    m_Localized: "{0} +{1} \xB7 Lv {2}/{3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214953
+    m_Localized: Lv {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214954
+    m_Localized: "Upgrade \xB7 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214955
+    m_Localized: Claim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214956
+    m_Localized: Other research in progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214957
+    m_Localized: Attack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214958
+    m_Localized: Attack Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214959
+    m_Localized: Range
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214960
+    m_Localized: Crit Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214961
+    m_Localized: Churu Gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214962
+    m_Localized: Crit Chance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125529618214963
+    m_Localized: Double Attack
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -52,10 +52,10 @@ namespace MV.UI.Tests
             q.Group(QuestCategory.Daily, 2, QuestItemState.Progress);
             q.Group(QuestCategory.Achievement, 3, QuestItemState.Progress);
             p.Open();
-            Assert.That(p.Model.Tabs.Select(t => t.Text), Is.EqualTo(new[] { "일일", "업적" }), "탭 = 묶음 분류");
+            Assert.That(p.Model.Tabs.Select(t => t.Text), Is.EqualTo(new[] { "#ui.quest.tabDaily", "#ui.quest.tabAchieve" }), "탭 = 묶음 분류");
             Assert.That(p.Model.Count(MetaRowKind.Header), Is.EqualTo(2));
             Assert.That(p.Model.Count(MetaRowKind.Row), Is.EqualTo(items + 1), "칸 = 지금 탭 묶음의 항목");
-            Assert.That(p.Model.Sub, Does.StartWith("초기화까지"));
+            Assert.That(p.Model.Sub, Is.EqualTo("#ui.meta.resetIn"));
             p.SelectTab(QuestPresenter.TabId(QuestCategory.Achievement));
             Assert.That(p.Model.Count(MetaRowKind.Row), Is.EqualTo(1));
             Assert.That(p.Model.Sub, Is.Empty, "업적은 초기화 없음");

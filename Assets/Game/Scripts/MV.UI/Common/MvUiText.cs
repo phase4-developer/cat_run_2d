@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using jjevol;
 using MV.Data;
 
@@ -16,6 +17,32 @@ namespace MV.UI
             if (string.IsNullOrEmpty(key) || UIRuntimeOptions.Localize == null) return fallback;
             string v = UIRuntimeOptions.GetLocalizedString(collection, key);
             return string.IsNullOrEmpty(v) || v == key ? fallback : v;
+        }
+
+        /// <summary>화면 문구 <c>ui</c> 컬렉션(키 = <c>ui.&lt;화면&gt;.&lt;항목&gt;</c>). 없으면 <c>#키</c>(07 §7.12 「문구가 없으면 #키」).</summary>
+        public static string Ui(string key) => Get("ui", key, "#" + key);
+
+        /// <summary><see cref="Ui(string)"/> + 자리 표시 <c>{0}</c>… (InvariantCulture, 07 §7.12).</summary>
+        public static string Ui(string key, params object[] args) => Format(Ui(key), args);
+
+        /// <summary>토스트 문구 <c>toastMessage</c> 컬렉션(키 = <c>toastMessage.&lt;항목&gt;</c>). 없으면 <c>#키</c>.</summary>
+        public static string Toast(string key, params object[] args) => Format(Get("toastMessage", key, "#" + key), args);
+
+        /// <summary>런 팝업·긴 안내 <c>msg</c> 컬렉션(키 = <c>msg.&lt;항목&gt;</c>). 없으면 <c>#키</c>.</summary>
+        public static string Msg(string key, params object[] args) => Format(Get("msg", key, "#" + key), args);
+
+        static string Format(string text, object[] args)
+        {
+            if (args == null || args.Length == 0) return text;
+            try { return string.Format(CultureInfo.InvariantCulture, text, args); }
+            catch (System.FormatException) { return text; }
+        }
+
+        /// <summary>재화 이름을 <c>01_wealth</c> 행 id로: 번역 <c>name:&lt;id&gt;</c> → 표 <c>name</c> 열 → id.</summary>
+        public static string WealthNameById(MvTables tables, int id)
+        {
+            string raw = tables != null ? RawName(tables.Wealth.RawRows, id) : null;
+            return Name(id, raw ?? id.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>표 행 이름 <c>name:&lt;행 id&gt;</c>.</summary>
