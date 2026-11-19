@@ -319,6 +319,30 @@ MonoBehaviour:
     m_Key: ui.result.reward
     m_Metadata:
       m_Items: []
+  - m_Id: 183528915300352
+    m_Key: ui.run.label.tower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660480
+    m_Key: ui.run.label.stair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660481
+    m_Key: ui.run.label.sgate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660482
+    m_Key: ui.run.label.cgate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660483
+    m_Key: ui.run.floorN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660484
+    m_Key: ui.run.areaGate
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
