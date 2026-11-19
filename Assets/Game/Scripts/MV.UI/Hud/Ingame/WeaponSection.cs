@@ -50,7 +50,8 @@ namespace MV.UI
         [Tooltip("장착 칸 등급 상승 튐 초")] [SerializeField] float equipPopSec = 0.25f;
 
         [Header("문 카드 줄서기(MV-UI3-HUD9, 참고 영상)")]
-        [Tooltip("스택 맨 아래 칸과 줄 첫 카드 사이 빈칸(px). 줄 카드 실루엣이 다 보이게 띄운다.")] [SerializeField] float queueGap = 40f;
+        [Tooltip("스택 맨 아래 칸의 아래 끝과 줄 첫 카드 사이 빈칸(칸 높이 배). 사용자 2026-11-19 「마지막 카드 위치에서 지금보다 더 아래 카드 사이즈 0.3정도 더 밑으로」.")] [SerializeField] float queueGapRatio = 0.38f;
+        [Tooltip("줄 카드끼리 위 끝 사이 거리(칸 높이 배). 스택(-110 px 간격)보다 넓게 띄워 아이콘 실루엣이 보이게 한다(사용자 2026-11-19 「간격도 더 널널하게 해서 아이콘 실루엣은 확인 가능하게」).")] [SerializeField] float queueStepRatio = 0.6f;
         [Tooltip("문 위 카드 자리 → 줄 자리 비행 초")] [SerializeField] float launchSec = 0.4f;
         [Tooltip("카드마다 출발 간격 초(표 300 fly.cloneGapMs 70 ms를 옮김, 사용자 2026-11-19 「프리팹으로 관리」)")] [SerializeField] float launchGapSec = 0.07f;
         [Tooltip("받을 장이 없는데 줄에 남은 카드(거절된 장)를 치우기까지 초")] [SerializeField] float queueHoldSec = 2f;
@@ -524,15 +525,15 @@ namespace MV.UI
         Vector2 QueueAt(int k) => QueueAt(k, _model != null ? _model.Cards.Count : 0);
 
         /// <summary>
-        /// 줄 k번째 자리(스택 기준 anchoredPosition, 위 가운데 기준): 스택 n장일 때 맨 아래 칸의 아래 끝에서 <see cref="queueGap"/> 띄우고(겹치지 않음), 그 아래로 칸 간격.
+        /// 줄 k번째 자리(스택 기준 anchoredPosition, 위 가운데 기준): 스택 n장일 때 맨 아래 칸의 아래 끝에서 칸 높이 × <see cref="queueGapRatio"/> 띄우고(겹치지 않음), 그 아래로 칸 높이 × <see cref="queueStepRatio"/>씩.
         /// 사용자 2026-11-19 「제일 마지막 무기에서 겹치지 않게 포지션 맞춰야해」.
         /// </summary>
         Vector2 QueueAt(int k, int n)
         {
             float h = SlotHeight();
             float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
-            float first = n > 0 ? -top - (n - 1) * (h + spacing) - h - queueGap : -top;
-            return new Vector2(0, first - k * (h + spacing));
+            float first = n > 0 ? -top - (n - 1) * (h + spacing) - h - h * queueGapRatio : -top;
+            return new Vector2(0, first - k * h * queueStepRatio);
         }
 
         /// <summary>도착한 줄 카드를 자리로(스택이 늘고 줄 앞이 빠지면 나머지는 그대로, 머지로 스택이 줄면 위로 당겨진다).</summary>

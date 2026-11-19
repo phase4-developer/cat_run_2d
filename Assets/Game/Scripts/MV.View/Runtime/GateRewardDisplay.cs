@@ -35,13 +35,15 @@ namespace MV.View
         [SerializeField] GateRewardCard _template;
         [Tooltip("보일 카드 상한(장). 통과 때 HUD로 넘기는 장 수도 이 값까지다(표 300 CRAFT_ICON_MAX를 옮김, 사용자 2026-11-19 「표값 그냥 지우고 … 프리팹 인스펙터 값으로」).")]
         [SerializeField] int _maxCards = 999;
-        [Tooltip("놓는 칸 왼쪽 끝 x(m, 묶음 기준) = 왼쪽 기둥 안쪽 면. 첫 카드 왼쪽 끝이 여기.")]
+        [Tooltip("왼쪽 기둥 안쪽 면 x(m, 묶음 기준). 줄 가운데 = 두 기둥 안쪽 면의 가운데.")]
         [SerializeField] float _leftX = -0.735f;
-        [Tooltip("놓는 칸 오른쪽 끝 x(m) = 오른쪽 기둥 안쪽 면. 카드 오른쪽 끝이 넘으면 위 줄.")]
+        [Tooltip("오른쪽 기둥 안쪽 면 x(m).")]
         [SerializeField] float _rightX = 0.735f;
+        [Tooltip("한 줄 장 수. 넘치면 위 줄(사용자 2026-11-19 「상단 무기 리스트는 인스펙터로 크기하고 한줄에 들어가는 사이즈 조절 가능하게 … 간격 포함해서」).")]
+        [SerializeField] int _perRow = 5;
         [Tooltip("카드 간격(m): x = 옆(카드 너비보다 작으면 겹친다), y = 위 줄.")]
         [SerializeField] Vector2 _step = new Vector2(0.255f, 0.3f);
-        [Tooltip("카드 크기(m). HUD 스택 칸(170×150)과 같은 비율. 한 줄 장 수 = 기둥 사이 폭에 이 크기·간격 x로 들어가는 수(5장 = 0.45 + 4 × 0.255 = 1.47).")]
+        [Tooltip("카드 크기(m). HUD 스택 칸(170×150)과 같은 비율. 기둥 사이(1.47)에 5장 = 0.45 + 4 × 0.255.")]
         [SerializeField] Vector2 _cardSize = new Vector2(0.45f, 0.4f);
 
         /// <summary>통과 때 카드 화면 자리(종류, 카드들). Boot 다리가 HUD로 넘긴다. 받는 쪽은 목록을 그 자리에서 읽고 보관하지 않는다.</summary>
@@ -63,8 +65,8 @@ namespace MV.View
         public int MaxCards => _maxCards;
         public float LeftX => _leftX;
         public float RightX => _rightX;
-        /// <summary>한 줄 장 수 = 기둥 사이 폭에 카드가 간격 x로 들어가는 수(최소 1).</summary>
-        public int Columns => _step.x > 0 ? Mathf.Max(1, Mathf.FloorToInt((_rightX - _leftX - _cardSize.x) / _step.x + 1e-4f) + 1) : 1;
+        /// <summary>한 줄 장 수(인스펙터 <see cref="_perRow"/>, 최소 1).</summary>
+        public int Columns => Mathf.Max(1, _perRow);
 
         public abstract GateRewardKind Kind { get; }
 
