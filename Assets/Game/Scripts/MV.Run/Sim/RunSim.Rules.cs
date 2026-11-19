@@ -350,7 +350,7 @@ namespace MV.Run
                 double nzb = b.Z + _p.ProjSpeed * dt;
                 // 이번 틱 이동 구간 [b.Z, nzb]에서 가장 먼저 닿는 피격 가능 대상 하나(정본 틱당 1대상). 순서는 질의가 진입 z·Id로 정한다.
                 _projHits.Clear();
-                HitQuery.Cast(s, b.X, b.Z, nzb, _projHits);
+                HitQuery.Cast(s, b.X, b.Z, nzb, b.Spear, _projHits);
                 RunObject best = null; double bz = 0;
                 foreach (var h in _projHits)
                 {

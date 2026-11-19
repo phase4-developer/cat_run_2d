@@ -63,6 +63,8 @@ namespace MV.View
             if (Has(_stairs, "ClimbStairs", nameof(ClimbStairView))) _stairs.Init(tables, _cfg, _rig.Cam);
             if (_objects != null && Has(_hits, "HitWorld", nameof(RunHitWorld)))
                 _objects.ConnectHits(_hits);   // 뷰 연결·회수 때 프리팹 Hitbox 등록·해제, 틱마다 대상 위치 맞추기
+            if (_hits != null && _projs != null)
+                _hits.SetProjectileShapes(_projs.HitShape(false), _projs.HitShape(true));   // 투사체 판정 구 = Proj_Toy·Proj_Spear Hitbox
         }
 
         public const string PrefabPath = "Assets/Game/Prefabs/WorldRoot.prefab";
