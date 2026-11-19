@@ -94,6 +94,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002}
     m_Modifications:
+    - target: {fileID: 1160949530822721052, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1273046835899328125, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8390693153538910056, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3947823058687302606, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7792430017237218106, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3200995168662133119, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 842117870945072989, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
       propertyPath: m_Name
       value: Popup_AreaUpgrade
