@@ -109,15 +109,19 @@ namespace MV.UI.Tests
         [Test]
         public void DealHold_MergeWaitsUntilCardReachesBottomThenRisesToItsSlot()
         {
-            // 사용자 2026-11-19 「정렬되는 타이밍에 카드가 순서대로 3장이 같은거면 3개중 제일 위 카드로 합쳐지면서 머지」 「날라올때도 정렬 유지하라는거야」: 손패에 정렬되는 순간(올라가는 중에도) 모은다.
+            // 사용자 2026-11-19 「정렬되는 타이밍에 카드가 순서대로 3장이 같은거면 3개중 제일 위 카드로 합쳐지면서 머지」: 새 카드가 제자리에 정렬되는 순간 모은다.
             var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.5f };
             m.Reset(new[] { 0, 1, 2 }, 0);   // 손패 [2, 2, 1]
             m.Deliver(1, 2);                 // 2등급 1장: 자리 = 1등급 위
             var actions = new List<HandAction>();
             m.Step(0, 0.001, actions);
-            Assert.That(actions.Select(a => a.Kind), Is.EqualTo(new[] { HandActionKind.Dealt, HandActionKind.GatherStart }), "3장이 되면 올라가는 중에도 바로 모은다");
+            Assert.That(actions.Select(a => a.Kind), Is.EqualTo(new[] { HandActionKind.Dealt }), "올라가는 중에는 아직 모으지 않는다");
             Assert.That(actions[0].Duration, Is.LessThan(0.1f), "다음 전달은 올라가는 연출을 기다리지 않고 짧은 간격으로 이어진다(사용자 2026-11-19 「딜레이만 살짝있게 연속으로」)");
             Assert.That(m.Settling, Is.EqualTo(0.5).Within(1e-5), "올라가는 시간");
+            m.Step(0.49, 0.489, actions);
+            Assert.That(actions.Count, Is.EqualTo(1), "제자리 전에는 모으지 않는다");
+            m.Step(0.5, 0.01, actions);
+            Assert.That(actions.Select(a => a.Kind), Is.EqualTo(new[] { HandActionKind.Dealt, HandActionKind.GatherStart }), "제자리에 정렬되는 순간 바로 모은다");
             Assert.That(actions[1].Gathered, Is.EqualTo(m.Cards.Where(c => c.Tier == 2).Select(c => c.Id).ToArray()), "그 등급 맨 위 3장(위 → 아래)");
 
             var c = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f };

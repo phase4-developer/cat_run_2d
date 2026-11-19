@@ -80,6 +80,8 @@ namespace MV.UI
         readonly int _mergeN;
         readonly int _maxTier;
         readonly List<HandCard> _cards = new List<HandCard>();
+        /// <summary>카드 Id → 제자리에 정렬되는 시각(전달 카드만, 없으면 이미 제자리).</summary>
+        readonly Dictionary<int, double> _readyAt = new Dictionary<int, double>();
         readonly List<Job> _queue = new List<Job>();
         int _nextId = 1;
         double _t0;
@@ -127,6 +129,7 @@ namespace MV.UI
             _dealWait = 0;
             _mergeWait = 0;
             _settle = 0;
+            _readyAt.Clear();
             _t0 = now;
             _nextId = 1;
             if (counts == null) return;
@@ -137,9 +140,9 @@ namespace MV.UI
 
         /// <summary>
         /// handDeliver: 대기열에 전달 1장(단계 t)을 n번 넣는다. 전달(줄 → 위로 → 제자리 정렬)은 머지와 상관없이 전달 간격(dealGap)으로 시간차로 이어진다.
-        /// 정렬 순서는 카드가 날아오는 중에도 유지된다(손패에 들어가는 순간 정렬). 머지는 그 정렬 순서를 위에서부터 세어 같은 등급 연속 3장이 되면 이동 끝을 기다리지 않고 한 번에 1개씩 일어난다
+        /// 머지는 카드가 제자리에 정렬되는 순간(<see cref="DealStraightSec"/> 뒤) 위에서부터 세어 같은 등급 연속 3장이 모두 제자리에 있으면 한 번에 1개씩 일어난다
         /// (사용자 2026-11-19 「카드 아래에 와서 위로 올라가 올라가서 장착칸으로 가서 정렬되 이 동작은 그냥 시간차로 이루어져 그리고 정렬되는 타이밍에 카드가 순서대로 3장이 같은거면
-        /// 3개중 제일 위 카드로 합쳐지면서 머지가 일어나고 뒤에 있던 카드들이 정렬돼」 「머지는 한번에 한개씩 발동」 「정렬되는건 머지하고 상관없이 시간차」 「위에서부터 3개 머지 세어야지」 「날라올때도 정렬 유지하라는거야」).
+        /// 3개중 제일 위 카드로 합쳐지면서 머지가 일어나고 뒤에 있던 카드들이 정렬돼」 「머지는 한번에 한개씩 발동」 「정렬되는건 머지하고 상관없이 시간차」 「위에서부터 3개 머지 세어야지」).
         /// </summary>
         public void Deliver(int n, int tier)
         {
@@ -212,6 +215,7 @@ namespace MV.UI
             int before = TopTier;
             var card = new HandCard(_nextId++, head.Tier);
             _cards.Add(card);
+            _readyAt[card.Id] = now + Math.Max(0f, DealStraightSec);   // 줄에서 올라가 제자리에 정렬되는 순간
             Sort();
             head.N--;
             if (head.N <= 0) _queue.RemoveAt(0);
@@ -224,14 +228,20 @@ namespace MV.UI
 
         bool StartMerge(double now, List<HandAction> actions)
         {
-            // 위에서부터 센다: 같은 등급 연속 MERGE_N장이 처음 나오는 묶음의 맨 위 3장(위 → 아래)을 3장 중 맨 위 카드로 모은다. 날아오는 카드도 정렬 순서대로 센다.
-            // 사용자 2026-11-19 「위에서부터 3개 머지 세어야지 중간에 꼬이지 않고 정렬되고」, 「3개중 제일 위 카드로 합쳐지면서」, 「날라올때도 정렬 유지하라는거야」.
+            // 위에서부터 센다: 같은 등급 묶음마다 맨 위 MERGE_N장이 모두 제자리에 정렬돼 있으면 그 3장(위 → 아래)을 3장 중 맨 위 카드로 모은다.
+            // 사용자 2026-11-19 「위에서부터 3개 머지 세어야지 중간에 꼬이지 않고 정렬되고」, 「3개중 제일 위 카드로 합쳐지면서」.
             int at = -1, tier = 0;
             for (int i = 0; i < _cards.Count;)
             {
                 int t = _cards[i].Tier, j = i;
                 while (j < _cards.Count && _cards[j].Tier == t) j++;
-                if (t < _maxTier && j - i >= _mergeN) { at = i; tier = t; break; }
+                if (t < _maxTier && j - i >= _mergeN)
+                {
+                    bool placed = true;
+                    for (int q = i; q < i + _mergeN && placed; q++)
+                        if (_readyAt.TryGetValue(_cards[q].Id, out var r) && r > now) placed = false;
+                    if (placed) { at = i; tier = t; break; }
+                }
                 i = j;
             }
             if (at < 0) return false;
@@ -253,6 +263,7 @@ namespace MV.UI
             var ids = _gather;
             _gather = null;
             _cards.RemoveAll(c => Array.IndexOf(ids, c.Id) >= 0);
+            foreach (var id in ids) _readyAt.Remove(id);
             var card = new HandCard(_nextId++, _gatherTier + 1);
             _cards.Add(card);
             Sort();
