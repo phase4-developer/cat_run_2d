@@ -124,6 +124,20 @@ namespace MV.UI.Tests
             Assert.IsTrue(view.Interactable);
         }
 
+        [Test]
+        public void Rewards_ZeroAmount_HasNoSlot()
+        {
+            var d = Data(new CountingSettler());
+            d.Gold = 238; d.Dia = 0; d.Tok = 55;
+            var r = ResultPresenter.Rewards(d);
+            Assert.AreEqual(2, r.Count, "블루 마법석 0개는 칸을 만들지 않는다");
+            Assert.AreEqual("gold", r[0].WealthType);
+            Assert.AreEqual("goldenFish", r[1].WealthType);
+
+            d.Gold = 0.9; d.Dia = 0; d.Tok = 0;
+            Assert.AreEqual(0, ResultPresenter.Rewards(d).Count, "골드는 정산처럼 소수점 버림 뒤 0이면 숨김");
+        }
+
         [TestCase(0, 0, 100, 0, 0f)]
         [TestCase(50, 80, 100, 80, 0.5f)]
         [TestCase(99, 150, 100, 100, 0.99f)]
