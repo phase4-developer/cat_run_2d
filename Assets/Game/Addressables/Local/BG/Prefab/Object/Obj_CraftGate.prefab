@@ -439,6 +439,18 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: b2daae7691085492d92f8721d661b870, type: 3}
+    - target: {fileID: 5530118000000000101, guid: bd292f017983f44939e4fca12986d13a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9021979648638796212, guid: bd292f017983f44939e4fca12986d13a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6633361269430648139, guid: bd292f017983f44939e4fca12986d13a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.478
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

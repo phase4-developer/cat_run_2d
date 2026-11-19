@@ -49,6 +49,35 @@ namespace MV.View.Tests
             return o;
         }
 
+        /// <summary>
+        /// 노션 Obj_StairGate UI: 문 안에 계단 아이콘(Icon_Floor), 그 아래 숫자 「x{value}」와 막대(아래로 아이콘 → 숫자 → 막대).
+        /// 무기문(cgate)은 계단문 변형이라 아이콘을 물려받으므로 끄고, 숫자·막대는 글자판 원래 자리 그대로다.
+        /// </summary>
+        [Test]
+        public void StairGate_InnerFloorIcon_AboveNumberAndGauge()
+        {
+            var sg = Object.Instantiate(LoadPrefab("Obj_StairGate"));
+            _made.Add(sg);
+            var icon = sg.transform.Find("Billboard/StairIcon");
+            Assert.That(icon, Is.Not.Null, "Obj_StairGate Billboard/StairIcon");
+            Assert.That(icon.gameObject.activeSelf, Is.True, "계단문 아이콘 켜짐");
+            var sr = icon.GetComponent<SpriteRenderer>();
+            Assert.That(sr != null && sr.sprite != null && sr.sprite.name == "Icon_Floor", Is.True, "Icon_Floor 그림");
+            var label = CountLabel.Find(sg.transform);
+            Assert.That(label.Number.GetComponent<Renderer>().sortingOrder, Is.GreaterThan(sr.sortingOrder), "숫자가 아이콘 위에 그려진다");
+            float iconY = icon.position.y, numY = label.Number.transform.position.y, gaugeY = label.GaugeRoot.transform.position.y;
+            Assert.That(iconY > numY && numY > gaugeY, Is.True, $"아래로 아이콘({iconY}) → 숫자({numY}) → 막대({gaugeY})");
+
+            var cg = Object.Instantiate(LoadPrefab("Obj_CraftGate"));
+            _made.Add(cg);
+            var cgIcon = cg.transform.Find("Billboard/StairIcon");
+            Assert.That(cgIcon, Is.Not.Null, "변형이 물려받은 StairIcon");
+            Assert.That(cgIcon.gameObject.activeSelf, Is.False, "무기문에는 계단 아이콘을 끈다");
+            var cgLabel = CountLabel.Find(cg.transform);
+            Assert.That(((RectTransform)cgLabel.Number.transform).anchoredPosition.y, Is.EqualTo(1.25f).Within(1e-4), "무기문 숫자는 글자판 원래 자리");
+            Assert.That(cgLabel.GaugeRoot.transform.localPosition.y, Is.EqualTo(0.478f).Within(1e-4), "무기문 막대는 글자판 원래 자리");
+        }
+
         [Test]
         public void GatePrefabs_HaveHitbox_AndCountLabelGauge([ValueSource(nameof(GateKeys))] string key)
         {
