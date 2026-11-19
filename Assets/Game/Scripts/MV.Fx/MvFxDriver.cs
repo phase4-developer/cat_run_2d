@@ -62,6 +62,8 @@ namespace MV.Fx
         /// </summary>
         bool _particleMode, _modeKnown, _psPlaying;
         ParticleSystem[] _systems;
+        /// <summary>스스로 재생을 정하는 파티클(<see cref="CardLightningFx"/>의 구름·연결 지점·마디·맞은 자리). 생성 때 한꺼번에 켜지 않는다.</summary>
+        bool[] _selfPlayed;
         float _psElapsed, _psTimeout;
 
         public bool ParticleMode { get { DetectMode(); return _particleMode; } }
@@ -77,6 +79,8 @@ namespace MV.Fx
             _modeKnown = true;
             _particleMode = !enabled;
             _systems = GetComponentsInChildren<ParticleSystem>(true);
+            _selfPlayed = new bool[_systems.Length];
+            for (int i = 0; i < _systems.Length; i++) _selfPlayed[i] = _systems[i] != null && _systems[i].GetComponentInParent<CardLightningFx>(true) != null;
         }
 
         /// <summary>시험용: 파티클 재생 중.</summary>
@@ -184,12 +188,15 @@ namespace MV.Fx
         {
             _psElapsed = 0f;
             _psTimeout = 0f;
-            foreach (var ps in _systems)
+            for (int i = 0; i < _systems.Length; i++)
             {
+                var ps = _systems[i];
                 if (!ps) continue;
                 var main = ps.main;
                 main.loop = false;
                 _psTimeout = Mathf.Max(_psTimeout, main.duration / Mathf.Max(0.0001f, main.simulationSpeed) + main.startLifetimeMultiplier + 0.05f);
+                // 번개가 스스로 켜는 파티클(구름 = 하늘에서 칠 때만, 연결 지점 = 연쇄일 때만)은 여기서 켜지 않는다(시간 계산에는 넣어 반납이 일찍 되지 않게).
+                if (_selfPlayed != null && i < _selfPlayed.Length && _selfPlayed[i]) continue;
                 ps.Play(true);
             }
             _psPlaying = _psTimeout > 0f;

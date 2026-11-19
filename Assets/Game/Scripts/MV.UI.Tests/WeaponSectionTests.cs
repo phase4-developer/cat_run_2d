@@ -70,6 +70,26 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void Depth_FollowsCurrentHeight_UpperSlotInFront()
+        {
+            // 사용자 2026-11-19 「위로 올라가면서 한칸씩 밀면서 뎁스도 한칸 앞으로 나와야」: 깊이 = 지금 높이(위 칸이 앞).
+            var w = NewSection(out var s);
+            s.W[3] = 1;
+            s.W[2] = 1;
+            s.W[1] = 1;
+            w.Tick(0);
+            var slots = w.StackSlots.ToList();   // 위 → 아래
+            Assert.That(slots.Select(x => x.Tier), Is.EqualTo(new[] { 3, 2, 1 }));
+            Assert.That(w.SlotsBackToFront(), Is.EqualTo(new[] { slots[2], slots[1], slots[0] }), "맨 아래 칸이 맨 뒤, 맨 위 칸이 맨 앞");
+
+            // 맨 아래 칸이 가운데 칸보다 높이 올라간 순간(올라가는 중): 가운데 칸 앞으로 한 칸 나온다.
+            float mid = slots[1].rectTransform.anchoredPosition.y, top = slots[0].rectTransform.anchoredPosition.y;
+            slots[2].rectTransform.anchoredPosition = new Vector2(0, (mid + top) * 0.5f);
+            w.Tick(0);
+            Assert.That(w.SlotsBackToFront(), Is.EqualTo(new[] { slots[1], slots[2], slots[0] }), "가운데 칸을 지나면 그 앞, 아직 맨 위 칸 뒤");
+        }
+
+        [Test]
         public void Deliver_WithoutFlight_DealsThenMergesLikeSim()
         {
             var w = NewSection(out var s);
@@ -141,7 +161,7 @@ namespace MV.UI.Tests
                 Assert.Less(y, prev, "줄은 스택 맨 아래 칸 밑으로 차례로 선다");
                 prev = y;
                 Assert.AreEqual(1f, q.transform.localScale.x, 1e-4f, "도착하면 스택 칸 크기");
-                foreach (var g in q.GetComponentsInChildren<Graphic>(true))
+                foreach (var g in q.GetComponentsInChildren<Graphic>(false))   // 켜진 그림만(꺼 둔 머지 플래시는 제외)
                     Assert.AreEqual(1f, g.canvasRenderer.GetAlpha(), 1e-4f, "알파 변화 없음");
             }
 
