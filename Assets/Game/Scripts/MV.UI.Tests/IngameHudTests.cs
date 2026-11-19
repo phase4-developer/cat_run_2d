@@ -225,6 +225,20 @@ namespace MV.UI.Tests
             Assert.AreEqual(HudCurrencySlot.IconOf(T, "dia"), view.TopBar.Dia.IconSprite);
         }
 
+        /// <summary>첫 그리기(BindRun 직후, TickRun 전)에도 계단 등급 틀(백판)이 보인다. 예전에는 표를 못 잡아 게이지가 움직여야 보였다.</summary>
+        [Test]
+        public void IngameHud_StairGradeFrame_ShownOnFirstDraw()
+        {
+            var (_, view) = NewHud();
+            var s = NewState();
+            view.BindRun(() => s);
+            view.SetState(new RunHudState { GaugeLv = 1, GaugeFill = 0 });
+            string want = HudGrade.Frame(T, 1)?.sprite;
+            Assert.That(want, Is.Not.Null.And.Not.Empty, "표의 1단계 등급 틀");
+            Assert.AreEqual(want, view.Stair.StairGradeSprite, "계단 칸 등급 틀이 시작부터");
+            Assert.AreEqual(want, view.Stair.GaugeGradeSprite, "게이지 등급 틀이 시작부터");
+        }
+
         [Test]
         public void IngameHud_RunState_DrivesWeaponsClimbCardsAndRoulette()
         {
@@ -278,6 +292,8 @@ namespace MV.UI.Tests
             view.TickRun(0);
             Assert.AreEqual(pick.id, view.SkillCard.CardId, "확정 = 시뮬 결과");
             Assert.AreEqual(pick.icon, view.SkillCard.FaceSprite);
+            Canvas.ForceUpdateCanvases();   // 띠(Vertical Layout) 칸 자리를 실제 배치로
+            Assert.That(view.SkillCard.FaceVisible, Is.True, "확정 카드 그림 칸(첫 칸)이 Mask 창 안");
             Assert.AreEqual(HudGrade.CardName(T, pick), view.SkillCard.Title);
             k.Flying = true; k.FlyLeft = .62;
             view.TickRun(0);
@@ -286,6 +302,7 @@ namespace MV.UI.Tests
             view.TickRun(0);
             Assert.That(view.PosCards.Count(c => c.gameObject.activeSelf), Is.EqualTo(1));
             Assert.AreEqual(pick.id, view.PosCards[0].CardId, "얻은 카드가 Card Pos에");
+            Canvas.ForceUpdateCanvases();
             Assert.That(view.PosCards[0].FaceVisible, Is.True, "Card Pos 자리 카드에 그림이 보인다(원본에서 꺼진 Mask를 켠다)");
         }
     }
