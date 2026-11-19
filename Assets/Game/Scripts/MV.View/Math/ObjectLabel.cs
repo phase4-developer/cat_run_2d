@@ -49,10 +49,12 @@ namespace MV.View
         /// <summary>계단문 숫자 앞 기호(노션 Obj_StairGate UI 「텍스트 포맷 : x{value}」). 언어와 무관한 기호라 언어팩 키를 두지 않는다.</summary>
         public const string StairCountPrefix = "x";
 
-        // 문구(07 §7.12). 언어팩이 들어오기 전까지 코드 문구 + 키 주석(MV.UI와 같은 방식). 이름은 MV-SPEC-02 용어(TermIdMap 「이름만 다름」).
+        // 문구(07 §7.12): 언어팩 ui 컬렉션(키는 105_objectKind.labelKey·생성기 LabelKey). 아래 한국어는 언어팩이 없을 때(시험·부트 전) 대체 문구.
+        // 이름은 MV-SPEC-02 용어(TermIdMap 「이름만 다름」).
         public const string TowerText = "마법서 탑 · 맞히면 계단 Lv UP";          // ui.run.label.tower
         public const string StairText = "우다다 계단 · 모은 계단만큼 돌파";       // ui.run.label.stair
         public const string FloorNKey = "ui.run.floorN", AreaGateKey = "ui.run.areaGate";
+        public const string FloorNFallback = "골목 {0}", AreaGateFallback = "Area {0} 돌파";
 
         static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
@@ -66,13 +68,20 @@ namespace MV.View
             switch (lk)
             {
                 case LabelKind.StairGate:
-                    // L1509: 모은 계단 수 + 충전 막대. 제목은 프리팹 글자. 숫자 형식 「x{value}」(노션 Obj_StairGate UI, 등급별 「+N」 표기 없음).
-                    return new LabelContent(true, true, null, StairCountPrefix + o.N.ToString(Inv), Gauge(o.Prog));
+                {
+                    // L1509: 모은 계단 수 + 충전 막대. 제목은 언어팩(labelKey), 없으면 프리팹 글자(「계단」). 숫자 형식 「x{value}」(노션 Obj_StairGate UI, 등급별 「+N」 표기 없음).
+                    string title = Loc(o.Kind.labelKey, null);
+                    return new LabelContent(true, title == null, title, StairCountPrefix + o.N.ToString(Inv), Gauge(o.Prog));
+                }
                 case LabelKind.CraftGate:
+                {
                     // 노션 Obj_CraftGate UI: 문 안은 무기 아이콘(CraftGateBundle)과 다음 장까지 막대뿐, 숫자 글자판 없음. 장 수는 문 위 카드 묶음이 보인다.
-                    return new LabelContent(true, true, null, null, Gauge(o.Prog));
+                    // 제목은 언어팩(labelKey), 없으면 프리팹 글자(「무기」).
+                    string title = Loc(o.Kind.labelKey, null);
+                    return new LabelContent(true, title == null, title, null, Gauge(o.Prog));
+                }
                 case LabelKind.WellText:
-                    return new LabelContent(o.Z > playerZ - TowerHideBack, false, TowerText, null, LabelContent.NoGauge);
+                    return new LabelContent(o.Z > playerZ - TowerHideBack, false, Loc(o.Kind.labelKey, TowerText), null, LabelContent.NoGauge);
                 case LabelKind.StairText:
                     // 계단 구역 위 문구는 노션 Obj_StairZone UI 시안에 없어 숨긴다(사용자 2026-11-19 「숨겨줘」). 문구·종류는 남겨 둔다.
                     return LabelContent.Hidden;
@@ -103,9 +112,20 @@ namespace MV.View
         public static string ArchText(RunObject o)
         {
             string key = !string.IsNullOrEmpty(o.LabelKey) ? o.LabelKey : o.Kind?.labelKey;
-            if (key == FloorNKey) return "골목 " + o.LabelArg.ToString(Inv);              // ui.run.floorN 「골목 {0}」
-            if (key == AreaGateKey) return "Area " + o.LabelArg.ToString(Inv) + " 돌파";  // ui.run.areaGate 「Area {0} 돌파」
-            return key;
+            if (key == FloorNKey) return string.Format(Inv, Loc(key, FloorNFallback), o.LabelArg);
+            if (key == AreaGateKey) return string.Format(Inv, Loc(key, AreaGateFallback), o.LabelArg);
+            return Loc(key, key);
+        }
+
+        /// <summary>
+        /// 언어팩 <c>ui</c> 컬렉션 문구(부트 7단계가 <c>TableRuntimeOptions.Localization</c>을 건다). 키가 없거나 언어팩 전이면 <paramref name="fallback"/>.
+        /// 시트 칸의 글자 \\n(두 글자)은 줄바꿈(MV.UI <c>MvUiText.Get</c>과 같은 규칙).
+        /// </summary>
+        public static string Loc(string key, string fallback)
+        {
+            if (string.IsNullOrEmpty(key)) return fallback;
+            string v = jjevol.TableData.GetLoc("ui", key, false);
+            return string.IsNullOrEmpty(v) || v == key ? fallback : v.Replace("\\n", "\n");
         }
 
         static float Gauge(double v) => (float)Math.Max(0, Math.Min(1, v));
