@@ -18,11 +18,11 @@
         },
         {
             "name": "01_wealth",
-            "hash": "1f8018e6e280c613a5b2682ae4907a16c1bb35146b5a6a61ee4b693cb9f49123",
+            "hash": "d9be3a0424dc3befbac71214b0e9423a845ca415aba07c57c319556f45de6b0e",
             "metaHash": "a4d3377de6b85f11804bbc6fec334ac295b420f93105bf08b21650b5b53de83b",
             "guid": "6c98c75f33d94ba5ac8272259e50b250",
-            "plainHash": "df913b6c2acb6ae6ad7f2c226100595c8ecec890fc7add36385b189fcc0d6af9",
-            "sourceHash": "df913b6c2acb6ae6ad7f2c226100595c8ecec890fc7add36385b189fcc0d6af9",
+            "plainHash": "b66be260487ae6786f9811c5bc9e7ac45d4197e4e38e7ed8b6972a6bee97a1a0",
+            "sourceHash": "b66be260487ae6786f9811c5bc9e7ac45d4197e4e38e7ed8b6972a6bee97a1a0",
             "source": "Assets/Game/GameData/Table/TSV/01_wealth.txt",
             "sourceKind": "LocalFile",
             "codec": "",
@@ -360,6 +360,18 @@
             "plainHash": "99500775bafcd4176e0da2b60b47cdad94b0e432718465df51d3b795c7108d91",
             "sourceHash": "99500775bafcd4176e0da2b60b47cdad94b0e432718465df51d3b795c7108d91",
             "source": "Assets/Game/GameData/Table/TSV/14_rebirthPerk.txt",
+            "sourceKind": "LocalFile",
+            "codec": "",
+            "encrypted": false
+        },
+        {
+            "name": "15_grade",
+            "hash": "ca03c1eb52d7c1aa047f8ddaf9dc9413e95daddd85177c480124fc8392daa8f1",
+            "metaHash": "e62bc0384b0732d708e4a5545a97401af431157c8f9bb6aaba435688d55b566a",
+            "guid": "b23a22d2c4c84744bf57c04607db470f",
+            "plainHash": "b689311cdf9ba2129596dccb0f53d99f41273035ab4975f23dc58d5a3b523e4e",
+            "sourceHash": "b689311cdf9ba2129596dccb0f53d99f41273035ab4975f23dc58d5a3b523e4e",
+            "source": "Assets/Game/GameData/Table/TSV/15_grade.txt",
             "sourceKind": "LocalFile",
             "codec": "",
             "encrypted": false
