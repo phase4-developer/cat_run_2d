@@ -316,6 +316,28 @@ namespace MV.View.Tests
             view.Sync(null, 0.3);
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Hidden));
             Assert.That(view.VisibleCount, Is.EqualTo(0));
+
+            // 외형 등급 = 화면 손패 맨 위 무기(사용자 2026-11-19 「캐릭터 무기가 바뀌는건 제일위에 무기가 바뀌는 순간」). 논리 손패는 이미 높아도 화면이 낮으면 화면 등급.
+            int top = t.WeaponTierMax();
+            s.W[top] = 1;
+            s.ShownHandTier = 1;
+            s.Phase = RunPhase.Run;
+            s.Fin = false;
+            view.Sync(s, 0.4);
+            Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, 1)), "화면 손패 등급으로 외형을 고른다");
+            s.ShownHandTier = 0;
+            view.Sync(s, 0.5);
+            Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, top)), "화면 손패가 없으면 논리 등급");
+
+            // 피해도 같은 순간(사용자 2026-11-19 「피해하고 투사체도 타이밍 맞춰줘」): 화면 손패 1등급이면 1등급 피해.
+            // 피해 공식은 RunSetup(냥환생·보정)을 읽으므로 설정이 있는 상태로 본다.
+            var d = new RunState(new RunSetup(), t, new Pcg32Rng(1));
+            d.W[top] = 1;
+            d.ShownHandTier = 1;
+            double shownDmg = RunFormulas.BaseDmg(d);
+            d.ShownHandTier = 0;
+            Assert.That(shownDmg, Is.EqualTo(System.Math.Floor(RunFormulas.WeaponDmg(t, 1) * (1 + RunFormulas.AtkPct(d) / 100))), "피해 = 화면 손패 등급");
+            Assert.That(RunFormulas.BaseDmg(d), Is.EqualTo(System.Math.Floor(RunFormulas.WeaponDmg(t, top) * (1 + RunFormulas.AtkPct(d) / 100))), "화면 손패가 없으면 논리 등급 피해");
         }
 
         [Test]
@@ -553,7 +575,7 @@ namespace MV.View.Tests
 
         /// <summary>
         /// 무기문 위 카드 묶음(MV-UI3-HUD9, 임시 리소스, 사용자 2026-11-19 「CreaftGate용 … 다른덴 추가하지마」): Obj_CraftGate 변형에만 있다.
-        /// 장 수 = Made + Extra(상한 없음), 한 줄 끝 카드가 두 기둥(왼쪽·오른쪽 끝 x)에 맞고 넘치면 위 줄, 통과(Done)하면 카드마다 화면 자리를 넘기고 숨긴다.
+        /// 장 수 = Made + Extra(상한 = 프리팹 MaxCards), 왼쪽 기둥부터 오른쪽으로 왼쪽 정렬하고 오른쪽 기둥을 넘으면 위 줄, 통과(Done)하면 카드마다 화면 자리를 넘기고 숨긴다.
         /// </summary>
         [Test]
         public void CraftGateBundle_ShowsMadePlusExtra_ReleasesOnPass()
@@ -575,21 +597,34 @@ namespace MV.View.Tests
             Assert.That(bundle.Template.Frame, Is.Not.Null, "카드 틀 참조");
             Assert.That(bundle.Template.Icon, Is.Not.Null, "카드 그림 참조");
             Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
-            Assert.AreEqual(8, bundle.Shown, "Made + Extra");
+            Assert.That(bundle.LabelIcon, Is.Not.Null, "이름 오른쪽 무기 카드(LabelIcon_Temp)");
+            Assert.That(bundle.LabelIcon.gameObject.activeSelf && bundle.LabelIcon.Frame != null && bundle.LabelIcon.Icon != null, Is.True, "이름 오른쪽 카드는 켜 두고 틀·그림 참조가 있다");
+            Assert.Greater(bundle.LabelIcon.transform.localPosition.x, (bundle.LeftX + bundle.RightX) * 0.5f, "이름 오른쪽(사용자 2026-11-19 「아이콘은 무조건 이름 우측」)");
+            Assert.AreEqual(System.Math.Min(8, bundle.MaxCards), bundle.Shown, "Made + Extra(프리팹 상한까지)");
 
-            // 아래 줄 끝 카드 = 두 기둥, 넘친 카드는 위 줄
+            // 한 줄 5장(사용자 2026-11-19 카드 「5장」), 꽉 찬 줄은 기둥 사이 가운데·기둥 안쪽 면을 넘지 않고 한 장 더 놓으면 넘는다. 두 줄부터 위 줄은 꽉 찬 줄 시작점에 왼쪽 정렬.
             var cards = bundle.Cards;
             float x0 = cards[0].transform.localPosition.x, y0 = cards[0].transform.localPosition.y;
             int cols = 0;
             foreach (var c in cards) if (UnityEngine.Mathf.Approximately(c.transform.localPosition.y, y0)) cols++;
-            Assert.That(cols, Is.GreaterThan(1).And.LessThan(8), "한 줄에 늘어뜨리지 않고 줄을 늘린다");
-            Assert.AreEqual(-1.25f, x0, 1e-4f, "왼쪽 끝 = 왼쪽 기둥");
-            Assert.AreEqual(1.25f, cards[cols - 1].transform.localPosition.x, 1e-4f, "오른쪽 끝 = 오른쪽 기둥");
+            Assert.AreEqual(bundle.Columns, cols, "한 줄 장 수 = 인스펙터 한 줄 장 수");
+            Assert.AreEqual(5, cols, "한 줄 5장(프리팹 값)");
+            float half = bundle.CardSize.x * 0.5f;
+            float mid = (bundle.LeftX + bundle.RightX) * 0.5f;
+            Assert.AreEqual(mid, (x0 + cards[cols - 1].transform.localPosition.x) * 0.5f, 1e-4f, "아래 줄 가운데 = 기둥 사이 가운데");
+            Assert.GreaterOrEqual(x0 - half, bundle.LeftX - 1e-4f, "왼쪽 기둥 안쪽 면을 넘지 않는다");
+            float gap = cards[1].transform.localPosition.x - x0;
+            Assert.Greater(gap, 0f);
+            Assert.LessOrEqual(cards[cols - 1].transform.localPosition.x + half, bundle.RightX + 1e-4f, "카드 오른쪽 끝이 오른쪽 기둥 안쪽 면을 넘지 않는다");
             Assert.Greater(cards[cols].transform.localPosition.y, y0, "넘치면 위 줄");
+            Assert.AreEqual(x0, cards[cols].transform.localPosition.x, 1e-4f, "두 줄부터 위 줄은 가장 긴 줄 시작점에 왼쪽 정렬");
+            Assert.AreEqual(gap, cards[cols + 1].transform.localPosition.x - cards[cols].transform.localPosition.x, 1e-4f, "위 줄도 같은 간격");
 
             gate.Made = 3; gate.Extra = 0;
             rig.Frame(0.1, objs);
             Assert.AreEqual(3, bundle.Shown, "줄면 풀로 돌려준다");
+            float oneMid = (bundle.Cards[0].transform.localPosition.x + bundle.Cards[2].transform.localPosition.x) * 0.5f;
+            Assert.AreEqual(mid, oneMid, 1e-4f, "한 줄일 때만 그 장 수로 기둥 사이 가운데");
 
             var got = new List<int>();
             System.Action<GateRewardKind, IReadOnlyList<GateCardRelease>> on = (k, list) => got.Add(list.Count);

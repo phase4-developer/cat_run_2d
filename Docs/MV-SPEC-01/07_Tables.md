@@ -395,7 +395,7 @@ MvTables.Current = tables;
 | WELL_BRICK_DIV | 0.1 | 배 | [프로토] L1471 | 조각 1개 기준 = gaugeNeed × 0.1 |
 | WELL_BRICK_LIFE | 0.26 | s(게임) | [프로토] L1872 | 조각 튐 |
 | ORE_ICON_GAP_MS | 60 | ms | [프로토] L1878~1886 | 벽돌이 안 보일 때 아이콘 간격 |
-| CRAFT_ICON_MAX | 999 | 개 | [프로토] L2051 5 → 사용자 2026-11-19 「날아가는 것도 만든 장 수 그대로」(키 유지, 값만 크게) | 공방 비행 아이콘 수 상한(사실상 없음, 만든 장 수 그대로 날린다) |
+| ~~CRAFT_ICON_MAX~~ | (삭제) | 개 | [프로토] L2051 5 → 사용자 2026-11-19 「날아가는 것도 만든 장 수 그대로」 → 같은 날 「표값 그냥 지우고 … 프리팹 인스펙터 값으로」 | 표에서 삭제. 무기문 위 카드 상한은 `Obj_CraftGate` 묶음 프리팹 `CraftGateBundle._maxCards`(999) 하나로 관리하고 HUD는 넘겨받은 장 수를 그대로 쓴다 |
 
 **그룹 104 레벨·필드·정산** (`300104xxx`)
 
@@ -566,6 +566,7 @@ zoneIndex(0기반, 보상 `ValuePerZone` 계산) = Zone을 sort 순으로 늘어
 | fieldSeedArea | int | areaNo − 1 | fieldSpec 시드에 넣는 A(0기반). 정본은 「클램프 전 A」 = areaNo − 1 |
 | bgm | sound | 빈칸 | 비우면 Zone 값 |
 | mapIcon | res | 빈칸 | 지도 Area 배너 아이콘(기본 아틀라스 `Atlas_UI_Lobby`) |
+| mapColor | color | 빈칸 | 지도(LevelProgress) Area 배경색 `#RRGGBB`. 비우면 디자이너 색 그대로. Area 1~6은 노션 「[팝업] LevelProgress」 견본 색, 7부터는 **더미**(견본 6색 반복, 결정 후보). 사용자 2026-11-19 「302_area에 색 열 추가」(MV-UI3-LVPROG) |
 | bg | res | 빈칸 | 배너 배경(`Tex_*` 주소, AddressableTexture) |
 | clearRewardType / Id / Value | consume | 빈칸 | 개방 순간 보상. 정본에 없음 → 빈칸 [프로토] |
 | firstClearRewardType / Id / Value | consume | 빈칸 | 첫 Area 아치 도달 보상(확장용) |
@@ -1451,7 +1452,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | 10001002 | weapon | 149 | 2 | DeckAdd | Pow | 30 | 1.043 | 스크래쳐 | [프로토] L824~826, `W_MAXP` L818 |
 | 10001003 | income | 50 | 3 | GoldMul | LinearNext | 20 | 8 | 생선 건조대 | [프로토] L827~828 |
 
-계산(MV-HARDCODE-1b, 표 칸은 비움): `max(stair) = Σ 11_stairLevel.need(lv < 11 lv 최댓값)` = 7+10+13 = 30. `max(weapon) = Σ 12_weaponLevel.need(lv 1~마지막−1) + WEAPON_EXTRA_BUYS` = 194 + 60 = 254.
+계산(MV-HARDCODE-1b, 표 칸은 비움): `max(stair) = Σ 11_stairLevel.need(lv < 11 lv 최댓값)` = 7+10+13 = 30. `max(weapon) = Σ 12_weaponLevel.need(lv 1~마지막−1) + WEAPON_EXTRA_BUYS` = 108 + 60 = 168.
 
 ### 7.8.2 11_stairLevel — 캣타워 단계
 
@@ -1476,7 +1477,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 |---|---|---|
 | id | int | `12001001`~ |
 | lv | int | 무기 Level |
-| need | int | 다음 Level까지 구매 수 `round(8 × 1.15^(lv−1))` |
+| need | int | 다음 Level까지 구매 수. Lv1~3 = 8/9/11(원작 관찰), Lv4부터 10. 시작 덱 1장 + 이전 Level에서 남은 그 등급 장수 + need가 늘 3의 배수(Lv3부터 2 + 10 = 12)라 현재 Level보다 낮은 카드가 덱에 남지 않는다(사용자 2026-11-19 「8,9,11 그다음 다 10이면 … 원작게임이 그런거 같아서」 → 「모두 10으로 하고」) |
 | itemId | fk 103 | 이 Level에서 사는 카드 |
 
 | id | lv | need | itemId |
@@ -1484,13 +1485,17 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | 12001001 | 1 | 8 | 103001001 |
 | 12001002 | 2 | 9 | 103001002 |
 | 12001003 | 3 | 11 | 103001003 |
-| 12001004 | 4 | 12 | 103001004 |
-| 12001005 | 5 | 14 | 103001005 |
-| 12001006 | 6 | 16 | 103001006 |
-| 12001007 | 7 | 19 | 103001007 |
-| 12001008 | 8 | 21 | 103001008 |
+| 12001004 | 4 | 10 | 103001004 |
+| 12001005 | 5 | 10 | 103001005 |
+| 12001006 | 6 | 10 | 103001006 |
+| 12001007 | 7 | 10 | 103001007 |
+| 12001008 | 8 | 10 | 103001008 |
+| 12001009 | 9 | 10 | 103001009 |
+| 12001010 | 10 | 10 | 103001010 |
+| 12001011 | 11 | 10 | 103001011 |
+| 12001012 | 12 | 10 | 103001012 |
 
-근거 [프로토] L813~819. Lv 8 이후는 상승 없음(need 21은 표시용).
+근거 [프로토] L813~819(Lv1~3 원작 관찰 8/9/11). Lv4 이후는 2026-11-19 사용자 결정으로 프로토 공식 외삽 `round(8 × 1.15^(lv−1))`(12/14/16/…/37) 대신 10. 마지막 Level의 need는 표시용.
 
 ### 7.8.4 13_areaUpgrade — 장난감 바구니(Area 강화 5종)
 
@@ -1559,6 +1564,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | targetLevel | int | 이 구매로 도달하는 수(= 현재 P + 1) |
 | priceType / priceId / priceValue | consume | 비용(`;`로 여러 재화 가능) |
 | needPiece | int | 함께 드는 카드 수(그룹 301 펫, [08 §8.5.2](08_Content.md)). 빈칸 = 0 |
+| needRebirth | int | 이 단계(targetLevel)를 사는 데 필요한 부활 레벨(`save.rb.lv`). 빈칸 = 0 = 잠김 없음. 모자라면 구매는 `meta.locked`로 거절. 화면(`Element_Upgrade`): 현재 Lv 0에서 잠기면 칸 전체 `Lock`, Lv ≥ 1에서 잠기면 내용 + 잠김 버튼(필요 수 표시). 13_areaUpgrade·14_rebirthPerk 행은 `levelPriceGroup`으로 이 값을 읽는다(사용자 2026-11-19 레벨별 잠금, 13·14의 행 단위 열은 제거). 기획서에 값이 없어 확인용 임시 값만: 그룹 16·17·18 Lv1 = 1·5·10, 나머지 빈칸 |
 
 **그룹 배정**
 

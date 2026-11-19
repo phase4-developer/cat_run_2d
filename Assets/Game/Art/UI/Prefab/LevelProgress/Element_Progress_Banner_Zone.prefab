@@ -563,6 +563,7 @@ GameObject:
   - component: {fileID: 8595248862366245955}
   - component: {fileID: 5835917316182017842}
   - component: {fileID: 4450244009350894366}
+  - component: {fileID: 7301100000000000022}
   m_Layer: 5
   m_Name: Element_Progress_Banner_Zone
   m_TagString: Untagged
@@ -635,3 +636,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
+--- !u!114 &7301100000000000022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7659879742553318912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3516f2db478341dda6df53454169e337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.LevelProgressZoneBanner
+  zoneNumberText: {fileID: 8185087046128224241}
+  zoneTitleText: {fileID: 9172055613792936724}

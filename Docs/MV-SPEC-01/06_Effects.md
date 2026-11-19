@@ -373,7 +373,7 @@
 | 300007012 | fly.startScale | 1.3 | 배 | L1738 |
 | 300007013 | fly.endScale | 0.6 | 배 | L1739 |
 | 300007014 | fly.endAlpha | 0.4 | 0~1 | L1739 |
-| 300007015 | fly.cloneGapMs | 70 | ms | L2052 |
+| ~~300007015~~ | ~~fly.cloneGapMs~~ | (삭제) | ms | L2052 — 2026-11-19 사용자 「프리팹으로 관리」: 무기 섹션 프리팹 `WeaponSection.launchGapSec` 0.07초 |
 | — | (룰렛 카드 비행 시간·곡선) | 0.6 · .55,0,.75,.4 | s · 곡선 | L563. HUD Card Pos 섹션 프리팹 직렬화 기본값(300 `flyCard.*` 삭제, MV-UI3-HUD3). 제거 지연 620 ms는 시뮬 값 330 `rlFlyMs` 하나만 둔다 |
 
 ## 6.9 배너·토스트·플래시

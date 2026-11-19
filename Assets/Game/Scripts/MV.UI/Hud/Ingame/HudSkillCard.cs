@@ -17,6 +17,8 @@ namespace MV.UI
         [SerializeField] AddressableImage grade;
         [SerializeField] RectTransform strip;
         [SerializeField] AddressableImage[] cells;
+        /// <summary>카드 그림 띠(<c>Slot_Skill</c>)를 가리는 <c>Mask</c> 오브젝트. 프리팹 원본에서는 꺼져 있어(롤링 전 모습), 롤링·확정 때 켠다.</summary>
+        [SerializeField] GameObject mask;
         /// <summary>롤링 전 고정 글(<c>Question Text</c>).</summary>
         [SerializeField] GameObject question;
         /// <summary>Mask 아래 카드 바탕 그림(<c>Card Texture (1)</c>). 롤링 전에는 끈다.</summary>
@@ -33,6 +35,8 @@ namespace MV.UI
         public string GradeSprite => grade ? grade.spriteName : null;
         public string FaceSprite => cells != null && cells.Length > 0 && cells[0] ? cells[0].spriteName : null;
         public bool QuestionShown => question && question.activeSelf;
+        /// <summary>카드 그림이 실제로 보이는가(Mask·띠가 둘 다 켜짐, 시험·QA).</summary>
+        public bool FaceVisible => strip && strip.gameObject.activeSelf && (!mask || mask.activeSelf);
         public RectTransform Rect => (RectTransform)transform;
         public int CellCount => cells?.Length ?? 0;
 
@@ -88,6 +92,7 @@ namespace MV.UI
             if (title) title.text = HudGrade.CardTierName(t, HudGrade.CardTier(t, tierIndex));
             if (question) question.SetActive(false);
             if (maskBack) maskBack.SetActive(false);
+            if (mask) mask.SetActive(true);
             if (strip) { strip.gameObject.SetActive(true); strip.anchoredPosition = _stripHome; }
             if (cells == null || faces == null || faces.Count == 0) return;
             for (int i = 0; i < cells.Length; i++) HudImage.Set(cells[i], MvAtlas.UiCard, faces[i % faces.Count]);
@@ -127,6 +132,7 @@ namespace MV.UI
             if (card != null) SetGrade(t, card.tier);
             if (question) question.SetActive(false);
             if (maskBack) maskBack.SetActive(false);
+            if (mask) mask.SetActive(true);   // 원본은 Mask가 꺼져 있어, 켜지 않으면 Card Pos 자리 카드에 그림이 안 보인다
             if (strip) { strip.gameObject.SetActive(true); strip.anchoredPosition = _stripHome; }
             if (card != null && cells != null && cells.Length > 0) HudImage.Set(cells[0], MvAtlas.UiCard, card.icon);
             if (title) title.text = HudGrade.CardName(t, card);

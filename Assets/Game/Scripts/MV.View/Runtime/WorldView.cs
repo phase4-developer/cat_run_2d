@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using MV.Data;
 using MV.Run;
@@ -112,11 +112,13 @@ namespace MV.View
             bool off = state == null || _rig == null || !_rig.Ready;
             double now = Time.realtimeSinceStartupAsDouble;
             if (_objects != null && !off) _objects.GoldMul = RunFormulas.GoldMul(state);   // 결계 블록 글자판 「+골드」(정본 L1492)
+            if (_objects != null && !off) _objects.GaugeLv = state.GaugeLv;   // 오브 탑 단계 연출
             if (_objects != null && !off)
             {
                 _objects.GateWeaponIcon = WeaponIcon(state);
                 _objects.GateWeaponFrameAtlas = _frameAtlas;
                 _objects.GateWeaponFrame = _frame;
+                _objects.GateWeaponColor = _gradeCol;   // 게이트 보석·파티클 등급색(GradeColorTint)
             }
             if (_cats != null) { if (off) _cats.Hide(); else _cats.Sync(state, now, _rig.Model.OrbitE); }
             if (_projs != null) { if (off) _projs.Hide(); else _projs.Sync(state, now); }
@@ -131,7 +133,8 @@ namespace MV.View
             _iconTier = state.Bt;
             _iconTables = state.Tables;
             _icon = null;
-            foreach (var it in state.Tables.Item.Datas) if (it.tier == state.Bt) { _icon = it.icon; break; }
+            _gradeCol = null;
+            foreach (var it in state.Tables.Item.Datas) if (it.tier == state.Bt) { _icon = it.icon; _gradeCol = it.gradeCol; break; }
             var fr = MvUiGrade.Frame(state.Tables, state.Bt);   // HUD 무기 칸과 같은 규칙(등급 번호 = 103_item.tier)
             _frameAtlas = fr?.atlas;
             _frame = fr?.sprite;
@@ -140,7 +143,7 @@ namespace MV.View
 
         int _iconTier = -1;
         MvTables _iconTables;
-        string _icon, _frameAtlas, _frame;
+        string _icon, _frameAtlas, _frame, _gradeCol;
 
         /// <summary>런 이벤트 → 월드 뷰 반응(오브젝트 맞음·우물 벽돌 빠짐, 06 §6.13). <see cref="SyncObjects"/> 전에 같은 프레임 목록으로 부른다.</summary>
         public void OnRunEvents(System.Collections.Generic.IReadOnlyList<RunEvent> events)

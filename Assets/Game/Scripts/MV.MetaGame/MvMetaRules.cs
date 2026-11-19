@@ -46,6 +46,10 @@ namespace MV.Meta
         public static IReadOnlyList<MvConsume> NextPrice(MvTables t, int levelPriceGroup, int bought)
             => t.LevelPrice.Get(levelPriceGroup, bought + 1)?.price;
 
+        /// <summary>다음 단계(P+1)를 사는 데 필요한 부활 레벨(<c>16_levelPrice.needRebirth</c>). 행이 없거나 빈칸이면 0(사용자 2026-11-19 레벨별 잠금).</summary>
+        public static int NeedRebirth(MvTables t, int levelPriceGroup, int bought)
+            => t.LevelPrice.Get(levelPriceGroup, bought + 1)?.needRebirth ?? 0;
+
         /// <summary>
         /// 캣타워 구매 수 → 런 시작 게이지(정본 <c>kegStart</c> L809~812). 단계 필요 수는 <c>11_stairLevel.need</c>,
         /// 상한 Lv은 <c>11_stairLevel</c> lv 최댓값(<see cref="MvTables.StairMaxLv"/>).

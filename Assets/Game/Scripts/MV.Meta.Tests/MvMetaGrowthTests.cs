@@ -100,6 +100,67 @@ namespace MV.Meta.Tests
             Assert.That(Meta.BuyAreaUp("nope").Code, Is.EqualTo(MvMetaErrors.UnknownKey));
         }
 
+        /// <summary>MV-UI2-AREAUP: 다음 단계 <c>16_levelPrice.needRebirth</c>보다 부활 레벨이 낮으면 잠김(살 수 없음·거절·재화 그대로). 레벨별(사용자 2026-11-19).</summary>
+        [Test]
+        public void NeedRebirth_LocksBuy_PerLevel_UntilRebirthLevel()
+        {
+            Assert.That(Meta.IsRebirthLocked(MvGrowth.AreaUp, "rate"), Is.False, "rate 1단계는 표에 잠김 없음");
+
+            int G(ILevelPriced r) => r.levelPriceGroup;
+            var rate = Tables.AreaUpgrade.ByKey("rate");
+            var range = Tables.AreaUpgrade.ByKey("range");
+            var power = Tables.RebirthPerk.ByKey("power");
+            var locked = new MvTables();
+            locked.LoadAll(new MvMemoryTableSource(new MvTsvDirectorySource(MvTableLoader.TsvDirectory))
+                .Set(LevelPriceData.Table, WithNeedRebirth((G(rate), 1, 2), (G(power), 1, 2), (G(range), 2, 2))));
+            var meta = new MvMeta(() => Store, () => Res, locked, Clock, Ads);
+            SetWealth((MvWealthIds.Dia, Plenty), (MvWealthIds.RbToken, Plenty));
+
+            Assert.That(Store.Rebirth.Lv, Is.EqualTo(0));
+            foreach (var (growth, key, wealth) in new[] { (MvGrowth.AreaUp, "rate", MvWealthIds.Dia), (MvGrowth.Perk, "power", MvWealthIds.RbToken) })
+            {
+                Assert.That(meta.NeedRebirth(growth, key), Is.EqualTo(2), key);
+                Assert.That(meta.IsRebirthLocked(growth, key), Is.True, key);
+                Assert.That(meta.CanBuy(growth, key), Is.False, key + " 잠김이면 버튼 꺼짐");
+                long before = W(wealth);
+                Assert.That(meta.Buy(growth, key).Code, Is.EqualTo(MvMetaErrors.Locked), key);
+                Assert.That(W(wealth), Is.EqualTo(before), key + " 잠김 거절은 재화를 바꾸지 않는다");
+                Assert.That(meta.Level(growth, key), Is.EqualTo(0), key);
+            }
+
+            // range: 1단계는 열림, 2단계부터 잠김
+            Assert.That(meta.IsRebirthLocked(MvGrowth.AreaUp, "range"), Is.False);
+            Assert.That(meta.Buy(MvGrowth.AreaUp, "range").Ok, Is.True);
+            Assert.That(meta.Level(MvGrowth.AreaUp, "range"), Is.EqualTo(1));
+            Assert.That(meta.NeedRebirth(MvGrowth.AreaUp, "range"), Is.EqualTo(2), "다음 단계(2)의 조건");
+            Assert.That(meta.IsRebirthLocked(MvGrowth.AreaUp, "range"), Is.True);
+            Assert.That(meta.Buy(MvGrowth.AreaUp, "range").Code, Is.EqualTo(MvMetaErrors.Locked));
+        }
+
+        /// <summary>16_levelPrice에서 (group, targetLevel) 행의 needRebirth만 바꾼 글.</summary>
+        static string WithNeedRebirth(params (int group, int level, int need)[] set)
+        {
+            string text = System.IO.File.ReadAllText(System.IO.Path.Combine(MvTableLoader.TsvDirectory, LevelPriceData.Table + ".txt"));
+            var lines = text.Replace("\r\n", "\n").Split('\n').Where(l => l.Length > 0).ToList();
+            var head = lines[0].Split('\t').ToList();
+            int gc = head.IndexOf("group"), lc = head.IndexOf("targetLevel"), nc = head.IndexOf("needRebirth");
+            Assert.That(nc, Is.GreaterThanOrEqualTo(0), "16_levelPrice needRebirth 열");
+            int hit = 0;
+            for (int i = 1; i < lines.Count; i++)
+            {
+                var c = lines[i].Split('\t');
+                foreach (var s in set)
+                {
+                    if (c[gc] != s.group.ToString() || c[lc] != s.level.ToString()) continue;
+                    c[nc] = s.need.ToString();
+                    hit++;
+                }
+                lines[i] = string.Join("\t", c);
+            }
+            Assert.That(hit, Is.EqualTo(set.Length), "바꿀 행");
+            return string.Join("\n", lines) + "\n";
+        }
+
         [Test]
         public void Weapon_AddsCurrentTierCard_AndMergesThree()
         {

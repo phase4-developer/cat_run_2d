@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 4637800538949214824}
   - component: {fileID: 7312033806595336998}
   - component: {fileID: 4432029930164073415}
+  - component: {fileID: 419042761198925022}
   m_Layer: 5
   m_Name: Count Text (TMP)
   m_TagString: Untagged
@@ -1340,6 +1341,7 @@ GameObject:
   - component: {fileID: 308171411558112269}
   - component: {fileID: 2918584037497240080}
   - component: {fileID: 3464260871447043731}
+  - component: {fileID: 8262257410429335874}
   m_Layer: 5
   m_Name: Button_Ok
   m_TagString: Untagged
@@ -1443,6 +1445,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3685056080117548897}
   - component: {fileID: 1212394952036460320}
+  - component: {fileID: 318647252222054089}
   m_Layer: 5
   m_Name: Element_Upgrade
   m_TagString: Untagged
@@ -2485,3 +2488,136 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4184235927439316006, guid: 883827f9d89c7104d9d26ebbdeec46b5, type: 3}
   m_PrefabInstance: {fileID: 6862968610995842364}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8262257410429335874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5361093813416453910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 2918584037497240080}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4937328426501805792 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1998124461253213148, guid: 883827f9d89c7104d9d26ebbdeec46b5, type: 3}
+  m_PrefabInstance: {fileID: 6862968610995842364}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b617d335f245c8bb44fc464e0612c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.UnlockRebirthBadge
+--- !u!114 &318647252222054089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5646066678674385752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 963eb1e5da374621add94b6cd21a8d92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.UpgradeElement
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  icon: {fileID: 0}
+  label: {fileID: 2036893751244007758}
+  level: {fileID: 6122351367073716602}
+  currentValue: {fileID: 4861574261909516402}
+  upgradeValue: {fileID: 528585895908027345}
+  arrow: {fileID: 6358058151387139254}
+  okRoot: {fileID: 5361093813416453910}
+  okButton: {fileID: 8262257410429335874}
+  okDisable: {fileID: 6118228552815003012}
+  priceIcon: {fileID: 8059379320411130181}
+  priceText: {fileID: 4432029930164073415}
+  priceLabel: {fileID: 419042761198925022}
+  lockRoot: {fileID: 8936365367720986185}
+  lockBadge: {fileID: 4937328426501805792}
+  contentsRoot: {fileID: 2847603736264414428}
+  buttonGroup: {fileID: 1746199017539052925}
+  rowLock: {fileID: 4677590772839613812}
+  rowLockBadge: {fileID: 3965335467077327002}
+--- !u!114 &419042761198925022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346720271700274043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7346a03f470194389185005050aa96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: JJEvol.UI.Economy.Runtime::jjevol.PriceLabel
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  context: {fileID: 0}
+  icon: {fileID: 0}
+  priceText: {fileID: 4432029930164073415}
+  showOwnedCount: 0
+  ownedCountFirst: 0
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  insufficientColor: {r: 1, g: 0.38, b: 0.45, a: 1}
+--- !u!114 &3965335467077327002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1998124461253213148, guid: 883827f9d89c7104d9d26ebbdeec46b5, type: 3}
+  m_PrefabInstance: {fileID: 3223856076929819462}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b617d335f245c8bb44fc464e0612c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.UnlockRebirthBadge

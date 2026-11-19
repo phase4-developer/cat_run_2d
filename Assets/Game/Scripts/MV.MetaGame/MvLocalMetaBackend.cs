@@ -256,6 +256,7 @@ namespace MV.Meta
             var row = _t.AreaUpgrade.ByKey(key);
             if (row == null || !row.active) return MvMetaResponse.Reject(MvMetaErrors.UnknownKey, key);
             int bought = S.AreaUp.GetLevel(key);
+            if (S.Rebirth.Lv < MvMetaRules.NeedRebirth(_t, row.levelPriceGroup, bought)) return MvMetaResponse.Reject(MvMetaErrors.Locked, key);
             var lv = ToJObject(S.AreaUp.Levels);
             lv[key] = bought + 1;
             return Buy(row, bought, MvSaveKeys.AreaUp, new JObject { ["lv"] = lv }, new JObject { ["key"] = key, ["after"] = bought + 1 });
@@ -266,6 +267,7 @@ namespace MV.Meta
             var row = _t.RebirthPerk.ByKey(key);
             if (row == null || !row.active) return MvMetaResponse.Reject(MvMetaErrors.UnknownKey, key);
             int bought = S.Rebirth.GetPerk(key);
+            if (S.Rebirth.Lv < MvMetaRules.NeedRebirth(_t, row.levelPriceGroup, bought)) return MvMetaResponse.Reject(MvMetaErrors.Locked, key);
             var perks = ToJObject(S.Rebirth.Perks);
             perks[key] = bought + 1;
             return Buy(row, bought, MvSaveKeys.Rebirth, new JObject { ["perks"] = perks }, new JObject { ["key"] = key, ["after"] = bought + 1 });

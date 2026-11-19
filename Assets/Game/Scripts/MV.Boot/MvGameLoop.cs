@@ -265,6 +265,7 @@ namespace MV.Boot
             if (Phase != MvLoopPhase.Run && Phase != MvLoopPhase.Result) return;
             if (_sim == null) return;
             bool playing = Phase == MvLoopPhase.Run;
+            _sim.State.ShownHandTier = MV.UI.WeaponSection.ShownTier;   // 피해·투사체·외형 = HUD 손패 맨 위 무기(사용자 2026-11-19)
             _frame.Step(_sim, _world, playing, ScriptedDrag, RunFrames, FixedDt, TicksPerFrame);
             if (playing) RunFrames++;
             if (playing && _sim.State.Phase == RunPhase.Result) FinishRun();

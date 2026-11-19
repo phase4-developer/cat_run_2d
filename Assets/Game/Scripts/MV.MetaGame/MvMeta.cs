@@ -59,6 +59,8 @@ namespace MV.Meta
 
         public MvSaveStore Store => _store();
         private ResourceService Res => _resources();
+        /// <summary>재화 서비스(가격 글자 PriceLabel이 보유량·변경을 읽는다). 열리지 않았으면 null일 수 있다.</summary>
+        public ResourceService Resources => Res;
         public bool IsReady => Store != null && !Store.IsDisposed && !Store.RequiresReopen && Res != null && !Res.IsDisposed;
 
         // ═════════ 요청 보내기 ═════════
@@ -221,11 +223,21 @@ namespace MV.Meta
             return MvMetaRules.NextPrice(Tables, row.levelPriceGroup, Level(growth, key));
         }
 
-        /// <summary>버튼 활성: MAX 아님 && 비용 재화 충분(정본은 실패 문구 없이 비활성).</summary>
+        /// <summary>다음 단계를 사는 데 필요한 부활 레벨(<c>16_levelPrice[group][P+1].needRebirth</c>). 없으면 0.</summary>
+        public int NeedRebirth(MvGrowth growth, string key)
+        {
+            var row = Row(growth, key);
+            return row == null ? 0 : MvMetaRules.NeedRebirth(Tables, row.levelPriceGroup, Level(growth, key));
+        }
+
+        /// <summary>부활 레벨이 <see cref="NeedRebirth"/>보다 낮아 살 수 없다(노션 잠김 버튼).</summary>
+        public bool IsRebirthLocked(MvGrowth growth, string key) => IsReady && Store.Rebirth.Lv < NeedRebirth(growth, key);
+
+        /// <summary>버튼 활성: MAX 아님 && 환생 잠김 아님 && 비용 재화 충분(정본은 실패 문구 없이 비활성).</summary>
         public bool CanBuy(MvGrowth growth, string key)
         {
             var price = NextPrice(growth, key);
-            return price != null && IsReady && CanAfford(price);
+            return price != null && IsReady && !IsRebirthLocked(growth, key) && CanAfford(price);
         }
 
         public bool CanAfford(IReadOnlyList<MvConsume> price)

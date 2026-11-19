@@ -63,7 +63,6 @@ namespace MV.UI.Tests
                 case "god": return new GodSelectPresenter();
                 case "area": return new AreaUpgradePresenter();
                 case "rebirth": return new RebirthPresenter();
-                case "map": return new MapPresenter();
                 case "unlock": return new FeatureUnlockPresenter();
                 case "debug": return new DebugPanelPresenter();
                 default: throw new ArgumentException(screen);
@@ -92,8 +91,17 @@ namespace MV.UI.Tests
 
         public FakeMetaPort(MvTables tables) { Tables = tables; }
 
-        public int Level(MvGrowth growth, string key) => 0;
-        public bool IsMax(MvGrowth growth, string key) => false;
+        /// <summary>키별 잠김 필요 부활 레벨(없으면 0). <see cref="RebirthLevel"/>은 0.</summary>
+        public readonly Dictionary<string, int> NeedRebirthByKey = new Dictionary<string, int>();
+        /// <summary>최대 단계로 볼 키.</summary>
+        public readonly HashSet<string> MaxKeys = new HashSet<string>();
+
+        /// <summary>키별 현재 레벨(없으면 0).</summary>
+        public readonly Dictionary<string, int> LevelByKey = new Dictionary<string, int>();
+
+        public int Level(MvGrowth growth, string key) => LevelByKey.TryGetValue(key, out int lv) ? lv : 0;
+        public bool IsMax(MvGrowth growth, string key) => MaxKeys.Contains(key);
+        public int NeedRebirth(MvGrowth growth, string key) => NeedRebirthByKey.TryGetValue(key, out int n) ? n : 0;
         public IReadOnlyList<ConsumeData> NextPrice(MvGrowth growth, string key) => new[] { new ConsumeData(ConsumeType.Wealth, 1001002, 40) };
         public bool CanBuy(MvGrowth growth, string key) => CanBuyResult;
         public MetaResult Buy(MvGrowth growth, string key) { BuyCalls++; LastBuy = (growth, key); return MetaResult.Success(); }
