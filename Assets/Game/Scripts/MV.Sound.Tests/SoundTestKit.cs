@@ -88,6 +88,12 @@ namespace MV.Sound.Tests
 
         public void SetMusicOn(bool on) => Music.Add(on ? "on:true" : "on:false");
 
+        /// <summary>볼륨 호출: <c>vol:music:0.5</c>, <c>vol:sfx:0.5</c>.</summary>
+        public readonly List<string> Volumes = new List<string>();
+
+        public void SetTrackVolume(bool music, float volume01) =>
+            Volumes.Add("vol:" + (music ? "music" : "sfx") + ":" + volume01.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+
         public List<string> Addresses()
         {
             var l = new List<string>();

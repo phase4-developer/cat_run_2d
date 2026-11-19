@@ -71,7 +71,8 @@ namespace MV.Meta
                 case MvMetaRequestNames.UseAd: return UseAd(Str(p, "key"));
                 case MvMetaRequestNames.RecordModePlay: return RecordModePlay(Str(p, "key"));
                 case MvMetaRequestNames.MarkSeen: return MarkSeen(p);
-                case MvMetaRequestNames.SetMuted: return SetMuted(p);
+                case MvMetaRequestNames.SetSound: return SetSound(p);
+                case MvMetaRequestNames.SetHaptic: return SetHaptic(p);
                 case MvMetaRequestNames.SetLanguage: return SetLanguage(p);
                 case MvMetaRequestNames.StartResearch: return StartResearch(p);
                 case MvMetaRequestNames.ClaimResearch: return ClaimResearch(p);
@@ -462,12 +463,38 @@ namespace MV.Meta
             return MvMetaResponse.Success(data);
         }
 
-        /// <summary>설정 소리 끄기(09 §9.3.6 <c>mvSettings.muted</c>). 다른 설정 칸은 그대로 둔다(병합).</summary>
-        private static MvMetaResponse SetMuted(JObject p)
+        /// <summary>
+        /// 소리 설정(설정 팝업, MV-UI2-SETTING). 볼륨은 0~100 정수, Mute는 bool. 빠진 칸은 그대로 두고(병합), 칸이 하나도 없거나 형식·범위가 틀리면 거절.
+        /// </summary>
+        private static MvMetaResponse SetSound(JObject p)
         {
-            if (p["muted"]?.Type != JTokenType.Boolean) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "muted");
-            bool muted = p.Value<bool>("muted");
-            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = new JObject { ["muted"] = muted } }, new JObject { ["muted"] = muted });
+            var settings = new JObject();
+            foreach (string key in new[] { "bgmVolume", "sfxVolume" })
+            {
+                JToken t = p[key];
+                if (t == null) continue;
+                if (t.Type != JTokenType.Integer) return MvMetaResponse.Reject(MvMetaErrors.BadParams, key);
+                long v = t.Value<long>();
+                if (v < 0 || v > 100) return MvMetaResponse.Reject(MvMetaErrors.BadParams, key);
+                settings[key] = (int)v;
+            }
+            foreach (string key in new[] { "bgmMute", "sfxMute" })
+            {
+                JToken t = p[key];
+                if (t == null) continue;
+                if (t.Type != JTokenType.Boolean) return MvMetaResponse.Reject(MvMetaErrors.BadParams, key);
+                settings[key] = t.Value<bool>();
+            }
+            if (!settings.HasValues) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "sound");
+            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = settings }, (JObject)settings.DeepClone());
+        }
+
+        /// <summary>진동 켜기·끄기(<c>mvSettings.haptic</c>). 다른 설정 칸은 그대로 둔다(병합).</summary>
+        private static MvMetaResponse SetHaptic(JObject p)
+        {
+            if (p["haptic"]?.Type != JTokenType.Boolean) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "haptic");
+            bool on = p.Value<bool>("haptic");
+            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = new JObject { ["haptic"] = on } }, new JObject { ["haptic"] = on });
         }
 
         /// <summary>언어 코드 저장(<c>mvSettings.language</c>). 영문·숫자·<c>-</c>만, 16자 이하.</summary>

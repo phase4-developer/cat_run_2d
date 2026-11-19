@@ -110,10 +110,15 @@ namespace MV.Boot
                 Ui = ui;
                 await MV.UI.MvUiBoot.InitAsync(ui);
 
-                // 9. 소리(설정의 음소거)·로컬 서버. 광고·로그인은 연결하지 않는다(D-90).
+                // 9. 소리·진동(설정 팝업 저장값, MV-UI2-SETTING)·로컬 서버. 광고·로그인은 연결하지 않는다(D-90).
                 MvSound.InstallDefault();
                 var store = MvSave.Current;
-                MvSound.Muted = store != null && !store.IsDisposed && store.Settings.Muted;
+                if (store != null && !store.IsDisposed)
+                {
+                    var s = store.Settings;
+                    MvSound.ApplySettings(s.BgmVolume / 100f, s.SfxVolume / 100f, s.BgmMute, s.SfxMute);
+                    MvHaptics.IsOn = s.Haptic;
+                }
                 NetworkManager.SetLocalService(MvPingRequest.RegisterLocal(new MvLocalNetworkService(), new MvLocalServerClock()));
                 NetworkManager.DefaultRoute = NetworkRoute.Local;   // 고정본 기본은 Server. 서버가 생기면 공급자를 걸고 Server로 바꾼다(D-89).
                 ServicesReady = true;

@@ -32,6 +32,12 @@ namespace MV.UI
 
         /// <summary><c>UIPopup_Research</c>(MV-META-RESEARCH, 컨텐츠 메뉴 「성장」 탭).</summary>
         public const string Research = "Research";
+
+        /// <summary><c>UIPopup_Setting</c>(MV-UI2-SETTING, 로비 설정 버튼).</summary>
+        public const string Setting = "Setting";
+
+        /// <summary><c>UIPopup_SettingLanguage</c>(MV-UI2-SETTING, 설정 → 언어).</summary>
+        public const string SettingLanguage = "SettingLanguage";
     }
 
     /// <summary>층 sortingOrder(05 §5.1.5). 각 화면 프리팹 루트의 Canvas(overrideSorting)에 넣는다.</summary>

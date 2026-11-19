@@ -239,6 +239,42 @@ MonoBehaviour:
     m_Key: ui.stat.doubleChance
     m_Metadata:
       m_Items: []
+  - m_Id: 140713002889216
+    m_Key: ui.setting.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609472
+    m_Key: ui.setting.mute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609473
+    m_Key: ui.setting.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609474
+    m_Key: ui.setting.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609475
+    m_Key: ui.setting.privacy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609476
+    m_Key: ui.setting.support
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609477
+    m_Key: ui.setting.language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609478
+    m_Key: ui.setting.mailSubject
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609479
+    m_Key: ui.setting.mailBody
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

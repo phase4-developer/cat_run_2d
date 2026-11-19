@@ -291,7 +291,7 @@ namespace MV.Content.Tests
             Clock.NowMs = MvQuestRules.NextMonthMs(T0);
             Assert.That(Store.Quest.Period(MvQuestRules.DailySlot), Is.EqualTo(today), "아직 쓰기 전");
             Assert.That(Entry(DailyRun).Count, Is.EqualTo(0), "읽기는 굴린 값");
-            Assert.That(Meta.SetMuted(true).Ok, Is.True, "퀘스트와 무관한 쓰기");
+            Assert.That(Meta.SetHaptic(false).Ok, Is.True, "퀘스트와 무관한 쓰기");
             Assert.That(Store.Quest.Period(MvQuestRules.DailySlot), Is.EqualTo(MvQuestRules.DayKey(Clock.NowMs)));
             Assert.That(Store.Quest.Period(MvQuestRules.MonthlySlot), Is.EqualTo(MvQuestRules.MonthKey(Clock.NowMs)));
             Assert.That(Store.Quest.Count(MvQuestRules.DailySlot, "1"), Is.EqualTo(0));

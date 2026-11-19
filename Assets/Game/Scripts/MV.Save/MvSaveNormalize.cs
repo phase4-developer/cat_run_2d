@@ -228,7 +228,12 @@ namespace MV.Save
         // 9.3.6
         internal static JObject Settings(JObject v) => new JObject
         {
-            ["muted"] = R.Bool(v["muted"], false),
+            // 설정 팝업(MV-UI2-SETTING, 정크버스터즈 설정과 같은 기능): 볼륨은 0~100 정수(기본 배경음 90·효과음 100), Mute 따로, 진동.
+            ["bgmVolume"] = R.Int(v["bgmVolume"], 90, 0, 100),
+            ["sfxVolume"] = R.Int(v["sfxVolume"], 100, 0, 100),
+            ["bgmMute"] = R.Bool(v["bgmMute"], false),
+            ["sfxMute"] = R.Bool(v["sfxMute"], false),
+            ["haptic"] = R.Bool(v["haptic"], true),
             ["contentTab"] = R.Str(v["contentTab"], ""),
             ["language"] = R.Str(v["language"], ""),
         };

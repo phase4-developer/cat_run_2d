@@ -242,6 +242,43 @@ MonoBehaviour:
     m_Localized: Double Attack
     m_Metadata:
       m_Items: []
+  - m_Id: 140713002889216
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609472
+    m_Localized: Mute
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609473
+    m_Localized: On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609474
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609475
+    m_Localized: Privacy Policy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609476
+    m_Localized: Support
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609477
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609478
+    m_Localized: '[{0}] Game Inquiry'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 140713061609479
+    m_Localized: 'Please describe your inquiry.\n\n\n[Device Info]\nApp version:
+      {0}\nDevice: {1}\nOS: {2}\nLanguage: {3}'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -100,11 +100,6 @@ namespace MV.UI
         /// <summary>광고 공급자(테스트 패널의 가짜 광고 결과 강제용). 메타가 없으면 null.</summary>
         IMvAdService Ads { get; }
 
-        /// <summary>
-        /// 소리 끄기 저장(<c>settings.muted</c>, <see cref="MvMeta.SetMuted"/>). 소리 모듈 값은 화면이 바꾼다.
-        /// 기본 구현은 저장하지 않는다(시험 가짜가 고치지 않아도 되게).
-        /// </summary>
-        MetaResult SetMuted(bool muted) => MetaResult.Fail(MvMetaErrors.UnknownRequest);
     }
 
     /// <summary>
@@ -217,8 +212,6 @@ namespace MV.UI
             }
             if (popup == null) data.Finish(false);
         }
-
-        public MetaResult SetMuted(bool muted) => Ready ? Of(M.SetMuted(muted)) : MetaResult.Fail(MvMetaErrors.NoStore);
 
         public bool IsOpen(string key) => Ready && M.IsOpen(key);
         public MvUnlockState UnlockState(string key) => Ready ? M.UnlockState(key) : MvUnlockState.Hidden;
