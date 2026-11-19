@@ -245,7 +245,10 @@ namespace MV.Meta
                     result["tier"] = tier;
                     result["merged"] = MvMetaRules.DeckAdd(deck, tier, _t.RunConfig.I(RunConfigKeys.MERGE_N));
                     result["before"] = tier;
-                    result["after"] = MvMetaRules.WeaponLevel(_t, bought + 1).Lv;
+                    int after = MvMetaRules.WeaponLevel(_t, bought + 1).Lv;
+                    result["after"] = after;
+                    // 무기 Level(= 런 무기 단계 Bt)이 오르면 그보다 낮은 카드는 버린다(04 §4.12, 사용자 2026-11-19).
+                    if (after > tier) result["discarded"] = MvMetaRules.DiscardBelow(deck, after);
                     container["deck"] = new JArray(deck.Cast<object>().ToArray());
                     break;
             }

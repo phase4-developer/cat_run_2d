@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using jjevol;
 using MV.Data;
 using MV.Run;
@@ -87,6 +88,8 @@ namespace MV.UI
         [SerializeField] HudWeaponSlot equipSlot;
         /// <summary>쌓이는 무기(<c>Stack</c>). 자식 <c>Slot_Weapon_Stack</c>이 칸이고, 모자라면 첫 칸을 복제해 풀에서 빌린다.</summary>
         [SerializeField] RectTransform stack;
+        [Tooltip("덱에서 빠지는 카드(무기 Level이 올라 버린 낮은 카드·머지로 줄어든 칸)가 흐려지며 사라지는 초(사용자 2026-11-19 카드 「짧게 흐려지며 사라짐」). 0 = 바로.")]
+        [SerializeField] float discardFadeSec = 0.15f;
 
         [Header("Mid/Stair")]
         [SerializeField] Image stairGrade;
@@ -363,16 +366,37 @@ namespace MV.UI
             while (_stackSlots.Count > Math.Max(tiers.Count, _designerSlots))
             {
                 int last = _stackSlots.Count - 1;
-                _stackPool.Release(_stackSlots[last]);
+                FadeOut(_stackSlots[last], release: true);
                 _stackSlots.RemoveAt(last);
             }
             for (int i = 0; i < _stackSlots.Count; i++)
             {
                 var slot = _stackSlots[i];
-                bool on = i < tiers.Count;
-                slot.gameObject.SetActive(on);
-                if (on) slot.Set(t, tiers[i], 1);
+                if (i < tiers.Count)
+                {
+                    DOTween.Kill(slot);
+                    slot.SetAlpha(1f);
+                    slot.gameObject.SetActive(true);
+                    slot.Set(t, tiers[i], 1);
+                }
+                else FadeOut(slot, release: false);
             }
+        }
+
+        /// <summary>빠지는 칸: <see cref="discardFadeSec"/> 동안 흐려진 뒤 끄거나 풀로 돌려준다(편집기 정지 중·0초면 바로).</summary>
+        void FadeOut(HudWeaponSlot slot, bool release)
+        {
+            if (!slot) return;
+            void Done()
+            {
+                slot.SetAlpha(1f);
+                if (release) _stackPool.Release(slot);
+                else slot.gameObject.SetActive(false);
+            }
+            DOTween.Kill(slot);
+            if (!Application.isPlaying || discardFadeSec <= 0 || !slot.gameObject.activeInHierarchy) { Done(); return; }
+            float a = 1f;
+            DOTween.To(() => a, v => { a = v; slot.SetAlpha(v); }, 0f, discardFadeSec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(slot).OnComplete(Done);
         }
 
         // ---------------- ILobbyMenuView(화면 코드 모델) ----------------

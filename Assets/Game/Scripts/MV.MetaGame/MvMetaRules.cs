@@ -93,6 +93,18 @@ namespace MV.Meta
             return merged;
         }
 
+        /// <summary>
+        /// 무기 단계 아래 카드 버림: <paramref name="tier"/>보다 낮은 등급 칸을 모두 0으로 한다. 돌려주는 값은 버린 장 수.
+        /// 사용자 2026-11-19 「무기 업그레이드 할때 그냥 낮은 무기 버림 처리하기로 했어」(카드: 게임 규칙에서 버림, 무기 단계(Bt)가 오를 때). 04 §4.12.
+        /// </summary>
+        public static int DiscardBelow(int[] deck, int tier)
+        {
+            if (deck == null) throw new ArgumentNullException(nameof(deck));
+            int n = 0;
+            for (int t = 1; t < tier && t < deck.Length; t++) { n += deck[t]; deck[t] = 0; }
+            return n;
+        }
+
         /// <summary>생선 건조대 goldMul = 1 + <c>INCOME_PER_LV</c> × P(04 §4.12.1).</summary>
         public static double GoldMul(MvTables t, int incomeBought) => 1 + t.RunConfig.D(RunConfigKeys.INCOME_PER_LV) * incomeBought;
 

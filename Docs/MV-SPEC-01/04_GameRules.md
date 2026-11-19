@@ -794,9 +794,10 @@ income: cost:P=>20+8*(P+1), max:50
 
 `round`는 JS 반올림(§4.0.2). 행 생성 도구는 MV-DATA 작업이 만들고, 검증기가 `10_lobbyUpgrade.max` = 그 group 행 수를 확인한다.
 
-구매 절차(원문 순서 그대로): `gold ≥ c && !max` 확인 → `before`(stair: kegStart(P).lv, weapon: baseTier(P)) → weapon이면 `deckAdd(save.deck, before)` → `gold −= c; up[k]++` → 저장 → (Lv 상승 시 배너 `캣타워 Lv N`/`계단 게이트 1칸당 계단 +N` 또는 `무기 Level N`/`이제 ${무기} 카드 · 장난감 공방도 ${무기}`). 연출 순서는 [05](05_Screens.md).
+구매 절차(원문 순서 그대로): `gold ≥ c && !max` 확인 → `before`(stair: kegStart(P).lv, weapon: baseTier(P)) → weapon이면 `deckAdd(save.deck, before)` → 무기 Level이 오르면(`after > before`) 덱에서 `after`보다 낮은 등급 카드를 모두 버림(`discardBelow`) → `gold −= c; up[k]++` → 저장 → (Lv 상승 시 배너 `캣타워 Lv N`/`계단 게이트 1칸당 계단 +N` 또는 `무기 Level N`/`이제 ${무기} 카드 · 장난감 공방도 ${무기}`). 연출 순서는 [05](05_Screens.md).
 
 - 덱 `save.deck`은 길이 9 배열(인덱스 1~8), 기본 털뭉치 1장. 런 시작 시 `R.w = deck.slice()`.
+- **낮은 무기 버림**(2026-11-19 사용자 결정 「무기 업그레이드 할때 그냥 낮은 무기 버림 처리하기로 했어」, 카드: 게임 규칙에서 버림·무기 단계(Bt)가 오를 때): 무기 Level(= `R.bt`)이 오르는 구매에서 그보다 낮은 등급 덱 카드는 버린다. 런 시작 시에도 `R.w`에서 `R.bt`보다 낮은 등급은 0으로 둔다(이 규칙 전 저장 덱 포함). 그래서 공방 카드(`R.bt`)는 언제나 손패 맨 밑에 들어가고, HUD 전달 연출은 아래에서 곧장 올라가는 것뿐이다(옆으로 도는 연출 없음, 05 §5.3). [원작 없음, 사용자 결정]
 
 ### 4.12.2 Area 강화 5종(장난감 바구니) `L2515~2532`
 

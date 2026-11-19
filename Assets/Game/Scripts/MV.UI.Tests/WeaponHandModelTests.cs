@@ -31,7 +31,8 @@ namespace MV.UI.Tests
         [Test]
         public void SpecExample_NineTierOne_DealsThenFourMerges_AboutTwoPointSixSeconds()
         {
-            // 05 §5.3.3 [계산]: 빈 손패에 1등급 9장 → 전달 9×0.05 + 머지 4×(0.497+0.04) ≈ 2.6초.
+            // 빈 손패에 1등급 9장: 전달은 머지를 기다리지 않고 0.05초 간격으로 이어지고(사용자 2026-11-19 「오는데도 순서가 있으니까 그거 정도 딜레이로」),
+            // 머지는 3번째 장(0.10초)부터 4 × (md 0.4968 + 쉼 0.04) → 약 2.25초(05 §5.3.3 예시 2.6초는 전달 뒤 머지 순서였을 때).
             var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12);
             m.Reset(new int[13], 0);
             m.Deliver(9, 1);
@@ -40,7 +41,9 @@ namespace MV.UI.Tests
             Assert.That(actions.Count(a => a.Kind == HandActionKind.Dealt), Is.EqualTo(9));
             Assert.That(actions.Count(a => a.Kind == HandActionKind.GatherStart), Is.EqualTo(4));
             Assert.That(actions.Count(a => a.Kind == HandActionKind.Merged), Is.EqualTo(4));
-            Assert.That(end, Is.EqualTo(0.45 + 4 * (0.54 * 0.92 + 0.04)).Within(0.01), "전달 0.45 + 머지 4 × (md 0.4968 + 쉼 0.04)");
+            Assert.That(end, Is.EqualTo(0.10 + 4 * (0.54 * 0.92 + 0.04)).Within(0.01), "3번째 전달 0.10 + 머지 4 × (md 0.4968 + 쉼 0.04), 나머지 전달은 머지와 함께 흐른다");
+            var dealt = actions.Where(a => a.Kind == HandActionKind.Dealt).ToList();
+            Assert.That(actions.IndexOf(dealt.Last()), Is.LessThan(actions.FindIndex(a => a.Kind == HandActionKind.Merged)), "9장은 첫 머지가 끝나기 전에 모두 올라온다");
             Assert.That(m.Cards.Select(c => c.Tier), Is.EqualTo(new[] { 3 }), "9 → 3 → 1");
             Assert.That(m.TopTier, Is.EqualTo(3));
             var gather = actions.First(a => a.Kind == HandActionKind.GatherStart);
@@ -76,13 +79,13 @@ namespace MV.UI.Tests
         [Test]
         public void Deliver_OneAtATime_MergesBottomThreeBeforeNextCard_ThenChainsUp()
         {
-            // 사용자 2026-11-19: 한 장씩 밑에 들어오고, 밑에서 3장이 되면 바로 합쳐지고, 그게 위 카드와 3장이 되면 또 합쳐진다(다 넣고 한꺼번에 머지하지 않는다).
+            // 사용자 2026-11-19: 한 장씩 밑에 들어오고, 밑에서 3장이 되면 바로 합쳐진다. 같은 날 「하나 움직이고 대기가 너무 긴데 … 그거 정도 딜레이로」: 다음 장은 머지를 기다리지 않고 이어서 오른다.
             var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12);
             m.Reset(new[] { 0, 2, 2 }, 0);   // 위에서부터 2, 2, 1, 1
             m.Deliver(4, 1);
             var (_, actions) = RunToIdle(m, 0);
             var kinds = string.Join(",", actions.Select(a => a.Kind == HandActionKind.Dealt ? "D" : a.Kind == HandActionKind.GatherStart ? "G" : "M"));
-            Assert.That(kinds, Is.EqualTo("D,G,M,G,M,D,D,D,G,M"), "1장 → 밑 3장 머지 → 위 2등급과 연쇄 → 다음 장들");
+            Assert.That(kinds, Is.EqualTo("D,G,D,D,D,M,G,M,G,M"), "1장 → 곧바로 밑 3장 모으기, 그동안 다음 장들이 오름 → 가장 낮은 등급부터 연쇄");
             var first = actions.First(a => a.Kind == HandActionKind.GatherStart);
             var bottomThree = first.Gathered;
             Assert.That(bottomThree.Last(), Is.EqualTo(actions[0].Card.Id), "방금 맨 밑에 들어온 장이 모으는 묶음에 든다");
@@ -92,15 +95,15 @@ namespace MV.UI.Tests
         [Test]
         public void DealHold_MergeWaitsUntilCardReachesBottomThenRisesToItsSlot()
         {
-            // 사용자 2026-11-19: 새 카드는 무조건 맨 밑 → 자기 등급 자리로(맨 밑이 아니면 왼쪽 통로로 우회) → 그 뒤 3장이면 머지.
-            var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f, DealDetourSec = 0.5f };
+            // 사용자 2026-11-19: 새 카드는 맨 밑에서 자기 자리로 올라감 → 그 뒤 3장이면 머지. 다음 전달은 짧은 간격으로 이어진다.
+            var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.5f };
             m.Reset(new[] { 0, 1, 2 }, 0);   // 손패 [2, 2, 1]
             m.Deliver(1, 2);                 // 2등급 1장: 자리 = 1등급 위(맨 밑 아님) → 올라감
             var actions = new List<HandAction>();
             m.Step(0, 0.001, actions);
             Assert.That(actions.Single().Kind, Is.EqualTo(HandActionKind.Dealt));
-            Assert.That(actions[0].Duration, Is.LessThan(0.1f), "다음 전달은 통로 우회를 기다리지 않고 짧은 간격으로 이어진다(사용자 2026-11-19 「딜레이만 살짝있게 연속으로」)");
-            Assert.That(m.Settling, Is.EqualTo(0.5).Within(1e-5), "머지는 통로 우회 시간만큼 기다린다");
+            Assert.That(actions[0].Duration, Is.LessThan(0.1f), "다음 전달은 올라가는 연출을 기다리지 않고 짧은 간격으로 이어진다(사용자 2026-11-19 「딜레이만 살짝있게 연속으로」)");
+            Assert.That(m.Settling, Is.EqualTo(0.5).Within(1e-5), "머지는 올라가는 시간만큼 기다린다");
             Assert.That(m.Cards.Select(c => c.Tier), Is.EqualTo(new[] { 2, 2, 2, 1 }));
             actions.Clear();
             m.Step(0.49, 0.489, actions);
@@ -108,20 +111,20 @@ namespace MV.UI.Tests
             m.Step(0.51, 0.02, actions);
             Assert.That(actions.Single().Kind, Is.EqualTo(HandActionKind.GatherStart), "자리를 찾은 뒤 3장 머지");
 
-            var c = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f, DealDetourSec = 0.5f };
-            c.Reset(new[] { 0, 1 }, 0);      // 손패 [1]
-            c.Deliver(2, 2);                 // 2등급 2장: 둘 다 1등급 위(통로) → 짧은 간격으로 연달아 전달
+            var c = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f };
+            c.Reset(new[] { 0, 0, 1 }, 0);   // 손패 [2]
+            c.Deliver(2, 1);                 // 1등급 2장(머지 없음) → 짧은 간격으로 연달아 전달
             actions.Clear();
             c.Step(0, 0.001, actions);
             c.Step(0.1, 0.099, actions);
-            Assert.That(actions.Count(a => a.Kind == HandActionKind.Dealt), Is.EqualTo(2), "통로 우회 중에도 다음 카드가 바로 이어서 출발");
+            Assert.That(actions.Count(a => a.Kind == HandActionKind.Dealt), Is.EqualTo(2), "올라가는 중에도 다음 카드가 바로 이어서 출발");
 
-            var b = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f, DealDetourSec = 0.5f };
+            var b = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f };
             b.Reset(new[] { 0, 0, 1 }, 0);   // 손패 [2]
             b.Deliver(1, 1);                 // 1등급: 자리 = 맨 밑 → 올라가지 않음
             actions.Clear();
             b.Step(0, 0.001, actions);
-            Assert.That(b.Settling, Is.EqualTo(0.3).Within(1e-5), "자리가 맨 밑이면 곧장 위로 가는 시간만 머지를 미룬다");
+            Assert.That(b.Settling, Is.EqualTo(0.3).Within(1e-5), "곧장 위로 가는 시간만큼 머지를 미룬다");
         }
 
         [Test]
