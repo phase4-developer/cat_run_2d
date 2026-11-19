@@ -361,7 +361,16 @@ namespace MV.UI
             if (deck == null) deck = Array.Empty<int>();
             if (equipSlot) equipSlot.Set(t, HudWeaponHand.Equipped(deck), 1);
             var tiers = HudWeaponHand.Stack(deck);
-            while (_stackSlots.Count < tiers.Count && _stackTemplate) _stackSlots.Add(_stackPool.Get());
+            while (_stackSlots.Count < tiers.Count && _stackTemplate)
+            {
+                var add = _stackPool.Get();
+                add.transform.SetAsLastSibling();   // 칸 목록 순서 = 형제 순서
+                _stackSlots.Add(add);
+            }
+            // 디자이너 Stack이 거꾸로 배치(ReverseArrangement)면 마지막 칸이 맨 위·맨 앞이다: 높은 단계(tiers[0])를 마지막 켜진 칸에 둔다(사용자 2026-11-19 「무기 정렬이 왜 이래?」).
+            var vl = stack ? stack.GetComponent<HorizontalOrVerticalLayoutGroup>() : null;
+            bool reverse = vl && vl.reverseArrangement;
+            int n = tiers.Count;
             // 디자이너 칸은 남기고, 빌린 칸은 필요 없어지면 풀로 돌려준다.
             while (_stackSlots.Count > Math.Max(tiers.Count, _designerSlots))
             {
@@ -372,12 +381,13 @@ namespace MV.UI
             for (int i = 0; i < _stackSlots.Count; i++)
             {
                 var slot = _stackSlots[i];
-                if (i < tiers.Count)
+                if (i < n)
                 {
                     DOTween.Kill(slot);
                     slot.SetAlpha(1f);
+                    IgnoreLayout(slot, false);
                     slot.gameObject.SetActive(true);
-                    slot.Set(t, tiers[i], 1);
+                    slot.Set(t, tiers[reverse ? n - 1 - i : i], 1);
                 }
                 else FadeOut(slot, release: false);
             }
@@ -390,13 +400,22 @@ namespace MV.UI
             void Done()
             {
                 slot.SetAlpha(1f);
+                IgnoreLayout(slot, false);
                 if (release) _stackPool.Release(slot);
                 else slot.gameObject.SetActive(false);
             }
             DOTween.Kill(slot);
             if (!Application.isPlaying || discardFadeSec <= 0 || !slot.gameObject.activeInHierarchy) { Done(); return; }
+            IgnoreLayout(slot, true);   // 흐려지는 동안 제자리에 두고 배치에서 빼서 남은 칸이 바로 자리를 잡는다
             float a = 1f;
             DOTween.To(() => a, v => { a = v; slot.SetAlpha(v); }, 0f, discardFadeSec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(slot).OnComplete(Done);
+        }
+
+        static void IgnoreLayout(HudWeaponSlot slot, bool on)
+        {
+            var le = slot.GetComponent<LayoutElement>();
+            if (!le) { if (!on) return; le = slot.gameObject.AddComponent<LayoutElement>(); }
+            le.ignoreLayout = on;
         }
 
         // ---------------- ILobbyMenuView(화면 코드 모델) ----------------
