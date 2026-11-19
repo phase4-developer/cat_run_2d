@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1002}
   - component: {fileID: 1003}
+  - component: {fileID: 7300100000000009005}
   m_Layer: 5
   m_Name: UIHud_Run
   m_TagString: Untagged
@@ -272,9 +273,8 @@ GameObject:
   - component: {fileID: 7300100000000009002}
   - component: {fileID: 7300100000000009003}
   - component: {fileID: 7300100000000009004}
-  - component: {fileID: 7300100000000009005}
   m_Layer: 5
-  m_Name: RunDragArea
+  m_Name: RunDragCatch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7300100000000009001}
+  m_GameObject: {fileID: 1001}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd21c4c28a794e20802d42076bd303dc, type: 3}
