@@ -91,7 +91,7 @@ namespace MV.UI.Tests
         [Test]
         public void SupportMail_EscapesAndFillsDash()
         {
-            string url = SettingsPopup.SupportMailUrl("a@b.c", "Moon", "1.0", "", "OS 1", "ko");
+            string url = SettingsPresenter.SupportMailUrl("a@b.c", "Moon", "1.0", "", "OS 1", "ko");
             StringAssert.StartsWith("mailto:a@b.c?subject=", url);
             StringAssert.Contains("&body=", url);
             StringAssert.DoesNotContain(" ", url, "공백은 이스케이프");

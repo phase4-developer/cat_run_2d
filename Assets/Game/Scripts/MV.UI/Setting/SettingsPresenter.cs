@@ -159,6 +159,16 @@ namespace MV.UI
         }
 
         /// <summary>0~1 → 저장 정수 0~100(반올림).</summary>
+        /// <summary>문의 메일 주소(mailto). 본문 키의 글자 \\n은 줄바꿈, 빈 값은 「-」.</summary>
+        public static string SupportMailUrl(string email, string appName, string version, string device, string os, string language)
+        {
+            string subject = MvUiText.Ui("ui.setting.mailSubject", Dash(appName));
+            string body = MvUiText.Ui("ui.setting.mailBody", Dash(version), Dash(device), Dash(os), Dash(language)).Replace("\\n", "\n");
+            return "mailto:" + email + "?subject=" + Uri.EscapeDataString(subject) + "&body=" + Uri.EscapeDataString(body);
+        }
+
+        static string Dash(string s) => string.IsNullOrEmpty(s) ? "-" : s;
+
         public static int ToPercent(float v01) => (int)Math.Round(Clamp01(v01) * 100f, MidpointRounding.AwayFromZero);
 
         static float Clamp01(float v) => float.IsNaN(v) ? 0f : v < 0f ? 0f : v > 1f ? 1f : v;

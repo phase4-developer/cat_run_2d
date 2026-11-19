@@ -104,7 +104,7 @@ namespace MV.UI
         {
             Click();
             if (string.IsNullOrEmpty(supportEmail)) return;
-            Application.OpenURL(SupportMailUrl(supportEmail, Application.productName, Application.version,
+            Application.OpenURL(SettingsPresenter.SupportMailUrl(supportEmail, Application.productName, Application.version,
                 SystemInfo.deviceModel, SystemInfo.operatingSystem, MvUiLanguage.Service?.Current));
         }
 
@@ -112,15 +112,6 @@ namespace MV.UI
         /// <c>mailto:</c> 주소. 제목 <c>ui.setting.mailSubject</c>({0}=앱 이름), 본문 <c>ui.setting.mailBody</c>({0}=앱 버전 {1}=기기 {2}=OS {3}=언어).
         /// 시트 칸은 한 줄이라 본문의 줄바꿈은 글자 <c>\n</c>으로 적는다. 빈 값은 「-」.
         /// </summary>
-        public static string SupportMailUrl(string email, string appName, string version, string device, string os, string language)
-        {
-            string subject = MvUiText.Ui("ui.setting.mailSubject", Dash(appName));
-            string body = MvUiText.Ui("ui.setting.mailBody", Dash(version), Dash(device), Dash(os), Dash(language)).Replace("\\n", "\n");
-            return "mailto:" + email + "?subject=" + Uri.EscapeDataString(subject) + "&body=" + Uri.EscapeDataString(body);
-        }
-
-        static string Dash(string s) => string.IsNullOrEmpty(s) ? "-" : s;
-
         /// <summary>뒤로 가기·Esc도 닫기 버튼과 같은 길로(<see cref="MetaPanelPopup"/>과 같은 이유: OnClosed를 건너뛰지 않게).</summary>
         public override UniTask<bool> OnBackRequestAsync()
         {
