@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0bbaa008e61a148478433cd306d1a59b
+    m_Address: Stage2_Block_Blue
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0bf3fb706e8fb424fa11e4a6d0ef5c96
     m_Address: Obj_Tower_Orb
     m_ReadOnly: 0
@@ -47,6 +52,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3f79218b270a145a489535f1075638f2
     m_Address: Stage1_Block_Blue
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 437873a395d3f40108ce8bc06c63d379
+    m_Address: Stage2
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -85,8 +95,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 909a9bde9d9824585903c79e102ed604
+    m_Address: Stage2_Block_Cat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9156da3ec9abf40c083b197281e5756e
     m_Address: Obj_CraftGate
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0d05c7243b234891bf2cd753e6c1563
+    m_Address: Stage2_Arch
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -117,6 +137,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: eedfd2c4624f14f1883e5b2dedc08e21
     m_Address: Stage1_Block_Gold
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f56573908d09f4a6faca1e7ab625fe5d
+    m_Address: Stage2_Block_Gold
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc903c6685ddb44b694d8cc9d9206624
+    m_Address: Stage2_Portal
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
