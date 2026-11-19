@@ -79,7 +79,7 @@ namespace MV.Data.Tests
             Assert.That(enemyDrop[0].rewardType, Is.EqualTo((int)ConsumeType.RunDia));
             Assert.That(enemyDrop[0].rewardValueRule, Is.EqualTo(RewardValueRule.HalfDiaCapCeil));
             // 07 §7.6.5 무리·분신.
-            Assert.That(t.SpawnGroup.GetGroup(2).Count, Is.EqualTo(30)); // MV-SPEC-02 Q-09 분신 상한 30(5번째부터 더미 위치)
+            Assert.That(t.SpawnGroup.GetGroup(2).Count, Is.EqualTo(5)); // 기획자확인 PC-09·18(2026-11-18): 분신 상한 5(본체 포함 6명)(5번째부터 더미 위치)
             Assert.That(t.SpawnGroup.Get(314001002).dz, Is.EqualTo(6.9).Within(1e-9));
             // 07 §7.7.2 가호 카드 등급, 330 lap.
             Assert.That(t.CardTier.Datas.OrderBy(x => x.tierIndex).Select(x => x.need), Is.EqualTo(new[] { 5, 10, 20, 40, 75 }));

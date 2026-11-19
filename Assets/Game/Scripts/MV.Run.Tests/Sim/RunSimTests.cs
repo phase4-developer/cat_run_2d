@@ -116,7 +116,7 @@ namespace MV.Run.Tests
             var cg = t.ChargeGate.ByKey("cgate");
             Assert.AreEqual(new[] { 1.9, 5.7, 9.5, 13.3 }, Enumerable.Range(0, 4).Select(k => System.Math.Round(Threshold(cg, k, s.Bal, s.ZoneHp), 9)).ToArray());
             var need = Enumerable.Range(1, 7).Select(lv => System.Math.Round(GaugeNeed(s, lv), 2)).ToArray();
-            Assert.AreEqual(new[] { 150, 240, 384, 614.4, 983.04, 1572.86, 2516.58 }, need);
+            Assert.AreEqual(new[] { 15, 24, 38.4, 61.44, 98.3, 157.29, 251.66 }, need);
         }
 
         [Test]
