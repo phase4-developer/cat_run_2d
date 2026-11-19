@@ -49,7 +49,7 @@ namespace MV.UI
                 string actionId = BuyPrefix + row.key;
                 var price = max ? null : Port.NextPrice(MvGrowth.AreaUp, row.key);
                 string val = "Lv " + lv + " · " + cur + (max ? " (MAX)" : " → " + next); // ui.aup.val / ui.aup.max
-                var state = locked ? UpgradeElementState.LockState(lv)
+                var state = locked ? UpgradeElementData.LockState(lv)
                     : max ? UpgradeElementState.Max
                     : canBuy ? UpgradeElementState.Ready : UpgradeElementState.Disabled;
                 m.Add(new MetaRow(row.key, MetaRowKind.Row, name)
