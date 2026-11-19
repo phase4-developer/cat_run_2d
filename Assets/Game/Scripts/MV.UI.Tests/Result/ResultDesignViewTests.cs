@@ -99,6 +99,7 @@ namespace MV.UI.Tests
         public void DecorDoesNotBlockBackboard_ExceptAdButton()
         {
             var (go, view) = NewPopup();
+            Open(view, Data(new Settler(), new Watcher())); // EditMode에서는 Awake가 없어 처음 그릴 때 Init이 돈다
             var designer = go.transform.Find("Popup_LevelComplete");
             var blocking = designer.GetComponentsInChildren<Graphic>(true)
                 .Where(g => g.raycastTarget && !g.transform.IsChildOf(view.AdButton.transform)).Select(g => g.name).ToList();
