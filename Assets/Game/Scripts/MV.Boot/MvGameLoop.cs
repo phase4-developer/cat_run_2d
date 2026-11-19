@@ -122,6 +122,7 @@ namespace MV.Boot
             }
             _fx.Dispose();
             _stage?.Dispose();
+            _frame?.Dispose();
         }
 
         // ═════════ 준비 ═════════
@@ -259,7 +260,8 @@ namespace MV.Boot
             if (Phase == MvLoopPhase.Lobby)
             {
                 _lobby.Sync(_world);
-                if (MvRunInputReader.StartKeyPressed()) PressStart();
+                // 출발 키(Input System 액션). 팝업이 열려 있으면 뒤 로비로 넘기지 않는다(팝업 백판과 같은 차단).
+                if (_frame != null && _frame.StartPressedThisFrame() && !MvUiNav.PopupOpen) PressStart();
                 return;
             }
             if (Phase != MvLoopPhase.Run && Phase != MvLoopPhase.Result) return;
