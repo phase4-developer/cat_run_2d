@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using MV.Data;
 using MV.Run;
@@ -83,6 +83,8 @@ namespace MV.View
         public RunHitWorld Hits;
         /// <summary>결계 블록 글자판 「+골드」 배율(정본 `goldMul()` L1492).</summary>
         public double GoldMul = 1;
+        /// <summary>마법서 탑 게이지 단계(런 전체 1개, `RunState.GaugeLv`, 1 ~ 107.cap). 오브 탑 단계 연출(<see cref="TowerOrbStages"/>)이 읽는다.</summary>
+        public int GaugeLv = 1;
         /// <summary>무기문 위 카드 묶음 그림(지금 런 무기 단계 Bt의 103_item.icon, Atlas_UI_Icon). 통합 코드가 매 프레임 넣는다(<see cref="CraftGateBundle"/>).</summary>
         public string GateWeaponIcon;
         /// <summary>무기문 위 카드 묶음 등급 틀(Bt의 09_uiResource 등급 틀 행 atlas·sprite, HUD 무기 칸과 같은 규칙 <see cref="MvUiGrade.Frame"/>).</summary>

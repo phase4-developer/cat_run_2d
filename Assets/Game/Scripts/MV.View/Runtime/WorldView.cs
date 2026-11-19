@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using MV.Data;
 using MV.Run;
@@ -112,6 +112,7 @@ namespace MV.View
             bool off = state == null || _rig == null || !_rig.Ready;
             double now = Time.realtimeSinceStartupAsDouble;
             if (_objects != null && !off) _objects.GoldMul = RunFormulas.GoldMul(state);   // 결계 블록 글자판 「+골드」(정본 L1492)
+            if (_objects != null && !off) _objects.GaugeLv = state.GaugeLv;   // 오브 탑 단계 연출
             if (_objects != null && !off)
             {
                 _objects.GateWeaponIcon = WeaponIcon(state);
