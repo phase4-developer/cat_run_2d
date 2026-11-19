@@ -292,6 +292,8 @@ namespace MV.UI.Tests
             view.TickRun(0);
             Assert.AreEqual(pick.id, view.SkillCard.CardId, "확정 = 시뮬 결과");
             Assert.AreEqual(pick.icon, view.SkillCard.FaceSprite);
+            Canvas.ForceUpdateCanvases();   // 띠(Vertical Layout) 칸 자리를 실제 배치로
+            Assert.That(view.SkillCard.FaceVisible, Is.True, "확정 카드 그림 칸(첫 칸)이 Mask 창 안");
             Assert.AreEqual(HudGrade.CardName(T, pick), view.SkillCard.Title);
             k.Flying = true; k.FlyLeft = .62;
             view.TickRun(0);
@@ -300,6 +302,7 @@ namespace MV.UI.Tests
             view.TickRun(0);
             Assert.That(view.PosCards.Count(c => c.gameObject.activeSelf), Is.EqualTo(1));
             Assert.AreEqual(pick.id, view.PosCards[0].CardId, "얻은 카드가 Card Pos에");
+            Canvas.ForceUpdateCanvases();
             Assert.That(view.PosCards[0].FaceVisible, Is.True, "Card Pos 자리 카드에 그림이 보인다(원본에서 꺼진 Mask를 켠다)");
         }
     }
