@@ -1706,7 +1706,7 @@ id	group	targetLevel	priceType	priceId	priceValue
 
 Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, ConsumeTypeId: 1)`.
 
-> 결정 D-GRADE-TABLE(2026-11-19, 원장 「확정 결정」): 보상 칸 등급 틀을 위해 `gradeId` 열(→ `15_grade` 행 id → 등급 번호 → `09_uiResource` `grade.N`, §7.8.14)을 더했다(MV-UI3-RESULT). 0 = 등급 없음(디자이너 틀 그대로). 현재 값 gold 15001002(Uncommon)·dia 15001003(Rare)·goldenFish 15001005(Legendary)는 디자이너 시안 틀 색에서 읽은 **임시 값**이고 결정 후보다. 나머지 행은 0.
+> 결정 D-GRADE-TABLE(2026-11-19, 원장 「확정 결정」): 보상 칸 등급 틀을 위해 `gradeId` 열(→ `15_grade` 행 id → 등급 번호 → `09_uiResource` `grade.N`, §7.8.14)을 더했다(MV-UI3-RESULT). 0 = 등급 없음(디자이너 틀 그대로). 값 gold 15001002(Uncommon)·dia 15001003(Rare)·goldenFish 15001005(Legendary)는 디자이너 시안 틀 색을 노션 등급 표 색에 맞춘 값으로 확정(사용자 2026-11-19 「시안 색대로 확정」). 나머지 행은 0.
 
 | 열 | 타입 | 뜻 |
 |---|---|---|
