@@ -91,6 +91,23 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void Depth_ScrambledSiblings_LowerSlotsBehind()
+        {
+            // 사용자 2026-11-19 「뎁스가 왜 뒤죽박죽이야 밑에 있는게 뒤여야하잖아」: 형제 순서가 섞여도(사이에 다른 형제가 있어도) 한 번에 위 칸이 앞, 밑 칸이 뒤로 바로잡는다.
+            var w = NewSection(out var s);
+            for (int t = 1; t <= 5; t++) s.W[t] = 1;
+            w.Tick(0);
+            var slots = w.StackSlots.ToList();   // 위 → 아래
+            var stack = Stack(w);
+            slots[1].transform.SetAsLastSibling();
+            slots[3].transform.SetAsFirstSibling();
+            slots[4].transform.SetSiblingIndex(stack.childCount / 2);
+            w.Tick(0);
+            var expect = Enumerable.Reverse(slots).ToList();
+            Assert.That(w.SlotsBackToFront(), Is.EqualTo(expect), "밑 칸이 뒤, 위 칸이 앞");
+        }
+
+        [Test]
         public void Deliver_WithoutFlight_DealsThenMergesLikeSim()
         {
             var w = NewSection(out var s);
