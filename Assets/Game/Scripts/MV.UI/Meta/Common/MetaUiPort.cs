@@ -83,6 +83,19 @@ namespace MV.UI
         bool RebirthArmed { get; }
         /// <summary>부활 버튼 1번. 첫 누름(확인 대기 시작)이면 null, 부활했으면 Value = 받은 조각.</summary>
         MetaResult? PressRebirth();
+        /// <summary>
+        /// 부활 실행(확인은 화면이 공용 확인 팝업으로 받는다, MV-UI2-REBIRTH 사용자 결정 「공용 확인 팝업 띄우기」). Value = 받은 황금 생선.
+        /// 기본 구현은 거절(시험 가짜가 고치지 않아도 되게).
+        /// </summary>
+        MetaResult RebirthNow() => MetaResult.Fail(MvMetaErrors.NoStore);
+        /// <summary>쿨타임 전체 길이 ms(<c>00_config.rebirthCooldownSec</c>). 없으면 0.</summary>
+        long RebirthCooldownTotalMs => 0;
+        /// <summary>지금 캣닢 스킵 가격(08 §8.5.14). 쿨타임이 없거나 메타가 없으면 빈 목록.</summary>
+        IReadOnlyList<ConsumeData> RebirthSkipDiaPrice => Array.Empty<ConsumeData>();
+        /// <summary>쿨타임 캣닢 스킵. Value = 쓴 캣닢.</summary>
+        MetaResult SkipRebirthCooldownDia() => MetaResult.Fail(MvMetaErrors.NoStore);
+        /// <summary>해금 판정 진행 값(Area·런·Level). 기본은 0.</summary>
+        MvUnlockProgress UnlockProgress => default;
 
         /// <summary>오늘 남은 광고 횟수. 한도 없음 −1.</summary>
         int AdsLeft(string key);
@@ -170,6 +183,33 @@ namespace MV.UI
             if (r == null) return null;
             return r.Ok ? MetaResult.Success(r.Result.Value<long>("got")) : MetaResult.Fail(r.Code);
         }
+
+        public MetaResult RebirthNow()
+        {
+            if (!Ready) return MetaResult.Fail(MvMetaErrors.NoStore);
+            MvMetaResponse r = M.Rebirth();
+            return r.Ok ? MetaResult.Success(r.Result.Value<long>("got")) : MetaResult.Fail(r.Code);
+        }
+
+        public long RebirthCooldownTotalMs
+        {
+            get
+            {
+                var cfg = Tables?.Config.Value;
+                return cfg != null ? Math.Max(0, (long)cfg.rebirthCooldownSec * 1000L) : 0;
+            }
+        }
+
+        public IReadOnlyList<ConsumeData> RebirthSkipDiaPrice => Ready ? M.RebirthSkipDiaPrice : Array.Empty<ConsumeData>();
+
+        public MetaResult SkipRebirthCooldownDia()
+        {
+            if (!Ready) return MetaResult.Fail(MvMetaErrors.NoStore);
+            MvMetaResponse r = M.SkipRebirthCooldownDia();
+            return r.Ok ? MetaResult.Success(r.Result.Value<long>("cost")) : MetaResult.Fail(r.Code);
+        }
+
+        public MvUnlockProgress UnlockProgress => Ready ? M.UnlockProgress : default;
 
         public int AdsLeft(string key) => Ready ? M.AdsLeft(key) : 0;
 

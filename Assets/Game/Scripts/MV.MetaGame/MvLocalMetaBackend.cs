@@ -66,6 +66,7 @@ namespace MV.Meta
                 case MvMetaRequestNames.BuyAreaUp: return BuyAreaUp(Str(p, "key"));
                 case MvMetaRequestNames.BuyPerk: return BuyPerk(Str(p, "key"));
                 case MvMetaRequestNames.Rebirth: return Rebirth();
+                case MvMetaRequestNames.RebirthSkipDia: return RebirthSkipDia();
                 case MvMetaRequestNames.SelectGod: return SelectGod(Str(p, "key"));
                 case MvMetaRequestNames.GrantAd: return GrantAd(Str(p, "key"));
                 case MvMetaRequestNames.UseAd: return UseAd(Str(p, "key"));
@@ -334,6 +335,20 @@ namespace MV.Meta
             // 지금 열려 있는 sticky 기능은 Area가 0으로 돌아가도 열린 채 둔다(rb.open 대응).
             WriteUnlocks(data, UnlockProgress(), UnlockProgress());
             return MvMetaResponse.Success(data, new JObject { ["got"] = got, ["lv"] = s.Rebirth.Lv + 1 });
+        }
+
+        /// <summary>쿨타임 캣닢 스킵(08 §8.5.14): 남은 시간 전체 = cdUntil 0, 비용 차감과 한 번에 저장.</summary>
+        private MvMetaResponse RebirthSkipDia()
+        {
+            if (!RebirthOpen()) return MvMetaResponse.Reject(MvMetaErrors.Locked, MvMetaRules.RebirthKey);
+            long left = RebirthCooldownLeftMs();
+            if (left <= 0) return MvMetaResponse.Reject(MvMetaErrors.NoCooldown);
+            long cost = MvMetaRules.RebirthSkipDiaCost(_t, left);
+            var wealth = new WealthDelta();
+            wealth.Cost(MvWealthIds.Dia, cost);
+            var data = new JObject { [MvSaveKeys.Rebirth] = new JObject { ["cdUntil"] = 0 } };
+            if (!wealth.TryWrite(Res, data, out string fail)) return MvMetaResponse.Reject(MvMetaErrors.NotEnough, fail);
+            return MvMetaResponse.Success(data, new JObject { ["cost"] = cost });
         }
 
         // ───────── 신 선택(04 §4.12.5) ─────────

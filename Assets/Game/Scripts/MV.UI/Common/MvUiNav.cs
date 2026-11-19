@@ -52,21 +52,9 @@ namespace MV.UI
         public static async UniTask<AreaUpgradePopup> OpenAreaUpgradeAsync(MetaPopupData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.AreaUpgrade, data ?? new MetaPopupData()) as AreaUpgradePopup;
 
-        /// <summary>부활(05 §5.9). 잠김이면 토스트만 내고 열지 않는다(null).</summary>
-        public static async UniTask<RebirthPopup> OpenRebirthAsync(MetaPopupData data = null)
-        {
-            var port = data?.Port ?? MvMetaUiPort.Instance;
-            if (port.Ready && !port.RebirthOpen)
-            {
-                // 해금 조건은 05_contentOpen 행 한 곳에서 읽는다(코드에 기본값을 두지 않는다). 문구는 공용 MvUnlockText.
-                string key = MV.Meta.MvMetaRules.RebirthKey;
-                var row = port.Tables?.ContentOpen.ByKey(key);
-                if (row != null) MvUiToast.Show(MvUnlockText.Need(row, port.UnlockState(key)) + " 달성 시 해금"); // ui.rb.goLocked
-                else UnityEngine.Debug.LogError("[MvUiNav] 05_contentOpen에 `" + key + "` 행이 없습니다.");
-                return null;
-            }
-            return await Ui.SpawnUIPopupAsync(MvUiIds.Rebirth, data ?? new MetaPopupData()) as RebirthPopup;
-        }
+        /// <summary>환생(05 §5.9, 노션 [팝업] 환생 업그레이드). 잠겨 있어도 열고 팝업이 Lock·해금 진행을 보인다(MV-UI2-REBIRTH).</summary>
+        public static async UniTask<RebirthPopup> OpenRebirthAsync(MetaPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.Rebirth, data ?? new MetaPopupData()) as RebirthPopup;
 
         /// <summary>
         /// 지도(05 §5.10). 로비 버튼은 열 때 소리 click. 런 끝 흐름(MV-SPEC-02 01 §12-3: 지도 → 결과)은 버튼이 아니라
