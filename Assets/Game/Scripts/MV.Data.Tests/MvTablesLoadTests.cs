@@ -69,7 +69,7 @@ namespace MV.Data.Tests
             var stair = t.LobbyUpgrade.ByKey("stair");
             Assert.That(t.LevelMax(stair), Is.EqualTo(30)); // Σ11.need(lv<4) = 7+10+13, 표 칸은 비움
             Assert.That(stair.costBase, Is.EqualTo(25));
-            Assert.That(t.LevelMax(t.LobbyUpgrade.ByKey("weapon")), Is.EqualTo(263)); // MV-SPEC-02 Q-08: 12등급 Σneed(lv1~11) 203 + 60(2026-11-19 need 3의 배수 맞춤)
+            Assert.That(t.LevelMax(t.LobbyUpgrade.ByKey("weapon")), Is.EqualTo(168)); // MV-SPEC-02 Q-08: 12등급 Σneed(lv1~11) 108 + 60(2026-11-19 need 8/9/11 다음 10)
             // 07 §7.8.4·7.8.5.
             Assert.That(t.AreaUpgrade.ByKey("rate").valueFormat, Is.EqualTo("{0}%"));
             Assert.That(t.RebirthPerk.ByKey("dcap").@base, Is.EqualTo(10));
