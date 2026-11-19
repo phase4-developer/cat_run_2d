@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 4637800538949214824}
   - component: {fileID: 7312033806595336998}
   - component: {fileID: 4432029930164073415}
+  - component: {fileID: 419042761198925022}
   m_Layer: 5
   m_Name: Count Text (TMP)
   m_TagString: Untagged
@@ -2574,5 +2575,49 @@ MonoBehaviour:
   okDisable: {fileID: 6118228552815003012}
   priceIcon: {fileID: 8059379320411130181}
   priceText: {fileID: 4432029930164073415}
+  priceLabel: {fileID: 419042761198925022}
   lockRoot: {fileID: 8936365367720986185}
   lockBadge: {fileID: 4937328426501805792}
+  contentsRoot: {fileID: 2847603736264414428}
+  buttonGroup: {fileID: 1746199017539052925}
+  rowLock: {fileID: 4677590772839613812}
+  rowLockBadge: {fileID: 3965335467077327002}
+--- !u!114 &419042761198925022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346720271700274043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7346a03f470194389185005050aa96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: JJEvol.UI.Economy.Runtime::jjevol.PriceLabel
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  context: {fileID: 0}
+  icon: {fileID: 0}
+  priceText: {fileID: 4432029930164073415}
+  showOwnedCount: 0
+  ownedCountFirst: 0
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  insufficientColor: {r: 1, g: 0.38, b: 0.45, a: 1}
+--- !u!114 &3965335467077327002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1998124461253213148, guid: 883827f9d89c7104d9d26ebbdeec46b5, type: 3}
+  m_PrefabInstance: {fileID: 3223856076929819462}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b617d335f245c8bb44fc464e0612c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.UnlockRebirthBadge

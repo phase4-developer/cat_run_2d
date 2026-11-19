@@ -66,6 +66,8 @@ namespace MV.UI
         int NeedRebirth(MvGrowth growth, string key) => 0;
         /// <summary>부활 레벨이 모자라 잠겼는지.</summary>
         bool IsRebirthLocked(MvGrowth growth, string key) => RebirthLevel < NeedRebirth(growth, key);
+        /// <summary>Framework 재화 서비스(가격 글자 <c>PriceLabel</c>용). 없으면 null(가격은 글자만, 색 판단 없음).</summary>
+        jjevol.ResourceService Wallet => null;
         /// <summary>구매 1번. 로비 강화(<see cref="MvGrowth.Lobby"/>)는 <see cref="MetaResult.HasLobbyBuy"/>와 Lv·등급을 함께 돌려준다.</summary>
         MetaResult Buy(MvGrowth growth, string key);
 
@@ -148,6 +150,7 @@ namespace MV.UI
         public bool CanBuy(MvGrowth growth, string key) => Ready && M.CanBuy(growth, key);
         public int NeedRebirth(MvGrowth growth, string key) => M?.NeedRebirth(growth, key) ?? 0;
         public bool IsRebirthLocked(MvGrowth growth, string key) => Ready && M.IsRebirthLocked(growth, key);
+        public jjevol.ResourceService Wallet => Ready ? M.Resources : null;
         public MetaResult Buy(MvGrowth growth, string key)
         {
             if (!Ready) return MetaResult.Fail(MvMetaErrors.NoStore);

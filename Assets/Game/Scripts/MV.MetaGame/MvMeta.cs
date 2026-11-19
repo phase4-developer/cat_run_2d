@@ -59,6 +59,8 @@ namespace MV.Meta
 
         public MvSaveStore Store => _store();
         private ResourceService Res => _resources();
+        /// <summary>재화 서비스(가격 글자 PriceLabel이 보유량·변경을 읽는다). 열리지 않았으면 null일 수 있다.</summary>
+        public ResourceService Resources => Res;
         public bool IsReady => Store != null && !Store.IsDisposed && !Store.RequiresReopen && Res != null && !Res.IsDisposed;
 
         // ═════════ 요청 보내기 ═════════

@@ -97,7 +97,10 @@ namespace MV.UI.Tests
         /// <summary>최대 단계로 볼 키.</summary>
         public readonly HashSet<string> MaxKeys = new HashSet<string>();
 
-        public int Level(MvGrowth growth, string key) => 0;
+        /// <summary>키별 현재 레벨(없으면 0).</summary>
+        public readonly Dictionary<string, int> LevelByKey = new Dictionary<string, int>();
+
+        public int Level(MvGrowth growth, string key) => LevelByKey.TryGetValue(key, out int lv) ? lv : 0;
         public bool IsMax(MvGrowth growth, string key) => MaxKeys.Contains(key);
         public int NeedRebirth(MvGrowth growth, string key) => NeedRebirthByKey.TryGetValue(key, out int n) ? n : 0;
         public IReadOnlyList<ConsumeData> NextPrice(MvGrowth growth, string key) => new[] { new ConsumeData(ConsumeType.Wealth, 1001002, 40) };

@@ -859,7 +859,8 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 | `Banner_AdsReward` | 보상 글 `ui.aup.adGain` 「x{0}」(`08_adPlacement dia` 보상), 버튼 = 무료 광고(남은 횟수 0이면 꺼짐, 남은 횟수 글은 시안에 없어 숨김) |
 | Upgrade List Scroll View | `13_areaUpgrade` active 행(sort)마다 `Element_Upgrade` 1칸(첫 칸 원형 + `ObjectPool`, 칸 수는 표 행 수) |
 | `Element_Upgrade`(공용, 환생 업그레이드도 씀) | 루트 `UpgradeElement`: 이름 `name:<id>`, `ui.aup.lv` 「Lv.{0}」, 현재 → 다음 값(`valueFormat`), 가격 숫자. 상태: 살 수 있음 / 부족 = `Disable` 켬·누름 막음 / MAX = `Disable` 켬·가격 자리 `ui.common.max` 「MAX」·다음 값 숨김 / 잠김(`needRebirth` > 부활 레벨) = `Button_Lock` 켬·`Element_UnlockRebirth`(루트 `UnlockRebirthBadge`)에 필요 수 |
-| 칸 전체 `Lock`(시안 「Require」 줄) | 노션 설명이 없어 손대지 않음(디자이너 기본 꺼짐) |
+| 칸 전체 `Lock`(시안 「Require」 줄) | 1레벨부터 잠긴 칸(현재 Lv 0이고 `needRebirth` 미달)은 칸 전체 `Lock`(내용·버튼 숨김, 필요 환생 수 배지). 이미 레벨이 있는데 잠긴 칸은 내용을 보이고 버튼만 잠금(사용자 2026-11-19) |
+| 가격 글자 | Framework `PriceLabel`(보유량 부족이면 부족 색, 재화가 바뀌면 다시 그림, MAX는 무료 글자로 보통 색). 숫자 형식은 Framework 형식, K 형식은 Framework 지원 뒤 일괄 적용(사용자 2026-11-19) |
 
 ## 5.9 부활 — `UIPopup_Rebirth`
 
