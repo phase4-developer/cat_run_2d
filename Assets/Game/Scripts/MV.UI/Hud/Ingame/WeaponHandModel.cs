@@ -101,12 +101,15 @@ namespace MV.UI
         /// <summary>정렬된 손패(등급 내림차순, 같은 등급은 먼저 받은 것이 앞).</summary>
         public IReadOnlyList<HandCard> Cards => _cards;
         /// <summary>
-        /// 전달 1장이 맨 밑 칸까지 가는 연출 초. 다음 일(머지·다음 전달)은 이 시간이 지난 뒤 시작한다(사용자 2026-11-19 「무조건 제일 밑으로 가고 그 다음 위로 올라가면서 자기 등급 자리 찾아가면서 정렬되고 3개면 머지」).
+        /// 새 카드 자리가 맨 밑일 때 전달 연출 초(스택 아래에서 곧장 위로 합류). 다음 일(머지·다음 전달)은 이 시간이 지난 뒤 시작한다.
         /// 섹션이 프리팹 연출 값으로 넣는다(0 = 기다리지 않음).
         /// </summary>
-        public float DealToBottomSec { get; set; }
-        /// <summary>맨 밑에서 자기 자리로 올라가는 연출 초. 새 카드 자리가 맨 밑이 아닐 때만 더 기다린다.</summary>
-        public float DealRiseSec { get; set; }
+        public float DealStraightSec { get; set; }
+        /// <summary>
+        /// 새 카드 자리가 맨 밑이 아닐 때 전달 연출 초(왼쪽 통로로 빠짐 → 통로로 올라감 → 오른쪽으로 끼어듦). 이것이 끝난 뒤 3장이면 머지
+        /// (사용자 2026-11-19 「무조건 제일 밑으로가고 그 다음 위로 올라가면서 자기 등급 자리 찾아가면서 정렬되고 3개면 머지」, 같은 날 측면 통로 지시).
+        /// </summary>
+        public float DealDetourSec { get; set; }
 
         /// <summary>대기열이 비고 모으는 중이 아니다.</summary>
         public bool Idle => _queue.Count == 0 && _gather == null;
@@ -203,7 +206,7 @@ namespace MV.UI
             else _queue[0] = head;
             float gap = Math.Min(_timing.dealGapMax, u * _timing.dealGapMul);
             bool rises = _cards.IndexOf(card) < _cards.Count - 1;
-            float hold = Math.Max(0f, DealToBottomSec) + (rises ? Math.Max(0f, DealRiseSec) : 0f);
+            float hold = Math.Max(0f, rises ? DealDetourSec : DealStraightSec);
             gap = Math.Max(gap, hold);
             _busy += gap;
             actions?.Add(new HandAction(HandActionKind.Dealt, card, null, gap, 0, u, TopTier > before));
