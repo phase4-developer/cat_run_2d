@@ -316,6 +316,21 @@ namespace MV.View.Tests
             view.Sync(null, 0.3);
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Hidden));
             Assert.That(view.VisibleCount, Is.EqualTo(0));
+
+            // 외형 등급 = HUD 맨 위 무기(사용자 2026-11-19 「캐릭터 무기가 바뀌는건 제일위에 무기가 바뀌는 순간」). 0이면 시뮬 등급.
+            int hudTier = t.WeaponTierMax();
+            try
+            {
+                CharacterPresenter.LookTier = () => hudTier;
+                s.Phase = RunPhase.Run;
+                s.Fin = false;
+                view.Sync(s, 0.4);
+                Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, hudTier)), "HUD 등급으로 외형을 고른다");
+                CharacterPresenter.LookTier = () => 0;
+                view.Sync(s, 0.5);
+                Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, tier)), "HUD 등급이 없으면 시뮬 등급");
+            }
+            finally { CharacterPresenter.LookTier = null; }
         }
 
         [Test]

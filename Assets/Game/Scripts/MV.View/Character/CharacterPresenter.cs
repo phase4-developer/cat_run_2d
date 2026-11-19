@@ -52,6 +52,12 @@ namespace MV.View
         ClimbPath _path;
         bool _ready;
 
+        /// <summary>
+        /// 무기 외형 등급 출처(Boot 다리가 HUD 장착 칸 등급을 넣는다, 0 이하 = 없음). 있으면 시뮬 즉시 등급 대신 이 값으로 그린다:
+        /// 시뮬은 먹는 순간 머지하지만 손패 머지 연출이 끝나 맨 위 무기가 바뀌는 순간에 캐릭터 무기도 바뀐다(사용자 2026-11-19). 피해 계산은 시뮬 등급 그대로다.
+        /// </summary>
+        public static Func<int> LookTier;
+
         public bool Ready => _ready;
         /// <summary>지금 보이는 캐릭터 수(시험·QA).</summary>
         public int VisibleCount { get; private set; }
@@ -164,6 +170,8 @@ namespace MV.View
             _units[0].Sm.Climbing = climbing;
             _units[0].Sm.ClimbedSteps = C != null ? C.Pos : 0;
             int tier = s.EqTier();
+            int shown = LookTier != null ? LookTier() : 0;
+            if (shown > 0) tier = shown;
 
             double px = s.P.X, pz = s.P.Z, py = 0, wy = s.WorldY;
             if (C != null) _path.Cat(C.Pos, C.K, C.Z0, out py, out pz);
