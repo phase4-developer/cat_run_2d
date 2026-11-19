@@ -275,6 +275,50 @@ MonoBehaviour:
     m_Key: ui.setting.mailBody
     m_Metadata:
       m_Items: []
+  - m_Id: 163383455084544
+    m_Key: ui.result.zoneClear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638976
+    m_Key: ui.result.areaOpen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638977
+    m_Key: ui.result.levelDone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638978
+    m_Key: ui.result.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638979
+    m_Key: ui.result.progZone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638980
+    m_Key: ui.result.progNext
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638981
+    m_Key: ui.result.adReward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638982
+    m_Key: ui.result.next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638983
+    m_Key: ui.common.countX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638984
+    m_Key: ui.result.progression
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163383488638985
+    m_Key: ui.result.reward
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

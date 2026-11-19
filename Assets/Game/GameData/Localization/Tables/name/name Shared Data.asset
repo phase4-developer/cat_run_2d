@@ -14,7 +14,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
   m_TableCollectionName: name
   m_TableCollectionNameGuidString: 8e9138352cc4bbe468cabf6b702d83d4
-  m_Entries: []
+  m_Entries:
+  - m_Id: 163387284484096
+    m_Key: 15001001
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398656
+    m_Key: 15001002
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398657
+    m_Key: 15001003
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398658
+    m_Key: 15001004
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398659
+    m_Key: 15001005
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398660
+    m_Key: 15001006
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398661
+    m_Key: 15001007
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398662
+    m_Key: 15001008
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398663
+    m_Key: 15001009
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398664
+    m_Key: 15001010
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398665
+    m_Key: 15001011
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163387347398666
+    m_Key: 15001012
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
