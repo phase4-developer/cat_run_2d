@@ -58,6 +58,20 @@ namespace MV.UI.Tests
             Assert.That(Blockers(prefab), Is.Empty, "장식 그림이 버튼·슬라이더 위에서 터치를 가로챔(디자이너 Deco_Frame 등)");
         }
 
+        /// <summary>
+        /// 켜짐 그림과 상태 전환 그림이 같은 토글(진동 켜기·끄기)은 전환을 끈다: 색 전환이 켜짐 그림 알파를 덮어써
+        /// 마우스를 올린 뒤 둘 다 켜져 보이고 바뀌지 않았다(사용자 2026-11-19 「오버 동작 자체가 있을 필요가 없어」).
+        /// </summary>
+        [Test]
+        public void Toggles_SharingCheckGraphic_HaveNoTransition()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(SettingPath);
+            var bad = prefab.GetComponentsInChildren<Toggle>(true)
+                .Where(t => t.graphic != null && t.targetGraphic == t.graphic && t.transition != Selectable.Transition.None)
+                .Select(t => t.name).ToList();
+            Assert.That(bad, Is.Empty);
+        }
+
         [Test]
         public void SettingView_AllReferencesSet()
         {
