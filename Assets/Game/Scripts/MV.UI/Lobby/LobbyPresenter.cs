@@ -121,6 +121,7 @@ namespace MV.UI
 
             var rb = Add(LobbySideIds.Rebirth, "아홉 목숨", "", ready); // ui.lobby.rb
             rb.UnlockKey = RebirthUnlockKey;
+            rb.OpensWhenLocked = true; // 노션 [팝업] 환생 업그레이드: 미해금이면 팝업에서 Lock·해금 진행
             ApplyLock(rb, t);
             long cool = Port.RebirthCooldownLeftMs;
             rb.Sub = rb.Locked ? LockSub(t, rb.UnlockKey)                                      // ui.lobby.rbLocked
@@ -216,12 +217,12 @@ namespace MV.UI
             return n;
         }
 
-        /// <summary>사이드·시스템 버튼 1번. 숨김·꺼짐이면 무시, 잠김이면 토스트만. 화면을 열어 달라고 했으면 true.</summary>
+        /// <summary>사이드·시스템 버튼 1번. 숨김·꺼짐이면 무시, 잠김이면 토스트만(<see cref="LobbySideButton.OpensWhenLocked"/>는 연다). 화면을 열어 달라고 했으면 true.</summary>
         public bool PressSide(string id)
         {
             var b = Model.FindSide(id);
             if (b == null || !b.Visible || !b.Enabled) return false;
-            if (b.Locked)
+            if (b.Locked && !b.OpensWhenLocked)
             {
                 Say(LockedToast(Port.Tables, b));
                 return false;
@@ -234,7 +235,6 @@ namespace MV.UI
         {
             string need = MvUnlockText.Need(t?.ContentOpen.ByKey(b.UnlockKey), Port.UnlockState(b.UnlockKey));
             if (need.Length == 0) return "아직 열리지 않았어요";
-            if (b.Id == LobbySideIds.Rebirth) return "부활은 " + need + " 달성 시 해금됩니다"; // toastMessage:rbLocked
             return need + " 달성 시 열려요";                                                   // toastMessage:contentLocked·questLocked
         }
 

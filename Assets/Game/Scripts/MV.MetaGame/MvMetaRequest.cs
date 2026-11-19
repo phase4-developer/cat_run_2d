@@ -40,6 +40,8 @@ namespace MV.Meta
         public const string BuyAreaUp = "meta.buyAreaUp";
         public const string BuyPerk = "meta.buyPerk";
         public const string Rebirth = "meta.rebirth";
+        /// <summary>부활 쿨타임 캣닢 스킵(08 §8.5.14). 남은 시간 전체를 지우고 비용은 <c>MvMetaRules.RebirthSkipDiaCost</c>.</summary>
+        public const string RebirthSkipDia = "meta.rebirthSkipDia";
         public const string SelectGod = "meta.selectGod";
         public const string GrantAd = "meta.grantAd";
         public const string UseAd = "meta.useAd";
