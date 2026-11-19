@@ -17,6 +17,8 @@ namespace MV.Save
         public ICollection<string> GodKeys { get; set; }
         /// <summary><c>103_item</c> 최대 tier. 덱 길이 = 이 값 + 1. 음수면 건너뜀.</summary>
         public int MaxWeaponTier { get; set; } = -1;
+        /// <summary><c>300_runConfig.MERGE_N</c>. 덱에서 같은 단계가 이만큼 모이면 윗단계로 합친다(상한 단계는 쌓인다). 1 미만이면 합치지 않는다.</summary>
+        public int MergeN { get; set; }
         /// <summary><c>302_area</c> 마지막 행의 Area 인덱스(0기반 = areaNo − 1). 음수면 건너뜀.</summary>
         public int MaxAreaIndex { get; set; } = -1;
         /// <summary>Area 인덱스 → Floor별 최대 칸 수(rows×3). 표에 없는 Area는 키가 없다. null이면 건너뜀.</summary>
@@ -108,13 +110,16 @@ namespace MV.Save
             if (selected == null || !catalog.GodKeys.Contains(selected)) value["sel"] = config.StartGodKey;
         }
 
-        /// <summary>덱 길이를 최대 tier + 1로 맞춘다. 모자라면 0으로 채우고, 넘치는 등급의 수는 최대 등급 칸에 더한다.</summary>
+        /// <summary>
+        /// 덱 길이를 최대 tier + 1로 맞춘다. 모자라면 0으로 채우고, 넘치는 등급의 수는 최대 등급 칸에 더한다.
+        /// 그 뒤 같은 단계 MERGE_N장 이상을 밑에서부터 윗단계로 합친다 — 상한이 늘면 예전 상한에 쌓여 있던 카드가 새 상한까지 합쳐진다
+        /// (사용자 2026-11-19 「무기 3개인데 왜 안합쳐져?」, 「그런 하드 코딩 넣지마 무기 테이블 맞춰서 가변해야지」).
+        /// </summary>
         private static void FixLobby(JObject value, MvSaveReferenceCatalog catalog)
         {
             ClampMap(value, "up", catalog.LobbyUpMax);
             if (catalog.MaxWeaponTier < 1 || value["deck"] is not JArray deck) return;
             int length = catalog.MaxWeaponTier + 1;
-            if (deck.Count == length) return;
             var counts = new long[length];
             for (int i = 0; i < deck.Count; i++)
             {
@@ -122,6 +127,12 @@ namespace MV.Save
                 int slot = Math.Min(i, length - 1);
                 counts[slot] = Math.Min(int.MaxValue, counts[slot] + n);
             }
+            if (catalog.MergeN >= 1)
+                for (int t = 1; t < length - 1; t++)
+                    if (counts[t] >= catalog.MergeN) { counts[t + 1] = Math.Min(int.MaxValue, counts[t + 1] + counts[t] / catalog.MergeN); counts[t] %= catalog.MergeN; }
+            bool same = deck.Count == length;
+            for (int i = 0; same && i < length; i++) same = R.Long(deck[i], 0) == counts[i];
+            if (same) return;
             value["deck"] = new JArray(counts.Select(n => (object)(int)n).ToArray());
         }
 

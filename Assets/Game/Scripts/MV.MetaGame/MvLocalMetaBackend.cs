@@ -108,7 +108,6 @@ namespace MV.Meta
             bool last = MvMetaRules.IsLastArea(_t, area);
             bool zoneEnd = gate && enough && last;
             bool pass = gate && enough && !last;
-            int tok = MvMetaRules.Tokens(_t, souls, gate, pass || zoneEnd);
 
             var wealth = new WealthDelta();
             long goldGain = (long)Math.Floor((gold - startGold) * mul + startGold);
@@ -131,6 +130,8 @@ namespace MV.Meta
                 }
 
             int areaAfter = pass ? area + 1 : area;
+            // 황금 생선은 런마다 쌓지 않고 냥환생 때 도달 Area로 정한다(PC-08). tok = 정산 뒤 기준 예상 지급량(표시용).
+            int tok = MvMetaRules.RebirthGrant(_t, areaAfter, s.Rebirth.Pending + pendingExtra);
             int runsAfter = s.Progress.Runs + 1;
             int levelAfter = s.Progress.Level + 1;
             int failsAfter = s.Progress.Fails + (pass || zoneEnd ? 0 : 1); // Area를 깨지 못한 정산만 센다
@@ -151,7 +152,7 @@ namespace MV.Meta
             var data = new JObject
             {
                 [MvSaveKeys.Progress] = progress,
-                [MvSaveKeys.Rebirth] = new JObject { ["pending"] = s.Rebirth.Pending + tok + pendingExtra },
+                [MvSaveKeys.Rebirth] = new JObject { ["pending"] = s.Rebirth.Pending + pendingExtra },
             };
             if (!wealth.TryWrite(Res, data, out string fail)) return MvMetaResponse.Reject(MvMetaErrors.NotEnough, fail);
             if (pass)
@@ -245,7 +246,12 @@ namespace MV.Meta
                     result["tier"] = tier;
                     result["merged"] = MvMetaRules.DeckAdd(deck, tier, _t.RunConfig.I(RunConfigKeys.MERGE_N));
                     result["before"] = tier;
-                    result["after"] = MvMetaRules.WeaponLevel(_t, bought + 1).Lv;
+                    int after = MvMetaRules.WeaponLevel(_t, bought + 1).Lv;
+                    result["after"] = after;
+                    // 덱에는 무기 Level(= 런 무기 단계 Bt)보다 낮은 카드를 두지 않는다: 살 때마다 버리고(04 §4.12, 사용자 2026-11-19 「무기 레벨업해서 추가되도 버림이 안되는거 같아」 — 옛 저장에 남은 카드 포함),
+                    // 남은 같은 단계 MERGE_N장은 합친다(옛 짧은 덱 상한에 쌓인 카드).
+                    result["discarded"] = MvMetaRules.DiscardBelow(deck, after);
+                    MvMetaRules.MergeUp(deck, _t.RunConfig.I(RunConfigKeys.MERGE_N));
                     container["deck"] = new JArray(deck.Cast<object>().ToArray());
                     break;
             }
@@ -306,7 +312,7 @@ namespace MV.Meta
             MvSaveStore s = S;
             if (!RebirthOpen()) return MvMetaResponse.Reject(MvMetaErrors.Locked, MvMetaRules.RebirthKey);
             if (RebirthCooldownLeftMs() > 0) return MvMetaResponse.Reject(MvMetaErrors.Cooldown);
-            int got = s.Rebirth.Pending;
+            int got = MvMetaRules.RebirthGrant(_t, s.Progress.Area, s.Rebirth.Pending); // PC-08: 5 × (도달 Area)^1.5 + 대기 조각
             var wealth = new WealthDelta();
             wealth.Set(MvWealthIds.Gold, 0);
             wealth.Set(MvWealthIds.Souls, 0);

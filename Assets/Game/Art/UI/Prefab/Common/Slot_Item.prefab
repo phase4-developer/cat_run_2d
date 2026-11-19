@@ -192,9 +192,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1536185070388183002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -213,6 +213,8 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: 
+  m_SpriteName: 
 --- !u!114 &3821526358491926298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,6 +239,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4901777398983692375}
   - component: {fileID: 8386304422743275636}
+  - component: {fileID: 5100927364810235001}
   m_Layer: 5
   m_Name: Slot_Item
   m_TagString: Untagged
@@ -479,9 +482,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8031190367290967047}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -500,6 +503,8 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.3
+  m_AtlasKey: 
+  m_SpriteName: 
 --- !u!1 &8378635441030918482
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,3 +551,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8378635441030918482}
   m_CullTransparentMesh: 1
+--- !u!114 &5100927364810235001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6947306532480399906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ef82c67d494079b063115935280edf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ItemSlot
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  gradeFrame: {fileID: 298610593623332392}
+  icon: {fileID: 7568686337584462594}
+  count: {fileID: 5850976051713901780}

@@ -135,6 +135,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e6d82339a5ded5f47a43942ad7729e0c
+    m_Address: Obj_Card_StairZone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: eedfd2c4624f14f1883e5b2dedc08e21
     m_Address: Stage1_Block_Gold
     m_ReadOnly: 0

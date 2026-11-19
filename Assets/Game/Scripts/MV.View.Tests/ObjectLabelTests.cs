@@ -38,7 +38,7 @@ namespace MV.View.Tests
             o.Prog = 0.5;
             var c = ObjectLabel.Of(o, 0, 3, 0, 1);
             Assert.That(c.Visible && c.KeepTitle, Is.True);
-            Assert.That(c.Number, Is.EqualTo("8"));
+            Assert.That(c.Number, Is.EqualTo("x8"), "노션 Obj_StairGate UI 「x{value}」");
             Assert.That(c.Gauge, Is.EqualTo(0.5f).Within(1e-6));
         }
 

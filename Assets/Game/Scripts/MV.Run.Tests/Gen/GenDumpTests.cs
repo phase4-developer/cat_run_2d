@@ -43,7 +43,8 @@ namespace MV.Run.Tests.Gen
                 {
                     Area = area - 1, Zone = (area - 1) / 5, Level = level, Cp = Int(e["cp"]), Bars = null, Preset = preset,
                 };
-                for (int i = 0; i < deck.Count && i < setup.Deck.Length; i++) setup.Deck[i] = Int(deck[i]);
+                setup.Deck = new int[deck.Count];   // 덤프 덱 그대로(런 W 길이는 103_item)
+                for (int i = 0; i < deck.Count; i++) setup.Deck[i] = Int(deck[i]);
 
                 var s = new RunLevelBuilder().NewRun(setup, t, new ConstRng(c));
                 string err = Compare(t, s, e, objKeys);

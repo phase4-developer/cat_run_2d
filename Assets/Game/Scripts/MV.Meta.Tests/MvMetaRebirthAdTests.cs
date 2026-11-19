@@ -55,7 +55,7 @@ namespace MV.Meta.Tests
             MvMetaResponse response = Meta.Rebirth();
             Assert.That(response.Ok, Is.True, response.Code);
 
-            Assert.That(W(MvWealthIds.RbToken), Is.EqualTo(1 + 9), "tokens += pending");
+            Assert.That(W(MvWealthIds.RbToken), Is.EqualTo(1 + 25 + 9), "PC-08: floor(5 × Area 3^1.5) + 대기 9");
             Assert.That(Store.Rebirth.Pending, Is.EqualTo(0));
             Assert.That(Store.Rebirth.Lv, Is.EqualTo(1));
             Assert.That(Store.Rebirth.CdUntil, Is.EqualTo(T0 + CooldownMs));

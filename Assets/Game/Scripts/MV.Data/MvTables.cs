@@ -82,6 +82,7 @@ namespace MV.Data
         public MvTable<AreaUpgradeData> AreaUpgrade { get; } = new MvTable<AreaUpgradeData>(AreaUpgradeData.Schema, r => new AreaUpgradeData(r));
         public MvTable<RebirthPerkData> RebirthPerk { get; } = new MvTable<RebirthPerkData>(RebirthPerkData.Schema, r => new RebirthPerkData(r));
         public LevelPriceTable LevelPrice { get; } = new LevelPriceTable();
+        public MvTable<GradeData> Grade { get; } = new MvTable<GradeData>(GradeData.Schema, r => new GradeData(r));
 
         // 1xx
         public MvTable<CatData> Cat { get; } = new MvTable<CatData>(CatData.Schema, r => new CatData(r));
@@ -157,7 +158,7 @@ namespace MV.Data
             _all = new List<IMvTable>
             {
                 Config, Wealth, PlayResource, Sound, Effect, ContentOpen, BalancePreset, ConsumeType, AdPlacement, UiResource,
-                LobbyUpgrade, StairLevel, WeaponLevel, AreaUpgrade, RebirthPerk, LevelPrice,
+                LobbyUpgrade, StairLevel, WeaponLevel, AreaUpgrade, RebirthPerk, LevelPrice, Grade,
                 Cat, Enemy, Item, ObjectKind, HitReaction, ChargeGate, ReceiveCondition, MoveAi, Card, CardPool, CardEffect,
                 God, HpRule, CardTier, CharLook,
                 RunConfig, Zone, Area, AreaFloor, Theme, StageObject, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup,
@@ -281,6 +282,13 @@ namespace MV.Data
         /// <summary>로비 강화 행이 최대 구매 수를 계산하는지(계단·지팡이). 이 행의 <c>max</c> 칸은 비운다.</summary>
         public static bool IsComputedMax(LobbyUpgradeData row) =>
             row != null && (row.effectType == LobbyEffectType.StartStairLv || row.effectType == LobbyEffectType.DeckAdd);
+
+        /// <summary>
+        /// 냥환생 때 받는 황금 생선 = floor(<c>RB_FISH_MUL</c> × areaNo^<c>RB_FISH_POW</c>)(기획자확인 PC-08, 2026-11-18: 5 × Area^1.5).
+        /// areaNo는 이번 환생 주기에 도달한 Area 번호(1기반, <c>save.area</c> + 1). 1보다 작으면 0.
+        /// </summary>
+        public int RebirthFish(int areaNo) => areaNo < 1 ? 0
+            : (int)System.Math.Floor(RunConfig.D(RunConfigKeys.RB_FISH_MUL) * System.Math.Pow(areaNo, RunConfig.D(RunConfigKeys.RB_FISH_POW)) + 1e-9);
 
         /// <summary><c>16_levelPrice</c> 묶음의 targetLevel 최댓값(펫 최대 Lv처럼 표에 따로 열이 없는 상한). 행이 없으면 0.</summary>
         public int LevelPriceMaxLevel(int group)

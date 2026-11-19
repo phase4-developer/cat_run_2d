@@ -93,17 +93,52 @@ namespace MV.Meta
             return merged;
         }
 
+        /// <summary>
+        /// 무기 단계 아래 카드 버림: <paramref name="tier"/>보다 낮은 등급 칸을 모두 0으로 한다. 돌려주는 값은 버린 장 수.
+        /// 사용자 2026-11-19 「무기 업그레이드 할때 그냥 낮은 무기 버림 처리하기로 했어」(카드: 게임 규칙에서 버림, 무기 단계(Bt)가 오를 때). 04 §4.12.
+        /// </summary>
+        public static int DiscardBelow(int[] deck, int tier)
+        {
+            if (deck == null) throw new ArgumentNullException(nameof(deck));
+            int n = 0;
+            for (int t = 1; t < tier && t < deck.Length; t++) { n += deck[t]; deck[t] = 0; }
+            return n;
+        }
+
+        /// <summary>
+        /// 같은 단계 <paramref name="mergeN"/>장 이상을 밑에서부터 윗단계로 모두 머지한다(상한 = 덱 길이 − 1, 그 단계는 쌓인다). 옛 짧은 덱 저장에서 상한에 쌓인 카드도 늘린 덱에서 합쳐진다.
+        /// 사용자 2026-11-19 「무기 3개인데 왜 안합쳐져?」.
+        /// </summary>
+        public static void MergeUp(int[] deck, int mergeN)
+        {
+            if (deck == null) throw new ArgumentNullException(nameof(deck));
+            if (mergeN < 1) throw new ArgumentOutOfRangeException(nameof(mergeN));
+            for (int t = 1; t < deck.Length - 1; t++)
+                if (deck[t] >= mergeN) { deck[t + 1] += deck[t] / mergeN; deck[t] %= mergeN; }
+        }
+
+        /// <summary>
+        /// 저장 덱을 지금 규칙으로 맞춘 사본: 길이 = 103 active 상한 등급 + 1, 무기 Level(<paramref name="bought"/>로 계산)보다 낮은 카드 버림, 같은 단계 MERGE_N장 합침.
+        /// 로비 표시가 이 값을 쓴다(옛 저장에 남은 낮은 카드·상한에 쌓인 카드가 보이지 않게, 사용자 2026-11-19).
+        /// </summary>
+        public static int[] CleanDeck(MvTables t, System.Collections.Generic.IReadOnlyList<int> saved, int bought)
+        {
+            int len = Math.Max(t.WeaponTierMax() + 1, saved?.Count ?? 0);
+            var deck = new int[len];
+            if (saved != null) for (int i = 0; i < saved.Count; i++) deck[i] = saved[i];
+            DiscardBelow(deck, WeaponLevel(t, bought).Lv);
+            MergeUp(deck, t.RunConfig.I(RunConfigKeys.MERGE_N));
+            return deck;
+        }
+
         /// <summary>생선 건조대 goldMul = 1 + <c>INCOME_PER_LV</c> × P(04 §4.12.1).</summary>
         public static double GoldMul(MvTables t, int incomeBought) => 1 + t.RunConfig.D(RunConfigKeys.INCOME_PER_LV) * incomeBought;
 
-        /// <summary>목숨 조각 = TOK_BASE + floor(souls / TOK_SOUL_DIV) + (gate ? TOK_GATE : 0) + (개방 ? TOK_OPEN : 0)(§4.11.1).</summary>
-        public static int Tokens(MvTables t, int runSouls, bool gate, bool opened)
-        {
-            var c = t.RunConfig;
-            int div = Math.Max(1, c.I(RunConfigKeys.TOK_SOUL_DIV));
-            return c.I(RunConfigKeys.TOK_BASE) + (int)Math.Floor((double)Math.Max(0, runSouls) / div)
-                   + (gate ? c.I(RunConfigKeys.TOK_GATE) : 0) + (opened ? c.I(RunConfigKeys.TOK_OPEN) : 0);
-        }
+        /// <summary>
+        /// 지금 냥환생하면 받을 황금 생선 = <see cref="MvTables.RebirthFish"/>(이번 주기 도달 Area) + 정산 대기 조각(608 보상·디버그).
+        /// 런마다 쌓지 않는다(기획자확인 PC-08). 로비·냥환생 화면 「대기」와 냥환생 지급이 같은 값을 쓴다.
+        /// </summary>
+        public static int RebirthGrant(MvTables t, int areaIndex, int pendingExtra) => t.RebirthFish(areaIndex + 1) + Math.Max(0, pendingExtra);
 
         /// <summary>이 Area(0기반)에서 다음 Area를 여는 누적 생선(<c>302_area.needSouls</c>). 행이 없으면 int.MaxValue.</summary>
         public static int NeedSouls(MvTables t, int area)

@@ -286,6 +286,41 @@ namespace MV.View.Tests
         // ───────── 캐릭터 뷰 구조 ─────────
 
         [Test]
+        public void CharacterPresenter_ClonesBeyondLookKinds_PickRandomKind_StableUntilGone()
+        {
+            var t = ViewTestTables.Load();
+            var go = new GameObject("Cats");
+            _made.Add(go);
+            var view = go.AddComponent<CharacterPresenter>();
+            view.Init(t, ViewTestTables.Config(), null, null);
+            int friend = t.Cat.ByKey(CharacterPresenter.FriendKey).id;
+            var slots = new List<int>();
+            CharLookResolver.Slots(t.CharLook.Datas, friend, slots);
+            int kinds = view.FriendLookCount;
+            Assert.That(kinds, Is.EqualTo(slots.Count).And.GreaterThan(0), "분신 외형 종류 = 116 friend slot 종류 수");
+            Assume.That(view.FriendSlots, Is.GreaterThan(kinds), "분신 자리가 외형 종류보다 많아야 시험한다");
+
+            var s = new RunState(null, t, new Pcg32Rng(1));
+            int tier = s.EqTier();
+            var kindRows = slots.Select(sl => CharLookResolver.Resolve(t.CharLook.Datas, friend, sl, tier)).ToList();
+            var seen = new HashSet<CharLookData>();
+            for (int seed = 0; seed < 40; seed++)
+            {
+                view.SetLookSeed(seed);
+                s.Clones = view.FriendSlots;
+                view.Sync(s, 0.1);
+                for (int i = 0; i < kinds; i++)
+                    Assert.That(view.LookOf(1 + i), Is.SameAs(kindRows[i]), "표 종류 안의 분신은 순서대로");
+                var extra = view.LookOf(1 + kinds);
+                Assert.That(kindRows, Does.Contain(extra), "표 종류 밖 분신은 표 종류 중 하나");
+                seen.Add(extra);
+                view.Sync(s, 0.2);
+                Assert.That(view.LookOf(1 + kinds), Is.SameAs(extra), "있는 동안 외형은 그대로");
+            }
+            if (kinds > 1) Assert.That(seen.Count, Is.GreaterThan(1), "무작위로 여러 종류가 나온다");
+        }
+
+        [Test]
         public void CharacterPresenter_PicksLookByTierAndSlot_StateByPhase_HidesWithoutArt()
         {
             var t = ViewTestTables.Load();
@@ -303,7 +338,7 @@ namespace MV.View.Tests
             int player = t.Cat.ByKey(CharacterPresenter.PlayerKey).id, friend = t.Cat.ByKey(CharacterPresenter.FriendKey).id;
             int tier = s.EqTier();
             Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, tier)));
-            Assert.That(view.LookOf(2), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, friend, 1, tier)), "분신 2번째 = slot 1(없으면 마지막 slot)");
+            Assert.That(view.LookOf(2), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, friend, 1, tier)), "분신 2번째 = slot 1");
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Walk), "런 중 걷기");
             Assert.That(view.StateOf(3), Is.EqualTo(CharState.Hidden), "분신 수 밖 자리는 숨김");
             Assert.That(view.SpriteNameOf(0), Is.Not.Empty);
@@ -597,18 +632,20 @@ namespace MV.View.Tests
             Assert.That(bundle.Template.Frame, Is.Not.Null, "카드 틀 참조");
             Assert.That(bundle.Template.Icon, Is.Not.Null, "카드 그림 참조");
             Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
-            Assert.That(bundle.LabelIcon, Is.Not.Null, "이름 오른쪽 무기 카드(LabelIcon_Temp)");
-            Assert.That(bundle.LabelIcon.gameObject.activeSelf && bundle.LabelIcon.Frame != null && bundle.LabelIcon.Icon != null, Is.True, "이름 오른쪽 카드는 켜 두고 틀·그림 참조가 있다");
-            Assert.Greater(bundle.LabelIcon.transform.localPosition.x, (bundle.LeftX + bundle.RightX) * 0.5f, "이름 오른쪽(사용자 2026-11-19 「아이콘은 무조건 이름 우측」)");
+            Assert.That(bundle.LabelIcon, Is.Not.Null, "문 안쪽 무기 카드(LabelIcon_Temp)");
+            Assert.That(bundle.LabelIcon.gameObject.activeSelf && bundle.LabelIcon.Frame != null && bundle.LabelIcon.Icon != null, Is.True, "문 안쪽 카드는 켜 두고 틀·그림 참조가 있다");
+            Assert.AreEqual((bundle.LeftX + bundle.RightX) * 0.5f, bundle.LabelIcon.transform.localPosition.x, 1e-4f, "문 안쪽 가운데(Notion Obj_CraftGate UI 「Gate 내부에 얻을 수 있는 무기의 아이콘」, 레이블 옆 아이콘 없음)");
             Assert.AreEqual(System.Math.Min(8, bundle.MaxCards), bundle.Shown, "Made + Extra(프리팹 상한까지)");
 
-            // 한 줄 5장(사용자 2026-11-19 카드 「5장」), 꽉 찬 줄은 기둥 사이 가운데·기둥 안쪽 면을 넘지 않고 한 장 더 놓으면 넘는다. 두 줄부터 위 줄은 꽉 찬 줄 시작점에 왼쪽 정렬.
+            // Notion Obj_CraftGate UI: 최대 4x5 격자(한 줄 4장, 최대 20장), 최초 정렬 Lower Center. 꽉 찬 줄은 기둥 사이 가운데·기둥 안쪽 면 안. 두 줄부터 위 줄은 꽉 찬 줄 시작점에 왼쪽 정렬.
             var cards = bundle.Cards;
             float x0 = cards[0].transform.localPosition.x, y0 = cards[0].transform.localPosition.y;
             int cols = 0;
             foreach (var c in cards) if (UnityEngine.Mathf.Approximately(c.transform.localPosition.y, y0)) cols++;
             Assert.AreEqual(bundle.Columns, cols, "한 줄 장 수 = 인스펙터 한 줄 장 수");
-            Assert.AreEqual(5, cols, "한 줄 5장(프리팹 값)");
+            Assert.AreEqual(4, cols, "한 줄 4장(프리팹 값, Notion 4x5)");
+            Assert.AreEqual(20, bundle.MaxCards, "최대 20장(Notion 4x5)");
+            Assert.Greater(cards[1].transform.localPosition.x - cards[0].transform.localPosition.x, bundle.CardSize.x, "격자: 카드끼리 겹치지 않는다");
             float half = bundle.CardSize.x * 0.5f;
             float mid = (bundle.LeftX + bundle.RightX) * 0.5f;
             Assert.AreEqual(mid, (x0 + cards[cols - 1].transform.localPosition.x) * 0.5f, 1e-4f, "아래 줄 가운데 = 기둥 사이 가운데");

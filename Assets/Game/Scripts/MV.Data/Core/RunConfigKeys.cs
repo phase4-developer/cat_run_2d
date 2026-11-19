@@ -122,10 +122,8 @@ namespace MV.Data
         public const string ORE_ICON_GAP_MS = "ORE_ICON_GAP_MS";
         public const string CP_MAX = "CP_MAX";
         public const string PLAYABLE_AREAS = "PLAYABLE_AREAS";
-        public const string TOK_BASE = "TOK_BASE";
-        public const string TOK_SOUL_DIV = "TOK_SOUL_DIV";
-        public const string TOK_GATE = "TOK_GATE";
-        public const string TOK_OPEN = "TOK_OPEN";
+        public const string RB_FISH_MUL = "RB_FISH_MUL";
+        public const string RB_FISH_POW = "RB_FISH_POW";
         public const string FAIL_SFX_DELAY_MS = "FAIL_SFX_DELAY_MS";
         public const string WEAPON_EXTRA_BUYS = "WEAPON_EXTRA_BUYS";
         public const string ARCH_LABEL_HIDE = "ARCH_LABEL_HIDE";
@@ -303,10 +301,8 @@ namespace MV.Data
             ORE_ICON_GAP_MS,
             CP_MAX,
             PLAYABLE_AREAS,
-            TOK_BASE,
-            TOK_SOUL_DIV,
-            TOK_GATE,
-            TOK_OPEN,
+            RB_FISH_MUL,
+            RB_FISH_POW,
             FAIL_SFX_DELAY_MS,
             WEAPON_EXTRA_BUYS,
             ARCH_LABEL_HIDE,

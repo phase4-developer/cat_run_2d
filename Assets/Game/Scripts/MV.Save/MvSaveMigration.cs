@@ -149,8 +149,8 @@ namespace MV.Save
                 ["bestArea"] = Copy(s["area"]),
             }, config);
 
-            // 정본: deck은 길이 9 배열일 때만, 아니면 DEF().deck.
-            JToken deck = s["deck"] is JArray protoDeck && protoDeck.Count == 9 ? protoDeck : null;
+            // 덱 길이는 표가 정한다(상수 9 검사 없음, 사용자 2026-11-19 「무기 테이블 맞춰서 가변해야지」): 배열이면 그대로 두고(값 검사는 정리 몫), 길이 맞춤·합침은 참조 정리(103_item 상한 + 1, MERGE_N) 몫.
+            JToken deck = s["deck"] is JArray protoDeck ? protoDeck : null;
             payload[MvSaveKeys.Lobby] = MvSaveNormalize.Lobby(new JObject { ["up"] = Copy(s["up"]), ["deck"] = Copy(deck) }, config);
             payload[MvSaveKeys.AreaUp] = MvSaveNormalize.AreaUp(new JObject { ["lv"] = Copy(s["aup"]) });
             payload[MvSaveKeys.Rebirth] = MvSaveNormalize.Rebirth(new JObject
