@@ -194,7 +194,7 @@ namespace MV.UI.Tests
             var p = Make(new Port(t));
             foreach (var u in p.Model.Upgrades)
             {
-                Assert.That(u.Cost, Has.Count.EqualTo(1), u.Key);
+                Assert.That(u.Cost?.Count, Is.EqualTo(1), u.Key);
                 Assert.AreEqual(25d, u.Cost[0].Value, u.Key + ": 16_levelPrice 비용 그대로 PriceBtn에 넘김");
                 Assert.That(u.PriceIcon, Is.Not.Empty, u.Key + ": 01_wealth.icon");
             }
