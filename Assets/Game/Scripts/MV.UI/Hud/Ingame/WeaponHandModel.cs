@@ -140,7 +140,7 @@ namespace MV.UI
 
         /// <summary>
         /// handDeliver: 대기열에 전달 1장(단계 t)을 n번 넣는다. 전달(줄 → 위로 → 제자리 정렬)은 머지와 상관없이 전달 간격(dealGap)으로 시간차로 이어진다.
-        /// 머지는 카드가 제자리에 정렬되는 순간(<see cref="DealStraightSec"/> 뒤) 위에서부터 세어 같은 등급 연속 3장이 모두 제자리에 있으면 한 번에 1개씩 일어난다
+        /// 머지는 카드가 제자리에 정렬되는 순간(<see cref="DealStraightSec"/> 뒤) 가장 낮은 등급의 위쪽 3장이 모두 제자리에 있으면 한 번에 1개씩 일어난다(등급 순서는 기획서 「가장 낮은 단계부터, 위쪽 3장부터」)
         /// (사용자 2026-11-19 「카드 아래에 와서 위로 올라가 올라가서 장착칸으로 가서 정렬되 이 동작은 그냥 시간차로 이루어져 그리고 정렬되는 타이밍에 카드가 순서대로 3장이 같은거면
         /// 3개중 제일 위 카드로 합쳐지면서 머지가 일어나고 뒤에 있던 카드들이 정렬돼」 「머지는 한번에 한개씩 발동」 「정렬되는건 머지하고 상관없이 시간차」 「위에서부터 3개 머지 세어야지」).
         /// </summary>
@@ -195,7 +195,7 @@ namespace MV.UI
             }
             _dealWait -= dt;
             _mergeWait -= dt;
-            // 전달은 간격마다 다음 장(머지와 무관), 머지는 모으기·쉼이 끝나면 제자리에 정렬된 연속 3장을 위에서부터 찾아 하나씩.
+            // 전달은 간격마다 다음 장(머지와 무관), 머지는 모으기·쉼이 끝나면 가장 낮은 등급의 위쪽 3장이 제자리에 정렬됐을 때 하나씩.
             for (bool more = true; more;)
             {
                 more = false;
@@ -228,23 +228,16 @@ namespace MV.UI
 
         bool StartMerge(double now, List<HandAction> actions)
         {
-            // 위에서부터 센다: 같은 등급 묶음마다 맨 위 MERGE_N장이 모두 제자리에 정렬돼 있으면 그 3장(위 → 아래)을 3장 중 맨 위 카드로 모은다.
-            // 사용자 2026-11-19 「위에서부터 3개 머지 세어야지 중간에 꼬이지 않고 정렬되고」, 「3개중 제일 위 카드로 합쳐지면서」.
-            int at = -1, tier = 0;
-            for (int i = 0; i < _cards.Count;)
-            {
-                int t = _cards[i].Tier, j = i;
-                while (j < _cards.Count && _cards[j].Tier == t) j++;
-                if (t < _maxTier && j - i >= _mergeN)
-                {
-                    bool placed = true;
-                    for (int q = i; q < i + _mergeN && placed; q++)
-                        if (_readyAt.TryGetValue(_cards[q].Id, out var r) && r > now) placed = false;
-                    if (placed) { at = i; tier = t; break; }
-                }
-                i = j;
-            }
-            if (at < 0) return false;
+            // 가장 낮은 단계부터, 그 단계 묶음의 위쪽 MERGE_N장(위 → 아래)을 3장 중 맨 위 카드로 모은다(기획서 머지 규칙 「가장 낮은 단계부터, 위쪽 3장부터 머지」,
+            // 사용자 2026-11-19 「낮은 등급 위에서 3개부터」). 그 3장이 아직 제자리에 정렬되지 않았으면 윗단계로 건너뛰지 않고 기다린다(순서 유지).
+            int tier = NextMergeTier();
+            if (tier < 1) return false;
+            int at = -1;
+            for (int i = 0; i < _cards.Count; i++)
+                if (_cards[i].Tier == tier) { at = i; break; }
+            if (at < 0 || at + _mergeN > _cards.Count) return false;
+            for (int q = at; q < at + _mergeN; q++)
+                if (_readyAt.TryGetValue(_cards[q].Id, out var r) && r > now) return false;
             float u = Unit(now);
             var ids = new int[_mergeN];
             for (int k = 0; k < _mergeN; k++) ids[k] = _cards[at + k].Id;
@@ -273,14 +266,12 @@ namespace MV.UI
         }
 
         /// <summary>
-        /// 다음에 합칠 등급: 3장 이상인 등급 중 **가장 높은 등급**(화면 위쪽 묶음부터). 0이면 없음.
-        /// 05 §5.3.3 「가장 낮은 등급」 대신 사용자 결정 2026-11-19: 전달이 머지를 기다리지 않아 밑에 새 카드가 계속 들어오므로, 낮은 등급부터 고르면
-        /// 위에 이미 3장이 된 묶음을 두고 밑에서 번쩍여 순서가 뒤섞인다(「순서대로 위에 3개 모이면 … 아래 두개가 위로 올라가면서 합쳐지고 밑에꺼도 재정렬되어야하는데 지금 번쩍이는거 보니까 순서가 뒤죽박죽」).
-        /// 높은 등급부터 고르면 밑에서 합쳐진 결과가 위 묶음과 3장이 되는 즉시 이어서 합쳐진다(「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」).
+        /// 다음에 합칠 등급: MERGE_N장 이상인 등급 중 **가장 낮은 등급**. 0이면 없음.
+        /// 기획서 머지 규칙 「가장 낮은 단계부터, 위쪽 3장부터 머지」·05 §5.3.3 「가장 낮은 등급」(사용자 2026-11-19 「낮은 등급 위에서 3개부터」로 높은 등급 우선을 되돌림).
         /// </summary>
         int NextMergeTier()
         {
-            for (int t = _maxTier - 1; t >= 1; t--)
+            for (int t = 1; t < _maxTier; t++)
             {
                 int n = 0;
                 foreach (var c in _cards) if (c.Tier == t) n++;
