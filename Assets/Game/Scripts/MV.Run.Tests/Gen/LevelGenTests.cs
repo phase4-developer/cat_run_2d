@@ -40,6 +40,7 @@ namespace MV.Run.Tests.Gen
         {
             var t = RunTestTables.ProtoEasy(); // 프로토 easy 값(MV-SPEC2-FIX2)
             var setup = new RunSetup { Area = 0, Zone = 0, Level = 1, UpWeapon = 8, UpStair = 3, AupClone = 9, God = "thunder", Preset = "easy" };
+            setup.Deck = RunTestTables.Deck(t);
             setup.Deck[1] = 2;
             setup.Deck[3] = 1;
             var s = new RunLevelBuilder().NewRun(setup, t, new ConstRng(0.5));
