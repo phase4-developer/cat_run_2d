@@ -282,7 +282,7 @@ namespace MV.Run
         {
             var s = S; var P = s.P;
             double iv = FireInterval(s);
-            int tier = s.EqTier();
+            int tier = s.HandTier();   // 투사체 그림 = 화면 손패 맨 위 무기(사용자 2026-11-19)
             double crC = CritChance(s), dbC = DoubleChance(s);
             int pierce = (int)CardSum(s, CardEffectType.Pierce);
             double pierceC = PierceChance(s);

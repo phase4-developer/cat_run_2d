@@ -64,7 +64,7 @@ namespace MV.UI
             h.MergeN = t != null ? t.RunConfig.I(RunConfigKeys.MERGE_N) : 0;
             h.GaugeFill = GaugeFill(s);
 
-            int tier = s.EqTier();
+            int tier = s.HandTier();   // 04 §4.10 handTier: #wDmg 문구는 화면 손패 맨 위 무기
             h.WeaponTier = tier;
             ItemData item = null;
             if (t != null) foreach (var it in t.Item.Datas) if (it.tier == tier) { item = it; break; }

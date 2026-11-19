@@ -10,10 +10,47 @@ namespace MV.View
     /// 자리: <c>Obj_CraftGate</c> 변형에만 더한 자식 <c>WeaponBundle_Temp</c>. 배치·크기·통과 때 HUD로 넘기기는 부모 <see cref="GateRewardDisplay"/>가 한다.
     /// 임시 리소스: 디자이너 묶음 리소스가 오면 프리팹만 바꾼다(코드로 그림을 그리지 않는다).
     /// </summary>
+    /// 레이블 아이콘: 문 레이블(「무기」) 옆 작은 카드(<see cref="_labelIcon"/>)에 같은 틀·그림을 칠한다(원작 「Craft: [무기]」, 사용자 2026-11-19 「레이블 옆에 작게 표시하는것만 따라하면 좋겠어」). 자리·크기는 프리팹 값.
     [DisallowMultipleComponent]
     public sealed class CraftGateBundle : GateRewardDisplay
     {
+        [Tooltip("문 레이블 옆 작은 무기 카드(켜 둔 GateRewardCard). 자리는 이 오브젝트 위치.")]
+        [SerializeField] GateRewardCard _labelIcon;
+        [Tooltip("레이블 옆 카드 크기(m).")]
+        [SerializeField] Vector2 _labelIconSize = new Vector2(0.46f, 0.4f);
+        [Tooltip("레이블 옆 카드 정렬 순서(레이블 글자 105와 같은 층).")]
+        [SerializeField] int _labelIconOrder = 105;
+
+        Sprite _labelFrame, _labelSprite;
+
         public override GateRewardKind Kind => GateRewardKind.Weapon;
+        public GateRewardCard LabelIcon => _labelIcon;
+        public Vector2 LabelIconSize => _labelIconSize;
+
+        public override void OnBind(RunObjectView view)
+        {
+            base.OnBind(view);
+            _labelFrame = _labelSprite = null;
+            PaintLabel(view);
+        }
+
+        public override void OnTick(RunObjectView view, in ObjectFrame f)
+        {
+            base.OnTick(view, f);
+            PaintLabel(view);
+        }
+
+        /// <summary>레이블 옆 카드: 지금 무기 단계 그림이 바뀌었을 때만 다시 칠한다.</summary>
+        void PaintLabel(RunObjectView view)
+        {
+            if (_labelIcon == null) return;
+            Look(view, out var frame, out var icon);
+            if (frame == null && icon == null) return;
+            if (frame == _labelFrame && icon == _labelSprite) return;
+            _labelFrame = frame;
+            _labelSprite = icon;
+            _labelIcon.Paint(frame, icon, _labelIconSize, _labelIconOrder);
+        }
 
         protected override int Count(RunObject o) => o.Made + o.Extra;
 

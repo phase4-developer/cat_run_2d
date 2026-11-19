@@ -39,6 +39,8 @@ namespace MV.UI
         [Tooltip("전달 wdeal 초 (L501)")] [SerializeField] float dealFadeSec = 0.25f;
         [Tooltip("전달: 제자리보다 이 칸 높이 배만큼 아래에서 나타남")] [SerializeField] float dealFromBelow = 1f;
         [Tooltip("전달: 칸 너비의 이 비율만큼 오른쪽에서 나타남 (wdeal translateX 35%)")] [SerializeField] float dealFromRight = 0.35f;
+        [Tooltip("전달 1단계: 새 카드가 스택 맨 밑 칸까지 가는 초(사용자 2026-11-19 「무조건 제일 밑으로 가고」)")] [SerializeField] float dealToBottomSec = 0.28f;
+        [Tooltip("전달 2단계: 맨 밑에서 자기 등급 자리로 올라가는 초(그 아래 카드는 같은 시간에 한 칸 내려간다). 이것이 끝난 뒤 3장이면 머지.")] [SerializeField] float dealRiseSec = 0.28f;
         [Tooltip("모으기 끝 크기 (wmg scale 1.06)")] [SerializeField] float gatherScale = 1.06f;
         [Tooltip("결과 시작 크기 (wmerged scale 1.3)")] [SerializeField] float mergedScale = 1.3f;
         [Tooltip("결과 연출 최소 초: max(이 값, u) (L1214)")] [SerializeField] float mergedMinSec = 0.15f;
@@ -73,6 +75,12 @@ namespace MV.UI
         int _equipTier;
         int[] _counts;
         double _now;
+
+        /// <summary>
+        /// 지금 장착 칸(손패 맨 위)에 보이는 무기 등급(없으면 0). 캐릭터 무기 외형이 이 값을 따른다
+        /// (사용자 2026-11-19 「캐릭터 무기가 바뀌는건 제일위에 무기가 바뀌는 순간이야 … 머지 연출때문에 먹었을때하고 실제 적용이 다르니까」). Boot가 매 프레임 RunState.ShownHandTier로 넣어 피해·투사체·외형이 같은 순간에 바뀐다.
+        /// </summary>
+        public static int ShownTier { get; private set; }
         bool _ready;
 
         // ---- 시험·QA ----
@@ -147,6 +155,7 @@ namespace MV.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            ShownTier = 0;
             _pool?.Dispose();
         }
 
@@ -171,6 +180,7 @@ namespace MV.UI
             _actions.Clear();
             _model.Step(_now, realDt, _actions);
             foreach (var a in _actions) Play(a);
+            OrderSiblings();   // 움직이는 중에도 지금 높이로 깊이를 맞춘다
             DropLeftovers(realDt);
             Resync(s);
         }
@@ -190,9 +200,15 @@ namespace MV.UI
             _credits = 0;
             _now = 0;
             _model = null;
+            ShownTier = 0;
             if (_run?.Tables == null || w == null) return;
             int mergeN = T.RunConfig.I(RunConfigKeys.MERGE_N);
             _model = new WeaponHandModel(timing, mergeN, RunFormulas.WeaponTierMax(T));
+            if (Animate)
+            {
+                _model.DealToBottomSec = dealToBottomSec;
+                _model.DealRiseSec = dealRiseSec;
+            }
             _model.Reset(w, _now);
             foreach (var c in _model.Cards) Rent(c);
             Layout(snap: true);
@@ -306,7 +322,7 @@ namespace MV.UI
                         s.transform.localScale = Vector3.one;
                         s.Set(T, a.Card.Tier, DmgMul());
                         _slots[a.Card.Id] = s;
-                        Layout(snap: false);
+                        Layout(snap: false, dealt: s, dealtInPlace: true);
                     }
                     else
                     {
@@ -371,15 +387,29 @@ namespace MV.UI
 
         /// <summary>
         /// 손패 순서대로 자리를 정한다(디자이너 Stack 세로 배치 값: 위 여백·간격, 반대 순서 = 위 칸이 앞).
-        /// dealt = 방금 들어온 칸(아래·오른쪽에서 나타남), placed = 이미 다른 자리에 놓인 칸(머지 결과).
+        /// dealt = 방금 들어온 칸: 먼저 스택 맨 밑 칸 자리로 가고(<see cref="dealToBottomSec"/>), 그다음 자기 등급 자리로 올라간다(<see cref="dealRiseSec"/>).
+        /// 그 자리 아래 카드들은 올라가는 동안 한 칸씩 내려간다(사용자 2026-11-19 「바로 자기 등급 밑으로 이동이 아니라 무조건 제일 밑으로가고 그 다음 위로 올라가면서 자기 등급 자리 찾아가면서 정렬」).
+        /// dealtInPlace = 이미 화면에 있는 칸(줄 맨 앞 카드)이라 지금 자리에서 출발, 아니면 맨 밑 칸 아래·오른쪽에서 나타난다. placed = 이미 다른 자리에 놓인 칸(머지 결과).
         /// </summary>
-        void Layout(bool snap, HudWeaponSlot dealt = null, HudWeaponSlot placed = null)
+        void Layout(bool snap, HudWeaponSlot dealt = null, HudWeaponSlot placed = null, bool dealtInPlace = false)
         {
             if (_model == null || !stack) return;
             float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
             var cards = _model.Cards;
             int n = cards.Count;
+            int di = -1;
+            if (dealt != null)
+                for (int i = 0; i < n; i++)
+                    if (_slots.TryGetValue(cards[i].Id, out var d) && d == dealt) { di = i; break; }
             float y = -top;
+            Vector2 bottom = default;
+            for (int i = 0; i < n; i++)
+            {
+                if (!_slots.TryGetValue(cards[i].Id, out var b)) continue;
+                if (i == n - 1) bottom = new Vector2(0, y);
+                y -= b.rectTransform.rect.height + spacing;
+            }
+            y = -top;
             for (int i = 0; i < n; i++)
             {
                 if (!_slots.TryGetValue(cards[i].Id, out var s)) continue;
@@ -392,26 +422,81 @@ namespace MV.UI
                 if (_gathering.Contains(s)) continue;   // 모이는 중인 칸은 모으기 연출이 움직인다
                 DOTween.Kill(rt);
                 if (snap || !Animate) { rt.anchoredPosition = to; continue; }
+                if (s == dealt)
+                {
+                    // 1단계: 맨 밑 칸 자리로. 2단계: 자기 자리로 올라감(맨 밑이면 1단계로 끝).
+                    if (!dealtInPlace) rt.anchoredPosition = bottom + new Vector2(rt.rect.width * dealFromRight, -h * dealFromBelow);
+                    var seq = DOTween.Sequence().SetUpdate(true).SetTarget(rt)
+                        .Append(AnchorTo(rt, bottom, dealToBottomSec).SetEase(Ease.OutQuad));
+                    if (i < n - 1) seq.Append(AnchorTo(rt, to, dealRiseSec).SetEase(Ease.InOutQuad));
+                    continue;
+                }
+                if (di >= 0 && i > di)
+                {
+                    // 새 카드 자리 아래 카드: 새 카드가 맨 밑에 닿은 뒤 올라오는 동안 한 칸 내려간다.
+                    AnchorTo(rt, to, dealRiseSec).SetDelay(dealToBottomSec).SetEase(Ease.InOutQuad).SetTarget(rt);
+                    continue;
+                }
                 // 머지 결과(placed)는 모인 자리에서 출발한다.
-                if (s == dealt) rt.anchoredPosition = to + new Vector2(rt.rect.width * dealFromRight, -h * dealFromBelow);
                 AnchorTo(rt, to, moveSec).SetEase(Ease.OutQuad).SetTarget(rt);
             }
             OrderSiblings();
         }
 
-        /// <summary>위 칸이 맨 앞(마지막 형제)이 되게 다시 맞춘다(디자이너 반대 순서 배치와 같은 겹침).</summary>
+        readonly List<HudWeaponSlot> _depth = new List<HudWeaponSlot>();
+        readonly List<int> _depthRank = new List<int>();
+        readonly List<int> _depthIdx = new List<int>();
+
+        /// <summary>
+        /// 스택 칸 깊이 = 지금 화면 높이: 위에 있는 칸이 앞(뒤 형제), 아래 칸이 뒤(디자이너 반대 순서 배치와 같은 겹침). 매 프레임 지금 자리로 다시 맞춘다:
+        /// 새 카드가 맨 밑에서 올라가며 한 칸씩 지나칠 때마다 한 칸씩 앞으로 나오고, 밀려 내려가는 칸은 한 칸 뒤로 간다(사용자 2026-11-19 「위로 올라가면서 한칸씩 밀면서 뎁스도 한칸 앞으로」).
+        /// 같은 높이면 손패 순서(위 카드가 앞). 스택 칸끼리의 형제 자리만 서로 바꾸고 줄·비행 카드 자리는 건드리지 않는다. 모이는 칸은 맨 앞.
+        /// </summary>
         void OrderSiblings()
         {
+            if (_model == null) return;
+            _depth.Clear();
+            _depthRank.Clear();
+            _depthIdx.Clear();
             var cards = _model.Cards;
-            for (int i = cards.Count - 1; i >= 0; i--)
-                if (_slots.TryGetValue(cards[i].Id, out var s)) s.transform.SetAsLastSibling();
-            foreach (var g in _gathering) if (g) g.transform.SetAsLastSibling();
+            for (int i = 0; i < cards.Count; i++)
+            {
+                if (!_slots.TryGetValue(cards[i].Id, out var s) || _gathering.Contains(s)) continue;
+                // 뒤(낮음) → 앞(높음) 순서로 끼워 넣는다.
+                float y = s.rectTransform.anchoredPosition.y;
+                int at = _depth.Count;
+                while (at > 0)
+                {
+                    var p = _depth[at - 1];
+                    float py = p.rectTransform.anchoredPosition.y;
+                    if (py < y || py == y && _depthRank[at - 1] > i) break;
+                    at--;
+                }
+                _depth.Insert(at, s);
+                _depthRank.Insert(at, i);
+                _depthIdx.Add(s.transform.GetSiblingIndex());
+            }
+            _depthIdx.Sort();
+            for (int k = 0; k < _depth.Count; k++)
+                if (_depth[k].transform.GetSiblingIndex() != _depthIdx[k]) _depth[k].transform.SetSiblingIndex(_depthIdx[k]);
+            if (_gathering.Count > 0 && stack)
+                foreach (var g in _gathering)
+                    if (g && g.transform.parent == stack && g.transform.GetSiblingIndex() != stack.childCount - 1) g.transform.SetAsLastSibling();
+        }
+
+        /// <summary>시험·QA: 스택 칸을 뒤 → 앞 깊이 순서로.</summary>
+        public List<HudWeaponSlot> SlotsBackToFront()
+        {
+            var list = new List<HudWeaponSlot>(StackSlots);
+            list.Sort((a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
+            return list;
         }
 
         void DrawEquip(bool pop)
         {
             if (!_equip || _model == null) return;
             int tier = _model.TopTier;
+            ShownTier = tier;
             _equip.Set(T, tier, DmgMul());
             bool up = pop && tier > _equipTier;
             _equipTier = tier;
