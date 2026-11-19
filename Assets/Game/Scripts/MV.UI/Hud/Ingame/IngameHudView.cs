@@ -39,7 +39,8 @@ namespace MV.UI
 
         Func<RunState> _state;
         RunState _run;
-        MvTables T => _run?.Tables;
+        // 첫 그리기(Bind 직후 Presenter.Tick)는 TickRun보다 먼저라 _run이 비어 있다. 그때도 표를 잡아 계단 등급 틀이 시작부터 보이게 한다.
+        MvTables T => _run?.Tables ?? _state?.Invoke()?.Tables;
         bool _ready;
 
         // ---- 시험·QA ----

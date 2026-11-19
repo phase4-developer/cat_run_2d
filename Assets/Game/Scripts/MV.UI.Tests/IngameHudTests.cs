@@ -225,6 +225,20 @@ namespace MV.UI.Tests
             Assert.AreEqual(HudCurrencySlot.IconOf(T, "dia"), view.TopBar.Dia.IconSprite);
         }
 
+        /// <summary>첫 그리기(BindRun 직후, TickRun 전)에도 계단 등급 틀(백판)이 보인다. 예전에는 표를 못 잡아 게이지가 움직여야 보였다.</summary>
+        [Test]
+        public void IngameHud_StairGradeFrame_ShownOnFirstDraw()
+        {
+            var (_, view) = NewHud();
+            var s = NewState();
+            view.BindRun(() => s);
+            view.SetState(new RunHudState { GaugeLv = 1, GaugeFill = 0 });
+            string want = HudGrade.Frame(T, 1)?.sprite;
+            Assert.That(want, Is.Not.Null.And.Not.Empty, "표의 1단계 등급 틀");
+            Assert.AreEqual(want, view.Stair.StairGradeSprite, "계단 칸 등급 틀이 시작부터");
+            Assert.AreEqual(want, view.Stair.GaugeGradeSprite, "게이지 등급 틀이 시작부터");
+        }
+
         [Test]
         public void IngameHud_RunState_DrivesWeaponsClimbCardsAndRoulette()
         {

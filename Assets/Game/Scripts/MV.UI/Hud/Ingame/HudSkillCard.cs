@@ -35,8 +35,22 @@ namespace MV.UI
         public string GradeSprite => grade ? grade.spriteName : null;
         public string FaceSprite => cells != null && cells.Length > 0 && cells[0] ? cells[0].spriteName : null;
         public bool QuestionShown => question && question.activeSelf;
-        /// <summary>카드 그림이 실제로 보이는가(Mask·띠가 둘 다 켜짐, 시험·QA).</summary>
-        public bool FaceVisible => strip && strip.gameObject.activeSelf && (!mask || mask.activeSelf);
+        /// <summary>카드 그림이 실제로 보이는가(Mask·띠가 둘 다 켜지고 첫 칸이 Mask 창 안, 시험·QA).</summary>
+        public bool FaceVisible => strip && strip.gameObject.activeSelf && (!mask || mask.activeSelf) && FaceInsideMask;
+
+        /// <summary>첫 칸 가운데가 Mask 창 안인가. 띠 위치가 어긋나면(Slot_Skill y = 0) 첫 칸이 창 밖으로 나가 뒷판만 보인다.</summary>
+        bool FaceInsideMask
+        {
+            get
+            {
+                if (!mask || cells == null || cells.Length == 0 || !cells[0]) return true;
+                var m = mask.transform as RectTransform;
+                if (!m) return true;
+                var c = cells[0].rectTransform;
+                Vector3 local = m.InverseTransformPoint(c.TransformPoint(c.rect.center));
+                return m.rect.Contains(local);
+            }
+        }
         public RectTransform Rect => (RectTransform)transform;
         public int CellCount => cells?.Length ?? 0;
 

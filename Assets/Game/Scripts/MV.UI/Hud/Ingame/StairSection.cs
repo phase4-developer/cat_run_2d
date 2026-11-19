@@ -31,6 +31,7 @@ namespace MV.UI
 
         public string StairValueText => stairValue ? stairValue.text : null;
         public string StairCountText => stairCount ? stairCount.text : null;
+        public string StairGradeSprite => stairGrade ? stairGrade.spriteName : null;
         public string GaugeGradeSprite => gaugeGrade ? gaugeGrade.spriteName : null;
         public float GaugeValue => gauge ? gauge.normalizedValue : -1;
 
