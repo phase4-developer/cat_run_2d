@@ -402,7 +402,7 @@ namespace MV.Run.Tests
             var sim = Sim(lv);
             Run(sim, 60);
             Assert.AreEqual(FinishReason.Gate, sim.State.Result.Reason);
-            Assert.AreEqual(3, sim.State.Result.Tok, "조각 1 + gate 2(생선 부족 → 개방 아님)");
+            Assert.AreEqual(5, sim.State.Result.Tok, "개방 아님 → 도달 Area 1: floor(5 × 1^1.5) = 5(기획자확인 PC-08)");
         }
 
         [Test]

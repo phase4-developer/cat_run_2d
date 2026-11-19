@@ -128,7 +128,7 @@ namespace MV.Meta.Tests
             Assert.That(W(MvWealthIds.Gold), Is.EqualTo((long)System.Math.Floor(10.5 * mul)), "floor(10.5 × mul)");
             Assert.That(W(MvWealthIds.Dia), Is.EqualTo(3 * mul));
             Assert.That(W(MvWealthIds.Souls), Is.EqualTo(4), "생선은 배수 없음");
-            Assert.That(r.Tokens, Is.EqualTo(5), "황금 생선은 배수 없음");
+            Assert.That(r.Tokens, Is.EqualTo(40), "황금 생선은 배수 없음(도달 Area 4: floor(5 × 4^1.5) = 40)");
             Assert.That(Store.Rebirth.Pending, Is.EqualTo(0));
             Assert.That(Store.Progress.Level, Is.EqualTo(2), "Level은 +1");
             Assert.That(r.ShowInterstitial, Is.False, "×3이면 전면 광고 없음");

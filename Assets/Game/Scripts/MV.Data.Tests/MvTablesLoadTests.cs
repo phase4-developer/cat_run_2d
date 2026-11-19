@@ -18,7 +18,7 @@ namespace MV.Data.Tests
             ["101_cat"] = 2, ["102_enemy"] = 3, ["103_item"] = 12, ["105_objectKind"] = 13, ["106_hitReaction"] = 7,
             ["107_chargeGate"] = 3, ["108_receiveCondition"] = 7, ["109_moveAI"] = 3, ["110_card"] = 92, ["111_cardPool"] = 11,
             ["112_cardEffect"] = 26, ["113_god"] = 12, ["114_hpRule"] = 7, ["115_cardTier"] = 5, ["116_charLook"] = 16,
-            ["300_runConfig"] = 159, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15, ["305_stageObject"] = 5,
+            ["300_runConfig"] = 157, ["301_zone"] = 6, ["302_area"] = 30, ["303_areaFloor"] = 94, ["304_theme"] = 15, ["305_stageObject"] = 5,
             ["310_template"] = 10, ["311_templateObject"] = 123, ["312_templateCycle"] = 2, ["313_fieldGen"] = 1,
             ["314_spawnGroup"] = 35, ["330_climb"] = 5,
             ["400_content"] = 5, ["401_modeStage"] = 53, ["402_modeRule"] = 4, ["410_questGroup"] = 14, ["413_repeatQuest"] = 16,
@@ -86,7 +86,7 @@ namespace MV.Data.Tests
             Assert.That(t.Climb.Config()["lap"], Is.EqualTo(75));
             // 300 키 = 코드 상수.
             Assert.That(t.RunConfig.Datas.Count, Is.EqualTo(RunConfigKeys.All.Length));
-            Assert.That(t.RunConfig.I(RunConfigKeys.MAX_CLONES), Is.EqualTo(30)); // MV-SPEC-02 Q-09 분신 상한 30
+            Assert.That(t.RunConfig.I(RunConfigKeys.MAX_CLONES), Is.EqualTo(5)); // 기획자확인 PC-09·18(2026-11-18) 분신 상한 5(본체 포함 6명)
             // 312 Level → 템플릿(정본 tplFor).
             Assert.That(t.TemplateCycle.TemplateFor(0, 1), Is.EqualTo(310000001));
             Assert.That(t.TemplateCycle.TemplateFor(0, 9), Is.EqualTo(310000003));
