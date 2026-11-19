@@ -43,5 +43,29 @@ namespace MV.Editor.Tests.Build
             var appInfo = sheets.Single(s => s.Collection == "appInfo");
             Assert.That(appInfo.Rows.Any(r => r.Key == "LanguageDisplayName" && r.Value.All(v => v.Length > 0)), Is.True);
         }
+
+        /// <summary>코드가 글자 그대로 부르는 키(MvUiText.Ui·Toast·Msg)는 시트에 있고 세 언어가 다 채워져 있다(없으면 화면에 #키).</summary>
+        [Test]
+        public void CodeKeys_ExistInSheets_WithAllLocales()
+        {
+            var sheets = MvLocBuild.ReadSheets(MvLocBuild.SheetDir, out var errors);
+            Assert.That(errors, Is.Empty, string.Join("\n", errors));
+            var rows = sheets.Where(s => s.Collection == "ui" || s.Collection == "toastMessage" || s.Collection == "msg")
+                .SelectMany(s => s.Rows).ToDictionary(r => r.Key, r => r.Value);
+            var call = new System.Text.RegularExpressions.Regex("MvUiText\\.(?:Ui|Toast|Msg)\\(\\s*\"((?:ui|toastMessage|msg)\\.[A-Za-z0-9_.]+)\"");
+            var missing = new List<string>();
+            int used = 0;
+            foreach (var file in System.IO.Directory.GetFiles("Assets/Game/Scripts", "*.cs", System.IO.SearchOption.AllDirectories))
+            {
+                foreach (System.Text.RegularExpressions.Match m in call.Matches(System.IO.File.ReadAllText(file)))
+                {
+                    used++;
+                    string key = m.Groups[1].Value;
+                    if (!rows.TryGetValue(key, out var v) || v.Any(string.IsNullOrEmpty)) missing.Add(key + " @ " + file);
+                }
+            }
+            Assert.That(used, Is.GreaterThan(0), "검색이 키를 하나도 못 찾으면 시험이 비어 있다");
+            Assert.That(missing, Is.Empty, string.Join("\n", missing));
+        }
     }
 }
