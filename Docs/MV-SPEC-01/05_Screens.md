@@ -777,6 +777,13 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 | 정산 | MV.Meta 정산·저장 → 배수 1이고 Area ≥ 3(인덱스)이면 전면 광고(`interstitial`) 뒤 → 로비 | L2424~2443 |
 | 로비 도착 | Area 개방이면 배너(구역이 바뀌면 `ui.banner.zone` 「Zone {0} · {1}」/`ui.banner.zoneSub` 「Area {0} 시작」, 아니면 `ui.banner.area` 「Area {0}」/`ui.banner.areaSub` 「{0} · 강화 초기화」), 구역 클리어면 `ui.banner.zoneClear` 「Zone {0} 클리어」/`ui.banner.zoneClearSub` 「Zone {0}는 업데이트 예정」. 새 해금이 있으면 900ms 뒤 §5.11 | L2438~2441 |
 
+**디자이너 시안 반영(MV-UI3-RESULT, 2026-11-19).** 겉은 디자이너 `Popup_LevelComplete`(래퍼 `UIPopup_Result`가 중첩, 원본은 그대로)이고, 위 표와 다른 점은 다음과 같다. 정본 나눔은 AGENTS.md 「UI 기준」.
+- 막(`Backboard`) 누름 = 배수 1 받기(노션 [팝업] 인게임 결과, 사용자 「노션 따름」). 「그냥 받기」 버튼은 MV-SPEC-02 「괜찮아요」(`ui.result.next`)로 바뀌어 시안의 안내 글 자리에 쓴다.
+- 광고 버튼 = 시안 `Button_RewardAds`, 배수는 `08_adPlacement` 결과 광고 `mul`(MV-SPEC-02 12-3, `ui.result.adReward` 「보상」).
+- 제목은 시안 왕관·리본 그림을 두고 글자만 언어팩 키로 바꾼다(사용자 「글자만 바꾸는데 언어팩으로 연결해」). 색은 시안 글자 스타일.
+- 진척도 = 시안 Slider·`Slot_AreaLabel`·% 글자. 정산 전 값 → 정산 후 값으로 보간(시간·곡선은 프리팹 임시 값). 진행 글(「Area {0} 개방까지」)·통계 4줄은 시안에 자리가 없어 숨김(로직 유지).
+- 보상 칸 = 공용 `Slot_Item`(`ItemSlot`: 아이콘·등급 틀 `15_grade`·수량 `ui.common.countX` 「x{0}」).
+
 **정본 버그(D-36).** 통계 문구가 관문 도달이 아닌 모든 종료에서 `R.hitWall.bar`를 읽는다(L2415). 장애물 충돌이 아닌 종료(예: Area 포털 쪽 종료 경로)에서는 값이 없어 예외가 나고 결과 화면이 열리지 않는다 [추정]. Unity는 막힌 곳이 없으면 그 조각을 빼고 연다(고침 권장).
 
 ## 5.7 야옹신 — `UIPopup_GodSelect`
