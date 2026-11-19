@@ -81,7 +81,7 @@ namespace MV.UI.Tests
         {
             var (go, view) = NewPopup();
             Assert.That(view.MissingRefs(), Is.Empty, "ResultDesignView 참조");
-            var ctrl = go.GetComponent<ResultPopup>();
+            var ctrl = go.GetComponent("ResultPopup"); // 형식 이름으로 찾는다(UIPopup 어셈블리를 시험 asmdef에 더하지 않음)
             Assert.That(ctrl, Is.Not.Null, "ResultPopup 컨트롤러");
             var so = new SerializedObject(ctrl);
             Assert.That(so.FindProperty("view").objectReferenceValue, Is.SameAs(view), "ResultPopup.view = ResultDesignView");
@@ -114,7 +114,7 @@ namespace MV.UI.Tests
             Assert.That(view.Slots.Distinct().Count(), Is.EqualTo(3));
             Assert.That(view.Slots.All(s => s.gameObject.activeSelf), Is.True);
             Assert.That(view.Slots.Select(s => s.WealthType), Is.EqualTo(new[] { "gold", "dia", "goldenFish" }));
-            Assert.That(view.Slots[0].IconSprite, Is.EqualTo(T.Wealth.Get("gold").icon), "아이콘 = 01_wealth.icon");
+            Assert.That(view.Slots[0].IconSprite, Is.EqualTo(HudCurrencySlot.IconOf(T, "gold")), "아이콘 = 01_wealth.icon");
             Assert.That(view.Slots[1].CountText, Is.EqualTo("x3"), "노션 텍스트 포맷 x{0}");
             foreach (var s in view.Slots)
             {
