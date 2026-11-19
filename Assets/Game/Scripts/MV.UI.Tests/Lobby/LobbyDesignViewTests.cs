@@ -62,6 +62,8 @@ namespace MV.UI.Tests
             var keys = view.Upgrades.Select(u => u.key).ToList();
             Assert.That(keys, Is.Unique);
             foreach (var k in rows) Assert.That(keys, Does.Contain(k), "10_lobbyUpgrade " + k + "에 맞는 디자이너 칸");
+            foreach (var u in view.Upgrades) // PriceBtn은 자기가 잠그는 Button과 같은 객체(강화 칸 루트)에 둔다
+                Assert.That(u.button.GetComponent("PriceBtn"), Is.Not.Null, u.key + ": 버튼 루트에 PriceBtn");
         }
 
         [Test]
