@@ -52,6 +52,7 @@ namespace MV.UI
             var lang = MvUiLanguage.Service;
             if (_busy || lang == null || string.IsNullOrEmpty(code)) return;
             MvSound.PlayUi(MvUiSound.ButtonClick);
+            if (string.Equals(code, lang.Current, StringComparison.OrdinalIgnoreCase)) { Close(); return; } // 같은 언어: 닫기만
             _busy = true;
             try
             {

@@ -323,6 +323,30 @@ MonoBehaviour:
     m_Localized: Reward
     m_Metadata:
       m_Items: []
+  - m_Id: 183528915300352
+    m_Localized: "Spellbook Tower \xB7 Hit for Stair Lv UP"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660480
+    m_Localized: "Dash Stairs \xB7 Break through with your stairs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660481
+    m_Localized: Stairs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660482
+    m_Localized: Weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660483
+    m_Localized: Alley {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183528944660484
+    m_Localized: Area {0} Clear
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

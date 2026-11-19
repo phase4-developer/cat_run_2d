@@ -89,6 +89,14 @@ namespace MV.UI.Tests
         public void ToPercent_RoundsAndClamps(float v, int expected) => Assert.That(SettingsPresenter.ToPercent(v), Is.EqualTo(expected));
 
         [Test]
+        public void LanguageButtons_FollowDesignOrder_UnknownLast()
+        {
+            var names = new Dictionary<string, string> { { "en", "English" }, { "ja", "日本語" }, { "ko", "한국어" }, { "fr", "Français" } };
+            var order = LanguageDesignView.DesignOrder(new[] { "en", "fr", "ja", "ko" }, new[] { "English", "한국어", "日本語" }, c => names[c]);
+            Assert.That(order, Is.EqualTo(new[] { "en", "ko", "ja", "fr" }), "시안 English → 한국어 → 日本語, 시안에 없는 언어는 뒤");
+        }
+
+        [Test]
         public void SupportMail_EscapesAndFillsDash()
         {
             string url = SettingsPresenter.SupportMailUrl("a@b.c", "Moon", "1.0", "", "OS 1", "ko");
