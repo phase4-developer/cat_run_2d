@@ -193,6 +193,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95375af14b24940a5bcde908fd72e12d
+    m_Address: Fx_Card_ChainPoint
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9c84ef1ae16472445b15eb9d288f39d9
     m_Address: Projectile 8 triangle
     m_ReadOnly: 0

@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0bf3fb706e8fb424fa11e4a6d0ef5c96
+    m_Address: Obj_Tower_Orb
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 21f4135c99f2c4f88932d081464afc3c
     m_Address: Obj_Text_Count
     m_ReadOnly: 0

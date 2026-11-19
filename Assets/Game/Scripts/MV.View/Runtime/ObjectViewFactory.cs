@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -46,6 +46,8 @@ namespace MV.View
 
         /// <summary>결계 블록 글자판 「+골드」에 곱할 골드 배율(정본 `goldMul()` L1492). 통합 코드가 런 상태에서 매 프레임 넣는다.</summary>
         public double GoldMul { get => _ctx.GoldMul; set => _ctx.GoldMul = value; }
+        /// <summary>마법서 탑 게이지 단계(<see cref="ObjectViewContext.GaugeLv"/>).</summary>
+        public int GaugeLv { get => _ctx.GaugeLv; set => _ctx.GaugeLv = value; }
 
         /// <summary>무기문 위 카드 묶음 그림 이름(103_item.icon, Atlas_UI_Icon). 통합 코드가 런 상태에서 매 프레임 넣는다.</summary>
         public string GateWeaponIcon { get => _ctx.GateWeaponIcon; set => _ctx.GateWeaponIcon = value; }
