@@ -286,6 +286,41 @@ namespace MV.View.Tests
         // ───────── 캐릭터 뷰 구조 ─────────
 
         [Test]
+        public void CharacterPresenter_ClonesBeyondLookKinds_PickRandomKind_StableUntilGone()
+        {
+            var t = ViewTestTables.Load();
+            var go = new GameObject("Cats");
+            _made.Add(go);
+            var view = go.AddComponent<CharacterPresenter>();
+            view.Init(t, ViewTestTables.Config(), null, null);
+            int friend = t.Cat.ByKey(CharacterPresenter.FriendKey).id;
+            var slots = new List<int>();
+            CharLookResolver.Slots(t.CharLook.Datas, friend, slots);
+            int kinds = view.FriendLookCount;
+            Assert.That(kinds, Is.EqualTo(slots.Count).And.GreaterThan(0), "분신 외형 종류 = 116 friend slot 종류 수");
+            Assume.That(view.FriendSlots, Is.GreaterThan(kinds), "분신 자리가 외형 종류보다 많아야 시험한다");
+
+            var s = new RunState(null, t, new Pcg32Rng(1));
+            int tier = s.EqTier();
+            var kindRows = slots.Select(sl => CharLookResolver.Resolve(t.CharLook.Datas, friend, sl, tier)).ToList();
+            var seen = new HashSet<CharLookData>();
+            for (int seed = 0; seed < 40; seed++)
+            {
+                view.SetLookSeed(seed);
+                s.Clones = view.FriendSlots;
+                view.Sync(s, 0.1);
+                for (int i = 0; i < kinds; i++)
+                    Assert.That(view.LookOf(1 + i), Is.SameAs(kindRows[i]), "표 종류 안의 분신은 순서대로");
+                var extra = view.LookOf(1 + kinds);
+                Assert.That(kindRows, Does.Contain(extra), "표 종류 밖 분신은 표 종류 중 하나");
+                seen.Add(extra);
+                view.Sync(s, 0.2);
+                Assert.That(view.LookOf(1 + kinds), Is.SameAs(extra), "있는 동안 외형은 그대로");
+            }
+            if (kinds > 1) Assert.That(seen.Count, Is.GreaterThan(1), "무작위로 여러 종류가 나온다");
+        }
+
+        [Test]
         public void CharacterPresenter_PicksLookByTierAndSlot_StateByPhase_HidesWithoutArt()
         {
             var t = ViewTestTables.Load();
@@ -303,7 +338,7 @@ namespace MV.View.Tests
             int player = t.Cat.ByKey(CharacterPresenter.PlayerKey).id, friend = t.Cat.ByKey(CharacterPresenter.FriendKey).id;
             int tier = s.EqTier();
             Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, tier)));
-            Assert.That(view.LookOf(2), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, friend, 1, tier)), "분신 2번째 = slot 1(없으면 마지막 slot)");
+            Assert.That(view.LookOf(2), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, friend, 1, tier)), "분신 2번째 = slot 1");
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Walk), "런 중 걷기");
             Assert.That(view.StateOf(3), Is.EqualTo(CharState.Hidden), "분신 수 밖 자리는 숨김");
             Assert.That(view.SpriteNameOf(0), Is.Not.Empty);

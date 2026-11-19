@@ -602,7 +602,7 @@ namespace MV.Data
             .Str("happy", true).Str("stair", true).Str("happyBack", true).Str("wheel").Str("wheelAtlas").Float("scale", true);
 
         public int catId { get; private set; }
-        /// <summary>자리 순서. 플레이어 0, 분신은 i번째 분신 = slot i(없으면 마지막 slot).</summary>
+        /// <summary>자리 순서. 플레이어 0, 분신은 i번째 분신 = i번째 slot, 표의 slot 종류보다 많은 분신은 그 중 무작위(사용자 2026-11-19).</summary>
         public int slot { get; private set; }
         /// <summary>이 외형을 쓰기 시작하는 무기 등급.</summary>
         public int fromTier { get; private set; }
