@@ -179,5 +179,26 @@ namespace MV.UI.Tests
             Assert.That(speed, Is.EqualTo(1), "마지막 상태 다음은 1x");
             Assert.That(view.ShownSpeedState, Is.EqualTo(0));
         }
+
+        /// <summary>
+        /// Area 업그레이드 버튼 안 이름표(HudAreaLabel)가 클릭을 삼키지 않는다: 이름표를 눌러도 버튼 → AreaUpgrade.
+        /// 상단 이름표는 그대로 지도(Map). (사용자 확인 2026-11-19 「팝업이 아예 안열리는데」)
+        /// </summary>
+        [Test]
+        public void AreaUpgradeLabelClick_ReachesButton_TopLabelOpensMap()
+        {
+            var (_, view) = NewLobby();
+            _ = view.StackSlots; // Init(): EditMode는 Awake가 돌지 않는다
+            var got = new List<string>();
+            view.SidePressed += got.Add;
+            var e = new UnityEngine.EventSystems.PointerEventData(null) { button = UnityEngine.EventSystems.PointerEventData.InputButton.Left };
+
+            view.AreaUpgradeLabel.OnPointerClick(e);
+            Assert.That(got, Is.EqualTo(new[] { LobbySideIds.AreaUpgrade }), "버튼 안 이름표 누름 → Area 업그레이드");
+
+            got.Clear();
+            view.AreaLabel.OnPointerClick(e);
+            Assert.That(got, Is.EqualTo(new[] { LobbySideIds.Map }), "상단 이름표 → 지도");
+        }
     }
 }

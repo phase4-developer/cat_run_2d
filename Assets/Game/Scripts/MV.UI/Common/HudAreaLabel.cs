@@ -53,7 +53,20 @@ namespace MV.UI
             ShowUI();
         }
 
-        public void OnPointerClick(PointerEventData eventData) => Clicked?.Invoke();
+        /// <summary>
+        /// 구독자가 있으면(로비 상단 이름표 → 지도) 그쪽만 부른다. 없으면 부모의 클릭 처리(예: 로비 「Area 업그레이드」 버튼 안 이름표)로 넘긴다.
+        /// 이 컴포넌트가 IPointerClickHandler라 그대로 두면 부모 버튼이 클릭을 받지 못한다(사용자 확인 2026-11-19 「팝업이 아예 안열리는데」).
+        /// </summary>
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (Clicked != null)
+            {
+                Clicked();
+                return;
+            }
+            var parent = transform.parent;
+            if (parent) ExecuteEvents.ExecuteHierarchy(parent.gameObject, eventData, ExecuteEvents.pointerClickHandler);
+        }
 
         protected override void _DrawContents()
         {
