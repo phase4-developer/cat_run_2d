@@ -42,7 +42,7 @@ namespace MV.Run.Tests
 
         public void Prepare(RunState s) { }
 
-        public void Cast(RunState s, double x, double z0, double z1, List<ProjectileHit> hits)
+        public void Cast(RunState s, double x, double z0, double z1, bool spear, List<ProjectileHit> hits)
         {
             int start = hits.Count;
             foreach (var o in s.Objs)

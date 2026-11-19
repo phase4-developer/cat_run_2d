@@ -17,24 +17,24 @@ namespace MV.Run.Tests.Rule
     /// </summary>
     public sealed class MainParityTests
     {
-        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음).</summary>
+        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음). MV-PARITY-GOLDEN-sgatem(2026-11-19): 302_area.sgateM(계단 게이트 체력 배율)이 Area 2~5에서 바뀐 표 커밋 429bb7e4 뒤로 A2~A5 12개 다시 기록(Area 1은 sgateM 같아 그대로, 종료 사유는 모두 Wall, 잡 MV-HIT-RADIUS-t1의 실제 값).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["A1L1"] = "f3126 e424 r235 Wall 4a10c80899b0edc6",
             ["A1L8"] = "f3890 e576 r291 Wall dc8e3f5784b69e70",
             ["A1L15"] = "f3788 e482 r281 Wall 34fd9fe9eda1ff89",
-            ["A2L1"] = "f3298 e422 r243 Wall 8033e2aaea0689f1",
-            ["A2L8"] = "f3886 e547 r291 Wall d67585aca514800a",
-            ["A2L15"] = "f3676 e496 r275 Wall 3d5886a184a9bb00",
-            ["A3L1"] = "f3448 e847 r497 Wall d7b17dc4d0b0dbaa",
-            ["A3L8"] = "f3890 e988 r577 Wall c6cb96099cd9255a",
-            ["A3L15"] = "f3829 e931 r559 Wall 906e60976154d56c",
-            ["A4L1"] = "f3155 e803 r469 Wall 54cfe749c2ef432f",
-            ["A4L8"] = "f3864 e946 r573 Wall 39929c3dd2d90a15",
-            ["A4L15"] = "f3680 e944 r545 Wall 13b7db96dc957f80",
-            ["A5L1"] = "f3151 e838 r469 Wall bae734eeccaf5ca7",
-            ["A5L8"] = "f3890 e997 r577 Wall 76f3922407c390e8",
-            ["A5L15"] = "f3676 e855 r545 Wall 91ff466ddcb4906c",
+            ["A2L1"] = "f3298 e422 r243 Wall f92ea9b1ce931e37",
+            ["A2L8"] = "f3886 e547 r291 Wall c42edeed231cbc73",
+            ["A2L15"] = "f3676 e496 r275 Wall df0f39ec2bd24990",
+            ["A3L1"] = "f3263 e794 r477 Wall c5901adbb822ec29",
+            ["A3L8"] = "f3890 e988 r577 Wall c615d398c6437a20",
+            ["A3L15"] = "f3817 e923 r559 Wall e9482f6645fcaff7",
+            ["A4L1"] = "f3155 e803 r469 Wall c548869e451a6a82",
+            ["A4L8"] = "f3864 e946 r573 Wall 79bcc4b9609f8f1a",
+            ["A4L15"] = "f3680 e943 r545 Wall c020ce54701d2fac",
+            ["A5L1"] = "f3151 e838 r469 Wall 74f5939221d9b6a6",
+            ["A5L8"] = "f3890 e997 r577 Wall 2390119f06233d73",
+            ["A5L15"] = "f3676 e854 r545 Wall 375287805b272bb5",
         };
 
         [Test] public void Area1() => Check(0);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using jjevol;
 using MV.Data;
 using MV.Meta;
 using NUnit.Framework;
@@ -14,6 +15,9 @@ namespace MV.UI.Tests
     /// </summary>
     public sealed class ContentMenuTests
     {
+        [TearDown]
+        public void ResetLocalize() => UIRuntimeOptions.Localize = null;
+
         const string Alley = "alleyWar";
 
         static int Cards(MetaPanelModel m) => m.Rows.Count(r => r.Id.StartsWith(ContentMenuPresenter.GoPrefix, StringComparison.Ordinal));
@@ -87,12 +91,13 @@ namespace MV.UI.Tests
                 rows.First(r => r[Array.IndexOf(head, "key")] == Alley)[Array.IndexOf(head, "dailyLimit")] = "2");
             var port = new ContentFakePort(tables) { RejectRecord = metaRejects ? MvMetaErrors.DailyLimit : null };
             port.Plays[Alley] = playsToday;
+            UIRuntimeOptions.Localize = (c, k) => k == "ui.content.today" ? "T{0}/{1}" : null;
             var toasts = new List<string>();
             string startedKey = null;
             var p = Open(port, k => startedKey = k);
             p.Toast += toasts.Add;
 
-            StringAssert.Contains("오늘 " + (2 - playsToday) + "/2", p.Model.FindRow(ContentMenuPresenter.GoPrefix + Alley).Value);
+            StringAssert.Contains("T" + (2 - playsToday) + "/2", p.Model.FindRow(ContentMenuPresenter.GoPrefix + Alley).Value, "ui.content.today {0}=남은 횟수 {1}=하루 한도");
             Assert.That(p.Press(ContentMenuPresenter.GoPrefix + Alley), Is.EqualTo(starts));
 
             Assert.That(port.RecordCalls, Is.EqualTo(recordCalls));
@@ -125,7 +130,7 @@ namespace MV.UI.Tests
 
             Assert.That(p.Press(ContentMenuPresenter.GoPrefix + Alley), Is.False);
             Assert.That(port.RecordCalls, Is.EqualTo(0));
-            Assert.That(toasts.Single(), Does.EndWith("준비 중"));
+            Assert.That(toasts.Single(), Is.EqualTo("#ui.content.preparing"), "번역 없으면 #키(07 §7.12)");
         }
 
         [Test]

@@ -14,7 +14,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
   m_TableCollectionName: toastMessage
   m_TableCollectionNameGuidString: 8d18a54f23c54ad44a1f24d3e135e8ab
-  m_Entries: []
+  m_Entries:
+  - m_Id: 125531467902976
+    m_Key: toastMessage.contentEnterFail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531518234624
+    m_Key: toastMessage.contentNoCount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531518234625
+    m_Key: toastMessage.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531518234626
+    m_Key: toastMessage.researchNotEnough
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531522428928
+    m_Key: toastMessage.researchBusy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531522428929
+    m_Key: toastMessage.researchNotDone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531522428930
+    m_Key: toastMessage.researchMax
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

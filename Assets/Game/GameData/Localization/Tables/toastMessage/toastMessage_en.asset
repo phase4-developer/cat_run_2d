@@ -17,7 +17,35 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 8d18a54f23c54ad44a1f24d3e135e8ab, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 125531467902976
+    m_Localized: Couldn't enter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531518234624
+    m_Localized: No more entries today
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531518234625
+    m_Localized: Not unlocked yet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531518234626
+    m_Localized: Not enough Catnip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531522428928
+    m_Localized: Another research is in progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531522428929
+    m_Localized: Still researching
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125531522428930
+    m_Localized: Max level reached
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

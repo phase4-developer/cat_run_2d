@@ -74,10 +74,10 @@ namespace MV.UI
 
         protected override void Build(MetaPanelModel m, MvTables tables)
         {
-            m.Title = "컨텐츠";                                     // ui.content.title
-            m.Sub = "누르면 바로 시작 · 입장권은 매일 다시 채워짐";   // ui.content.sub
-            m.Tabs.Add(new MetaTab { Id = TabMode, Text = "모드", Selected = _tab == TabMode }); // ui.content.tabMode
-            m.Tabs.Add(new MetaTab { Id = TabMeta, Text = "성장", Selected = _tab == TabMeta }); // ui.content.tabMeta
+            m.Title = MvUiText.Ui("ui.content.title");
+            m.Sub = MvUiText.Ui("ui.content.sub");
+            m.Tabs.Add(new MetaTab { Id = TabMode, Text = MvUiText.Ui("ui.content.tabMode"), Selected = _tab == TabMode });
+            m.Tabs.Add(new MetaTab { Id = TabMeta, Text = MvUiText.Ui("ui.content.tabMeta"), Selected = _tab == TabMeta });
             if (_tab == TabMeta) BuildMeta(m, tables);
             else BuildModes(m, tables);
         }
@@ -99,7 +99,7 @@ namespace MV.UI
                 double gain = 0; // 08[modeTicket].adRewardValue(옛 문구 「+1」 고정)
                 foreach (var r in tables.AdPlacement.ByKey(AdTicketKey).adReward) gain += r.Value;
                 m.Add(new MetaRow("adInfo", MetaRowKind.Text,
-                    "광고 보고 입장권 +" + gain.ToString("0.##", Inv) + " · 오늘 " + (left < 0 ? "∞" : left.ToString(Inv)) + "회 남음")); // ui.content.adInfo
+                    MvUiText.Ui("ui.content.adInfo", gain.ToString("0.##", Inv), left < 0 ? "∞" : left.ToString(Inv))));
             }
 
             foreach (var c in ModeRows(tables))
@@ -114,7 +114,7 @@ namespace MV.UI
                     Value = Chips(c, tables, locked, open),
                 });
                 // 잠김 카드도 누를 수 있다(누르면 잠금 토스트, 05 §5.15.3).
-                row.Act(GoPrefix + c.key, locked ? LockText(open) : "도전", true); // ui.content.lockAt / ui.content.go
+                row.Act(GoPrefix + c.key, locked ? LockText(open) : MvUiText.Ui("ui.content.go"), true);
             }
         }
 
@@ -123,7 +123,7 @@ namespace MV.UI
             var parts = new List<string>(4);
             if (!locked && open != null && Content.IsNew(open.key))
             {
-                parts.Add("NEW"); // ui.content.new
+                parts.Add(MvUiText.Ui("ui.content.new"));
                 _shownNew.Add(open.key);
             }
 
@@ -131,13 +131,13 @@ namespace MV.UI
             if (ticket != null)
             {
                 long have = Content.TicketCount(ticket.id);
-                parts.Add("입장권 " + (have < 0 ? "-" : have.ToString(Inv)) + "/" + ticket.chargeMax.ToString(Inv));
+                parts.Add(MvUiText.Ui("ui.content.ticket", have < 0 ? "-" : have.ToString(Inv), ticket.chargeMax.ToString(Inv)));
             }
 
             if (c.dailyLimit > 0)
             {
                 int left = Math.Max(0, c.dailyLimit - Content.ModePlaysToday(c.key));
-                parts.Add("오늘 " + left.ToString(Inv) + "/" + c.dailyLimit.ToString(Inv)); // 남은 입장/하루 한도
+                parts.Add(MvUiText.Ui("ui.content.today", left.ToString(Inv), c.dailyLimit.ToString(Inv))); // 남은 입장/하루 한도
             }
             return string.Join(" · ", parts);
         }
@@ -162,7 +162,7 @@ namespace MV.UI
                 string sub = "";
                 if (!locked && Content.IsNew(f.key))
                 {
-                    sub = "NEW"; // ui.content.new
+                    sub = MvUiText.Ui("ui.content.new");
                     _shownNew.Add(f.key);
                 }
                 m.Add(new MetaRow(MetaPrefix + f.key, MetaRowKind.Row, NameOf(f.id, f.key))
@@ -209,14 +209,14 @@ namespace MV.UI
             var start = StartMode;
             if (start == null)
             {
-                Say(NameOf(c.id, c.key) + " 준비 중");
+                Say(MvUiText.Ui("ui.content.preparing", NameOf(c.id, c.key)));
                 return false;
             }
 
             var r = Content.RecordModePlay(key);
             if (!r.Ok)
             {
-                Say(r.Code == MvMetaErrors.DailyLimit ? NoCountText : r.Code == MvMetaErrors.Locked ? LockText(open) : "입장하지 못했습니다");
+                Say(r.Code == MvMetaErrors.DailyLimit ? NoCountText : r.Code == MvMetaErrors.Locked ? LockText(open) : MvUiText.Toast("toastMessage.contentEnterFail"));
                 return false;
             }
             RequestClose(); // 05 §5.15.4 ④: 메뉴 닫힘 → 런 시작
@@ -238,7 +238,7 @@ namespace MV.UI
             var openMeta = OpenMeta;
             if (openMeta == null)
             {
-                Say(NameOf(f.id, f.key) + " 준비 중");
+                Say(MvUiText.Ui("ui.content.preparing", NameOf(f.id, f.key)));
                 return false;
             }
             openMeta(key);
@@ -248,7 +248,7 @@ namespace MV.UI
         // ───────── 잠금·문구 ─────────
 
         /// <summary>오늘 입장 한도를 다 썼을 때(<c>toastMessage:contentNoCount</c>).</summary>
-        public const string NoCountText = "오늘은 더 입장할 수 없어요";
+        public static string NoCountText => MvUiText.Toast("toastMessage.contentNoCount");
 
         bool IsLocked(ContentOpenData open) => open != null && !Port.IsOpen(open.key);
 
@@ -257,7 +257,7 @@ namespace MV.UI
         {
             if (open == null) return "";
             string need = MvUnlockText.Need(open);
-            return need.Length > 0 ? need + " 달성 시 열려요" : "업데이트 예정";
+            return need.Length > 0 ? MvUiText.Ui("ui.content.lockAt", need) : MvUiText.Ui("ui.content.soon");
         }
 
         void SaveSeen()
