@@ -82,7 +82,6 @@ namespace MV.UI
             _presenter.SideRequested += OnSideRequested;
             _presenter.Toast += MvUiToast.Show;
             _presenter.Bought += OnBought;
-            _presenter.FacilityBump += OnFacilityBump;
             hudSettings.displayMode = UIHudDisplayMode.KeepPrevious; // 런 HUD는 게임 루프가 MvUiNav로 켜고 끈다
         }
 
@@ -210,8 +209,6 @@ namespace MV.UI
 
         static void OnBought() => MvSound.PlayUi(MvUiSound.LobbyUpgradeBuy);
 
-        void OnFacilityBump(string key) => Data?.OnFacilityBump?.Invoke(key);
-
         protected override void OnDestroy()
         {
             if (_view != null) _view.StartPressed -= PressStart;
@@ -223,7 +220,6 @@ namespace MV.UI
             _presenter.SideRequested -= OnSideRequested;
             _presenter.Toast -= MvUiToast.Show;
             _presenter.Bought -= OnBought;
-            _presenter.FacilityBump -= OnFacilityBump;
             base.OnDestroy();
         }
     }
