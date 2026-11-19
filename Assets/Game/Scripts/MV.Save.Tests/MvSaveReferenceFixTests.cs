@@ -25,6 +25,26 @@ namespace MV.Save.Tests
             ContentOpenKeys = new HashSet<string> { "rebirth", "quest" },
         };
 
+        /// <summary>
+        /// 게임과 같은 조합: Boot(<c>MvBootSave.CreateConfig</c>)는 시작 덱을 103 상한 tier + 1 길이로 0을 채워 넘긴다.
+        /// 시험 기본 시작 덱(<c>{0,1}</c>)을 그대로 쓰면 새 저장도 덱 길이 정리에 걸리므로, 목록의 상한에 맞춰 늘린다.
+        /// </summary>
+        private static MvSaveConfig Config()
+        {
+            MvSaveConfig config = MvSaveConfig.CreateDefault();
+            var deck = new int[Math.Max(config.StartDeck.Length, Catalog().MaxWeaponTier + 1)];
+            Array.Copy(config.StartDeck, deck, config.StartDeck.Length);
+            config.StartDeck = deck;
+            return config;
+        }
+
+        private static MvSaveOptions Options(MemoryPrefs prefs, TestClock clock = null)
+        {
+            MvSaveOptions options = MvSaveTestKit.Options(prefs, clock);
+            options.Config = Config();
+            return options;
+        }
+
         [Test]
         public void UnknownGod_DeckLength_AreaOverflow_FixedOnOpenAndSavedOnce()
         {
@@ -75,7 +95,7 @@ namespace MV.Save.Tests
         [Test]
         public void UpgradeAndKeyReferences_ClampOrDropUnknown()
         {
-            MvSaveStore save = Track(MvSaveStore.Open(MvSaveTestKit.Options(new MemoryPrefs())));
+            MvSaveStore save = Track(MvSaveStore.Open(Options(new MemoryPrefs())));
             string tooMany = "[" + string.Join(",", Enumerable.Repeat("5", 25)) + "]";
             save.ApplyAndSaveJson(
                 "{\"mvLobby\":{\"up\":{\"stair\":99,\"ghost\":3}},\"mvAreaUp\":{\"lv\":{\"clone\":9}},\"mvRebirth\":{\"perks\":{\"obst\":50}}," +
@@ -84,7 +104,7 @@ namespace MV.Save.Tests
                 "\"mvProgress\":{\"bars\":{\"A0\":[" + tooMany + "],\"A1\":[[1,2],[3]],\"A7\":[[1]]}}}",
                 false, MvSaveKeys.Lobby, MvSaveKeys.AreaUp, MvSaveKeys.Rebirth, MvSaveKeys.Daily, MvSaveKeys.Unlock, MvSaveKeys.Progress);
 
-            IReadOnlyList<string> fixes = MvSaveReferenceFix.Run(save, Catalog(), MvSaveConfig.CreateDefault());
+            IReadOnlyList<string> fixes = MvSaveReferenceFix.Run(save, Catalog(), Config());
 
             Assert.That(fixes, Is.EquivalentTo(new[]
             {
@@ -107,12 +127,12 @@ namespace MV.Save.Tests
         {
             var prefs = new MemoryPrefs();
             var clock = new TestClock();
-            MvSaveStore save = Track(MvSaveStore.Open(MvSaveTestKit.Options(prefs, clock)));
+            MvSaveStore save = Track(MvSaveStore.Open(Options(prefs, clock)));
             Dictionary<string, string> before = prefs.Copy();
             long lastSaveAt = save.Meta.LastSaveAt;
             clock.Now += 1000;
 
-            Assert.That(MvSaveReferenceFix.Run(save, Catalog(), MvSaveConfig.CreateDefault()), Is.Empty);
+            Assert.That(MvSaveReferenceFix.Run(save, Catalog(), Config()), Is.Empty);
             Assert.That(prefs.Values, Is.EquivalentTo(before));
             Assert.That(save.Meta.LastSaveAt, Is.EqualTo(lastSaveAt));
         }
@@ -120,8 +140,8 @@ namespace MV.Save.Tests
         [Test]
         public void TableVersionChange_IsRecorded()
         {
-            MvSaveStore save = Track(MvSaveStore.Open(MvSaveTestKit.Options(new MemoryPrefs())));
-            var config = MvSaveConfig.CreateDefault();
+            MvSaveStore save = Track(MvSaveStore.Open(Options(new MemoryPrefs())));
+            var config = Config();
             config.TableVersion = 7;
             Assert.That(MvSaveReferenceFix.Run(save, Catalog(), config), Is.EqualTo(new[] { "mvMeta.tableVersion" }));
             Assert.That(save.Meta.TableVersion, Is.EqualTo(7));
