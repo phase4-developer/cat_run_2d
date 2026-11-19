@@ -31,6 +31,10 @@ namespace MV.Save
         public const int NoAds = 1001017;
         /// <summary>보라 마법석(유료, MV-SPEC-02 Q-30). 쓰는 곳은 BM 결정 뒤.</summary>
         public const int PurpleGem = 1001018;
+        /// <summary>일일 퀘스트 포인트(MV-WEALTH-QUESTPOINT). 보상 표시용 재화 행 — 받은 값은 재화 잔액이 아니라 퀘스트 카운터 dailyPoint(20)에 쌓는다(MvQuestRules.Claim).</summary>
+        public const int DailyQuestPoint = 1001019;
+        /// <summary>주간 퀘스트 포인트(MV-WEALTH-QUESTPOINT). 주간 퀘스트가 기획서에 없어 지금 쓰는 곳 없음(사용자 결정 2026-11-19).</summary>
+        public const int WeeklyQuestPoint = 1001020;
 
         private static readonly Dictionary<int, string> TypeById = new Dictionary<int, string>
         {
@@ -38,6 +42,7 @@ namespace MV.Save
             [PetFood] = "petFood", [Yarn] = "yarn", [GodCoin] = "godCoin", [GodShard] = "godShard",
             [FriendCoin] = "friendCoin", [FriendUp] = "friendUp", [FriendAny] = "friendAny", [StarCandy] = "starCandy",
             [BoxPaper] = "boxPaper", [BoxWood] = "boxWood", [BoxGold] = "boxGold", [NoAds] = "noAds", [PurpleGem] = "purpleGem",
+            [DailyQuestPoint] = "dailyQuestPoint", [WeeklyQuestPoint] = "weeklyQuestPoint",
         };
 
         private static readonly Dictionary<string, int> IdByType = TypeById.ToDictionary(pair => pair.Value, pair => pair.Key, StringComparer.Ordinal);

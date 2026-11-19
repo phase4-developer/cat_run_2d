@@ -17,8 +17,6 @@ namespace MV.Data
         Drop = 50,
         AD = 100,
         Inapp = 101,
-        DailyQuestPoint = 300,
-        WeeklyQuestPoint = 301,
         Pass = 500,
         StairLv = 600,
         Card = 601,

@@ -165,9 +165,7 @@ namespace MV.UI
             foreach (var r in reward)
             {
                 if (sb.Length > 0) sb.Append("  ");
-                string name = r.Type == ConsumeType.Wealth ? MvUiText.WealthNameById(tables, r.Id)
-                    : r.Type == ConsumeType.DailyQuestPoint ? MvUiText.Ui("ui.quest.dailyPoint")
-                    : r.Type.ToString();
+                string name = r.Type == ConsumeType.Wealth ? MvUiText.WealthNameById(tables, r.Id) : r.Type.ToString();
                 sb.Append(name).Append(" +").Append(MvUiFormat.Fmt(r.Value));
             }
             return sb.ToString();

@@ -305,7 +305,7 @@ namespace MV.Content
         /// <summary>
         /// 보상 받기 1번. 목표 미달 <see cref="MvMetaErrors.NotDone"/>, 이미 받음 <see cref="MvMetaErrors.AlreadyClaimed"/>,
         /// 잠김 <see cref="MvMetaErrors.Locked"/>, 지급할 수 없는 보상 <see cref="MvMetaErrors.NoReward"/>.
-        /// 보상: 재화(1)는 재화 행, 일일 포인트(300)는 카운터 dailyPoint(20)로 — 같은 저장 한 번.
+        /// 보상: 재화(1)는 재화 행, 단 일일 퀘스트 포인트 재화(<see cref="MvWealthIds.DailyQuestPoint"/>)는 재화 잔액이 아니라 카운터 dailyPoint(20)로 — 같은 저장 한 번.
         /// </summary>
         public static MvMetaResponse Claim(MvTables t, MvQuestSnapshot s, ResourceService res, int id, Func<string, bool> isOpen)
         {
@@ -344,10 +344,9 @@ namespace MV.Content
                 {
                     case ConsumeType.Wealth:
                         if (MvWealthIds.TypeOf(r.Id) == null) return MvMetaResponse.Reject(MvMetaErrors.NoReward, r.ToString());
-                        wealth.Gain(r.Id, v);
-                        break;
-                    case ConsumeType.DailyQuestPoint:
-                        points += v;
+                        // 일일 포인트는 날짜가 바뀌면 비는 퀘스트 카운터에 쌓는다(일일 종합 판정이 읽는 값, 사용자 결정 2026-11-19).
+                        if (r.Id == MvWealthIds.DailyQuestPoint) points += v;
+                        else wealth.Gain(r.Id, v);
                         break;
                     default:
                         // 상자·패스 XP 등 2차 보상은 그 계약이 처리한다.
