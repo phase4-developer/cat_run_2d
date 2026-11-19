@@ -469,9 +469,10 @@ namespace MV.UI
         void DrawPrice(LobbyUpgradeParts p, LobbyUpgradeItem u)
         {
             if (!p.priceButton && _missingPrice.Add(p.key))
-                Debug.LogWarning("LobbyDesignView: 강화 칸 " + p.key + "의 PriceBtn이 없습니다(UIScreen_Lobby upgrades[].priceButton → LobbyScreen/…/Slot_Price)", this);
-            if (!u.Max && MvPrice.Show(p.priceButton, Wallet, u.Cost, u.InputAllowed)) return;
-            if (p.price) p.price.SetActive(false);
+                Debug.LogWarning("LobbyDesignView: 강화 칸 " + p.key + "의 PriceBtn이 없습니다(UIScreen_Lobby upgrades[].priceButton → Assets/Game/Art/UI/Prefab/HUD/Element_MainUpgrade_Stair.prefab 루트, Button과 같은 객체)", this);
+            bool shown = !u.Max && MvPrice.Show(p.priceButton, Wallet, u.Cost, u.InputAllowed);
+            if (p.price) p.price.SetActive(shown); // PriceBtn은 버튼 루트에 있어 가격 칸(Slot_Price)은 따로 켜고 끈다
+            if (shown) return;
             if (p.button) p.button.interactable = false;
         }
 
