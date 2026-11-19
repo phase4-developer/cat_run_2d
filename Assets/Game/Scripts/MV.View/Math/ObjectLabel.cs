@@ -46,6 +46,8 @@ namespace MV.View
         public const double TowerHideBack = 1;
         /// <summary>결계 블록 글자판: 같은 골목·같은 줄에서 앞에 남은 블록이 이 수보다 적을 때만(L1488 「각 줄 앞쪽 2칸만」).</summary>
         public const int WallShownRows = 2;
+        /// <summary>계단문 숫자 앞 기호(노션 Obj_StairGate UI 「텍스트 포맷 : x{value}」). 언어와 무관한 기호라 언어팩 키를 두지 않는다.</summary>
+        public const string StairCountPrefix = "x";
 
         // 문구(07 §7.12). 언어팩이 들어오기 전까지 코드 문구 + 키 주석(MV.UI와 같은 방식). 이름은 MV-SPEC-02 용어(TermIdMap 「이름만 다름」).
         public const string TowerText = "마법서 탑 · 맞히면 계단 Lv UP";          // ui.run.label.tower
@@ -64,8 +66,8 @@ namespace MV.View
             switch (lk)
             {
                 case LabelKind.StairGate:
-                    // L1509: 모은 계단 수 + 충전 막대. 제목은 프리팹 글자.
-                    return new LabelContent(true, true, null, o.N.ToString(Inv), Gauge(o.Prog));
+                    // L1509: 모은 계단 수 + 충전 막대. 제목은 프리팹 글자. 숫자 형식 「x{value}」(노션 Obj_StairGate UI, 등급별 「+N」 표기 없음).
+                    return new LabelContent(true, true, null, StairCountPrefix + o.N.ToString(Inv), Gauge(o.Prog));
                 case LabelKind.CraftGate:
                     // 만든 지팡이 수(통과 때 받는 장 수 = Made + Extra) + 다음 장까지 막대.
                     return new LabelContent(true, true, null, (o.Made + o.Extra).ToString(Inv), Gauge(o.Prog));
