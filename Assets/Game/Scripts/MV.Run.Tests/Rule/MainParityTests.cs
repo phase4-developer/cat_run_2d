@@ -20,21 +20,21 @@ namespace MV.Run.Tests.Rule
         /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["A1L1"] = "f3126 e424 r235 Wall 4a10c80899b0edc6",
-            ["A1L8"] = "f3890 e576 r291 Wall dc8e3f5784b69e70",
+            ["A1L1"] = "f3126 e424 r235 Wall 6252f5b8ff06ee84",
+            ["A1L8"] = "f3890 e577 r291 Wall 98a71b0fde37be84",
             ["A1L15"] = "f3788 e482 r281 Wall 34fd9fe9eda1ff89",
-            ["A2L1"] = "f3298 e422 r243 Wall 8033e2aaea0689f1",
-            ["A2L8"] = "f3886 e547 r291 Wall d67585aca514800a",
-            ["A2L15"] = "f3676 e496 r275 Wall 3d5886a184a9bb00",
-            ["A3L1"] = "f3448 e847 r497 Wall d7b17dc4d0b0dbaa",
-            ["A3L8"] = "f3890 e988 r577 Wall c6cb96099cd9255a",
-            ["A3L15"] = "f3829 e931 r559 Wall 906e60976154d56c",
-            ["A4L1"] = "f3155 e803 r469 Wall 54cfe749c2ef432f",
-            ["A4L8"] = "f3864 e946 r573 Wall 39929c3dd2d90a15",
-            ["A4L15"] = "f3680 e944 r545 Wall 13b7db96dc957f80",
-            ["A5L1"] = "f3151 e838 r469 Wall bae734eeccaf5ca7",
-            ["A5L8"] = "f3890 e997 r577 Wall 76f3922407c390e8",
-            ["A5L15"] = "f3676 e855 r545 Wall 91ff466ddcb4906c",
+            ["A2L1"] = "f3298 e422 r243 Wall ad35393260b21005",
+            ["A2L8"] = "f3886 e547 r291 Wall 7ce25525fb7b4073",
+            ["A2L15"] = "f3676 e496 r275 Wall 5bdbd6442f42194e",
+            ["A3L1"] = "f3269 e810 r477 Wall db8579f7e102d225",
+            ["A3L8"] = "f3890 e993 r577 Wall 7b6a8383e4f38768",
+            ["A3L15"] = "f3823 e926 r559 Wall b20b6214128f2f5b",
+            ["A4L1"] = "f3155 e808 r469 Wall 2f95bd2687073082",
+            ["A4L8"] = "f3864 e952 r573 Wall bfc7f79a62cfd068",
+            ["A4L15"] = "f3680 e952 r545 Wall 06d444ffb9403c85",
+            ["A5L1"] = "f3131 e840 r465 Wall c1e9fd660439c724",
+            ["A5L8"] = "f3891 e1008 r577 Wall 7c53f8efa9b64d6a",
+            ["A5L15"] = "f3710 e883 r549 Wall 2fa39d8318d14591",
         };
 
         [Test] public void Area1() => Check(0);

@@ -47,8 +47,8 @@ namespace MV.Run.Tests
             Assert.AreEqual(WeaponDmg(d.Tables, 1), BaseDmg(d), 1e-12, "장착 단계 103_item.dmg 그대로");
             var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Modifiers = new RunModifiers { Dmg = 10 } });
             Assert.AreEqual(System.Math.Floor(WeaponDmg(s.Tables, 1) * 1.1), BaseDmg(s), 1e-9, "공격력 정수 버림(MV-SPEC2-FIX1)");
-            // 103_item 더미(HE_07 전): 1 × 1.8^(단계−1) 반올림(MV-SPEC2-FIX1)
-            Assert.AreEqual(new[] { 1, 2, 3, 6, 10, 19, 34, 61 }, Enumerable.Range(1, 8).Select(i => (int)WeaponDmg(s.Tables, i)).ToArray());
+            // 103_item 더미(HE_07 없음): 2^(단계−1)(기획자확인 PC-03, 2026-11-18)
+            Assert.AreEqual(new[] { 1, 2, 4, 8, 16, 32, 64, 128 }, Enumerable.Range(1, 8).Select(i => (int)WeaponDmg(s.Tables, i)).ToArray());
         }
 
         [Test]
