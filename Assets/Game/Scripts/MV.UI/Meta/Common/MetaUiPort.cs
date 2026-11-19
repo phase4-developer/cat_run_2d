@@ -62,7 +62,7 @@ namespace MV.UI
         bool IsMax(MvGrowth growth, string key);
         IReadOnlyList<ConsumeData> NextPrice(MvGrowth growth, string key);
         bool CanBuy(MvGrowth growth, string key);
-        /// <summary>구매에 필요한 부활 레벨(표 <c>needRebirth</c>, 없으면 0). 기본 구현은 0(시험 가짜가 고치지 않아도 되게).</summary>
+        /// <summary>다음 단계 구매에 필요한 부활 레벨(<c>16_levelPrice.needRebirth</c>, 없으면 0). 기본 구현은 0(시험 가짜가 고치지 않아도 되게).</summary>
         int NeedRebirth(MvGrowth growth, string key) => 0;
         /// <summary>부활 레벨이 모자라 잠겼는지.</summary>
         bool IsRebirthLocked(MvGrowth growth, string key) => RebirthLevel < NeedRebirth(growth, key);

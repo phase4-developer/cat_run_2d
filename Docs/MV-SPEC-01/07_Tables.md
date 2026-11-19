@@ -1507,7 +1507,6 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | levelPriceGroup | int | 11~18 |
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
 | costBase / costGrowth | float | 생성 도구 전용 round(base × 1.6^L) |
-| needRebirth | int | 구매에 필요한 부활 레벨(`save.rb.lv`). 0 = 잠김 없음. 모자라면 칸이 잠김 버튼(필요 수 표시)이고 구매는 `meta.locked`로 거절(MV-UI2-AREAUP, 노션 [팝업] Area 업그레이드 「환생 조건」). 기획서에 값이 없어 전 행 **더미** 0 |
 
 | id | key | max | perLv | statKey | valueFormat | valueBase | valueStep | levelPriceGroup | costBase | 이름 |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -1536,7 +1535,6 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | levelPriceGroup | int | 21~29 |
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
 | costBase / costGrowth | float | 생성 도구 전용 round(base × 1.5^L) |
-| needRebirth | int | 13_areaUpgrade와 같음(공용 칸 `Element_Upgrade` 잠김). 전 행 **더미** 0 |
 
 | id | key | max | base | perLv | floor | statKey | valueFormat | valueBase | valueStep | levelPriceGroup | costBase | 이름 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -1561,6 +1559,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | targetLevel | int | 이 구매로 도달하는 수(= 현재 P + 1) |
 | priceType / priceId / priceValue | consume | 비용(`;`로 여러 재화 가능) |
 | needPiece | int | 함께 드는 카드 수(그룹 301 펫, [08 §8.5.2](08_Content.md)). 빈칸 = 0 |
+| needRebirth | int | 이 단계(targetLevel)를 사는 데 필요한 부활 레벨(`save.rb.lv`). 빈칸 = 0 = 잠김 없음. 모자라면 구매는 `meta.locked`로 거절. 화면(`Element_Upgrade`): 현재 Lv 0에서 잠기면 칸 전체 `Lock`, Lv ≥ 1에서 잠기면 내용 + 잠김 버튼(필요 수 표시). 13_areaUpgrade·14_rebirthPerk 행은 `levelPriceGroup`으로 이 값을 읽는다(사용자 2026-11-19 레벨별 잠금, 13·14의 행 단위 열은 제거). 기획서에 값이 없어 확인용 임시 값만: 그룹 16·17·18 Lv1 = 1·5·10, 나머지 빈칸 |
 
 **그룹 배정**
 

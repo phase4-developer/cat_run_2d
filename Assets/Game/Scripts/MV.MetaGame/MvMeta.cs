@@ -223,8 +223,12 @@ namespace MV.Meta
             return MvMetaRules.NextPrice(Tables, row.levelPriceGroup, Level(growth, key));
         }
 
-        /// <summary>구매에 필요한 부활 레벨(<see cref="IRebirthLocked.needRebirth"/>). 잠김 열이 없는 표·행이면 0.</summary>
-        public int NeedRebirth(MvGrowth growth, string key) => Row(growth, key) is IRebirthLocked r ? r.needRebirth : 0;
+        /// <summary>다음 단계를 사는 데 필요한 부활 레벨(<c>16_levelPrice[group][P+1].needRebirth</c>). 없으면 0.</summary>
+        public int NeedRebirth(MvGrowth growth, string key)
+        {
+            var row = Row(growth, key);
+            return row == null ? 0 : MvMetaRules.NeedRebirth(Tables, row.levelPriceGroup, Level(growth, key));
+        }
 
         /// <summary>부활 레벨이 <see cref="NeedRebirth"/>보다 낮아 살 수 없다(노션 잠김 버튼).</summary>
         public bool IsRebirthLocked(MvGrowth growth, string key) => IsReady && Store.Rebirth.Lv < NeedRebirth(growth, key);
