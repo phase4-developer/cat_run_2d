@@ -180,6 +180,7 @@ namespace MV.UI
             _actions.Clear();
             _model.Step(_now, realDt, _actions);
             foreach (var a in _actions) Play(a);
+            OrderSiblings();   // 움직이는 중에도 지금 높이로 깊이를 맞춘다
             DropLeftovers(realDt);
             Resync(s);
         }
@@ -442,13 +443,53 @@ namespace MV.UI
             OrderSiblings();
         }
 
-        /// <summary>위 칸이 맨 앞(마지막 형제)이 되게 다시 맞춘다(디자이너 반대 순서 배치와 같은 겹침).</summary>
+        readonly List<HudWeaponSlot> _depth = new List<HudWeaponSlot>();
+        readonly List<int> _depthRank = new List<int>();
+        readonly List<int> _depthIdx = new List<int>();
+
+        /// <summary>
+        /// 스택 칸 깊이 = 지금 화면 높이: 위에 있는 칸이 앞(뒤 형제), 아래 칸이 뒤(디자이너 반대 순서 배치와 같은 겹침). 매 프레임 지금 자리로 다시 맞춘다:
+        /// 새 카드가 맨 밑에서 올라가며 한 칸씩 지나칠 때마다 한 칸씩 앞으로 나오고, 밀려 내려가는 칸은 한 칸 뒤로 간다(사용자 2026-11-19 「위로 올라가면서 한칸씩 밀면서 뎁스도 한칸 앞으로」).
+        /// 같은 높이면 손패 순서(위 카드가 앞). 스택 칸끼리의 형제 자리만 서로 바꾸고 줄·비행 카드 자리는 건드리지 않는다. 모이는 칸은 맨 앞.
+        /// </summary>
         void OrderSiblings()
         {
+            if (_model == null) return;
+            _depth.Clear();
+            _depthRank.Clear();
+            _depthIdx.Clear();
             var cards = _model.Cards;
-            for (int i = cards.Count - 1; i >= 0; i--)
-                if (_slots.TryGetValue(cards[i].Id, out var s)) s.transform.SetAsLastSibling();
-            foreach (var g in _gathering) if (g) g.transform.SetAsLastSibling();
+            for (int i = 0; i < cards.Count; i++)
+            {
+                if (!_slots.TryGetValue(cards[i].Id, out var s) || _gathering.Contains(s)) continue;
+                // 뒤(낮음) → 앞(높음) 순서로 끼워 넣는다.
+                float y = s.rectTransform.anchoredPosition.y;
+                int at = _depth.Count;
+                while (at > 0)
+                {
+                    var p = _depth[at - 1];
+                    float py = p.rectTransform.anchoredPosition.y;
+                    if (py < y || py == y && _depthRank[at - 1] > i) break;
+                    at--;
+                }
+                _depth.Insert(at, s);
+                _depthRank.Insert(at, i);
+                _depthIdx.Add(s.transform.GetSiblingIndex());
+            }
+            _depthIdx.Sort();
+            for (int k = 0; k < _depth.Count; k++)
+                if (_depth[k].transform.GetSiblingIndex() != _depthIdx[k]) _depth[k].transform.SetSiblingIndex(_depthIdx[k]);
+            if (_gathering.Count > 0 && stack)
+                foreach (var g in _gathering)
+                    if (g && g.transform.parent == stack && g.transform.GetSiblingIndex() != stack.childCount - 1) g.transform.SetAsLastSibling();
+        }
+
+        /// <summary>시험·QA: 스택 칸을 뒤 → 앞 깊이 순서로.</summary>
+        public List<HudWeaponSlot> SlotsBackToFront()
+        {
+            var list = new List<HudWeaponSlot>(StackSlots);
+            list.Sort((a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
+            return list;
         }
 
         void DrawEquip(bool pop)
