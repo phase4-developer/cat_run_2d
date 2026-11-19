@@ -91,7 +91,7 @@ namespace MV.UI
         [SerializeField] GameObject priceIcon;
         [SerializeField] TMP_Text priceText;
         /// <summary>가격 글자에 붙은 Framework <c>PriceLabel</c>(아이콘은 비워 프리팹 그림 유지).</summary>
-        [SerializeField] PriceLabel priceLabel;
+        [SerializeField] jjevol.PriceLabel priceLabel;
         [SerializeField] GameObject lockRoot;
         [SerializeField] UnlockRebirthBadge lockBadge;
 
