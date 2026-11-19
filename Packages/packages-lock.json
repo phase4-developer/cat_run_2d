@@ -489,7 +489,7 @@
       }
     },
     "com.jjevol.ui.addressables": {
-      "version": "file:Frozen/com.jjevol.ui.addressables-0.1.0-pre.6.tgz",
+      "version": "file:Frozen/com.jjevol.ui.addressables-0.1.0-pre.10.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {

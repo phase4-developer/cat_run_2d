@@ -125,6 +125,28 @@ namespace MV.UI
         public static async UniTask<LanguagePopup> OpenLanguageAsync(LanguagePopupData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.SettingLanguage, data ?? new LanguagePopupData()) as LanguagePopup;
 
+        /// <summary>공용 시스템 팝업(노션 「[팝업] 시스템 기본 팝업」). 콜백은 <see cref="SystemPopupData.OnClosed"/>.</summary>
+        public static async UniTask<SystemPopup> OpenSystemAsync(SystemPopupData data) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.CommonSystem, data) as SystemPopup;
+
+        /// <summary>선택(OK·Cancel). OK면 true, Cancel·X·뒤로·열지 못함이면 false.</summary>
+        public static async UniTask<bool> ConfirmAsync(string contents, string title = null)
+        {
+            var data = SystemPopupData.Confirm(contents, null, title);
+            var popup = await OpenSystemAsync(data);
+            if (popup == null) { data.Finish(false); return false; }
+            return await popup.CloseWait();
+        }
+
+        /// <summary>알림(OK 끔, Cancel·X로 닫음). 닫힐 때까지 기다린다.</summary>
+        public static async UniTask NoticeAsync(string contents, string title = null)
+        {
+            var data = SystemPopupData.Notice(contents, title);
+            var popup = await OpenSystemAsync(data);
+            if (popup == null) { data.Finish(false); return; }
+            await popup.CloseWait();
+        }
+
         /// <summary>퀘스트(08 §8.5.1, MV-META-QUEST). 잠김 판정은 로비 버튼(<see cref="LobbyPresenter.QuestSideId"/>)이 한다.</summary>
         public static async UniTask<QuestPopup> OpenQuestAsync(QuestPopupData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.Quest, data ?? new QuestPopupData()) as QuestPopup;
