@@ -43,14 +43,15 @@ namespace MV.View.Tests
         }
 
         [Test]
-        public void CraftGate_ShowsMadeWands_WithDoubles()
+        public void CraftGate_NoNumber_TitleAndGaugeOnly()
         {
             var o = Make("cgate");
             o.Made = 3;
             o.Extra = 1;
             o.Prog = 2;   // 범위 밖은 0~1로 자른다
             var c = ObjectLabel.Of(o, 0, 3, 0, 1);
-            Assert.That(c.Number, Is.EqualTo("4"));
+            Assert.That(c.Number, Is.Null, "노션 Obj_CraftGate UI: 숫자 없음(아이콘·막대만)");
+            Assert.That(c.Visible && c.KeepTitle, Is.True, "제목(「무기」)과 막대는 보인다");
             Assert.That(c.Gauge, Is.EqualTo(1f));
         }
 

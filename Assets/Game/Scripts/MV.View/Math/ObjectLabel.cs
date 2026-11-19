@@ -69,8 +69,8 @@ namespace MV.View
                     // L1509: 모은 계단 수 + 충전 막대. 제목은 프리팹 글자. 숫자 형식 「x{value}」(노션 Obj_StairGate UI, 등급별 「+N」 표기 없음).
                     return new LabelContent(true, true, null, StairCountPrefix + o.N.ToString(Inv), Gauge(o.Prog));
                 case LabelKind.CraftGate:
-                    // 만든 지팡이 수(통과 때 받는 장 수 = Made + Extra) + 다음 장까지 막대.
-                    return new LabelContent(true, true, null, (o.Made + o.Extra).ToString(Inv), Gauge(o.Prog));
+                    // 노션 Obj_CraftGate UI: 문 안은 무기 아이콘(CraftGateBundle)과 다음 장까지 막대뿐, 숫자 글자판 없음. 장 수는 문 위 카드 묶음이 보인다.
+                    return new LabelContent(true, true, null, null, Gauge(o.Prog));
                 case LabelKind.WellText:
                     return new LabelContent(o.Z > playerZ - TowerHideBack, false, TowerText, null, LabelContent.NoGauge);
                 case LabelKind.StairText:

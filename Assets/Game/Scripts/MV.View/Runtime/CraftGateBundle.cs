@@ -10,16 +10,17 @@ namespace MV.View
     /// 자리: <c>Obj_CraftGate</c> 변형에만 더한 자식 <c>WeaponBundle_Temp</c>. 배치·크기·통과 때 HUD로 넘기기는 부모 <see cref="GateRewardDisplay"/>가 한다.
     /// 임시 리소스: 디자이너 묶음 리소스가 오면 프리팹만 바꾼다(코드로 그림을 그리지 않는다).
     /// </summary>
-    /// 레이블 아이콘: 문 이름(「무기」) 오른쪽 작은 카드(<see cref="_labelIcon"/>, 오브젝트 LabelIcon_Temp)에 같은 틀·그림을 칠한다
-    /// (원작 「Craft: [무기]」, 사용자 2026-11-19 「크래프트문 무기 아이콘은 다시 이름 우측으로」·「아이콘은 무조건 이름 우측에 뜨는 형태」). 자리·크기는 프리팹 값.
+    /// 문 안 아이콘: 문 가운데 큰 카드(<see cref="_labelIcon"/>, 오브젝트 LabelIcon_Temp)에 같은 틀·그림을 칠한다
+    /// (노션 Obj_CraftGate UI 「Gate 내부에 얻을 수 있는 무기의 아이콘과 하단 게이지바」·「라벨 옆에 무기 아이콘 없음」, 사용자 2026-11-19 「아이콘과 게이지 표현하는걸로 무기문은 바뀐거같은데」로
+    /// 이전 「이름 우측」 지시를 대신한다). 숫자 글자판은 없다(<see cref="ObjectLabel"/>). 자리·크기는 프리팹 값.
     [DisallowMultipleComponent]
     public sealed class CraftGateBundle : GateRewardDisplay
     {
-        [Tooltip("문 이름 오른쪽 무기 카드(켜 둔 GateRewardCard, LabelIcon_Temp). 자리는 이 오브젝트 위치.")]
+        [Tooltip("문 안 가운데 무기 카드(켜 둔 GateRewardCard, LabelIcon_Temp). 자리는 이 오브젝트 위치.")]
         [SerializeField] GateRewardCard _labelIcon;
-        [Tooltip("이름 오른쪽 카드 크기(m).")]
-        [SerializeField] Vector2 _labelIconSize = new Vector2(0.46f, 0.4f);
-        [Tooltip("이름 오른쪽 카드 정렬 순서(레이블 글자 105와 같은 층).")]
+        [Tooltip("문 안 카드 크기(m). 노션 시안 약 1.3m.")]
+        [SerializeField] Vector2 _labelIconSize = new Vector2(1.3f, 1.3f);
+        [Tooltip("문 안 카드 정렬 순서(레이블 글자 105와 같은 층).")]
         [SerializeField] int _labelIconOrder = 105;
 
         Sprite _labelFrame, _labelSprite;

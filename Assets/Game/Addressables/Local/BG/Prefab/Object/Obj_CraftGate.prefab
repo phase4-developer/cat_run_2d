@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 4410235511000200001}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.2, z: 0}
+  m_LocalPosition: {x: 0, y: 3.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -46,14 +46,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MV.View::MV.View.CraftGateBundle
   _template: {fileID: 4410235511000200006}
-  _maxCards: 999
+  _maxCards: 20
   _leftX: -0.735
   _rightX: 0.735
-  _perRow: 5
-  _step: {x: 0.255, y: 0.3}
-  _cardSize: {x: 0.45, y: 0.4}
+  _perRow: 4
+  _step: {x: 0.55, y: 0.54}
+  _cardSize: {x: 0.53, y: 0.5}
   _labelIcon: {fileID: 4410235511000200103}
-  _labelIconSize: {x: 0.46, y: 0.4}
+  _labelIconSize: {x: 1.3, y: 1.3}
   _labelIconOrder: 105
 --- !u!1 &4410235511000200004
 GameObject:
@@ -313,7 +313,7 @@ Transform:
   m_GameObject: {fileID: 4410235511000200101}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.75, y: 2.29, z: -0.02}
+  m_LocalPosition: {x: 0, y: 1.14, z: -0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -645,7 +645,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6633361269430648139, guid: bd292f017983f44939e4fca12986d13a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.478
+      value: 0.23
       objectReference: {fileID: 0}
     - target: {fileID: 8773659453497088954, guid: bd292f017983f44939e4fca12986d13a, type: 3}
       propertyPath: m_Name

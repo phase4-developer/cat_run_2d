@@ -34,17 +34,17 @@ namespace MV.View
         [Tooltip("카드 원본(꺼 둔 카드). 장 수만큼 복제해 풀에서 꺼낸다.")]
         [SerializeField] GateRewardCard _template;
         [Tooltip("보일 카드 상한(장). 통과 때 HUD로 넘기는 장 수도 이 값까지다(표 300 CRAFT_ICON_MAX를 옮김, 사용자 2026-11-19 「표값 그냥 지우고 … 프리팹 인스펙터 값으로」).")]
-        [SerializeField] int _maxCards = 999;
+        [SerializeField] int _maxCards = 20;
         [Tooltip("왼쪽 기둥 안쪽 면 x(m, 묶음 기준). 줄 가운데 = 두 기둥 안쪽 면의 가운데.")]
         [SerializeField] float _leftX = -0.735f;
         [Tooltip("오른쪽 기둥 안쪽 면 x(m).")]
         [SerializeField] float _rightX = 0.735f;
         [Tooltip("한 줄 장 수. 넘치면 위 줄(사용자 2026-11-19 「상단 무기 리스트는 인스펙터로 크기하고 한줄에 들어가는 사이즈 조절 가능하게 … 간격 포함해서」).")]
-        [SerializeField] int _perRow = 5;
+        [SerializeField] int _perRow = 4;
         [Tooltip("카드 간격(m): x = 옆(카드 너비보다 작으면 겹친다), y = 위 줄.")]
-        [SerializeField] Vector2 _step = new Vector2(0.255f, 0.3f);
-        [Tooltip("카드 크기(m). HUD 스택 칸(170×150)과 같은 비율. 기둥 사이(1.47)에 5장 = 0.45 + 4 × 0.255.")]
-        [SerializeField] Vector2 _cardSize = new Vector2(0.45f, 0.4f);
+        [SerializeField] Vector2 _step = new Vector2(0.55f, 0.54f);
+        [Tooltip("카드 크기(m). 노션 Obj_CraftGate UI 시안 4×5 격자에서 잰 값(카드 0.53×0.5, 간격 0.55×0.54).")]
+        [SerializeField] Vector2 _cardSize = new Vector2(0.53f, 0.5f);
 
         /// <summary>통과 때 카드 화면 자리(종류, 카드들). Boot 다리가 HUD로 넘긴다. 받는 쪽은 목록을 그 자리에서 읽고 보관하지 않는다.</summary>
         public static event Action<GateRewardKind, IReadOnlyList<GateCardRelease>> Released;

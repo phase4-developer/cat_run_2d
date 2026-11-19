@@ -51,7 +51,7 @@ namespace MV.View.Tests
 
         /// <summary>
         /// 노션 Obj_StairGate UI: 문 안에 계단 아이콘(Icon_Floor), 그 아래 숫자 「x{value}」와 막대(아래로 아이콘 → 숫자 → 막대).
-        /// 무기문(cgate)은 계단문 변형이라 아이콘을 물려받으므로 끄고, 숫자·막대는 글자판 원래 자리 그대로다.
+        /// 무기문(cgate)은 계단문 변형이라 아이콘을 물려받으므로 끄고, 문 안 무기 카드 아래에 막대만 둔다(숫자 없음).
         /// </summary>
         [Test]
         public void StairGate_InnerFloorIcon_AboveNumberAndGauge()
@@ -74,8 +74,10 @@ namespace MV.View.Tests
             Assert.That(cgIcon, Is.Not.Null, "변형이 물려받은 StairIcon");
             Assert.That(cgIcon.gameObject.activeSelf, Is.False, "무기문에는 계단 아이콘을 끈다");
             var cgLabel = CountLabel.Find(cg.transform);
-            Assert.That(((RectTransform)cgLabel.Number.transform).anchoredPosition.y, Is.EqualTo(1.25f).Within(1e-4), "무기문 숫자는 글자판 원래 자리");
-            Assert.That(cgLabel.GaugeRoot.transform.localPosition.y, Is.EqualTo(0.478f).Within(1e-4), "무기문 막대는 글자판 원래 자리");
+            var bundle = cg.GetComponentInChildren<CraftGateBundle>(true);
+            Assert.That(bundle != null && bundle.LabelIcon != null, Is.True, "무기문 문 안 카드");
+            float cardBottom = bundle.LabelIcon.transform.position.y - bundle.LabelIconSize.y * 0.5f;
+            Assert.That(cgLabel.GaugeRoot.transform.position.y, Is.LessThan(cardBottom), "무기문: 문 안 카드 아래 막대(노션 시안)");
         }
 
         /// <summary>
