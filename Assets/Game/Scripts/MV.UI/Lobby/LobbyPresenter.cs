@@ -255,7 +255,7 @@ namespace MV.UI
                     Max = max,
                     Price = max ? "MAX" : MetaPanelPresenter.PriceText(Port.NextPrice(MvGrowth.Lobby, row.key), t), // ui.common.max
                     Enabled = canBuy,
-                    PriceShort = ready && !max && !canBuy,
+                    InputAllowed = ready && !max,
                 };
                 if (!max) SetPrice(u, Port.NextPrice(MvGrowth.Lobby, row.key), t);
                 Describe(u, row, t, p);
@@ -263,12 +263,12 @@ namespace MV.UI
             }
         }
 
-        /// <summary>가격 첫 항목의 숫자·재화 아이콘(디자이너 Slot_Price). 재화가 아니면 아이콘 없음.</summary>
+        /// <summary>비용과 첫 항목의 재화 아이콘(디자이너 Slot_Price). 재화가 아니면 아이콘 없음.</summary>
         static void SetPrice(LobbyUpgradeItem u, System.Collections.Generic.IReadOnlyList<ConsumeData> price, MvTables t)
         {
             if (price == null || price.Count == 0) return;
+            u.Cost = price;
             var c = price[0];
-            u.PriceValue = MvUiFormat.Fmt(c.Value);
             if (c.Type == ConsumeType.Wealth) u.PriceIcon = t.Wealth.Get(c.Id)?.icon ?? "";
         }
 
