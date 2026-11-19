@@ -53,9 +53,6 @@ namespace MV.UI
         bool _viewBound;
         bool _needOpen = true;
 
-        /// <summary>층 sortingOrder(05 §5.1.5).</summary>
-        protected virtual int Layer => MvUiLayer.Popup;
-
         protected abstract MetaPanelPresenter CreatePresenter();
 
         MetaPanelPresenter P
@@ -107,7 +104,6 @@ namespace MV.UI
         protected override void Awake()
         {
             base.Awake();
-            MvUi.EnsureLayer(gameObject, Layer, true);
         }
 
         protected MetaPopupData Data => popupData as MetaPopupData;

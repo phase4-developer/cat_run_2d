@@ -104,7 +104,6 @@ namespace MV.UI
         {
             base.Awake();
             hudSettings.displayMode = UIHudDisplayMode.KeepPrevious;
-            MvUi.EnsureLayer(gameObject, MvUiLayer.Ad, true);
         }
 
         protected override void _DrawContents()

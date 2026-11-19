@@ -34,7 +34,6 @@ namespace MV.UI
         protected override void Awake()
         {
             base.Awake();
-            MvUi.EnsureLayer(gameObject, MvUiLayer.FullPanel, true);
             if (view) view.CloseRequested += OnCloseRequested;
             else Debug.LogWarning("[MapPopup] LevelProgressView 참조가 없습니다. Assets/Game/Addressables/Local/UI/Meta/UIPopup_Map.prefab의 view를 채우세요.");
         }

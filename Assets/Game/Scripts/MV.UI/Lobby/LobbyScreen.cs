@@ -84,7 +84,6 @@ namespace MV.UI
             _presenter.Bought += OnBought;
             _presenter.FacilityBump += OnFacilityBump;
             hudSettings.displayMode = UIHudDisplayMode.KeepPrevious; // 런 HUD는 게임 루프가 MvUiNav로 켜고 끈다
-            MvUi.EnsureLayer(gameObject, MvUiLayer.Screen, true);
         }
 
         public override void ShowUI()

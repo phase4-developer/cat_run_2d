@@ -53,7 +53,6 @@ namespace MV.UI
         {
             base.Awake();
             hudSettings.displayMode = UIHudDisplayMode.ForceHide; // 열림: HUD 숨김(05 §5.6)
-            MvUi.EnsureLayer(gameObject, MvUiLayer.Result, true);
         }
 
         public override void ShowUI()
