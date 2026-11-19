@@ -124,17 +124,6 @@ namespace MV.UI
             return b;
         }
 
-        /// <summary>층 Canvas(05 §5.1.5). 프리팹에 이미 있으면 값만 맞춘다.</summary>
-        public static Canvas EnsureLayer(GameObject go, int sortingOrder, bool raycast)
-        {
-            var c = go.GetComponent<Canvas>();
-            if (!c) c = go.AddComponent<Canvas>();
-            c.overrideSorting = true;
-            c.sortingOrder = sortingOrder;
-            if (raycast && !go.GetComponent<GraphicRaycaster>()) go.AddComponent<GraphicRaycaster>();
-            return c;
-        }
-
         /// <summary>비율로 채우는 막대(둥근 끝 유지를 위해 fillAmount 대신 크기, 05 §5.1.8 ProgressBar).</summary>
         public static void SetFill(RectTransform fill, float t, bool vertical)
         {

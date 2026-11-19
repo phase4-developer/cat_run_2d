@@ -107,26 +107,17 @@ UGUI는 y가 위로 증가한다. 아래 규칙으로 옮긴다. 모든 값은 S
 
 ### 5.1.5 층(sortingOrder)
 
-구현: 각 UI 프리팹 루트에 `Canvas`(overrideSorting = true, Sorting Layer `UI`, sortingOrder = 아래 값) + `GraphicRaycaster`를 붙인다. UIManager 루트 순서와 상관없이 층이 정해진다. 같은 층 팝업이 여럿이면 연 순서대로 `기준값 + 2×순번`.
+구현(D-93, 정크버스터즈 방식): 층은 UIManager 프리팹의 층 루트가 정한다. 층 루트마다 `Canvas`(overrideSorting = true, sortingOrder = 아래 값) + `GraphicRaycaster`를 두고, 화면·HUD·팝업 프리팹 루트에는 Canvas를 붙이지 않는다(런타임에 Canvas를 더하지 않는다). 같은 층 안의 순서는 형제 순서다. 팝업은 연 순서대로 쌓이고 Framework `UIPopupManager`가 맨 위 팝업 바로 아래에 `Backboard`를 두므로, 팝업이 열려 있으면 Backboard가 그 아래 화면·HUD·다른 팝업의 누름을 막는다.
 
-| sortingOrder | 층 | 담는 것 | 정본 z | 처리 |
-|---|---|---|---|---|
-| 0 | (비움) | 레터박스는 02 소유(월드 쪽) | — | — |
-| 10 | Vignette | `#vig` 비네트(로비·런 항상) | auto(L610) | — |
-| 100 | Screen | `UIScreen_Lobby` | auto | 로비 안 `#mapBtn` z3은 같은 화면 안 순서로 처리 |
-| 200 | HUD | `UIHud_Run` | auto, `#ampRow` 4 | — |
-| 210 | FloatText | `UIHud_FloatText`(`#pops`) | auto(L636) | — |
-| 220 | HUD 가운데 | `UIHud_Run` 하위 Canvas: `#ms` 등급 미터(5), `#hc` 가호 카드(6), `.flycard`(30), 손패 머지 카드(`.wcard2.mg` 300·`.merged` 250) | 5~300 | **고침**: 손패 머지 카드를 HUD 층 안에 가둔다. 정본은 쌓임 맥락이 없어 광고 화면(40)보다 위지만 둘이 동시에 나오는 경우가 없어 겉모습은 같다 |
-| 280 | Overlay | `UIHud_Overlay`: 배너, 플래시, 날아가는 아이콘 | auto | — |
-| 300 | Result | `UIPopup_Result`, `UIPopup_ModeResult` | auto(문서 마지막) | 정본대로: 사운드·테스트 버튼(z5)보다 아래 |
-| 400 | System | `UIHud_System`: `#sndBtn`, `#dbgBtn` | 5 | 정본대로: 결과 화면 위, 패널 아래 |
-| 410 | Debug | `UIPopup_Debug`(`#dbg`) | 6 | 개발 빌드만 |
-| 500 | Popup | 야옹신·Area 강화·부활·컨텐츠 메뉴·메타 패널·카드 고르기 | 20 | — |
-| 550 | FullPanel | `UIPopup_Map` | 25 | — |
-| 600 | Unlock | `UIPopup_FeatureUnlock` | 30 | — |
-| 700 | Ad | `UIPopup_FakeAd` | 40 | — |
-| 800 | Toast | `effects.ui` 토스트 | auto(패널 아래) | **고침(D-32)**: 정본은 야옹신 잠긴 탭을 누를 때 토스트가 패널 어둠 막(z20) 뒤에 흐리게 깔린다. 맨 위로 올린다 |
-| 900 | Loading | `loadingRoot` | — | Framework |
+| sortingOrder | 층 루트 | 담는 것 | 비고 |
+|---|---|---|---|
+| 0 | Screen(UIManager 루트 Canvas) | `UIScreen_Lobby` | 로비 안 `#mapBtn` 등은 같은 화면 안 형제 순서 |
+| 90 | Hud | `UIHud_Run` | Framework `UIHudManager`가 HUD를 요구한 팝업이 열리면 140으로 올린다(MV 팝업은 `KeepPrevious`라 90 유지) |
+| 100 | Popup | `Backboard`, 모든 팝업(결과·야옹신·Area 강화·부활·컨텐츠 메뉴·메타 패널·지도·신기능 해금·광고·디버그) | 연 순서대로 위. 결과 팝업은 HUD를 숨긴다(`ForceHide`) |
+| 150 | Effect | `effectRoot` 연출 | — |
+| 200 | Loading | `loadingRoot` | Framework, StageRoot 밖 |
+
+HTML 정본의 z 순서(비네트 10 ~ 토스트 800)를 층으로 옮기던 이전 구현은 폐기했다(D-93). 같은 층 팝업 사이의 순서는 연 순서로 정하고, 정본에서 동시에 뜨는 조합이 생기면 원장에 올려 묻는다.
 
 ### 5.1.6 색 토큰
 
@@ -506,7 +497,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ### 5.2.8 등급 미터 `#ms` (계단 오르기 중)
 
-`ClimbMeterWidget`. 층 220. 계단 오르기(`CN` 있음) 동안만 보인다. 결과 화면에서는 숨김(L2339). 계산식은 정본 `updHeadUI`(L2343~2351)와 [04](04_GameRules.md).
+`ClimbMeterWidget`. Hud 층. 계단 오르기(`CN` 있음) 동안만 보인다. 결과 화면에서는 숨김(L2339). 계산식은 정본 `updHeadUI`(L2343~2351)와 [04](04_GameRules.md).
 
 | 요소 | 위치·크기 | 스타일 | 글꼴·문구 | 데이터 | L |
 |---|---|---|---|---|---|
@@ -524,7 +515,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ### 5.2.9 가호 카드 `#hc` (오르기 끝 룰렛)
 
-`BlessingCardsWidget`. 층 220. 계단 오르기가 끝나고 확정 카드가 1장 이상이면 등급 수만큼 카드를 띄워 돌린다(정본 `startRoulette`·`updRoulette`, L2357~2374). 없으면 토스트 `toastMessage:rouletteNone` 「우다다 {0}칸 · 5칸 미만이라 가호 없음」(L2359).
+`BlessingCardsWidget`. Hud 층. 계단 오르기가 끝나고 확정 카드가 1장 이상이면 등급 수만큼 카드를 띄워 돌린다(정본 `startRoulette`·`updRoulette`, L2357~2374). 없으면 토스트 `toastMessage:rouletteNone` 「우다다 {0}칸 · 5칸 미만이라 가호 없음」(L2359).
 
 | 요소 | 위치·크기 | 스타일 | 글꼴·문구 | L |
 |---|---|---|---|---|
@@ -549,7 +540,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ### 5.2.10 날아가는 아이콘·떠오르는 숫자
 
-**날아가는 아이콘** `FlyIconLayer`(층 280, `effects.ui` `EffectIconBehaviour` 기반, 풀). 정본 `.fly`(L144~145): 글 D 6u `--stair`, 그림자 `pop`. 시작 2프레임 뒤 이동, 560ms 뒤 제거 + 콜백.
+**날아가는 아이콘** `FlyIconLayer`(Hud 층, `effects.ui` `EffectIconBehaviour` 기반, 풀). 정본 `.fly`(L144~145): 글 D 6u `--stair`, 그림자 `pop`. 시작 2프레임 뒤 이동, 560ms 뒤 제거 + 콜백.
 
 | 종류 | 시작 | 끝 | 시간·곡선 | L |
 |---|---|---|---|---|
@@ -565,7 +556,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 | 계단 게이트 | `#hStair` | 캔 4.4u + 「+{0}」 | `R.stairs += n`, 계단 상자 `pulse` | L2047 |
 | 무기 공방 게이트 | 손패 | `103_item.icon`, 최대 5개 70ms 간격 | — | L2052 |
 
-**떠오르는 숫자** `UIHud_FloatText`(`FloatTextHud`, 층 210, 정본 `#pops` L142~143, L1700~1711). 호출 목록·색·크기는 [06](06_Effects.md).
+**떠오르는 숫자** `UIHud_FloatText`(`FloatTextHud`, Hud 층, 정본 `#pops` L142~143, L1700~1711). 호출 목록·색·크기는 [06](06_Effects.md).
 
 | 항목 | 값 |
 |---|---|
@@ -622,7 +613,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 |---|---|---|
 | 전달 | 대기열 1장을 손패에 넣고 정렬. 새 카드는 제자리보다 ch 아래에서 나타나 위치 .28s ease + `wdeal` .25s ease-out(불투명 0·오른쪽 35% → 원래). 무기문 통과로 받은 장은 문 위 카드가 같은 자리·같은 크기 UI 카드로 바뀌어(알파 변화 없음) 스택 맨 아래 칸 밑에 한 줄로 서고, 한 장씩 맨 밑으로 들어간다. 밑에서 MERGE_N장이 되면 바로 합쳐지고 그 결과가 위 카드와 다시 MERGE_N장이 되면 또 합쳐진 뒤 다음 장이 들어간다(사용자 2026-11-19 「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」). 장 수 상한·출발 간격은 프리팹 값(`CraftGateBundle._maxCards`·`WeaponSection.launchGapSec`). 날고 있는 카드가 없으면 받은 장을 바로 넣는다 | L1180, L1211~1213, L501 |
 | 머지 찾기 | 3장 이상인 **가장 낮은 등급**. 없으면 끝 | L1183~1186 |
-| 모으기 | **사용자 결정 2026-11-19**(「무기 머지 3개가 위로 모여지게 되어있는거 맞지? 뎁스도 제일 위에있는게 유지되야하는데」 → 「그렇게 바꿔」): 3장이 맨 위 카드 자리로 위로 모이고, 모이는 동안 3장의 깊이는 고정(맨 위 카드가 앞). 정본(HTML): 그 등급 앞 3장이 2번째 카드 자리로 이동(`md×0.9`, ease-in) + `wmg`(md, ease-in, 끝 유지: 60% 밝기 1.7 → 100% 밝기 3·`scale 1.06`). 층 220 안 맨 앞 | L1187~1191, L502~503, L572 |
+| 모으기 | **사용자 결정 2026-11-19**(「무기 머지 3개가 위로 모여지게 되어있는거 맞지? 뎁스도 제일 위에있는게 유지되야하는데」 → 「그렇게 바꿔」): 3장이 맨 위 카드 자리로 위로 모이고, 모이는 동안 3장의 깊이는 고정(맨 위 카드가 앞). 정본(HTML): 그 등급 앞 3장이 2번째 카드 자리로 이동(`md×0.9`, ease-in) + `wmg`(md, ease-in, 끝 유지: 60% 밝기 1.7 → 100% 밝기 3·`scale 1.06`). Hud 층 안 맨 앞 | L1187~1191, L502~503, L572 |
 | 결과 | md 뒤 3장 제거, 다음 등급 1장을 모인 자리에 넣고 정렬 → 제자리로 .28s. `wmerged`(`max(0.15, u)`, ease-out: 0% `scale 1.3`·밝기 3·빛 4u `--gc` → 없음) + 결과 칸 위 반짝임(참고 영상). 소리 `merge`. 밝기·반짝임 그림은 `Slot_Weapon.prefab`의 `flash`·`sparkle` 자식(디자이너 리소스 필요, 없으면 크기 연출만) | L1192~1194, L1214~1221, L504~505 |
 | 연쇄 | 머지할 것이 없을 때까지 하나씩 반복 | L1195 |
 | 등급 상승 | 최고 등급이 오르면 장착 카드 갱신, 런 중이면 「변신!」 팝업·불꽃·`lvup`([06](06_Effects.md)) | L1218~1221 |
@@ -745,7 +736,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ## 5.6 결과 — `UIPopup_Result`
 
-`ResultPopup : UIPopup`, 층 300. 정본 `#result.ov`(L686~698, CSS L253~267·L329~331·L373~375), `finish`(L2394~2418), `collect`(L2424~2443). 런 끝에 `ResultViewData`(제목 종류·진행·보상 consumeData 목록·통계 줄·광고 배수 가능 여부)를 받아 그린다. 컨텐츠 모드(§5.15)도 같은 팝업을 쓴다.
+`ResultPopup : UIPopup`, Popup 층. 정본 `#result.ov`(L686~698, CSS L253~267·L329~331·L373~375), `finish`(L2394~2418), `collect`(L2424~2443). 런 끝에 `ResultViewData`(제목 종류·진행·보상 consumeData 목록·통계 줄·광고 배수 가능 여부)를 받아 그린다. 컨텐츠 모드(§5.15)도 같은 팝업을 쓴다.
 
 | 요소 | 위치·크기 | 스타일 | 글꼴·문구 | 데이터 | L |
 |---|---|---|---|---|---|
@@ -788,7 +779,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ## 5.7 야옹신 — `UIPopup_GodSelect`
 
-`GodSelectPopup : UIPopup`, 층 500. 정본 `#godPanel`(L663~673, CSS L177~201·L376~378·L595), `renderGodPanel`(L2494~2509). 데이터 `113_god`(`sort`·`active`), 고유 카드 `111_cardPool` → `110_card`, 등급 `115_cardTier`.
+`GodSelectPopup : UIPopup`, Popup 층. 정본 `#godPanel`(L663~673, CSS L177~201·L376~378·L595), `renderGodPanel`(L2494~2509). 데이터 `113_god`(`sort`·`active`), 고유 카드 `111_cardPool` → `110_card`, 등급 `115_cardTier`.
 
 | 요소 | 위치·크기 | 스타일 | 글꼴·문구 | 데이터 | L |
 |---|---|---|---|---|---|
@@ -818,11 +809,11 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 | 사용 | `save.god` 저장 → 카드 풀 교체 → 로비 야옹신 버튼 다시 그림 → **패널 닫힘** | L2513 |
 | 닫기·막 | 닫힘 | L2511~2512 |
 
-토스트(층 800)는 이 패널 위에 보인다(D-32: 정본은 패널 뒤에 가려짐).
+토스트는 이 패널 위에 보인다(D-32: 정본은 패널 뒤에 가려짐, 층은 §5.1.5).
 
 ## 5.8 Area 강화 — `UIPopup_AreaUpgrade`
 
-`AreaUpgradePopup : UIPopup`, 층 500. 정본 `#aupPanel`(L699~702), `renderAup`(L2522~2532). 공용 패널 틀 `.pnl`(L347~364, L595) — §5.9·§5.16도 같은 틀:
+`AreaUpgradePopup : UIPopup`, Popup 층. 정본 `#aupPanel`(L699~702), `renderAup`(L2522~2532). 공용 패널 틀 `.pnl`(L347~364, L595) — §5.9·§5.16도 같은 틀:
 
 | 틀 요소 | 값 | L |
 |---|---|---|
@@ -871,7 +862,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ## 5.9 부활 — `UIPopup_Rebirth`
 
-`RebirthPopup : UIPopup`, 층 500. 정본 `#rbPanel`(L703~709, CSS L365~369), `renderRb`(L2543~2557), `doRebirth`(L2559~2564). `.pnl` 틀(§5.8), `--pc = #ff9a5a`.
+`RebirthPopup : UIPopup`, Popup 층. 정본 `#rbPanel`(L703~709, CSS L365~369), `renderRb`(L2543~2557), `doRebirth`(L2559~2564). `.pnl` 틀(§5.8), `--pc = #ff9a5a`.
 
 | 요소 | 크기·스타일 | 글꼴·문구 | 데이터 | L |
 |---|---|---|---|---|
@@ -908,7 +899,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ## 5.10 지도 — `UIPopup_Map`
 
-`MapPopup : UIPopup`, 층 550. 정본 `#mapPanel`(L710, CSS L445~480·L593~594), `renderMap`(L2587~2609). 전체 화면, 바탕 `#2a1e2a`, 세로 배치(머리 → 스크롤). 열 때 소리 `click`. 데이터 `301_zone`·`302_area`·`303_areaFloor`·`05_contentOpen`.
+`MapPopup : UIPopup`, Popup 층. 정본 `#mapPanel`(L710, CSS L445~480·L593~594), `renderMap`(L2587~2609). 전체 화면, 바탕 `#2a1e2a`, 세로 배치(머리 → 스크롤). 열 때 소리 `click`. 데이터 `301_zone`·`302_area`·`303_areaFloor`·`05_contentOpen`.
 
 | 요소 | 위치·크기 | 스타일 | 글꼴·문구 | 데이터 | L |
 |---|---|---|---|---|---|
@@ -932,7 +923,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ## 5.11 신기능 해금 — `UIPopup_FeatureUnlock`
 
-`FeatureUnlockPopup : UIPopup`, 층 600. 정본 `#unlockOv`(L711, CSS L481~491), `showUnlock`(L2612~2615). 정본은 「아홉 목숨」 하나만 Area 2 개방 정산 900ms 뒤 연다(L2441). Unity는 정산 뒤 로비에서 900ms 뒤, 조건을 새로 채웠고 아직 보지 않은 `05_contentOpen` 행마다 차례로 연다.
+`FeatureUnlockPopup : UIPopup`, Popup 층. 정본 `#unlockOv`(L711, CSS L481~491), `showUnlock`(L2612~2615). 정본은 「아홉 목숨」 하나만 Area 2 개방 정산 900ms 뒤 연다(L2441). Unity는 정산 뒤 로비에서 900ms 뒤, 조건을 새로 채웠고 아직 보지 않은 `05_contentOpen` 행마다 차례로 연다.
 
 | 요소 | 크기 | 스타일 | 글꼴·문구 | 데이터 | L |
 |---|---|---|---|---|---|
@@ -951,7 +942,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ## 5.12 가짜 광고 → `AdManager` — `UIPopup_FakeAd`
 
-정본은 광고 대신 3초 검은 화면을 보여 주고 끝나면 보상을 준다(`#adFake` L712, CSS L370~372, `fakeAd` L2419~2422). Unity는 Framework `AdManager`를 부르고, 광고 SDK가 없을 때(에디터·개발 빌드)만 `FakeAdPopup`(층 700)을 쓴다. 작업 계약 MV-PLAT-ADS.
+정본은 광고 대신 3초 검은 화면을 보여 주고 끝나면 보상을 준다(`#adFake` L712, CSS L370~372, `fakeAd` L2419~2422). Unity는 Framework `AdManager`를 부르고, 광고 SDK가 없을 때(에디터·개발 빌드)만 `FakeAdPopup`(Popup 층)을 쓴다. 작업 계약 MV-PLAT-ADS.
 
 **가짜 광고 화면**: 전체 바탕 `#0b0b0e`, 누름 막음. 가운데 D 6u `#fff` 문구(정본 「보상 광고 · 츄르·캣닢 ×3」 등 → `08_adPlacement`의 `name:<id>`) + 위 여백 2u B7 3u `--ink-dim` `ui.ad.sub` 「프로토 시뮬레이션 · {0}」(3 → 0, 1초마다).
 
@@ -1004,7 +995,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ## 5.14 시스템 버튼·테스트 패널
 
-`UIHud_System`(`SystemHud`, 층 400 — 정본대로 결과 화면보다 위) + `UIPopup_Debug`(`DebugPopup`, 층 410, **개발 빌드 전용**: `UNITY_EDITOR || DEVELOPMENT_BUILD`).
+`UIHud_System`(`SystemHud`, Hud 층 — D-93 뒤로 결과 화면(Popup 층)보다 아래, 정본은 위) + `UIPopup_Debug`(`DebugPopup`, Popup 층, **개발 빌드 전용**: `UNITY_EDITOR || DEVELOPMENT_BUILD`).
 
 | 요소 | 위치·크기 | 스타일 | 글꼴·문구 | 동작 | L |
 |---|---|---|---|---|---|
@@ -1143,7 +1134,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ### 5.17.1 모드 결과 — `UIPopup_ModeResult`
 
-`ModeResultPopup : UIPopup`, 층 300. 결과(§5.6)와 같은 막·상자·보상 칸 모양을 쓰고 아래만 다르다. **×3 광고 버튼 없음**([08](08_Content.md) §8.4.1 ⑥).
+`ModeResultPopup : UIPopup`, Popup 층. 결과(§5.6)와 같은 막·상자·보상 칸 모양을 쓰고 아래만 다르다. **×3 광고 버튼 없음**([08](08_Content.md) §8.4.1 ⑥).
 
 | 요소 | 값 |
 |---|---|
@@ -1157,7 +1148,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ### 5.17.2 골목 수비전 HUD — `UIHud_Defence`
 
-`DefenceHud : UIHud`, 층 200. `UIHud_Run`의 왼쪽 위 블록·재화 칩 대신 아래를 쓴다. 무기 묶음(§5.2.6, 손패 포함)·가호 줄(§5.2.7)·떠오르는 숫자·날아가는 아이콘은 그대로 재사용한다. 계단 상자·계단 게이지·경고·등급 미터·가호 카드 룰렛은 없다.
+`DefenceHud : UIHud`, Hud 층. `UIHud_Run`의 왼쪽 위 블록·재화 칩 대신 아래를 쓴다. 무기 묶음(§5.2.6, 손패 포함)·가호 줄(§5.2.7)·떠오르는 숫자·날아가는 아이콘은 그대로 재사용한다. 계단 상자·계단 게이지·경고·등급 미터·가호 카드 룰렛은 없다.
 
 | 요소 | 위치·크기 | 스타일 | 글꼴·문구 | 데이터 |
 |---|---|---|---|---|
@@ -1171,7 +1162,7 @@ Address는 Framework 규칙 `UIScreen_{ID}`·`UIPopup_{ID}`·`UIHud_{ID}`. ID �
 
 ### 5.17.3 카드 고르기 — `UIPopup_CardPick`
 
-`CardPickPopup : UIPopup`, 층 500. 수비전 레벨업(대기열에서 하나씩)과 택배 상자 외 모든 「3택」에 쓴다. **열려 있는 동안 런은 일시정지**(§5.18).
+`CardPickPopup : UIPopup`, Popup 층. 수비전 레벨업(대기열에서 하나씩)과 택배 상자 외 모든 「3택」에 쓴다. **열려 있는 동안 런은 일시정지**(§5.18).
 
 | 요소 | 값 |
 |---|---|

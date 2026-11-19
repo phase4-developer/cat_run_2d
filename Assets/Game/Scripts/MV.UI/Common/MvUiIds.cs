@@ -39,24 +39,4 @@ namespace MV.UI
         /// <summary><c>UIPopup_SettingLanguage</c>(MV-UI2-SETTING, 설정 → 언어).</summary>
         public const string SettingLanguage = "SettingLanguage";
     }
-
-    /// <summary>층 sortingOrder(05 §5.1.5). 각 화면 프리팹 루트의 Canvas(overrideSorting)에 넣는다.</summary>
-    public static class MvUiLayer
-    {
-        public const int Vignette = 10;
-        public const int Screen = 100;
-        public const int Hud = 200;
-        public const int FloatText = 210;
-        public const int HudCenter = 220;
-        public const int Overlay = 280;
-        public const int Result = 300;
-        public const int System = 400;
-        public const int Debug = 410;
-        public const int Popup = 500;
-        public const int FullPanel = 550;
-        public const int Unlock = 600;
-        public const int Ad = 700;
-        public const int Toast = 800;
-        public const int Loading = 900;
-    }
 }

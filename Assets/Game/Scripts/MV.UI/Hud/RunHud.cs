@@ -2,7 +2,6 @@ using System;
 using jjevol;
 using MV.Run;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MV.UI
 {
@@ -61,12 +60,6 @@ namespace MV.UI
                 if (!notice) Debug.LogWarning("[RunHud] 계단 안내 프리팹(HUD_ClimbNotice)이 자식에 없습니다.", this);
                 return notice;
             }
-        }
-
-        protected virtual void Awake()
-        {
-            // HUD 전체는 누를 수 없다(드래그가 아래로 지나감). 겉에 버튼(배속 토글 등)이 있으면 그 버튼만 받는다(겉이 나머지 그림의 raycastTarget을 끈다).
-            MvUi.EnsureLayer(gameObject, MvUiLayer.Hud, GetComponentInChildren<Selectable>(true) != null);
         }
 
         protected override void _DrawContents()

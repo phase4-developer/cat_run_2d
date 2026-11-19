@@ -41,7 +41,6 @@ namespace MV.UI
         protected override void Awake()
         {
             base.Awake();
-            MvUi.EnsureLayer(gameObject, MvUiLayer.Popup, true);
             Bind();
         }
 
