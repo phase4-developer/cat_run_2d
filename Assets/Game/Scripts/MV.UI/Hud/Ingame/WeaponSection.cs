@@ -50,6 +50,7 @@ namespace MV.UI
         [Tooltip("줄 카드끼리 위 끝 사이 거리(칸 높이 배). 스택(-110 px 간격)보다 넓게 띄워 아이콘 실루엣이 보이게 한다(사용자 2026-11-19 「간격도 더 널널하게 해서 아이콘 실루엣은 확인 가능하게」).")] [SerializeField] float queueStepRatio = 0.6f;
         [Tooltip("문 위 카드 자리 → 줄 자리 비행 초")] [SerializeField] float launchSec = 0.4f;
         [Tooltip("카드마다 출발 간격 초(표 300 fly.cloneGapMs 70 ms를 옮김, 사용자 2026-11-19 「프리팹으로 관리」)")] [SerializeField] float launchGapSec = 0.07f;
+        [Tooltip("문 → 줄 비행 곡선 휨(출발~도착 거리 배, 바깥쪽으로 부푼 2차 곡선). 0 = 직선. 사용자 2026-11-19 「너무 직선 말고 … 곡선으로 가는게 더 자연스러울거 같아」.")] [SerializeField] float launchArc = 0.25f;
         [Tooltip("받을 장이 없는데 줄에 남은 카드(거절된 장)를 치우기까지 초")] [SerializeField] float queueHoldSec = 2f;
 
         Func<RunState> _state;
@@ -350,8 +351,10 @@ namespace MV.UI
                     if (_gathering.Count == 0) break;
                     // 그 등급 3장이 맨 위 카드 자리로 위로 모인다(md × 0.9, ease-in) + 밝아짐·scale 1.06.
                     // 05 §5.3.3 「2번째 카드 자리」 대신 사용자 2026-11-19 「무기 머지 3개가 위로 모여지게 … 뎁스도 제일 위에있는게 유지되야」 → 「그렇게 바꿔」.
-                    var to = _gathering[0].rectTransform.anchoredPosition;   // Gathered는 위 → 아래 순서
+                    // 모을 자리 = 맨 위 카드의 손패 자리(올라오는 중이어도 이동이 끝나기를 기다리지 않는다, 사용자 2026-11-19 「3개 배치되면 그때 바로 머지」).
+                    var to = TargetOf(_gathering[0], out var top, out _) ? top : _gathering[0].rectTransform.anchoredPosition;   // Gathered는 위 → 아래 순서
                     _gatherY = to.y;
+                    _moves.RemoveAll(mv => _gathering.Contains(mv.Slot));   // 올라오던 카드도 곧장 모으는 자리로
                     foreach (var g in _gathering)
                     {
                         g.ResetLook();   // 깊이는 높이 규칙 그대로(위 카드가 앞): 모이는 3장이 바로 위 카드 앞으로 튀어나오지 않는다(사용자 2026-11-19 「마지막 머지할때 뎁스가 이상하게」)
@@ -581,17 +584,15 @@ namespace MV.UI
         Vector2 QueueAt(int k, int n)
         {
             float h = SlotHeight();
-            Vector2 first;
+            float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
+            // 스택 맨 아래 칸 바로 밑(칸 높이 × queueGapRatio 띄움).
+            var first = new Vector2(0, n > 0 ? -top - (n - 1) * (h + spacing) - h - h * queueGapRatio : -top);
             if (queueAnchor && stack)
             {
-                // 지정한 오브젝트 자리(스택 위 가운데 기준 anchoredPosition으로 바꾼다).
-                var local = (Vector2)stack.InverseTransformPoint(queueAnchor.position);
-                first = local - new Vector2(stack.rect.center.x, stack.rect.yMax);
-            }
-            else
-            {
-                float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
-                first = new Vector2(0, n > 0 ? -top - (n - 1) * (h + spacing) - h - h * queueGapRatio : -top);
+                // 지정한 오브젝트 = 줄의 가장 높은 자리와 x(스택 위 가운데 기준 anchoredPosition). 스택이 길어져 그보다 내려오면 스택 밑을 따라 내려간다
+                // (사용자 2026-11-19 「카드가 가는 위치가 너무 아래」: 스택이 짧을 때 멀리 떨어지지 않게).
+                var local = (Vector2)stack.InverseTransformPoint(queueAnchor.position) - new Vector2(stack.rect.center.x, stack.rect.yMax);
+                first = new Vector2(local.x, Mathf.Min(local.y, first.y));
             }
             return first - new Vector2(0, k * h * queueStepRatio);
         }
@@ -650,8 +651,17 @@ namespace MV.UI
                     continue;
                 }
                 float delay = i * launchGapSec;
+                var from = rt.anchoredPosition;
+                var dir = to - from;
+                var bulge = new Vector2(dir.y, -dir.x);                 // 진행 방향의 수직
+                if (bulge.x < 0) bulge = -bulge;                         // 바깥(화면 오른쪽)으로 부푼다
+                var ctrl = (from + to) * .5f + bulge * launchArc;        // |bulge| = 거리
                 DOTween.Sequence().SetUpdate(true).SetTarget(rt)
-                    .Insert(delay, AnchorTo(rt, to, launchSec).SetEase(Ease.InOutQuad))
+                    .Insert(delay, DOTween.To(() => 0f, u =>
+                    {
+                        float a = 1f - u;
+                        rt.anchoredPosition = a * a * from + 2f * a * u * ctrl + u * u * to;
+                    }, 1f, launchSec).SetEase(Ease.InOutQuad).SetUpdate(true))
                     .Insert(delay, s.transform.DOScale(1f, launchSec).SetEase(Ease.InOutQuad))
                     .OnComplete(() => { q.Arrived = true; LayoutQueue(); });
             }
