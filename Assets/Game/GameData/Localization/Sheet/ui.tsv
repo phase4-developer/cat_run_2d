@@ -75,3 +75,9 @@ ui.result.next	괜찮아요	No Thanks	結構です
 ui.common.countX	x{0}	x{0}	x{0}
 ui.result.progression	진행도	Progression	進行度
 ui.result.reward	보상	Reward	報酬
+ui.run.label.tower	마법서 탑 · 맞히면 계단 Lv UP	Spellbook Tower · Hit for Stair Lv UP	魔法書の塔 · 当てると階段Lv UP
+ui.run.label.stair	우다다 계단 · 모은 계단만큼 돌파	Dash Stairs · Break through with your stairs	ダダダ階段 · 集めた階段だけ突破
+ui.run.label.sgate	계단	Stairs	階段
+ui.run.label.cgate	무기	Weapon	武器
+ui.run.floorN	골목 {0}	Alley {0}	路地 {0}
+ui.run.areaGate	Area {0} 돌파	Area {0} Clear	Area {0} 突破
