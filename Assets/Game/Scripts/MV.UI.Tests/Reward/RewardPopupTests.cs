@@ -71,9 +71,8 @@ namespace MV.UI.Tests
             string guid = AssetDatabase.AssetPathToGUID(PopupPath);
             Assert.That(guid, Is.Not.Empty);
             string text = System.IO.File.ReadAllText("Assets/AddressableAssetsData/AssetGroups/Local_UI.asset");
-            Assert.That(text, Does.Contain("m_GUID: " + guid + "
-    m_Address: UIPopup_" + MvUiIds.Reward).Or.Contain("m_GUID: " + guid + "
-    m_Address: UIPopup_" + MvUiIds.Reward),
+            string flat = text.Replace("\r", "").Replace("\n", " ");
+            Assert.That(flat, Does.Contain("m_GUID: " + guid + "     m_Address: UIPopup_" + MvUiIds.Reward),
                 "Local_UI 항목, 주소 = 파일 이름");
         }
 
