@@ -81,3 +81,6 @@ ui.run.label.sgate	계단	Stairs	階段
 ui.run.label.cgate	무기	Weapon	武器
 ui.run.floorN	골목 {0}	Alley {0}	路地 {0}
 ui.run.areaGate	Area {0} 돌파	Area {0} Clear	Area {0} 突破
+ui.common.ok	확인	OK	OK
+ui.common.cancel	취소	Cancel	キャンセル
+ui.popup.notice	알림	Notice	お知らせ
