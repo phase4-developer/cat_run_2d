@@ -89,6 +89,8 @@ namespace MV.View
         public string GateWeaponIcon;
         /// <summary>무기문 위 카드 묶음 등급 틀(Bt의 09_uiResource 등급 틀 행 atlas·sprite, HUD 무기 칸과 같은 규칙 <see cref="MvUiGrade.Frame"/>).</summary>
         public string GateWeaponFrameAtlas, GateWeaponFrame;
+        /// <summary>게이트 등급 색(지금 런 무기 단계 Bt의 103_item.gradeCol hex). <see cref="GradeColorTint"/>가 읽는다.</summary>
+        public string GateWeaponColor;
         /// <summary>글자판 문구 덮어쓰기(시험·Localization). 있으면 이 값이 한 줄 글자, null이면 글자판을 숨긴다.</summary>
         public bool HideLabels;
         public readonly WallRowIndex WallRows = new WallRowIndex();

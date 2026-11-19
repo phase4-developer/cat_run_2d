@@ -53,6 +53,8 @@ namespace MV.View
         public string GateWeaponIcon { get => _ctx.GateWeaponIcon; set => _ctx.GateWeaponIcon = value; }
         public string GateWeaponFrameAtlas { get => _ctx.GateWeaponFrameAtlas; set => _ctx.GateWeaponFrameAtlas = value; }
         public string GateWeaponFrame { get => _ctx.GateWeaponFrame; set => _ctx.GateWeaponFrame = value; }
+        /// <summary>게이트 등급 색(<see cref="ObjectViewContext.GateWeaponColor"/>).</summary>
+        public string GateWeaponColor { get => _ctx.GateWeaponColor; set => _ctx.GateWeaponColor = value; }
 
         /// <summary>오브젝트 프리팹 로더(주소 → 원본). 기본은 Addressables. 시험은 에셋 원본을 바로 주거나 로드 없이 뷰 구조만 본다.</summary>
         public Func<string, CancellationToken, UniTask<PrefabHandle>> PrefabLoader = LoadAddressable;
