@@ -282,6 +282,13 @@ namespace MV.Data
         public static bool IsComputedMax(LobbyUpgradeData row) =>
             row != null && (row.effectType == LobbyEffectType.StartStairLv || row.effectType == LobbyEffectType.DeckAdd);
 
+        /// <summary>
+        /// 냥환생 때 받는 황금 생선 = floor(<c>RB_FISH_MUL</c> × areaNo^<c>RB_FISH_POW</c>)(기획자확인 PC-08, 2026-11-18: 5 × Area^1.5).
+        /// areaNo는 이번 환생 주기에 도달한 Area 번호(1기반, <c>save.area</c> + 1). 1보다 작으면 0.
+        /// </summary>
+        public int RebirthFish(int areaNo) => areaNo < 1 ? 0
+            : (int)System.Math.Floor(RunConfig.D(RunConfigKeys.RB_FISH_MUL) * System.Math.Pow(areaNo, RunConfig.D(RunConfigKeys.RB_FISH_POW)) + 1e-9);
+
         /// <summary><c>16_levelPrice</c> 묶음의 targetLevel 최댓값(펫 최대 Lv처럼 표에 따로 열이 없는 상한). 행이 없으면 0.</summary>
         public int LevelPriceMaxLevel(int group)
         {

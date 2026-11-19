@@ -244,7 +244,7 @@ namespace MV.Data.Tests
 
         [Test]
         public void Semantics_CloneGroupShort_IsError() =>
-            AssertError(TsvFixture.Validate(("314_spawnGroup", TsvFixture.Remove(TsvFixture.Read("314_spawnGroup"), "314002004"))),
+            AssertError(TsvFixture.Validate(("314_spawnGroup", Enumerable.Range(4, 27).Aggregate(TsvFixture.Read("314_spawnGroup"), (s, i) => TsvFixture.Remove(s, $"314002{i:000}")))),
                 "314_spawnGroup", "MAX_CLONES");
 
         [Test]

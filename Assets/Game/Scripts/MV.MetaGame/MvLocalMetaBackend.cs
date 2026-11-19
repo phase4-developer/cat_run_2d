@@ -107,7 +107,6 @@ namespace MV.Meta
             bool last = MvMetaRules.IsLastArea(_t, area);
             bool zoneEnd = gate && enough && last;
             bool pass = gate && enough && !last;
-            int tok = MvMetaRules.Tokens(_t, souls, gate, pass || zoneEnd);
 
             var wealth = new WealthDelta();
             long goldGain = (long)Math.Floor((gold - startGold) * mul + startGold);
@@ -130,6 +129,8 @@ namespace MV.Meta
                 }
 
             int areaAfter = pass ? area + 1 : area;
+            // 황금 생선은 런마다 쌓지 않고 냥환생 때 도달 Area로 정한다(PC-08). tok = 정산 뒤 기준 예상 지급량(표시용).
+            int tok = MvMetaRules.RebirthGrant(_t, areaAfter, s.Rebirth.Pending + pendingExtra);
             int runsAfter = s.Progress.Runs + 1;
             int levelAfter = s.Progress.Level + 1;
             int failsAfter = s.Progress.Fails + (pass || zoneEnd ? 0 : 1); // Area를 깨지 못한 정산만 센다
@@ -150,7 +151,7 @@ namespace MV.Meta
             var data = new JObject
             {
                 [MvSaveKeys.Progress] = progress,
-                [MvSaveKeys.Rebirth] = new JObject { ["pending"] = s.Rebirth.Pending + tok + pendingExtra },
+                [MvSaveKeys.Rebirth] = new JObject { ["pending"] = s.Rebirth.Pending + pendingExtra },
             };
             if (!wealth.TryWrite(Res, data, out string fail)) return MvMetaResponse.Reject(MvMetaErrors.NotEnough, fail);
             if (pass)
@@ -305,7 +306,7 @@ namespace MV.Meta
             MvSaveStore s = S;
             if (!RebirthOpen()) return MvMetaResponse.Reject(MvMetaErrors.Locked, MvMetaRules.RebirthKey);
             if (RebirthCooldownLeftMs() > 0) return MvMetaResponse.Reject(MvMetaErrors.Cooldown);
-            int got = s.Rebirth.Pending;
+            int got = MvMetaRules.RebirthGrant(_t, s.Progress.Area, s.Rebirth.Pending); // PC-08: 5 × (도달 Area)^1.5 + 대기 조각
             var wealth = new WealthDelta();
             wealth.Set(MvWealthIds.Gold, 0);
             wealth.Set(MvWealthIds.Souls, 0);

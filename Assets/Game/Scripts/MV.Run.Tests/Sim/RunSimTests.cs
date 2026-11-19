@@ -47,8 +47,8 @@ namespace MV.Run.Tests
             Assert.AreEqual(WeaponDmg(d.Tables, 1), BaseDmg(d), 1e-12, "장착 단계 103_item.dmg 그대로");
             var s = NewState(new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, Modifiers = new RunModifiers { Dmg = 10 } });
             Assert.AreEqual(System.Math.Floor(WeaponDmg(s.Tables, 1) * 1.1), BaseDmg(s), 1e-9, "공격력 정수 버림(MV-SPEC2-FIX1)");
-            // 103_item 더미(HE_07 전): 1 × 1.8^(단계−1) 반올림(MV-SPEC2-FIX1)
-            Assert.AreEqual(new[] { 1, 2, 3, 6, 10, 19, 34, 61 }, Enumerable.Range(1, 8).Select(i => (int)WeaponDmg(s.Tables, i)).ToArray());
+            // 103_item 더미(HE_07 없음): 2^(단계−1)(기획자확인 PC-03, 2026-11-18)
+            Assert.AreEqual(new[] { 1, 2, 4, 8, 16, 32, 64, 128 }, Enumerable.Range(1, 8).Select(i => (int)WeaponDmg(s.Tables, i)).ToArray());
         }
 
         [Test]
@@ -90,15 +90,17 @@ namespace MV.Run.Tests
             Assert.AreEqual(14, DiaCap(t, 2), 1e-12);
         }
 
-        /// <summary>런 종료 「레벨당 골드·블루 마법석 획득」 = 13 perLv × 강화 Lv × 런 Level(MV-SPEC-02 529~530, MV-SPEC2-FIX1).</summary>
+        /// <summary>런 종료 「레벨당 골드·블루 마법석 획득」 = floor(번 몫 × 13 perLv × 강화 Lv)(기획자확인 PC-06: 1단계당 +10%).</summary>
         [Test]
-        public void PerLevelReward_FromAreaUpgradeRows()
+        public void PerLevelBonus_PercentOfEarned()
         {
             var t = RunTestTables.Load();
+            Assert.AreEqual(0.1, AupRow(t, AreaStatKey.GoldPerLevel).perLv, 1e-12, "표 perLv 0.1 = 단계당 10%");
             var st = new RunSetup { AupGoldLv = 2, AupDiaLv = 3 };
-            Assert.AreEqual(AupRow(t, AreaStatKey.GoldPerLevel).perLv * 2 * 4, PerLevelReward(t, st, AreaStatKey.GoldPerLevel, 4), 1e-12);
-            Assert.AreEqual(AupRow(t, AreaStatKey.DiaPerLevel).perLv * 3 * 4, PerLevelReward(t, st, AreaStatKey.DiaPerLevel, 4), 1e-12);
-            Assert.AreEqual(0, PerLevelReward(t, new RunSetup(), AreaStatKey.GoldPerLevel, 4), 1e-12, "Lv 0이면 0");
+            Assert.AreEqual(System.Math.Floor(105 * AupRow(t, AreaStatKey.GoldPerLevel).perLv * 2), PerLevelBonus(t, st, AreaStatKey.GoldPerLevel, 105), 1e-12);
+            Assert.AreEqual(System.Math.Floor(7 * AupRow(t, AreaStatKey.DiaPerLevel).perLv * 3), PerLevelBonus(t, st, AreaStatKey.DiaPerLevel, 7), 1e-12);
+            Assert.AreEqual(0, PerLevelBonus(t, new RunSetup(), AreaStatKey.GoldPerLevel, 100), 1e-12, "Lv 0이면 0");
+            Assert.AreEqual(0, PerLevelBonus(t, st, AreaStatKey.GoldPerLevel, -5), 1e-12, "번 몫이 없으면 0");
         }
 
         /// <summary>
@@ -116,7 +118,7 @@ namespace MV.Run.Tests
             var cg = t.ChargeGate.ByKey("cgate");
             Assert.AreEqual(new[] { 1.9, 5.7, 9.5, 13.3 }, Enumerable.Range(0, 4).Select(k => System.Math.Round(Threshold(cg, k, s.Bal, s.ZoneHp), 9)).ToArray());
             var need = Enumerable.Range(1, 7).Select(lv => System.Math.Round(GaugeNeed(s, lv), 2)).ToArray();
-            Assert.AreEqual(new[] { 150, 240, 384, 614.4, 983.04, 1572.86, 2516.58 }, need);
+            Assert.AreEqual(new[] { 15, 24, 38.4, 61.44, 98.3, 157.29, 251.66 }, need);
         }
 
         [Test]
@@ -131,11 +133,16 @@ namespace MV.Run.Tests
         }
 
         [Test]
-        public void Tokens_Formula()
+        public void RebirthFish_Formula()
         {
+            // 기획자확인 PC-08: floor(RB_FISH_MUL x 도달 Area^RB_FISH_POW) = floor(5 x Area^1.5).
             var t = RunTestTables.Load();
-            Assert.AreEqual(1, Tokens(t, 0, false, false));
-            Assert.AreEqual(1 + 1 + 2 + 3, Tokens(t, 5, true, true));
+            Assert.AreEqual(0, t.RebirthFish(0));
+            Assert.AreEqual(5, t.RebirthFish(1));
+            Assert.AreEqual(14, t.RebirthFish(2));
+            Assert.AreEqual(40, t.RebirthFish(4));
+            Assert.AreEqual(73, t.RebirthFish(6));
+            Assert.AreEqual(158, t.RebirthFish(10));
         }
     }
 
@@ -395,7 +402,7 @@ namespace MV.Run.Tests
             var sim = Sim(lv);
             Run(sim, 60);
             Assert.AreEqual(FinishReason.Gate, sim.State.Result.Reason);
-            Assert.AreEqual(3, sim.State.Result.Tok, "조각 1 + gate 2(생선 부족 → 개방 아님)");
+            Assert.AreEqual(5, sim.State.Result.Tok, "개방 아님 → 도달 Area 1: floor(5 × 1^1.5) = 5(기획자확인 PC-08)");
         }
 
         [Test]

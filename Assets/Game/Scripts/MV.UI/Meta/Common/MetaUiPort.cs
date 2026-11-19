@@ -162,7 +162,8 @@ namespace MV.UI
         public MetaResult SelectGod(string key) => Ready ? Of(M.SelectGod(key)) : MetaResult.Fail(MvMetaErrors.NoStore);
 
         public int RebirthLevel => Ready ? S.Rebirth.Lv : 0;
-        public int RebirthPending => Ready ? S.Rebirth.Pending : 0;
+        /// <summary>지금 냥환생하면 받을 황금 생선(PC-08: 도달 Area 산식 + 대기 조각).</summary>
+        public int RebirthPending => Ready ? MV.Meta.MvMetaRules.RebirthGrant(Tables, S.Progress.Area, S.Rebirth.Pending) : 0;
         public bool RebirthOpen => Ready && M.RebirthOpen;
         public long RebirthCooldownLeftMs => Ready ? M.RebirthCooldownLeftMs : 0;
         public bool RebirthArmed => Ready && M.RebirthArmed;

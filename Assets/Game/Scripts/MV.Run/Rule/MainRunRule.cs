@@ -71,17 +71,18 @@ namespace MV.Run
             bool enough = s.Setup.Souls + s.Souls >= need;
             var r = new RunResult
             {
-                // 「레벨당 골드·블루 마법석 획득」(13 GoldPerLevel·DiaPerLevel)은 런 종료에 더한다(MV-SPEC-02 529~530).
+                // 「레벨당 골드·블루 마법석 획득」(13 GoldPerLevel·DiaPerLevel)은 런 종료에 이번 런에서 번 몫(시작 몫 제외)의 %로 더한다(PC-06).
                 Reason = reason, Souls = s.Souls,
-                Gold = s.Gold + RunFormulas.PerLevelReward(t, s.Setup, AreaStatKey.GoldPerLevel, s.Level),
-                Dia = s.Dia + (int)Math.Floor(RunFormulas.PerLevelReward(t, s.Setup, AreaStatKey.DiaPerLevel, s.Level)),
+                Gold = s.Gold + RunFormulas.PerLevelBonus(t, s.Setup, AreaStatKey.GoldPerLevel, s.Gold - s.StartGold),
+                Dia = s.Dia + (int)RunFormulas.PerLevelBonus(t, s.Setup, AreaStatKey.DiaPerLevel, s.Dia - s.StartDia),
                 StartGold = s.StartGold, StartDia = s.StartDia, // PC-15: 시작 몫은 정산 ×1
                 ZoneEnd = gate && enough && last, Pass = gate && enough && !last,
                 CpRun = s.Setup.UseCheckpoint ? s.CpRun : 0, BarRec = s.Setup.KeepBars ? rec : null,
                 Climbed = s.Climbed, Walls = s.Walls, GaugeLv = s.GaugeLv, EqTier = s.EqTier(), Clones = s.Clones,
                 CardCount = s.CardOrder.Count, HitWallBar = s.HitWall?.Bar ?? -1,
             };
-            r.Tok = RunFormulas.Tokens(t, s.Souls, gate, r.Pass || r.ZoneEnd);
+            // 결과 화면 「잠긴 황금 생선」 = 이 런 뒤 기준 냥환생 예상 지급량(PC-08). 런마다 쌓지 않는다.
+            r.Tok = t.RebirthFish((r.Pass ? s.Area + 1 : s.Area) + 1);
             r.PendingSettle.AddRange(s.PendingSettle);
             return r;
         }
