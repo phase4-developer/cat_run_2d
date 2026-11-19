@@ -51,7 +51,7 @@ namespace MV.View.Tests
 
         /// <summary>
         /// 노션 Obj_StairGate UI: 문 안에 계단 아이콘(Icon_Floor), 그 아래 숫자 「x{value}」와 막대(아래로 아이콘 → 숫자 → 막대).
-        /// 무기문(cgate)은 계단문 변형이라 아이콘을 물려받으므로 끄고, 숫자·막대는 글자판 원래 자리 그대로다.
+        /// 무기문(cgate)은 계단문 변형이라 아이콘을 물려받으므로 끄고, 문 안 무기 카드 아래에 막대만 둔다(숫자 없음).
         /// </summary>
         [Test]
         public void StairGate_InnerFloorIcon_AboveNumberAndGauge()
@@ -67,6 +67,12 @@ namespace MV.View.Tests
             Assert.That(label.Number.GetComponent<Renderer>().sortingOrder, Is.GreaterThan(sr.sortingOrder), "숫자가 아이콘 위에 그려진다");
             float iconY = icon.position.y, numY = label.Number.transform.position.y, gaugeY = label.GaugeRoot.transform.position.y;
             Assert.That(iconY > numY && numY > gaugeY, Is.True, $"아래로 아이콘({iconY}) → 숫자({numY}) → 막대({gaugeY})");
+            // 노션 시안(1 m = 89 px 격자)에서 잰 글자·막대: 숫자 글자 높이 0.43 m(= 크기 5.2), 제목·숫자 외곽선, 막대 배경 1.28 x 0.29, 채움 1.19 x 0.19.
+            Assert.That(label.Number.fontSize, Is.EqualTo(5.2f).Within(0.01f), "숫자 크기(시안)");
+            Assert.That(label.Number.fontSharedMaterial.name, Does.Contain("Outline"), "숫자 외곽선 재질(시안)");
+            Assert.That(label.Title.fontSharedMaterial.name, Does.Contain("Outline"), "제목 외곽선 재질(시안)");
+            Assert.That(label.GaugeRoot.GetComponent<SpriteRenderer>().size.x, Is.EqualTo(1.28f).Within(1e-3f), "막대 배경 폭(시안)");
+            Assert.That(label.Pivot.GetComponentInChildren<SpriteRenderer>(true).size.x, Is.EqualTo(1.19f).Within(1e-3f), "막대 채움 폭(시안)");
 
             var cg = Object.Instantiate(LoadPrefab("Obj_CraftGate"));
             _made.Add(cg);
@@ -74,8 +80,32 @@ namespace MV.View.Tests
             Assert.That(cgIcon, Is.Not.Null, "변형이 물려받은 StairIcon");
             Assert.That(cgIcon.gameObject.activeSelf, Is.False, "무기문에는 계단 아이콘을 끈다");
             var cgLabel = CountLabel.Find(cg.transform);
-            Assert.That(((RectTransform)cgLabel.Number.transform).anchoredPosition.y, Is.EqualTo(1.25f).Within(1e-4), "무기문 숫자는 글자판 원래 자리");
-            Assert.That(cgLabel.GaugeRoot.transform.localPosition.y, Is.EqualTo(0.478f).Within(1e-4), "무기문 막대는 글자판 원래 자리");
+            var bundle = cg.GetComponentInChildren<CraftGateBundle>(true);
+            Assert.That(bundle != null && bundle.LabelIcon != null, Is.True, "무기문 문 안 카드");
+            float cardBottom = bundle.LabelIcon.transform.position.y - bundle.LabelIconSize.y * 0.5f;
+            Assert.That(cgLabel.GaugeRoot.transform.position.y, Is.LessThan(cardBottom), "무기문: 문 안 카드 아래 막대(노션 시안)");
+        }
+
+        /// <summary>
+        /// 노션 Obj_StairZone UI: 계단 구역 위에 별자리 카드(Obj_Card_StairZone, 팀원 프리팹)를 띄운다. 등급 틀 Grade_1·그림 1장 고정.
+        /// 카드는 글자판과 같은 빌보드 묶음 안, 글자판(「계단」·숫자·막대) 아래에 있다. 등급 글자·필요 계단 수·이름 칸은 없다.
+        /// </summary>
+        [Test]
+        public void StairZone_ShowsFixedGrade1Card_UnderLabel()
+        {
+            var zone = Object.Instantiate(LoadPrefab("Obj_StairZone"));
+            _made.Add(zone);
+            var card = zone.transform.Find("Billboard/Obj_Card_StairZone");
+            Assert.That(card, Is.Not.Null, "Obj_StairZone Billboard/Obj_Card_StairZone");
+            Assert.That(card.gameObject.activeSelf, Is.True, "카드 켜짐");
+            var frame = card.Find("Frame")?.GetComponent<SpriteRenderer>();
+            var tex = card.Find("Mask/Texture")?.GetComponent<SpriteRenderer>();
+            Assert.That(frame != null && frame.sprite != null && frame.sprite.name == "Grade_1", Is.True, "틀 = Grade_1 고정");
+            Assert.That(tex != null && tex.sprite != null && tex.sprite.name == "Texture_Card_Grade_1", Is.True, "그림 1장 고정");
+            Assert.That(card.GetComponentsInChildren<TMPro.TMP_Text>(true), Is.Empty, "카드에 글자 칸(등급·필요 계단 수·이름) 없음");
+            var label = CountLabel.Find(zone.transform);
+            Assert.That(label, Is.Not.Null, "글자판");
+            Assert.That(frame.bounds.max.y, Is.LessThan(label.GaugeRoot.transform.position.y), "카드 위 끝이 글자판 막대 아래(시안: 글자판 → 카드 순)");
         }
 
         [Test]
