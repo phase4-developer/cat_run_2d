@@ -324,6 +324,9 @@ namespace MV.UI
                                   : WeaponName(t, tier) + " 카드 1장 추가";                                          // ui.up.weaponDesc
                     u.Progress = tier >= top ? 1f : w.Need > 0 ? (float)w.Step / w.Need : 0f;
                     u.ProgressText = tier >= top ? w.Step.ToString(Inv) : w.Step + "/" + w.Need;
+                    // 디자이너 칸 Slot_Count_Weapon(현재값 / 다음값) = 이번 Level에서 산 수 / 12_weaponLevel.need(사용자 2026-11-19 「8 9 11 10 10 10 일텐데 어떻게 1/3 2/3 이라는 수치가」).
+                    u.CurValue = w.Step.ToString(Inv);
+                    u.NextValue = w.Need.ToString(Inv);
                     break;
                 }
                 default:

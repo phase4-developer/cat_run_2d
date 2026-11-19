@@ -195,6 +195,11 @@ namespace MV.UI.Tests
                 Assert.That(u.PriceIcon, Is.Not.Empty, u.Key + ": 01_wealth.icon");
             }
             Assert.IsTrue(p.Model.Upgrades.Single(u => u.Key == "weapon").IconIsItem);
+            // 무기 칸 Slot_Count_Weapon = 산 수 / 12_weaponLevel 그 Level need(프리팹 자리 글자가 남지 않는다).
+            var wu = p.Model.Upgrades.Single(u => u.Key == "weapon");
+            var wl = MvMetaRules.WeaponLevel(t, 0);
+            Assert.AreEqual("0", wu.CurValue, "산 수");
+            Assert.AreEqual(t.WeaponLevel.Datas.First(r => r.lv == wl.Lv).need.ToString(), wu.NextValue, "필요 수 = 표 need");
 
             int need = 0;
             foreach (var c in t.ContentOpen.ByKey(LobbyPresenter.RebirthUnlockKey).openConditions)

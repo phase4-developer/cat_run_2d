@@ -83,8 +83,13 @@ namespace MV.UI
         readonly List<Job> _queue = new List<Job>();
         int _nextId = 1;
         double _t0;
-        double _busy;
+        /// <summary>다음 전달까지 남은 초(전달 간격).</summary>
+        double _dealWait;
+        /// <summary>모으는 중 = 머지 끝까지, 아니면 머지 뒤 쉼이 끝나기까지 남은 초.</summary>
+        double _mergeWait;
         double _settle;
+        /// <summary>카드 id → 자리를 찾기까지 남은 초. 모으는 묶음에 이 카드가 있으면 머지를 미룬다.</summary>
+        readonly Dictionary<int, double> _arriving = new Dictionary<int, double>();
         int[] _gather;
         int _gatherTier;
 
@@ -110,8 +115,8 @@ namespace MV.UI
         /// <summary>전달한 카드가 모두 자리를 찾기까지 남은 초. 0보다 크면 머지를 시작하지 않는다.</summary>
         public double Settling => _settle;
 
-        /// <summary>대기열이 비고 모으는 중이 아니다.</summary>
-        public bool Idle => _queue.Count == 0 && _gather == null;
+        /// <summary>대기열이 비고 모으는 중·머지 뒤 쉼이 아니며 더 머지할 것이 없다.</summary>
+        public bool Idle => _queue.Count == 0 && _gather == null && _mergeWait <= 0 && LowestMergeTier() < 1;
         /// <summary>handTier: 손패 최고 등급(비면 1). 장착 칸·고양이 외형은 이 값.</summary>
         public int TopTier => _cards.Count > 0 ? _cards[0].Tier : 1;
 
@@ -121,8 +126,10 @@ namespace MV.UI
             _cards.Clear();
             _queue.Clear();
             _gather = null;
-            _busy = 0;
+            _dealWait = 0;
+            _mergeWait = 0;
             _settle = 0;
+            _arriving.Clear();
             _t0 = now;
             _nextId = 1;
             if (counts == null) return;
@@ -132,8 +139,9 @@ namespace MV.UI
         }
 
         /// <summary>
-        /// handDeliver: 대기열에 1장씩 {전달 1장, 단계 t}·{연쇄}를 n번 넣는다. 한 장이 맨 밑에 들어올 때마다 밑에서부터 머지가 끝난 뒤 다음 장이 들어온다
-        /// (사용자 2026-11-19 「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」, 전부 넣은 뒤 한꺼번에 머지하지 않는다).
+        /// handDeliver: 대기열에 전달 1장(단계 t)을 n번 넣는다. 전달은 머지를 기다리지 않고 전달 간격(dealGap)으로 연달아 오르고
+        /// (사용자 2026-11-19 「하나 움직이고 대기가 너무 긴데 오는데도 순서가 있으니까 그거 정도 딜레이로 움직여야해」 — 05 §5.3.3 「머지가 끝난 뒤 다음 전달」 대신 사용자 결정),
+        /// 머지는 그와 함께 밑 3장이 자리를 찾는 대로 바로 시작한다(같은 날 「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」).
         /// </summary>
         public void Deliver(int n, int tier)
         {
@@ -142,7 +150,6 @@ namespace MV.UI
             for (int i = 0; i < n; i++)
             {
                 _queue.Add(new Job { Deal = true, N = 1, Tier = tier });
-                _queue.Add(new Job { Deal = false });
             }
         }
 
@@ -178,24 +185,39 @@ namespace MV.UI
         public void Step(double now, double dt, List<HandAction> actions)
         {
             _settle = Math.Max(0, _settle - dt);
+            if (_arriving.Count > 0)
+            {
+                _ids.Clear();
+                _ids.AddRange(_arriving.Keys);
+                foreach (var id in _ids)
+                {
+                    double left = _arriving[id] - dt;
+                    if (left <= 0) _arriving.Remove(id);
+                    else _arriving[id] = left;
+                }
+            }
             if (Idle)
             {
                 _t0 = now;
-                _busy = 0;
+                _dealWait = 0;
+                _mergeWait = 0;
                 return;
             }
-            _busy -= dt;
-            while (_busy <= 0)
+            _dealWait -= dt;
+            _mergeWait -= dt;
+            // 전달과 머지는 따로 흐른다: 전달은 간격마다 다음 장, 머지는 모으기·쉼이 끝나고 밑 3장이 자리를 찾았으면 다음 묶음.
+            for (bool more = true; more;)
             {
-                if (_gather != null) { FinishMerge(now, actions); continue; }
-                if (_queue.Count == 0) { _busy = 0; break; }
-                var head = _queue[0];
-                if (head.Deal) Deal(now, head, actions);
-                else if (LowestMergeTier() < 1) _queue.RemoveAt(0);   // 머지할 것이 없으면 기다리지 않고 다음 전달
-                else if (_settle > 0) { _busy = _settle; break; }       // 전달 카드가 자리를 찾을 때까지 머지를 미룬다
-                else StartMerge(now, actions);
+                more = false;
+                if (_gather != null && _mergeWait <= 0) { FinishMerge(now, actions); more = true; }
+                if (_gather == null && _mergeWait <= 0 && StartMerge(now, actions)) more = true;
+                if (_dealWait <= 0 && _queue.Count > 0) { Deal(now, _queue[0], actions); more = true; }
             }
+            if (_queue.Count == 0 && _dealWait < 0) _dealWait = 0;
+            if (_gather == null && _mergeWait < 0 && LowestMergeTier() < 1) _mergeWait = 0;
         }
+
+        readonly List<int> _ids = new List<int>();
 
         void Deal(double now, Job head, List<HandAction> actions)
         {
@@ -209,7 +231,8 @@ namespace MV.UI
             else _queue[0] = head;
             float gap = Math.Min(_timing.dealGapMax, u * _timing.dealGapMul);
             _settle = Math.Max(_settle, Math.Max(0f, DealStraightSec));
-            _busy += gap;
+            if (DealStraightSec > 0) _arriving[card.Id] = DealStraightSec;
+            _dealWait += gap;
             actions?.Add(new HandAction(HandActionKind.Dealt, card, null, gap, 0, u, TopTier > before));
         }
 
@@ -223,10 +246,11 @@ namespace MV.UI
             // 그 등급의 맨 밑 MERGE_N장(가장 늦게 받은 것들 = 스택 맨 아래, 밑에서부터 머지). ids는 위→아래 순서.
             for (int i = _cards.Count - 1; i >= 0 && k > 0; i--)
                 if (_cards[i].Tier == tier) ids[--k] = _cards[i].Id;
+            foreach (var id in ids) if (_arriving.ContainsKey(id)) return false;   // 아직 자리를 찾는 카드가 있으면 그 뒤에 모은다
             _gather = ids;
             _gatherTier = tier;
             float md = u * _timing.mergeMul;
-            _busy += md;
+            _mergeWait = Math.Max(0, _mergeWait) + md;
             actions?.Add(new HandAction(HandActionKind.GatherStart, default, ids, md, md * _timing.moveMul, u, false));
             return true;
         }
@@ -242,7 +266,7 @@ namespace MV.UI
             _cards.Add(card);
             Sort();
             float after = Math.Min(_timing.afterMax, u * _timing.afterMul);
-            _busy += after;
+            _mergeWait += after;
             actions?.Add(new HandAction(HandActionKind.Merged, card, ids, after, 0, u, TopTier > before));
         }
 
