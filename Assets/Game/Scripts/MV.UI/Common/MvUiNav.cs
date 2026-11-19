@@ -17,8 +17,13 @@ namespace MV.UI
         {
             var screen = await Ui.screenManager.ChangeUIScreenAsync(MvUiIds.Lobby, data) as LobbyScreen;
             Ui.hudManager.HideAll();
+            // 런 HUD를 미리 읽어 둔다: 출발 누름과 같은 호출에서 런 HUD(드래그 입력면)가 켜져야 로비 첫 터치를 넘겨받는다(04 §4.1.2).
+            await Ui.hudManager.CachingHudAsync(new List<string> { MvUiIds.Run });
             return screen;
         }
+
+        /// <summary>팝업이 하나라도 열려 있는가(Framework 팝업 관리자 기준).</summary>
+        public static bool PopupOpen => Ui != null && Ui.popupManager != null && Ui.popupManager.ActivePopups.Count > 0;
 
         /// <summary>로비를 숨기고 런 HUD를 켠다. 같은 프레임에 런이 시작되도록 HUD 첫 로드만 기다린다.</summary>
         public static async UniTask<RunHud> EnterRunAsync(IRunHudSource source)

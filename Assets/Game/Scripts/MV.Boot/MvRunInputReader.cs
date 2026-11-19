@@ -1,29 +1,40 @@
+using System;
 using MV.Run;
+using MV.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace MV.Boot
 {
     /// <summary>
-    /// 런 입력(04 §4.1.2)을 Input System에서 읽는다. 터치·마우스는 같은 경로(<see cref="Pointer.current"/>)다.
+    /// 런 입력(04 §4.1.2). 포인터는 EventSystem으로 받은 <see cref="RunDragArea"/>(런 HUD 드래그 입력면) 값만 읽고,
+    /// 키는 Input System 액션으로 읽는다. 장치 상태를 직접 폴링하지 않는다 — 팝업 백판 같은 UI가 가리면 포인터 입력이 오지 않는다.
     /// 드래그: 누른 순간 화면 x(sx)와 그때의 목표 tx(px)를 기억하고 <c>tx = px + (x − sx) / (W / DRAG_SCREEN_M)</c>.
     /// W = 9:16 게임 영역 폭(px). clamp는 MV.Run이 한다. 키: ←/→ 축(실시간 dt는 MV.Run이 곱한다).
-    /// Framework 대체: Framework에 입력 패키지가 없어 게임 코드로 둔다(계약 MV-PLAY-INT).
     /// </summary>
-    public sealed class MvRunInputReader
+    public sealed class MvRunInputReader : IDisposable
     {
         readonly double _dragScreenM;
-        bool _dragging;
-        float _sx;
+        readonly InputAction _move;
+        readonly InputAction _start;
+        int _seenPress;
         double _px;
 
         public MvRunInputReader(double dragScreenM)
         {
             _dragScreenM = dragScreenM > 0 ? dragScreenM : 7.2;
+            _move = new InputAction("RunMove", InputActionType.Value);
+            _move.AddCompositeBinding("1DAxis").With("Negative", "<Keyboard>/leftArrow").With("Positive", "<Keyboard>/rightArrow");
+            _start = new InputAction("RunStart", InputActionType.Button);
+            _start.AddBinding("<Keyboard>/space");
+            _start.AddBinding("<Keyboard>/enter");
+            _start.AddBinding("<Keyboard>/numpadEnter");
+            _move.Enable();
+            _start.Enable();
         }
 
-        /// <summary>새 런: 드래그 기억을 버린다. 로비를 누른 그 손가락이 아직 눌려 있으면 다음 읽기에서 새 런의 tx(0)부터 드래그한다.</summary>
-        public void Reset() => _dragging = false;
+        /// <summary>새 런: 지금 누르고 있는 포인터를 새 누름으로 다시 본다(로비 첫 터치가 새 런의 tx=0부터 드래그).</summary>
+        public void Reset() => _seenPress = -1;
 
         /// <summary>9:16 게임 영역 폭(px). 화면이 더 넓으면 높이 기준.</summary>
         public static double GameAreaWidth(float screenW, float screenH) => Mathf.Max(1f, Mathf.Min(screenW, screenH * 9f / 16f));
@@ -31,30 +42,24 @@ namespace MV.Boot
         public RunInput Read(RunState s)
         {
             var input = RunInput.None;
-            var pointer = Pointer.current;
-            if (pointer != null && s != null)
+            var area = RunDragArea.Active;
+            if (area && area.Pressed && s != null)
             {
-                bool pressed = pointer.press.isPressed;
-                float x = pointer.position.ReadValue().x;
-                if (pressed && !_dragging) { _dragging = true; _sx = x; _px = s.P.Tx; }
-                else if (!pressed) _dragging = false;
-                if (_dragging)
-                {
-                    double w = GameAreaWidth(Screen.width, Screen.height);
-                    input.DragTargetX = _px + (x - _sx) / (w / _dragScreenM);
-                }
+                if (area.PressSeq != _seenPress) { _seenPress = area.PressSeq; _px = s.P.Tx; }
+                double w = GameAreaWidth(Screen.width, Screen.height);
+                input.DragTargetX = _px + (area.X - area.StartX) / (w / _dragScreenM);
             }
-            var kb = Keyboard.current;
-            if (kb != null)
-                input.KeyAxis = (kb.rightArrowKey.isPressed ? 1 : 0) - (kb.leftArrowKey.isPressed ? 1 : 0);
+            input.KeyAxis = Mathf.RoundToInt(_move.ReadValue<float>());
             return input;
         }
 
-        /// <summary>로비 출발 키(Space/Enter, 04 §4.1.2 「런 시작 키」). Enter는 UI Submit으로도 들어오지만 출발은 한 번만 된다.</summary>
-        public static bool StartKeyPressed()
+        /// <summary>로비 출발 키(Space/Enter, 04 §4.1.2 「런 시작 키」)를 이번 프레임에 눌렀는가.</summary>
+        public bool StartPressedThisFrame() => _start.WasPressedThisFrame();
+
+        public void Dispose()
         {
-            var kb = Keyboard.current;
-            return kb != null && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame);
+            _move.Dispose();
+            _start.Dispose();
         }
     }
 }
