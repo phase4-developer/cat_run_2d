@@ -135,18 +135,21 @@ namespace MV.UI.Tests
                 Assert.That(area.Item(i).transform.GetSiblingIndex(), Is.GreaterThan(area.Item(i - 1).transform.GetSiblingIndex()));
         }
 
-        (MapPopup popup, LevelProgressView view) NewMap()
+        // MapPopup은 UIPopup(JJEvol.UI.Addressables) 파생이라 이 시험 어셈블리에서 형식으로 쓰지 않고 이름·직렬화 필드로 본다(AreaUpgradeDesignViewTests와 같은 방식).
+        (Component popup, LevelProgressView view) NewMap()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(MapPath);
             Assert.That(prefab, Is.Not.Null, MapPath);
             var go = Object.Instantiate(prefab);
             _made.Add(go);
-            var popup = go.GetComponent<MapPopup>();
+            var popup = go.GetComponent("MapPopup");
             Assert.That(popup, Is.Not.Null, "UIPopup_Map 루트 MapPopup");
-            Assert.That(popup.PopupType, Is.EqualTo(MvUiIds.Map));
-            Assert.That(popup.View, Is.Not.Null, "MapPopup.view");
-            Assert.That(popup.View.HasRefs, Is.True, "LevelProgressView 참조");
-            return (popup, popup.View);
+            var so = new SerializedObject(popup);
+            Assert.That(so.FindProperty("PopupType").stringValue, Is.EqualTo(MvUiIds.Map));
+            var view = so.FindProperty("view").objectReferenceValue as LevelProgressView;
+            Assert.That(view, Is.Not.Null, "MapPopup.view");
+            Assert.That(view.HasRefs, Is.True, "LevelProgressView 참조");
+            return (popup, view);
         }
 
         [Test]
