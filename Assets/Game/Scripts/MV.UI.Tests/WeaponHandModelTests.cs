@@ -77,16 +77,19 @@ namespace MV.UI.Tests
         }
 
         [Test]
-        public void TwoTiersReady_MergesUpperGroupFirst()
+        public void TwoTiersReady_MergesLowestGroupFirst_TopThreeOfIt()
         {
-            // 사용자 2026-11-19 「순서대로 위에 3개 모이면 … 합쳐지고 밑에꺼도 재정렬」: 위(높은 등급) 묶음부터 합친다.
+            // 기획서 머지 규칙 「가장 낮은 단계부터, 위쪽 3장부터 머지」(사용자 2026-11-19 「낮은 등급 위에서 3개부터」).
             var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12);
             var counts = new int[3];
-            counts[1] = MergeN;
+            counts[1] = MergeN + 1;
             counts[2] = MergeN;
             m.Reset(counts, 0);
+            var lowTopIds = m.Cards.Where(c => c.Tier == 1).Take(MergeN).Select(c => c.Id).ToArray();
             var (_, actions) = RunToIdle(m, 0);
-            Assert.That(actions.First(a => a.Kind == HandActionKind.Merged).Card.Tier, Is.EqualTo(3), "위 2등급 묶음이 먼저 3등급으로");
+            var firstGather = actions.First(a => a.Kind == HandActionKind.GatherStart);
+            Assert.That(firstGather.Gathered, Is.EqualTo(lowTopIds), "가장 낮은 1등급 묶음의 위쪽 3장(위 → 아래)");
+            Assert.That(actions.First(a => a.Kind == HandActionKind.Merged).Card.Tier, Is.EqualTo(2), "낮은 1등급 묶음이 먼저 2등급으로");
         }
 
         [Test]
@@ -98,7 +101,7 @@ namespace MV.UI.Tests
             m.Deliver(4, 1);
             var (_, actions) = RunToIdle(m, 0);
             var kinds = string.Join(",", actions.Select(a => a.Kind == HandActionKind.Dealt ? "D" : a.Kind == HandActionKind.GatherStart ? "G" : "M"));
-            Assert.That(kinds, Is.EqualTo("D,G,D,D,D,M,G,M,G,M"), "1장 → 곧바로 밑 3장 모으기, 그동안 다음 장들이 오름 → 결과가 위 묶음과 3장이 되면 위(높은 등급)부터 연쇄");
+            Assert.That(kinds, Is.EqualTo("D,G,D,D,D,M,G,M,G,M"), "1장 → 곧바로 3장 모으기, 그동안 다음 장들이 오름 → 가장 낮은 등급부터 연쇄");
             var first = actions.First(a => a.Kind == HandActionKind.GatherStart);
             Assert.That(first.Gathered.Last(), Is.EqualTo(actions[0].Card.Id), "방금 들어와 3장이 된 장이 모으는 묶음에 든다");
             var later = actions.Where(a => a.Kind == HandActionKind.GatherStart).Skip(1).First();
