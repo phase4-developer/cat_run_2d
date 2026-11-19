@@ -317,11 +317,26 @@ namespace MV.Run
         /// <summary>카드 장수 `cardN(id)`.</summary>
         public int CardN(int cardId) => Cards.TryGetValue(cardId, out var n) ? n : 0;
 
-        /// <summary>장착 최고 등급 `eqTier()`.</summary>
+        /// <summary>장착 최고 등급 `eqTier()`(논리 손패 `W`, 즉시 머지 결과).</summary>
         public int EqTier()
         {
             for (int t = W.Length - 1; t >= 1; t--) if (W[t] > 0) return t;
             return 1;
+        }
+
+        /// <summary>
+        /// 화면 손패 맨 위 무기 등급(HUD 손패 머지 연출이 끝나 장착 칸이 바뀐 등급). 런 진행 쪽(Boot)이 매 프레임 넣는다. 0 이하 = 화면 손패 없음(시험·로비·HUD 없는 실행).
+        /// </summary>
+        public int ShownHandTier;
+
+        /// <summary>
+        /// 지금 적용되는 무기 등급 `handTier`: 피해·투사체·이펙트 색·캐릭터 외형·무기 문구가 이 값을 쓴다. 화면 손패가 있으면 그 맨 위 등급(논리 등급을 넘지 않음), 없으면 <see cref="EqTier"/>.
+        /// 사용자 2026-11-19 「캐릭터 무기가 바뀌는건 제일위에 무기가 바뀌는 순간이야 타이밍이 맞아야해」, 「피해하고 투사체도 타이밍 맞춰줘」(04 D-28 A → 피해도 handTier).
+        /// </summary>
+        public int HandTier()
+        {
+            int eq = EqTier();
+            return ShownHandTier > 0 ? System.Math.Min(ShownHandTier, eq) : eq;
         }
 
         /// <summary>이벤트를 쌓고 규칙의 OnEvent를 부른다(§4.20.2).</summary>

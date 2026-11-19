@@ -78,7 +78,7 @@ namespace MV.UI
 
         /// <summary>
         /// 지금 장착 칸(손패 맨 위)에 보이는 무기 등급(없으면 0). 캐릭터 무기 외형이 이 값을 따른다
-        /// (사용자 2026-11-19 「캐릭터 무기가 바뀌는건 제일위에 무기가 바뀌는 순간이야 … 머지 연출때문에 먹었을때하고 실제 적용이 다르니까」). Boot 다리가 MV.View로 넘긴다.
+        /// (사용자 2026-11-19 「캐릭터 무기가 바뀌는건 제일위에 무기가 바뀌는 순간이야 … 머지 연출때문에 먹었을때하고 실제 적용이 다르니까」). Boot가 매 프레임 RunState.ShownHandTier로 넣어 피해·투사체·외형이 같은 순간에 바뀐다.
         /// </summary>
         public static int ShownTier { get; private set; }
         bool _ready;

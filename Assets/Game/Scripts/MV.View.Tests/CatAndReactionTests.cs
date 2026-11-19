@@ -317,20 +317,24 @@ namespace MV.View.Tests
             Assert.That(view.StateOf(0), Is.EqualTo(CharState.Hidden));
             Assert.That(view.VisibleCount, Is.EqualTo(0));
 
-            // 외형 등급 = HUD 맨 위 무기(사용자 2026-11-19 「캐릭터 무기가 바뀌는건 제일위에 무기가 바뀌는 순간」). 0이면 시뮬 등급.
-            int hudTier = t.WeaponTierMax();
-            try
-            {
-                CharacterPresenter.LookTier = () => hudTier;
-                s.Phase = RunPhase.Run;
-                s.Fin = false;
-                view.Sync(s, 0.4);
-                Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, hudTier)), "HUD 등급으로 외형을 고른다");
-                CharacterPresenter.LookTier = () => 0;
-                view.Sync(s, 0.5);
-                Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, tier)), "HUD 등급이 없으면 시뮬 등급");
-            }
-            finally { CharacterPresenter.LookTier = null; }
+            // 외형 등급 = 화면 손패 맨 위 무기(사용자 2026-11-19 「캐릭터 무기가 바뀌는건 제일위에 무기가 바뀌는 순간」). 논리 손패는 이미 높아도 화면이 낮으면 화면 등급.
+            int top = t.WeaponTierMax();
+            s.W[top] = 1;
+            s.ShownHandTier = 1;
+            s.Phase = RunPhase.Run;
+            s.Fin = false;
+            view.Sync(s, 0.4);
+            Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, 1)), "화면 손패 등급으로 외형을 고른다");
+            s.ShownHandTier = 0;
+            view.Sync(s, 0.5);
+            Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, top)), "화면 손패가 없으면 논리 등급");
+
+            // 피해도 같은 순간(사용자 2026-11-19 「피해하고 투사체도 타이밍 맞춰줘」): 화면 손패 1등급이면 1등급 피해.
+            s.ShownHandTier = 1;
+            double shownDmg = RunFormulas.BaseDmg(s);
+            s.ShownHandTier = 0;
+            Assert.That(shownDmg, Is.EqualTo(System.Math.Floor(RunFormulas.WeaponDmg(t, 1) * (1 + RunFormulas.AtkPct(s) / 100))), "피해 = 화면 손패 등급");
+            Assert.That(RunFormulas.BaseDmg(s), Is.EqualTo(System.Math.Floor(RunFormulas.WeaponDmg(t, top) * (1 + RunFormulas.AtkPct(s) / 100))), "화면 손패가 없으면 논리 등급 피해");
         }
 
         [Test]

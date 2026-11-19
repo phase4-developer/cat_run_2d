@@ -32,7 +32,6 @@ namespace MV.Boot
             player.FlyArrived += b.OnArrived;
             MvHudFly.InFlight = b.CountOf;
             GateRewardDisplay.Released += OnGateReleased;
-            CharacterPresenter.LookTier = HudWeaponTier;   // 캐릭터 무기 외형 = HUD 맨 위 무기(머지 연출 시점)
             return b;
         }
 
@@ -44,8 +43,6 @@ namespace MV.Boot
             for (int i = 0; i < a.Length; i++) if (a[i] != h[i]) return false;
             return true;
         }
-
-        static readonly Func<int> HudWeaponTier = () => WeaponSection.ShownTier;
 
         static readonly List<Rect> s_rects = new List<Rect>(16);
 
@@ -94,7 +91,6 @@ namespace MV.Boot
         public void Dispose()
         {
             GateRewardDisplay.Released -= OnGateReleased;
-            if (CharacterPresenter.LookTier == HudWeaponTier) CharacterPresenter.LookTier = null;
             if (_player != null)
             {
                 _player.FlyArrived -= OnArrived;
