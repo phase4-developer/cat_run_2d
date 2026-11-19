@@ -91,6 +91,5 @@ ui.rb.skipAd	{0}분 스킵	Skip {0} mins	{0}分スキップ
 ui.rb.skipDia	쿨타임 스킵	Skip Cooldown	クールタイムスキップ
 ui.rb.unlockAfter	{0} 달성 시 해금	Unlocks at {0}	{0}達成で解放
 ui.rb.go	환생	Rebirth	転生
-ui.rb.gain	+{0}	+{0}	+{0}
 ui.rb.confirm	환생하면 Area 진척도·츄르·생선·로비 강화·Area 강화가 초기화되고 황금 생선 {0}개를 받습니다. 환생할까요?	Rebirth resets Area progress, Churu, Fish, Lobby and Area upgrades, and grants {0} Golden Fish. Rebirth now?	転生するとArea進行度・チュール・魚・ロビー強化・Area強化がリセットされ、金の魚を{0}個獲得します。転生しますか？
 ui.rb.done	환생 Lv {0} · 황금 생선 +{1}	Rebirth Lv {0} · Golden Fish +{1}	転生 Lv {0} · 金の魚 +{1}

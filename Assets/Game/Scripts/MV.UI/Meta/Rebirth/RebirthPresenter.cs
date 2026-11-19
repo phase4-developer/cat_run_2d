@@ -31,7 +31,6 @@ namespace MV.UI
         public const string SkipDiaLabelKey = "ui.rb.skipDia";
         public const string UnlockAfterKey = "ui.rb.unlockAfter";
         public const string GoLabelKey = "ui.rb.go";
-        public const string GainKey = "ui.rb.gain";
         public const string ConfirmKey = "ui.rb.confirm";
         public const string DoneKey = "ui.rb.done";
 
@@ -108,7 +107,7 @@ namespace MV.UI
             }
 
             d.GoLabel = MvUiText.Ui(GoLabelKey);
-            d.GainText = MvUiText.Ui(GainKey, MvUiFormat.Fmt(Port.RebirthPending));
+            d.GainText = "+" + MvUiFormat.Fmt(Port.RebirthPending); // 숫자 표기라 언어팩 키 없음
             d.GoActionId = GoId;
             m.Confirm = new MetaAction(GoId, d.GoLabel, d.State == RebirthHeaderState.Ready && !_asking);
             m.Data = d;
