@@ -549,7 +549,7 @@ namespace MV.UI
 
         readonly List<HudWeaponSlot> _depth = new List<HudWeaponSlot>();
         readonly List<int> _depthRank = new List<int>();
-        readonly List<int> _depthIdx = new List<int>();
+        readonly List<float> _depthY = new List<float>();
 
         /// <summary>
         /// 스택 칸 깊이 = 지금 화면 높이: 위에 있는 칸이 앞(뒤 형제), 아래 칸이 뒤(디자이너 반대 순서 배치와 같은 겹침). 매 프레임 지금 자리로 다시 맞춘다:
@@ -561,7 +561,7 @@ namespace MV.UI
             if (_model == null) return;
             _depth.Clear();
             _depthRank.Clear();
-            _depthIdx.Clear();
+            _depthY.Clear();
             var cards = _model.Cards;
             for (int i = 0; i < cards.Count; i++)
             {
@@ -571,18 +571,22 @@ namespace MV.UI
                 int at = _depth.Count;
                 while (at > 0)
                 {
-                    var p = _depth[at - 1];
-                    float py = p.rectTransform.anchoredPosition.y;
+                    float py = _depthY[at - 1];
                     if (py < y || py == y && _depthRank[at - 1] > i) break;
                     at--;
                 }
                 _depth.Insert(at, s);
                 _depthRank.Insert(at, i);
-                _depthIdx.Add(s.transform.GetSiblingIndex());
+                _depthY.Insert(at, y);
             }
-            _depthIdx.Sort();
-            for (int k = 0; k < _depth.Count; k++)
-                if (_depth[k].transform.GetSiblingIndex() != _depthIdx[k]) _depth[k].transform.SetSiblingIndex(_depthIdx[k]);
+            // 이미 뒤 → 앞 순서면 그대로 둔다(매 프레임 캔버스를 다시 짓지 않게).
+            bool sorted = true;
+            for (int k = 1; k < _depth.Count && sorted; k++)
+                if (_depth[k].transform.GetSiblingIndex() < _depth[k - 1].transform.GetSiblingIndex()) sorted = false;
+            if (sorted) return;
+            // 뒤 → 앞 순서로 맨 뒤 형제로 보낸다. 형제 번호를 하나씩 바꾸면 앞서 맞춘 칸 번호가 밀려 깊이가 뒤섞인다(사용자 2026-11-19 「뎁스가 왜 뒤죽박죽이야 밑에 있는게 뒤여야」).
+            // 줄 카드(맨 앞 형제로 들어감)·풀에 쉬는 칸은 스택 칸보다 앞 번호(= 뒤 깊이)에 남는다.
+            foreach (var d in _depth) d.transform.SetAsLastSibling();
         }
 
         /// <summary>시험·QA: 스택 칸을 뒤 → 앞 깊이 순서로.</summary>

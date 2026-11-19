@@ -136,9 +136,10 @@ namespace MV.UI
         }
 
         /// <summary>
-        /// handDeliver: 대기열에 전달 1장(단계 t)을 n번 넣는다. 전달은 머지를 기다리지 않고 전달 간격(dealGap)으로 연달아 오르고
-        /// (사용자 2026-11-19 「하나 움직이고 대기가 너무 긴데 오는데도 순서가 있으니까 그거 정도 딜레이로 움직여야해」 — 05 §5.3.3 「머지가 끝난 뒤 다음 전달」 대신 사용자 결정),
-        /// 머지는 그와 함께 밑 3장이 자리를 찾는 대로 바로 시작한다(같은 날 「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」).
+        /// handDeliver: 대기열에 전달 1장(단계 t)을 n번 넣는다. 1장씩 전달 간격(dealGap)으로 들어가고, 3장이 되면 바로 합치고 그 결과가 위와 또 3장이면 이어서 합친 뒤에
+        /// 다음 장이 들어간다(05 §5.3.3 전달 행, 사용자 2026-11-19 「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」,
+        /// 「정렬되기 시작하면서 3개가 모였을때 순서대로 3개 모이면 합쳐지는건데」 「너 그냥 내부에서 3개 모인거 그냥 합치고 있는거 아니야」).
+        /// 카드별 도착 대기는 없다(「3개 배치되면 그때 바로 머지가 일어나야지 이동이 끝날때까지 기다리고 있고」).
         /// </summary>
         public void Deliver(int n, int tier)
         {
@@ -191,16 +192,16 @@ namespace MV.UI
             }
             _dealWait -= dt;
             _mergeWait -= dt;
-            // 전달과 머지는 따로 흐른다: 전달은 간격마다 다음 장, 머지는 모으기·쉼이 끝나면 3장이 모인 즉시 다음 묶음
-            // (사용자 2026-11-19 「3개 배치되면 그때 바로 머지가 일어나야지 이동이 끝날때까지 기다리고 있고」).
+            // 1장 전달 → 3장이 되면 바로 모으기(이동 끝을 기다리지 않음) → 연쇄가 끝나면 다음 장. 머지 중에는 다음 장이 들어가지 않는다.
             for (bool more = true; more;)
             {
                 more = false;
                 if (_gather != null && _mergeWait <= 0) { FinishMerge(now, actions); more = true; }
                 if (_gather == null && _mergeWait <= 0 && StartMerge(now, actions)) more = true;
-                if (_dealWait <= 0 && _queue.Count > 0) { Deal(now, _queue[0], actions); more = true; }
+                if (!MergeBusy && _dealWait <= 0 && _queue.Count > 0) { Deal(now, _queue[0], actions); more = true; }
             }
             if (_queue.Count == 0 && _dealWait < 0) _dealWait = 0;
+            if (MergeBusy && _dealWait < 0) _dealWait = 0;   // 머지가 끝난 뒤 밀린 장이 한꺼번에 들어가지 않게
             if (_gather == null && _mergeWait < 0 && NextMergeTier() < 1) _mergeWait = 0;
         }
 
@@ -263,6 +264,9 @@ namespace MV.UI
         /// 위에 이미 3장이 된 묶음을 두고 밑에서 번쩍여 순서가 뒤섞인다(「순서대로 위에 3개 모이면 … 아래 두개가 위로 올라가면서 합쳐지고 밑에꺼도 재정렬되어야하는데 지금 번쩍이는거 보니까 순서가 뒤죽박죽」).
         /// 높은 등급부터 고르면 밑에서 합쳐진 결과가 위 묶음과 3장이 되는 즉시 이어서 합쳐진다(「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」).
         /// </summary>
+        /// <summary>모으는 중·머지 뒤 쉼이거나 아직 합칠 3장이 있다(이동안 다음 장은 들어가지 않는다).</summary>
+        bool MergeBusy => _gather != null || _mergeWait > 0 || NextMergeTier() >= 1;
+
         int NextMergeTier()
         {
             for (int t = _maxTier - 1; t >= 1; t--)
