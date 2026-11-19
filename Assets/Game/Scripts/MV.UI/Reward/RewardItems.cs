@@ -16,6 +16,10 @@ namespace MV.UI
     /// </summary>
     public static class RewardItems
     {
+        /// <summary>재화 보상 1항목(<c>01_wealth.type</c>, 예: <c>gold</c>). 모르는 type은 id 0(칸 없음, 경고).</summary>
+        public static ConsumeData Wealth(string wealthType, double value) =>
+            new ConsumeData(ConsumeType.Wealth, MvWealthIds.IdOf(wealthType), value);
+
         public static List<ItemSlotData> Build(MvTables tables, IEnumerable<ConsumeData> rewards)
         {
             var order = new List<int>();

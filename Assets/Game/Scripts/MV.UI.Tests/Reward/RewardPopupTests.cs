@@ -40,11 +40,9 @@ namespace MV.UI.Tests
             return (go, view);
         }
 
-        static int Gold => T.Wealth.GetId("gold");
-        static int Dia => T.Wealth.GetId("dia");
-        static int Tok => T.Wealth.GetId("goldenFish");
+        const string Gold = "gold", Dia = "dia", Tok = "goldenFish";
 
-        static ConsumeData W(int id, double v) => new ConsumeData(ConsumeType.Wealth, id, v);
+        static ConsumeData W(string type, double v) => RewardItems.Wealth(type, v);
 
         static List<ItemSlotData> Items(params ConsumeData[] r) => RewardItems.Build(T, r);
 
