@@ -115,10 +115,8 @@
 300103005	벽돌 아이콘 간격	ORE_ICON_GAP_MS	60	ms
 300104002	체크포인트 상한	CP_MAX	2	
 300104003	플레이 가능 Area 수	PLAYABLE_AREAS	5	개
-300104004	황금 생선 기본	TOK_BASE	1	개
-300104005	황금 생선 구출 고양이 나눗수	TOK_SOUL_DIV	4	생선/개
-300104006	황금 생선 포털 도달	TOK_GATE	2	개
-300104007	황금 생선 개방	TOK_OPEN	3	개
+300104004	냥환생 황금 생선 계수	RB_FISH_MUL	5	개
+300104005	냥환생 황금 생선 Area 지수	RB_FISH_POW	1.5	
 300104008	실패 소리 지연	FAIL_SFX_DELAY_MS	350	ms
 300104010	지팡이 Lv 8 이후 추가 구매 수	WEAPON_EXTRA_BUYS	60	회
 300104011	결계문 글자판 숨김 거리	ARCH_LABEL_HIDE	3	m
