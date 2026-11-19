@@ -78,6 +78,28 @@ namespace MV.View.Tests
             Assert.That(cgLabel.GaugeRoot.transform.localPosition.y, Is.EqualTo(0.478f).Within(1e-4), "무기문 막대는 글자판 원래 자리");
         }
 
+        /// <summary>
+        /// 노션 Obj_StairZone UI: 계단 구역 위에 별자리 카드(Obj_Card_StairZone, 팀원 프리팹)를 띄운다. 등급 틀 Grade_1·그림 1장 고정.
+        /// 카드는 글자판과 같은 빌보드 묶음 안, 글자판(「계단」·숫자·막대) 아래에 있다. 등급 글자·필요 계단 수·이름 칸은 없다.
+        /// </summary>
+        [Test]
+        public void StairZone_ShowsFixedGrade1Card_UnderLabel()
+        {
+            var zone = Object.Instantiate(LoadPrefab("Obj_StairZone"));
+            _made.Add(zone);
+            var card = zone.transform.Find("Billboard/Obj_Card_StairZone");
+            Assert.That(card, Is.Not.Null, "Obj_StairZone Billboard/Obj_Card_StairZone");
+            Assert.That(card.gameObject.activeSelf, Is.True, "카드 켜짐");
+            var frame = card.Find("Frame")?.GetComponent<SpriteRenderer>();
+            var tex = card.Find("Mask/Texture")?.GetComponent<SpriteRenderer>();
+            Assert.That(frame != null && frame.sprite != null && frame.sprite.name == "Grade_1", Is.True, "틀 = Grade_1 고정");
+            Assert.That(tex != null && tex.sprite != null && tex.sprite.name == "Texture_Card_Grade_1", Is.True, "그림 1장 고정");
+            Assert.That(card.GetComponentsInChildren<TMPro.TMP_Text>(true), Is.Empty, "카드에 글자 칸(등급·필요 계단 수·이름) 없음");
+            var label = CountLabel.Find(zone.transform);
+            Assert.That(label, Is.Not.Null, "글자판");
+            Assert.That(frame.bounds.max.y, Is.LessThan(label.GaugeRoot.transform.position.y), "카드 위 끝이 글자판 막대 아래(시안: 글자판 → 카드 순)");
+        }
+
         [Test]
         public void GatePrefabs_HaveHitbox_AndCountLabelGauge([ValueSource(nameof(GateKeys))] string key)
         {
