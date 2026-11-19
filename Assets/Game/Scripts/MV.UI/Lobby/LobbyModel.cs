@@ -64,6 +64,8 @@ namespace MV.UI
         public bool Max;
         /// <summary>꺼짐: 최대·비용 부족·메타 없음(05 §5.5.1 상태 표).</summary>
         public bool Enabled;
+        /// <summary>비용 부족(메타 준비됨·최대 아님·잔액 모자람). 가격 글자를 빨갛게 그린다(사용자 2026-11-19).</summary>
+        public bool PriceShort;
         /// <summary>단계 숫자(캣타워 = 계단 Lv, 무기 = 무기 등급, 건조대 = 산 단계 + 1). 디자이너 강화 칸 「Level {0}」.</summary>
         public int LevelNo;
         /// <summary>디자이너 강화 칸 <c>Slot_Count</c> 지금 값·다음 값(캣타워 = 칸당 계단, 건조대 = 츄르 배수). 없으면 빈 문자열.</summary>
