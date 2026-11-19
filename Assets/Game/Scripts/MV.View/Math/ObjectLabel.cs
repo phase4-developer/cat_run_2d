@@ -74,7 +74,8 @@ namespace MV.View
                 case LabelKind.WellText:
                     return new LabelContent(o.Z > playerZ - TowerHideBack, false, TowerText, null, LabelContent.NoGauge);
                 case LabelKind.StairText:
-                    return new LabelContent(!o.Used, false, StairText, null, LabelContent.NoGauge);
+                    // 계단 구역 위 문구는 노션 Obj_StairZone UI 시안에 없어 숨긴다(사용자 2026-11-19 「숨겨줘」). 문구·종류는 남겨 둔다.
+                    return LabelContent.Hidden;
                 case LabelKind.Arch:
                     // L1479: 관문 z − 3 m를 지나면 현판을 숨긴다(카메라를 가리지 않게).
                     return new LabelContent(!(playerZ > o.Z - archHide), false, ArchText(o), null, LabelContent.NoGauge);
