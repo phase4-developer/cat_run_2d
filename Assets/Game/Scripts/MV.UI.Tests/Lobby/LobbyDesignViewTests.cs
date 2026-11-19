@@ -70,8 +70,7 @@ namespace MV.UI.Tests
             var (_, view) = NewLobby();
             var m = new LobbyMenuModel();
             var first = view.Upgrades[0];
-            var designerPriceColor = first.priceText.color;
-            m.Upgrades.Add(new LobbyUpgradeItem { Key = first.key, Enabled = false, PriceShort = true, LevelNo = 7, CurValue = "7", NextValue = "8", PriceValue = "25" });
+            m.Upgrades.Add(new LobbyUpgradeItem { Key = first.key, Enabled = false, InputAllowed = true, LevelNo = 7, CurValue = "7", NextValue = "8", Cost = new[] { new ConsumeData(ConsumeType.Wealth, 1001001, 25) } });
             m.Rebirth.Visible = true;
             m.Rebirth.Locked = true;
             m.Rebirth.UnlockNow = 3;
@@ -82,9 +81,7 @@ namespace MV.UI.Tests
             Assert.That(first.root.activeSelf, Is.True);
             Assert.That(first.level.text, Is.EqualTo(string.Format(LobbyDesignView.UpgradeLevelFormat, 7)));
             Assert.That(first.currentValue.text, Is.EqualTo("7"));
-            Assert.That(first.priceText.text, Is.EqualTo("25"));
-            Assert.That(first.priceText.color, Is.EqualTo(view.PriceShortColor), "비용 부족이면 가격 글자 빨강(프리팹 priceShortColor)");
-            Assert.That(view.PriceShortColor, Is.Not.EqualTo(designerPriceColor), "빨강은 디자이너 기본색과 달라야 보임");
+            Assert.That(first.price.activeSelf, Is.False, "재화 서비스가 없으면 PriceBtn이 그릴 수 없어 가격 칸을 끔");
             Assert.That(first.disable.activeSelf, Is.True, "살 수 없으면 Disable");
             Assert.That(first.button.interactable, Is.False);
             foreach (var other in view.Upgrades.Skip(1)) Assert.That(other.root.activeSelf, Is.False, other.key + ": 모델에 없는 칸은 숨김");
@@ -95,10 +92,8 @@ namespace MV.UI.Tests
             Assert.That(view.RebirthRewardText, Is.EqualTo("+4"));
 
             m.Rebirth.Visible = false;
-            m.Upgrades[0].PriceShort = false;
             view.Render(m);
             Assert.That(view.RebirthShown, Is.False, "잠금 표시 조건 전이면 숨김");
-            Assert.That(first.priceText.color, Is.EqualTo(designerPriceColor), "모자라지 않으면 디자이너 글자색으로 되돌림");
         }
 
         [Test]

@@ -47,9 +47,12 @@ namespace MV.UI
         public GameObject price;
         public Image priceIcon;
         public TMP_Text priceText;
+        /// <summary>
+        /// <c>Slot_Price</c>에 래퍼가 덧붙인 Framework 가격 버튼. 가격 글자(게임 숫자 표기)·부족 색(빨강)·누름 잠금을 재화 서비스로 직접 정한다
+        /// (사용자 2026-11-19 「Framework PriceBtn 사용」). 아이콘은 디자이너 Image(<see cref="priceIcon"/>)에 둔다.
+        /// </summary>
+        public PriceBtn priceButton;
         public GameObject redDot;
-        /// <summary>디자이너가 정한 가격 글자색(처음 그릴 때 기억). 비용이 모자라지 않으면 이 색으로 되돌린다.</summary>
-        [NonSerialized] public Color? priceTextColor;
     }
 
     /// <summary>
@@ -91,12 +94,6 @@ namespace MV.UI
 
         [Header("Bottom")]
         [SerializeField] LobbyUpgradeParts[] upgrades;
-        /// <summary>
-        /// 비용이 모자랄 때 강화 칸 가격 글자색(사용자 2026-11-19 「재화가 부족하면 하단 레이블 색깔 빨갛게」, 기획서엔 색 값 없음).
-        /// 기본값은 Framework <c>PriceLabel.insufficientColor</c>와 같다(나중에 PriceBtn으로 옮길 때 같은 색).
-        /// </summary>
-        [Tooltip("임시: 비용 부족 가격 글자색. 기획서·시안에 값 없음, Framework PriceLabel 기본값")]
-        [SerializeField] Color priceShortColor = new Color(1f, 0.38f, 0.45f);
         [SerializeField] Button rebirthButton;
         [SerializeField] Slider rebirthUnlock;
         [SerializeField] TMP_Text rebirthUnlockCount;
@@ -128,6 +125,10 @@ namespace MV.UI
         MvTables _tables;
         bool _ready, _disposed;
         readonly HashSet<string> _missingKeys = new HashSet<string>();
+        readonly HashSet<string> _missingPrice = new HashSet<string>();
+
+        /// <summary>강화 칸 가격 버튼이 잔액을 읽는 재화 서비스(<see cref="MvMetaUiPort.Wallet"/>). 화면(<see cref="LobbyScreen"/>)이 넣는다. 없으면 가격 칸을 끈다.</summary>
+        public ResourceService Wallet { get; set; }
 
         // ---- 시험·QA ----
         public LobbyStartArea StartArea => startArea;
@@ -193,6 +194,7 @@ namespace MV.UI
                 Need(u?.price, n + ".price");
                 Need(u?.priceIcon, n + ".priceIcon");
                 Need(u?.priceText, n + ".priceText");
+                Need(u?.priceButton, n + ".priceButton");
                 Need(u?.redDot, n + ".redDot");
                 Need(u?.currentValue, n + ".currentValue");
                 Need(u?.nextValue, n + ".nextValue");
@@ -416,26 +418,32 @@ namespace MV.UI
                 var u = m.FindUpgrade(p.key);
                 if (p.root) p.root.SetActive(u != null);
                 if (u == null) continue;
-                if (p.button) p.button.interactable = u.Enabled;
                 if (p.disable) p.disable.SetActive(!u.Enabled);
                 if (p.redDot) p.redDot.SetActive(u.Enabled);
                 if (p.level) p.level.text = string.Format(UpgradeLevelFormat, u.LevelNo);
                 if (p.currentValue && u.CurValue.Length > 0) p.currentValue.text = u.CurValue;
                 if (p.nextValue && u.NextValue.Length > 0) p.nextValue.text = u.NextValue;
                 if (p.maxText) p.maxText.SetActive(u.Max);
-                if (p.price) p.price.SetActive(!u.Max);
-                if (p.priceText)
-                {
-                    p.priceText.text = u.PriceValue;
-                    p.priceTextColor ??= p.priceText.color;
-                    p.priceText.color = u.PriceShort ? priceShortColor : p.priceTextColor.Value;
-                }
+                DrawPrice(p, u);
                 if (u.PriceIcon.Length > 0) SetSprite(p.priceIcon, MvAtlas.UiIcon, u.PriceIcon);
                 if (u.IconIsItem && u.Icon.Length > 0) SetSprite(p.icon, MvAtlas.UiIcon, u.Icon);
             }
             foreach (var u in m.Upgrades)
                 if (Find(u.Key) == null && _missingKeys.Add(u.Key))
                     Debug.LogError("LobbyDesignView: 10_lobbyUpgrade key " + u.Key + "에 맞는 디자이너 강화 칸이 없습니다(UIScreen_Lobby upgrades)", this);
+        }
+
+        /// <summary>
+        /// 가격 칸: 최대가 아니고 재화 서비스가 있으면 PriceBtn이 글자·부족 색·누름 잠금을 그린다. 그 밖(최대·메타 없음·재화 아닌 비용)은 칸을 끄고 누름을 막는다.
+        /// PriceBtn 참조가 없으면 만들거나 대신 그리지 않고 경로만 남긴다.
+        /// </summary>
+        void DrawPrice(LobbyUpgradeParts p, LobbyUpgradeItem u)
+        {
+            if (!p.priceButton && _missingPrice.Add(p.key))
+                Debug.LogWarning("LobbyDesignView: 강화 칸 " + p.key + "의 PriceBtn이 없습니다(UIScreen_Lobby upgrades[].priceButton → LobbyScreen/…/Slot_Price)", this);
+            if (!u.Max && MvPrice.Show(p.priceButton, Wallet, u.Cost, u.InputAllowed)) return;
+            if (p.price) p.price.SetActive(false);
+            if (p.button) p.button.interactable = false;
         }
 
         LobbyUpgradeParts Find(string key)
@@ -501,6 +509,5 @@ namespace MV.UI
         /// <summary>시험·QA: 그 칸에 넣으려는 그림 이름(없으면 null).</summary>
         public string WantedSprite(Image img) => img && _wanted.TryGetValue(img, out var w) ? w.sprite : null;
         public Image StairGradeImage => stairGrade;
-        public Color PriceShortColor => priceShortColor;
     }
 }

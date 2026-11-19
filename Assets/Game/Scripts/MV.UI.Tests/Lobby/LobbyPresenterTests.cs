@@ -87,7 +87,7 @@ namespace MV.UI.Tests
             Assert.That(after.Count, Is.EqualTo(before + 1));
             Assert.That(after.Last().Key, Does.EndWith("_t"));
             Assert.IsTrue(after.All(u => u.Enabled && u.Price.Length > 0));
-            Assert.IsTrue(after.All(u => !u.PriceShort), "살 수 있으면 가격 글자는 기본색");
+            Assert.IsTrue(after.All(u => u.InputAllowed && u.Cost != null && u.Cost.Count > 0), "가격 버튼(PriceBtn)에 넘길 비용·입력 허용");
         }
 
         [TestCase(LobbySideIds.Rebirth, "rebirth", "locked")]
@@ -121,7 +121,7 @@ namespace MV.UI.Tests
 
             Assert.IsTrue(p.Model.Upgrades.Count > 0);
             Assert.IsTrue(p.Model.Upgrades.All(u => !u.Enabled));
-            Assert.IsTrue(p.Model.Upgrades.All(u => !u.PriceShort), "메타 없음은 비용 부족이 아님(빨간 글자 아님)");
+            Assert.IsTrue(p.Model.Upgrades.All(u => !u.InputAllowed), "메타 없음이면 가격 버튼 입력 막음");
             foreach (var u in p.Model.Upgrades) Assert.IsFalse(p.PressUpgrade(u.Key));
             foreach (var id in new[] { LobbySideIds.God, LobbySideIds.AreaUpgrade, LobbySideIds.Rebirth, LobbySideIds.Map, LobbySideIds.Content })
                 Assert.IsFalse(p.PressSide(id), id);
@@ -155,7 +155,7 @@ namespace MV.UI.Tests
             var port = new Port(MetaUiTestKit.Base()) { CanBuyResult = false };
             var p = Make(port);
             Assert.IsTrue(p.Model.Upgrades.All(u => !u.Enabled));
-            Assert.IsTrue(p.Model.Upgrades.All(u => u.PriceShort), "비용 부족 = 가격 글자 빨강(사용자 2026-11-19)");
+            Assert.IsTrue(p.Model.Upgrades.All(u => u.InputAllowed), "잔액 부족은 입력 허용과 별개(빨간 글자·잠금은 PriceBtn이 잔액으로 판단)");
             Assert.IsFalse(p.PressUpgrade("stair"));
             Assert.AreEqual(0, port.BuyCalls);
         }
@@ -194,7 +194,8 @@ namespace MV.UI.Tests
             var p = Make(new Port(t));
             foreach (var u in p.Model.Upgrades)
             {
-                Assert.AreEqual("25", u.PriceValue, u.Key);
+                Assert.That(u.Cost, Has.Count.EqualTo(1), u.Key);
+                Assert.AreEqual(25d, u.Cost[0].Value, u.Key + ": 16_levelPrice 비용 그대로 PriceBtn에 넘김");
                 Assert.That(u.PriceIcon, Is.Not.Empty, u.Key + ": 01_wealth.icon");
             }
             Assert.IsTrue(p.Model.Upgrades.Single(u => u.Key == "weapon").IconIsItem);
