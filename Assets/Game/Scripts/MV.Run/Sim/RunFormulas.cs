@@ -194,13 +194,13 @@ namespace MV.Run
             (int)Math.Floor(PerkValue(t, RebirthStatKey.StartDia, PerkLv(st, RebirthStatKey.StartDia)));
 
         /// <summary>
-        /// 런 종료 「레벨당 획득」(13 DiaPerLevel·GoldPerLevel, MV-SPEC-02 529~530) = 강화 값(perLv × Lv) × 런 Level.
-        /// 행이 없거나 Lv 0이면 0.
+        /// 런 종료 「레벨당 획득」 추가분(13 DiaPerLevel·GoldPerLevel) = floor(이번 런에서 번 몫 × perLv × Lv).
+        /// 기획자확인 PC-06(2026-11-18): 1단계당 +10%(표 perLv 0.1). 번 몫은 시작 골드·블루 마법석을 뺀 값. 행이 없거나 Lv 0이면 0.
         /// </summary>
-        public static double PerLevelReward(MvTables t, RunSetup st, AreaStatKey stat, int level)
+        public static double PerLevelBonus(MvTables t, RunSetup st, AreaStatKey stat, double earned)
         {
             var a = AupRow(t, stat);
-            return a != null ? a.perLv * AupLv(st, stat) * Math.Max(0, level) : 0;
+            return a != null ? Math.Floor(Math.Max(0, earned) * a.perLv * AupLv(st, stat) + 1e-9) : 0;
         }
 
         /// <summary>
@@ -342,12 +342,5 @@ namespace MV.Run
 
         // ---------------- 종료 ----------------
 
-        /// <summary>목숨 조각 tok(§4.11.1).</summary>
-        public static int Tokens(MvTables t, int runSouls, bool gate, bool open)
-        {
-            var rc = t.RunConfig;
-            return rc.I(RunConfigKeys.TOK_BASE) + (int)Math.Floor(runSouls / rc.D(RunConfigKeys.TOK_SOUL_DIV))
-                + (gate ? rc.I(RunConfigKeys.TOK_GATE) : 0) + (open ? rc.I(RunConfigKeys.TOK_OPEN) : 0);
-        }
     }
 }

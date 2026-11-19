@@ -96,14 +96,11 @@ namespace MV.Meta
         /// <summary>생선 건조대 goldMul = 1 + <c>INCOME_PER_LV</c> × P(04 §4.12.1).</summary>
         public static double GoldMul(MvTables t, int incomeBought) => 1 + t.RunConfig.D(RunConfigKeys.INCOME_PER_LV) * incomeBought;
 
-        /// <summary>목숨 조각 = TOK_BASE + floor(souls / TOK_SOUL_DIV) + (gate ? TOK_GATE : 0) + (개방 ? TOK_OPEN : 0)(§4.11.1).</summary>
-        public static int Tokens(MvTables t, int runSouls, bool gate, bool opened)
-        {
-            var c = t.RunConfig;
-            int div = Math.Max(1, c.I(RunConfigKeys.TOK_SOUL_DIV));
-            return c.I(RunConfigKeys.TOK_BASE) + (int)Math.Floor((double)Math.Max(0, runSouls) / div)
-                   + (gate ? c.I(RunConfigKeys.TOK_GATE) : 0) + (opened ? c.I(RunConfigKeys.TOK_OPEN) : 0);
-        }
+        /// <summary>
+        /// 지금 냥환생하면 받을 황금 생선 = <see cref="MvTables.RebirthFish"/>(이번 주기 도달 Area) + 정산 대기 조각(608 보상·디버그).
+        /// 런마다 쌓지 않는다(기획자확인 PC-08). 로비·냥환생 화면 「대기」와 냥환생 지급이 같은 값을 쓴다.
+        /// </summary>
+        public static int RebirthGrant(MvTables t, int areaIndex, int pendingExtra) => t.RebirthFish(areaIndex + 1) + Math.Max(0, pendingExtra);
 
         /// <summary>이 Area(0기반)에서 다음 Area를 여는 누적 생선(<c>302_area.needSouls</c>). 행이 없으면 int.MaxValue.</summary>
         public static int NeedSouls(MvTables t, int area)

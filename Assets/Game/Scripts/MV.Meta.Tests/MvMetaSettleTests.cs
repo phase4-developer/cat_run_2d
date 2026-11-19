@@ -18,12 +18,12 @@ namespace MV.Meta.Tests
             Assert.That(r.Ok, Is.True, r.Code);
             Assert.That(r.Pass, Is.False);
             Assert.That(r.ZoneEnd, Is.False);
-            Assert.That(r.Tokens, Is.EqualTo(1 + 6 / 4), "TOK_BASE + floor(souls/4)");
+            Assert.That(r.Tokens, Is.EqualTo(5), "PC-08: 냥환생 예상 = floor(5 × Area 1^1.5)");
             Assert.That(W(MvWealthIds.Gold), Is.EqualTo(10), "floor(gold × 1)");
             Assert.That(W(MvWealthIds.Souls), Is.EqualTo(6));
             Assert.That(W(MvWealthIds.Dia), Is.EqualTo(2));
-            Assert.That(W(MvWealthIds.RbToken), Is.EqualTo(0), "조각은 대기분으로만 쌓인다");
-            Assert.That(Store.Rebirth.Pending, Is.EqualTo(2));
+            Assert.That(W(MvWealthIds.RbToken), Is.EqualTo(0), "황금 생선은 냥환생 때만 받는다");
+            Assert.That(Store.Rebirth.Pending, Is.EqualTo(0), "PC-08: 런마다 쌓지 않는다");
             Assert.That(Store.Progress.Level, Is.EqualTo(2));
             Assert.That(Store.Progress.Fails, Is.EqualTo(1), "Area를 깨지 못한 정산 = 실패 +1");
             Assert.That(Store.Progress.Runs, Is.EqualTo(1));
@@ -46,7 +46,7 @@ namespace MV.Meta.Tests
             Assert.That(older.Code, Is.EqualTo(MvMetaErrors.AlreadySettled));
             Assert.That(W(MvWealthIds.Gold), Is.EqualTo(5));
             Assert.That(Store.Progress.Runs, Is.EqualTo(1));
-            Assert.That(Store.Rebirth.Pending, Is.EqualTo(1));
+            Assert.That(Store.Rebirth.Pending, Is.EqualTo(0));
             Assert.That(Meta.BeginRun(), Is.EqualTo(seq + 1));
         }
 
@@ -57,7 +57,7 @@ namespace MV.Meta.Tests
             Assert.That(r.Ok, Is.True, r.Code);
             Assert.That(r.Pass, Is.False);
             Assert.That(r.ZoneEnd, Is.False);
-            Assert.That(r.Tokens, Is.EqualTo(1 + 2 + 2), "1 + floor(10/4) + gate 2");
+            Assert.That(r.Tokens, Is.EqualTo(5), "Area 그대로 → floor(5 × 1^1.5)");
             Assert.That(Store.Progress.Area, Is.EqualTo(0));
         }
 
@@ -80,7 +80,7 @@ namespace MV.Meta.Tests
             Assert.That(r.AreaBefore, Is.EqualTo(0));
             Assert.That(r.AreaAfter, Is.EqualTo(1));
             Assert.That(r.ZoneChanged, Is.False);
-            Assert.That(r.Tokens, Is.EqualTo(1 + 1 + 2 + 3));
+            Assert.That(r.Tokens, Is.EqualTo(14), "개방 뒤 Area 2 → floor(5 × 2^1.5)");
             Assert.That(Store.Progress.Area, Is.EqualTo(1));
             Assert.That(Store.Progress.BestArea, Is.EqualTo(1));
             Assert.That(Store.Progress.Fails, Is.EqualTo(RebirthUseLevel), "개방 판은 실패로 세지 않는다");
@@ -108,7 +108,7 @@ namespace MV.Meta.Tests
             Assert.That(r.Ok, Is.True, r.Code);
             Assert.That(r.ZoneEnd, Is.True);
             Assert.That(r.Pass, Is.False);
-            Assert.That(r.Tokens, Is.EqualTo(1 + 0 + 2 + 3));
+            Assert.That(r.Tokens, Is.EqualTo(55), "마지막 Area 5 → floor(5 × 5^1.5)");
             Assert.That(Store.Progress.Area, Is.EqualTo(4));
             Assert.That(Store.Progress.ZoneClear, Is.True);
             Assert.That(Store.Progress.BarAreaKeys, Is.EqualTo(new[] { "A4" }));
@@ -128,8 +128,8 @@ namespace MV.Meta.Tests
             Assert.That(W(MvWealthIds.Gold), Is.EqualTo((long)System.Math.Floor(10.5 * mul)), "floor(10.5 × mul)");
             Assert.That(W(MvWealthIds.Dia), Is.EqualTo(3 * mul));
             Assert.That(W(MvWealthIds.Souls), Is.EqualTo(4), "생선은 배수 없음");
-            Assert.That(r.Tokens, Is.EqualTo(2), "조각은 배수 없음");
-            Assert.That(Store.Rebirth.Pending, Is.EqualTo(2));
+            Assert.That(r.Tokens, Is.EqualTo(5), "황금 생선은 배수 없음");
+            Assert.That(Store.Rebirth.Pending, Is.EqualTo(0));
             Assert.That(Store.Progress.Level, Is.EqualTo(2), "Level은 +1");
             Assert.That(r.ShowInterstitial, Is.False, "×3이면 전면 광고 없음");
         }
@@ -211,7 +211,7 @@ namespace MV.Meta.Tests
             MvSettleResult r = Meta.Settle(Outcome(Meta.BeginRun(), MvRunEnd.Wall, pending: pending));
             Assert.That(r.Ok, Is.True, r.Code);
             Assert.That(W(MvWealthIds.Medal), Is.EqualTo(2));
-            Assert.That(Store.Rebirth.Pending, Is.EqualTo(1 + 3), "조각 1 + 정산 대기 608 3");
+            Assert.That(Store.Rebirth.Pending, Is.EqualTo(3), "정산 대기 608 3만(PC-08: 런 조각 없음)");
             Assert.That(r.Unsettled.Count, Is.EqualTo(1));
             Assert.That(r.Unsettled[0].Type, Is.EqualTo(ConsumeType.Card));
         }

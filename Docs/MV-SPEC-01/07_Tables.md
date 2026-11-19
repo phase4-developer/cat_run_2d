@@ -403,10 +403,8 @@ MvTables.Current = tables;
 |---|---|---|---|---|
 | CP_MAX | 2 | | [프로토] L2401 | 체크포인트 상한(골목 3은 항상 플레이) |
 | PLAYABLE_AREAS | 5 | 개 | [프로토] L757 `PROTO_AREAS` | 이 번호 Area가 마지막(zoneEnd). 결정 대기(D-63, 04 D-26) |
-| TOK_BASE | 1 | 개 | [프로토] L2407 | 목숨 조각 기본 |
-| TOK_SOUL_DIV | 4 | 생선/개 | [프로토] L2407 | floor(souls/4) |
-| TOK_GATE | 2 | 개 | [프로토] L2407 | Area 아치 도달 |
-| TOK_OPEN | 3 | 개 | [프로토] L2407 | 개방(pass·zoneEnd) |
+| RB_FISH_MUL | 5 | 개 | 기획자확인 PC-08(2026-11-18) | 냥환생 황금 생선 = floor(RB_FISH_MUL × 도달 Area^RB_FISH_POW). 옛 TOK_BASE·TOK_SOUL_DIV·TOK_GATE·TOK_OPEN(런마다 적립) 대체 |
+| RB_FISH_POW | 1.5 | | 기획자확인 PC-08 | 위 식의 Area 지수(예: Area 2 → 14, 4 → 40, 6 → 73, 10 → 158) |
 | FAIL_SFX_DELAY_MS | 350 | ms | [프로토] L2408 | 실패 소리 지연 |
 | WEAPON_EXTRA_BUYS | 60 | 회 | [프로토] L818 | 무기 Lv 8 이후 추가 구매 수(16_levelPrice 행 생성에만) |
 | ARCH_LABEL_HIDE | 3 | m | [프로토] L1479 | 아치 글자판 숨김 거리(MV.View) |
@@ -1521,8 +1519,8 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | 13001004 | crit | 10 | 0.1 | CritChance | {0}% | 0 | 10 | 14 | 80 | 치명타 확률 |
 | 13001005 | dbl | 10 | 0.1 | DoubleChance | {0}% | 0 | 10 | 15 | 80 | 2연발 확률 |
 | 13001006 | pierce | 10 | 0.1 | PierceChance | {0}% | 0 | 10 | 16 | 80 | 관통 확률(**더미** 행) |
-| 13001007 | diaLv | 10 | 1 | DiaPerLevel | {0} | 0 | 1 | 17 | 80 | 레벨당 블루 마법석 획득량(**더미** 행) |
-| 13001008 | goldLv | 10 | 5 | GoldPerLevel | {0} | 0 | 5 | 18 | 80 | 레벨당 골드 획득량(**더미** 행) |
+| 13001007 | diaLv | 10 | 0.1 | DiaPerLevel | {0}% | 0 | 10 | 17 | 80 | 레벨당 블루 마법석 획득량: 런 종료에 이번 런에서 번 블루 마법석(시작 몫 제외)의 perLv × Lv를 더함(기획자확인 PC-06: 단계당 +10%, 임시) |
+| 13001008 | goldLv | 10 | 0.1 | GoldPerLevel | {0}% | 0 | 10 | 18 | 80 | 레벨당 골드 획득량: 런 종료에 이번 런에서 번 골드(시작 몫 제외)의 perLv × Lv를 더함(PC-06: 단계당 +10%, 임시) |
 
 근거 [프로토] L2515~2521. 비용 재화 캣닢(`1 / 2`). 이름의 영문 부분(Fire Rate 등)은 정본 문구 그대로 `name` 값에 둔다([05](05_Screens.md)).
 

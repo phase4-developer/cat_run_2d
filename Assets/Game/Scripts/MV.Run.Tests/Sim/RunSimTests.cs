@@ -90,15 +90,17 @@ namespace MV.Run.Tests
             Assert.AreEqual(14, DiaCap(t, 2), 1e-12);
         }
 
-        /// <summary>런 종료 「레벨당 골드·블루 마법석 획득」 = 13 perLv × 강화 Lv × 런 Level(MV-SPEC-02 529~530, MV-SPEC2-FIX1).</summary>
+        /// <summary>런 종료 「레벨당 골드·블루 마법석 획득」 = floor(번 몫 × 13 perLv × 강화 Lv)(기획자확인 PC-06: 1단계당 +10%).</summary>
         [Test]
-        public void PerLevelReward_FromAreaUpgradeRows()
+        public void PerLevelBonus_PercentOfEarned()
         {
             var t = RunTestTables.Load();
+            Assert.AreEqual(0.1, AupRow(t, AreaStatKey.GoldPerLevel).perLv, 1e-12, "표 perLv 0.1 = 단계당 10%");
             var st = new RunSetup { AupGoldLv = 2, AupDiaLv = 3 };
-            Assert.AreEqual(AupRow(t, AreaStatKey.GoldPerLevel).perLv * 2 * 4, PerLevelReward(t, st, AreaStatKey.GoldPerLevel, 4), 1e-12);
-            Assert.AreEqual(AupRow(t, AreaStatKey.DiaPerLevel).perLv * 3 * 4, PerLevelReward(t, st, AreaStatKey.DiaPerLevel, 4), 1e-12);
-            Assert.AreEqual(0, PerLevelReward(t, new RunSetup(), AreaStatKey.GoldPerLevel, 4), 1e-12, "Lv 0이면 0");
+            Assert.AreEqual(System.Math.Floor(105 * AupRow(t, AreaStatKey.GoldPerLevel).perLv * 2), PerLevelBonus(t, st, AreaStatKey.GoldPerLevel, 105), 1e-12);
+            Assert.AreEqual(System.Math.Floor(7 * AupRow(t, AreaStatKey.DiaPerLevel).perLv * 3), PerLevelBonus(t, st, AreaStatKey.DiaPerLevel, 7), 1e-12);
+            Assert.AreEqual(0, PerLevelBonus(t, new RunSetup(), AreaStatKey.GoldPerLevel, 100), 1e-12, "Lv 0이면 0");
+            Assert.AreEqual(0, PerLevelBonus(t, st, AreaStatKey.GoldPerLevel, -5), 1e-12, "번 몫이 없으면 0");
         }
 
         /// <summary>

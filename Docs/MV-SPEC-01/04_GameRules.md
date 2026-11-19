@@ -718,7 +718,7 @@ setTimeout(()=>SND.play(R && (R.pass || R.zoneEnd || R.reason === 'gate') ? 'win
 | 종료 사유 | `gate`(Area 돌파 아치 통과), `wall`(장애물 막힘). `cell`/`area`는 도달 불가 | — |
 | 개방 조건 | `gate` && 누적 생선(`save.souls + R.souls`) ≥ `AREA_NEED[area]` | `302_area.needSouls` |
 | 마지막 Area | `area ≥ PROTO_AREAS − 1`(=4, Area 5) → `zoneEnd`(더 진행 없음) | `300_runConfig.PLAYABLE_AREAS`=5 — 결정 대기(D-26) |
-| 목숨 조각 | `1 + floor(R.souls/4) + (gate ? 2 : 0) + (개방 ? 3 : 0)` | `300_runConfig.TOK_BASE`=1, `TOK_SOUL_DIV`=4, `TOK_GATE`=2, `TOK_OPEN`=3 |
+| 황금 생선(옛 목숨 조각) | 런마다 쌓지 않음. 냥환생 때 `floor(5 × (이번 주기 도달 Area 번호)^1.5)` + 정산 대기(608) 지급. 결과 화면·로비는 지금 기준 예상량 표시(기획자확인 PC-08, 2026-11-18. 옛 `1 + floor(souls/4) + gate 2 + 개방 3`) | `300_runConfig.RB_FISH_MUL`=5, `RB_FISH_POW`=1.5 |
 | 결과 소리 | gate면 즉시 win, 아니면 350ms 뒤 fail | `300_runConfig.FAIL_SFX_DELAY_MS`=350 |
 | ×3 버튼 활성 | `R.gold ≥ 1 || R.dia > 0` | — |
 | 결과 제목 | zoneEnd `Zone 1 클리어!` / pass `Area ${area+2} 개방!` / gate `LEVEL COMPLETED!` / 실패 `아지트로 귀환` | 문구 키 [07 §7.12](07_Tables.md) |
