@@ -752,7 +752,8 @@ namespace MV.View.Tests
         /// </summary>
         static readonly HashSet<string> PendingArtCheck = new HashSet<string>
         {
-            "Obj_Tower:Billboard/Shadow",
+            // 105_objectKind 마법서 탑 프리팹이 Obj_Tower → Obj_Tower_Orb로 바뀜(팀원 c63d7e2a). 같은 그림자 배치라 확인 대기를 그대로 옮긴다(MV-OBJ-GRADE).
+            "Obj_Tower_Orb:Billboard/Shadow",
             "Obj_CoinPile:Billboard/Image/Pile_1/Pile_1",
             "Obj_CoinPile:Billboard/Image/Pile_2/Pile_2",
             "Obj_CoinPile:Billboard/Image/Pile_3/Pile_3",
