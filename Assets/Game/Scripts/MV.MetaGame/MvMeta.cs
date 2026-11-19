@@ -59,6 +59,8 @@ namespace MV.Meta
 
         public MvSaveStore Store => _store();
         private ResourceService Res => _resources();
+        /// <summary>재화 서비스(가격 글자 PriceLabel이 보유량·변경을 읽는다). 열리지 않았으면 null일 수 있다.</summary>
+        public ResourceService Resources => Res;
         public bool IsReady => Store != null && !Store.IsDisposed && !Store.RequiresReopen && Res != null && !Res.IsDisposed;
 
         // ═════════ 요청 보내기 ═════════
@@ -221,8 +223,12 @@ namespace MV.Meta
             return MvMetaRules.NextPrice(Tables, row.levelPriceGroup, Level(growth, key));
         }
 
-        /// <summary>구매에 필요한 부활 레벨(<see cref="IRebirthLocked.needRebirth"/>). 잠김 열이 없는 표·행이면 0.</summary>
-        public int NeedRebirth(MvGrowth growth, string key) => Row(growth, key) is IRebirthLocked r ? r.needRebirth : 0;
+        /// <summary>다음 단계를 사는 데 필요한 부활 레벨(<c>16_levelPrice[group][P+1].needRebirth</c>). 없으면 0.</summary>
+        public int NeedRebirth(MvGrowth growth, string key)
+        {
+            var row = Row(growth, key);
+            return row == null ? 0 : MvMetaRules.NeedRebirth(Tables, row.levelPriceGroup, Level(growth, key));
+        }
 
         /// <summary>부활 레벨이 <see cref="NeedRebirth"/>보다 낮아 살 수 없다(노션 잠김 버튼).</summary>
         public bool IsRebirthLocked(MvGrowth growth, string key) => IsReady && Store.Rebirth.Lv < NeedRebirth(growth, key);
@@ -328,6 +334,9 @@ namespace MV.Meta
 
         /// <summary>설정 소리 끄기를 저장한다(<c>mvSettings.muted</c>). 소리 모듈 값은 화면이 바꾼다(이 명령은 저장만).</summary>
         public MvMetaResponse SetMuted(bool muted) => Send(new MvMetaRequest(MvMetaRequestNames.SetMuted, new JObject { ["muted"] = muted }));
+
+        /// <summary>고른 언어를 저장한다(<c>mvSettings.language</c>). 언어 바꾸기는 LocalizationManager가 하고 이 명령은 저장만.</summary>
+        public MvMetaResponse SetLanguage(string code) => Send(new MvMetaRequest(MvMetaRequestNames.SetLanguage, new JObject { ["language"] = code }));
 
         public MvMetaResponse RecordModePlay(string contentKey) =>
             Send(new MvMetaRequest(MvMetaRequestNames.RecordModePlay, new JObject { ["key"] = contentKey }));

@@ -49,8 +49,9 @@ MonoBehaviour:
   _maxCards: 999
   _leftX: -0.735
   _rightX: 0.735
-  _step: {x: 0.42, y: 0.35}
-  _cardSize: {x: 0.57, y: 0.5}
+  _perRow: 5
+  _step: {x: 0.255, y: 0.3}
+  _cardSize: {x: 0.45, y: 0.4}
   _labelIcon: {fileID: 4410235511000200103}
   _labelIconSize: {x: 0.46, y: 0.4}
   _labelIconOrder: 105

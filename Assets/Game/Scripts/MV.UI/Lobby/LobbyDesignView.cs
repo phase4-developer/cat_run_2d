@@ -48,6 +48,8 @@ namespace MV.UI
         public Image priceIcon;
         public TMP_Text priceText;
         public GameObject redDot;
+        /// <summary>디자이너가 정한 가격 글자색(처음 그릴 때 기억). 비용이 모자라지 않으면 이 색으로 되돌린다.</summary>
+        [NonSerialized] public Color? priceTextColor;
     }
 
     /// <summary>
@@ -63,6 +65,12 @@ namespace MV.UI
         [Header("Top")]
         [SerializeField] TMP_Text levelText;
         [SerializeField] HudAreaLabel areaLabel;
+        /// <summary>
+        /// 상단 Area 이름표를 누르면 지도(LevelProgress)를 연다(노션 「로비의 상단 Slot_AreaLabel을 클릭 시」, MV-UI3-LVPROG).
+        /// 공용 부품 <see cref="HudAreaLabel"/>은 클릭을 받지 않고, 로비 래퍼 프리팹이 이 이름표에만 Button을 덧붙인다
+        /// (같은 부품이 「Area 업그레이드」 버튼 안에도 있어 부품이 클릭을 받으면 그 버튼이 눌리지 않았다, 사용자 2026-11-19 「구조로 바꿔」).
+        /// </summary>
+        [SerializeField] Button areaLabelButton;
         /// <summary>설정 버튼. 설정 팝업이 아직 없어 기획서 설정 자리(05 §5.14 소리 켜고 끄기)로 보낸다.</summary>
         [SerializeField] Button settingButton;
         [SerializeField] Button speedButton;
@@ -89,6 +97,12 @@ namespace MV.UI
 
         [Header("Bottom")]
         [SerializeField] LobbyUpgradeParts[] upgrades;
+        /// <summary>
+        /// 비용이 모자랄 때 강화 칸 가격 글자색(사용자 2026-11-19 「재화가 부족하면 하단 레이블 색깔 빨갛게」, 기획서엔 색 값 없음).
+        /// 기본값은 Framework <c>PriceLabel.insufficientColor</c>와 같다(나중에 PriceBtn으로 옮길 때 같은 색).
+        /// </summary>
+        [Tooltip("임시: 비용 부족 가격 글자색. 기획서·시안에 값 없음, Framework PriceLabel 기본값")]
+        [SerializeField] Color priceShortColor = new Color(1f, 0.38f, 0.45f);
         [SerializeField] Button rebirthButton;
         [SerializeField] Slider rebirthUnlock;
         [SerializeField] TMP_Text rebirthUnlockCount;
@@ -196,6 +210,7 @@ namespace MV.UI
             Need(rebirthCoolCount, nameof(rebirthCoolCount));
             Need(rebirthCoolComplete, nameof(rebirthCoolComplete));
             Need(rebirthReward, nameof(rebirthReward));
+            Need(areaLabelButton, nameof(areaLabelButton));
             Need(areaUpgradeButton, nameof(areaUpgradeButton));
             Need(areaUpgradeLabel, nameof(areaUpgradeLabel));
             if (areaUpgradeLabel && !areaUpgradeLabel.HasRefs) miss.Add("areaUpgradeLabel(HudAreaLabel 참조)");
@@ -209,12 +224,10 @@ namespace MV.UI
         {
             if (_ready) return;
             _ready = true;
-            // 버튼(Selectable) 아래 그림과 출발 영역, 상단 Area 이름표만 누를 수 있다. 나머지 글·패널은 누름을 받지 않아 출발 영역으로 지나간다(05 §5.4.1).
+            // 버튼(Selectable) 아래 그림과 출발 영역만 누를 수 있다(상단 Area 이름표도 래퍼가 붙인 Button 아래). 나머지 글·패널은 누름을 받지 않아 출발 영역으로 지나간다(05 §5.4.1).
             foreach (var g in GetComponentsInChildren<Graphic>(true))
-                g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null || (startArea && g.gameObject == startArea.gameObject)
-                    || (areaLabel && g.transform.IsChildOf(areaLabel.transform));
-            // 상단 Area 이름표를 누르면 지도(LevelProgress)를 연다(노션 「[팝업] LevelProgress」, 05 §5.10 지도 버튼 자리, MV-UI3-LVPROG).
-            if (areaLabel) areaLabel.Clicked += () => SidePressed?.Invoke(LobbySideIds.Map);
+                g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null || (startArea && g.gameObject == startArea.gameObject);
+            if (areaLabelButton) areaLabelButton.onClick.AddListener(() => SidePressed?.Invoke(LobbySideIds.Map));
             if (startArea) startArea.Pressed += OnStart;
             if (speedToggle) speedToggle.enabled = false;
             if (speedButton) speedButton.onClick.AddListener(OnSpeedClick);
@@ -416,7 +429,12 @@ namespace MV.UI
                 if (p.nextValue && u.NextValue.Length > 0) p.nextValue.text = u.NextValue;
                 if (p.maxText) p.maxText.SetActive(u.Max);
                 if (p.price) p.price.SetActive(!u.Max);
-                if (p.priceText) p.priceText.text = u.PriceValue;
+                if (p.priceText)
+                {
+                    p.priceText.text = u.PriceValue;
+                    p.priceTextColor ??= p.priceText.color;
+                    p.priceText.color = u.PriceShort ? priceShortColor : p.priceTextColor.Value;
+                }
                 if (u.PriceIcon.Length > 0) SetSprite(p.priceIcon, MvAtlas.UiIcon, u.PriceIcon);
                 if (u.IconIsItem && u.Icon.Length > 0) SetSprite(p.icon, MvAtlas.UiIcon, u.Icon);
             }
@@ -488,5 +506,6 @@ namespace MV.UI
         /// <summary>시험·QA: 그 칸에 넣으려는 그림 이름(없으면 null).</summary>
         public string WantedSprite(Image img) => img && _wanted.TryGetValue(img, out var w) ? w.sprite : null;
         public Image StairGradeImage => stairGrade;
+        public Color PriceShortColor => priceShortColor;
     }
 }

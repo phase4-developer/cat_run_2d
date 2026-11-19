@@ -84,6 +84,7 @@ namespace MV.UI
         int _nextId = 1;
         double _t0;
         double _busy;
+        double _settle;
         int[] _gather;
         int _gatherTier;
 
@@ -101,12 +102,18 @@ namespace MV.UI
         /// <summary>정렬된 손패(등급 내림차순, 같은 등급은 먼저 받은 것이 앞).</summary>
         public IReadOnlyList<HandCard> Cards => _cards;
         /// <summary>
-        /// 전달 1장이 맨 밑 칸까지 가는 연출 초. 다음 일(머지·다음 전달)은 이 시간이 지난 뒤 시작한다(사용자 2026-11-19 「무조건 제일 밑으로 가고 그 다음 위로 올라가면서 자기 등급 자리 찾아가면서 정렬되고 3개면 머지」).
-        /// 섹션이 프리팹 연출 값으로 넣는다(0 = 기다리지 않음).
+        /// 새 카드 자리가 맨 밑일 때 전달 연출 초(스택 아래에서 곧장 위로 합류). 다음 전달은 기다리지 않고 원래 간격(dealGap)으로 이어지고,
+        /// 머지만 이 시간이 지나 카드가 자리를 찾은 뒤 시작한다. 섹션이 프리팹 연출 값으로 넣는다(0 = 기다리지 않음).
         /// </summary>
-        public float DealToBottomSec { get; set; }
-        /// <summary>맨 밑에서 자기 자리로 올라가는 연출 초. 새 카드 자리가 맨 밑이 아닐 때만 더 기다린다.</summary>
-        public float DealRiseSec { get; set; }
+        public float DealStraightSec { get; set; }
+        /// <summary>
+        /// 새 카드 자리가 맨 밑이 아닐 때 전달 연출 초(왼쪽 통로로 빠짐 → 통로로 올라감 → 오른쪽으로 끼어듦). 머지는 이것이 끝난 뒤
+        /// (사용자 2026-11-19 「무조건 제일 밑으로가고 … 자기 등급 자리 찾아가면서 정렬되고 3개면 머지」, 같은 날 「사이드로 이동할때 완료 될때까지 기다리는데 기존처럼 딜레이만 살짝있게 연속으로」).
+        /// </summary>
+        public float DealDetourSec { get; set; }
+
+        /// <summary>전달한 카드가 모두 자리를 찾기까지 남은 초. 0보다 크면 머지를 시작하지 않는다.</summary>
+        public double Settling => _settle;
 
         /// <summary>대기열이 비고 모으는 중이 아니다.</summary>
         public bool Idle => _queue.Count == 0 && _gather == null;
@@ -120,6 +127,7 @@ namespace MV.UI
             _queue.Clear();
             _gather = null;
             _busy = 0;
+            _settle = 0;
             _t0 = now;
             _nextId = 1;
             if (counts == null) return;
@@ -174,6 +182,7 @@ namespace MV.UI
         /// <summary>stepHand: 실시간 dt만큼 진행하고, 이번에 생긴 일을 순서대로 actions에 더한다.</summary>
         public void Step(double now, double dt, List<HandAction> actions)
         {
+            _settle = Math.Max(0, _settle - dt);
             if (Idle)
             {
                 _t0 = now;
@@ -187,6 +196,7 @@ namespace MV.UI
                 if (_queue.Count == 0) { _busy = 0; break; }
                 var head = _queue[0];
                 if (head.Deal) Deal(now, head, actions);
+                else if (_settle > 0) { _busy = _settle; break; }   // 전달 카드가 자리를 찾을 때까지 머지를 미룬다
                 else if (!StartMerge(now, actions)) _queue.RemoveAt(0);
             }
         }
@@ -203,8 +213,7 @@ namespace MV.UI
             else _queue[0] = head;
             float gap = Math.Min(_timing.dealGapMax, u * _timing.dealGapMul);
             bool rises = _cards.IndexOf(card) < _cards.Count - 1;
-            float hold = Math.Max(0f, DealToBottomSec) + (rises ? Math.Max(0f, DealRiseSec) : 0f);
-            gap = Math.Max(gap, hold);
+            _settle = Math.Max(_settle, Math.Max(0f, rises ? DealDetourSec : DealStraightSec));
             _busy += gap;
             actions?.Add(new HandAction(HandActionKind.Dealt, card, null, gap, 0, u, TopTier > before));
         }

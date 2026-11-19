@@ -1,0 +1,222 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Local_Localization
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Local_Localization
+  m_GUID: 33ea1ae33d921e64db52639826f707fb
+  m_SerializeEntries:
+  - m_GUID: 103886e5ba9aa9a4a83f6466cedbe403
+    m_Address: ui_ko
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1503f45ec87087c409a515790edb90a7
+    m_Address: Assets/Game/GameData/Localization/Tables/appInfo/appInfo Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 281803141cdee264fae587c176d32de6
+    m_Address: Korean
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2be1ba4eaa76e7b46a015e366b3bf992
+    m_Address: description_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2dc432fa0abd3f7499b1fb3f4e29445f
+    m_Address: toastMessage_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3253e16bf4701e44ba4e3f731a01b7a1
+    m_Address: msg_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35a23d3d39d27984fbf14350598381ea
+    m_Address: Assets/Game/GameData/Localization/Tables/msg/msg Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 380ac950652c730419b166e61bcd87bd
+    m_Address: ui_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b18685cdacb0f943b6e748d95301d4c
+    m_Address: English
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49508e3f9a199fd478bb065c27644bec
+    m_Address: Assets/Game/GameData/Localization/Tables/description/description Shared
+      Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 517848c13b67a0545ba1b08ebbc546d8
+    m_Address: name_ko
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6017381f69fea614d96cb857e620f0d5
+    m_Address: toastMessage_ko
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6eeeed634f7be314e9a0dbb3a272da85
+    m_Address: name_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8c8feaeaf79976c4da84c0ff0be85f1d
+    m_Address: description_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8d18a54f23c54ad44a1f24d3e135e8ab
+    m_Address: Assets/Game/GameData/Localization/Tables/toastMessage/toastMessage
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e9138352cc4bbe468cabf6b702d83d4
+    m_Address: Assets/Game/GameData/Localization/Tables/name/name Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 99f9fea640bfdd149a6dd136c8035893
+    m_Address: msg_ko
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9eb03c091935f4a4cad2537164724a7f
+    m_Address: toastMessage_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a133fe58f9dd85a478631e2fbc30c017
+    m_Address: Japanese
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa1055a66360a374b96c2d2678fb6098
+    m_Address: Assets/Game/GameData/Localization/Tables/ui/ui Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b821ae92ef569a142918ba3aa8533ef9
+    m_Address: description_ko
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e55e5338691b5ca479b05d0a2ac0dc94
+    m_Address: appInfo_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e67d6352a3c411b459111b2328d4b68e
+    m_Address: appInfo_ko
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed28e8db66b14f44d9d2785576eaaee9
+    m_Address: msg_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef94de6ae4aa1364ab766c5bcaf3b4a5
+    m_Address: ui_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f1f940deb0cd94945a538a26716d47aa
+    m_Address: name_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3715a1b88eecf74b85b6882d027040f
+    m_Address: appInfo_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    - Localization
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b4c0b2a35093b2b4c82bd299c8c2388e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 157e8b008b7d5444494dcc2ee12bd9ac, type: 2}
+    - {fileID: 11400000, guid: 4919d8ed89a7e5e41abc4fae1dcf1675, type: 2}
+    m_SchemaDisplayOrder:
+    - Local_Localization_BundledAssetGroupSchema
+    - Local_Localization_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

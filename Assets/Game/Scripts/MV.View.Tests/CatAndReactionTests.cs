@@ -597,17 +597,18 @@ namespace MV.View.Tests
             Assert.That(bundle.Template.Frame, Is.Not.Null, "카드 틀 참조");
             Assert.That(bundle.Template.Icon, Is.Not.Null, "카드 그림 참조");
             Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
-            Assert.That(bundle.LabelIcon, Is.Not.Null, "레이블 옆 작은 무기 카드(LabelIcon_Temp)");
-            Assert.That(bundle.LabelIcon.gameObject.activeSelf && bundle.LabelIcon.Frame != null && bundle.LabelIcon.Icon != null, Is.True, "레이블 옆 카드는 켜 두고 틀·그림 참조가 있다");
+            Assert.That(bundle.LabelIcon, Is.Not.Null, "이름 오른쪽 무기 카드(LabelIcon_Temp)");
+            Assert.That(bundle.LabelIcon.gameObject.activeSelf && bundle.LabelIcon.Frame != null && bundle.LabelIcon.Icon != null, Is.True, "이름 오른쪽 카드는 켜 두고 틀·그림 참조가 있다");
+            Assert.Greater(bundle.LabelIcon.transform.localPosition.x, (bundle.LeftX + bundle.RightX) * 0.5f, "이름 오른쪽(사용자 2026-11-19 「아이콘은 무조건 이름 우측」)");
             Assert.AreEqual(System.Math.Min(8, bundle.MaxCards), bundle.Shown, "Made + Extra(프리팹 상한까지)");
 
-            // 기둥 사이 가운데 정렬: 같은 간격, 꽉 찬 줄은 기둥 안쪽 면을 넘지 않고 한 장 더 놓으면 넘는다, 줄마다 기둥 사이 가운데
+            // 한 줄 5장(사용자 2026-11-19 카드 「5장」), 꽉 찬 줄은 기둥 사이 가운데·기둥 안쪽 면을 넘지 않고 한 장 더 놓으면 넘는다. 두 줄부터 위 줄은 꽉 찬 줄 시작점에 왼쪽 정렬.
             var cards = bundle.Cards;
             float x0 = cards[0].transform.localPosition.x, y0 = cards[0].transform.localPosition.y;
             int cols = 0;
             foreach (var c in cards) if (UnityEngine.Mathf.Approximately(c.transform.localPosition.y, y0)) cols++;
-            Assert.AreEqual(bundle.Columns, cols, "한 줄 장 수 = 기둥 사이에 간격으로 들어가는 수");
-            Assert.That(cols, Is.GreaterThan(1).And.LessThan(8), "한 줄에 늘어뜨리지 않고 줄을 늘린다");
+            Assert.AreEqual(bundle.Columns, cols, "한 줄 장 수 = 인스펙터 한 줄 장 수");
+            Assert.AreEqual(5, cols, "한 줄 5장(프리팹 값)");
             float half = bundle.CardSize.x * 0.5f;
             float mid = (bundle.LeftX + bundle.RightX) * 0.5f;
             Assert.AreEqual(mid, (x0 + cards[cols - 1].transform.localPosition.x) * 0.5f, 1e-4f, "아래 줄 가운데 = 기둥 사이 가운데");
@@ -615,18 +616,15 @@ namespace MV.View.Tests
             float gap = cards[1].transform.localPosition.x - x0;
             Assert.Greater(gap, 0f);
             Assert.LessOrEqual(cards[cols - 1].transform.localPosition.x + half, bundle.RightX + 1e-4f, "카드 오른쪽 끝이 오른쪽 기둥 안쪽 면을 넘지 않는다");
-            Assert.Greater(cols * gap + bundle.CardSize.x, bundle.RightX - bundle.LeftX - 1e-4f, "한 장 더 놓으면 기둥 사이를 넘는다");
             Assert.Greater(cards[cols].transform.localPosition.y, y0, "넘치면 위 줄");
-            int end = System.Math.Min(cards.Count, 2 * cols) - 1;
-            float upperMid = (cards[cols].transform.localPosition.x + cards[end].transform.localPosition.x) * 0.5f;
-            Assert.AreEqual(mid, upperMid, 1e-4f, $"위 줄({end - cols + 1}장)도 기둥 사이 가운데");
-            int lastStart = (cards.Count - 1) / cols * cols;
-            float lastMid = (cards[lastStart].transform.localPosition.x + cards[cards.Count - 1].transform.localPosition.x) * 0.5f;
-            Assert.AreEqual(mid, lastMid, 1e-4f, "덜 찬 맨 위 줄도 가운데");
+            Assert.AreEqual(x0, cards[cols].transform.localPosition.x, 1e-4f, "두 줄부터 위 줄은 가장 긴 줄 시작점에 왼쪽 정렬");
+            Assert.AreEqual(gap, cards[cols + 1].transform.localPosition.x - cards[cols].transform.localPosition.x, 1e-4f, "위 줄도 같은 간격");
 
             gate.Made = 3; gate.Extra = 0;
             rig.Frame(0.1, objs);
             Assert.AreEqual(3, bundle.Shown, "줄면 풀로 돌려준다");
+            float oneMid = (bundle.Cards[0].transform.localPosition.x + bundle.Cards[2].transform.localPosition.x) * 0.5f;
+            Assert.AreEqual(mid, oneMid, 1e-4f, "한 줄일 때만 그 장 수로 기둥 사이 가운데");
 
             var got = new List<int>();
             System.Action<GateRewardKind, IReadOnlyList<GateCardRelease>> on = (k, list) => got.Add(list.Count);

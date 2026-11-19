@@ -10,15 +10,16 @@ namespace MV.View
     /// 자리: <c>Obj_CraftGate</c> 변형에만 더한 자식 <c>WeaponBundle_Temp</c>. 배치·크기·통과 때 HUD로 넘기기는 부모 <see cref="GateRewardDisplay"/>가 한다.
     /// 임시 리소스: 디자이너 묶음 리소스가 오면 프리팹만 바꾼다(코드로 그림을 그리지 않는다).
     /// </summary>
-    /// 레이블 아이콘: 문 레이블(「무기」) 옆 작은 카드(<see cref="_labelIcon"/>)에 같은 틀·그림을 칠한다(원작 「Craft: [무기]」, 사용자 2026-11-19 「레이블 옆에 작게 표시하는것만 따라하면 좋겠어」). 자리·크기는 프리팹 값.
+    /// 레이블 아이콘: 문 이름(「무기」) 오른쪽 작은 카드(<see cref="_labelIcon"/>, 오브젝트 LabelIcon_Temp)에 같은 틀·그림을 칠한다
+    /// (원작 「Craft: [무기]」, 사용자 2026-11-19 「크래프트문 무기 아이콘은 다시 이름 우측으로」·「아이콘은 무조건 이름 우측에 뜨는 형태」). 자리·크기는 프리팹 값.
     [DisallowMultipleComponent]
     public sealed class CraftGateBundle : GateRewardDisplay
     {
-        [Tooltip("문 레이블 옆 작은 무기 카드(켜 둔 GateRewardCard). 자리는 이 오브젝트 위치.")]
+        [Tooltip("문 이름 오른쪽 무기 카드(켜 둔 GateRewardCard, LabelIcon_Temp). 자리는 이 오브젝트 위치.")]
         [SerializeField] GateRewardCard _labelIcon;
-        [Tooltip("레이블 옆 카드 크기(m).")]
+        [Tooltip("이름 오른쪽 카드 크기(m).")]
         [SerializeField] Vector2 _labelIconSize = new Vector2(0.46f, 0.4f);
-        [Tooltip("레이블 옆 카드 정렬 순서(레이블 글자 105와 같은 층).")]
+        [Tooltip("이름 오른쪽 카드 정렬 순서(레이블 글자 105와 같은 층).")]
         [SerializeField] int _labelIconOrder = 105;
 
         Sprite _labelFrame, _labelSprite;
@@ -40,7 +41,7 @@ namespace MV.View
             PaintLabel(view);
         }
 
-        /// <summary>레이블 옆 카드: 지금 무기 단계 그림이 바뀌었을 때만 다시 칠한다.</summary>
+        /// <summary>이름 오른쪽 카드: 지금 무기 단계 그림이 바뀌었을 때만 다시 칠한다.</summary>
         void PaintLabel(RunObjectView view)
         {
             if (_labelIcon == null) return;
