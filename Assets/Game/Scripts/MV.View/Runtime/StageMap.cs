@@ -61,6 +61,7 @@ namespace MV.View
         [Tooltip("한쪽 장식 간격(m)")] public float DecoSpacing = 12.6f;
         [Tooltip("길 중심에서 장식까지 거리(m), 아래·위 범위에서 무작위")] public Vector2 DecoX = new Vector2(6.9f, 8.0f);
         [Tooltip("카메라 뒤·앞으로 장식을 둘 범위(m)")] public Vector2 DecoRange = new Vector2(-10f, 110f);
+        [Tooltip("장식 그림 바닥을 땅에서 얼마나 띄울지(m, 음수 = 묻힘). 그림 높이·피벗과 관계없이 보이는 그림 아래 끝 기준")] public float DecoGroundOffset = -0.07f;
 
         Camera _cam;
         Func<float> _groundY;
@@ -147,6 +148,8 @@ namespace MV.View
             public GameObject Root;
             public SpriteRenderer[] Sprites;
             public DepthSortable Sort;
+            /// <summary>그림 높이 맞춤을 한 번이라도 했는지(복제 직후 템플릿 그림도 맞춘다).</summary>
+            public bool Fitted;
         }
 
         /// <summary>원경 묶음(먼 겹·가까운 겹) 아래 렌더러와 각자의 인스턴스 머티리얼(텍스처 밀기용).</summary>
@@ -408,6 +411,7 @@ namespace MV.View
                     bool changed = false;
                     for (int i = 0; i < d.Sprites.Length; i++)   // 본체·그림자 모두 같은 그림
                         if (d.Sprites[i].sprite != sp) { d.Sprites[i].sprite = sp; changed = true; }
+                    if (changed || !d.Fitted) FitDecoHeight(d, sp);
                     if (changed && d.Sort != null) d.Sort.Refresh();
                     float x = side * Mathf.Lerp(DecoX.x, DecoX.y, h);
                     float dz = k * DecoSpacing + h * 1.2f;
@@ -420,6 +424,29 @@ namespace MV.View
             for (; n < _decos.Count; n++)
             {
                 if (_decos[n].Root.activeSelf) _decos[n].Root.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// 장식 그림 아래 끝이 땅(<see cref="DecoGroundOffset"/>)에 닿도록 켜진 그림의 높이를 맞춘다.
+        /// 그림마다 높이·피벗이 달라도 바닥에 붙는다. 아래 끝은 스프라이트 메시 정점 기준(Tight 메시면 투명 여백 제외).
+        /// </summary>
+        void FitDecoHeight(DecoView d, Sprite sp)
+        {
+            d.Fitted = true;
+            if (sp == null) return;
+            float minY = float.MaxValue;
+            var vs = sp.vertices;
+            for (int i = 0; i < vs.Length; i++) if (vs[i].y < minY) minY = vs[i].y;
+            if (minY == float.MaxValue) minY = sp.bounds.min.y;
+            for (int i = 0; i < d.Sprites.Length; i++)
+            {
+                var sr = d.Sprites[i];
+                if (sr == null || !sr.gameObject.activeSelf) continue;   // 꺼 둔 옛 그림자는 건드리지 않음
+                var tr = sr.transform;
+                var lp = tr.localPosition;
+                lp.y = DecoGroundOffset - minY * tr.localScale.y;
+                tr.localPosition = lp;
             }
         }
 

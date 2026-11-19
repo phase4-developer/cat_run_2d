@@ -12,7 +12,8 @@ namespace MV.View
     /// <summary>
     /// 런 캐릭터 뷰(MV-SPEC-02 ArtResourcePlan §5, `CatView` 대체): 플레이어 1 + 분신(`RunState.Clones`)을 캐릭터 프리팹으로 그린다.
     /// 외형은 `116_charLook`(<see cref="CharLookResolver"/>: catId·자리·무기 등급 → 행)이 정하고 코드에 그림·아틀라스 이름이 없다.
-    /// 플레이어 = `101_cat` key player 행, 분신 = key friend 행, 분신 i번째(0부터) = slot i. 등급 = 장착 최고 등급(<see cref="RunState.EqTier"/>).
+    /// 플레이어 = `101_cat` key player 행, 분신 = key friend 행, 분신 i번째(0부터) = 표 friend slot 목록의 i번째.
+    /// 표의 slot 종류보다 많은 분신(예: 4종인데 5번째)은 나타날 때 slot 목록에서 무작위로 하나를 정하고, 분신 수가 줄어 사라질 때까지 그대로 둔다(사용자 2026-11-19). 등급 = 장착 최고 등급(<see cref="RunState.EqTier"/>).
     /// 프리팹은 <see cref="CharacterPool"/>, 그림은 행 아틀라스(<see cref="WorldSpriteCache"/>)에서. 지금 행 + 다음 등급 행 아틀라스를 미리 읽고 캐릭터 묶음별 최근 3개만 둔다(03 §3.8.8).
     /// 그림은 <see cref="CharStateMachine"/>이 고른다: 런 중 Walk, 끝나면 Stand, 계단 정산(오르기 단계) 중 플레이어 Stair(분신은 Walk — 정산 중 분신 숨김은 카메라 궤도 회전과 함께 5단계).
     /// 쏜 순간은 런 이벤트 Fire(a = 0 플레이어, 1.. 분신), 기쁨은 GateTake(계단·공방 게이트 통과)·GaugeLevelUp(계단 Lv 상승)으로 모두가 함께 돈다(웹 프로토 `paperSpin`).
@@ -34,6 +35,8 @@ namespace MV.View
             public readonly CharStateMachine Sm = new CharStateMachine();
             public string SpriteName;
             public CharState Shown;
+            /// <summary>분신 외형 slot(-1 = 아직 안 정함). 표 slot 종류 밖 분신은 무작위로 정한다.</summary>
+            public int LookSlot = -1;
         }
 
         readonly List<Unit> _units = new List<Unit>(32);
@@ -41,6 +44,8 @@ namespace MV.View
         readonly Dictionary<int, List<string>> _lru = new Dictionary<int, List<string>>();
         readonly HashSet<string> _loading = new HashSet<string>(StringComparer.Ordinal);
         readonly HashSet<string> _failed = new HashSet<string>(StringComparer.Ordinal);
+        readonly List<int> _friendSlots = new List<int>(8);
+        System.Random _rng = new System.Random();
 
         IReadOnlyList<CharLookData> _looks;
         WorldSpriteCache _sprites;
@@ -63,6 +68,14 @@ namespace MV.View
         public string SpriteNameOf(int index) => index >= 0 && index < _units.Count ? _units[index].SpriteName : null;
         /// <summary>순번의 마지막 프레임 상태(기쁨 겹침 포함, 시험·QA용).</summary>
         public CharState StateOf(int index) => index >= 0 && index < _units.Count ? _units[index].Shown : CharState.Hidden;
+        /// <summary>분신 외형 종류 수(= `116_charLook` friend slot 종류). 시험·QA용.</summary>
+        public int FriendLookCount => _friendSlots.Count;
+        /// <summary>무작위 분신 외형의 시드를 정한다(시험·재현용). 이미 정한 외형은 지운다.</summary>
+        public void SetLookSeed(int seed)
+        {
+            _rng = new System.Random(seed);
+            for (int i = 0; i < _units.Count; i++) _units[i].LookSlot = -1;
+        }
 
         public void Init(MvTables tables, ViewConfig cfg, WorldSpriteCache sprites, Material fallbackMaterial)
         {
@@ -74,12 +87,14 @@ namespace MV.View
             _anim = CharAnimParams.From(tables);
             _playerCat = CatId(tables, PlayerKey);
             _friendCat = CatId(tables, FriendKey);
+            CharLookResolver.Slots(_looks, _friendCat, _friendSlots);
             CatLayout.CloneOffsets(tables, _offsets);
             _xMax = tables.RunConfig.D(RunConfigKeys.CLONE_X_MAX);
             _path = ClimbPath.From(tables.Climb);
             _pool?.Dispose();
             _pool = new CharacterPool(transform, Setup);
             while (_units.Count < 1 + _offsets.Count) _units.Add(new Unit());
+            for (int i = 0; i < _units.Count; i++) _units[i].LookSlot = -1;
             _ready = true;
             Hide();
         }
@@ -178,15 +193,28 @@ namespace MV.View
             int slots = _units.Count - 1;
             // 사용자 계단 규칙 6(2026-11-16): 분신(견습냥)은 계단 정산 중 보이지 않고 끝나면 다시 나타난다.
             // 숨는·나타나는 순간은 새 HTML대로 옆 시점 진행 e > 0.3.
-            int n = e > CloneHideE ? 0 : Math.Min(s.Clones, slots);
+            int alive = Math.Min(s.Clones, slots);
+            int n = e > CloneHideE ? 0 : alive;
             for (int i = 0; i < slots; i++)
             {
                 var u = _units[1 + i];
+                if (i >= alive) u.LookSlot = -1;   // 분신 수가 줄어 사라진 자리는 다음에 나타날 때 외형을 다시 정한다(정산 중 숨김은 유지)
                 if (i >= n) { Park(u); continue; }
                 CatLayout.ClonePos(px, pz, _offsets[i].dx, _offsets[i].dz, _xMax, out double cx, out double cz);
-                if (Place(1 + i, _friendCat, i, tier, state, cx, wy + StairY(C, cz), cz, nowSec)) visible++;
+                if (Place(1 + i, _friendCat, FriendLookSlot(i), tier, state, cx, wy + StairY(C, cz), cz, nowSec)) visible++;
             }
             VisibleCount = visible;
+        }
+
+        /// <summary>분신 i번째(0부터)의 외형 slot: 표 slot 종류 안이면 i번째 slot, 밖이면 처음 나타날 때 무작위로 정한 slot.</summary>
+        int FriendLookSlot(int i)
+        {
+            var u = _units[1 + i];
+            if (u.LookSlot >= 0) return u.LookSlot;
+            int kinds = _friendSlots.Count;
+            if (kinds == 0) return i;   // 표에 분신 행이 없으면 Resolve가 null을 돌려 숨긴다
+            u.LookSlot = i < kinds ? _friendSlots[i] : _friendSlots[_rng.Next(kinds)];
+            return u.LookSlot;
         }
 
         /// <summary>새 HTML stairY(z): 정산 중 그 z의 칸이 보이면 칸 높이(지면 기준), 아니면 0.</summary>

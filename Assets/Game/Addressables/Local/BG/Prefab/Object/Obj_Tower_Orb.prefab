@@ -19478,6 +19478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b48448ead9d4b61b96d2285f438f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MV.View::MV.View.ParticleFogAlpha
+  _hideBelow: 0.05
 --- !u!1 &1461381068720292469
 GameObject:
   m_ObjectHideFlags: 0

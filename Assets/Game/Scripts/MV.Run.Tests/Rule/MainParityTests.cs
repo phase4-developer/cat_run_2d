@@ -17,7 +17,7 @@ namespace MV.Run.Tests.Rule
     /// </summary>
     public sealed class MainParityTests
     {
-        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음). MV-PC-ANS1·ANS2(2026-11-19, 기획자확인 반영): 지팡이 피해 2^(단계−1)·탑 기준 15로 A1~A5 프레임·이벤트 값 일부, 레벨당 획득 % 지급·황금 생선 5 × Area^1.5로 결과 해시가 바뀌어 15개 모두 다시 기록(잡 MV-PC-ANS2-t2의 실제 값, 종료 사유는 모두 Wall).</summary>
+        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음). MV-PARITY-GOLDEN-sgatem(2026-11-19): 302_area.sgateM(계단 게이트 체력 배율)이 Area 2~5에서 바뀐 표 커밋 429bb7e4 뒤로 A2~A5 12개 다시 기록. MV-PC-ANS1·ANS2(2026-11-19, 기획자확인 반영): 지팡이 피해 2^(단계−1)·탑 기준 15로 A1~A5 프레임·이벤트 값 일부, 레벨당 획득 % 지급·황금 생선 5 × Area^1.5로 결과 해시가 바뀌어 15개 모두 다시 기록(잡 MV-PC-ANS2-t2의 실제 값, 종료 사유는 모두 Wall).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["A1L1"] = "f3126 e424 r235 Wall 0f26c5bfc1577bed",

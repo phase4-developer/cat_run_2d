@@ -209,14 +209,22 @@ namespace MV.Editor.Build
                 rules = ScriptableObject.CreateInstance<AddressableGroupRules>();
                 AssetDatabase.CreateAsset(rules, GroupRulesPath);
             }
-            rules.LocaleResolver = new GroupResolver(group);
-            rules.StringTablesResolver = new GroupResolver(group);
-            rules.AssetTablesResolver = new GroupResolver(group);
-            rules.AssetResolver = new GroupResolver(group);
-            EditorUtility.SetDirty(rules);
-            AssetDatabase.SaveAssetIfDirty(rules);
+            // 이미 같은 그룹을 가리키면 두고 새로 만들지 않는다(다시 만들면 직렬화 rid만 바뀌어 매번 diff가 생긴다).
+            bool changed = false;
+            if (!PointsTo(rules.LocaleResolver, group)) { rules.LocaleResolver = new GroupResolver(group); changed = true; }
+            if (!PointsTo(rules.StringTablesResolver, group)) { rules.StringTablesResolver = new GroupResolver(group); changed = true; }
+            if (!PointsTo(rules.AssetTablesResolver, group)) { rules.AssetTablesResolver = new GroupResolver(group); changed = true; }
+            if (!PointsTo(rules.AssetResolver, group)) { rules.AssetResolver = new GroupResolver(group); changed = true; }
+            if (changed)
+            {
+                EditorUtility.SetDirty(rules);
+                AssetDatabase.SaveAssetIfDirty(rules);
+            }
             AddressableGroupRules.Instance = rules;
         }
+
+        static bool PointsTo(GroupResolver resolver, AddressableAssetGroup group) =>
+            resolver != null && resolver.SharedGroupName == group.Name && resolver.LocaleGroupNamePattern == group.Name;
 
         static AddressableAssetGroup EnsureGroup(AddressableAssetSettings aa)
         {
