@@ -482,6 +482,14 @@ MonoBehaviour:
     m_Localized: Cancer Cat Piercing Shot
     m_Metadata:
       m_Items: []
+  - m_Id: 214576919310336
+    m_Localized: Daily Quest Points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 214576965447680
+    m_Localized: Weekly Quest Points
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

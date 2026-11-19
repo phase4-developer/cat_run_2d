@@ -178,6 +178,7 @@ namespace MV.Content.Tests
             Assert.That(Quest.Claim(Summary40).Code, Is.EqualTo(MvMetaErrors.NotDone));
             Assert.That(Quest.Claim(DailyRun).Ok, Is.True);
             Assert.That(Entry(Summary40).Count, Is.EqualTo(20));
+            Assert.That(Res.GetRaw(MvWealthIds.DailyQuestPoint), Is.EqualTo(0), "일일 포인트 재화는 잔액이 아니라 카운터에 쌓는다");
             Rec(QuestClearType.AdWatch, 2);
             Assert.That(Quest.Claim(DailyAd).Ok, Is.True);
             long gold = Res.GetRaw(MvWealthIds.Gold);

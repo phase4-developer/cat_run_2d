@@ -17,3 +17,5 @@
 1001016	황금 상자	boxGold	16	1	UI_Icon_BoxGold	0	702001002	0
 1001017	광고 제거	noAds	17	1	UI_Icon_NoAds	0	0	0
 1001018	보라 마법석	purpleGem	18	1		0	0	0
+1001019	일일 퀘스트 포인트	dailyQuestPoint	19	1	UI_Icon_QuestDaily	0	0	0
+1001020	주간 퀘스트 포인트	weeklyQuestPoint	20	1	UI_Icon_QuestWeekly	0	0	0

@@ -1727,6 +1727,8 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 
 MV-SPEC-02 반영(MV-DATA-SPEC2, Q-30·Q-32·Q-34): 표 id는 `1001{순번 3}`. 8·9번 행 active 0, 보라 마법석(1001018, key `purpleGem`) 추가. key 변경은 저장 이관 없이 바꾼다(Q-34).
 
+> 결정 MV-WEALTH-QUESTPOINT(2026-11-19, 사용자 「퀘스트 포인트도 재화타입화 시켜 가능하잖아」, 결정 카드 「퀘스트 카운터 유지」·「주간 재화 행도 추가」): 퀘스트 포인트를 `07_consumeType` 300·301에서 재화 행으로 옮겼다(300·301 행 삭제). 1001019 `dailyQuestPoint`(일일 퀘스트 포인트, `UI_Icon_QuestDaily`), 1001020 `weeklyQuestPoint`(주간 퀘스트 포인트, `UI_Icon_QuestWeekly`), maxValue·chargeShopSectionId·gradeId 0. 일일 포인트 보상은 재화 잔액에 넣지 않고 퀘스트 카운터 `dailyPoint`(20)에 쌓는다(날짜가 바뀌면 비는 값, [08 §8.5.1](08_Content.md)) — 재화 행은 보상 칸 표시(아이콘·이름)용이라 잔액은 늘 0. 주간 행은 주간 퀘스트가 없어 쓰는 곳 없음.
+
 ### 7.8.11 02_playResource — 충전형 자원
 
 | 열 | 타입 | 뜻 |
@@ -1773,8 +1775,6 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-30·Q-32·Q-34): 표 id는 `1001{순번 3}`. 
 | 50 | Drop | 801_drop | 굴림 횟수(id = dropGroup) | Int | Atlas_UI_Icon | =UI_Icon_Drop | 표시 안 함이 기본 |
 | 100 | AD | - | 광고 1회(비용 전용) | Int | Atlas_UI_Icon | =UI_Icon_Ad | |
 | 101 | Inapp | - | 가격(스텁) | Int | Atlas_UI_Icon | =UI_Icon_Inapp | |
-| 300 | DailyQuestPoint | - | 점수 | Int | Atlas_UI_Icon | =UI_Icon_QuestDaily | |
-| 301 | WeeklyQuestPoint | - | 점수 | Int | Atlas_UI_Icon | =UI_Icon_QuestWeekly | |
 | 500 | Pass | 410_questGroup | 패스 XP | Int | Atlas_UI_Icon | =UI_Icon_PassXp | |
 | 600 | StairLv | - | 런 게이지 Lv + 값 | Int | Atlas_UI_Icon | =UI_Icon_StairLv | 런 전용 |
 | 601 | Card | 110_card | 장수(id 0 = 현재 풀에서 무작위) | Int | Atlas_UI_Card | icon | 런 전용(applyCard) |

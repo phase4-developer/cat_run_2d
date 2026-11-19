@@ -87,10 +87,25 @@ namespace MV.UI.Tests
         public void Items_NonWealth_Skipped_WithWarning()
         {
             LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(@"\[RewardPopup\] 재화가 아닌 보상"));
-            var list = Items(new ConsumeData(ConsumeType.DailyQuestPoint, 0, 10), W(Gold, 5));
+            var list = Items(new ConsumeData(ConsumeType.Pass, 0, 10), W(Gold, 5));
             Assert.That(list.Select(i => i.WealthType), Is.EqualTo(new[] { "gold" }));
             Assert.That(Items().Count, Is.EqualTo(0));
             Assert.That(RewardItems.Build(T, null).Count, Is.EqualTo(0));
+        }
+
+        /// <summary>MV-WEALTH-QUESTPOINT: 퀘스트 포인트는 재화 행(01_wealth dailyQuestPoint·weeklyQuestPoint)이라 칸이 된다.</summary>
+        [Test]
+        public void Items_QuestPoints_AreWealthSlots()
+        {
+            var list = Items(W(Dia, 10), W("dailyQuestPoint", 20), W("weeklyQuestPoint", 5), W("dailyQuestPoint", 20));
+            Assert.That(list.Select(i => i.WealthType), Is.EqualTo(new[] { "dia", "dailyQuestPoint", "weeklyQuestPoint" }));
+            Assert.That(list[1].Count, Is.EqualTo(MvUiFormat.Fmt(40)), "같은 포인트 합침");
+            Assert.That(HudCurrencySlot.IconOf(T, "dailyQuestPoint"), Is.EqualTo("UI_Icon_QuestDaily"), "아이콘 = 01_wealth.icon");
+            Assert.That(HudCurrencySlot.IconOf(T, "weeklyQuestPoint"), Is.EqualTo("UI_Icon_QuestWeekly"));
+
+            // 퀘스트 표(413) 일일 보상 그대로 넘겨도 칸이 된다(경고 없음).
+            var reward = T.RepeatQuest.Get(413001001).reward;
+            Assert.That(Items(reward.ToArray()).Select(i => i.WealthType), Is.EqualTo(new[] { "dia", "dailyQuestPoint" }));
         }
 
         [Test]

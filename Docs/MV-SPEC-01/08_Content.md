@@ -824,7 +824,7 @@ public interface IModeRule : IRunRule {
 | 16 | godLevelUp | 신 레벨업 | 0 |
 | 17 | researchDone | 연구 완료 | 0 |
 | 18 | loginDay | 출석 수령 | 0 |
-| 20 | dailyPoint | 일일 퀘스트 포인트(consumeType 300) 누적 | 0 |
+| 20 | dailyPoint | 일일 퀘스트 포인트(재화 1001019 `dailyQuestPoint` 보상) 누적 | 0 |
 
 **410_questGroup** (정크버스터즈 열): `id, group, name(작성용), periodType, category, groupType, progressScope, selectionType, selectionCount`.
 - periodType: 0 없음 / 2 일일(UTC 날짜) / 3 월간(UTC `yyyyMM`) / 5 이벤트 주기(8.5.13 `event.*`).
@@ -840,7 +840,7 @@ public interface IModeRule : IRunRule {
 
 **413_repeatQuest** (정크버스터즈 열 + `clearValueStep`): `id, questGroup, step, sort, periodType, clearType, clearCondition, clearValue, clearValueStep, rewardType, rewardId, rewardValue`.
 - 일일: 한 번 받으면 그날 끝. 월간: 받을 때마다 목표 = `clearValue + clearValueStep × 받은 횟수`로 반복(원작 구조). 목표·보상 [창작·HE임시](원작 저장소 9행), 모드·광고·부활 행 [창작].
-- 보상의 `300` = DailyQuestPoint(07_consumeType 300), id 0.
+- 일일 포인트 보상 = 재화 `1` / `1001019`(`dailyQuestPoint`, 07 §7.8.10 MV-WEALTH-QUESTPOINT). 재화 잔액이 아니라 카운터 20에 쌓는다. 아래 표의 `1;300 / 2;0`은 지금 표에서 `1;1 / 1001002;1001019`(일일 모드 행은 `1001005;1001019`).
 
 | id | group | sort | clearType / cond | clearValue | step | rewardType / Id / Value |
 |---|---|---|---|---|---|---|

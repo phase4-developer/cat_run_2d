@@ -7,8 +7,6 @@ typeId	name	codeName	idTable	idKind	valueMeaning	valueKind	iconAtlas	iconColumn	
 50	드롭	Drop	801_drop	group	굴림 횟수(id = dropGroup)	Int	Atlas_UI_Icon	=UI_Icon_Drop				None		0	1
 100	광고	AD	-	none	광고 1회(비용 전용)	Int	Atlas_UI_Icon	=UI_Icon_Ad				None		0	1
 101	인앱 결제	Inapp	-	none	가격(스텁)	Int	Atlas_UI_Icon	=UI_Icon_Inapp				None		0	1
-300	일일 퀘스트 포인트	DailyQuestPoint	-	none	점수	Int	Atlas_UI_Icon	=UI_Icon_QuestDaily				None		0	1
-301	주간 퀘스트 포인트	WeeklyQuestPoint	-	none	점수	Int	Atlas_UI_Icon	=UI_Icon_QuestWeekly				None		0	1
 500	패스 XP	Pass	410_questGroup	row	패스 XP	Int	Atlas_UI_Icon	=UI_Icon_PassXp				None		0	1
 600	계단 Lv	StairLv	-	none	런 게이지 Lv + 값	Int	Atlas_UI_Icon	=UI_Icon_StairLv				None		0	1
 601	대마법 주문카드	Card	110_card	row	장수(id 0 = 현재 풀에서 무작위)	Int	Atlas_UI_Card	icon				None		0	1
