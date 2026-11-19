@@ -64,6 +64,8 @@ namespace MV.UI
         readonly Dictionary<int, HudWeaponSlot> _flies = new Dictionary<int, HudWeaponSlot>();   // 비행 id → 칸
         readonly List<HandAction> _actions = new List<HandAction>();
         readonly List<HudWeaponSlot> _gathering = new List<HudWeaponSlot>();
+        /// <summary>모으는 자리 y(맨 위 카드 자리). 모이는 3장은 깊이를 이 높이로 고정해 맨 위 카드가 앞에 남는다.</summary>
+        float _gatherY;
 
         /// <summary>전달 이동 중인 칸. 매 프레임 지금 손패 목표 자리를 다시 읽어 따라간다(다음 카드가 이어서 들어와 목표가 바뀌어도 경로가 끊기지 않는다).</summary>
         sealed class DealMove
@@ -346,9 +348,10 @@ namespace MV.UI
                     _gathering.Clear();
                     foreach (var id in a.Gathered) if (_slots.TryGetValue(id, out var g)) _gathering.Add(g);
                     if (_gathering.Count == 0) break;
-                    // 그 등급 앞 3장이 2번째 카드 자리로(md × 0.9, ease-in) + 밝아짐·scale 1.06. 층 맨 앞.
-                    var mid = _gathering[Math.Min(1, _gathering.Count - 1)];
-                    var to = mid.rectTransform.anchoredPosition;
+                    // 그 등급 3장이 맨 위 카드 자리로 위로 모인다(md × 0.9, ease-in) + 밝아짐·scale 1.06.
+                    // 05 §5.3.3 「2번째 카드 자리」 대신 사용자 2026-11-19 「무기 머지 3개가 위로 모여지게 … 뎁스도 제일 위에있는게 유지되야」 → 「그렇게 바꿔」.
+                    var to = _gathering[0].rectTransform.anchoredPosition;   // Gathered는 위 → 아래 순서
+                    _gatherY = to.y;
                     foreach (var g in _gathering)
                     {
                         g.ResetLook();   // 깊이는 높이 규칙 그대로(위 카드가 앞): 모이는 3장이 바로 위 카드 앞으로 튀어나오지 않는다(사용자 2026-11-19 「마지막 머지할때 뎁스가 이상하게」)
@@ -367,7 +370,7 @@ namespace MV.UI
                     bool has = false;
                     if (_gathering.Count > 0)
                     {
-                        at = _gathering[Math.Min(1, _gathering.Count - 1)].rectTransform.anchoredPosition;
+                        at = _gathering[0].rectTransform.anchoredPosition;
                         has = true;
                     }
                     _gathering.Clear();
@@ -518,8 +521,8 @@ namespace MV.UI
             for (int i = 0; i < cards.Count; i++)
             {
                 if (!_slots.TryGetValue(cards[i].Id, out var s)) continue;
-                // 뒤(낮음) → 앞(높음) 순서로 끼워 넣는다.
-                float y = s.rectTransform.anchoredPosition.y;
+                // 뒤(낮음) → 앞(높음) 순서로 끼워 넣는다. 모이는 3장은 모으는 자리 높이로 고정: 서로 앞뒤가 바뀌지 않고 맨 위 카드가 앞(같은 높이는 손패 위 순서가 앞).
+                float y = _gathering.Contains(s) ? _gatherY : s.rectTransform.anchoredPosition.y;
                 int at = _depth.Count;
                 while (at > 0)
                 {
