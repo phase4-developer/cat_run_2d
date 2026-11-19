@@ -110,12 +110,25 @@ namespace MV.UI.Tests
         public bool GodUnlocked(string key) => true;
         public MetaResult SelectGod(string key) { SelectGodCalls++; LastGod = key; return MetaResult.Success(); }
 
-        public int RebirthLevel => 0;
-        public int RebirthPending => 10;
-        public bool RebirthOpen => true;
-        public long RebirthCooldownLeftMs => 0;
+        public int RebirthLevel { get; set; }
+        public int RebirthPending { get; set; } = 10;
+        public bool RebirthOpen { get; set; } = true;
+        public long RebirthCooldownLeftMs { get; set; }
         public bool RebirthArmed => false;
         public MetaResult? PressRebirth() { PressRebirthCalls++; return null; }
+        public int RebirthNowCalls;
+        public MetaResult RebirthNow() { RebirthNowCalls++; return MetaResult.Success(RebirthPending); }
+        public long RebirthCooldownTotalMs { get; set; } = 6L * 3600L * 1000L;
+        /// <summary>캣닢 스킵 가격(쿨타임이 있으면 이 값).</summary>
+        public long SkipDiaCost = 180;
+        public IReadOnlyList<ConsumeData> RebirthSkipDiaPrice => RebirthCooldownLeftMs > 0
+            ? new[] { new ConsumeData(ConsumeType.Wealth, 1001002, SkipDiaCost) } : System.Array.Empty<ConsumeData>();
+        public int SkipDiaCalls;
+        public MetaResult SkipRebirthCooldownDia() { SkipDiaCalls++; RebirthCooldownLeftMs = 0; return MetaResult.Success(SkipDiaCost); }
+        public MvUnlockProgress UnlockProgress { get; set; }
+        /// <summary>해금 단계를 정해 둔다(없으면 열림/잠김).</summary>
+        public MvUnlockState? UnlockStateOverride;
+        public MvUnlockState UnlockState(string key) => UnlockStateOverride ?? (IsOpen(key) ? MvUnlockState.Open : MvUnlockState.Locked);
 
         public int AdsLeft(string key) => 3;
         public void WatchAdForReward(string key, Action<MetaResult> done) => done?.Invoke(MetaResult.Success());

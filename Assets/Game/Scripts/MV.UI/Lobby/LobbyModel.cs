@@ -34,6 +34,8 @@ namespace MV.UI
         public bool Visible = true;
         /// <summary>잠김 모양(SoftLock: 보이고, 누르면 토스트).</summary>
         public bool Locked;
+        /// <summary>잠겨 있어도 눌러 화면을 연다(화면이 잠금을 보인다). 환생은 노션대로 팝업에서 Lock을 보인다(MV-UI2-REBIRTH).</summary>
+        public bool OpensWhenLocked;
         /// <summary>false면 눌러도 무시(메타 없음).</summary>
         public bool Enabled = true;
         /// <summary>해금 키(<c>05_contentOpen.key</c>). 없으면 null.</summary>

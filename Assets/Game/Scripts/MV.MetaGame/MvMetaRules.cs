@@ -140,6 +140,18 @@ namespace MV.Meta
         /// </summary>
         public static int RebirthGrant(MvTables t, int areaIndex, int pendingExtra) => t.RebirthFish(areaIndex + 1) + Math.Max(0, pendingExtra);
 
+        /// <summary>
+        /// 부활 쿨타임 캣닢 스킵 비용(08 §8.5.14): 남은 시간 전체를 지우고 <c>ceil(남은 분 / 10) × 499[rebirth.skipDiaPer10Min]</c>.
+        /// 남은 시간이 없으면 0. 화면 가격 표시와 백엔드 차감이 같은 값을 쓴다.
+        /// </summary>
+        public static long RebirthSkipDiaCost(MvTables t, long cooldownLeftMs)
+        {
+            if (cooldownLeftMs <= 0) return 0;
+            const long tenMinMs = 10L * 60L * 1000L;
+            long blocks = (cooldownLeftMs + tenMinMs - 1) / tenMinMs;
+            return blocks * t.ContentConfig.I(ContentConfigKeys.Rebirth_SkipDiaPer10Min);
+        }
+
         /// <summary>이 Area(0기반)에서 다음 Area를 여는 누적 생선(<c>302_area.needSouls</c>). 행이 없으면 int.MaxValue.</summary>
         public static int NeedSouls(MvTables t, int area)
         {

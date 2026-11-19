@@ -53,6 +53,18 @@ namespace MV.Meta
             }
         }
 
+        /// <summary>조건 종류의 지금 값(<see cref="Met"/>과 같은 눈금: Area는 1기반). 항상·모르는 종류는 0.</summary>
+        public static int Current(UnlockConditionType type, MvUnlockProgress p)
+        {
+            switch (type)
+            {
+                case UnlockConditionType.Area: return p.Area + 1;
+                case UnlockConditionType.Runs: return p.Runs;
+                case UnlockConditionType.Level: return p.Level;
+                default: return 0;
+            }
+        }
+
         /// <summary>목록의 조건이 모두 성립(빈 목록은 성립).</summary>
         public static bool AllMet(IReadOnlyList<UnlockCondition> conditions, MvUnlockProgress p)
         {
