@@ -67,6 +67,12 @@ namespace MV.View.Tests
             Assert.That(label.Number.GetComponent<Renderer>().sortingOrder, Is.GreaterThan(sr.sortingOrder), "숫자가 아이콘 위에 그려진다");
             float iconY = icon.position.y, numY = label.Number.transform.position.y, gaugeY = label.GaugeRoot.transform.position.y;
             Assert.That(iconY > numY && numY > gaugeY, Is.True, $"아래로 아이콘({iconY}) → 숫자({numY}) → 막대({gaugeY})");
+            // 노션 시안(1 m = 89 px 격자)에서 잰 글자·막대: 숫자 글자 높이 0.43 m(= 크기 5.2), 제목·숫자 외곽선, 막대 배경 1.28 x 0.29, 채움 1.19 x 0.19.
+            Assert.That(label.Number.fontSize, Is.EqualTo(5.2f).Within(0.01f), "숫자 크기(시안)");
+            Assert.That(label.Number.fontSharedMaterial.name, Does.Contain("Outline"), "숫자 외곽선 재질(시안)");
+            Assert.That(label.Title.fontSharedMaterial.name, Does.Contain("Outline"), "제목 외곽선 재질(시안)");
+            Assert.That(label.GaugeRoot.GetComponent<SpriteRenderer>().size.x, Is.EqualTo(1.28f).Within(1e-3f), "막대 배경 폭(시안)");
+            Assert.That(label.Pivot.GetComponentInChildren<SpriteRenderer>(true).size.x, Is.EqualTo(1.19f).Within(1e-3f), "막대 채움 폭(시안)");
 
             var cg = Object.Instantiate(LoadPrefab("Obj_CraftGate"));
             _made.Add(cg);
