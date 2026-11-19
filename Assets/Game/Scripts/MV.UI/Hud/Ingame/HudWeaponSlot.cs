@@ -35,7 +35,7 @@ namespace MV.UI
         [SerializeField] TMP_Text attack;
 
         [Header("머지 연출(디자이너 리소스, 없으면 크기 연출만)")]
-        [Tooltip("머지 때 하얗게 밝아지는 덮개(05 §5.3.3 wmg·wmerged 밝기). 투명도 0으로 둔다.")]
+        [Tooltip("머지 때 하얗게 밝아지는 덮개(05 §5.3.3 wmg·wmerged 밝기). 꺼 둔 Image + 흰 칠 재질(UIWhiteFill), 연출 때 등급 틀 그림 모양을 따라 켠다. 최대 밝기 = Image 색 알파.")]
         [SerializeField] Graphic flash;
         [Tooltip("머지 결과 칸 위에서 터지는 반짝임(영상 7.3). 꺼 둔 채로 둔다.")]
         [SerializeField] GameObject sparkle;
@@ -93,8 +93,27 @@ namespace MV.UI
             DOTween.Kill(transform);
             transform.localScale = Vector3.one;
             SetAlpha(1);
-            if (flash) flash.canvasRenderer.SetAlpha(0);
+            if (flash)
+            {
+                flash.canvasRenderer.SetAlpha(0);
+                flash.gameObject.SetActive(false);
+            }
             if (sparkle) sparkle.SetActive(false);
+        }
+
+        /// <summary>플래시를 켜고 지금 등급 틀 그림 모양을 따른다(틀 그림은 등급마다 바뀐다).</summary>
+        void ArmFlash(float alpha)
+        {
+            if (!flash) return;
+            if (flash is Image f && grade)
+            {
+                f.sprite = grade.sprite;
+                f.type = grade.type;
+                f.pixelsPerUnitMultiplier = grade.pixelsPerUnitMultiplier;
+                f.preserveAspect = grade.preserveAspect;
+            }
+            flash.gameObject.SetActive(true);
+            flash.canvasRenderer.SetAlpha(alpha);
         }
 
         /// <summary>전달: 투명 → 불투명(05 §5.3.3 wdeal, ease-out).</summary>
@@ -114,6 +133,7 @@ namespace MV.UI
             if (flash)
             {
                 float a = 0;
+                ArmFlash(0);
                 seq.Join(DOTween.To(() => a, v => { a = v; flash.canvasRenderer.SetAlpha(v); }, 1f, md).SetEase(Ease.InQuad));
             }
             return seq;
@@ -130,8 +150,9 @@ namespace MV.UI
             if (flash)
             {
                 float a = 1;
-                flash.canvasRenderer.SetAlpha(1);
+                ArmFlash(1);
                 seq.Join(DOTween.To(() => a, v => { a = v; flash.canvasRenderer.SetAlpha(v); }, 0f, sec).SetEase(Ease.OutQuad));
+                seq.OnComplete(() => { if (flash) flash.gameObject.SetActive(false); });
             }
             return seq;
         }

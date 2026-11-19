@@ -290,6 +290,7 @@ GameObject:
   - component: {fileID: 4286209909954352364}
   - component: {fileID: 4932049991107621946}
   - component: {fileID: 1154106559361114837}
+  - component: {fileID: 7301100000000000011}
   m_Layer: 5
   m_Name: Element_Progress_Item
   m_TagString: Untagged
@@ -666,3 +667,29 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1123283559421318625, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
   m_PrefabInstance: {fileID: 6495725592631489276}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7301100000000000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5194044518463866180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d68c471f1c7d42818cf7c8b069bfa719, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.LevelProgressItem
+  milestone: {fileID: 2088146640134103886}
+  milestoneText: {fileID: 2029457899567902223}
+  areaLabel: {fileID: 2989641941508512818}
+--- !u!114 &2989641941508512818 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8311432158699843278, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
+  m_PrefabInstance: {fileID: 6495725592631489276}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be54c511762c45ac859243f0e849e518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.HudAreaLabel

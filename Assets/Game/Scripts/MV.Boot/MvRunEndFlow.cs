@@ -57,7 +57,9 @@ namespace MV.Boot
                 OpenResultAsync(data).Forget(Debug.LogException);
             }
 
-            _map = await MvUiNav.OpenMapAsync(new MetaPopupData { OnClosed = OpenResult }, playClick: false);
+            // 지도(LevelProgress)는 정산 전에 열리므로 이번 런 영혼 수를 넘겨 오름 연출을 보이고, 끝나면 스스로 닫힌다(MV-UI3-LVPROG).
+            var mapData = new LevelProgressPopupData { OnClosed = OpenResult, RunEnd = true, RunSouls = data.Outcome?.Souls ?? 0 };
+            _map = await MvUiNav.OpenMapAsync(mapData, playClick: false);
             if (_map == null)
             {
                 Debug.LogWarning("[MvRunEndFlow] 지도를 열지 못했습니다. 결과로 바로 갑니다.");
@@ -75,7 +77,7 @@ namespace MV.Boot
         public bool PressMapClose()
         {
             if (!MapOpen) return false;
-            _map.Presenter.PressClose();
+            _map.PressClose();
             return true;
         }
 

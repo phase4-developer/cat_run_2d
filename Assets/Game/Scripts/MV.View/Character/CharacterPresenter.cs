@@ -163,7 +163,7 @@ namespace MV.View
             bool climbing = C != null && C.Pos > 0;
             _units[0].Sm.Climbing = climbing;
             _units[0].Sm.ClimbedSteps = C != null ? C.Pos : 0;
-            int tier = s.EqTier();
+            int tier = s.HandTier();   // 손패 머지 연출이 끝나 맨 위 무기가 바뀌는 순간에 외형도 바뀐다(사용자 2026-11-19)
 
             double px = s.P.X, pz = s.P.Z, py = 0, wy = s.WorldY;
             if (C != null) _path.Cat(C.Pos, C.K, C.Z0, out py, out pz);
