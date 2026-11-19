@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using jjevol;
 using MV.Data;
 using MV.Sound;
+using ConsumeData = MV.Data.ConsumeData;
 using UnityEngine;
 
 namespace MV.UI
