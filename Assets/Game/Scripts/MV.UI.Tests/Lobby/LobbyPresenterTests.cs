@@ -9,7 +9,7 @@ namespace MV.UI.Tests
 {
     /// <summary>
     /// 로비 화면 코드(D-92 ③, 05 §5.4·§5.5.1·§5.14): 표 행 추가 → 강화 버튼 추가, <c>05_contentOpen</c> 잠금,
-    /// 메타가 없으면 막힘, 강화 1번 → 메타 구매 1번, 시설 단계 문턱(정본 azStages).
+    /// 메타가 없으면 막힘, 강화 1번 → 메타 구매 1번.
     /// </summary>
     public sealed class LobbyPresenterTests
     {
@@ -20,8 +20,6 @@ namespace MV.UI.Tests
                 s = new LobbyState { Level = 3, AreaNo = 1, Souls = 40, NeedSouls = 100 };
                 return true;
             }
-
-            public int FacilityStage(string key, out int extra) { extra = 0; return 1; }
         }
 
         /// <summary>잠금·구매 수를 정하고 호출을 세는 가짜 메타 입구.</summary>
@@ -132,23 +130,20 @@ namespace MV.UI.Tests
             Assert.IsTrue(p.PressSide(LobbySideIds.Sound)); // 설정(소리)은 메타와 무관
         }
 
-        [TestCase("stair", "tower")]
-        [TestCase("weapon", "scratch")]
-        [TestCase("income", "rack")]
-        public void UpgradePress_BuysOnceAndBumpsFacility(string key, string facility)
+        [TestCase("stair")]
+        [TestCase("weapon")]
+        [TestCase("income")]
+        public void UpgradePress_BuysOnce(string key)
         {
             var port = new Port(MetaUiTestKit.Base());
             var p = Make(port);
-            var bumps = new List<string>();
             int bought = 0;
-            p.FacilityBump += bumps.Add;
             p.Bought += () => bought++;
 
             Assert.IsTrue(p.PressUpgrade(key));
             Assert.AreEqual(1, port.BuyCalls);
             Assert.AreEqual((MvGrowth.Lobby, key), port.LastBuy);
             Assert.AreEqual(1, bought);
-            CollectionAssert.AreEqual(new[] { facility }, bumps);
         }
 
         [Test]
@@ -170,22 +165,6 @@ namespace MV.UI.Tests
             var p = Make(new Port(MetaUiTestKit.Base()), dev);
             Assert.AreEqual(dev, p.Model.FindSide(LobbySideIds.Debug).Visible);
             Assert.AreEqual(dev, p.PressSide(LobbySideIds.Debug));
-        }
-
-        [TestCase("tower", "stair", 6, 0, 1, 0)]
-        [TestCase("tower", "stair", 7, 0, 2, 0)]
-        [TestCase("tower", "stair", 30, 0, 3, 0)]
-        [TestCase("rack", "income", 4, 0, 1, 3)]
-        [TestCase("rack", "income", 5, 0, 2, 3)]
-        [TestCase("rack", "income", 15, 0, 3, 6)]
-        [TestCase("stove", "", 0, 0, 0, 0)]
-        [TestCase("stove", "", 0, 1, 1, 0)]
-        public void FacilityStage_FollowsCanonThresholds(string facility, string upKey, int bought, int rebirthOpen, int stage, int extra)
-        {
-            var port = new Port(MetaUiTestKit.Base()) { RbOpen = rebirthOpen == 1 };
-            if (upKey.Length > 0) port.Levels[upKey] = bought;
-            Assert.AreEqual(stage, LobbyFacilities.Stage(port, facility, out int got));
-            Assert.AreEqual(extra, got);
         }
 
         /// <summary>디자이너 칸 값: 가격 숫자·재화 아이콘, 부활 해금 진행 = Level(실패 횟수) / 05_contentOpen 사용 조건 Level.</summary>

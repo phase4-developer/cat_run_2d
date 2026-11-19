@@ -81,7 +81,7 @@
 
 **`DepthSorter`** — `Runtime/DepthSorter.cs`, order 100. `LateUpdate` → `Billboard.SyncAll` → `SortAll(DepthSortable.All, …)`(`:21-49`): 카메라 전방축 투영 깊이 d, 근평면 컷이면 숨김, `sortingOrder = DepthMath.SortingOrder(d, bias, rank, quant)`, 안개 알파 `FogAlpha(dAnchor)`. 정본 「화가 알고리즘」 대체.
 
-**`Math/*`(순수 계산, 시험 직접 호출)**: `DepthMath`(깊이·안개·정렬 순서·`RankFarFirst`), `ViewConfig`(`300_runConfig` 뷰 키 1회 읽기, 코드 기본값 없음), `CatLayout`(분신 오프셋·계단 y), `ObjectLayout`(우물 벽돌·잡동사니 지터), `ObjectReaction`(맞음 흔들림/번쩍/눌림/쓰러짐 시간·곡선), `ProjLayout`(투사체·창·회전 장난감 배치와 등급별 그림 주소), `PropLayout`(소품 배치·그리기 범위), `ClothLineLayout`, `FenceDeco`, `GroundStripBuilder`, `BoxBillboardBuilder`, `MeshBuffer`(재사용 정점 버퍼), `MvColor`(정본 색 함수, 결과 캐시), `ScreenLayers.SnowField`, `LobbyIso`, `LobbyTrack.Pick`(로비 트랙에 깔 오브젝트 선택).
+**`Math/*`(순수 계산, 시험 직접 호출)**: `DepthMath`(깊이·안개·정렬 순서·`RankFarFirst`), `ViewConfig`(`300_runConfig` 뷰 키 1회 읽기, 코드 기본값 없음), `CatLayout`(분신 오프셋·계단 y), `ObjectLayout`(우물 벽돌·잡동사니 지터), `ObjectReaction`(맞음 흔들림/번쩍/눌림/쓰러짐 시간·곡선), `ProjLayout`(투사체·창·회전 장난감 배치와 등급별 그림 주소), `PropLayout`(소품 배치·그리기 범위), `ClothLineLayout`, `FenceDeco`, `GroundStripBuilder`, `BoxBillboardBuilder`, `MeshBuffer`(재사용 정점 버퍼), `MvColor`(정본 색 함수, 결과 캐시), `ScreenLayers.SnowField`, `LobbyTrack.Pick`(로비 트랙에 깔 오브젝트 선택).
 
 ### 3.3 월드 그림 캐시
 

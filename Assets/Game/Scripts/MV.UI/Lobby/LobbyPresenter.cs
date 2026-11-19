@@ -61,8 +61,6 @@ namespace MV.UI
         public event Action<string> Toast;
         /// <summary>강화 구매가 성공했다(소리 buy, 정본 L2644).</summary>
         public event Action Bought;
-        /// <summary>시설 반짝임(<see cref="LobbyFacilities"/> key).</summary>
-        public event Action<string> FacilityBump;
 
         public void SetPort(IMetaUiPort port) => _port = port;
         public void SetSource(ILobbySource source) => _source = source;
@@ -348,7 +346,7 @@ namespace MV.UI
         /// <summary>아이콘 뒤 아지트 단계(정본 facIconURL(kind, azStages())).</summary>
         static int StageOf(MvTables t, LobbyEffectType effect, int p)
         {
-            // 문턱은 LobbyFacilities 한 곳(시설 단계와 같은 값).
+            // 문턱은 LobbyFacilities 한 곳(PC-19 정리 대기).
             if (effect == LobbyEffectType.StartStairLv) return LobbyFacilities.TowerStage(MvMetaRules.StairStart(t, p).Lv);
             return LobbyFacilities.RackStage(p);
         }
@@ -387,7 +385,6 @@ namespace MV.UI
                 return false;
             }
             Bought?.Invoke();
-            FacilityBump?.Invoke(LobbyFacilities.OfEffect(row.effectType));
             int after = StepLevel(t, row, Port.Level(MvGrowth.Lobby, key));
             if (r.HasLobbyBuy) { before = r.LvBefore; after = r.LvAfter; } // 메타 구매 결과(MvLobbyBuyResult)의 Lv. 머지 등급(r.MergedTier) 연출은 2차.
             // 배너 자리(OverlayHud.ShowBanner는 2차 연출). 1차는 토스트로 알린다.
