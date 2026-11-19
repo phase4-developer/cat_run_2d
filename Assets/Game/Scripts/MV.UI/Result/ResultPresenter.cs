@@ -71,13 +71,21 @@ namespace MV.UI
                 ProgressLeft(d), d.SoulsHave + " / " + d.SoulsNeed);
         }
 
-        /// <summary>보상 칸(정본 3칸 = 골드 R.gold, 블루 마법석 R.dia, 황금 생선 R.tok, 05 §5.6·MV-SPEC-02 12-3).</summary>
-        public static IReadOnlyList<ResultRewardItem> Rewards(ResultViewData d) => new[]
+        /// <summary>
+        /// 보상 칸(정본 3칸 = 골드 R.gold, 블루 마법석 R.dia, 황금 생선 R.tok, 05 §5.6·MV-SPEC-02 12-3).
+        /// 0개인 재화는 칸을 만들지 않는다(사용자 2026-11-19 「0개 획득이면 표시 자체를 안해야하고」). 골드는 정산처럼 소수점을 버린 값으로 본다.
+        /// </summary>
+        public static IReadOnlyList<ResultRewardItem> Rewards(ResultViewData d)
         {
-            new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.Gold), d.GoldName, MvUiFormat.Fmt(d.Gold)),
-            new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.Dia), d.DiaName, d.Dia.ToString()),
-            new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.RbToken), d.TokName, d.Tok.ToString()),
-        };
+            var list = new List<ResultRewardItem>(3);
+            if (Math.Floor(d.Gold) >= 1)
+                list.Add(new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.Gold), d.GoldName, MvUiFormat.Fmt(d.Gold)));
+            if (d.Dia > 0)
+                list.Add(new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.Dia), d.DiaName, d.Dia.ToString()));
+            if (d.Tok > 0)
+                list.Add(new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.RbToken), d.TokName, d.Tok.ToString()));
+            return list;
+        }
 
         /// <summary>
         /// 결과 「×N 보상」 광고(MV-SPEC-02 01 §12-3, 08_adPlacement collect3). 광고를 끝까지 봤으면 ×배수 정산 1번, 안 봤으면 정산 없이 다시 고를 수 있다.
