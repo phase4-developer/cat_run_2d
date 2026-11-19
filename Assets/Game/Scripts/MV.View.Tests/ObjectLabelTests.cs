@@ -56,6 +56,21 @@ namespace MV.View.Tests
         }
 
         [Test]
+        public void StairZone_TextHidden_NotInNotionDesign()
+        {
+            var t = ViewTestTables.Load();
+            int checkedKinds = 0;
+            foreach (var k in t.ObjectKind.Datas)
+            {
+                if (k.labelKind != LabelKind.StairText) continue;
+                var o = RunObjectFactory.Create(t, k, 0, 10);
+                Assert.That(ObjectLabel.Of(o, 0, 3, 0, 1).Visible, Is.False, k.key + ": 계단 구역 위 문구 숨김(노션 시안에 없음)");
+                checkedKinds++;
+            }
+            Assert.That(checkedKinds, Is.GreaterThan(0), "StairText 종류가 표에 있다");
+        }
+
+        [Test]
         public void Wall_FrontTwoRowsOnly_RewardTimesGoldMul()
         {
             var o = Make("wall");
