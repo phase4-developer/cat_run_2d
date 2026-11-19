@@ -37,12 +37,7 @@ namespace MV.UI
         [Header("손패 연출(05 §5.3.3 기본값)")]
         [Tooltip("자리 이동(정렬·당겨짐) 초 (L1211)")] [SerializeField] float moveSec = 0.28f;
         [Tooltip("전달 wdeal 초 (L501)")] [SerializeField] float dealFadeSec = 0.25f;
-        [Tooltip("전달(자리가 맨 밑): 스택 아래 줄 자리에서 곧장 위로 맨 밑 칸에 합류하는 초. 좌우 이동·깊이 변경 없음.")] [SerializeField] float dealUpSec = 0.22f;
-        [Tooltip("전달(자리가 맨 밑 아님) 1단계: 스택 아래에서 왼쪽 통로로 빠지는 초(겹치지 않는 자리로 먼저 비킨다)")] [SerializeField] float laneOutSec = 0.14f;
-        [Tooltip("2단계: 왼쪽 통로를 따라 자기 등급 높이까지 올라가는 초. 깊이는 이 통로에 있을 때(겹치지 않을 때)만 바뀐다.")] [SerializeField] float laneRiseSec = 0.26f;
-        [Tooltip("자리 열기: 새 카드가 목표 높이에 닿기 이 초 전부터 그 자리 아래 카드들이 한 칸씩 내려가 끼울 자리를 만든다(2단계 안에 끝남).")] [SerializeField] float laneOpenSec = 0.16f;
-        [Tooltip("3단계: 통로에서 오른쪽으로 들어가 자리에 합류하는 초")] [SerializeField] float laneInSec = 0.14f;
-        [Tooltip("통로 여유(px): 통로 x = 칸 너비 + 이 값만큼 왼쪽. 겹치지 않는 최소 거리.")] [SerializeField] float laneGap = 6f;
+        [Tooltip("전달: 줄 맨 앞 자리에서 곧장 위로 스택 맨 밑 칸에 합류하는 초(올라오는 속도). 좌우 이동 없음. 머지는 이 시간이 지난 뒤.")] [SerializeField] float dealUpSec = 0.22f;
         [Tooltip("모으기 끝 크기 (wmg scale 1.06)")] [SerializeField] float gatherScale = 1.06f;
         [Tooltip("결과 시작 크기 (wmerged scale 1.3)")] [SerializeField] float mergedScale = 1.3f;
         [Tooltip("결과 연출 최소 초: max(이 값, u) (L1214)")] [SerializeField] float mergedMinSec = 0.15f;
@@ -50,7 +45,8 @@ namespace MV.UI
         [Tooltip("장착 칸 등급 상승 튐 초")] [SerializeField] float equipPopSec = 0.25f;
 
         [Header("문 카드 줄서기(MV-UI3-HUD9, 참고 영상)")]
-        [Tooltip("스택 맨 아래 칸의 아래 끝과 줄 첫 카드 사이 빈칸(칸 높이 배). 사용자 2026-11-19 「마지막 카드 위치에서 지금보다 더 아래 카드 사이즈 0.3정도 더 밑으로」.")] [SerializeField] float queueGapRatio = 0.38f;
+        [Tooltip("문에서 날아온 무기 카드가 줄 서는 자리(줄 맨 앞 카드의 위 가운데). 비우면 스택 맨 밑 칸 아래(queueGapRatio)로 계산한다. 사용자 2026-11-19 「날라올 위치 게임오브젝트로 지정」.")] [SerializeField] RectTransform queueAnchor;
+        [Tooltip("queueAnchor가 없을 때: 스택 맨 아래 칸의 아래 끝과 줄 첫 카드 사이 빈칸(칸 높이 배). 사용자 2026-11-19 「마지막 카드 위치에서 지금보다 더 아래 카드 사이즈 0.3정도 더 밑으로」.")] [SerializeField] float queueGapRatio = 0.38f;
         [Tooltip("줄 카드끼리 위 끝 사이 거리(칸 높이 배). 스택(-110 px 간격)보다 넓게 띄워 아이콘 실루엣이 보이게 한다(사용자 2026-11-19 「간격도 더 널널하게 해서 아이콘 실루엣은 확인 가능하게」).")] [SerializeField] float queueStepRatio = 0.6f;
         [Tooltip("문 위 카드 자리 → 줄 자리 비행 초")] [SerializeField] float launchSec = 0.4f;
         [Tooltip("카드마다 출발 간격 초(표 300 fly.cloneGapMs 70 ms를 옮김, 사용자 2026-11-19 「프리팹으로 관리」)")] [SerializeField] float launchGapSec = 0.07f;
@@ -74,7 +70,6 @@ namespace MV.UI
         {
             public HudWeaponSlot Slot;
             public Vector2 Start;
-            public bool Detour;
             public float T;
         }
         readonly List<DealMove> _moves = new List<DealMove>();
@@ -222,7 +217,6 @@ namespace MV.UI
             if (Animate)
             {
                 _model.DealStraightSec = dealUpSec;
-                _model.DealDetourSec = laneOutSec + Math.Max(laneRiseSec, laneOpenSec) + laneInSec;
             }
             _model.Reset(w, _now);
             foreach (var c in _model.Cards) Rent(c);
@@ -401,11 +395,9 @@ namespace MV.UI
 
         /// <summary>
         /// 손패 순서대로 자리를 정한다(디자이너 Stack 세로 배치 값: 위 여백·간격, 반대 순서 = 위 칸이 앞).
-        /// dealt = 방금 들어온 칸: 언제나 스택 아래(맨 밑 칸과 겹치지 않는 줄 자리, 깊이 맨 뒤)에서 출발한다.
-        /// 자리가 맨 밑이면 곧장 위로 합류(<see cref="dealUpSec"/>). 아니면 왼쪽 통로로 빠지고(<see cref="laneOutSec"/>) 통로로 자기 높이까지 올라간 뒤(<see cref="laneRiseSec"/>,
-        /// 닿기 <see cref="laneOpenSec"/> 전부터 아래 카드들이 한 칸 내려가 자리를 연다) 오른쪽으로 들어간다(<see cref="laneInSec"/>).
-        /// 깊이는 지금 높이로 매 프레임 정하므로 겹친 채로는 뒤집히지 않고 통로에서만 바뀐다(사용자 2026-11-19 「겹친상태에서 갑자기 뎁스가 변경되는거니까 이거 자연스럽게」 → 측면 통로 결정).
-        /// dealtInPlace = 이미 화면에 있는 칸(줄 맨 앞 카드)이라 지금 자리에서 출발, 아니면 줄 맨 앞 자리에서 나타난다. placed = 이미 다른 자리에 놓인 칸(머지 결과, 통로 우회 없음).
+        /// dealt = 방금 들어온 칸: 줄 맨 앞 자리(깊이 맨 뒤)에서 곧장 위로 자기 자리에 합류한다(<see cref="dealUpSec"/>).
+        /// 무기 단계가 오를 때 그보다 낮은 카드는 버리므로(04 §4.10, 사용자 2026-11-19) 새 카드 자리는 언제나 스택 맨 밑이다 — 옆으로 도는 연출은 없다(같은 날 「사이드 연출은 빠져도」).
+        /// 깊이는 지금 높이로 매 프레임 정한다(위 카드가 앞). dealtInPlace = 이미 화면에 있는 칸(줄 맨 앞 카드)이라 지금 자리에서 출발, 아니면 줄 맨 앞 자리에서 나타난다. placed = 머지 결과.
         /// </summary>
         void Layout(bool snap, HudWeaponSlot dealt = null, HudWeaponSlot placed = null, bool dealtInPlace = false)
         {
@@ -423,10 +415,10 @@ namespace MV.UI
                 {
                     var drt = dealt.rectTransform;
                     DOTween.Kill(drt);
-                    // 출발 = 스택 아래 줄 맨 앞 자리(새 카드가 들어오기 전 스택 기준, 맨 밑 칸과 겹치지 않음).
+                    // 출발 = 줄 맨 앞 자리(새 카드가 들어오기 전 스택 기준).
                     if (!dealtInPlace) drt.anchoredPosition = QueueAt(0, n - 1);
                     _moves.RemoveAll(m => m.Slot == dealt);
-                    _moves.Add(new DealMove { Slot = dealt, Start = drt.anchoredPosition, Detour = di < n - 1 });
+                    _moves.Add(new DealMove { Slot = dealt, Start = drt.anchoredPosition });
                 }
             }
             float y = -top;
@@ -444,38 +436,16 @@ namespace MV.UI
                 if (snap || !Animate) { DOTween.Kill(rt); rt.anchoredPosition = to; continue; }
                 DOTween.Kill(rt);
                 if (rt.anchoredPosition == to) continue;
-                float open = OpenDelay(i);
-                if (open >= 0)
-                {
-                    // 위에 끼어들 카드가 통로에 있다: 그 카드가 목표 높이에 닿기 직전에 한 칸 내려가 자리를 연다.
-                    AnchorTo(rt, to, laneOpenSec).SetDelay(open).SetEase(Ease.InOutQuad).SetTarget(rt);
-                    continue;
-                }
                 // 머지 결과(placed)는 모인 자리에서 출발한다.
                 AnchorTo(rt, to, moveSec).SetEase(Ease.OutQuad).SetTarget(rt);
             }
             OrderSiblings();
         }
 
-        float LaneRise => Math.Max(laneRiseSec, laneOpenSec);
-
         bool IsMoving(HudWeaponSlot s)
         {
             foreach (var m in _moves) if (m.Slot == s) return true;
             return false;
-        }
-
-        /// <summary>손패 i번째 칸 위로 끼어들 통로 카드가 있으면 자리를 열 때까지 남은 초(가장 먼저 닿는 카드 기준), 없으면 −1.</summary>
-        float OpenDelay(int i)
-        {
-            float best = -1;
-            foreach (var m in _moves)
-            {
-                if (!m.Detour || !TargetOf(m.Slot, out _, out int idx) || idx >= i) continue;
-                float d = Math.Max(0f, laneOutSec + LaneRise - laneOpenSec - m.T);
-                if (best < 0 || d < best) best = d;
-            }
-            return best;
         }
 
         /// <summary>칸의 지금 손패 목표 자리(Layout과 같은 계산)와 순서.</summary>
@@ -497,11 +467,9 @@ namespace MV.UI
         }
 
         static float OutQuad(float u) => 1f - (1f - u) * (1f - u);
-        static float InOutQuad(float u) => u < .5f ? 2f * u * u : 1f - 2f * (1f - u) * (1f - u);
 
         /// <summary>
-        /// 전달 이동: 자리가 맨 밑이면 곧장 위로(<see cref="dealUpSec"/>), 아니면 왼쪽 통로로 빠짐(<see cref="laneOutSec"/>) → 통로로 지금 목표 높이까지 올라감 → 오른쪽으로 들어감(<see cref="laneInSec"/>).
-        /// 목표는 매 프레임 다시 읽어 다음 카드가 이어서 들어와도 경로가 끊기지 않는다.
+        /// 전달 이동: 줄 자리에서 곧장 위로 자기 자리까지(<see cref="dealUpSec"/>). 목표는 매 프레임 다시 읽어 다음 카드가 이어서 들어와도 경로가 끊기지 않는다.
         /// </summary>
         void StepMoves(float dt)
         {
@@ -513,34 +481,10 @@ namespace MV.UI
                 var rt = m.Slot.rectTransform;
                 bool done;
                 Vector2 p;
-                if (!m.Detour)
                 {
                     float u = dealUpSec > 0 ? Mathf.Clamp01(m.T / dealUpSec) : 1f;
                     p = Vector2.LerpUnclamped(m.Start, to, OutQuad(u));
                     done = u >= 1f;
-                }
-                else
-                {
-                    float lane = -(rt.rect.width + laneGap);
-                    float rise = LaneRise;
-                    if (m.T < laneOutSec)
-                    {
-                        float u = m.T / laneOutSec;
-                        p = Vector2.LerpUnclamped(m.Start, new Vector2(lane, m.Start.y), OutQuad(u));
-                        done = false;
-                    }
-                    else if (m.T < laneOutSec + rise)
-                    {
-                        float u = (m.T - laneOutSec) / rise;
-                        p = new Vector2(lane, Mathf.LerpUnclamped(m.Start.y, to.y, InOutQuad(u)));
-                        done = false;
-                    }
-                    else
-                    {
-                        float u = laneInSec > 0 ? Mathf.Clamp01((m.T - laneOutSec - rise) / laneInSec) : 1f;
-                        p = Vector2.LerpUnclamped(new Vector2(lane, to.y), to, OutQuad(u));
-                        done = u >= 1f;
-                    }
                 }
                 rt.anchoredPosition = done ? to : p;
                 if (done) _moves.RemoveAt(k);
@@ -634,9 +578,19 @@ namespace MV.UI
         Vector2 QueueAt(int k, int n)
         {
             float h = SlotHeight();
-            float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
-            float first = n > 0 ? -top - (n - 1) * (h + spacing) - h - h * queueGapRatio : -top;
-            return new Vector2(0, first - k * h * queueStepRatio);
+            Vector2 first;
+            if (queueAnchor && stack)
+            {
+                // 지정한 오브젝트 자리(스택 위 가운데 기준 anchoredPosition으로 바꾼다).
+                var local = (Vector2)stack.InverseTransformPoint(queueAnchor.position);
+                first = local - new Vector2(stack.rect.center.x, stack.rect.yMax);
+            }
+            else
+            {
+                float top = _layout ? _layout.padding.top : 0, spacing = _layout ? _layout.spacing : 0;
+                first = new Vector2(0, n > 0 ? -top - (n - 1) * (h + spacing) - h - h * queueGapRatio : -top);
+            }
+            return first - new Vector2(0, k * h * queueStepRatio);
         }
 
         /// <summary>도착한 줄 카드를 자리로(스택이 늘고 줄 앞이 빠지면 나머지는 그대로, 머지로 스택이 줄면 위로 당겨진다).</summary>

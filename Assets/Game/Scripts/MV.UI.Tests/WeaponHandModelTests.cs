@@ -92,15 +92,15 @@ namespace MV.UI.Tests
         [Test]
         public void DealHold_MergeWaitsUntilCardReachesBottomThenRisesToItsSlot()
         {
-            // 사용자 2026-11-19: 새 카드는 무조건 맨 밑 → 자기 등급 자리로(맨 밑이 아니면 왼쪽 통로로 우회) → 그 뒤 3장이면 머지.
-            var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f, DealDetourSec = 0.5f };
+            // 사용자 2026-11-19: 새 카드는 맨 밑에서 자기 자리로 올라감 → 그 뒤 3장이면 머지. 다음 전달은 짧은 간격으로 이어진다.
+            var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.5f };
             m.Reset(new[] { 0, 1, 2 }, 0);   // 손패 [2, 2, 1]
             m.Deliver(1, 2);                 // 2등급 1장: 자리 = 1등급 위(맨 밑 아님) → 올라감
             var actions = new List<HandAction>();
             m.Step(0, 0.001, actions);
             Assert.That(actions.Single().Kind, Is.EqualTo(HandActionKind.Dealt));
-            Assert.That(actions[0].Duration, Is.LessThan(0.1f), "다음 전달은 통로 우회를 기다리지 않고 짧은 간격으로 이어진다(사용자 2026-11-19 「딜레이만 살짝있게 연속으로」)");
-            Assert.That(m.Settling, Is.EqualTo(0.5).Within(1e-5), "머지는 통로 우회 시간만큼 기다린다");
+            Assert.That(actions[0].Duration, Is.LessThan(0.1f), "다음 전달은 올라가는 연출을 기다리지 않고 짧은 간격으로 이어진다(사용자 2026-11-19 「딜레이만 살짝있게 연속으로」)");
+            Assert.That(m.Settling, Is.EqualTo(0.5).Within(1e-5), "머지는 올라가는 시간만큼 기다린다");
             Assert.That(m.Cards.Select(c => c.Tier), Is.EqualTo(new[] { 2, 2, 2, 1 }));
             actions.Clear();
             m.Step(0.49, 0.489, actions);
@@ -108,20 +108,20 @@ namespace MV.UI.Tests
             m.Step(0.51, 0.02, actions);
             Assert.That(actions.Single().Kind, Is.EqualTo(HandActionKind.GatherStart), "자리를 찾은 뒤 3장 머지");
 
-            var c = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f, DealDetourSec = 0.5f };
-            c.Reset(new[] { 0, 1 }, 0);      // 손패 [1]
-            c.Deliver(2, 2);                 // 2등급 2장: 둘 다 1등급 위(통로) → 짧은 간격으로 연달아 전달
+            var c = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f };
+            c.Reset(new[] { 0, 0, 1 }, 0);   // 손패 [2]
+            c.Deliver(2, 1);                 // 1등급 2장(머지 없음) → 짧은 간격으로 연달아 전달
             actions.Clear();
             c.Step(0, 0.001, actions);
             c.Step(0.1, 0.099, actions);
-            Assert.That(actions.Count(a => a.Kind == HandActionKind.Dealt), Is.EqualTo(2), "통로 우회 중에도 다음 카드가 바로 이어서 출발");
+            Assert.That(actions.Count(a => a.Kind == HandActionKind.Dealt), Is.EqualTo(2), "올라가는 중에도 다음 카드가 바로 이어서 출발");
 
-            var b = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f, DealDetourSec = 0.5f };
+            var b = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12) { DealStraightSec = 0.3f };
             b.Reset(new[] { 0, 0, 1 }, 0);   // 손패 [2]
             b.Deliver(1, 1);                 // 1등급: 자리 = 맨 밑 → 올라가지 않음
             actions.Clear();
             b.Step(0, 0.001, actions);
-            Assert.That(b.Settling, Is.EqualTo(0.3).Within(1e-5), "자리가 맨 밑이면 곧장 위로 가는 시간만 머지를 미룬다");
+            Assert.That(b.Settling, Is.EqualTo(0.3).Within(1e-5), "곧장 위로 가는 시간만큼 머지를 미룬다");
         }
 
         [Test]

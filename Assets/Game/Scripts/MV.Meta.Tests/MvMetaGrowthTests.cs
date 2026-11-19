@@ -205,6 +205,11 @@ namespace MV.Meta.Tests
             deck[max] = 2;
             Assert.That(MvMetaRules.DeckAdd(deck, max, Tables.RunConfig.I(RunConfigKeys.MERGE_N)), Is.EqualTo(0), "상한 등급은 더 머지하지 않는다");
             Assert.That(deck[max], Is.EqualTo(3));
+            // 무기 단계가 오르면 그보다 낮은 카드는 버린다(사용자 2026-11-19 「낮은 무기 버림」).
+            var low = new int[max + 1];
+            low[1] = 2; low[2] = 1; low[3] = 1;
+            Assert.That(MvMetaRules.DiscardBelow(low, 3), Is.EqualTo(3), "3등급 아래 3장 버림");
+            Assert.That(low.Take(4), Is.EqualTo(new[] { 0, 0, 0, 1 }), "그 단계 카드는 남긴다");
             // 저장 덱이 상한보다 짧아도 MAX 등급까지 산다: 무기 Level 마지막 = 상한.
             Assert.That(MvMetaRules.WeaponLevel(Tables, Tables.LevelMax(Tables.LobbyUpgrade.ByKey("weapon"))).Lv, Is.EqualTo(max));
         }
