@@ -330,11 +330,14 @@ namespace MV.View.Tests
             Assert.That(view.LookOf(0), Is.SameAs(CharLookResolver.Resolve(t.CharLook.Datas, player, 0, top)), "화면 손패가 없으면 논리 등급");
 
             // 피해도 같은 순간(사용자 2026-11-19 「피해하고 투사체도 타이밍 맞춰줘」): 화면 손패 1등급이면 1등급 피해.
-            s.ShownHandTier = 1;
-            double shownDmg = RunFormulas.BaseDmg(s);
-            s.ShownHandTier = 0;
-            Assert.That(shownDmg, Is.EqualTo(System.Math.Floor(RunFormulas.WeaponDmg(t, 1) * (1 + RunFormulas.AtkPct(s) / 100))), "피해 = 화면 손패 등급");
-            Assert.That(RunFormulas.BaseDmg(s), Is.EqualTo(System.Math.Floor(RunFormulas.WeaponDmg(t, top) * (1 + RunFormulas.AtkPct(s) / 100))), "화면 손패가 없으면 논리 등급 피해");
+            // 피해 공식은 RunSetup(냥환생·보정)을 읽으므로 설정이 있는 상태로 본다.
+            var d = new RunState(new RunSetup(), t, new Pcg32Rng(1));
+            d.W[top] = 1;
+            d.ShownHandTier = 1;
+            double shownDmg = RunFormulas.BaseDmg(d);
+            d.ShownHandTier = 0;
+            Assert.That(shownDmg, Is.EqualTo(System.Math.Floor(RunFormulas.WeaponDmg(t, 1) * (1 + RunFormulas.AtkPct(d) / 100))), "피해 = 화면 손패 등급");
+            Assert.That(RunFormulas.BaseDmg(d), Is.EqualTo(System.Math.Floor(RunFormulas.WeaponDmg(t, top) * (1 + RunFormulas.AtkPct(d) / 100))), "화면 손패가 없으면 논리 등급 피해");
         }
 
         [Test]
