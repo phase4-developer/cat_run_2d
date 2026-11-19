@@ -53,6 +53,16 @@ namespace MV.UI.Tests
             Assert.That(popupType, Is.EqualTo(MvUiIds.CommonSystem));
         }
 
+        /// <summary>Local_UI 그룹에 주소 <c>UIPopup_CommonSystem</c>으로 등록(없으면 SpawnUIPopupAsync가 실패). 시험 어셈블리가 Addressables 편집기를 참조하지 않아 그룹 자산 글자로 본다.</summary>
+        [Test]
+        public void Registered_InLocalUiGroup()
+        {
+            string guid = AssetDatabase.AssetPathToGUID(Path);
+            Assert.That(guid, Is.Not.Empty);
+            string group = System.IO.File.ReadAllText("Assets/AddressableAssetsData/AssetGroups/Local_UI.asset").Replace("\r\n", "\n");
+            Assert.That(group, Does.Contain("m_GUID: " + guid + "\n    m_Address: UIPopup_" + MvUiIds.CommonSystem + "\n"));
+        }
+
         /// <summary>알림: OK 끔, Cancel과 X 둘 다 닫기(취소)로 간다(사용자 2026-11-19 「OK 버튼을 꺼서 Cancel하고 X 두개로 닫기게해」).</summary>
         [Test]
         public void Notice_HidesOk_CancelAndCloseBothCancel()

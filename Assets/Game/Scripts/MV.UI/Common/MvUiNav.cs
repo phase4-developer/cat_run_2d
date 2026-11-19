@@ -42,6 +42,21 @@ namespace MV.UI
         public static async UniTask<ResultPopup> OpenResultAsync(ResultViewData data) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.Result, new ResultPopupData(data)) as ResultPopup;
 
+        /// <summary>
+        /// 공용 보상획득 팝업(MV-UI3-REWARD, 노션 [팝업] 보상획득 팝업). 지급을 끝낸 뒤 보여 주기만 한다.
+        /// 보일 칸(재화 1개 이상)이 없으면 열지 않고 <paramref name="onClosed"/>를 바로 부른 뒤 null.
+        /// </summary>
+        public static async UniTask<RewardPopup> OpenRewardAsync(IReadOnlyList<MV.Data.ConsumeData> rewards, System.Action onClosed = null, MV.Data.MvTables tables = null)
+        {
+            var t = tables ?? MvMetaUiPort.Instance.Tables;
+            if (RewardItems.Build(t, rewards).Count == 0)
+            {
+                onClosed?.Invoke();
+                return null;
+            }
+            return await Ui.SpawnUIPopupAsync(MvUiIds.Reward, new RewardPopupData(rewards, onClosed, t)) as RewardPopup;
+        }
+
         // ───────── 메타 패널(MV-UI-META). 로비 버튼 연결은 MV-UI-LOBBY. ─────────
 
         /// <summary>야옹신(05 §5.7).</summary>
