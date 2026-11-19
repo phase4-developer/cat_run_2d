@@ -6290,12 +6290,12 @@ MonoBehaviour:
   ShadowOrder: 10
   DecoTemplate: {fileID: 9067802597922072011}
   DecoSprites:
-  - {fileID: 21300000, guid: 07824bc6c09fb451498bb99c4f42c982, type: 3}
-  - {fileID: 21300000, guid: 103c4c4f2f87a4ffda792d6fb83f16ba, type: 3}
-  - {fileID: 21300000, guid: 4e8be7c26270147e8b7a1080718746c9, type: 3}
-  - {fileID: 21300000, guid: 3d0d603b7d4c448b7bba773114b59948, type: 3}
-  - {fileID: 21300000, guid: 1a3070ce2407e4b29b751d1fbc972612, type: 3}
-  - {fileID: 21300000, guid: 15a5944677bee45d39fad269586e6799, type: 3}
+  - {fileID: 21300000, guid: 8191c6023fd03406c8354b4a8e85614d, type: 3}
+  - {fileID: 21300000, guid: f93cb679bd7554139a3b4480251ac506, type: 3}
+  - {fileID: 21300000, guid: e293c78eacc5542c487889bfbdbf5309, type: 3}
+  - {fileID: 21300000, guid: 8f8341cfe97bd4947bd52f213caa1d2c, type: 3}
+  - {fileID: 21300000, guid: 301aac131549b4a0f8573110316ff65b, type: 3}
+  - {fileID: 21300000, guid: b69bb34559f9d4165b7c897025fff0b2, type: 3}
   DecoSpacing: 12.6
   DecoX: {x: 6.5, y: 12.5}
   DecoRange: {x: -10, y: 110}
