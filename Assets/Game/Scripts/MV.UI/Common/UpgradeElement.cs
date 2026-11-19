@@ -198,7 +198,7 @@ namespace MV.UI
         }
 
         /// <summary>
-        /// 재화 서비스가 있으면 <c>PriceLabel</c>(숫자 형식·부족 색은 Framework, K 형식은 Framework 지원 뒤 일괄 적용 — 사용자 2026-11-19),
+        /// 재화 서비스가 있으면 <c>PriceLabel</c>(부족 색은 Framework, 숫자는 게임 기본 표기 05 §5.1.12 — MvUiBoot이 넣는 MvUiFormat.Profile, MV-FW-NUMFMT),
         /// 없으면 글자만. 최대는 「MAX」를 무료 글자로 넘겨 보통 색으로 둔다.
         /// </summary>
         void DrawPrice(in UpgradeElementData d)

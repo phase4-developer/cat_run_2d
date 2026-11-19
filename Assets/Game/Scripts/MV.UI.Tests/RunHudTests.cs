@@ -159,6 +159,34 @@ namespace MV.UI.Tests
             Assert.AreEqual("1.5M", MvUiFormat.Fmt(1500000));
         }
 
+        // MV-FW-NUMFMT: Framework 라벨(PriceLabel 등)에 넣는 프로필이 정본 fmt와 같은 글자를 쓰는지.
+        [Test]
+        public void FmtFramework_Boundaries_FollowCanonRule()
+        {
+            Assert.AreEqual("9,950", MvUiFormat.FmtFramework(9950));
+            Assert.AreEqual("9,999", MvUiFormat.FmtFramework(9999));
+            Assert.AreEqual("10.0K", MvUiFormat.FmtFramework(10000));
+            Assert.AreEqual("12.0K", MvUiFormat.FmtFramework(12000));
+            Assert.AreEqual("12.4K", MvUiFormat.FmtFramework(12350));
+            Assert.AreEqual("100.0K", MvUiFormat.FmtFramework(99950));
+            Assert.AreEqual("1000.0K", MvUiFormat.FmtFramework(999950));
+            Assert.AreEqual("1.0M", MvUiFormat.FmtFramework(1000000));
+            Assert.AreEqual("1.5M", MvUiFormat.FmtFramework(1500000));
+        }
+
+        [Test]
+        public void FmtFramework_MatchesFmt_AcrossRange()
+        {
+            void Check(long n)
+            {
+                string expected = MvUiFormat.Fmt(n), actual = MvUiFormat.FmtFramework(n);
+                if (expected != actual) Assert.Fail($"{n}: fmt {expected}, Framework {actual}");
+            }
+            for (long n = 0; n <= 120000; n++) Check(n);
+            for (long n = 120001; n <= 2000000; n += 37) Check(n);
+            for (long n = 2000000; n <= 10000000000; n += 99991) Check(n);
+        }
+
         [Test]
         public void ClimbCount_ShowsShownOverTotal_AfterSideTurn()
         {
