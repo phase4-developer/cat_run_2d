@@ -51,6 +51,7 @@ namespace MV.UI.Tests
 
         [TestCase(SettingPath)]
         [TestCase(LanguagePath)]
+        [TestCase(SystemPopupPrefabTests.Path)]
         public void Decor_DoesNotBlockInputs(string path)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
