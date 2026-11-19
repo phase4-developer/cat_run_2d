@@ -1610,7 +1610,8 @@ MonoBehaviour:
   mergedMinSec: 0.15
   equipPopScale: 1.15
   equipPopSec: 0.25
-  queueGap: 12
+  queueGapRatio: 0.38
+  queueStepRatio: 0.6
   launchSec: 0.4
   launchGapSec: 0.07
   queueHoldSec: 2
