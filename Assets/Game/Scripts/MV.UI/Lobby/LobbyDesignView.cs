@@ -65,6 +65,12 @@ namespace MV.UI
         [Header("Top")]
         [SerializeField] TMP_Text levelText;
         [SerializeField] HudAreaLabel areaLabel;
+        /// <summary>
+        /// 상단 Area 이름표를 누르면 지도(LevelProgress)를 연다(노션 「로비의 상단 Slot_AreaLabel을 클릭 시」, MV-UI3-LVPROG).
+        /// 공용 부품 <see cref="HudAreaLabel"/>은 클릭을 받지 않고, 로비 래퍼 프리팹이 이 이름표에만 Button을 덧붙인다
+        /// (같은 부품이 「Area 업그레이드」 버튼 안에도 있어 부품이 클릭을 받으면 그 버튼이 눌리지 않았다, 사용자 2026-11-19 「구조로 바꿔」).
+        /// </summary>
+        [SerializeField] Button areaLabelButton;
         /// <summary>설정 버튼. 설정 팝업이 아직 없어 기획서 설정 자리(05 §5.14 소리 켜고 끄기)로 보낸다.</summary>
         [SerializeField] Button settingButton;
         [SerializeField] Button speedButton;
@@ -204,6 +210,7 @@ namespace MV.UI
             Need(rebirthCoolCount, nameof(rebirthCoolCount));
             Need(rebirthCoolComplete, nameof(rebirthCoolComplete));
             Need(rebirthReward, nameof(rebirthReward));
+            Need(areaLabelButton, nameof(areaLabelButton));
             Need(areaUpgradeButton, nameof(areaUpgradeButton));
             Need(areaUpgradeLabel, nameof(areaUpgradeLabel));
             if (areaUpgradeLabel && !areaUpgradeLabel.HasRefs) miss.Add("areaUpgradeLabel(HudAreaLabel 참조)");
@@ -217,12 +224,10 @@ namespace MV.UI
         {
             if (_ready) return;
             _ready = true;
-            // 버튼(Selectable) 아래 그림과 출발 영역, 상단 Area 이름표만 누를 수 있다. 나머지 글·패널은 누름을 받지 않아 출발 영역으로 지나간다(05 §5.4.1).
+            // 버튼(Selectable) 아래 그림과 출발 영역만 누를 수 있다(상단 Area 이름표도 래퍼가 붙인 Button 아래). 나머지 글·패널은 누름을 받지 않아 출발 영역으로 지나간다(05 §5.4.1).
             foreach (var g in GetComponentsInChildren<Graphic>(true))
-                g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null || (startArea && g.gameObject == startArea.gameObject)
-                    || (areaLabel && g.transform.IsChildOf(areaLabel.transform));
-            // 상단 Area 이름표를 누르면 지도(LevelProgress)를 연다(노션 「[팝업] LevelProgress」, 05 §5.10 지도 버튼 자리, MV-UI3-LVPROG).
-            if (areaLabel) areaLabel.Clicked += () => SidePressed?.Invoke(LobbySideIds.Map);
+                g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null || (startArea && g.gameObject == startArea.gameObject);
+            if (areaLabelButton) areaLabelButton.onClick.AddListener(() => SidePressed?.Invoke(LobbySideIds.Map));
             if (startArea) startArea.Pressed += OnStart;
             if (speedToggle) speedToggle.enabled = false;
             if (speedButton) speedButton.onClick.AddListener(OnSpeedClick);
