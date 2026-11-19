@@ -14,7 +14,7 @@ namespace MV.UI
 
     /// <summary>
     /// <c>UIPopup_Result</c> 컨트롤러(05 §5.6): 정산 결과 표시 + 「괜찮아요」×1 + 「×N 보상」(N = 08_adPlacement 결과 광고 mul, 가짜 광고 경유, MV-SPEC-02 01 §12-3).
-    /// 화면 코드는 <see cref="ResultPresenter"/>, 겉은 <see cref="IResultView"/>·<see cref="IResultAdView"/>(기본 <see cref="ResultView"/>).
+    /// 화면 코드는 <see cref="ResultPresenter"/>, 겉은 <see cref="IResultView"/>·<see cref="IResultAdView"/>(디자이너 겉 <see cref="ResultDesignView"/>, MV-UI3-RESULT).
     /// 받기는 어느 쪽이든 정산 명령을 한 번만 부르고 팝업을 닫은 뒤 <see cref="ResultViewData.OnCollected"/>(게임 루프 → 로비)를 부른다.
     /// </summary>
     public class ResultPopup : UIPopup
@@ -69,7 +69,7 @@ namespace MV.UI
             else Presenter.Draw();
         }
 
-        /// <summary>「괜찮아요」(×1, MV-SPEC-02 01 §12-3).</summary>
+        /// <summary>×1 받기: 디자이너 겉은 Backboard 터치(노션 [팝업] 인게임 결과), 기획서 「괜찮아요」(MV-SPEC-02 01 §12-3).</summary>
         public void PressCollect()
         {
             if (!Presenter.TryCollect(1)) return;

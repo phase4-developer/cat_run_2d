@@ -157,11 +157,18 @@ namespace MV.Save
     public sealed class MvPassContainer : MvReservedContainer { public MvPassContainer() : base(MvSaveKeys.Pass) { } }
     public sealed class MvBlessingContainer : MvReservedContainer { public MvBlessingContainer() : base(MvSaveKeys.Blessing) { } }
 
-    /// <summary><c>mvSettings</c> — 소리 끄기, 컨텐츠 메뉴 마지막 탭, 언어 코드. 진행 초기화에서 유지한다.</summary>
+    /// <summary><c>mvSettings</c> — 소리(배경음·효과음 볼륨·Mute), 진동, 컨텐츠 메뉴 마지막 탭, 언어 코드. 진행 초기화에서 유지한다.</summary>
     public sealed class MvSettingsContainer : MvSaveContainer
     {
         public MvSettingsContainer() : base(MvSaveKeys.Settings, MvSaveNormalize.Settings) { }
-        public bool Muted => ReadBool("muted");
+        /// <summary>배경음 볼륨 0~100.</summary>
+        public int BgmVolume => ReadInt("bgmVolume");
+        /// <summary>효과음 볼륨 0~100.</summary>
+        public int SfxVolume => ReadInt("sfxVolume");
+        public bool BgmMute => ReadBool("bgmMute");
+        public bool SfxMute => ReadBool("sfxMute");
+        /// <summary>진동 켜짐(기본 켜짐).</summary>
+        public bool Haptic => ReadBool("haptic");
         public string ContentTab => ReadString("contentTab");
         /// <summary>고른 언어 코드(<c>ko</c>·<c>en</c>·<c>ja</c>). 빈 값이면 기기 언어를 따른다(MV-LOC).</summary>
         public string Language => ReadString("language");

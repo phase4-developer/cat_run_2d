@@ -14,7 +14,7 @@ namespace MV.Meta.Tests
         static readonly int[] Income = { 28, 36, 44, 52, 60, 68, 76, 84, 92, 100, 108 };
         static readonly int[] RateRange = { 40, 64, 102, 164, 262, 419, 671, 1074, 1718, 2749 };
         // MV-SPEC-02 Q-09: 분신 max 30, 16_levelPrice group 13(100 × 1.6^(P))
-        static readonly int[] Clone = { 100, 160, 256, 410, 655, 1049, 1678, 2684, 4295, 6872, 10995, 17592, 28147, 45036, 72058, 115292, 184467, 295148, 472237, 755579, 1208926, 1934281, 3094850, 4951760, 7922816, 12676506, 20282410, 32451855, 51922969, 83076750 };
+        static readonly int[] Clone = { 100, 160, 256, 410, 655 }; // 최대 5단계(기획자확인 PC-18)
         static readonly int[] CritDbl = { 80, 128, 205, 328, 524, 839, 1342, 2147, 3436, 5498 };
         // MV-SPEC-02 571~572 관측 「1→2단계 : 50」: 16021002·16022002 = 50(MV-SPEC2-FIX1), 나머지는 50 × 1.5^(L−1).
         static readonly int[] PowerCrit = { 50, 50, 113, 169, 253, 380, 570, 854, 1281, 1922, 2883 };
@@ -69,7 +69,7 @@ namespace MV.Meta.Tests
             BuyCostsMatch(MvGrowth.AreaUp, "clone", MvWealthIds.Dia, Clone, true);
             BuyCostsMatch(MvGrowth.AreaUp, "crit", MvWealthIds.Dia, CritDbl, true);
             BuyCostsMatch(MvGrowth.AreaUp, "dbl", MvWealthIds.Dia, CritDbl, true);
-            Assert.That(Meta.AreaUpValue("clone"), Is.EqualTo(30).Within(1e-9));
+            Assert.That(Meta.AreaUpValue("clone"), Is.EqualTo(5).Within(1e-9));
             Assert.That(Meta.AreaUpValue("rate"), Is.EqualTo(1.0).Within(1e-9));
         }
 
@@ -205,6 +205,17 @@ namespace MV.Meta.Tests
             deck[max] = 2;
             Assert.That(MvMetaRules.DeckAdd(deck, max, Tables.RunConfig.I(RunConfigKeys.MERGE_N)), Is.EqualTo(0), "상한 등급은 더 머지하지 않는다");
             Assert.That(deck[max], Is.EqualTo(3));
+            // 무기 단계가 오르면 그보다 낮은 카드는 버린다(사용자 2026-11-19 「낮은 무기 버림」).
+            var low = new int[max + 1];
+            low[1] = 2; low[2] = 1; low[3] = 1;
+            Assert.That(MvMetaRules.DiscardBelow(low, 3), Is.EqualTo(3), "3등급 아래 3장 버림");
+            Assert.That(low.Take(4), Is.EqualTo(new[] { 0, 0, 0, 1 }), "그 단계 카드는 남긴다");
+            // 같은 단계 3장 이상은 밑에서부터 합친다(옛 짧은 덱 상한에 쌓인 카드).
+            var stack = new int[max + 1];
+            stack[2] = 3; stack[3] = 2;
+            MvMetaRules.MergeUp(stack, 3);
+            Assert.That(stack.Skip(1).Take(3), Is.EqualTo(new[] { 0, 0, 0 }), "2단계 3장 → 3단계 3장 → 4단계");
+            Assert.AreEqual(1, stack[4]);
             // 저장 덱이 상한보다 짧아도 MAX 등급까지 산다: 무기 Level 마지막 = 상한.
             Assert.That(MvMetaRules.WeaponLevel(Tables, Tables.LevelMax(Tables.LobbyUpgrade.ByKey("weapon"))).Lv, Is.EqualTo(max));
         }

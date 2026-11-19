@@ -610,7 +610,7 @@ namespace MV.View.Tests
 
         /// <summary>
         /// 무기문 위 카드 묶음(MV-UI3-HUD9, 임시 리소스, 사용자 2026-11-19 「CreaftGate용 … 다른덴 추가하지마」): Obj_CraftGate 변형에만 있다.
-        /// 장 수 = Made + Extra(상한 = 프리팹 MaxCards 20), 한 줄 4장을 넘으면 위 줄, 통과(Done)하면 카드마다 화면 자리를 넘기고 숨긴다.
+        /// 장 수 = Made + Extra(상한 = 프리팹 MaxCards), 왼쪽 기둥부터 오른쪽으로 왼쪽 정렬하고 오른쪽 기둥을 넘으면 위 줄, 통과(Done)하면 카드마다 화면 자리를 넘기고 숨긴다.
         /// </summary>
         [Test]
         public void CraftGateBundle_ShowsMadePlusExtra_ReleasesOnPass()
@@ -632,23 +632,27 @@ namespace MV.View.Tests
             Assert.That(bundle.Template.Frame, Is.Not.Null, "카드 틀 참조");
             Assert.That(bundle.Template.Icon, Is.Not.Null, "카드 그림 참조");
             Assert.That(bundle.Template.gameObject.activeSelf, Is.False, "원본은 꺼 둔다");
-            Assert.That(bundle.LabelIcon, Is.Not.Null, "문 안 무기 카드(LabelIcon_Temp)");
-            Assert.That(bundle.LabelIcon.gameObject.activeSelf && bundle.LabelIcon.Frame != null && bundle.LabelIcon.Icon != null, Is.True, "문 안 카드는 켜 두고 틀·그림 참조가 있다");
-            Assert.AreEqual((bundle.LeftX + bundle.RightX) * 0.5f, bundle.LabelIcon.transform.localPosition.x, 1e-4f, "문 가운데(노션 Obj_CraftGate UI 「라벨 옆에 무기 아이콘 없음」)");
+            Assert.That(bundle.LabelIcon, Is.Not.Null, "문 안쪽 무기 카드(LabelIcon_Temp)");
+            Assert.That(bundle.LabelIcon.gameObject.activeSelf && bundle.LabelIcon.Frame != null && bundle.LabelIcon.Icon != null, Is.True, "문 안쪽 카드는 켜 두고 틀·그림 참조가 있다");
+            Assert.AreEqual((bundle.LeftX + bundle.RightX) * 0.5f, bundle.LabelIcon.transform.localPosition.x, 1e-4f, "문 안쪽 가운데(Notion Obj_CraftGate UI 「Gate 내부에 얻을 수 있는 무기의 아이콘」, 레이블 옆 아이콘 없음)");
             Assert.AreEqual(System.Math.Min(8, bundle.MaxCards), bundle.Shown, "Made + Extra(프리팹 상한까지)");
 
-            // 노션 Obj_CraftGate UI: 4×5(한 줄 4장·최대 20), 아래 줄 가운데 정렬, 카드끼리 겹치지 않는다. 두 줄부터 위 줄은 꽉 찬 줄 시작점에 왼쪽 정렬.
+            // Notion Obj_CraftGate UI: 최대 4x5 격자(한 줄 4장, 최대 20장), 최초 정렬 Lower Center. 꽉 찬 줄은 기둥 사이 가운데·기둥 안쪽 면 안. 두 줄부터 위 줄은 꽉 찬 줄 시작점에 왼쪽 정렬.
             var cards = bundle.Cards;
             float x0 = cards[0].transform.localPosition.x, y0 = cards[0].transform.localPosition.y;
             int cols = 0;
             foreach (var c in cards) if (UnityEngine.Mathf.Approximately(c.transform.localPosition.y, y0)) cols++;
             Assert.AreEqual(bundle.Columns, cols, "한 줄 장 수 = 인스펙터 한 줄 장 수");
-            Assert.AreEqual(4, cols, "한 줄 4장(노션 4x5)");
-            Assert.AreEqual(20, bundle.MaxCards, "최대 20장(노션)");
+            Assert.AreEqual(4, cols, "한 줄 4장(프리팹 값, Notion 4x5)");
+            Assert.AreEqual(20, bundle.MaxCards, "최대 20장(Notion 4x5)");
+            Assert.Greater(cards[1].transform.localPosition.x - cards[0].transform.localPosition.x, bundle.CardSize.x, "격자: 카드끼리 겹치지 않는다");
+            float half = bundle.CardSize.x * 0.5f;
             float mid = (bundle.LeftX + bundle.RightX) * 0.5f;
             Assert.AreEqual(mid, (x0 + cards[cols - 1].transform.localPosition.x) * 0.5f, 1e-4f, "아래 줄 가운데 = 기둥 사이 가운데");
+            Assert.GreaterOrEqual(x0 - half, bundle.LeftX - 1e-4f, "왼쪽 기둥 안쪽 면을 넘지 않는다");
             float gap = cards[1].transform.localPosition.x - x0;
-            Assert.GreaterOrEqual(gap, bundle.CardSize.x - 1e-4f, "카드끼리 겹치지 않는다(시안 격자)");
+            Assert.Greater(gap, 0f);
+            Assert.LessOrEqual(cards[cols - 1].transform.localPosition.x + half, bundle.RightX + 1e-4f, "카드 오른쪽 끝이 오른쪽 기둥 안쪽 면을 넘지 않는다");
             Assert.Greater(cards[cols].transform.localPosition.y, y0, "넘치면 위 줄");
             Assert.AreEqual(x0, cards[cols].transform.localPosition.x, 1e-4f, "두 줄부터 위 줄은 가장 긴 줄 시작점에 왼쪽 정렬");
             Assert.AreEqual(gap, cards[cols + 1].transform.localPosition.x - cards[cols].transform.localPosition.x, 1e-4f, "위 줄도 같은 간격");

@@ -332,8 +332,15 @@ namespace MV.Meta
         /// <summary>모드 오늘 입장 수(<c>mvDaily.modePlays</c>). 한도는 <c>400_content.dailyLimit</c>(0 = 없음).</summary>
         public int ModePlaysToday(string contentKey) => IsReady ? _local.ModePlaysToday(contentKey) : 0;
 
-        /// <summary>설정 소리 끄기를 저장한다(<c>mvSettings.muted</c>). 소리 모듈 값은 화면이 바꾼다(이 명령은 저장만).</summary>
-        public MvMetaResponse SetMuted(bool muted) => Send(new MvMetaRequest(MvMetaRequestNames.SetMuted, new JObject { ["muted"] = muted }));
+        /// <summary>소리 설정을 저장한다(설정 팝업). 소리 모듈 값은 화면이 바꾼다(이 명령은 저장만). 볼륨은 0~100.</summary>
+        public MvMetaResponse SetSound(int bgmVolume, int sfxVolume, bool bgmMute, bool sfxMute) =>
+            Send(new MvMetaRequest(MvMetaRequestNames.SetSound, new JObject
+            {
+                ["bgmVolume"] = bgmVolume, ["sfxVolume"] = sfxVolume, ["bgmMute"] = bgmMute, ["sfxMute"] = sfxMute,
+            }));
+
+        /// <summary>진동 켜기·끄기를 저장한다(<c>mvSettings.haptic</c>).</summary>
+        public MvMetaResponse SetHaptic(bool on) => Send(new MvMetaRequest(MvMetaRequestNames.SetHaptic, new JObject { ["haptic"] = on }));
 
         /// <summary>고른 언어를 저장한다(<c>mvSettings.language</c>). 언어 바꾸기는 LocalizationManager가 하고 이 명령은 저장만.</summary>
         public MvMetaResponse SetLanguage(string code) => Send(new MvMetaRequest(MvMetaRequestNames.SetLanguage, new JObject { ["language"] = code }));

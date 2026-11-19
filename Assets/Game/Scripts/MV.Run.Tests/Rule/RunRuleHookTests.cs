@@ -55,6 +55,7 @@ namespace MV.Run.Tests.Rule
             var split = new SplitLevel(lv);
             var probe = new ProbeRule(split);
             var snap = new RunSetup { Preset = "easy" };
+            snap.Deck = RunTestTables.Deck(t);
             snap.Deck[5] = 1; // 피해 10인 단계(103 더미 5단계, MV-SPEC2-FIX1)
             var ctx = new RunContext
             {

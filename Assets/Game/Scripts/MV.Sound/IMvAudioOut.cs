@@ -21,6 +21,9 @@ namespace MV.Sound
 
         /// <summary>음악 트랙 켜기/끄기. 음소거 중에도 음악은 계속 흐른다(정본 L1684).</summary>
         void SetMusicOn(bool on);
+
+        /// <summary>트랙 볼륨 0~1(설정 팝업 슬라이더, MV-UI2-SETTING). music이면 음악 트랙, 아니면 효과음·UI 트랙.</summary>
+        void SetTrackVolume(bool music, float volume01);
     }
 
     /// <summary>GAP·지연 재생 시계(초). 실제는 <see cref="Time.unscaledTimeAsDouble"/>, 시험은 주입.</summary>

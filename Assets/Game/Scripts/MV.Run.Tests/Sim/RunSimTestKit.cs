@@ -11,6 +11,9 @@ namespace MV.Run.Tests
     {
         static MvTables _cached;
 
+        /// <summary>빈 시작 덱: 길이 = 103_item 상한 + 1(표 기준, 상수 없음).</summary>
+        public static int[] Deck(MvTables t) => new int[t.WeaponTierMax() + 1];
+
         public static MvTables Load()
         {
             if (_cached != null) return _cached;

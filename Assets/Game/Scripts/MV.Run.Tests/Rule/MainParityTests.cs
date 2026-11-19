@@ -17,24 +17,24 @@ namespace MV.Run.Tests.Rule
     /// </summary>
     public sealed class MainParityTests
     {
-        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음). MV-PARITY-GOLDEN-sgatem(2026-11-19): 302_area.sgateM(계단 게이트 체력 배율)이 Area 2~5에서 바뀐 표 커밋 429bb7e4 뒤로 A2~A5 12개 다시 기록(Area 1은 sgateM 같아 그대로, 종료 사유는 모두 Wall, 잡 MV-HIT-RADIUS-t1의 실제 값).</summary>
+        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음). MV-PARITY-GOLDEN-sgatem(2026-11-19): 302_area.sgateM(계단 게이트 체력 배율)이 Area 2~5에서 바뀐 표 커밋 429bb7e4 뒤로 A2~A5 12개 다시 기록. MV-PC-ANS1·ANS2(2026-11-19, 기획자확인 반영): 지팡이 피해 2^(단계−1)·탑 기준 15로 A1~A5 프레임·이벤트 값 일부, 레벨당 획득 % 지급·황금 생선 5 × Area^1.5로 결과 해시가 바뀌어 15개 모두 다시 기록(잡 MV-PC-ANS2-t2의 실제 값, 종료 사유는 모두 Wall).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["A1L1"] = "f3126 e424 r235 Wall 4a10c80899b0edc6",
-            ["A1L8"] = "f3890 e576 r291 Wall dc8e3f5784b69e70",
-            ["A1L15"] = "f3788 e482 r281 Wall 34fd9fe9eda1ff89",
-            ["A2L1"] = "f3298 e422 r243 Wall f92ea9b1ce931e37",
-            ["A2L8"] = "f3886 e547 r291 Wall c42edeed231cbc73",
-            ["A2L15"] = "f3676 e496 r275 Wall df0f39ec2bd24990",
-            ["A3L1"] = "f3263 e794 r477 Wall c5901adbb822ec29",
-            ["A3L8"] = "f3890 e988 r577 Wall c615d398c6437a20",
-            ["A3L15"] = "f3817 e923 r559 Wall e9482f6645fcaff7",
-            ["A4L1"] = "f3155 e803 r469 Wall c548869e451a6a82",
-            ["A4L8"] = "f3864 e946 r573 Wall 79bcc4b9609f8f1a",
-            ["A4L15"] = "f3680 e943 r545 Wall c020ce54701d2fac",
-            ["A5L1"] = "f3151 e838 r469 Wall 74f5939221d9b6a6",
-            ["A5L8"] = "f3890 e997 r577 Wall 2390119f06233d73",
-            ["A5L15"] = "f3676 e854 r545 Wall 375287805b272bb5",
+            ["A1L1"] = "f3126 e424 r235 Wall 0f26c5bfc1577bed",
+            ["A1L8"] = "f3890 e577 r291 Wall 617c6e17653d0bf4",
+            ["A1L15"] = "f3788 e482 r281 Wall f06ff3a9f78ca025",
+            ["A2L1"] = "f3298 e422 r243 Wall 27b0ed9ba1ca46cf",
+            ["A2L8"] = "f3886 e547 r291 Wall 04196193699fa0f6",
+            ["A2L15"] = "f3676 e496 r275 Wall 2360f603cf39a710",
+            ["A3L1"] = "f3269 e810 r477 Wall 412cef6cde9f9532",
+            ["A3L8"] = "f3890 e993 r577 Wall 5dd11cec4c4e55d3",
+            ["A3L15"] = "f3823 e926 r559 Wall eacaa1837967e821",
+            ["A4L1"] = "f3155 e808 r469 Wall 439b7d969d0d096b",
+            ["A4L8"] = "f3864 e952 r573 Wall bc7a8fb93d287d8c",
+            ["A4L15"] = "f3680 e952 r545 Wall 604acdce0d453dd0",
+            ["A5L1"] = "f3131 e840 r465 Wall b807117c84bf10de",
+            ["A5L8"] = "f3891 e1008 r577 Wall ccd3829a571f3c36",
+            ["A5L15"] = "f3710 e883 r549 Wall 6f7e92aec9d04248",
         };
 
         [Test] public void Area1() => Check(0);
@@ -84,8 +84,9 @@ namespace MV.Run.Tests.Rule
                 AupRate = 1, AupRange = 1, AupClone = area >= 2 ? 1 : 0, AupCrit = 1, AupDbl = 1,
                 PerkPower = 1, PerkCrit = 1, PerkObst = 1, PerkDcap = 1,
             };
+            s.Deck = RunTestTables.Deck(RunTestTables.Load());
             s.Deck[1] = 1;
-            s.Deck[Math.Min(8, 1 + area)] += 1;
+            s.Deck[Math.Min(s.Deck.Length - 1, 1 + area)] += 1;   // 상한 = 103_item 상한(상수 없음)
             return s;
         }
 

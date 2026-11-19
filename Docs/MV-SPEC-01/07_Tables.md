@@ -225,6 +225,7 @@ MvTables.Current = tables;
 | | `12_weaponLevel` | WeaponLevelTable | Meta | 7.8.3 | 07 |
 | | `13_areaUpgrade` | AreaUpgradeTable | Meta, Run | 7.8.4 | 07 |
 | | `14_rebirthPerk` | RebirthPerkTable | Meta, Run | 7.8.5 | 07 |
+| | `15_grade` | GradeData(`MvTables.Grade`) | UI | 7.8.14 | 07 |
 | | `16_levelPrice` | LevelPriceTable(group → level) | Meta | 7.8.6 | 07(그룹 1~24), 08(그룹 301~) |
 | 1xx | `101_cat` | CatTable | View | 7.7.7 | 07 |
 | | `102_enemy` | EnemyTable | Run, View | 7.5.8 | 07 |
@@ -374,7 +375,7 @@ MvTables.Current = tables;
 | key | value | unit | 근거 | 쓰는 곳 |
 |---|---|---|---|---|
 | FIRE_PHASE | 0/0.13/0.26/0.07/0.19/… (31칸) | s | [프로토] L1811 | 유닛별 첫 발사 위상(본체, 분신 1~30). 6번째부터 **더미**(Q-09 분신 상한 30 준비) |
-| MAX_CLONES | 30 | 명 | MV-SPEC-02 Q-09(옛 [프로토] L830 4) | 분신 상한, clone 카드 후보 제외. 런 코드의 5칸 고정 배열은 MV-RUN-SPEC2가 표 길이로 바꾼다 |
+| MAX_CLONES | 5 | 명 | 기획자확인 PC-09·18(2026-11-18, 본체 포함 6명. 30은 원작 값 클램프라 쓰지 않음) | 분신 상한, clone 카드 후보 제외. 런 코드의 5칸 고정 배열은 MV-RUN-SPEC2가 표 길이로 바꾼다 |
 | CLONE_X_MAX | 3.5 | m | MV-SPEC-02 Q-10(옛 [프로토] 3.4) | 분신 x 제한 |
 | DBL_SHOT_DX | 0.2 | m | [프로토] L2088 | 2연발 좌우 간격 |
 | PROJ_SPAWN_DZ | 0.4 | m | [프로토] L2081 | 탄 출발 z |
@@ -403,10 +404,8 @@ MvTables.Current = tables;
 |---|---|---|---|---|
 | CP_MAX | 2 | | [프로토] L2401 | 체크포인트 상한(골목 3은 항상 플레이) |
 | PLAYABLE_AREAS | 5 | 개 | [프로토] L757 `PROTO_AREAS` | 이 번호 Area가 마지막(zoneEnd). 결정 대기(D-63, 04 D-26) |
-| TOK_BASE | 1 | 개 | [프로토] L2407 | 목숨 조각 기본 |
-| TOK_SOUL_DIV | 4 | 생선/개 | [프로토] L2407 | floor(souls/4) |
-| TOK_GATE | 2 | 개 | [프로토] L2407 | Area 아치 도달 |
-| TOK_OPEN | 3 | 개 | [프로토] L2407 | 개방(pass·zoneEnd) |
+| RB_FISH_MUL | 5 | 개 | 기획자확인 PC-08(2026-11-18) | 냥환생 황금 생선 = floor(RB_FISH_MUL × 도달 Area^RB_FISH_POW). 옛 TOK_BASE·TOK_SOUL_DIV·TOK_GATE·TOK_OPEN(런마다 적립) 대체 |
+| RB_FISH_POW | 1.5 | | 기획자확인 PC-08 | 위 식의 Area 지수(예: Area 2 → 14, 4 → 40, 6 → 73, 10 → 158) |
 | FAIL_SFX_DELAY_MS | 350 | ms | [프로토] L2408 | 실패 소리 지연 |
 | WEAPON_EXTRA_BUYS | 60 | 회 | [프로토] L818 | 무기 Lv 8 이후 추가 구매 수(16_levelPrice 행 생성에만) |
 | ARCH_LABEL_HIDE | 3 | m | [프로토] L1479 | 아치 글자판 숨김 거리(MV.View) |
@@ -864,7 +863,7 @@ flash·punch·objShake의 시간·크기 값은 [02](02_Visual.md)·[06](06_Effe
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 107001001 | sgate | StairGate | 1.9 | 0 | None | 0 | 1 | 1 | 0 | 0 | 0 | GaugeLv | L835 `GATE_MAX[0]`, L1945~1951. MV-SPEC-02 Q-06: mul 2→1, useAreaHp 1→0, diffMul 1→0(M은 `302_area.sgateM`). useScale은 Q-03 미정이라 그대로 |
 | 107001002 | cgate | CraftGate | 1.9 | 3.8 | Add | 20 | 1 | 1 | 0 | 1 | 0 | One | L837~838 |
-| 107001003 | well | Well | 150 | 1.6 | Pow | 8 | 1 | 0 | 1 | 1 | 0 | Level | L1745~1747, L1887~1893 |
+| 107001003 | well | Well | 15 | 1.6 | Pow | 8 | 1 | 0 | 1 | 1 | 0 | Level | L1745~1747, L1887~1893 |
 
 - 문턱 식: StairGate `M = base × mul × scale × hp/100`(Area 1 easy 11.4), CraftGate `T(k) = (base + step·k) × scale × hp/100`(5.7, 17.1, 28.5 …), Well `need(lv) = base × step^(lv−1) × hp/100 × gauge`(150, 240, 384 …). 넘침 처리·반복은 [04 §4.4~4.5](04_GameRules.md).
 - `GATE_MAX[1..7]`(3.5~15)는 정본에서 쓰지 않는다(잔재, 04 §4.16). 표에 두지 않는다.
@@ -1202,7 +1201,7 @@ consumeType 5(Item)의 id 표. 로비 시작 덱(`save.deck`)과 런 손패의 �
 | key | string | `w1`~`w8` |
 | tier | int | 1~8 |
 | sort, active | int | |
-| dmg | int | 기본 피해(정수). 런은 장착 단계의 이 값을 그대로 읽는다(코드에 공식 없음). 지금 값은 **더미** `round(1 × 1.8^(t−1))`(HE_07 확보 전, 원작 단위 1, MV-SPEC2-FIX1·PC-03) |
+| dmg | int | 기본 피해(정수). 런은 장착 단계의 이 값을 그대로 읽는다(코드에 공식 없음). 지금 값은 **더미** `2^(t−1)` = 1, 2, 4 … 2048(원작에 단계별 표 없음, 기획자확인 PC-03 2026-11-18. 옛 더미 `round(1.8^(t−1))`) |
 | col | color | 3D 금속색(그림 보조) `WCOL` |
 | gradeCol | color | 등급색 `WGRADE`(손패 틀·팝업·「변신!」 색) |
 | spin | bool01 | 투사체 회전 그림 여부. 정본 `spin: !(t===4 \|\| t===7)` L2087 |
@@ -1216,13 +1215,13 @@ consumeType 5(Item)의 id 표. 로비 시작 덱(`save.deck`)과 런 손패의 �
 |---|---|---|---|---|---|---|---|
 | 103001001 | 1 | 1 | #c08a52 | #9ea4ae | 1 | 털뭉치 | 방울 목걸이 |
 | 103001002 | 2 | 2 | #d6a56a | #46c35a | 1 | 솔방울 | 새싹 머리 |
-| 103001003 | 3 | 3 | #d9dde3 | #3a8ff0 | 1 | 병뚜껑 | 병뚜껑 모자 |
-| 103001004 | 4 | 6 | #a9bfd6 | #a65be8 | 0 | 깡통 | 깡통 투구 · 파란 목도리 |
-| 103001005 | 5 | 10 | #b4bac4 | #f08a24 | 1 | 생선뼈 | 해적 반다나 · 생선뼈 목걸이 |
-| 103001006 | 6 | 19 | #ece6d6 | #e8443a | 1 | 고무공 | 털모자 · 줄무늬 목도리 |
-| 103001007 | 7 | 34 | #cfe0ff | #1fc8c8 | 0 | 방울 장난감 | 방울 마법사 모자 · 망토 |
-| 103001008 | 8 | 61 | #ffe08a | #ffd23a | 1 | 황금 털뭉치 | 황금 왕관 · 빨간 망토 |
-| 103001009~012 | 9~12 | 110 / 198 / 357 / 643 | | | | w9~w12 | **더미**, active 0(MV-SPEC-02 Q-08 지팡이 12단계 준비. 그림·문구는 8단계 것 재사용) |
+| 103001003 | 3 | 4 | #d9dde3 | #3a8ff0 | 1 | 병뚜껑 | 병뚜껑 모자 |
+| 103001004 | 4 | 8 | #a9bfd6 | #a65be8 | 0 | 깡통 | 깡통 투구 · 파란 목도리 |
+| 103001005 | 5 | 16 | #b4bac4 | #f08a24 | 1 | 생선뼈 | 해적 반다나 · 생선뼈 목걸이 |
+| 103001006 | 6 | 32 | #ece6d6 | #e8443a | 1 | 고무공 | 털모자 · 줄무늬 목도리 |
+| 103001007 | 7 | 64 | #cfe0ff | #1fc8c8 | 0 | 방울 장난감 | 방울 마법사 모자 · 망토 |
+| 103001008 | 8 | 128 | #ffe08a | #ffd23a | 1 | 황금 털뭉치 | 황금 왕관 · 빨간 망토 |
+| 103001009~012 | 9~12 | 256 / 512 / 1024 / 2048 | | | | w9~w12 | **더미**, active 0(MV-SPEC-02 Q-08 지팡이 12단계 준비. 그림·문구는 8단계 것 재사용) |
 
 근거 [프로토] L769~772, L3264. 등급 9 이상을 만들려면 행 추가 + `12_weaponLevel` 행 + 손패 머지 상한(코드 상수 8 → `103_item` 최대 tier로 바뀜).
 
@@ -1517,12 +1516,12 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 |---|---|---|---|---|---|---|---|---|---|---|
 | 13001001 | rate | 10 | 0.1 | FireRate | {0}% | 0 | 10 | 11 | 40 | 냥냥펀치 연사 |
 | 13001002 | range | 10 | 0.1 | Range | {0}% | 0 | 10 | 12 | 40 | 사거리 |
-| 13001003 | clone | 30 | 1 | Clone | {0} | 0 | 1 | 13 | 100 | 분신 수(MV-SPEC-02 Q-09: max 4 → 30) |
+| 13001003 | clone | 5 | 1 | Clone | {0} | 0 | 1 | 13 | 100 | 분신 수(기획자확인 PC-18: max 5, MAX_CLONES와 따로 둠) |
 | 13001004 | crit | 10 | 0.1 | CritChance | {0}% | 0 | 10 | 14 | 80 | 치명타 확률 |
 | 13001005 | dbl | 10 | 0.1 | DoubleChance | {0}% | 0 | 10 | 15 | 80 | 2연발 확률 |
 | 13001006 | pierce | 10 | 0.1 | PierceChance | {0}% | 0 | 10 | 16 | 80 | 관통 확률(**더미** 행) |
-| 13001007 | diaLv | 10 | 1 | DiaPerLevel | {0} | 0 | 1 | 17 | 80 | 레벨당 블루 마법석 획득량(**더미** 행) |
-| 13001008 | goldLv | 10 | 5 | GoldPerLevel | {0} | 0 | 5 | 18 | 80 | 레벨당 골드 획득량(**더미** 행) |
+| 13001007 | diaLv | 10 | 0.1 | DiaPerLevel | {0}% | 0 | 10 | 17 | 80 | 레벨당 블루 마법석 획득량: 런 종료에 이번 런에서 번 블루 마법석(시작 몫 제외)의 perLv × Lv를 더함(기획자확인 PC-06: 단계당 +10%, 임시) |
+| 13001008 | goldLv | 10 | 0.1 | GoldPerLevel | {0}% | 0 | 10 | 18 | 80 | 레벨당 골드 획득량: 런 종료에 이번 런에서 번 골드(시작 몫 제외)의 perLv × Lv를 더함(PC-06: 단계당 +10%, 임시) |
 
 근거 [프로토] L2515~2521. 비용 재화 캣닢(`1 / 2`). 이름의 영문 부분(Fire Rate 등)은 정본 문구 그대로 `name` 값에 둔다([05](05_Screens.md)).
 
@@ -1571,7 +1570,7 @@ MV-SPEC-02 반영(MV-DATA-SPEC2, Q-20·Q-21·Q-35): 이름은 별자리 12종(�
 | group | 대상 | 재화 | 행 수 | 소유 |
 |---|---|---|---|---|
 | 1 / 2 / 3 | 로비 stair / weapon / income | 츄르 `1 / 1` | 30 / 149 / 50 | 07 |
-| 11~18 | Area 강화 rate / range / clone / crit / dbl / pierce / diaLv / goldLv | 캣닢 `1 / 2` | 10 / 10 / 30 / 10 / 10 / 10 / 10 / 10 | 07. 그룹 13 Lv 5~30과 16~18은 **더미** 가격(분신 수 max 30) |
+| 11~18 | Area 강화 rate / range / clone / crit / dbl / pierce / diaLv / goldLv | 캣닢 `1 / 2` | 10 / 10 / 5 / 10 / 10 / 10 / 10 / 10 | 07. 그룹 13 Lv 5와 16~18은 **더미** 가격(분신 수 max 5, Lv 6~30 행은 남겨 두지만 쓰지 않음) |
 | 21~29 | 부활 power / crit / obst / dcap / gcap / startGold / startDia / craftDbl / stairDbl | 목숨 조각 `1 / 4` | 20 / 40 / 10 / 5 / 21 / 20 / 20 / 20 / 20 | 07. 25~29와 22의 Lv21~40은 **더미**. 24는 Lv6~20 행이 남아 있으나 max 5라 쓰지 않는다 |
 | 301 / 302 / 304 / 306~313 | 펫 / 친구 / 신 레벨 / 장비 | 08 정의 | 08 | [08](08_Content.md) |
 
@@ -1689,11 +1688,23 @@ id	group	targetLevel	priceType	priceId	priceValue
 - MV-SPEC-02 반영(MV-DATA-SPEC2, Q-21): 사자자리냥 해금(5001004)은 active 0.
 - 판정 시점: Area 개방·런 정산 직후 MV.Meta가 1회. 새로 열리면 `showUnlock` 연출([05](05_Screens.md)).
 
+### 7.8.14 15_grade — 등급(MV-UI3-RESULT, D-GRADE-TABLE)
+
+노션 「[참고] 프로젝트 내 등급 관련 리소스 표」의 등급 1~12. 등급 틀 그림은 `09_uiResource` 그룹 5(`sort` = 등급 번호, `MvUiGrade.Frame`)가 정본이라 이 표에 틀 열을 두지 않는다(같은 값 두 곳 금지). 이름은 언어팩 `name:<id>`.
+
+| 열 | 타입 | 뜻 |
+|---|---|---|
+| id | int | `15001{순번 3}` |
+| name | string | 편집용 영문 이름(Common ~ Transcendent). 화면 이름은 언어팩 `name:<id>` |
+| grade | int | 등급 번호 1~12 = `09_uiResource` 등급 틀 `sort` |
+
+등급을 가진 대상 표는 `gradeId` 열로 이 표 행을 가리킨다(첫 적용 `01_wealth.gradeId`).
+
 ### 7.8.10 01_wealth — 재화
 
 Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, ConsumeTypeId: 1)`.
 
-> 결정 D-GRADE-TABLE(2026-11-19, 원장 「확정 결정」): 보상 칸 등급 틀을 위해 `grade` 열(등급 번호 → 새 등급 표 → `09_uiResource` `grade.N`)을 더한다. 표 구조는 결과 팝업 계약에서 이 절과 새 등급 표 절에 함께 적는다. 값은 정해질 때까지 더미.
+> 결정 D-GRADE-TABLE(2026-11-19, 원장 「확정 결정」): 보상 칸 등급 틀을 위해 `gradeId` 열(→ `15_grade` 행 id → 등급 번호 → `09_uiResource` `grade.N`, §7.8.14)을 더했다(MV-UI3-RESULT). 0 = 등급 없음(디자이너 틀 그대로). 값 gold 15001002(Uncommon)·dia 15001003(Rare)·goldenFish 15001005(Legendary)는 디자이너 시안 틀 색을 노션 등급 표 색에 맞춘 값으로 확정(사용자 2026-11-19 「시안 색대로 확정」). 나머지 행은 0.
 
 | 열 | 타입 | 뜻 |
 |---|---|---|
@@ -1703,6 +1714,7 @@ Framework `WealthTable`이 읽는 표. `ResourceService(data, wealthTable, Consu
 | icon | res | 기본 아틀라스 `Atlas_UI_Icon` |
 | maxValue | long | 0 = 상한 없음 |
 | chargeShopSectionId | int | 모자랄 때 여는 상점 칸(`702_shopSection`). 0 = 없음 |
+| gradeId | int(FK `15_grade`) | 보상·아이템 칸 등급 틀. 0 = 등급 없음 |
 
 | id | type | icon | maxValue | chargeShopSectionId | 이름 | 근거 |
 |---|---|---|---|---|---|---|

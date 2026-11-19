@@ -17,8 +17,13 @@ namespace MV.UI
         {
             var screen = await Ui.screenManager.ChangeUIScreenAsync(MvUiIds.Lobby, data) as LobbyScreen;
             Ui.hudManager.HideAll();
+            // 런 HUD를 미리 읽어 둔다: 출발 누름과 같은 호출에서 런 HUD(드래그 입력면)가 켜져야 로비 첫 터치를 넘겨받는다(04 §4.1.2).
+            await Ui.hudManager.CachingHudAsync(new List<string> { MvUiIds.Run });
             return screen;
         }
+
+        /// <summary>팝업이 하나라도 열려 있는가(Framework 팝업 관리자 기준).</summary>
+        public static bool PopupOpen => Ui != null && Ui.popupManager != null && Ui.popupManager.ActivePopups.Count > 0;
 
         /// <summary>로비를 숨기고 런 HUD를 켠다. 같은 프레임에 런이 시작되도록 HUD 첫 로드만 기다린다.</summary>
         public static async UniTask<RunHud> EnterRunAsync(IRunHudSource source)
@@ -96,6 +101,14 @@ namespace MV.UI
         /// <summary>로비 「컨텐츠」 메뉴(05 §5.15, MV-UI-CONTENT). 모드 시작은 <see cref="ContentMenuData.OnStartMode"/>.</summary>
         public static async UniTask<ContentMenuPopup> OpenContentMenuAsync(ContentMenuData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.ContentMenu, data ?? new ContentMenuData()) as ContentMenuPopup;
+
+        /// <summary>설정(노션 [팝업] 설정, MV-UI2-SETTING). 로비 설정 버튼이 연다.</summary>
+        public static async UniTask<SettingsPopup> OpenSettingsAsync(SettingsPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.Setting, data ?? new SettingsPopupData()) as SettingsPopup;
+
+        /// <summary>언어 고르기(D-LOC-PLAN ③). 설정 팝업의 언어 버튼이 연다.</summary>
+        public static async UniTask<LanguagePopup> OpenLanguageAsync(LanguagePopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.SettingLanguage, data ?? new LanguagePopupData()) as LanguagePopup;
 
         /// <summary>퀘스트(08 §8.5.1, MV-META-QUEST). 잠김 판정은 로비 버튼(<see cref="LobbyPresenter.QuestSideId"/>)이 한다.</summary>
         public static async UniTask<QuestPopup> OpenQuestAsync(QuestPopupData data = null) =>

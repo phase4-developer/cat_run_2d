@@ -40,6 +40,7 @@ namespace MV.Run.Tests.Gen
         {
             var t = RunTestTables.ProtoEasy(); // 프로토 easy 값(MV-SPEC2-FIX2)
             var setup = new RunSetup { Area = 0, Zone = 0, Level = 1, UpWeapon = 8, UpStair = 3, AupClone = 9, God = "thunder", Preset = "easy" };
+            setup.Deck = RunTestTables.Deck(t);
             setup.Deck[1] = 2;
             setup.Deck[3] = 1;
             var s = new RunLevelBuilder().NewRun(setup, t, new ConstRng(0.5));
@@ -51,10 +52,10 @@ namespace MV.Run.Tests.Gen
             Assert.AreEqual(4 + 7, s.CardPool.Count, "공용 active 4 + 신 active 7");
             Assert.AreEqual(2, s.Bt, "baseTier(8) = 무기 Level 2");
             Assert.AreEqual(1, s.GaugeLv, "kegStart(3) Lv 1");
-            Assert.AreEqual(3.0 / 7 * 150, s.GaugeFill, 1e-9, "fill = step/need × gaugeNeed(1)");
-            // MV-SPEC-02 Q-09: 분신 상한 = min(MAX_CLONES 30, 314 위치 수) → aup.clone 9 그대로
+            Assert.AreEqual(3.0 / 7 * 15, s.GaugeFill, 1e-9, "fill = step/need × gaugeNeed(1)");
+            // 분신 상한 = min(MAX_CLONES 5(PC-09·18), 314 위치 수) → aup.clone 9는 5로 잘림
             Assert.AreEqual(System.Math.Min(RunFormulas.CloneCap(t), setup.AupClone), s.Clones, "min(CloneCap, aup.clone)");
-            Assert.AreEqual(9, s.Clones);
+            Assert.AreEqual(5, s.Clones);
             // FIRE_PHASE(300) 칸 = 1 + 분신 상한, 표 값 그대로(표에 없는 칸은 0)
             Assert.AreEqual(1 + RunFormulas.CloneCap(t), s.FireT.Length);
             CollectionAssert.AreEqual(new[] { 0, 0.13, 0.26, 0.07, 0.19 }, s.FireT.Take(5));

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using jjevol;
 using MV.Data;
 using MV.Run;
@@ -87,6 +88,8 @@ namespace MV.UI
         [SerializeField] HudWeaponSlot equipSlot;
         /// <summary>쌓이는 무기(<c>Stack</c>). 자식 <c>Slot_Weapon_Stack</c>이 칸이고, 모자라면 첫 칸을 복제해 풀에서 빌린다.</summary>
         [SerializeField] RectTransform stack;
+        [Tooltip("덱에서 빠지는 카드(무기 Level이 올라 버린 낮은 카드·머지로 줄어든 칸)가 흐려지며 사라지는 초(사용자 2026-11-19 카드 「짧게 흐려지며 사라짐」). 0 = 바로.")]
+        [SerializeField] float discardFadeSec = 0.15f;
 
         [Header("Mid/Stair")]
         [SerializeField] Image stairGrade;
@@ -358,21 +361,61 @@ namespace MV.UI
             if (deck == null) deck = Array.Empty<int>();
             if (equipSlot) equipSlot.Set(t, HudWeaponHand.Equipped(deck), 1);
             var tiers = HudWeaponHand.Stack(deck);
-            while (_stackSlots.Count < tiers.Count && _stackTemplate) _stackSlots.Add(_stackPool.Get());
+            while (_stackSlots.Count < tiers.Count && _stackTemplate)
+            {
+                var add = _stackPool.Get();
+                add.transform.SetAsLastSibling();   // 칸 목록 순서 = 형제 순서
+                _stackSlots.Add(add);
+            }
+            // 디자이너 Stack이 거꾸로 배치(ReverseArrangement)면 마지막 칸이 맨 위·맨 앞이다: 높은 단계(tiers[0])를 마지막 켜진 칸에 둔다(사용자 2026-11-19 「무기 정렬이 왜 이래?」).
+            var vl = stack ? stack.GetComponent<HorizontalOrVerticalLayoutGroup>() : null;
+            bool reverse = vl && vl.reverseArrangement;
+            int n = tiers.Count;
             // 디자이너 칸은 남기고, 빌린 칸은 필요 없어지면 풀로 돌려준다.
             while (_stackSlots.Count > Math.Max(tiers.Count, _designerSlots))
             {
                 int last = _stackSlots.Count - 1;
-                _stackPool.Release(_stackSlots[last]);
+                FadeOut(_stackSlots[last], release: true);
                 _stackSlots.RemoveAt(last);
             }
             for (int i = 0; i < _stackSlots.Count; i++)
             {
                 var slot = _stackSlots[i];
-                bool on = i < tiers.Count;
-                slot.gameObject.SetActive(on);
-                if (on) slot.Set(t, tiers[i], 1);
+                if (i < n)
+                {
+                    DOTween.Kill(slot);
+                    slot.SetAlpha(1f);
+                    IgnoreLayout(slot, false);
+                    slot.gameObject.SetActive(true);
+                    slot.Set(t, tiers[reverse ? n - 1 - i : i], 1);
+                }
+                else FadeOut(slot, release: false);
             }
+        }
+
+        /// <summary>빠지는 칸: <see cref="discardFadeSec"/> 동안 흐려진 뒤 끄거나 풀로 돌려준다(편집기 정지 중·0초면 바로).</summary>
+        void FadeOut(HudWeaponSlot slot, bool release)
+        {
+            if (!slot) return;
+            void Done()
+            {
+                slot.SetAlpha(1f);
+                IgnoreLayout(slot, false);
+                if (release) _stackPool.Release(slot);
+                else slot.gameObject.SetActive(false);
+            }
+            DOTween.Kill(slot);
+            if (!Application.isPlaying || discardFadeSec <= 0 || !slot.gameObject.activeInHierarchy) { Done(); return; }
+            IgnoreLayout(slot, true);   // 흐려지는 동안 제자리에 두고 배치에서 빼서 남은 칸이 바로 자리를 잡는다
+            float a = 1f;
+            DOTween.To(() => a, v => { a = v; slot.SetAlpha(v); }, 0f, discardFadeSec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(slot).OnComplete(Done);
+        }
+
+        static void IgnoreLayout(HudWeaponSlot slot, bool on)
+        {
+            var le = slot.GetComponent<LayoutElement>();
+            if (!le) { if (!on) return; le = slot.gameObject.AddComponent<LayoutElement>(); }
+            le.ignoreLayout = on;
         }
 
         // ---------------- ILobbyMenuView(화면 코드 모델) ----------------
@@ -445,9 +488,10 @@ namespace MV.UI
         void DrawPrice(LobbyUpgradeParts p, LobbyUpgradeItem u)
         {
             if (!p.priceButton && _missingPrice.Add(p.key))
-                Debug.LogWarning("LobbyDesignView: 강화 칸 " + p.key + "의 PriceBtn이 없습니다(UIScreen_Lobby upgrades[].priceButton → LobbyScreen/…/Slot_Price)", this);
-            if (!u.Max && MvPrice.Show(p.priceButton, Wallet, u.Cost, u.InputAllowed)) return;
-            if (p.price) p.price.SetActive(false);
+                Debug.LogWarning("LobbyDesignView: 강화 칸 " + p.key + "의 PriceBtn이 없습니다(UIScreen_Lobby upgrades[].priceButton → Assets/Game/Art/UI/Prefab/HUD/Element_MainUpgrade_Stair.prefab 루트, Button과 같은 객체)", this);
+            bool shown = !u.Max && MvPrice.Show(p.priceButton, Wallet, u.Cost, u.InputAllowed);
+            if (p.price) p.price.SetActive(shown); // PriceBtn은 버튼 루트에 있어 가격 칸(Slot_Price)은 따로 켜고 끈다
+            if (shown) return;
             if (p.button) p.button.interactable = false;
         }
 

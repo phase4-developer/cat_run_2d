@@ -13,6 +13,7 @@ namespace MV.Run.Tests.Rule
         static RunState State(RunModifiers m, double? rate = null)
         {
             var setup = new RunSetup { Area = 0, Zone = 0, Level = 1, Preset = "easy", Modifiers = m, RateOverride = rate };
+            setup.Deck = RunTestTables.Deck(RunTestTables.Load());
             setup.Deck[1] = 1;
             return new RunLevelBuilder().NewRun(setup, RunTestTables.ProtoEasy(), new ConstRng(0.5)); // 정본 대조는 프로토 easy 값(MV-SPEC2-FIX2)
         }
@@ -116,6 +117,7 @@ namespace MV.Run.Tests.Rule
             Assert.IsNotNull(new RunModifiers { Dmg = -1 }.Validate());
             Assert.IsNotNull(new RunModifiers { DoubleChance = -0.5 }.Validate());
             var setup = new RunSetup { Modifiers = new RunModifiers { Gold = -1 } };
+            setup.Deck = RunTestTables.Deck(RunTestTables.Load());
             setup.Deck[1] = 1;
             Assert.Throws<ArgumentException>(() => TestSims.Create(setup, RunTestTables.Load(), new ConstRng(0.5), new HandLevel()));
         }
@@ -124,6 +126,7 @@ namespace MV.Run.Tests.Rule
         static int Draws(RunModifiers m, RngUse use)
         {
             var setup = new RunSetup { Modifiers = m };
+            setup.Deck = RunTestTables.Deck(RunTestTables.Load());
             setup.Deck[1] = 1;
             var sim = TestSims.Create(setup, RunTestTables.Load(), new ConstRng(0.5), new HandLevel());
             sim.State.RngLog = new System.Collections.Generic.List<RngDraw>();

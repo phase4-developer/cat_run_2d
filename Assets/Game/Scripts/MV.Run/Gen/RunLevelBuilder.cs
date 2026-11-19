@@ -60,6 +60,13 @@ namespace MV.Run
             {
                 s.Bt = BaseTier(t, setup.UpWeapon);
                 if (setup.Deck != null) Array.Copy(setup.Deck, s.W, Math.Min(setup.Deck.Length, s.W.Length));
+                // 무기 단계 Bt보다 낮은 카드는 버린다(04 §4.12, 사용자 2026-11-19 「낮은 무기 버림」): 공방 카드(Bt)는 언제나 손패 맨 밑으로 들어간다.
+                for (int i = 1; i < s.Bt && i < s.W.Length; i++) s.W[i] = 0;
+                // 같은 단계 MERGE_N장 이상은 시작 전에 합친다(옛 짧은 덱 저장에서 상한에 쌓인 카드, 사용자 2026-11-19 「무기 3개인데 왜 안합쳐져?」). 상한 = W 길이 − 1.
+                int mergeN = t.RunConfig.I(RunConfigKeys.MERGE_N);
+                if (mergeN > 0)
+                    for (int i = 1; i < s.W.Length - 1; i++)
+                        if (s.W[i] >= mergeN) { s.W[i + 1] += s.W[i] / mergeN; s.W[i] %= mergeN; }
             }
 
             // 게이지 시작값 kegStart

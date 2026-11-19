@@ -137,8 +137,8 @@ namespace MV.Run
 
         // 로비 강화 up.{stair, weapon, income}
         public int UpStair, UpWeapon, UpIncome;
-        /// <summary>시작 덱(등급별 장수, 0번 미사용). 기본 9칸은 빈 입력·시험용이고 MvRunStart가 저장 덱 길이로 바꾼다. 런 W 길이는 103_item에서 따로 잡는다.</summary>
-        public int[] Deck = new int[9];
+        /// <summary>시작 덱(등급별 장수, 0번 미사용). 기본은 빈 배열이고 MvRunStart가 저장 덱으로 채운다. 길이는 표가 정한다(103_item 상한 + 1, 상수 없음 — 사용자 2026-11-19 「무기 테이블 맞춰서 가변해야지」). 런 W 길이도 103_item에서 잡는다.</summary>
+        public int[] Deck = System.Array.Empty<int>();
         // Area 강화 aup.{rate, range, clone, crit, dbl}
         public int AupRate, AupRange, AupClone, AupCrit, AupDbl;
         /// <summary>Area 강화 관통 확률 Lv(13_areaUpgrade statKey PierceChance, MV-SPEC-02 Q-28).</summary>

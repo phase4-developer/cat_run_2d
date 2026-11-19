@@ -51,10 +51,10 @@ namespace MV.Save.Tests
             foreach (int id in MvWealthIds.AllIds) Assert.That(save.GetWealth(id), Is.EqualTo(0), "wealth " + id);
             Assert.That(save.Wealth.Balances.Count, Is.EqualTo(18));
 
-            // DEF: up:{stair,weapon,income}=0, deck:[0,1,0,0,0,0,0,0,0], god:'thunder'
+            // DEF: up:{stair,weapon,income}=0, deck = 시작 덱(길이는 표가 정함), god:'thunder'
             Assert.That(save.Lobby.Up.Keys, Is.EquivalentTo(new[] { "stair", "weapon", "income" }));
             Assert.That(save.Lobby.Up.Values, Is.All.EqualTo(0));
-            Assert.That(save.Lobby.Deck, Is.EqualTo(new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }));
+            Assert.That(save.Lobby.Deck, Is.EqualTo(MvSaveConfig.CreateDefault().StartDeck));
             Assert.That(save.God.Selected, Is.EqualTo("thunder"));
             Assert.That(save.God.GodKeys, Is.Empty);
 
@@ -77,8 +77,12 @@ namespace MV.Save.Tests
             Assert.That(save.Unlock.SeenUnlock, Is.Empty);
             Assert.That(save.Unlock.SeenNew, Is.Empty);
 
-            // 정본 ce_mute 기본 false. 08·2차 시스템은 빈 상태.
-            Assert.That(save.Settings.Muted, Is.False);
+            // 정본 ce_mute 기본 false. 설정 팝업 기본: 배경음 90·효과음 100(정크버스터즈 0.9·1), 진동 켜짐. 08·2차 시스템은 빈 상태.
+            Assert.That(save.Settings.BgmMute, Is.False);
+            Assert.That(save.Settings.SfxMute, Is.False);
+            Assert.That(save.Settings.BgmVolume, Is.EqualTo(90));
+            Assert.That(save.Settings.SfxVolume, Is.EqualTo(100));
+            Assert.That(save.Settings.Haptic, Is.True);
             Assert.That(save.Settings.ContentTab, Is.EqualTo(""));
             Assert.That(save.Shop.Guarantee, Is.Empty);
             Assert.That(save.Research.RunningKey, Is.Null);
@@ -93,6 +97,8 @@ namespace MV.Save.Tests
         public void ProtoDef_ConvertsToNewSaveDefaults()
         {
             var config = MvSaveConfig.CreateDefault();
+            // 시작 덱은 정본 DEF 값 그대로 비교한다(길이 상수를 두지 않고 정본 JSON에서 읽는다).
+            config.StartDeck = System.Text.RegularExpressions.Regex.Match(MvSaveTestKit.ProtoDefJson, @"""deck"":\[([^\]]*)\]").Groups[1].Value.Split(',').Select(int.Parse).ToArray();
             string converted = MvProtoSave.ToPayloadJson(MvSaveTestKit.ProtoDefJson, config, MvSaveTestKit.Now);
             string defaults = MvSaveDefaults.CreateJson(config, MvSaveTestKit.Now);
             Assert.That(MvSaveJson.DeepEquals(MvSaveJson.Without(converted, MvSaveKeys.Meta), MvSaveJson.Without(defaults, MvSaveKeys.Meta)), Is.True,

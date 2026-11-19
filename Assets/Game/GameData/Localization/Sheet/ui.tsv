@@ -55,3 +55,12 @@ ui.stat.critDmg	치명타 피해	Crit Damage	クリティカルダメージ
 ui.stat.gold	츄르 획득	Churu Gain	チュール獲得
 ui.stat.critChance	치명타 확률	Crit Chance	クリティカル率
 ui.stat.doubleChance	두 번 공격	Double Attack	2回攻撃
+ui.setting.title	설정	Settings	設定
+ui.setting.mute	음소거	Mute	ミュート
+ui.setting.on	켜기	On	オン
+ui.setting.off	끄기	Off	オフ
+ui.setting.privacy	개인정보 처리방침	Privacy Policy	プライバシーポリシー
+ui.setting.support	문의하기	Support	お問い合わせ
+ui.setting.language	언어	Language	言語
+ui.setting.mailSubject	[{0}] 게임 문의	[{0}] Game Inquiry	[{0}] ゲームのお問い合わせ
+ui.setting.mailBody	문의 내용을 입력해 주세요.\n\n\n[기기 정보]\n앱 버전: {0}\n기기: {1}\nOS: {2}\n언어: {3}	Please describe your inquiry.\n\n\n[Device Info]\nApp version: {0}\nDevice: {1}\nOS: {2}\nLanguage: {3}	お問い合わせ内容をご記入ください。\n\n\n[端末情報]\nアプリバージョン: {0}\n端末: {1}\nOS: {2}\n言語: {3}

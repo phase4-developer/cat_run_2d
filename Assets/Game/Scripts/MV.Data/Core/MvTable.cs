@@ -251,7 +251,7 @@ namespace MV.Data
         public MvWealthTable() : base(Name)
         {
             Schema = new MvSchema(Name).Id().Str("type", true).Int("sort").Bool("active").Res("icon", MvAtlas.UiIcon)
-                .Long("maxValue").Int("chargeShopSectionId");
+                .Long("maxValue").Int("chargeShopSectionId").Fk("gradeId", GradeData.Table);
         }
 
         protected override void InsertData(List<TSVRow> datas)
@@ -263,6 +263,14 @@ namespace MV.Data
         public bool HasId(int id) => Dict.ContainsKey(id);
         public bool HasGroup(int group) => false;
         public bool HasKey(string key) => key != null && GetId(key) != 0;
+
+        /// <summary>재화 행의 등급(<c>gradeId</c> → <c>15_grade</c> id). 빈칸·0 = 등급 없음(디자이너 기본 틀). Framework <c>WealthData</c>에 열이 없어 원문 행에서 읽는다.</summary>
+        public int GradeIdOf(int wealthId)
+        {
+            foreach (var r in _raw.Rows)
+                if (r != null && r.GetInt("id") == wealthId) return r.GetInt("gradeId");
+            return 0;
+        }
     }
 
     /// <summary>기본 아틀라스 이름(07 §7.10.3).</summary>

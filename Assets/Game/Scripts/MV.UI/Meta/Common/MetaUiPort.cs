@@ -100,11 +100,6 @@ namespace MV.UI
         /// <summary>광고 공급자(테스트 패널의 가짜 광고 결과 강제용). 메타가 없으면 null.</summary>
         IMvAdService Ads { get; }
 
-        /// <summary>
-        /// 소리 끄기 저장(<c>settings.muted</c>, <see cref="MvMeta.SetMuted"/>). 소리 모듈 값은 화면이 바꾼다.
-        /// 기본 구현은 저장하지 않는다(시험 가짜가 고치지 않아도 되게).
-        /// </summary>
-        MetaResult SetMuted(bool muted) => MetaResult.Fail(MvMetaErrors.UnknownRequest);
     }
 
     /// <summary>
@@ -162,7 +157,8 @@ namespace MV.UI
         public MetaResult SelectGod(string key) => Ready ? Of(M.SelectGod(key)) : MetaResult.Fail(MvMetaErrors.NoStore);
 
         public int RebirthLevel => Ready ? S.Rebirth.Lv : 0;
-        public int RebirthPending => Ready ? S.Rebirth.Pending : 0;
+        /// <summary>지금 냥환생하면 받을 황금 생선(PC-08: 도달 Area 산식 + 대기 조각).</summary>
+        public int RebirthPending => Ready ? MV.Meta.MvMetaRules.RebirthGrant(Tables, S.Progress.Area, S.Rebirth.Pending) : 0;
         public bool RebirthOpen => Ready && M.RebirthOpen;
         public long RebirthCooldownLeftMs => Ready ? M.RebirthCooldownLeftMs : 0;
         public bool RebirthArmed => Ready && M.RebirthArmed;
@@ -216,8 +212,6 @@ namespace MV.UI
             }
             if (popup == null) data.Finish(false);
         }
-
-        public MetaResult SetMuted(bool muted) => Ready ? Of(M.SetMuted(muted)) : MetaResult.Fail(MvMetaErrors.NoStore);
 
         public bool IsOpen(string key) => Ready && M.IsOpen(key);
         public MvUnlockState UnlockState(string key) => Ready ? M.UnlockState(key) : MvUnlockState.Hidden;

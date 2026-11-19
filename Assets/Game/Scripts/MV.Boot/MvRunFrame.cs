@@ -13,7 +13,7 @@ namespace MV.Boot
     /// 런 한 프레임: 입력 → <see cref="RunSim.Tick"/>(×틱 수) → <see cref="RunSim.DrainEvents"/> 한 번 → 같은 목록을 소리·이펙트·월드 뷰·HUD(<see cref="MvHudEvents"/>)에 넘긴다.
     /// HUD의 계속 보이는 값은 상태 스냅샷(<see cref="IRunHudSource"/>)으로 읽는다.
     /// </summary>
-    sealed class MvRunFrame
+    sealed class MvRunFrame : IDisposable
     {
         readonly MvRunInputReader _input;
 
@@ -24,6 +24,11 @@ namespace MV.Boot
 
         /// <summary>새 런: 드래그 상태를 지운다.</summary>
         public void Reset() => _input.Reset();
+
+        /// <summary>로비 출발 키를 이번 프레임에 눌렀는가(Input System 액션).</summary>
+        public bool StartPressedThisFrame() => _input.StartPressedThisFrame();
+
+        public void Dispose() => _input.Dispose();
 
         /// <param name="playing">런 단계(결과 단계에서는 입력 없이 시뮬만 끝까지 돈다).</param>
         /// <param name="scriptedDrag">시험 훅: 런 프레임 → 목표 tx(null = 드래그 없음). null이면 포인터를 읽는다.</param>

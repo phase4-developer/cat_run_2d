@@ -71,7 +71,8 @@ namespace MV.Meta
                 case MvMetaRequestNames.UseAd: return UseAd(Str(p, "key"));
                 case MvMetaRequestNames.RecordModePlay: return RecordModePlay(Str(p, "key"));
                 case MvMetaRequestNames.MarkSeen: return MarkSeen(p);
-                case MvMetaRequestNames.SetMuted: return SetMuted(p);
+                case MvMetaRequestNames.SetSound: return SetSound(p);
+                case MvMetaRequestNames.SetHaptic: return SetHaptic(p);
                 case MvMetaRequestNames.SetLanguage: return SetLanguage(p);
                 case MvMetaRequestNames.StartResearch: return StartResearch(p);
                 case MvMetaRequestNames.ClaimResearch: return ClaimResearch(p);
@@ -107,7 +108,6 @@ namespace MV.Meta
             bool last = MvMetaRules.IsLastArea(_t, area);
             bool zoneEnd = gate && enough && last;
             bool pass = gate && enough && !last;
-            int tok = MvMetaRules.Tokens(_t, souls, gate, pass || zoneEnd);
 
             var wealth = new WealthDelta();
             long goldGain = (long)Math.Floor((gold - startGold) * mul + startGold);
@@ -130,6 +130,8 @@ namespace MV.Meta
                 }
 
             int areaAfter = pass ? area + 1 : area;
+            // 황금 생선은 런마다 쌓지 않고 냥환생 때 도달 Area로 정한다(PC-08). tok = 정산 뒤 기준 예상 지급량(표시용).
+            int tok = MvMetaRules.RebirthGrant(_t, areaAfter, s.Rebirth.Pending + pendingExtra);
             int runsAfter = s.Progress.Runs + 1;
             int levelAfter = s.Progress.Level + 1;
             int failsAfter = s.Progress.Fails + (pass || zoneEnd ? 0 : 1); // Area를 깨지 못한 정산만 센다
@@ -150,7 +152,7 @@ namespace MV.Meta
             var data = new JObject
             {
                 [MvSaveKeys.Progress] = progress,
-                [MvSaveKeys.Rebirth] = new JObject { ["pending"] = s.Rebirth.Pending + tok + pendingExtra },
+                [MvSaveKeys.Rebirth] = new JObject { ["pending"] = s.Rebirth.Pending + pendingExtra },
             };
             if (!wealth.TryWrite(Res, data, out string fail)) return MvMetaResponse.Reject(MvMetaErrors.NotEnough, fail);
             if (pass)
@@ -244,7 +246,12 @@ namespace MV.Meta
                     result["tier"] = tier;
                     result["merged"] = MvMetaRules.DeckAdd(deck, tier, _t.RunConfig.I(RunConfigKeys.MERGE_N));
                     result["before"] = tier;
-                    result["after"] = MvMetaRules.WeaponLevel(_t, bought + 1).Lv;
+                    int after = MvMetaRules.WeaponLevel(_t, bought + 1).Lv;
+                    result["after"] = after;
+                    // 덱에는 무기 Level(= 런 무기 단계 Bt)보다 낮은 카드를 두지 않는다: 살 때마다 버리고(04 §4.12, 사용자 2026-11-19 「무기 레벨업해서 추가되도 버림이 안되는거 같아」 — 옛 저장에 남은 카드 포함),
+                    // 남은 같은 단계 MERGE_N장은 합친다(옛 짧은 덱 상한에 쌓인 카드).
+                    result["discarded"] = MvMetaRules.DiscardBelow(deck, after);
+                    MvMetaRules.MergeUp(deck, _t.RunConfig.I(RunConfigKeys.MERGE_N));
                     container["deck"] = new JArray(deck.Cast<object>().ToArray());
                     break;
             }
@@ -305,7 +312,7 @@ namespace MV.Meta
             MvSaveStore s = S;
             if (!RebirthOpen()) return MvMetaResponse.Reject(MvMetaErrors.Locked, MvMetaRules.RebirthKey);
             if (RebirthCooldownLeftMs() > 0) return MvMetaResponse.Reject(MvMetaErrors.Cooldown);
-            int got = s.Rebirth.Pending;
+            int got = MvMetaRules.RebirthGrant(_t, s.Progress.Area, s.Rebirth.Pending); // PC-08: 5 × (도달 Area)^1.5 + 대기 조각
             var wealth = new WealthDelta();
             wealth.Set(MvWealthIds.Gold, 0);
             wealth.Set(MvWealthIds.Souls, 0);
@@ -456,12 +463,38 @@ namespace MV.Meta
             return MvMetaResponse.Success(data);
         }
 
-        /// <summary>설정 소리 끄기(09 §9.3.6 <c>mvSettings.muted</c>). 다른 설정 칸은 그대로 둔다(병합).</summary>
-        private static MvMetaResponse SetMuted(JObject p)
+        /// <summary>
+        /// 소리 설정(설정 팝업, MV-UI2-SETTING). 볼륨은 0~100 정수, Mute는 bool. 빠진 칸은 그대로 두고(병합), 칸이 하나도 없거나 형식·범위가 틀리면 거절.
+        /// </summary>
+        private static MvMetaResponse SetSound(JObject p)
         {
-            if (p["muted"]?.Type != JTokenType.Boolean) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "muted");
-            bool muted = p.Value<bool>("muted");
-            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = new JObject { ["muted"] = muted } }, new JObject { ["muted"] = muted });
+            var settings = new JObject();
+            foreach (string key in new[] { "bgmVolume", "sfxVolume" })
+            {
+                JToken t = p[key];
+                if (t == null) continue;
+                if (t.Type != JTokenType.Integer) return MvMetaResponse.Reject(MvMetaErrors.BadParams, key);
+                long v = t.Value<long>();
+                if (v < 0 || v > 100) return MvMetaResponse.Reject(MvMetaErrors.BadParams, key);
+                settings[key] = (int)v;
+            }
+            foreach (string key in new[] { "bgmMute", "sfxMute" })
+            {
+                JToken t = p[key];
+                if (t == null) continue;
+                if (t.Type != JTokenType.Boolean) return MvMetaResponse.Reject(MvMetaErrors.BadParams, key);
+                settings[key] = t.Value<bool>();
+            }
+            if (!settings.HasValues) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "sound");
+            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = settings }, (JObject)settings.DeepClone());
+        }
+
+        /// <summary>진동 켜기·끄기(<c>mvSettings.haptic</c>). 다른 설정 칸은 그대로 둔다(병합).</summary>
+        private static MvMetaResponse SetHaptic(JObject p)
+        {
+            if (p["haptic"]?.Type != JTokenType.Boolean) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "haptic");
+            bool on = p.Value<bool>("haptic");
+            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = new JObject { ["haptic"] = on } }, new JObject { ["haptic"] = on });
         }
 
         /// <summary>언어 코드 저장(<c>mvSettings.language</c>). 영문·숫자·<c>-</c>만, 16자 이하.</summary>
