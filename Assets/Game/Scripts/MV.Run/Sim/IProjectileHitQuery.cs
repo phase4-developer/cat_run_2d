@@ -6,7 +6,7 @@ namespace MV.Run
     public readonly struct ProjectileHit
     {
         public readonly RunObject Obj;
-        /// <summary>판정 형상에 들어가는 z. 시작점이 이미 형상 안이면 구간 시작 z.</summary>
+        /// <summary>판정 형상에 처음 닿을 때 투사체 위치 z. 시작점이 이미 형상에 닿아 있으면 구간 시작 z.</summary>
         public readonly double Z;
 
         public ProjectileHit(RunObject obj, double z)
@@ -27,8 +27,9 @@ namespace MV.Run
 
         /// <summary>
         /// x에서 z0 → z1로 움직이는 투사체 구간이 닿는 대상을 <paramref name="hits"/>에 채운다. 대상마다 한 번, 진입 z 오름차순(같으면 Id 오름차순).
+        /// 투사체 굵기(판정 구)는 종류(<paramref name="spear"/> = 창, 아니면 던진 장난감)에 따라 질의 구현이 정한다(투사체 프리팹 `Hitbox`).
         /// 피격 가능 여부(<c>Hittable</c>)와 이미 맞힌 대상은 거르지 않는다.
         /// </summary>
-        void Cast(RunState s, double x, double z0, double z1, List<ProjectileHit> hits);
+        void Cast(RunState s, double x, double z0, double z1, bool spear, List<ProjectileHit> hits);
     }
 }

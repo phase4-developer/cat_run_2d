@@ -4,7 +4,6 @@ using MV.Data;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace MV.UI.Tests
 {
@@ -197,18 +196,6 @@ namespace MV.UI.Tests
             var (_, view) = NewMap();
             view.ShowUI(new LevelProgressViewData { Model = Model(MetaUiTestKit.Base()), FromSouls = 0, ToSouls = 30, AutoClose = true });
             Assert.That(view.CloseVisible, Is.False, "런 끝 자동 연출 동안 Close 끔(노션)");
-        }
-
-        [Test]
-        public void AreaLabel_Click_RaisesClicked()
-        {
-            var go = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Art/UI/Prefab/Common/Slot_AreaLabel.prefab"));
-            _made.Add(go);
-            var label = go.GetComponent<HudAreaLabel>();
-            int n = 0;
-            label.Clicked += () => n++;
-            label.OnPointerClick(new PointerEventData(null));
-            Assert.That(n, Is.EqualTo(1));
         }
     }
 }

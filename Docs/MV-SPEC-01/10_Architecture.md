@@ -89,7 +89,7 @@
 
 규칙:
 - `MV.Run`은 Unity를 참조하지 않는다. 피해·관통·보상 같은 규칙은 EditMode 시험으로 따로 돌릴 수 있다.
-- **투사체 공간 충돌은 예외로 Unity Physics가 정본이다**(MV-HIT-PHYS, 2026-11-17 사용자 지시 「투사체의 공간 충돌 검출은 실제 Collider와 Unity Physics를 활용하는 방향으로 개선」). 피격 형상 = 오브젝트 프리팹 안 `Hitbox`(`RunHitbox` + Collider). `MV.Run`은 `IProjectileHitQuery`(틱마다 `Prepare` 1회, 투사체마다 이동 구간 `Cast`)만 알고, 구현은 `MV.View` `RunHitWorld`(Raycast + 시작점 겹침, 대상 단위, 진입 z·Id 순)다. 표 `105`·`102`의 `hw`·`hd`는 투사체 판정에 쓰지 않는다(벽 막힘·게이트 통과·범위 공격 규칙에는 아직 쓴다). 그래서 투사체 결과는 프로토 HTML과 비트 일치를 보장하지 않는다.
+- **투사체 공간 충돌은 예외로 Unity Physics가 정본이다**(MV-HIT-PHYS, 2026-11-17 사용자 지시 「투사체의 공간 충돌 검출은 실제 Collider와 Unity Physics를 활용하는 방향으로 개선」). 피격 형상 = 오브젝트 프리팹 안 `Hitbox`(`RunHitbox` + Collider). `MV.Run`은 `IProjectileHitQuery`(틱마다 `Prepare` 1회, 투사체마다 이동 구간 `Cast`)만 알고, 구현은 `MV.View` `RunHitWorld`(SphereCast + 시작점 구 겹침, 대상 단위, 진입 z·Id 순)다. 투사체 굵기 = 투사체 프리팹 `Proj_Toy`·`Proj_Spear`의 `Hitbox` SphereCollider 반지름·중심(MV-HIT-RADIUS, 2026-11-19, `WorldView`가 `ProjectileView.HitShape` → `RunHitWorld.SetProjectileShapes`로 넣는다. 풀 인스턴스의 이 Collider는 꺼 둔다). 이동 구간 전체를 훑으므로 고속 터널링이 없고, Rigidbody·충돌 이벤트는 쓰지 않는다(물리 스텝과 시뮬 틱이 달라 순서·결정성이 깨지므로). 표 `105`·`102`의 `hw`·`hd`는 투사체 판정에 쓰지 않는다(벽 막힘·게이트 통과·범위 공격 규칙에는 아직 쓴다). 그래서 투사체 결과는 프로토 HTML과 비트 일치를 보장하지 않는다.
 - 영속 상태는 `MV.Meta`만 바꾼다. UI는 명령을 호출하고 `DataRepository.Changed`로 다시 그린다(Framework `UIBase.SetDirty`).
 - 런 중 표시 효과(흔들림·팝업·이펙트·소리)는 `MV.Run`이 이벤트(`RunEvent` 큐: `Hit`, `Break`, `GateFill`, `GateTake`, `GateMiss`, `Steal`, `ClimbStart` …)로 내보내고 `MV.Fx`·`MV.Sound`·`MV.UI`가 구독한다.
 
