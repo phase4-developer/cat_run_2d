@@ -133,11 +133,16 @@ namespace MV.Run.Tests
         }
 
         [Test]
-        public void Tokens_Formula()
+        public void RebirthFish_Formula()
         {
+            // 기획자확인 PC-08: floor(RB_FISH_MUL x 도달 Area^RB_FISH_POW) = floor(5 x Area^1.5).
             var t = RunTestTables.Load();
-            Assert.AreEqual(1, Tokens(t, 0, false, false));
-            Assert.AreEqual(1 + 1 + 2 + 3, Tokens(t, 5, true, true));
+            Assert.AreEqual(0, t.RebirthFish(0));
+            Assert.AreEqual(5, t.RebirthFish(1));
+            Assert.AreEqual(14, t.RebirthFish(2));
+            Assert.AreEqual(40, t.RebirthFish(4));
+            Assert.AreEqual(73, t.RebirthFish(6));
+            Assert.AreEqual(158, t.RebirthFish(10));
         }
     }
 
