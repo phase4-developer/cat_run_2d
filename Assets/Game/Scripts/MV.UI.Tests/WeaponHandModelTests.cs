@@ -77,6 +77,19 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void TwoTiersReady_MergesUpperGroupFirst()
+        {
+            // 사용자 2026-11-19 「순서대로 위에 3개 모이면 … 합쳐지고 밑에꺼도 재정렬」: 위(높은 등급) 묶음부터 합친다.
+            var m = new WeaponHandModel(new WeaponHandTiming(), MergeN, 12);
+            var counts = new int[3];
+            counts[1] = MergeN;
+            counts[2] = MergeN;
+            m.Reset(counts, 0);
+            var (_, actions) = RunToIdle(m, 0);
+            Assert.That(actions.First(a => a.Kind == HandActionKind.Merged).Card.Tier, Is.EqualTo(3), "위 2등급 묶음이 먼저 3등급으로");
+        }
+
+        [Test]
         public void Deliver_OneAtATime_MergesBottomThreeBeforeNextCard_ThenChainsUp()
         {
             // 사용자 2026-11-19: 한 장씩 밑에 들어오고, 밑에서 3장이 되면 바로 합쳐진다. 같은 날 「하나 움직이고 대기가 너무 긴데 … 그거 정도 딜레이로」: 다음 장은 머지를 기다리지 않고 이어서 오른다.
@@ -85,7 +98,7 @@ namespace MV.UI.Tests
             m.Deliver(4, 1);
             var (_, actions) = RunToIdle(m, 0);
             var kinds = string.Join(",", actions.Select(a => a.Kind == HandActionKind.Dealt ? "D" : a.Kind == HandActionKind.GatherStart ? "G" : "M"));
-            Assert.That(kinds, Is.EqualTo("D,G,D,D,D,M,G,M,G,M"), "1장 → 곧바로 밑 3장 모으기, 그동안 다음 장들이 오름 → 가장 낮은 등급부터 연쇄");
+            Assert.That(kinds, Is.EqualTo("D,G,D,D,D,M,G,M,G,M"), "1장 → 곧바로 밑 3장 모으기, 그동안 다음 장들이 오름 → 결과가 위 묶음과 3장이 되면 위(높은 등급)부터 연쇄");
             var first = actions.First(a => a.Kind == HandActionKind.GatherStart);
             Assert.That(first.Gathered.Last(), Is.EqualTo(actions[0].Card.Id), "방금 들어와 3장이 된 장이 모으는 묶음에 든다");
             var later = actions.Where(a => a.Kind == HandActionKind.GatherStart).Skip(1).First();

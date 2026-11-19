@@ -114,7 +114,7 @@ namespace MV.UI
         public double Settling => _settle;
 
         /// <summary>대기열이 비고 모으는 중·머지 뒤 쉼이 아니며 더 머지할 것이 없다.</summary>
-        public bool Idle => _queue.Count == 0 && _gather == null && _mergeWait <= 0 && LowestMergeTier() < 1;
+        public bool Idle => _queue.Count == 0 && _gather == null && _mergeWait <= 0 && NextMergeTier() < 1;
         /// <summary>handTier: 손패 최고 등급(비면 1). 장착 칸·고양이 외형은 이 값.</summary>
         public int TopTier => _cards.Count > 0 ? _cards[0].Tier : 1;
 
@@ -201,7 +201,7 @@ namespace MV.UI
                 if (_dealWait <= 0 && _queue.Count > 0) { Deal(now, _queue[0], actions); more = true; }
             }
             if (_queue.Count == 0 && _dealWait < 0) _dealWait = 0;
-            if (_gather == null && _mergeWait < 0 && LowestMergeTier() < 1) _mergeWait = 0;
+            if (_gather == null && _mergeWait < 0 && NextMergeTier() < 1) _mergeWait = 0;
         }
 
 
@@ -224,7 +224,7 @@ namespace MV.UI
 
         bool StartMerge(double now, List<HandAction> actions)
         {
-            int tier = LowestMergeTier();
+            int tier = NextMergeTier();
             if (tier < 1) return false;
             float u = Unit(now);
             var ids = new int[_mergeN];
@@ -257,9 +257,15 @@ namespace MV.UI
             actions?.Add(new HandAction(HandActionKind.Merged, card, ids, after, 0, u, TopTier > before));
         }
 
-        int LowestMergeTier()
+        /// <summary>
+        /// 다음에 합칠 등급: 3장 이상인 등급 중 **가장 높은 등급**(화면 위쪽 묶음부터). 0이면 없음.
+        /// 05 §5.3.3 「가장 낮은 등급」 대신 사용자 결정 2026-11-19: 전달이 머지를 기다리지 않아 밑에 새 카드가 계속 들어오므로, 낮은 등급부터 고르면
+        /// 위에 이미 3장이 된 묶음을 두고 밑에서 번쩍여 순서가 뒤섞인다(「순서대로 위에 3개 모이면 … 아래 두개가 위로 올라가면서 합쳐지고 밑에꺼도 재정렬되어야하는데 지금 번쩍이는거 보니까 순서가 뒤죽박죽」).
+        /// 높은 등급부터 고르면 밑에서 합쳐진 결과가 위 묶음과 3장이 되는 즉시 이어서 합쳐진다(「밑에서부터 3개 합쳐지고 그게 또 위에꺼하고 합쳐지고 차곡차곡」).
+        /// </summary>
+        int NextMergeTier()
         {
-            for (int t = 1; t < _maxTier; t++)
+            for (int t = _maxTier - 1; t >= 1; t--)
             {
                 int n = 0;
                 foreach (var c in _cards) if (c.Tier == t) n++;
