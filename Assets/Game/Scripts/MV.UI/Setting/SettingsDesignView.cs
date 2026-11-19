@@ -77,11 +77,18 @@ namespace MV.UI
                 if (hapticOn) hapticOn.SetIsOnWithoutNotify(v.Haptic);
                 if (hapticOff) hapticOff.SetIsOnWithoutNotify(!v.Haptic);
                 if (languageLabel) languageLabel.text = languageName ?? "";
+                // 켜짐 그림은 토글 연출(CrossFadeAlpha)에 맡기지 않고 값대로 바로 보이고 숨긴다(진동 켜기·끄기가 둘 다 켜져 보이던 문제).
+                ShowState(bgmMute); ShowState(sfxMute); ShowState(hapticOn); ShowState(hapticOff);
             }
             finally
             {
                 _drawing = false;
             }
+        }
+
+        static void ShowState(Toggle t)
+        {
+            if (t != null && t.graphic != null) t.graphic.canvasRenderer.SetAlpha(t.isOn ? 1f : 0f);
         }
 
         /// <summary>고정 문구를 지금 언어로(07 §7.12 ui.setting.*).</summary>

@@ -106,6 +106,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002}
     m_Modifications:
+    - target: {fileID: 8824022254108982799, guid: cbf8e1c529ab3d64d89cc4e9e565d15f, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6590815508595347324, guid: cbf8e1c529ab3d64d89cc4e9e565d15f, type: 3}
       propertyPath: m_Name
       value: Popup_Setting
