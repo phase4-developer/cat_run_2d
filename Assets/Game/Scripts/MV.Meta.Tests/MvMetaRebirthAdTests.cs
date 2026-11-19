@@ -200,6 +200,22 @@ namespace MV.Meta.Tests
             Assert.That(Meta.SendDebug(MvMetaRequestNames.SetMuted).Code, Is.EqualTo(MvMetaErrors.BadParams));
         }
 
+        /// <summary>언어 저장(<c>mvSettings.language</c>, MV-LOC): 저장·다른 칸 유지, 빈 값·이상한 글자·값 없음은 거절.</summary>
+        [Test]
+        public void SetLanguage_SavesCode_RejectsBadValues()
+        {
+            SetContainer(MvSaveKeys.Settings, "\"contentTab\":\"mode\",\"muted\":true");
+            Assert.That(Store.Settings.Language, Is.EqualTo(""), "고른 적 없으면 빈 값");
+            Assert.That(Meta.SetLanguage("ja").Ok, Is.True);
+            Assert.That(Store.Settings.Language, Is.EqualTo("ja"));
+            Assert.That(Store.Settings.ContentTab, Is.EqualTo("mode"), "다른 설정 칸은 그대로");
+            Assert.That(Store.Settings.Muted, Is.True);
+            Assert.That(Meta.SetLanguage("").Code, Is.EqualTo(MvMetaErrors.BadParams));
+            Assert.That(Meta.SetLanguage("en/../x").Code, Is.EqualTo(MvMetaErrors.BadParams));
+            Assert.That(Meta.SendDebug(MvMetaRequestNames.SetLanguage).Code, Is.EqualTo(MvMetaErrors.BadParams));
+            Assert.That(Store.Settings.Language, Is.EqualTo("ja"), "거절은 저장을 바꾸지 않는다");
+        }
+
         [Test]
         public void Unlock_ByRunsAndArea_MarkSeen()
         {

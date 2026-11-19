@@ -1,8 +1,6 @@
-using System;
 using jjevol;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace MV.UI
@@ -25,7 +23,7 @@ namespace MV.UI
     /// 겉(배치·그림)은 프리팹이 정하고, 글자만 넣는다. 로비·Element_Progress_Item·Popup_AreaUpgrade·Popup_LevelComplete가 같은 프리팹·같은 컴포넌트를 쓴다.
     /// Area 그림은 표에 열이 없어 디자이너 그림을 그대로 둔다(열린 결정).
     /// </summary>
-    public sealed class HudAreaLabel : UIBase, IPointerClickHandler
+    public sealed class HudAreaLabel : UIBase
     {
         /// <summary>「Zone {0}」(노션).</summary>
         public const string ZoneFormat = "Zone {0}";
@@ -38,9 +36,6 @@ namespace MV.UI
 
         AreaLabelData _data;
 
-        /// <summary>이름표를 눌렀을 때. 로비는 지도(LevelProgress)를 연다(노션 「로비의 상단 Slot_AreaLabel을 클릭 시」). 다른 화면은 구독하지 않는다.</summary>
-        public event Action Clicked;
-
         public Image AreaTexture => areaTexture;
         public string ZoneText => zoneText ? zoneText.text : null;
         public string AreaText => areaText ? areaText.text : null;
@@ -52,8 +47,6 @@ namespace MV.UI
             _data = data;
             ShowUI();
         }
-
-        public void OnPointerClick(PointerEventData eventData) => Clicked?.Invoke();
 
         protected override void _DrawContents()
         {

@@ -153,7 +153,12 @@ namespace MV.UI.Tests
             w.OnLaunched(HudFlyTarget.Hand, rects);
             Assert.AreEqual(3, w.QueuedCards);
             var queued = w.QueueSlots.ToList();
-            var bottom = w.StackSlots.Last().rectTransform.anchoredPosition.y;
+            var last = w.StackSlots.Last().rectTransform;
+            var bottom = last.anchoredPosition.y;
+            // 사용자 2026-11-19 「제일 마지막 무기에서 겹치지 않게」: 줄 첫 카드 위 끝(피벗 위)이 맨 밑 칸 아래 끝보다 아래.
+            Assert.LessOrEqual(queued[0].rectTransform.anchoredPosition.y, bottom - last.rect.height + 1e-3f, "줄 첫 카드는 맨 밑 칸과 겹치지 않는다");
+            int backmost = w.StackSlots.Min(x => x.transform.GetSiblingIndex());
+            foreach (var q in queued) Assert.Less(q.transform.GetSiblingIndex(), backmost, "줄 카드 깊이 = 스택 카드보다 뒤(등장은 맨 뒤)");
             float prev = bottom;
             foreach (var q in queued)
             {

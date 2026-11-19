@@ -70,6 +70,11 @@ namespace MV.UI.Tests
             Assert.That(element, Is.Not.Null, "Element_Upgrade 루트의 UpgradeElement(공용 부품)");
             Assert.That(element.MissingRefs(), Is.Empty);
             Assert.That(element.LockBadge.HasRefs, Is.True, "Element_UnlockRebirth 루트의 UnlockRebirthBadge");
+            Assert.That(element.RowLockBadge.HasRefs, Is.True, "칸 전체 Lock 안 Element_UnlockRebirth");
+            Assert.That(element.RowLockBadge, Is.Not.SameAs(element.LockBadge));
+            var priceLabel = element.GetComponentInChildren(System.Type.GetType("jjevol.PriceLabel, JJEvol.UI.Economy.Runtime"), true);
+            Assert.That(priceLabel, Is.Not.Null, "가격 글자의 Framework PriceLabel");
+            Assert.That(new SerializedObject(priceLabel).FindProperty("priceText").objectReferenceValue, Is.Not.Null, "PriceLabel.priceText");
         }
 
         [Test]
@@ -102,6 +107,8 @@ namespace MV.UI.Tests
             var keys = T.AreaUpgrade.Sorted.Where(r => r.active).Select(r => r.key).ToList();
             port.MaxKeys.Add(keys[1]);
             port.NeedRebirthByKey[keys[2]] = 4;
+            port.NeedRebirthByKey[keys[3]] = 5;
+            port.LevelByKey[keys[3]] = 2;
             p.Open();
 
             var ready = view.Elements[0];
@@ -115,11 +122,19 @@ namespace MV.UI.Tests
             Assert.That(max.PriceLabel, Is.EqualTo("MAX"));
             Assert.That(max.OkButton.interactable, Is.False);
 
-            var locked = view.Elements[2];
-            Assert.That(locked.Data.State, Is.EqualTo(UpgradeElementState.Locked));
-            Assert.That(locked.LockShown && !locked.OkShown, Is.True);
-            Assert.That(locked.LockBadge.CountText, Is.EqualTo("4"), "필요 환생 수");
+            // 1레벨부터 잠김 → 칸 전체 Lock(내용·버튼 숨김)
+            var all = view.Elements[2];
+            Assert.That(all.Data.State, Is.EqualTo(UpgradeElementState.LockedAll));
+            Assert.That(all.RowLockShown && !all.ContentsShown && !all.OkShown, Is.True);
+            Assert.That(all.RowLockBadge.CountText, Is.EqualTo("4"), "필요 환생 수");
             Assert.That(p.Model.FindAction(AreaUpgradePresenter.BuyPrefix + keys[2]).Enabled, Is.False);
+
+            // 이미 레벨이 있는데 잠김 → 내용 보이고 버튼 잠금
+            var locked = view.Elements[3];
+            Assert.That(locked.Data.State, Is.EqualTo(UpgradeElementState.Locked));
+            Assert.That(locked.LockShown && !locked.OkShown && locked.ContentsShown && !locked.RowLockShown, Is.True);
+            Assert.That(locked.LockBadge.CountText, Is.EqualTo("5"));
+            Assert.That(ready.RowLockShown || max.RowLockShown, Is.False);
 
             port.CanBuyResult = false;
             p.Draw();

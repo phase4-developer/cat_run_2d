@@ -230,6 +230,7 @@ namespace MV.Save
         {
             ["muted"] = R.Bool(v["muted"], false),
             ["contentTab"] = R.Str(v["contentTab"], ""),
+            ["language"] = R.Str(v["language"], ""),
         };
 
         internal static JObject Meta(JObject v, MvSaveConfig c) => new JObject

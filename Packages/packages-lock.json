@@ -479,11 +479,11 @@
       }
     },
     "com.jjevol.ui": {
-      "version": "file:Frozen/com.jjevol.ui-0.1.0-pre.3.tgz",
+      "version": "file:Frozen/com.jjevol.ui-0.1.0-pre.4.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
-        "com.jjevol.ui.contracts": "0.1.0-pre.1",
+        "com.jjevol.ui.contracts": "0.1.0-pre.2",
         "com.unity.ugui": "2.0.0",
         "com.cysharp.unitask": "2.5.11"
       }
@@ -504,7 +504,7 @@
       }
     },
     "com.jjevol.ui.contracts": {
-      "version": "file:Frozen/com.jjevol.ui.contracts-0.1.0-pre.1.tgz",
+      "version": "file:Frozen/com.jjevol.ui.contracts-0.1.0-pre.3.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -520,11 +520,13 @@
       }
     },
     "com.jjevol.ui.economy": {
-      "version": "file:Frozen/com.jjevol.ui.economy-0.1.0-pre.6.tgz",
+      "version": "file:Frozen/com.jjevol.ui.economy-0.1.0-pre.7.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
         "com.jjevol.ui.addressables": "0.1.0-pre.6",
+        "com.jjevol.ui": "0.1.0-pre.4",
+        "com.jjevol.ui.contracts": "0.1.0-pre.2",
         "com.jjevol.economy": "0.1.0-pre.4"
       }
     },

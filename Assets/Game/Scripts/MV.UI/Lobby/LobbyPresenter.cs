@@ -247,13 +247,15 @@ namespace MV.UI
                 if (!row.active) continue;
                 int p = Port.Level(MvGrowth.Lobby, row.key);
                 bool max = Port.IsMax(MvGrowth.Lobby, row.key);
+                bool canBuy = ready && !max && Port.CanBuy(MvGrowth.Lobby, row.key);
                 var u = new LobbyUpgradeItem
                 {
                     Key = row.key,
                     Title = MvUiText.Name(row.id, FallbackName(row.key)),
                     Max = max,
                     Price = max ? "MAX" : MetaPanelPresenter.PriceText(Port.NextPrice(MvGrowth.Lobby, row.key), t), // ui.common.max
-                    Enabled = ready && !max && Port.CanBuy(MvGrowth.Lobby, row.key),
+                    Enabled = canBuy,
+                    PriceShort = ready && !max && !canBuy,
                 };
                 if (!max) SetPrice(u, Port.NextPrice(MvGrowth.Lobby, row.key), t);
                 Describe(u, row, t, p);
