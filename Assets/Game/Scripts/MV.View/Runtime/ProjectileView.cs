@@ -57,6 +57,9 @@ namespace MV.View
         double _spinLocal, _spinLastTime;
         bool _simSpins;
 
+        /// <summary>판정 Hitbox 경고에 쓰는 프리팹 경로.</summary>
+        public const string ToyPrefabPath = "Assets/Game/Prefabs/Projectile/Proj_Toy.prefab", SpearPrefabPath = "Assets/Game/Prefabs/Projectile/Proj_Spear.prefab";
+
         /// <summary>창 장식 파티클 주소(불 / 그 외). 프리팹이 아직 없으면 장식 없이 창만 그린다.</summary>
         const string SpearFxBolt = "VFX_Spear_Bolt", SpearFxFire = "VFX_Spear_Fire";
 
@@ -99,6 +102,18 @@ namespace MV.View
                 if (_blades[i] == null) _blades[i] = Spawn(_bladePrefab, "Blade" + i, (float)cfg.SortBlade);
             _ready = true;
             Hide();
+        }
+
+        /// <summary>
+        /// 투사체 판정 구(<see cref="ProjectileSlot.TryHitShape"/>, 프리팹 `Hitbox` SphereCollider). <paramref name="spear"/>면 창, 아니면 던진 장난감.
+        /// 프리팹이나 Hitbox가 없으면 만들지 않고 경로를 경고로 남기고 반지름 0(선)으로 둔다.
+        /// </summary>
+        public ProjHitShape HitShape(bool spear)
+        {
+            ProjectileSlot prefab = spear ? _spearPrefab : _toyPrefab;
+            if (prefab != null && prefab.TryHitShape(out var shape)) return shape;
+            Debug.LogWarning($"[ProjectileView] {(spear ? SpearPrefabPath : ToyPrefabPath)}에 투사체 판정 Hitbox(SphereCollider)가 없거나 연결되지 않았습니다. 반지름 0(선)으로 판정합니다.", this);
+            return default;
         }
 
         static void Discard(GameObject go)

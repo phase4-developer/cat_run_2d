@@ -127,6 +127,13 @@ namespace MV.UI
         {
             var v = View;
             if (v == null || !Source.TryRead(out var s)) return;
+            // 강화 칸 PriceBtn이 잔액을 읽는 재화 서비스. 저장을 다시 열면 바뀌므로 바뀌면 다시 그린다.
+            var wallet = (Presenter.Port as MvMetaUiPort)?.Wallet;
+            if (v is LobbyDesignView design && !ReferenceEquals(design.Wallet, wallet))
+            {
+                design.Wallet = wallet;
+                _drawn = false;
+            }
             bool all = !_drawn;
             if (all || !Same(s, _last)) Presenter.Draw(); // 재화·Area가 바뀌면 강화 버튼 켜짐·부제를 다시 그린다
             if (all || s.Level != _last.Level)

@@ -52,9 +52,9 @@ namespace MV.UI
 
         protected override void Build(MetaPanelModel m, MvTables tables)
         {
-            m.Title = "고양이 공부방"; // name:5001009
-            m.Sub = "계열마다 단계를 올려 런 능력치를 키워요 · 한 번에 하나씩"; // ui.research.sub
-            m.Currencies = "캣닢 " + MvUiFormat.Fmt(Port.Wealth(MvWealthIds.Dia));
+            m.Title = MvUiText.Ui("ui.research.title");
+            m.Sub = MvUiText.Ui("ui.research.sub");
+            m.Currencies = MvUiText.WealthNameById(tables, MvWealthIds.Dia) + " " + MvUiFormat.Fmt(Port.Wealth(MvWealthIds.Dia));
 
             var groups = MvResearchRules.Groups(tables);
             if (groups.Count == 0) return;
@@ -70,8 +70,9 @@ namespace MV.UI
                 m.Tabs.Add(new MetaTab
                 {
                     Id = TabPrefix + g.ToString(Inv),
-                    Text = NameOf(HeadId(g), "계열 " + g),
-                    Sub = st == MvResearchStatus.Ready ? "받기!" : st == MvResearchStatus.Running ? "연구 중" : "Lv " + glv + "/" + MvResearchRules.MaxLevel(tables, g), // ui.research.tabSub
+                    Text = NameOf(HeadId(g), MvUiText.Ui("ui.research.group", g)),
+                    Sub = st == MvResearchStatus.Ready ? MvUiText.Ui("ui.research.tabReady") : st == MvResearchStatus.Running ? MvUiText.Ui("ui.research.tabRunning")
+                        : MvUiText.Ui("ui.research.lvOf", glv, MvResearchRules.MaxLevel(tables, g)),
                     Selected = g == _group,
                 });
             }
@@ -82,7 +83,7 @@ namespace MV.UI
                 var unlock = tables.ContentOpen.ByKey(MvResearchRules.UnlockKey);
                 string need = MvUnlockText.Need(unlock, Port.UnlockState(MvResearchRules.UnlockKey));
                 m.Add(new MetaRow(LockedId, MetaRowKind.Text, need.Length > 0
-                    ? need + " 달성 시 열려요" : "아직 열리지 않았어요")); // toastMessage:contentLocked
+                    ? MvUiText.Ui("ui.content.lockAt", need) : MvUiText.Toast("toastMessage.locked")));
             }
 
             int group = _group;
@@ -91,16 +92,16 @@ namespace MV.UI
             var reached = MvResearchRules.Reached(tables, group, level);
             var status = MvResearchRules.Status(tables, group, level, run, now);
             MetaStat stat = steps.Count > 0 ? steps[0].statType : MetaStat.Dmg;
-            m.Add(new MetaRow(SumId, MetaRowKind.Header, NameOf(HeadId(group), "계열 " + group))
+            m.Add(new MetaRow(SumId, MetaRowKind.Header, NameOf(HeadId(group), MvUiText.Ui("ui.research.group", group)))
             {
                 Icon = steps.Count > 0 ? steps[0].icon : "",
-                Value = StatName(stat) + " +" + Pct(reached?.statValue ?? 0) + " · Lv " + level + "/" + MvResearchRules.MaxLevel(tables, group), // ui.research.sum
+                Value = MvUiText.Ui("ui.research.sum", StatName(stat), Pct(reached?.statValue ?? 0), level, MvResearchRules.MaxLevel(tables, group)),
             });
 
             foreach (var row in steps)
             {
                 string id = row.level.ToString(Inv);
-                var cell = m.Add(new MetaRow(StepPrefix + id, MetaRowKind.Row, "Lv " + row.level) // ui.research.lv
+                var cell = m.Add(new MetaRow(StepPrefix + id, MetaRowKind.Row, MvUiText.Ui("ui.research.lv", row.level))
                 {
                     Icon = row.icon,
                     Value = StatName(row.statType) + " +" + Pct(row.statValue),
@@ -108,7 +109,7 @@ namespace MV.UI
                 });
                 if (row.level <= level)
                 {
-                    cell.Act(DonePrefix + id, "완료", false); // ui.meta.done
+                    cell.Act(DonePrefix + id, MvUiText.Ui("ui.meta.done"), false);
                     continue;
                 }
                 bool isNext = row.level == MvResearchRules.Next(tables, group, level)?.level;
@@ -122,16 +123,16 @@ namespace MV.UI
                 switch (status)
                 {
                     case MvResearchStatus.Idle:
-                        cell.Act(StartPrefix + gid, "올리기 · " + PriceText(row.price, tables), open && r.CanAfford(row.price)); // ui.research.start
+                        cell.Act(StartPrefix + gid, MvUiText.Ui("ui.research.start", PriceText(row.price, tables)), open && r.CanAfford(row.price));
                         break;
                     case MvResearchStatus.Running:
                         cell.Act(WaitPrefix + gid, Hms(MvResearchRules.LeftMs(run.FinishAtMs, now)), false);
                         break;
                     case MvResearchStatus.Ready:
-                        cell.Act(ClaimPrefix + gid, "받기", true); // ui.research.claim
+                        cell.Act(ClaimPrefix + gid, MvUiText.Ui("ui.research.claim"), true);
                         break;
                     case MvResearchStatus.Busy:
-                        cell.Act(BusyPrefix + gid, "다른 연구 중", false); // ui.research.busy
+                        cell.Act(BusyPrefix + gid, MvUiText.Ui("ui.research.busy"), false);
                         break;
                 }
             }
@@ -173,13 +174,13 @@ namespace MV.UI
         {
             switch (s)
             {
-                case MetaStat.Dmg: return "공격력";
-                case MetaStat.FireRate: return "공격 속도";
-                case MetaStat.Range: return "사거리";
-                case MetaStat.CritDmg: return "치명타 피해";
-                case MetaStat.Gold: return "츄르 획득";
-                case MetaStat.CritChance: return "치명타 확률";
-                case MetaStat.DoubleChance: return "두 번 공격";
+                case MetaStat.Dmg: return MvUiText.Ui("ui.stat.dmg");
+                case MetaStat.FireRate: return MvUiText.Ui("ui.stat.fireRate");
+                case MetaStat.Range: return MvUiText.Ui("ui.stat.range");
+                case MetaStat.CritDmg: return MvUiText.Ui("ui.stat.critDmg");
+                case MetaStat.Gold: return MvUiText.Ui("ui.stat.gold");
+                case MetaStat.CritChance: return MvUiText.Ui("ui.stat.critChance");
+                case MetaStat.DoubleChance: return MvUiText.Ui("ui.stat.doubleChance");
                 default: return s.ToString();
             }
         }
@@ -190,11 +191,11 @@ namespace MV.UI
         {
             switch (code)
             {
-                case MvMetaErrors.NotEnough: return "캣닢이 부족해요";              // toastMessage:notEnough
-                case MvMetaErrors.Busy: return "다른 연구가 진행 중이에요";          // toastMessage:researchBusy
-                case MvMetaErrors.NotDone: return "아직 연구 중이에요";              // toastMessage:researchNotDone
-                case MvMetaErrors.Locked: return "아직 열리지 않았어요";
-                case MvMetaErrors.Max: return "최고 단계예요";
+                case MvMetaErrors.NotEnough: return MvUiText.Toast("toastMessage.researchNotEnough");
+                case MvMetaErrors.Busy: return MvUiText.Toast("toastMessage.researchBusy");
+                case MvMetaErrors.NotDone: return MvUiText.Toast("toastMessage.researchNotDone");
+                case MvMetaErrors.Locked: return MvUiText.Toast("toastMessage.locked");
+                case MvMetaErrors.Max: return MvUiText.Toast("toastMessage.researchMax");
                 default: return code;
             }
         }

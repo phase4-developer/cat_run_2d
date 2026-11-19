@@ -27,5 +27,15 @@ namespace MV.Data
             }
             return best ?? lowest;
         }
+
+        /// <summary>그 캐릭터가 표에 가진 slot 목록(작은 순, 중복 없음). 분신 외형 종류 수 = 이 목록 길이.</summary>
+        public static void Slots(IEnumerable<CharLookData> rows, int catId, List<int> into)
+        {
+            into.Clear();
+            if (rows == null) return;
+            foreach (var row in rows)
+                if (row.catId == catId && !into.Contains(row.slot)) into.Add(row.slot);
+            into.Sort();
+        }
     }
 }

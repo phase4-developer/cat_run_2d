@@ -143,7 +143,7 @@ units.forEach((u,i)=>{
 
 ### 4.2.3 투사체 이동·명중 `L2094~2117`
 
-> **Unity 구현 차이(MV-HIT-PHYS, 2026-11-17 사용자 지시):** 아래 정본의 `|b.x − o.x| ≤ hw`, 앞면 `o.z − hd` 계산은 Unity에서 **오브젝트 프리팹 `Hitbox` Collider + Unity Physics**로 바뀌었다(`IProjectileHitQuery` → `RunHitWorld`). 이동 구간 [b.z, nzb]를 투사체 높이(`ProjLayout.ProjY`)에서 Raycast하고 시작점 겹침도 본다. 틱당 가장 앞(진입 z, 같으면 Id) 피격 가능 대상 1개, `b.hit` 중복 제외, `--pierce < 0` 소멸, 피해·보상·사거리 규칙은 그대로다. 명중 연출 z(`ProjImpact`) = Collider 진입 z.
+> **Unity 구현 차이(MV-HIT-PHYS, 2026-11-17 사용자 지시):** 아래 정본의 `|b.x − o.x| ≤ hw`, 앞면 `o.z − hd` 계산은 Unity에서 **오브젝트 프리팹 `Hitbox` Collider + Unity Physics**로 바뀌었다(`IProjectileHitQuery` → `RunHitWorld`). 이동 구간 [b.z, nzb]를 투사체 높이(`ProjLayout.ProjY`)에서 투사체 판정 구로 SphereCast하고 시작점 구 겹침도 본다. 판정 구 반지름·중심 = 투사체 프리팹(`Proj_Toy`·`Proj_Spear`) 뿌리 아래 `Hitbox` SphereCollider(MV-HIT-RADIUS, 2026-11-19 사용자 결정 「SphereCast로 진행」, 반지름 0.5는 그림 반지름 `ProjLayout.ProjRadius`를 따른 **임시** 값, 디자이너가 프리팹에서 편집). 틱당 가장 앞(진입 z, 같으면 Id) 피격 가능 대상 1개, `b.hit` 중복 제외, `--pierce < 0` 소멸, 피해·보상·사거리 규칙은 그대로다. 명중 연출 z(`ProjImpact`) = 판정 구가 Collider에 처음 닿을 때 투사체 중심 z.
 
 ```js
 const PSPD = 20, RANGE = 22 * (1 + 0.1*save.aup.range);
@@ -167,7 +167,7 @@ for (const b of R.projs){
 |---|---|---|
 | 속도 | 20 m/s | `MvCharacterSettings.projSpeed`=20(2026-11-18 `300_runConfig.PROJ_SPEED`에서 옮김) |
 | 사거리 | 22m × (1 + 0.1·aup.range). 출발 z 기준 | `300_runConfig.PROJ_RANGE`=22, `13_areaUpgrade[range].perLv`=0.1 |
-| 가로 판정 | `|b.x − o.x| ≤ o.hw` (탄 반경 0) | `105_objectKind.hw` |
+| 가로 판정 | `|b.x − o.x| ≤ o.hw` (탄 반경 0). **Unity: 대상 Hitbox Collider와 투사체 Hitbox 구가 닿으면 명중(MV-HIT-RADIUS, 탄 반경 = 투사체 프리팹 값)** | `105_objectKind.hw`(Unity 투사체 판정에는 안 씀) |
 | 세로 판정 | 이번 프레임 이동 구간 [b.z, nzb]와 대상 [z−hd, z+hd]가 겹치는 대상 중 **앞면(z−hd)이 가장 작은 것 1개**. 동률이면 `R.objs` 앞쪽 | `105_objectKind.hd` |
 | 1프레임 1대상 | 관통탄도 프레임당 1대상. 맞힌 대상은 `b.hit`에 기록해 다시 안 맞힘 | — |
 | 명중 시 | `hit(best, b.d, b.crit, {proc:true})` → 신 가호 발동 가능(§4.9.2) | — |

@@ -66,10 +66,10 @@ namespace MV.View.Tests
             return o;
         }
 
-        static List<ProjectileHit> Cast(RunHitWorld w, RunState s, double x, double z0, double z1)
+        static List<ProjectileHit> Cast(RunHitWorld w, RunState s, double x, double z0, double z1, bool spear = false)
         {
             var hits = new List<ProjectileHit>();
-            w.Cast(s, x, z0, z1, hits);
+            w.Cast(s, x, z0, z1, spear, hits);
             return hits;
         }
 
@@ -258,6 +258,97 @@ namespace MV.View.Tests
             var inside = Cast(w, s, 0, 10, 10.2);
             Assert.That(inside.Select(h => h.Obj.Id), Is.EqualTo(new[] { 1000 }), "시작점 겹침: 대상 아닌 Collider 20개와 함께 있어도 잡는다");
             Assert.That(inside[0].Z, Is.EqualTo(10).Within(1e-6));
+        }
+
+        // ---------- 투사체 굵기(MV-HIT-RADIUS): 투사체 프리팹 Hitbox 구 + SphereCast ----------
+
+        static ProjHitShape RealShape(string path)
+        {
+            var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            Assert.That(go, Is.Not.Null, path);
+            var slot = go.GetComponent<ProjectileSlot>();
+            Assert.That(slot, Is.Not.Null, path + " ProjectileSlot");
+            Assert.That(slot.TryHitShape(out var shape), Is.True, path + " Hitbox(SphereCollider) 연결");
+            return shape;
+        }
+
+        /// <summary>실제 투사체 프리팹(Proj_Toy·Proj_Spear)에 판정 구가 있고, 빌보드(회전) 밖 뿌리 바로 아래에 있다.</summary>
+        [Test]
+        public void ProjectilePrefabs_HaveHitboxSphere_UnderRoot()
+        {
+            foreach (var path in new[] { ProjectileView.ToyPrefabPath, ProjectileView.SpearPrefabPath })
+            {
+                Assert.That(RealShape(path).Radius, Is.GreaterThan(0f), path + " 반지름");
+                var root = AssetDatabase.LoadAssetAtPath<GameObject>(path).transform;
+                var col = root.GetComponentInChildren<SphereCollider>(true);
+                Assert.That(col.transform.parent, Is.EqualTo(root), path + " Hitbox는 뿌리 바로 아래");
+            }
+        }
+
+        /// <summary>그림 가장자리만 닿는 경우: 중심선은 Collider 밖이지만 구가 닿으면 맞는다. 반지름 0(선)은 그대로 안 맞는다.</summary>
+        [Test]
+        public void ProjectileRadius_EdgeTouchHits_LineMisses()
+        {
+            var s = NewState();
+            Wall(s, 1, 0, 10);
+            var w = RealWorld();
+            w.Prepare(s);
+            var box = WallBox();
+            float half = box.size.x / 2f;
+            const float r = 0.5f;
+            w.SetProjectileShapes(new ProjHitShape(r, Vector3.zero), default);
+            double edge = half + r * 0.6;   // 중심은 Collider 밖, 구 가장자리는 안
+            Assert.That(Cast(w, s, edge, 0, 30).Select(h => h.Obj.Id), Is.EqualTo(new[] { 1 }), "구 가장자리가 닿으면 맞는다");
+            Assert.That(Cast(w, s, edge, 0, 30, spear: true), Is.Empty, "반지름 0(선)은 안 맞는다");
+            Assert.That(Cast(w, s, half + r + 0.05, 0, 30), Is.Empty, "구 밖이면 안 맞는다");
+            var hit = Cast(w, s, 0, 0, 30)[0];
+            Assert.That(hit.Z, Is.EqualTo(10 + box.center.z - box.size.z / 2 - r).Within(1e-3), "진입 z = 구 앞이 Collider 앞면에 닿을 때 중심 z");
+        }
+
+        [Test]
+        public void ProjectileRadius_StartTouching_HitsAtSegmentStart()
+        {
+            var s = NewState();
+            Wall(s, 1, 0, 10);
+            var w = RealWorld();
+            w.Prepare(s);
+            const float r = 0.5f;
+            w.SetProjectileShapes(new ProjHitShape(r, Vector3.zero), default);
+            var hits = Cast(w, s, WallBox().size.x / 2f + r * 0.6, 10, 10.2);
+            Assert.That(hits.Count, Is.EqualTo(1), "출발점에서 구가 이미 닿아 있어도 맞는다");
+            Assert.That(hits[0].Z, Is.EqualTo(10).Within(1e-6));
+        }
+
+        /// <summary>터널링: 얇은 게이트(Obj_StairGate Hitbox 깊이 0.24)를 한 틱에 100 m 지나가도 구 가장자리로 잡는다.</summary>
+        [Test]
+        public void ProjectileRadius_FastSegment_ThinGate_DoesNotTunnel()
+        {
+            var s = NewState();
+            Kind(s, "sgate", 1, 0, 50);
+            var w = RealWorld();
+            w.Prepare(s);
+            var gateCols = Physics.OverlapSphere(new Vector3(0, (float)ProjLayout.ProjY, 50), 0.05f, ~0, QueryTriggerInteraction.Collide);
+            Assert.That(gateCols.Length, Is.GreaterThan(0), "게이트 Hitbox가 투사체 높이에 있다");
+            var b = gateCols[0].bounds;
+            Assert.That(b.size.z, Is.LessThan(0.5f), "시험 전제: 얇은 게이트");
+            const float r = 0.5f;
+            w.SetProjectileShapes(new ProjHitShape(r, Vector3.zero), default);
+            Assert.That(Cast(w, s, b.max.x + r * 0.6, 0, 100).Select(h => h.Obj.Id), Is.EqualTo(new[] { 1 }), "고속 구간에서도 구 가장자리로 맞는다");
+            Assert.That(Cast(w, s, 0, 0, 100, spear: true).Select(h => h.Obj.Id), Is.EqualTo(new[] { 1 }), "선도 정면이면 맞는다");
+        }
+
+        /// <summary>판정 구 오프셋(Hitbox 중심 이동)이 질의 위치에 들어간다.</summary>
+        [Test]
+        public void ProjectileShapeOffset_MovesQuery()
+        {
+            var s = NewState();
+            Wall(s, 1, 0, 10);
+            var w = RealWorld();
+            w.Prepare(s);
+            float half = WallBox().size.x / 2f;
+            w.SetProjectileShapes(new ProjHitShape(0.1f, new Vector3(-(half + 1f), 0, 0)), default);
+            Assert.That(Cast(w, s, half + 1f, 0, 30).Select(h => h.Obj.Id), Is.EqualTo(new[] { 1 }), "중심을 왼쪽으로 옮기면 오른쪽 밖에서 쏴도 맞는다");
+            Assert.That(Cast(w, s, 0, 0, 30), Is.Empty, "옮긴 중심이 벽 밖이면 안 맞는다");
         }
 
         /// <summary>시뮬 + 실제 Physics: 관통 1 투사체가 앞 벽 → 뒤 벽 순서로 한 번씩 맞고 사라진다(같은 대상 중복 없음).</summary>

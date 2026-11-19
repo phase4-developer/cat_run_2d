@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MV.Data;
 
 namespace MV.UI
 {
@@ -64,15 +65,19 @@ namespace MV.UI
         public bool Max;
         /// <summary>꺼짐: 최대·비용 부족·메타 없음(05 §5.5.1 상태 표).</summary>
         public bool Enabled;
-        /// <summary>비용 부족(메타 준비됨·최대 아님·잔액 모자람). 가격 글자를 빨갛게 그린다(사용자 2026-11-19).</summary>
-        public bool PriceShort;
+        /// <summary>
+        /// 가격 버튼 입력 허용(메타 준비됨·최대 아님). 잔액 확인은 Framework <c>PriceBtn</c>이 재화 서비스로 직접 하고,
+        /// 모자라면 가격 글자를 빨갛게·버튼을 잠근다(사용자 2026-11-19 「Framework PriceBtn 사용」).
+        /// </summary>
+        public bool InputAllowed;
         /// <summary>단계 숫자(캣타워 = 계단 Lv, 무기 = 무기 등급, 건조대 = 산 단계 + 1). 디자이너 강화 칸 「Level {0}」.</summary>
         public int LevelNo;
         /// <summary>디자이너 강화 칸 <c>Slot_Count</c> 지금 값·다음 값(캣타워 = 칸당 계단, 건조대 = 츄르 배수). 없으면 빈 문자열.</summary>
         public string CurValue = "";
         public string NextValue = "";
-        /// <summary>가격 숫자(<c>fmt</c>)와 가격 재화 아이콘(<c>01_wealth.icon</c>, Atlas_UI_Icon). 최대면 빈 문자열.</summary>
-        public string PriceValue = "";
+        /// <summary>다음 단계 비용(<c>16_levelPrice</c> consumeData). 최대면 null. 글자·부족 색은 <c>PriceBtn</c>이 그린다.</summary>
+        public IReadOnlyList<ConsumeData> Cost;
+        /// <summary>가격 재화 아이콘(<c>01_wealth.icon</c>, Atlas_UI_Icon). 최대면 빈 문자열.</summary>
         public string PriceIcon = "";
         /// <summary>
         /// <see cref="Icon"/>이 103_item 그림(Atlas_UI_Icon)인지. 무기 강화만 true(노션: 레벨업하면 다음 등급 무기 그림).

@@ -16,6 +16,12 @@ namespace MV.View
 
         enum Mode : byte { Opacity, BaseColor, Tint, Color, None }
 
+        [Tooltip("알파를 못 바꾸는 재질의 파티클을 숨기는 기준: 안개·가림 알파가 이 값보다 작으면 렌더러를 끈다")]
+        [SerializeField, Range(0f, 1f)] float _hideBelow = 0.05f;
+
+        /// <summary>알파를 못 바꾸는 재질의 숨김 기준(시험·QA).</summary>
+        public float HideBelow => _hideBelow;
+
         ParticleSystemRenderer[] _rs;
         Mode[] _mode;
         Color[] _baseColor;
@@ -53,8 +59,8 @@ namespace MV.View
                 if (r == null) continue;
                 if (_mode[i] == Mode.None)
                 {
-                    // 알파를 못 바꾸는 재질: 거의 사라질 때만 숨긴다.
-                    r.forceRenderingOff = alpha < 0.05f;
+                    // 알파를 못 바꾸는 재질: 거의 사라질 때만 숨긴다(기준 = 프리팹 직렬화 _hideBelow).
+                    r.forceRenderingOff = alpha < _hideBelow;
                     continue;
                 }
                 r.GetPropertyBlock(_mpb);
