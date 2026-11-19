@@ -105,6 +105,32 @@ namespace MV.Meta
             return n;
         }
 
+        /// <summary>
+        /// 같은 단계 <paramref name="mergeN"/>장 이상을 밑에서부터 윗단계로 모두 머지한다(상한 = 덱 길이 − 1, 그 단계는 쌓인다). 옛 짧은 덱 저장에서 상한에 쌓인 카드도 늘린 덱에서 합쳐진다.
+        /// 사용자 2026-11-19 「무기 3개인데 왜 안합쳐져?」.
+        /// </summary>
+        public static void MergeUp(int[] deck, int mergeN)
+        {
+            if (deck == null) throw new ArgumentNullException(nameof(deck));
+            if (mergeN < 1) throw new ArgumentOutOfRangeException(nameof(mergeN));
+            for (int t = 1; t < deck.Length - 1; t++)
+                if (deck[t] >= mergeN) { deck[t + 1] += deck[t] / mergeN; deck[t] %= mergeN; }
+        }
+
+        /// <summary>
+        /// 저장 덱을 지금 규칙으로 맞춘 사본: 길이 = 103 active 상한 등급 + 1, 무기 Level(<paramref name="bought"/>로 계산)보다 낮은 카드 버림, 같은 단계 MERGE_N장 합침.
+        /// 로비 표시가 이 값을 쓴다(옛 저장에 남은 낮은 카드·상한에 쌓인 카드가 보이지 않게, 사용자 2026-11-19).
+        /// </summary>
+        public static int[] CleanDeck(MvTables t, System.Collections.Generic.IReadOnlyList<int> saved, int bought)
+        {
+            int len = Math.Max(t.WeaponTierMax() + 1, saved?.Count ?? 0);
+            var deck = new int[len];
+            if (saved != null) for (int i = 0; i < saved.Count; i++) deck[i] = saved[i];
+            DiscardBelow(deck, WeaponLevel(t, bought).Lv);
+            MergeUp(deck, t.RunConfig.I(RunConfigKeys.MERGE_N));
+            return deck;
+        }
+
         /// <summary>생선 건조대 goldMul = 1 + <c>INCOME_PER_LV</c> × P(04 §4.12.1).</summary>
         public static double GoldMul(MvTables t, int incomeBought) => 1 + t.RunConfig.D(RunConfigKeys.INCOME_PER_LV) * incomeBought;
 

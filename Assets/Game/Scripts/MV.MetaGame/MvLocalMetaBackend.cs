@@ -247,8 +247,10 @@ namespace MV.Meta
                     result["before"] = tier;
                     int after = MvMetaRules.WeaponLevel(_t, bought + 1).Lv;
                     result["after"] = after;
-                    // 무기 Level(= 런 무기 단계 Bt)이 오르면 그보다 낮은 카드는 버린다(04 §4.12, 사용자 2026-11-19).
-                    if (after > tier) result["discarded"] = MvMetaRules.DiscardBelow(deck, after);
+                    // 덱에는 무기 Level(= 런 무기 단계 Bt)보다 낮은 카드를 두지 않는다: 살 때마다 버리고(04 §4.12, 사용자 2026-11-19 「무기 레벨업해서 추가되도 버림이 안되는거 같아」 — 옛 저장에 남은 카드 포함),
+                    // 남은 같은 단계 MERGE_N장은 합친다(옛 짧은 덱 상한에 쌓인 카드).
+                    result["discarded"] = MvMetaRules.DiscardBelow(deck, after);
+                    MvMetaRules.MergeUp(deck, _t.RunConfig.I(RunConfigKeys.MERGE_N));
                     container["deck"] = new JArray(deck.Cast<object>().ToArray());
                     break;
             }

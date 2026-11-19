@@ -210,6 +210,12 @@ namespace MV.Meta.Tests
             low[1] = 2; low[2] = 1; low[3] = 1;
             Assert.That(MvMetaRules.DiscardBelow(low, 3), Is.EqualTo(3), "3등급 아래 3장 버림");
             Assert.That(low.Take(4), Is.EqualTo(new[] { 0, 0, 0, 1 }), "그 단계 카드는 남긴다");
+            // 같은 단계 3장 이상은 밑에서부터 합친다(옛 짧은 덱 상한에 쌓인 카드).
+            var stack = new int[max + 1];
+            stack[2] = 3; stack[3] = 2;
+            MvMetaRules.MergeUp(stack, 3);
+            Assert.That(stack.Skip(1).Take(3), Is.EqualTo(new[] { 0, 0, 0 }), "2단계 3장 → 3단계 3장 → 4단계");
+            Assert.AreEqual(1, stack[4]);
             // 저장 덱이 상한보다 짧아도 MAX 등급까지 산다: 무기 Level 마지막 = 상한.
             Assert.That(MvMetaRules.WeaponLevel(Tables, Tables.LevelMax(Tables.LobbyUpgrade.ByKey("weapon"))).Lv, Is.EqualTo(max));
         }
