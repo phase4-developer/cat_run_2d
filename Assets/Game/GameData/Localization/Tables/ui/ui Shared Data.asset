@@ -343,6 +343,54 @@ MonoBehaviour:
     m_Key: ui.run.areaGate
     m_Metadata:
       m_Items: []
+  - m_Id: 207629583216640
+    m_Key: ui.common.ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548288
+    m_Key: ui.common.cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548289
+    m_Key: ui.popup.notice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548290
+    m_Key: ui.rb.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548291
+    m_Key: ui.rb.cooldown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548292
+    m_Key: ui.rb.ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548293
+    m_Key: ui.rb.skipAd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548294
+    m_Key: ui.rb.skipDia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548295
+    m_Key: ui.rb.unlockAfter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548296
+    m_Key: ui.rb.go
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548297
+    m_Key: ui.rb.confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548298
+    m_Key: ui.rb.done
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

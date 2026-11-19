@@ -42,6 +42,21 @@ namespace MV.UI
         public static async UniTask<ResultPopup> OpenResultAsync(ResultViewData data) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.Result, new ResultPopupData(data)) as ResultPopup;
 
+        /// <summary>
+        /// 공용 보상획득 팝업(MV-UI3-REWARD, 노션 [팝업] 보상획득 팝업). 지급을 끝낸 뒤 보여 주기만 한다.
+        /// 보일 칸(재화 1개 이상)이 없으면 열지 않고 <paramref name="onClosed"/>를 바로 부른 뒤 null.
+        /// </summary>
+        public static async UniTask<RewardPopup> OpenRewardAsync(IReadOnlyList<MV.Data.ConsumeData> rewards, System.Action onClosed = null, MV.Data.MvTables tables = null)
+        {
+            var t = tables ?? MvMetaUiPort.Instance.Tables;
+            if (RewardItems.Build(t, rewards).Count == 0)
+            {
+                onClosed?.Invoke();
+                return null;
+            }
+            return await Ui.SpawnUIPopupAsync(MvUiIds.Reward, new RewardPopupData(rewards, onClosed, t)) as RewardPopup;
+        }
+
         // ───────── 메타 패널(MV-UI-META). 로비 버튼 연결은 MV-UI-LOBBY. ─────────
 
         /// <summary>야옹신(05 §5.7).</summary>
@@ -52,21 +67,9 @@ namespace MV.UI
         public static async UniTask<AreaUpgradePopup> OpenAreaUpgradeAsync(MetaPopupData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.AreaUpgrade, data ?? new MetaPopupData()) as AreaUpgradePopup;
 
-        /// <summary>부활(05 §5.9). 잠김이면 토스트만 내고 열지 않는다(null).</summary>
-        public static async UniTask<RebirthPopup> OpenRebirthAsync(MetaPopupData data = null)
-        {
-            var port = data?.Port ?? MvMetaUiPort.Instance;
-            if (port.Ready && !port.RebirthOpen)
-            {
-                // 해금 조건은 05_contentOpen 행 한 곳에서 읽는다(코드에 기본값을 두지 않는다). 문구는 공용 MvUnlockText.
-                string key = MV.Meta.MvMetaRules.RebirthKey;
-                var row = port.Tables?.ContentOpen.ByKey(key);
-                if (row != null) MvUiToast.Show(MvUnlockText.Need(row, port.UnlockState(key)) + " 달성 시 해금"); // ui.rb.goLocked
-                else UnityEngine.Debug.LogError("[MvUiNav] 05_contentOpen에 `" + key + "` 행이 없습니다.");
-                return null;
-            }
-            return await Ui.SpawnUIPopupAsync(MvUiIds.Rebirth, data ?? new MetaPopupData()) as RebirthPopup;
-        }
+        /// <summary>환생(05 §5.9, 노션 [팝업] 환생 업그레이드). 잠겨 있어도 열고 팝업이 Lock·해금 진행을 보인다(MV-UI2-REBIRTH).</summary>
+        public static async UniTask<RebirthPopup> OpenRebirthAsync(MetaPopupData data = null) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.Rebirth, data ?? new MetaPopupData()) as RebirthPopup;
 
         /// <summary>
         /// 지도(05 §5.10). 로비 버튼은 열 때 소리 click. 런 끝 흐름(MV-SPEC-02 01 §12-3: 지도 → 결과)은 버튼이 아니라
@@ -109,6 +112,28 @@ namespace MV.UI
         /// <summary>언어 고르기(D-LOC-PLAN ③). 설정 팝업의 언어 버튼이 연다.</summary>
         public static async UniTask<LanguagePopup> OpenLanguageAsync(LanguagePopupData data = null) =>
             await Ui.SpawnUIPopupAsync(MvUiIds.SettingLanguage, data ?? new LanguagePopupData()) as LanguagePopup;
+
+        /// <summary>공용 시스템 팝업(노션 「[팝업] 시스템 기본 팝업」). 콜백은 <see cref="SystemPopupData.OnClosed"/>.</summary>
+        public static async UniTask<SystemPopup> OpenSystemAsync(SystemPopupData data) =>
+            await Ui.SpawnUIPopupAsync(MvUiIds.CommonSystem, data) as SystemPopup;
+
+        /// <summary>선택(OK·Cancel). OK면 true, Cancel·X·뒤로·열지 못함이면 false.</summary>
+        public static async UniTask<bool> ConfirmAsync(string contents, string title = null)
+        {
+            var data = SystemPopupData.Confirm(contents, null, title);
+            var popup = await OpenSystemAsync(data);
+            if (popup == null) { data.Finish(false); return false; }
+            return await popup.CloseWait();
+        }
+
+        /// <summary>알림(OK 끔, Cancel·X로 닫음). 닫힐 때까지 기다린다.</summary>
+        public static async UniTask NoticeAsync(string contents, string title = null)
+        {
+            var data = SystemPopupData.Notice(contents, title);
+            var popup = await OpenSystemAsync(data);
+            if (popup == null) { data.Finish(false); return; }
+            await popup.CloseWait();
+        }
 
         /// <summary>퀘스트(08 §8.5.1, MV-META-QUEST). 잠김 판정은 로비 버튼(<see cref="LobbyPresenter.QuestSideId"/>)이 한다.</summary>
         public static async UniTask<QuestPopup> OpenQuestAsync(QuestPopupData data = null) =>

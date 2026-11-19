@@ -48,6 +48,34 @@ namespace MV.Meta.Tests
             Assert.That(Meta.UnlockState(MvMetaRules.RebirthKey), Is.EqualTo(MvUnlockState.Hidden), "Level만으로는 잠금 표시 조건(Area 2)을 넘지 못한다");
         }
 
+        /// <summary>쿨타임 캣닢 스킵(08 §8.5.14, MV-UI2-REBIRTH): ceil(남은 분/10) × 499 rebirth.skipDiaPer10Min, 남은 시간 전체, 부족이면 거절.</summary>
+        [Test]
+        public void SkipCooldownDia_CostsPerTenMinutes_ClearsCooldown()
+        {
+            ArrangeMidGame();
+            Assert.That(Meta.SkipRebirthCooldownDia().Code, Is.EqualTo(MvMetaErrors.NoCooldown), "쿨타임 없음");
+            Assert.That(Meta.Rebirth().Ok, Is.True);
+
+            int per10 = Tables.ContentConfig.I(ContentConfigKeys.Rebirth_SkipDiaPer10Min);
+            long full = (CooldownMs / 600_000L) * per10;
+            Assert.That(MvMetaRules.RebirthSkipDiaCost(Tables, CooldownMs), Is.EqualTo(full), "6시간 = 36칸");
+            Assert.That(MvMetaRules.RebirthSkipDiaCost(Tables, 600_000L + 1), Is.EqualTo(2 * per10), "10분 넘으면 올림");
+            Assert.That(MvMetaRules.RebirthSkipDiaCost(Tables, 0), Is.EqualTo(0));
+            Assert.That(Meta.RebirthSkipDiaPrice[0].Value, Is.EqualTo(full));
+
+            SetWealth((MvWealthIds.Dia, full - 1));
+            Assert.That(Meta.SkipRebirthCooldownDia().Code, Is.EqualTo(MvMetaErrors.NotEnough));
+            Assert.That(Meta.RebirthCooldownLeftMs, Is.GreaterThan(0));
+
+            SetWealth((MvWealthIds.Dia, full + 7));
+            MvMetaResponse r = Meta.SkipRebirthCooldownDia();
+            Assert.That(r.Ok, Is.True, r.Code);
+            Assert.That(W(MvWealthIds.Dia), Is.EqualTo(7));
+            Assert.That(Meta.RebirthCooldownLeftMs, Is.EqualTo(0));
+            Assert.That(Meta.CanRebirth, Is.True);
+            Assert.That(Meta.RebirthSkipDiaPrice, Is.Empty);
+        }
+
         [Test]
         public void Rebirth_MovesPendingToTokens_ResetsRun_KeepsKeepFields()
         {

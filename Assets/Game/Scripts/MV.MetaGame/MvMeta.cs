@@ -311,6 +311,22 @@ namespace MV.Meta
             return Rebirth();
         }
 
+        /// <summary>쿨타임 캣닢 스킵(08 §8.5.14). 비용은 <see cref="RebirthSkipDiaPrice"/>.</summary>
+        public MvMetaResponse SkipRebirthCooldownDia() => Send(new MvMetaRequest(MvMetaRequestNames.RebirthSkipDia));
+
+        /// <summary>지금 캣닢 스킵 가격(쿨타임이 없으면 빈 목록).</summary>
+        public IReadOnlyList<MvConsume> RebirthSkipDiaPrice
+        {
+            get
+            {
+                long cost = IsReady ? MvMetaRules.RebirthSkipDiaCost(Tables, RebirthCooldownLeftMs) : 0;
+                return cost <= 0 ? Array.Empty<MvConsume>() : new[] { new MvConsume(ConsumeType.Wealth, MvWealthIds.Dia, cost) };
+            }
+        }
+
+        /// <summary>해금 판정 진행 값(<see cref="MvUnlockRules"/>, 화면의 해금 진행 표시용).</summary>
+        public MvUnlockProgress UnlockProgress => IsReady ? _local.UnlockProgress() : default;
+
         /// <summary>부활 화면을 열면 확인 대기를 끈다(05 §5.9 「열기」, 정본 L2572).</summary>
         public void DisarmRebirth() => _rebirthArmedAt = long.MinValue;
 

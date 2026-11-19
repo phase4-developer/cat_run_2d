@@ -105,10 +105,12 @@ namespace MV.UI.Tests
             p.SideRequested += requested.Add;
             p.Toast += toasts.Add;
 
+            // 환생은 잠겨 있어도 팝업을 열고 팝업이 Lock을 보인다(노션 [팝업] 환생 업그레이드, MV-UI2-REBIRTH).
+            bool opens = open || side == LobbySideIds.Rebirth;
             Assert.AreEqual(!open, p.Model.FindSide(side).Locked);
-            Assert.AreEqual(open, p.PressSide(side));
-            Assert.AreEqual(open ? 1 : 0, requested.Count);
-            Assert.AreEqual(open ? 0 : 1, toasts.Count);
+            Assert.AreEqual(opens, p.PressSide(side));
+            Assert.AreEqual(opens ? 1 : 0, requested.Count);
+            Assert.AreEqual(opens ? 0 : 1, toasts.Count);
         }
 
         [Test]

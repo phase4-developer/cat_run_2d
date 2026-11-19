@@ -347,6 +347,55 @@ MonoBehaviour:
     m_Localized: Area {0} Clear
     m_Metadata:
       m_Items: []
+  - m_Id: 207629583216640
+    m_Localized: OK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548288
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548289
+    m_Localized: Notice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548290
+    m_Localized: Rebirth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548291
+    m_Localized: Rebirth Cooldown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548292
+    m_Localized: Ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548293
+    m_Localized: Skip {0} mins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548294
+    m_Localized: Skip Cooldown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548295
+    m_Localized: Unlocks at {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548296
+    m_Localized: Rebirth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548297
+    m_Localized: Rebirth resets Area progress, Churu, Fish, Lobby and Area upgrades,
+      and grants {0} Golden Fish. Rebirth now?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 207629633548298
+    m_Localized: "Rebirth Lv {0} \xB7 Golden Fish +{1}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
