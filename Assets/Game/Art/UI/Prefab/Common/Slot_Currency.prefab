@@ -287,7 +287,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  m_AtlasKey: Icon Atlas
+  m_AtlasKey: Atlas_UI_Icon
   m_SpriteName: 
   m_LoadOnEnable: 1
   m_ReleaseOnDisable: 0
