@@ -8,6 +8,9 @@ namespace MV.Data
     // 400~402 모드, 410~420 퀘스트, 499 콘텐츠 상수, 700~702 상점 규칙(08 §8.4, §8.5.1, §8.5.6, §8.5.7, §8.5.13).
     public static partial class MvTableValidator
     {
+        /// <summary>일일 퀘스트 포인트 재화 행의 <c>01_wealth.type</c>(MV.Save <c>MvWealthIds.DailyQuestPoint</c>와 같은 행).</summary>
+        public const string DailyQuestPointWealthType = "dailyQuestPoint";
+
         /// <summary>contentType → IModeRule 구현(08 §8.4.2·8.4.4).</summary>
         static readonly Dictionary<ContentType, string> s_ruleOfContent = new Dictionary<ContentType, string>
         {
@@ -175,8 +178,11 @@ namespace MV.Data
                     r.Error(RepeatQuestData.Table, q.id, "clearValueStep", "일일 퀘스트는 반복하지 않으므로 clearValueStep 0이어야 합니다");
             }
             // 일일 종합 목표는 같은 날 얻을 수 있는 일일 점수 합 이하(08 §8.5.1 「합 120 = 전부 완료」).
+            // 일일 점수 = 재화 보상 중 01_wealth type dailyQuestPoint 행(MV-WEALTH-QUESTPOINT, MV.Save MvWealthIds.DailyQuestPoint).
+            int dailyPointId = t.Wealth.GetId(DailyQuestPointWealthType);
+            if (dailyPointId == 0) r.Error(MvWealthTable.Name, 0, "type", $"일일 퀘스트 포인트 재화 행(type {DailyQuestPointWealthType})이 없습니다");
             long dailyPoints = t.RepeatQuest.Datas.Where(q => q.periodType == QuestPeriodType.Daily)
-                .Sum(q => q.reward.Where(x => x.TypeId == (int)ConsumeType.DailyQuestPoint).Sum(x => (long)x.Value));
+                .Sum(q => q.reward.Where(x => x.TypeId == (int)ConsumeType.Wealth && x.Id == dailyPointId).Sum(x => (long)x.Value));
             foreach (var q in t.RepeatQuest.Datas.Where(q => q.clearType == QuestClearType.DailyPoint && q.clearValue > dailyPoints))
                 r.Error(RepeatQuestData.Table, q.id, "clearValue", $"일일 점수 목표 {q.clearValue}가 하루 최대 점수 {dailyPoints}보다 큽니다");
 
