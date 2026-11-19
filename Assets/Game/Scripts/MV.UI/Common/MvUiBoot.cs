@@ -12,7 +12,7 @@ namespace MV.UI
         /// <summary>정적 옵션. Play 시작 때 Framework가 비우므로 부트스트랩에서 매번 정한다.</summary>
         public static void ConfigureOptions()
         {
-            // 문구: 다국어(7단계)가 연결되면 LocalizationManager.GetLoc(collection, key)로 바꾼다. 지금은 키를 그대로 돌려준다.
+            // 문구: 7단계(MvBootLocalization)가 LocalizationManager.GetLoc으로 이미 정한다. 다국어 초기화가 실패했을 때만 키를 그대로 돌려준다.
             if (UIRuntimeOptions.Localize == null) UIRuntimeOptions.Localize = (collection, key) => key;
             // 뒤로 가기 종료 확인: 종료 확인 팝업은 2차. 지금은 확인 없이 종료를 허용한다(Framework는 이 값이 없으면 오류).
             if (UINavigationOptions.ConfirmExitAsync == null) UINavigationOptions.ConfirmExitAsync = _ => UniTask.FromResult(true);

@@ -72,6 +72,7 @@ namespace MV.Meta
                 case MvMetaRequestNames.RecordModePlay: return RecordModePlay(Str(p, "key"));
                 case MvMetaRequestNames.MarkSeen: return MarkSeen(p);
                 case MvMetaRequestNames.SetMuted: return SetMuted(p);
+                case MvMetaRequestNames.SetLanguage: return SetLanguage(p);
                 case MvMetaRequestNames.StartResearch: return StartResearch(p);
                 case MvMetaRequestNames.ClaimResearch: return ClaimResearch(p);
                 default:
@@ -461,6 +462,18 @@ namespace MV.Meta
             if (p["muted"]?.Type != JTokenType.Boolean) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "muted");
             bool muted = p.Value<bool>("muted");
             return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = new JObject { ["muted"] = muted } }, new JObject { ["muted"] = muted });
+        }
+
+        /// <summary>언어 코드 저장(<c>mvSettings.language</c>). 영문·숫자·<c>-</c>만, 16자 이하.</summary>
+        private static MvMetaResponse SetLanguage(JObject p)
+        {
+            if (p["language"]?.Type != JTokenType.String) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "language");
+            string code = p.Value<string>("language");
+            if (string.IsNullOrEmpty(code) || code.Length > 16) return MvMetaResponse.Reject(MvMetaErrors.BadParams, "language");
+            foreach (char ch in code)
+                if (!(ch == '-' || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')))
+                    return MvMetaResponse.Reject(MvMetaErrors.BadParams, "language");
+            return MvMetaResponse.Success(new JObject { [MvSaveKeys.Settings] = new JObject { ["language"] = code } }, new JObject { ["language"] = code });
         }
 
         private static JArray Union(IReadOnlyList<string> current, JArray add)

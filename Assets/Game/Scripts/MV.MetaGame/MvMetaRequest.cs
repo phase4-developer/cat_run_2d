@@ -47,6 +47,8 @@ namespace MV.Meta
         public const string MarkSeen = "meta.markSeen";
         /// <summary>소리 끄기 저장(<c>mvSettings.muted</c>). muted = bool.</summary>
         public const string SetMuted = "meta.setMuted";
+        /// <summary>언어 저장(<c>mvSettings.language</c>). language = 언어 코드 문자열.</summary>
+        public const string SetLanguage = "meta.setLanguage";
 
         // 개발 빌드 테스트 패널(05 §5.14). 이름은 MV.UI <c>MvDebugRequests</c>와 같다. 출시 빌드 로컬 백엔드는 처리기를 등록하지 않는다.
         /// <summary>key = 재화 id 문자열, amount = 더할 양.</summary>

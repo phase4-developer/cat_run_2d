@@ -24,6 +24,7 @@
         "JJEvol.Save.Runtime",
         "JJEvol.Economy.Runtime",
         "JJEvol.Localization.Runtime",
+        "Unity.Localization",
         "JJEvol.Scene.Runtime",
         "JJEvol.Scene.Addressables",
         "JJEvol.Scene.UI",

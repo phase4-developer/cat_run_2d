@@ -5,8 +5,8 @@ using MV.Data;
 namespace MV.UI
 {
     /// <summary>
-    /// 문구 찾기(05 §5.1.12). 지금은 한국어 직접 문자열을 쓰고 키 자리를 남긴다.
-    /// 교체 지점: <c>UIRuntimeOptions.Localize</c>가 LocalizationManager.GetLoc로 연결되면 키 값이 그대로 쓰인다.
+    /// 문구 찾기(05 §5.1.12, 07 §7.12). <c>UIRuntimeOptions.Localize</c>(7단계가 LocalizationManager.GetLoc으로 연결)로 언어팩 값을 쓰고,
+    /// 키가 없거나 비었으면 <c>fallback</c>(한국어 대체)을 쓴다. 새 문구는 키를 시트에 넣고 대체 문구는 ko와 같게 둔다(MV-LOC).
     /// </summary>
     public static class MvUiText
     {
