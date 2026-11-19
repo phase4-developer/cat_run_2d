@@ -64,7 +64,7 @@ namespace MV.View.Tests
             var sr = icon.GetComponent<SpriteRenderer>();
             Assert.That(sr != null && sr.sprite != null && sr.sprite.name == "Icon_Floor", Is.True, "Icon_Floor 그림");
             var label = CountLabel.Find(sg.transform);
-            Assert.That(label.Number.sortingOrder, Is.GreaterThan(sr.sortingOrder), "숫자가 아이콘 위에 그려진다");
+            Assert.That(label.Number.GetComponent<Renderer>().sortingOrder, Is.GreaterThan(sr.sortingOrder), "숫자가 아이콘 위에 그려진다");
             float iconY = icon.position.y, numY = label.Number.transform.position.y, gaugeY = label.GaugeRoot.transform.position.y;
             Assert.That(iconY > numY && numY > gaugeY, Is.True, $"아래로 아이콘({iconY}) → 숫자({numY}) → 막대({gaugeY})");
 
