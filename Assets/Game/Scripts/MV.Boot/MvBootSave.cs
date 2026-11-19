@@ -151,6 +151,7 @@ namespace MV.Boot
             {
                 GodKeys = KeySet(tables.God.Sorted.Select(row => row.key)),
                 MaxWeaponTier = tables.Item.Sorted.Count == 0 ? -1 : tables.WeaponTierMax(), // 103 active 상한(MV-SPEC-02 Q-08)
+                MergeN = tables.RunConfig.I(RunConfigKeys.MERGE_N),
                 MaxAreaIndex = tables.Area.Sorted.Count == 0 ? -1 : tables.Area.Sorted.Max(row => row.areaNo) - 1,
                 BarCellLimits = barLimits,
                 LobbyUpMax = tables.LobbyUpgrade.Sorted.ToDictionary(row => row.key, row => tables.LevelMax(row), StringComparer.Ordinal), // 계단·지팡이는 11·12 합계
