@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using MV.Data;
 using MV.Meta;
 using UnityEngine;
 
@@ -49,18 +51,32 @@ namespace MV.UI
             var d = Data;
             if (v == null || d == null) return;
             v.SetTitle(TitleText(d), d.Kind == ResultKind.Fail ? MvUi.Hex("#ffb08a") : MvUi.Gold);
-            v.SetProgress(ProgressLeft(d), d.SoulsHave + " / " + d.SoulsNeed,
-                d.SoulsNeed > 0 ? Mathf.Clamp01((float)d.SoulsHave / d.SoulsNeed) : 1f);
-            v.SetRewards(new ResultRewardText(d.GoldName, "+" + MvUiFormat.Fmt(d.Gold)),
-                new ResultRewardText(d.DiaName, "+" + d.Dia),
-                new ResultRewardText(d.TokName, "+" + d.Tok));
+            v.SetProgress(Progress(d));
+            v.SetRewards(Rewards(d));
             v.SetStat(d.Stat ?? "");
             v.SetCollectInteractable(!Collected && !AdPending);
-            (v as IResultAdView)?.SetX3(AdText(Watcher.Mul), CanX3);
+            (v as IResultAdView)?.SetX3(Watcher.Mul, CanX3);
         }
 
-        /// <summary>결과 광고 버튼 글 「×N 보상」(MV-SPEC-02 01 §12-3). N은 <c>08_adPlacement</c> 결과 광고 행 <c>mul</c>.</summary>
-        public static string AdText(int mul) => "×" + mul + " 보상"; // ui.result.adX3
+        /// <summary>채움 비율(0~1). 필요량이 0이면 가득.</summary>
+        public static float Fill01(int souls, int need) => need > 0 ? Mathf.Clamp01((float)souls / need) : 1f;
+
+        /// <summary>진척도: 정산 전(<see cref="ResultViewData.SoulsBefore"/>) → 정산 후(<see cref="ResultViewData.SoulsHave"/>), % 정수(소수점 버림, 100 상한).</summary>
+        public static ResultProgress Progress(ResultViewData d)
+        {
+            float to = Fill01(d.SoulsHave, d.SoulsNeed);
+            int pct = d.SoulsNeed > 0 ? (int)Math.Min(100L, (long)Math.Max(0, d.SoulsHave) * 100 / d.SoulsNeed) : 100;
+            return new ResultProgress(Mathf.Min(Fill01(d.SoulsBefore, d.SoulsNeed), to), to, pct, d.ZoneNo, d.AreaName ?? "",
+                ProgressLeft(d), d.SoulsHave + " / " + d.SoulsNeed);
+        }
+
+        /// <summary>보상 칸(정본 3칸 = 골드 R.gold, 블루 마법석 R.dia, 황금 생선 R.tok, 05 §5.6·MV-SPEC-02 12-3).</summary>
+        public static IReadOnlyList<ResultRewardItem> Rewards(ResultViewData d) => new[]
+        {
+            new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.Gold), d.GoldName, MvUiFormat.Fmt(d.Gold)),
+            new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.Dia), d.DiaName, d.Dia.ToString()),
+            new ResultRewardItem(d.Tables, MvWealthIds.TypeOf(MvWealthIds.RbToken), d.TokName, d.Tok.ToString()),
+        };
 
         /// <summary>
         /// 결과 「×N 보상」 광고(MV-SPEC-02 01 §12-3, 08_adPlacement collect3). 광고를 끝까지 봤으면 ×배수 정산 1번, 안 봤으면 정산 없이 다시 고를 수 있다.
@@ -103,20 +119,27 @@ namespace MV.UI
             return true;
         }
 
-        // 문구: ui:ui.result.* (LocalizationManager.GetLoc 교체 지점)
+        /// <summary>
+        /// 제목(05 §5.6 제목 4종, 언어팩 <c>ui:ui.result.*</c>). 디자이너 왕관·리본 그림은 그대로 두고 글자만 바꾼다(사용자 2026-11-19 「글자만 바꾸는데 언어팩으로 연결해」).
+        /// 레벨 완주의 대체 문구는 디자이너 시안 글자와 같다.
+        /// </summary>
         public static string TitleText(ResultViewData d)
         {
             switch (d.Kind)
             {
-                case ResultKind.ZoneClear: return "Zone " + d.ZoneNo + " 클리어!";     // ui.result.zoneClear
-                case ResultKind.AreaOpen: return "Area " + (d.AreaNo + 1) + " 개방!";  // ui.result.areaOpen
-                case ResultKind.LevelDone: return "LEVEL COMPLETED!";                  // ui.result.levelDone
-                default: return "아지트로 귀환";                                        // ui.result.fail
+                case ResultKind.ZoneClear: return string.Format(MvUiText.Get("ui", "ui.result.zoneClear", "Zone {0} 클리어!"), d.ZoneNo);
+                case ResultKind.AreaOpen: return string.Format(MvUiText.Get("ui", "ui.result.areaOpen", "Area {0} 개방!"), d.AreaNo + 1);
+                case ResultKind.LevelDone: return MvUiText.Get("ui", "ui.result.levelDone", LevelDoneFallback);
+                default: return MvUiText.Get("ui", "ui.result.fail", "아지트로 귀환");
             }
         }
 
+        /// <summary>디자이너 <c>Obj_Complete/Label Text (TMP)</c> 글자.</summary>
+        public const string LevelDoneFallback = "<size=65>Level</size>\nComplete !";
+
         public static string ProgressLeft(ResultViewData d) =>
-            d.Kind == ResultKind.ZoneClear ? "Zone " + d.ZoneNo + " · 업데이트 예정"  // ui.result.progZone
-                                           : "Area " + (d.AreaNo + 1) + " 개방까지 " + d.SoulsName; // ui.result.progNext
+            d.Kind == ResultKind.ZoneClear
+                ? string.Format(MvUiText.Get("ui", "ui.result.progZone", "Zone {0} · 업데이트 예정"), d.ZoneNo)
+                : string.Format(MvUiText.Get("ui", "ui.result.progNext", "Area {0} 개방까지 {1}"), d.AreaNo + 1, d.SoulsName);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MV.Meta;
 using MV.Run;
 using NUnit.Framework;
@@ -26,18 +27,15 @@ namespace MV.UI.Tests
         sealed class FakeView : IResultView
         {
             public event Action CollectPressed;
-            public string Title, Left, Right, Gold, Dia, Tok, Stat, GoldName, DiaName, TokName;
+            public string Title, Stat;
             public Color TitleColor;
-            public float Fill;
+            public ResultProgress Progress;
+            public IReadOnlyList<ResultRewardItem> Rewards;
             public bool Interactable = true;
             public void Press() => CollectPressed?.Invoke();
             public void SetTitle(string text, Color color) { Title = text; TitleColor = color; }
-            public void SetProgress(string left, string right, float fill01) { Left = left; Right = right; Fill = fill01; }
-            public void SetRewards(ResultRewardText gold, ResultRewardText dia, ResultRewardText tok)
-            {
-                Gold = gold.Value; Dia = dia.Value; Tok = tok.Value;
-                GoldName = gold.Name; DiaName = dia.Name; TokName = tok.Name;
-            }
+            public void SetProgress(in ResultProgress progress) => Progress = progress;
+            public void SetRewards(IReadOnlyList<ResultRewardItem> items) => Rewards = items;
             public void SetStat(string text) => Stat = text;
             public void SetCollectInteractable(bool interactable) => Interactable = interactable;
         }
@@ -108,16 +106,36 @@ namespace MV.UI.Tests
             var d = Data(new CountingSettler());
             p.Open(d);
             Assert.AreEqual("Area 2 개방!", view.Title);
-            Assert.AreEqual("Area 2 개방까지 " + d.SoulsName, view.Left);
-            Assert.AreEqual("80 / 100", view.Right);
-            Assert.AreEqual(0.8f, view.Fill, 1e-5f);
-            Assert.AreEqual("+1,234", view.Gold);
-            Assert.AreEqual("+2", view.Dia);
-            Assert.AreEqual("+1", view.Tok);
-            Assert.AreEqual(d.GoldName, view.GoldName);
-            Assert.AreEqual(d.DiaName, view.DiaName);
-            Assert.AreEqual(d.TokName, view.TokName);
+            Assert.AreEqual("Area 2 개방까지 " + d.SoulsName, view.Progress.Left);
+            Assert.AreEqual("80 / 100", view.Progress.Right);
+            Assert.AreEqual(0.5f, view.Progress.From01, 1e-5f, "정산 전 50/100에서 출발");
+            Assert.AreEqual(0.8f, view.Progress.To01, 1e-5f);
+            Assert.AreEqual(80, view.Progress.Percent);
+            Assert.AreEqual(3, view.Rewards.Count, "정본 3칸: 골드·블루 마법석·황금 생선");
+            Assert.AreEqual("gold", view.Rewards[0].WealthType);
+            Assert.AreEqual(MvUiFormat.Fmt(1234.5), view.Rewards[0].Count);
+            Assert.AreEqual("dia", view.Rewards[1].WealthType);
+            Assert.AreEqual("2", view.Rewards[1].Count);
+            Assert.AreEqual("goldenFish", view.Rewards[2].WealthType);
+            Assert.AreEqual("1", view.Rewards[2].Count);
+            Assert.AreEqual(d.GoldName, view.Rewards[0].Name);
+            Assert.AreEqual(d.DiaName, view.Rewards[1].Name);
+            Assert.AreEqual(d.TokName, view.Rewards[2].Name);
             Assert.IsTrue(view.Interactable);
+        }
+
+        [TestCase(0, 0, 100, 0, 0f)]
+        [TestCase(50, 80, 100, 80, 0.5f)]
+        [TestCase(99, 150, 100, 100, 0.99f)]
+        [TestCase(1, 2, 3, 66, 0.3333333f)]
+        [TestCase(10, 10, 0, 100, 1f)]
+        public void Progress_PercentFloors_AndStartsFromBefore(int before, int have, int need, int pct, float from)
+        {
+            var d = new ResultViewData { SoulsBefore = before, SoulsHave = have, SoulsNeed = need };
+            var p = ResultPresenter.Progress(d);
+            Assert.AreEqual(pct, p.Percent, "소수점 버림, 100 상한");
+            Assert.AreEqual(from, p.From01, 1e-5f);
+            Assert.That(p.To01, Is.GreaterThanOrEqualTo(p.From01));
         }
 
         [Test]
@@ -127,6 +145,7 @@ namespace MV.UI.Tests
             var d = ResultViewData.Create(r, 42, 2, 10, null);
             Assert.AreEqual(ResultKind.AreaOpen, d.Kind);
             Assert.AreEqual(3, d.AreaNo);
+            Assert.AreEqual(10, d.SoulsBefore);
             Assert.AreEqual(40, d.SoulsHave);
             Assert.AreEqual(42, d.Outcome.RunSeq);
             Assert.AreEqual(MvRunEnd.Gate, d.Outcome.End);

@@ -82,6 +82,7 @@ namespace MV.Data
         public MvTable<AreaUpgradeData> AreaUpgrade { get; } = new MvTable<AreaUpgradeData>(AreaUpgradeData.Schema, r => new AreaUpgradeData(r));
         public MvTable<RebirthPerkData> RebirthPerk { get; } = new MvTable<RebirthPerkData>(RebirthPerkData.Schema, r => new RebirthPerkData(r));
         public LevelPriceTable LevelPrice { get; } = new LevelPriceTable();
+        public MvTable<GradeData> Grade { get; } = new MvTable<GradeData>(GradeData.Schema, r => new GradeData(r));
 
         // 1xx
         public MvTable<CatData> Cat { get; } = new MvTable<CatData>(CatData.Schema, r => new CatData(r));
@@ -157,7 +158,7 @@ namespace MV.Data
             _all = new List<IMvTable>
             {
                 Config, Wealth, PlayResource, Sound, Effect, ContentOpen, BalancePreset, ConsumeType, AdPlacement, UiResource,
-                LobbyUpgrade, StairLevel, WeaponLevel, AreaUpgrade, RebirthPerk, LevelPrice,
+                LobbyUpgrade, StairLevel, WeaponLevel, AreaUpgrade, RebirthPerk, LevelPrice, Grade,
                 Cat, Enemy, Item, ObjectKind, HitReaction, ChargeGate, ReceiveCondition, MoveAi, Card, CardPool, CardEffect,
                 God, HpRule, CardTier, CharLook,
                 RunConfig, Zone, Area, AreaFloor, Theme, StageObject, Template, TemplateObject, TemplateCycle, FieldGen, SpawnGroup,
