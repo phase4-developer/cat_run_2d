@@ -1599,14 +1599,18 @@ MonoBehaviour:
     afterMul: 0.08
   moveSec: 0.28
   dealFadeSec: 0.25
-  dealFromBelow: 1
-  dealFromRight: 0.35
+  dealUpSec: 0.22
+  laneOutSec: 0.14
+  laneRiseSec: 0.26
+  laneOpenSec: 0.16
+  laneInSec: 0.14
+  laneGap: 6
   gatherScale: 1.06
   mergedScale: 1.3
   mergedMinSec: 0.15
   equipPopScale: 1.15
   equipPopSec: 0.25
-  queueGap: 40
+  queueGap: 12
   launchSec: 0.4
   launchGapSec: 0.07
   queueHoldSec: 2
