@@ -1,18 +1,20 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MV.View
 {
     /// <summary>
     /// 계단 경험치 오브(<c>Obj_Stair_Orb</c>, MV-UI3-STAIRFX 노션 「World Object Attraction」) 비행의 입구.
-    /// 월드 쪽(<see cref="StairOrbEmitter"/>)이 출발을 요청하고(<see cref="Launcher"/>, MV.Fx가 EffectManager로 UI Effect 루트에 재생),
-    /// HUD 계단 섹션이 도착 자리(화면 px)와 오브를 놓을 UI 판(<see cref="UiRoot"/>)을 꽂고 게이지를 도착에 맞춰 올린다(MV-UI3-STAIRFX2).
-    /// MV.UI·MV.Fx가 MV.View를 참조하므로 다리 없이 여기서 만난다(<see cref="GateRewardDisplay.Released"/>와 같은 방식).
-    /// 게이지 값은 시뮬(`RunState.GaugeFill`)이 갖고, 여기에는 연출 개수만 있다.
+    /// 월드 쪽(<see cref="StairOrbEmitter"/>)이 출발을 요청하고(<see cref="Launcher"/>, MV.Fx가 Framework 비행으로 UI Effect 루트에 재생),
+    /// HUD 계단 섹션이 도착 자리(화면 px)와 오브를 놓을 UI 판(<see cref="UiRoot"/>)을 꽂는다.
+    /// 오브가 도착하거나 도착하지 못하고 끝나면 <see cref="RaiseArrived"/>로 수령 번호를 알리고, 런 프레임(Boot)이 그 번호를 시뮬
+    /// (<c>RunSim.ReceiveArrived</c>)에 넘겨 실제 게이지가 그 순간 오른다(MV-UI3-STAIRFX3, 사용자 2026-11-20 「이펙트가 도착해서 종료되는 시점에 처리해」).
+    /// MV.UI·MV.Fx·MV.Boot가 MV.View를 참조하므로 다리 없이 여기서 만난다.
     /// </summary>
     public static class StairOrbFlight
     {
-        /// <summary>도착 자리(화면 px, 왼아래 원점). HUD 계단 섹션이 <c>Mid/Stair/OrbPos Anchor</c>로 꽂는다. 없거나 false면 오브는 퍼진 자리에서 사라진다.</summary>
+        /// <summary>도착 자리(화면 px, 왼아래 원점). HUD 계단 섹션이 <c>Mid/Stair/OrbPos Anchor</c>로 꽂는다. 없거나 false면 오브는 마지막 자리(퍼진 자리)에서 도착한다.</summary>
         public delegate bool TargetFn(out Vector2 screen);
 
         public static TargetFn Target;
@@ -28,39 +30,67 @@ namespace MV.View
             public string Key;
             /// <summary>UI 판 캔버스 정렬 순서에 더할 값(오브가 그 캔버스 위에 그려지게).</summary>
             public int SortingOffset;
+            /// <summary>시뮬 수령 번호(WellFlush 이벤트 B)와 그때의 런 번호(<see cref="Run"/>). 도착 때 그대로 돌려준다.</summary>
+            public int ReceiveId, Run;
         }
 
         public delegate bool LaunchFn(in OrbLaunch launch);
 
-        /// <summary>오브 재생기(MV.Fx <c>StairOrbFx</c>가 꽂는다). 없거나 false면 오브 없이 바로 도착으로 친다.</summary>
+        /// <summary>
+        /// 오브 재생기(MV.Fx <c>StairOrbFx</c>가 꽂는다). 받으면 true이고, 그 뒤 도착(또는 도착 못 하고 끝남)을 정확히 한 번
+        /// <see cref="RaiseArrived"/>로 알린다. 없거나 false면 요청한 쪽이 바로 도착으로 친다.
+        /// </summary>
         public static LaunchFn Launcher;
 
         /// <summary>오브를 놓을 UI 판(UIManager Effect 루트). HUD 계단 섹션이 꽂는다.</summary>
         public static Func<Transform> UiRoot;
 
-        /// <summary>출발 요청. 재생기가 받으면 true(도착은 재생기가 <see cref="RaiseArrived"/>로 알린다).</summary>
+        /// <summary>오브 하나 도착(수령 번호). 실제 게이지는 시뮬이 올리므로 화면은 듣기만 한다(시험·QA).</summary>
+        public static event Action<int> Arrived;
+
+        /// <summary>지금 런 번호. 런 프레임이 새 런마다 <see cref="BeginRun"/>으로 올린다. 지난 런 오브의 도착은 버린다.</summary>
+        public static int Run { get; private set; }
+
+        static readonly List<int> s_arrivals = new List<int>();
+        static readonly HashSet<int> s_claimed = new HashSet<int>();
+
+        /// <summary>출발 요청. 재생기가 받으면 true.</summary>
         public static bool TryLaunch(in OrbLaunch launch) => Launcher != null && Launcher(launch);
 
-        /// <summary>오브 묶음 출발(개수). 한 번 비울 때 한 번.</summary>
-        public static event Action<int> Launched;
-
-        /// <summary>오브 하나 도착(중간에 치워진 오브도 도착으로 친다. 게이지가 멈춰 있지 않게).</summary>
-        public static event Action Arrived;
-
-        /// <summary>아직 도착하지 않은 오브 수.</summary>
-        public static int InFlight { get; private set; }
-
-        public static void RaiseLaunched(int count)
+        /// <summary>
+        /// 이 수령을 오브로 맡았다(<see cref="StairOrbEmitter"/>). 맡은 수령의 도착은 오브가 알리고,
+        /// 아무도 맡지 않은 수령은 런 프레임이 바로 도착으로 친다(탑 뷰 없음·재생기 없음, 게이지가 멈추지 않게).
+        /// </summary>
+        public static void Claim(int receiveId)
         {
-            if (count <= 0) return;
-            InFlight += count;
-            Launched?.Invoke(count);
+            if (receiveId > 0) s_claimed.Add(receiveId);
         }
 
-        public static void RaiseArrived()
+        /// <summary>런 프레임: 이 수령을 누가 맡았는가(맡음 표시는 지운다).</summary>
+        public static bool TakeClaim(int receiveId) => s_claimed.Remove(receiveId);
+
+        /// <summary>오브 하나 도착(또는 도착하지 못하고 끝남). 지난 런·번호 없음은 버린다.</summary>
+        public static void RaiseArrived(int run, int receiveId)
         {
-            if (InFlight > 0) InFlight--;
-            Arrived?.Invoke();
+            if (receiveId <= 0 || run != Run) return;
+            s_arrivals.Add(receiveId);
+            Arrived?.Invoke(receiveId);
+        }
+
+        /// <summary>런 프레임: 쌓인 도착을 넘기고 비운다(시뮬 Tick 앞).</summary>
+        public static void DrainArrivals(Action<int> to)
+        {
+            if (s_arrivals.Count == 0) return;
+            foreach (int id in s_arrivals) to?.Invoke(id);
+            s_arrivals.Clear();
+        }
+
+        /// <summary>새 런: 쌓인 도착·맡음을 비우고 런 번호를 올린다(날고 있던 지난 런 오브의 도착은 버린다).</summary>
+        public static void BeginRun()
+        {
+            Run++;
+            s_arrivals.Clear();
+            s_claimed.Clear();
         }
 
         /// <summary>시험 정리용.</summary>
@@ -69,9 +99,9 @@ namespace MV.View
             Target = null;
             UiRoot = null;
             Launcher = null;
-            Launched = null;
             Arrived = null;
-            InFlight = 0;
+            s_arrivals.Clear();
+            s_claimed.Clear();
         }
     }
 }

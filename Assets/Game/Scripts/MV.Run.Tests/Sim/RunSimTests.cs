@@ -332,6 +332,72 @@ namespace MV.Run.Tests
             Assert.AreEqual(s.Objs[0].N, s.Stairs);
         }
 
+        /// <summary>탑을 맞혀 첫 우물 비움(WellFlush)이 나올 때까지 돈다.</summary>
+        static RunEvent FirstWellFlush(RunSim sim)
+        {
+            for (int f = 0; f < 1800; f++)
+            {
+                sim.Tick(1 / 60.0, default);
+                foreach (var e in sim.State.Events) if (e.Type == RunEventType.WellFlush) return e;
+            }
+            Assert.Fail("WellFlush 없음");
+            return default;
+        }
+
+        [Test]
+        public void WellGauge_DefaultMode_ReceivesAfter108Delay()
+        {
+            var sim = Sim(new HandLevel().Add("tower", 0, 8));
+            var e = FirstWellFlush(sim);
+            Assert.AreEqual(0, e.B, "도착으로 받기가 아니면 수령 번호 없음(HTML 대조 표기 그대로)");
+            Run(sim, 120); // 108 wellGauge 260 + 560 ms보다 길게
+            Assert.IsTrue(Ev(sim, RunEventType.GaugeReceive).Count > 0, "시험·대조 런은 108 지연 뒤 받는다");
+        }
+
+        /// <summary>MV-UI3-STAIRFX3: 실제 게이지는 오브 하나가 도착하는 순간(화면 알림) 그 몫만큼 오른다. 시간이 지나도 혼자 오르지 않는다.</summary>
+        [Test]
+        public void WellGauge_OnArrival_RisesOneSharePerOrb_NotByTime()
+        {
+            var sim = Sim(new HandLevel().Add("tower", 0, 8));
+            sim.WellGaugeOnArrival = true;
+            var e = FirstWellFlush(sim);
+            Assert.Greater(e.B, 0, "수령 번호");
+            Assert.GreaterOrEqual(e.A, 1);
+            Run(sim, 240);
+            Assert.AreEqual(0, Ev(sim, RunEventType.GaugeReceive).Count, "도착 알림 없이는 오르지 않는다(시간으로 맞추지 않음)");
+
+            double sum = 0;
+            for (int i = 0; i < e.A; i++)
+            {
+                sim.ReceiveArrived(e.B);
+                sim.Tick(1 / 60.0, default);
+                var got = Ev(sim, RunEventType.GaugeReceive);
+                Assert.AreEqual(i + 1, got.Count, "오브 하나 = 한 번");
+                sum += got[i].Amount;
+                if (i < e.A - 1) Assert.AreEqual(e.Amount / e.A, got[i].Amount, 1e-9, "같은 몫");
+            }
+            Assert.AreEqual(e.Amount, sum, 1e-9, "다 도착하면 수령량 전부");
+
+            sim.ReceiveArrived(e.B);
+            sim.ReceiveArrived(0);
+            sim.ReceiveArrived(9999);
+            sim.Tick(1 / 60.0, default);
+            Assert.AreEqual(e.A, Ev(sim, RunEventType.GaugeReceive).Count, "끝난 수령·모르는 번호는 무시");
+        }
+
+        [Test]
+        public void WellGauge_OnArrival_AfterFinIsDropped()
+        {
+            var sim = Sim(new HandLevel().Add("tower", 0, 8));
+            sim.WellGaugeOnArrival = true;
+            var e = FirstWellFlush(sim);
+            sim.State.Fin = true;
+            sim.ReceiveArrived(e.B);
+            sim.Tick(1 / 60.0, default);
+            Assert.AreEqual(0, Ev(sim, RunEventType.GaugeReceive).Count, "런이 끝난 뒤의 도착은 버린다");
+            Assert.IsFalse(sim.State.PendingReceives.Exists(r => r.Id == e.B), "그 수령은 닫힌다");
+        }
+
         [Test]
         public void Enemy_StealsGold()
         {

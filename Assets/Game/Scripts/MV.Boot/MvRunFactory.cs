@@ -23,6 +23,8 @@ namespace MV.Boot
             var sim = RunSim.Create(ctx, new MainRunRule(builder), new Pcg32Rng(seed), builder);
             // 투사체 판정 = 오브젝트 프리팹 Collider(Unity Physics). 월드에 판정 세계가 없으면 런을 시작하지 않는다.
             sim.HitQuery = world.Hits != null ? world.Hits : throw new InvalidOperationException("WorldView에 RunHitWorld가 없습니다(오브젝트 뷰 필요).");
+            // 우물 게이지는 계단 경험치 오브가 도착하는 순간 받는다(MV-UI3-STAIRFX3, 사용자 2026-11-20). 시험·대조 런은 108 지연 그대로.
+            sim.WellGaugeOnArrival = true;
             return sim;
         }
 

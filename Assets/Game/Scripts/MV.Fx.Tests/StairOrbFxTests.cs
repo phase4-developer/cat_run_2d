@@ -9,8 +9,8 @@ using UnityEngine;
 namespace MV.Fx.Tests
 {
     /// <summary>
-    /// MV-UI3-STAIRFX2: 계단 경험치 오브를 EffectManager로 UI Effect 루트에 재생(HUD 앞), 도착 신호는 요청이 끝날 때 한 번,
-    /// 오브 부품은 UI 판 위에서 HUD 도착 자리에 정확히 닿는다. 화면 모양(크기·곡선·앞뒤)은 사람 확인(NOT_RUN 별도).
+    /// MV-UI3-STAIRFX2·3: 계단 경험치 오브를 Framework 비행(PlayFlight)으로 UI Effect 루트에 재생(HUD 앞), 도착(또는 도착 못 하고 끝남) 때
+    /// 수령 번호를 정확히 한 번 알린다. 비행 자체(경로·도착 이벤트)는 Framework 시험(effects pre.5 PlayMode)이 맡는다. 화면 모양은 사람 확인(NOT_RUN 별도).
     /// </summary>
     public sealed class StairOrbFxTests
     {
@@ -50,45 +50,43 @@ namespace MV.Fx.Tests
         }
 
         [Test]
-        public void OrbPrefab_HasStairOrbBehaviourAndParticles()
+        public void OrbPrefab_HasFlightProfile_SpreadHoldThenFly()
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(OrbPath);
             Assert.That(prefab, Is.Not.Null, OrbPath);
-            var orb = prefab.GetComponent<StairOrb>();
-            Assert.That(orb, Is.Not.Null, "뿌리 StairOrb(EffectManager 동작으로 수집)");
-            Assert.That(orb is IEffectBehaviour);
+            var profile = prefab.GetComponent<EffectFlightProfile>();
+            Assert.That(profile, Is.Not.Null, "뿌리 EffectFlightProfile(Framework 비행 연출 값 정본)");
+            Assert.AreEqual(2, profile.legs.Count, "퍼짐 이동 → HUD 비행");
+            Assert.AreEqual(EffectFlightLegKind.Move, profile.legs[0].kind);
+            Assert.AreEqual(0.2f, profile.legs[0].holdAfter, 1e-6f, "퍼진 뒤 멈춤 0.2초(노션)");
+            Assert.AreEqual(EffectFlightLegKind.Move, profile.legs[1].kind);
+            Assert.That(profile.matchUILayer, Is.True, "UI 판 아래에서 UI 카메라가 그리게");
             Assert.That(prefab.GetComponentInChildren<ParticleSystem>(true), Is.Not.Null, "EffectManager가 ParticleEffectRenderer를 고른다");
-            Assert.That(new SerializedObject(orb).FindProperty("particle").objectReferenceValue, Is.Not.Null, "반환 때 잔상 지울 파티클");
         }
 
         [Test]
-        public void Launch_PlaysOnUiRootAboveItsCanvas_AndArrivesOnceWhenEnded()
+        public void Launch_PlaysFlightOnUiRootAboveItsCanvas_AndReportsOnceWhenRefused()
         {
             var plane = NewUiPlane(150);
-            var fake = new FakePlayer();
+            var fake = new FakePlayer(); // Play가 null = 재생 거절 → Framework가 onEnded(false)를 부른다
             StairOrbFx.Install(fake);
             StairOrbFlight.UiRoot = () => plane;
-            int arrived = 0;
-            StairOrbFlight.Arrived += () => arrived++;
-            StairOrbFlight.RaiseLaunched(1);
+            var arrived = new List<int>();
+            StairOrbFlight.Arrived += id => arrived.Add(id);
 
-            var launch = new StairOrbFlight.OrbLaunch { From = Vector3.one, Spread = Vector3.up, Key = "Obj_Stair_Orb", SortingOffset = 1 };
+            var launch = new StairOrbFlight.OrbLaunch { From = Vector3.one, Spread = Vector3.up, Key = "Obj_Stair_Orb", SortingOffset = 1, ReceiveId = 9, Run = StairOrbFlight.Run };
             Assert.That(StairOrbFlight.TryLaunch(launch), Is.True);
             Assert.AreEqual(1, fake.Requests.Count);
             var req = fake.Requests[0];
             Assert.AreEqual("Obj_Stair_Orb", req.effectType);
             Assert.AreSame(plane, req.parent, "UI Effect 루트 아래(UI 카메라가 그린다)");
             Assert.AreEqual(151, req.sortingOrder, "판 캔버스 순서 + offset → HUD 위");
-            Assert.That(req.loop, Is.True, "파티클 반복, 끝은 오브 부품");
+            Assert.That(req.loop, Is.True, "비행이 도착에서 끝낸다(Framework 권장 loop)");
             Assert.That(req.unscaledTime, Is.True);
-            Assert.That(StairOrbFx.TryGet(req.skinIndex, out var got), Is.True, "요청 표식으로 출발 정보");
-            Assert.AreEqual(launch.Spread, got.Spread);
+            Assert.AreEqual(new[] { 9 }, arrived.ToArray(), "재생하지 못해도 수령 번호를 한 번 알린다(게이지가 멈추지 않게)");
 
-            req.onEnded(EffectEndReason.Despawned);
-            req.onEnded(EffectEndReason.Despawned);
-            Assert.AreEqual(1, arrived, "끝날 때 도착 신호 한 번");
-            Assert.AreEqual(0, StairOrbFlight.InFlight);
-            Assert.AreEqual(0, StairOrbFx.Pending);
+            req.onEnded?.Invoke(EffectEndReason.Despawned);
+            Assert.AreEqual(1, arrived.Count, "두 번 알리지 않는다");
         }
 
         [Test]
@@ -99,37 +97,17 @@ namespace MV.Fx.Tests
         }
 
         [Test]
-        public void Orb_FliesOnUiPlane_AndEndsExactlyOnHudTarget()
+        public void FitScale_IsOneWithoutCamera_AndPositiveWithOne()
         {
-            var plane = NewUiPlane(150);
+            var plane = NewUiPlane(0);
+            Assert.AreEqual(1f, StairOrbFx.FitScale(null, Vector3.zero, plane, null));
             var camGo = new GameObject("WorldCam");
             _made.Add(camGo);
             var cam = camGo.AddComponent<Camera>();
             cam.orthographic = true;
             cam.orthographicSize = 5;
-            camGo.transform.position = new Vector3(0, 0, -10);
-
-            var orb = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(OrbPath)).GetComponent<StairOrb>();
-            _made.Add(orb.gameObject);
-            var handleGo = new GameObject("Handle");
-            handleGo.transform.SetParent(plane, false);
-            orb.transform.SetParent(handleGo.transform, false);
-
-            var target = new Vector2(30, 40);
-            StairOrbFlight.Target = (out Vector2 s) => { s = target; return true; };
-            orb.Launch(new Vector3(0, 1, 0), new Vector3(1, 2, 0), cam, plane);
-            Assert.That(orb.Busy, Is.True);
-            Assert.AreEqual(5, orb.gameObject.layer, "UI 카메라가 그리도록 UI 레이어");
-            foreach (var p in orb.GetComponentsInChildren<ParticleSystem>(true)) Assert.AreEqual(5, p.gameObject.layer);
-            Assert.That(orb.Fit, Is.GreaterThan(0f).And.Not.NaN);
-
-            orb.Step(orb.TotalSec + 0.01f);
-            Assert.That(orb.IsFinished, Is.True, "날기 끝 = 반환");
-            Assert.That(RectTransformUtility.ScreenPointToWorldPointInRectangle(plane, target, null, out var expect));
-            Assert.That(Vector3.Distance(expect, orb.transform.position), Is.LessThan(1e-3f), "HUD 도착 자리에 정확히");
-
-            orb.End();
-            Assert.That(orb.Busy, Is.False);
+            float fit = StairOrbFx.FitScale(cam, Vector3.zero, plane, null);
+            Assert.That(fit, Is.GreaterThan(0f).And.Not.NaN);
         }
     }
 }
