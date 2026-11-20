@@ -120,7 +120,7 @@ namespace MV.UI.Tests
             var (_, view) = NewLobby();
             var stack = view.WeaponStack.View;
             int lo = T.Item.Datas.Min(i => i.tier);
-            int mergeN = T.RunConfig.I(MV.Run.RunConfigKeys.MERGE_N);
+            int mergeN = T.RunConfig.I(RunConfigKeys.MERGE_N);
             var deck = new int[lo + 2];
             deck[lo + 1] = 1;           // 장착 칸 = 가장 높은 등급
             deck[lo] = mergeN - 1;      // 머지 직전 장수(저장 덱은 머지가 끝난 값)
@@ -156,8 +156,8 @@ namespace MV.UI.Tests
             var (_, view) = NewLobby();
             var stack = view.WeaponStack.View;
             int lo = T.Item.Datas.Min(i => i.tier);
-            int mergeN = T.RunConfig.I(MV.Run.RunConfigKeys.MERGE_N);
-            Assume.That(MV.Run.RunFormulas.WeaponTierMax(T), Is.GreaterThan(lo), "머지할 다음 등급");
+            int mergeN = T.RunConfig.I(RunConfigKeys.MERGE_N);
+            Assert.That(MV.Run.RunFormulas.WeaponTierMax(T), Is.GreaterThan(lo), "머지할 다음 등급");
             var deck = new int[lo + 2];
             deck[lo] = 1;
             view.SetState(new LobbyState { AreaNo = 1, ZoneNo = 1, Deck = deck }, T);
