@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "saved_at": "2026-11-12T18:20:20+09:00",
-  "saved_by": "사용자(설정 화면)",
+  "saved_at": "2026-11-20T23:04:10+09:00",
+  "saved_by": "사용자(설정 화면); 2026-11-20 사용자 「프레임 워크 이펙트와 공용 UI 툴이 업데이트 되었는데 모든 프로젝트가 이건 최신화 적용하면 좋겠어」 → UI 위젯 추가(중앙 대화)",
   "values": {
     "project_kind": "new",
     "ownership": "company",
@@ -112,7 +112,11 @@
       "com.jjevol.scene.addressables",
       "com.jjevol.scene.ui",
       "com.jjevol.ui.economy"
-    ]
+    ],
+    "fw_widgets": [
+      "widgets"
+    ],
+    "arch_doc": "Docs/Architecture"
   },
   "framework_packages": [
     "com.artress.managed-addressables",
@@ -163,10 +167,13 @@
     "com.jjevol.ui.contracts",
     "com.jjevol.ui.dotween-pro",
     "com.jjevol.ui.economy",
-    "com.jjevol.ui.urp"
+    "com.jjevol.ui.urp",
+    "com.jjevol.ui.widgets"
   ],
   "missing": [],
   "later": [
+    "concept_doc",
+    "design_doc",
     "fw_skip_reason",
     "lead_tool",
     "worker_tool",
@@ -198,5 +205,13 @@
       "level": "info",
       "text": "iOS 출시인데 iOS QA 대상이 없다"
     }
-  ]
+  ],
+  "auto": {
+    "arch_doc": {
+      "value": "Docs/Architecture",
+      "by": "AI(중앙 설정 갱신)",
+      "at": "2026-11-20T23:03:01+09:00",
+      "basis": "Docs/Architecture 폴더가 실제로 있음"
+    }
+  }
 }
