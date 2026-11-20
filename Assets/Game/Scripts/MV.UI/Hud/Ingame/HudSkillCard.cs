@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using jjevol;
 using MV.Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MV.UI
 {
@@ -24,6 +26,12 @@ namespace MV.UI
         /// <summary>Mask 아래 카드 바탕 그림(<c>Card Texture (1)</c>). 롤링 전에는 끈다.</summary>
         [SerializeField] GameObject maskBack;
         [SerializeField] TMP_Text title;
+
+        [Header("롤링 완료 연출(디자이너 리소스)")]
+        [Tooltip("완료 때 하얗게 번쩍이는 덮개(Flash). 흰 칠 재질 Image, 연출 때만 켠다.")]
+        [SerializeField] Graphic flash;
+        [Tooltip("완료 때 터지는 반짝임(Effect_Sparkle). 꺼 둔 채로 둔다.")]
+        [SerializeField] GameObject sparkle;
 
         Vector2 _stripHome;
         bool _homeSet;
@@ -150,6 +158,56 @@ namespace MV.UI
             if (strip) { strip.gameObject.SetActive(true); strip.anchoredPosition = _stripHome; }
             if (card != null && cells != null && cells.Length > 0) HudImage.Set(cells[0], MvAtlas.UiCard, card.icon);
             if (title) title.text = HudGrade.CardName(t, card);
+        }
+
+        // ---------------- 롤링 완료 연출(스킬 섹션이 시간·배율을 정해 부른다, MV-UI3-CLIMBFX) ----------------
+
+        static bool s_missingLogged;
+
+        public bool HasFlash => flash;
+        public bool HasSparkle => sparkle;
+        /// <summary>완료 연출 중(시험·QA).</summary>
+        public bool CompletePlaying => DOTween.IsTweening(this);
+
+        /// <summary>풀 반환·재사용 전: 연출을 멈추고 제모습으로.</summary>
+        public void ResetLook()
+        {
+            DOTween.Kill(this);
+            transform.localScale = Vector3.one;
+            if (flash) flash.gameObject.SetActive(false);
+            if (sparkle) sparkle.SetActive(false);
+        }
+
+        /// <summary>
+        /// 롤링 완료(노션 ClimbStair 연출 보강 2): 크기 1 → peakScale → 1(앞 upRatio 동안 커지고 나머지 동안 돌아옴),
+        /// 플래시 flashAlpha → 0, 반짝임 1회.
+        /// </summary>
+        public Tween PlayComplete(float sec, float peakScale, float upRatio, float flashAlpha)
+        {
+            ResetLook();
+            if (!s_missingLogged && (!flash || !sparkle))
+            {
+                s_missingLogged = true;
+                Debug.LogWarning("[HudSkillCard] 롤링 완료 연출 리소스 없음: Assets/Game/Art/UI/Prefab/HUD/Card_Skill.prefab에 "
+                    + (flash ? "" : "Flash ") + (sparkle ? "" : "Effect_Sparkle ") + "연결이 없습니다. 있는 것만 연출합니다.");
+            }
+            if (sec <= 0 || !Application.isPlaying) return null;
+            if (sparkle) sparkle.SetActive(true);
+            float up = sec * Mathf.Clamp01(upRatio);
+            var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
+            seq.Append(transform.DOScale(peakScale, up).SetEase(Ease.OutQuad));
+            seq.Append(transform.DOScale(1f, sec - up).SetEase(Ease.OutBack));
+            if (flash)
+            {
+                var c = flash.color;
+                flash.color = new Color(c.r, c.g, c.b, 1f);
+                flash.gameObject.SetActive(true);
+                float a = flashAlpha;
+                flash.canvasRenderer.SetAlpha(a);
+                seq.Insert(0, DOTween.To(() => a, v => { a = v; flash.canvasRenderer.SetAlpha(v); }, 0f, sec).SetEase(Ease.OutQuad));
+            }
+            seq.OnComplete(() => { if (flash) flash.gameObject.SetActive(false); });
+            return seq;
         }
     }
 

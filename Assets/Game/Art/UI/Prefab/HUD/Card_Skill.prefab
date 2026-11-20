@@ -241,6 +241,8 @@ MonoBehaviour:
   question: {fileID: 8555534329968481025}
   maskBack: {fileID: 2124182067076545818}
   title: {fileID: 2598495496517396845}
+  flash: {fileID: 7802149146029480030}
+  sparkle: {fileID: 8117560511176516814}
 --- !u!1 &994510634616818449
 GameObject:
   m_ObjectHideFlags: 0

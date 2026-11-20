@@ -128,7 +128,7 @@ namespace MV.UI
             if (skillRoll) skillRoll.Tick(s, speed);
             if (cardPos) cardPos.Tick(s);
 
-            bool rolling = s.Roulette != null && skillRoll && skillRoll.Focus >= 0;
+            bool rolling = s.Roulette != null && skillRoll && skillRoll.Active;
             bool climbing = s.Phase == RunPhase.Climb && s.Climb != null;
             bool anyFly = skillRoll && skillRoll.AnyFlown;
             if (climbStair) climbStair.SetActive(climbing || rolling);

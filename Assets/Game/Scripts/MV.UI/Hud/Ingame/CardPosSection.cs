@@ -20,6 +20,11 @@ namespace MV.UI
         [SerializeField] HudSkillCard flyPrefab;
         [Tooltip("나는 카드를 둘 부모(화면 루트, 다른 섹션 위)")]
         [SerializeField] RectTransform flyParent;
+        [Header("비행 보간(MV-UI3-CLIMBFX). 시간은 시뮬 330 rlFlyMs")]
+        [Tooltip("위치 보간 곡선")]
+        [SerializeField] HudEase flyMoveEase = HudEase.OutCubic;
+        [Tooltip("크기 보간 곡선")]
+        [SerializeField] HudEase flyScaleEase = HudEase.OutCubic;
 
         RectTransform _holderTemplate;
         readonly List<HudSkillCard> _posCards = new List<HudSkillCard>();
@@ -114,7 +119,7 @@ namespace MV.UI
             {
                 if (!clone || !_flying.Remove(clone)) return;
                 _pool.Release(clone);
-            });
+            }, flyMoveEase, flyScaleEase);
         }
 
         /// <summary>index번째 Holder 카드(Holder_Card가 모자라면 첫 Holder를 복제).</summary>

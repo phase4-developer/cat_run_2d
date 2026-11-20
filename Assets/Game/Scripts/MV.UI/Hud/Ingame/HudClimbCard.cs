@@ -58,6 +58,14 @@ namespace MV.UI
             _data = new ClimbCardData(_data.Tables, _data.TierIndex, fill01);
             if (progress) progress.normalizedValue = Mathf.Clamp01(fill01);
         }
+
+        /// <summary>진행 게이지(<c>Progress_Level</c>)는 진행 중인 Current 자리 카드에만 보인다(노션 ClimbStair 연출 보강 1).</summary>
+        public void ShowProgress(bool on)
+        {
+            if (progress && progress.gameObject.activeSelf != on) progress.gameObject.SetActive(on);
+        }
+
+        public bool ProgressShown => progress && progress.gameObject.activeSelf;
     }
 
     /// <summary>계단 등급 카드 표시 데이터: 115_cardTier 등급 번호와 게이지(0~1).</summary>
