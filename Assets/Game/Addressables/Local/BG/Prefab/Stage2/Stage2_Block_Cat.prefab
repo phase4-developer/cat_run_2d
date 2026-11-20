@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2572092359591244906, guid: 28b3601d9fb7f4bc8b9a09b6a650ea69, type: 3}
       propertyPath: m_Name
-      value: Stage1_Block_Cat
+      value: Stage2_Block_Cat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

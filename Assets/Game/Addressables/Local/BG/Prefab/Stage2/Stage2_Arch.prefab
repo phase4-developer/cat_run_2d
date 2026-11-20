@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4493594045560483613, guid: 62c6f0102a1ac4f9aab4907aab870f9a, type: 3}
       propertyPath: m_Name
-      value: Stage2_Arch Variant
+      value: Stage2_Arch
       objectReference: {fileID: 0}
     - target: {fileID: 5243400703901515509, guid: 62c6f0102a1ac4f9aab4907aab870f9a, type: 3}
       propertyPath: m_Sprite

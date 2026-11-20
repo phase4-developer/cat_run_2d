@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: -8890522067525861984, guid: b9f9b27bdc4f92949a07f64b73f7fd0e, type: 2}
     - target: {fileID: 1017244270075531286, guid: a6e529cc742c645bb9a201758a85d9f5, type: 3}
       propertyPath: m_Name
-      value: Stage2_Portal Variant
+      value: Stage2_Portal
       objectReference: {fileID: 0}
     - target: {fileID: 4423935046143989316, guid: a6e529cc742c645bb9a201758a85d9f5, type: 3}
       propertyPath: m_LocalPosition.x
