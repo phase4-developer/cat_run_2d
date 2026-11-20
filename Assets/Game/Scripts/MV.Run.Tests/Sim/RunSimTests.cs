@@ -349,9 +349,9 @@ namespace MV.Run.Tests
         {
             var sim = Sim(new HandLevel().Add("tower", 0, 8));
             var e = FirstWellFlush(sim);
-            Assert.AreEqual(0, e.B, "도착으로 받기가 아니면 수령 번호 없음(HTML 대조 표기 그대로)");
+            Assert.AreEqual(0, e.B, "도착으로 받기가 아니면 수령 번호 없음(이벤트 표기 그대로)");
             Run(sim, 120); // 108 wellGauge 260 + 560 ms보다 길게
-            Assert.IsTrue(Ev(sim, RunEventType.GaugeReceive).Count > 0, "시험·대조 런은 108 지연 뒤 받는다");
+            Assert.IsTrue(Ev(sim, RunEventType.GaugeReceive).Count > 0, "화면 없는 시험 런은 108 지연 뒤 받는다");
         }
 
         /// <summary>MV-UI3-STAIRFX3: 실제 게이지는 오브 하나가 도착하는 순간(화면 알림) 그 몫만큼 오른다. 시간이 지나도 혼자 오르지 않는다.</summary>

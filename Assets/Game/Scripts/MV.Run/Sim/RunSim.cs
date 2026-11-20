@@ -22,7 +22,7 @@ namespace MV.Run
         /// <summary>
         /// 우물 게이지 수령(108 wellGauge)을 화면의 오브 도착으로 받는다(MV-UI3-STAIRFX3, 사용자 2026-11-20 「이펙트가 도착해서 종료되는 시점에 처리해」).
         /// 켜면 WellFlush가 시간 없이 수령 번호(이벤트 B)를 내고, 오브 하나가 도착하거나 도착하지 못하고 끝날 때마다 <see cref="ReceiveArrived"/>로 한 몫씩 받는다.
-        /// 끄면(기본: 시험·HTML 대조·화면 없는 런) 108 행 지연(preDelayMs·delayMs) 그대로다. 실제 게임 런은 Boot가 켠다.
+        /// 끄면(기본: 화면 없이 시뮬만 도는 시험 — 도착을 알릴 오브가 없다) 108 행 지연(preDelayMs·delayMs) 그대로다. 실제 게임 런은 Boot가 켠다.
         /// </summary>
         public bool WellGaugeOnArrival { get; set; }
 
