@@ -98,6 +98,8 @@ namespace MV.UI
         [SerializeField] TMP_Text gaugeLevel;
         [SerializeField] Image gaugeNextGrade;
         [SerializeField] TMP_Text gaugeNextLevel;
+        /// <summary>계단 등급 업 연출(MV-UI3-STAIRFX, 노션 「Stair 업그레이드 연출」): MainUpgrade로 계단 레벨이 오르면 Slot_Stair 크기·Flash·Sparkle. 인게임 계단 칸과 같은 부품.</summary>
+        [SerializeField] HudGradeUpFx stairGradeUpFx;
 
         [Header("Bottom")]
         [SerializeField] LobbyUpgradeParts[] upgrades;
@@ -246,6 +248,9 @@ namespace MV.UI
                 Debug.LogError("LobbyDesignView: UIScreen_Lobby 참조가 비었습니다 — " + string.Join(", ", miss), this);
         }
 
+        // 화면을 다시 열면 지난 레벨 변화를 연출하지 않는다(첫 그리기는 기준만 잡는다).
+        void OnDisable() => _drawnStairLv = -1;
+
         void OnDestroy()
         {
             _disposed = true;
@@ -359,6 +364,9 @@ namespace MV.UI
         void DrawStair(MvTables t, LobbyMenuModel m)
         {
             int lv = m.StairLv;
+            // 등급 업 연출 시작 경로는 여기 하나(그린 레벨이 오를 때).
+            if (_drawnStairLv >= 0 && lv > _drawnStairLv && stairGradeUpFx) stairGradeUpFx.Play();
+            _drawnStairLv = lv;
             var cap = t != null ? RunFormulas.GaugeRow(t) : null;
             int next = cap != null && cap.cap > 0 ? Math.Min(cap.cap, lv + 1) : lv + 1;
             SetFrame(stairGrade, t, lv);
@@ -478,5 +486,7 @@ namespace MV.UI
         /// <summary>시험·QA: 그 칸에 넣으려는 그림 이름(없으면 null).</summary>
         public string WantedSprite(Image img) => img && _wanted.TryGetValue(img, out var w) ? w.sprite : null;
         public Image StairGradeImage => stairGrade;
+        public HudGradeUpFx StairGradeUpFx => stairGradeUpFx;
+        int _drawnStairLv = -1;
     }
 }

@@ -104,6 +104,7 @@ MonoBehaviour:
   gaugeLevel: {fileID: 4518021496437276933}
   gaugeNextGrade: {fileID: 6859774801411784064}
   gaugeNextLevel: {fileID: 4708457525291450659}
+  stairGradeUpFx: {fileID: 8046647382971051574}
   upgrades:
   - key: stair
     root: {fileID: 4520659199526426648}
@@ -1415,5 +1416,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f55389a5e5d488419f5659152e65b9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8046647382971051574 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8046647382971050618, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a47f1ac4b534f25a2ea67882ce03bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
