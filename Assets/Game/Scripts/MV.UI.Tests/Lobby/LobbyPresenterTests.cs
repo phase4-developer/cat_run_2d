@@ -139,11 +139,17 @@ namespace MV.UI.Tests
             var p = Make(port);
             int bought = 0;
             p.Bought += () => bought++;
+            var added = new List<int>();
+            p.DeckCardAdded += added.Add;
 
             Assert.IsTrue(p.PressUpgrade(key));
             Assert.AreEqual(1, port.BuyCalls);
             Assert.AreEqual((MvGrowth.Lobby, key), port.LastBuy);
             Assert.AreEqual(1, bought);
+            // 스크래쳐(DeckAdd)만 덱 카드 연출을 부른다(MV-UI3-LOBBY-WEAPONFX). 구매 결과 등급이 없으면 사기 전 무기 Level = 등급.
+            bool deckAdd = port.Tables.LobbyUpgrade.ByKey(key).effectType == MV.Data.LobbyEffectType.DeckAdd;
+            Assert.AreEqual(deckAdd ? 1 : 0, added.Count, key + ": 덱 카드 연출");
+            if (deckAdd) Assert.That(added[0], Is.GreaterThanOrEqualTo(1));
         }
 
         [Test]

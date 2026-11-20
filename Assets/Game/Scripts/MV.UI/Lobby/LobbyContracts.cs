@@ -64,6 +64,13 @@ namespace MV.UI
         void SetState(in LobbyState state, MvTables tables);
     }
 
+    /// <summary>시작 덱 연출을 그리는 겉(MV-UI3-LOBBY-WEAPONFX). 컨트롤러가 구매 결과를 넘긴다.</summary>
+    public interface ILobbyDeckView
+    {
+        /// <summary>스크래쳐 구매로 덱에 <paramref name="tier"/> 등급 카드 1장이 들어갔다(머지·버림은 메타가 이미 저장).</summary>
+        void AddDeckCard(int tier);
+    }
+
     /// <summary>저장(<see cref="MvSave.Current"/>)과 표(<see cref="MvTables.Current"/>)에서 로비 값을 읽는다.</summary>
     public sealed class MvSaveLobbySource : ILobbySource
     {

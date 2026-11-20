@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using jjevol;
 using MV.Data;
 using MV.Run;
@@ -9,7 +8,6 @@ using MV.Save;
 using MV.View;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Pool;
 using UnityEngine.UI;
 
 namespace MV.UI
@@ -61,7 +59,7 @@ namespace MV.UI
     /// <c>UIScreen_Lobby</c> 래퍼 프리팹 루트에 붙고, 참조는 래퍼 안 중첩 인스턴스를 직렬화로 가리킨다. 디자이너 원본은 바꾸지 않는다.
     /// 겉(배치·그림·크기)은 프리팹이 정하고 코드는 값·켜고 끄기만 한다. 디자이너 시안에 없는 기획서 요소(지도·야옹신·컨텐츠·퀘스트·진행 상자·덱 위젯)는 그리지 않는다(사용자 2026-11-19).
     /// </summary>
-    public sealed class LobbyDesignView : MonoBehaviour, ILobbyView, ILobbyMenuView, ILobbyStateView
+    public sealed class LobbyDesignView : MonoBehaviour, ILobbyView, ILobbyMenuView, ILobbyStateView, ILobbyDeckView
     {
         [Header("출발")]
         [SerializeField] LobbyStartArea startArea;
@@ -85,11 +83,11 @@ namespace MV.UI
         [SerializeField] LobbyCurrencyParts[] currencies;
 
         [Header("Mid/Weapon")]
-        [SerializeField] HudWeaponSlot equipSlot;
-        /// <summary>쌓이는 무기(<c>Stack</c>). 자식 <c>Slot_Weapon_Stack</c>이 칸이고, 모자라면 첫 칸을 복제해 풀에서 빌린다.</summary>
-        [SerializeField] RectTransform stack;
-        [Tooltip("덱에서 빠지는 카드(무기 Level이 올라 버린 낮은 카드·머지로 줄어든 칸)가 흐려지며 사라지는 초(사용자 2026-11-19 카드 「짧게 흐려지며 사라짐」). 0 = 바로.")]
-        [SerializeField] float discardFadeSec = 0.15f;
+        /// <summary>
+        /// 장착 칸 + 쌓이는 무기(<c>Mid/Weapon</c>)의 로비 연결. 스택·줄 서기·머지 연출은 인게임과 같은 공용 부품 <see cref="WeaponStackView"/>가 맡는다
+        /// (MV-UI3-LOBBY-WEAPONFX, 노션 「LobbyScreen : WeaponUpgrade시 무기 획득 및 Stack 연출」).
+        /// </summary>
+        [SerializeField] LobbyWeaponStack weaponStack;
 
         [Header("Mid/Stair")]
         [SerializeField] Image stairGrade;
@@ -127,10 +125,6 @@ namespace MV.UI
 
         readonly WorldSpriteCache _sprites = new WorldSpriteCache();
         readonly Dictionary<Image, (string atlas, string sprite)> _wanted = new Dictionary<Image, (string, string)>();
-        readonly List<HudWeaponSlot> _stackSlots = new List<HudWeaponSlot>();
-        ObjectPool<HudWeaponSlot> _stackPool;
-        HudWeaponSlot _stackTemplate;
-        int _designerSlots;
         MvTables _tables;
         bool _ready, _disposed;
         readonly HashSet<string> _missingKeys = new HashSet<string>();
@@ -144,8 +138,7 @@ namespace MV.UI
         public string LevelText => levelText ? levelText.text : null;
         public IReadOnlyList<LobbyUpgradeParts> Upgrades => upgrades;
         public IReadOnlyList<LobbyCurrencyParts> Currencies => currencies;
-        public IReadOnlyList<HudWeaponSlot> StackSlots { get { Init(); return _stackSlots; } }
-        public HudWeaponSlot EquipSlot => equipSlot;
+        public LobbyWeaponStack WeaponStack { get { Init(); return weaponStack; } }
         public int SpeedStateCount => speedStates?.Length ?? 0;
         public int ShownSpeedState { get { if (speedStates != null) for (int i = 0; i < speedStates.Length; i++) if (speedStates[i] && speedStates[i].activeSelf) return i; return -1; } }
         public string StairValueText => stairValue ? stairValue.text : null;
@@ -178,8 +171,8 @@ namespace MV.UI
                 var c = currencies[i];
                 Need(c?.slot, "currencies[" + i + "].slot");
             }
-            Need(equipSlot, nameof(equipSlot));
-            Need(stack, nameof(stack));
+            Need(weaponStack, nameof(weaponStack));
+            if (weaponStack) foreach (var m in weaponStack.MissingRefs()) miss.Add("weaponStack." + m);
             Need(stairGrade, nameof(stairGrade));
             Need(stairValue, nameof(stairValue));
             Need(stairCount, nameof(stairCount));
@@ -248,21 +241,6 @@ namespace MV.UI
                     u.button.onClick.AddListener(() => UpgradePressed?.Invoke(key));
                 }
 
-            if (stack)
-                foreach (Transform c in stack)
-                {
-                    var slot = c.GetComponent<HudWeaponSlot>();
-                    if (!slot) continue;
-                    if (!_stackTemplate) _stackTemplate = slot;
-                    _stackSlots.Add(slot);
-                }
-            _designerSlots = _stackSlots.Count;
-            // 디자이너가 둔 칸보다 많이 쌓이면 첫 칸을 복제한다. 풀은 이 영역이 갖고, 반환 때 칸을 끈다.
-            _stackPool = new ObjectPool<HudWeaponSlot>(
-                () => Instantiate(_stackTemplate, stack, false),
-                s => s.gameObject.SetActive(true),
-                s => s.gameObject.SetActive(false),
-                s => { if (s) Discard(s.gameObject); });
             SetSpeedShown(MvRunSpeed.Current);
             if (MissingRefs() is { Count: > 0 } miss)
                 Debug.LogError("LobbyDesignView: UIScreen_Lobby 참조가 비었습니다 — " + string.Join(", ", miss), this);
@@ -272,14 +250,7 @@ namespace MV.UI
         {
             _disposed = true;
             if (startArea) startArea.Pressed -= OnStart;
-            _stackPool?.Dispose();
             _sprites.Dispose();
-        }
-
-        static void Discard(UnityEngine.Object o)
-        {
-            if (Application.isPlaying) Destroy(o);
-            else DestroyImmediate(o);
         }
 
         void OnStart() => StartPressed?.Invoke();
@@ -355,67 +326,16 @@ namespace MV.UI
             }
         }
 
-        /// <summary>시작 덱을 장착 1장 + 스택으로(<see cref="HudWeaponHand"/>, 인게임 손패와 같은 규칙).</summary>
+        /// <summary>시작 덱(등급별 장수)을 장착 칸 + 스택으로. 그리기·버림·머지는 공용 부품(<see cref="LobbyWeaponStack"/> → <see cref="WeaponStackView"/>, 인게임 손패와 같은 규칙).</summary>
         void DrawWeapons(MvTables t, int[] deck)
         {
-            if (deck == null) deck = Array.Empty<int>();
-            if (equipSlot) equipSlot.Set(t, HudWeaponHand.Equipped(deck), 1);
-            var tiers = HudWeaponHand.Stack(deck);
-            while (_stackSlots.Count < tiers.Count && _stackTemplate)
-            {
-                var add = _stackPool.Get();
-                add.transform.SetAsLastSibling();   // 칸 목록 순서 = 형제 순서
-                _stackSlots.Add(add);
-            }
-            // 디자이너 Stack이 거꾸로 배치(ReverseArrangement)면 마지막 칸이 맨 위·맨 앞이다: 높은 단계(tiers[0])를 마지막 켜진 칸에 둔다(사용자 2026-11-19 「무기 정렬이 왜 이래?」).
-            var vl = stack ? stack.GetComponent<HorizontalOrVerticalLayoutGroup>() : null;
-            bool reverse = vl && vl.reverseArrangement;
-            int n = tiers.Count;
-            // 디자이너 칸은 남기고, 빌린 칸은 필요 없어지면 풀로 돌려준다.
-            while (_stackSlots.Count > Math.Max(tiers.Count, _designerSlots))
-            {
-                int last = _stackSlots.Count - 1;
-                FadeOut(_stackSlots[last], release: true);
-                _stackSlots.RemoveAt(last);
-            }
-            for (int i = 0; i < _stackSlots.Count; i++)
-            {
-                var slot = _stackSlots[i];
-                if (i < n)
-                {
-                    DOTween.Kill(slot);
-                    slot.SetAlpha(1f);
-                    IgnoreLayout(slot, false);
-                    slot.gameObject.SetActive(true);
-                    slot.Set(t, tiers[reverse ? n - 1 - i : i], 1);
-                }
-                else FadeOut(slot, release: false);
-            }
+            if (weaponStack) weaponStack.Show(t, deck);
         }
 
-        /// <summary>빠지는 칸: <see cref="discardFadeSec"/> 동안 흐려진 뒤 끄거나 풀로 돌려준다(편집기 정지 중·0초면 바로).</summary>
-        void FadeOut(HudWeaponSlot slot, bool release)
+        /// <summary>스크래쳐 구매로 덱에 카드 1장이 들어갔다: Spwan → Dst → 줄 → 스택(노션, MV-UI3-LOBBY-WEAPONFX).</summary>
+        public void AddDeckCard(int tier)
         {
-            if (!slot) return;
-            void Done()
-            {
-                slot.SetAlpha(1f);
-                IgnoreLayout(slot, false);
-                if (release) _stackPool.Release(slot);
-                else slot.gameObject.SetActive(false);
-            }
-            DOTween.Kill(slot);
-            if (!Application.isPlaying || discardFadeSec <= 0 || !slot.gameObject.activeInHierarchy) { Done(); return; }
-            IgnoreLayout(slot, true);   // 흐려지는 동안 제자리에 두고 배치에서 빼서 남은 칸이 바로 자리를 잡는다
-            float a = 1f;
-            DOTween.To(() => a, v => { a = v; slot.SetAlpha(v); }, 0f, discardFadeSec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(slot).OnComplete(Done);
-        }
-
-        static void IgnoreLayout(HudWeaponSlot slot, bool on)
-        {
-            var le = slot.GetComponent<LayoutElement>();
-            if (!le) { if (!on) return; le = slot.gameObject.AddComponent<LayoutElement>(); }
-            le.ignoreLayout = on;
+            if (weaponStack) weaponStack.Add(tier);
         }
 
         // ---------------- ILobbyMenuView(화면 코드 모델) ----------------

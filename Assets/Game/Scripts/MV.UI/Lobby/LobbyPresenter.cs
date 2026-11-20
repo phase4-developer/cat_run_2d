@@ -61,6 +61,8 @@ namespace MV.UI
         public event Action<string> Toast;
         /// <summary>강화 구매가 성공했다(소리 buy, 정본 L2644).</summary>
         public event Action Bought;
+        /// <summary>스크래쳐(<see cref="LobbyEffectType.DeckAdd"/>) 구매로 덱에 이 등급 카드 1장이 들어갔다(05 §5.5.1 「무기 그림이 버튼에서 덱으로」, 노션 Spwan → Dst → 줄).</summary>
+        public event Action<int> DeckCardAdded;
 
         public void SetPort(IMetaUiPort port) => _port = port;
         public void SetSource(ILobbySource source) => _source = source;
@@ -386,7 +388,10 @@ namespace MV.UI
             }
             Bought?.Invoke();
             int after = StepLevel(t, row, Port.Level(MvGrowth.Lobby, key));
-            if (r.HasLobbyBuy) { before = r.LvBefore; after = r.LvAfter; } // 메타 구매 결과(MvLobbyBuyResult)의 Lv. 머지 등급(r.MergedTier) 연출은 2차.
+            if (r.HasLobbyBuy) { before = r.LvBefore; after = r.LvAfter; } // 메타 구매 결과(MvLobbyBuyResult)의 Lv.
+            // 덱에 넣은 카드(메타 AddedTier, 없으면 사기 전 무기 Level = 등급). 머지·낮은 카드 버림은 메타가 이미 저장했고 연출은 겉이 손패 모델로 다시 보인다.
+            if (row.effectType == LobbyEffectType.DeckAdd)
+                DeckCardAdded?.Invoke(r.HasLobbyBuy && r.AddedTier > 0 ? r.AddedTier : before);
             // 배너 자리(OverlayHud.ShowBanner는 2차 연출). 1차는 토스트로 알린다.
             if (after > before)
                 Say(row.effectType == LobbyEffectType.StartStairLv ? "캣타워 Lv " + after   // ui.banner.stairUp

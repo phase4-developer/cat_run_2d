@@ -166,8 +166,9 @@ namespace MV.UI.Tests
             Assert.That(PrefabUtility.IsPartOfPrefabAsset(view.CardPos.FlyPrefab), Is.True, "나는 카드 복제 원본 = Card_Skill.prefab 에셋");
             Assert.That(view.Weapon, Is.Not.Null, "Mid/Weapon 무기 섹션");
             AssertRefs(view.Weapon);
-            Assert.That(view.Weapon.Equip, Is.Not.Null, "Equip/Slot_Weapon");
-            Assert.That(PrefabUtility.IsPartOfPrefabAsset(view.Weapon.StackPrefab), Is.True, "스택 복제 원본 = Slot_Weapon_Stack.prefab 에셋");
+            AssertRefs(view.Weapon.View);
+            Assert.That(view.Weapon.View.Equip, Is.Not.Null, "Equip/Slot_Weapon");
+            Assert.That(PrefabUtility.IsPartOfPrefabAsset(view.Weapon.View.StackPrefab), Is.True, "스택 복제 원본 = Slot_Weapon_Stack.prefab 에셋");
             Assert.That(view.SkillCard, Is.Not.Null, "Skill Section/Card_Skill");
             // flash·sparkle은 디자이너 리소스가 아직 없는 선택 항목(없으면 크기 연출만, 경고 로그).
             foreach (var slot in hud.GetComponentsInChildren<HudWeaponSlot>(true)) AssertRefs(slot, "flash", "sparkle");
@@ -249,7 +250,7 @@ namespace MV.UI.Tests
             // 지팡이(무기 섹션): 장착 = 최고 단계, 스택 = 손패 전부(05 §5.3.1, 높은 단계가 위). 그림은 표(103 icon·등급 틀).
             s.W[1] = 2; s.W[3] = 1;
             view.TickRun(0);
-            var weapon = view.Weapon;
+            var weapon = view.Weapon.View;
             Assert.AreEqual(3, weapon.Equip.Tier);
             var item3 = T.Item.Datas.First(i => i.tier == 3);
             Assert.AreEqual(item3.icon, weapon.Equip.IconSprite);
