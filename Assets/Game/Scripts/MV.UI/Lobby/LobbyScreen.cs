@@ -82,6 +82,7 @@ namespace MV.UI
             _presenter.SideRequested += OnSideRequested;
             _presenter.Toast += MvUiToast.Show;
             _presenter.Bought += OnBought;
+            _presenter.DeckCardAdded += OnDeckCardAdded;
             hudSettings.displayMode = UIHudDisplayMode.KeepPrevious; // 런 HUD는 게임 루프가 MvUiNav로 켜고 끈다
         }
 
@@ -209,6 +210,11 @@ namespace MV.UI
 
         static void OnBought() => MvSound.PlayUi(MvUiSound.LobbyUpgradeBuy);
 
+        void OnDeckCardAdded(int tier)
+        {
+            if (View is ILobbyDeckView deck) deck.AddDeckCard(tier);
+        }
+
         protected override void OnDestroy()
         {
             if (_view != null) _view.StartPressed -= PressStart;
@@ -220,6 +226,7 @@ namespace MV.UI
             _presenter.SideRequested -= OnSideRequested;
             _presenter.Toast -= MvUiToast.Show;
             _presenter.Bought -= OnBought;
+            _presenter.DeckCardAdded -= OnDeckCardAdded;
             base.OnDestroy();
         }
     }
