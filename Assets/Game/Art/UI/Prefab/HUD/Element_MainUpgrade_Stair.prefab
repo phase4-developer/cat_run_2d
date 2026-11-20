@@ -913,6 +913,7 @@ GameObject:
   - component: {fileID: 3917403571128465207}
   - component: {fileID: 6602871915403384519}
   - component: {fileID: 7232893677876663442}
+  - component: {fileID: 8813340527716209451}
   m_Layer: 5
   m_Name: Element_MainUpgrade_Stair
   m_TagString: Untagged
@@ -1068,6 +1069,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8813340527716209451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5587649413094638688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out
 --- !u!1 &5606721804039423034
 GameObject:
   m_ObjectHideFlags: 0
