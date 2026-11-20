@@ -12,6 +12,8 @@
         "MV.UI",
         "JJEvol.Tables.Runtime",
         "JJEvol.UI.Runtime",
+        "JJEvol.UI.Widgets.Runtime",
+        "JJEvol.UI.Contracts.Runtime",
         "Unity.TextMeshPro",
         "UnityEngine.UI",
         "UniTask"

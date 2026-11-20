@@ -11,6 +11,7 @@
         "JJEvol.UI.Contracts.Runtime",
         "JJEvol.UI.URP.Runtime",
         "JJEvol.UI.Economy.Runtime",
+        "JJEvol.UI.Widgets.Runtime",
         "Unity.TextMeshPro",
         "UnityEngine.UI",
         "UniTask",
