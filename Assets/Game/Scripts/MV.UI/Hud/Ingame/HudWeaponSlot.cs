@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Ease = DG.Tweening.Ease; // ui.contracts pre.5의 jjevol.Ease(위젯 모델)와 이름이 겹친다
 using jjevol;
 using MV.Data;
 using TMPro;
