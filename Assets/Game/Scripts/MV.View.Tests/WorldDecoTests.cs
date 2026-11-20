@@ -7,8 +7,8 @@ using UnityEngine;
 namespace MV.View.Tests
 {
     /// <summary>
-    /// 티켓 03 나머지 순수 계산: 화면 눈(02 §2.5.5), 로비 투영(02 §2.9).
-    /// 골든 값은 정본 `drawMoonProp`·`drawClothes`·`drawSnow`·`iso` 식을 Node(V8)로 돌린 결과다.
+    /// 티켓 03 나머지 순수 계산: 화면 눈(02 §2.5.5). 로비 아지트 투영(LobbyIso)은 2026-11-19 정리(MV-CLEAN-AZIT).
+    /// 골든 값은 정본 `drawMoonProp`·`drawClothes`·`drawSnow` 식을 Node(V8)로 돌린 결과다.
     /// </summary>
     public sealed class WorldDecoTests
     {
@@ -31,36 +31,6 @@ namespace MV.View.Tests
             Assert.That(gx, Is.EqualTo(x).Within(1e-5));
             Assert.That(gy, Is.EqualTo(y).Within(1e-5));
             Assert.That(gr, Is.EqualTo(r).Within(1e-5));
-        }
-
-        [Test]
-        public void LobbyIso_MatchesProto()
-        {
-            LobbyIso.IsoPx(-0.92, -0.92, 360, 640, out double x, out double y);
-            Assert.That(x, Is.EqualTo(180).Within(1e-6));
-            Assert.That(y, Is.EqualTo(212.9408).Within(1e-6));
-            LobbyIso.IsoPx(1, -1, 360, 640, out x, out y);
-            Assert.That(x, Is.EqualTo(468).Within(1e-6));
-            Assert.That(y, Is.EqualTo(350.72).Within(1e-6));
-            LobbyIso.IsoUnits(-0.78, -0.3, out x, out y);
-            Assert.That(x, Is.EqualTo(110.88 / 40 - 4.5).Within(1e-9));
-            Assert.That(y, Is.EqualTo(8 - 269.8496 / 40).Within(1e-9));
-            Assert.That(LobbyIso.Bump(1), Is.EqualTo(1).Within(1e-9));
-            Assert.That(LobbyIso.Bump(0.97), Is.EqualTo(1.016431312).Within(1e-8));
-            Assert.That(LobbyIso.SortingOrder(1), Is.LessThan(LobbyIso.SortingOrder(-1)), "화면 위(뒤)가 먼저");
-        }
-
-        [Test]
-        public void LobbyFacSprite_NamesFollowStageAndFrames()
-        {
-            Assert.That(LobbyIso.FacSprite("tower", 0, 0), Is.Null);
-            Assert.That(LobbyIso.FacSprite("tower", 1, 5), Is.EqualTo("Lobby_Fac_Tower_1"));
-            Assert.That(LobbyIso.FacSprite("tower", 2, 1.0), Is.EqualTo("Lobby_Fac_Tower_2_04"), "4.2 fps");
-            Assert.That(LobbyIso.FacSprite("stove", 0, 0), Is.EqualTo("Lobby_Fac_Stove_0"));
-            Assert.That(LobbyIso.FacSprite("stove", 3, 1.0), Is.EqualTo("Lobby_Fac_Stove_3_02"), "10.2 fps, 8프레임");
-            Assert.That(LobbyIso.FacSprite("rack", 2, 0, 9), Is.EqualTo("Lobby_Fac_Rack_2_F4"));
-            Assert.That(LobbyIso.FacSprite("scratch", 3, 0), Is.EqualTo("Lobby_Fac_Scratch_3"));
-            Assert.That(LobbyIso.FacSprite("basket", 1, 0), Is.EqualTo("Lobby_Fac_Basket_1"));
         }
     }
 }
