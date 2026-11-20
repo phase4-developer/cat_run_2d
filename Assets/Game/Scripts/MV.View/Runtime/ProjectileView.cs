@@ -41,6 +41,8 @@ namespace MV.View
         string[] _centers;
         OrbConfig _orb;
         Sprite _headFire, _headBolt;
+        /// <summary>번개 창 머리가 흰 그림(<see cref="ProjLayout.SpearHeadWhite"/>)인지(그렇다면 번개 색을 곱한다).</summary>
+        bool _boltWhite;
         Material _imageMaterial;
 
         MvTables _tables;
@@ -241,7 +243,7 @@ namespace MV.View
                     slot.Stamp = _stamp;
                     var pos = new Vector3((float)b.X, (float)(wy + ProjLayout.ProjY), (float)b.Z);
                     bool shown = slot is SpearProjectile spear
-                        ? spear.Place(SpearHead(fire), fire ? SpearFxFire : SpearFxBolt, Prefab(fire ? SpearFxFire : SpearFxBolt), pos)
+                        ? spear.Place(SpearHead(fire), !fire && _boltWhite ? spear.BoltTint : Color.white, fire ? SpearFxFire : SpearFxBolt, Prefab(fire ? SpearFxFire : SpearFxBolt), pos)
                         : PlaceToy((ToyProjectile)slot, b, pos, nowSec);
                     if (shown) visible++;
                 }
@@ -337,7 +339,13 @@ namespace MV.View
             var sp = fire ? _headFire : _headBolt;
             if (sp != null) return sp;
             if (_sprites == null || !_sprites.IsLoaded(_fxAtlas)) return null;
-            sp = _sprites.Get(_fxAtlas, fire ? ProjLayout.SpearHeadFire : ProjLayout.SpearHeadBolt);
+            if (fire) sp = _sprites.Get(_fxAtlas, ProjLayout.SpearHeadFire);
+            else
+            {
+                sp = _sprites.Get(_fxAtlas, ProjLayout.SpearHeadWhite);
+                _boltWhite = sp != null;
+                if (sp == null) sp = _sprites.Get(_fxAtlas, ProjLayout.SpearHeadBolt);
+            }
             if (fire) _headFire = sp; else _headBolt = sp;
             return sp;
         }

@@ -11,6 +11,8 @@ namespace MV.View
     public abstract class ProjectileSlot : MonoBehaviour
     {
         [SerializeField] DepthSortable _sortable;
+        /// <summary>정렬·안개(그림 색을 바꿀 때 기본색으로 등록한다).</summary>
+        protected DepthSortable Sortable => _sortable;
         /// <summary>그림을 카메라 쪽으로 세우는 빌보드(그림·장식의 부모).</summary>
         [SerializeField] protected Transform _billboard;
         /// <summary>

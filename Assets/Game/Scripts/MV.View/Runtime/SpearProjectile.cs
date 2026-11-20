@@ -9,6 +9,10 @@ namespace MV.View
     public sealed class SpearProjectile : ProjectileSlot
     {
         [SerializeField] SpriteRenderer _head;
+        [Tooltip("번개 창 머리 색(흰 그림 World_Proj_SpearHead에 곱한다). 불 창은 그림 색 그대로")]
+        [SerializeField] Color _boltTint = new Color(0.45f, 0.75f, 1f, 1f);
+
+        public Color BoltTint => _boltTint;
 
         GameObject _fx;
         string _fxAddress;
@@ -16,7 +20,10 @@ namespace MV.View
         public override bool HasRefs => base.HasRefs && _head != null;
 
         /// <summary>머리 그림이 아직 없으면 숨기고 false. 장식 프리팹이 아직 없으면 장식 없이 창만 그린다.</summary>
-        public bool Place(Sprite head, string fxAddress, GameObject fxPrefab, Vector3 pos)
+        public bool Place(Sprite head, string fxAddress, GameObject fxPrefab, Vector3 pos) => Place(head, Color.white, fxAddress, fxPrefab, pos);
+
+        /// <summary>머리 그림을 <paramref name="tint"/> 색으로 그린다(흰 그림에 곱함).</summary>
+        public bool Place(Sprite head, Color tint, string fxAddress, GameObject fxPrefab, Vector3 pos)
         {
             if (head == null)
             {
@@ -24,6 +31,11 @@ namespace MV.View
                 return false;
             }
             if (_head.sprite != head) _head.sprite = head;
+            if (_head.color != tint)
+            {
+                _head.color = tint;
+                if (Sortable != null) Sortable.SetBaseColor(_head, tint);   // 안개가 기본색으로 덮어쓰지 않게
+            }
             ShowAt(pos);
             SetFx(fxAddress, fxPrefab);
             if (Fresh)

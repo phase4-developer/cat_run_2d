@@ -21,6 +21,8 @@ namespace MV.View
         public const double SpearTail = 2.8, SpearWide = 0.32, SpearCore = 0.08, SpearWideAlpha = 0.45;
         public const string SpearColorFire = "#ffb03a", SpearColorOther = "#ff3a4a", SpearCoreColor = "#ffffff";
         public const string SpearHeadFire = "World_Proj_SpearHead_Fire", SpearHeadBolt = "World_Proj_SpearHead_Bolt";
+        /// <summary>번개 창 머리(흰 그림, <see cref="SpearProjectile"/>의 번개 색을 곱한다). 아틀라스에 없으면 <see cref="SpearHeadBolt"/>.</summary>
+        public const string SpearHeadWhite = "World_Proj_SpearHead";
         public const int MinTier = 1;
         /// <summary>회전 장난감 높이 1.0 ± sin(2a)·0.15(정본 syncScene L2765). 개수·반지름·각속도는 표(<see cref="OrbConfig"/>).</summary>
         public const double BladeY = 1.0, BladeBob = 0.15;
