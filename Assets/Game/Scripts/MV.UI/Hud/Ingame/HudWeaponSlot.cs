@@ -35,8 +35,10 @@ namespace MV.UI
         [SerializeField] TMP_Text attack;
 
         [Header("머지 연출(디자이너 리소스, 없으면 크기 연출만)")]
-        [Tooltip("머지 때 하얗게 밝아지는 덮개(05 §5.3.3 wmg·wmerged 밝기). 꺼 둔 Image + 흰 칠 재질(UIWhiteFill), 연출 때 등급 틀 그림 모양을 따라 켠다. 최대 밝기 = Image 색 알파.")]
+        [Tooltip("머지 때 하얗게 밝아지는 덮개(05 §5.3.3 wmg·wmerged 밝기). 꺼 둔 Image + 흰 칠 재질(UIWhiteFill), 연출 때 등급 틀 그림 모양을 따라 켠다. 쉴 때 색은 프리팹 그대로 둔다(디자이너 Slot_Weapon은 알파 0).")]
         [SerializeField] Graphic flash;
+        [Tooltip("덮개 최고 알파(임시, HudGradeUpFx.flashPeak와 같음). 연출 동안 덮개 색 알파를 이 값으로 두고 밝기를 곱한다. MV-UI3-FXFIX: 예전엔 Image 색 알파가 최고 밝기라 디자이너 알파 0에서 덮개가 보이지 않았다.")]
+        [SerializeField] float flashPeak = 1f;
         [Tooltip("머지 결과 칸 위에서 터지는 반짝임(영상 7.3). 꺼 둔 채로 둔다.")]
         [SerializeField] GameObject sparkle;
 
@@ -69,6 +71,20 @@ namespace MV.UI
 
         Graphic[] _graphics;
         static bool s_missingLogged;
+        Color _flashRest;
+        bool _flashCaptured;
+
+        /// <summary>시험·QA: 덮개가 지금 보이는 밝기(켜짐 × 색 알파 × 밝기).</summary>
+        public float FlashVisibleAlpha => flash && flash.gameObject.activeInHierarchy ? flash.color.a * flash.canvasRenderer.GetAlpha() : 0f;
+        /// <summary>시험·QA: 반짝임이 켜져 있는가.</summary>
+        public bool SparkleOn => sparkle && sparkle.activeInHierarchy;
+
+        void CaptureFlash()
+        {
+            if (_flashCaptured || !flash) return;
+            _flashCaptured = true;
+            _flashRest = flash.color;
+        }
 
         Graphic[] Graphics => _graphics ??= GetComponentsInChildren<Graphic>(true);
 
@@ -96,6 +112,7 @@ namespace MV.UI
             if (flash)
             {
                 flash.canvasRenderer.SetAlpha(0);
+                if (_flashCaptured) flash.color = _flashRest;
                 flash.gameObject.SetActive(false);
             }
             if (sparkle) sparkle.SetActive(false);
@@ -105,6 +122,10 @@ namespace MV.UI
         void ArmFlash(float alpha)
         {
             if (!flash) return;
+            CaptureFlash();
+            var c = _flashRest;
+            c.a = flashPeak;
+            flash.color = c;
             if (flash is Image f && grade)
             {
                 f.sprite = grade.sprite;
