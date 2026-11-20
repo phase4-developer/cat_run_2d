@@ -58,7 +58,7 @@ namespace MV.UI
             view.SupportPressed += OpenSupport;
             view.ClosePressed += () => { Click(); Close(); };
             Presenter.Changed += Draw;
-            UIRuntimeOptions.LocaleChanged += Draw;
+            UIDisplayOptions.LocaleChanged += Draw;
         }
 
         protected override void _DrawContents()
@@ -139,7 +139,7 @@ namespace MV.UI
 
         protected override void OnDestroy()
         {
-            UIRuntimeOptions.LocaleChanged -= Draw;
+            UIDisplayOptions.LocaleChanged -= Draw;
             if (_presenter != null) _presenter.Changed -= Draw;
             base.OnDestroy();
         }

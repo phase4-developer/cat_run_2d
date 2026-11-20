@@ -29,6 +29,7 @@
         "JJEvol.Scene.Addressables",
         "JJEvol.Scene.UI",
         "JJEvol.UI.Runtime",
+        "JJEvol.UI.Contracts.Runtime",
         "JJEvol.UI.Addressables.Runtime",
         "JJEvol.UI.URP.Runtime",
         "Artress.ManagedAddressables",
