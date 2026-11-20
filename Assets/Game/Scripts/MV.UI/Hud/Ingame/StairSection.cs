@@ -68,12 +68,14 @@ namespace MV.UI
                 StairOrbFlight.Launched += OrbsLaunched;
                 StairOrbFlight.Arrived += OrbArrived;
                 StairOrbFlight.Target = TryOrbTarget;
+                StairOrbFlight.UiRoot = OrbUiRoot;
             }
             else
             {
                 StairOrbFlight.Launched -= OrbsLaunched;
                 StairOrbFlight.Arrived -= OrbArrived;
                 if (StairOrbFlight.Target == (StairOrbFlight.TargetFn)TryOrbTarget) StairOrbFlight.Target = null;
+                if (StairOrbFlight.UiRoot == (Func<Transform>)OrbUiRoot) StairOrbFlight.UiRoot = null;
                 // 듣지 않는 동안 도착을 놓치므로 묶음을 비운다(다음 그리기에서 시뮬 값을 따른다).
                 _batchTotal = _batchArrived = 0;
             }
@@ -90,6 +92,19 @@ namespace MV.UI
             var cam = canvas && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.rootCanvas.worldCamera : null;
             screen = RectTransformUtility.WorldToScreenPoint(cam, rt.position);
             return true;
+        }
+
+        /// <summary>
+        /// 오브를 놓을 UI 판(MV-UI3-STAIRFX2): Framework <c>UIManager.PlayScreenEffect</c>와 같은 순서로 지금 화면의 Effect 루트, 없으면 UIManager Effect 루트.
+        /// UI 카메라가 그리므로 오브가 HUD 앞에 보인다. UIManager가 없으면 null(오브 없이 게이지만 오른다).
+        /// </summary>
+        public static Transform OrbUiRoot()
+        {
+            if (!UIManager.HasInstance) return null;
+            var ui = UIManager.Instance;
+            var screen = ui.screenManager != null ? ui.screenManager.CurrentScreen : null;
+            var root = screen != null ? screen.EffectRoot : null;
+            return root != null ? root : ui.EffectRoot;
         }
 
         /// <summary>오브 묶음 출발(구독은 SetSubscribe, 시험은 직접 부른다).</summary>
@@ -116,15 +131,22 @@ namespace MV.UI
             if (gradeUpFx) gradeUpFx.ResetLook();
         }
 
-        /// <summary>계단 레벨(칸당 계단)과 게이지(시뮬 값). 다음 레벨은 표 상한(330 게이지 행 cap)까지.</summary>
+        /// <summary>계단 레벨(칸당 계단)과 게이지(시뮬 값). 다음 레벨은 표 상한(330 게이지 행 cap)까지.
+        /// HUD 값이 바뀐 프레임에만 불린다. 따라 오르는 진행은 <see cref="Tick"/>이 매 프레임 한다(MV-UI3-STAIRFX2).</summary>
         public void SetGauge(MvTables t, int lv, float fill01)
         {
             _t = t;
             _sim = lv + Mathf.Clamp01(fill01) * 0.999999;
             if (_shown < 0 || _sim < _shown) _shown = _goal = _sim; // 첫 그리기·새 런·되감김은 바로
             Retarget();
-            if (_shown < _goal)
-                _shown = Math.Min(_goal, _shown + Math.Max(_stepSpeed, 1e-6) * Time.unscaledDeltaTime);
+            Draw();
+        }
+
+        /// <summary>매 프레임(<see cref="IngameHudView.TickRun"/>): 보이는 진행을 목표까지 따라 올린다. 오브 도착은 시뮬 값이 바뀌지 않으므로 여기서 진행한다.</summary>
+        public void Tick(float dt)
+        {
+            if (_sim < 0 || _shown >= _goal) return;
+            _shown = Math.Min(_goal, _shown + Math.Max(_stepSpeed, 1e-6) * Math.Max(0, dt));
             Draw();
         }
 

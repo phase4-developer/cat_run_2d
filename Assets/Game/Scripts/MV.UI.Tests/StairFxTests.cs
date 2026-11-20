@@ -100,6 +100,28 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void Gauge_AdvancesEveryFrameAfterArrival_WithoutNewSimValue()
+        {
+            // MV-UI3-STAIRFX2: 오브 도착은 시뮬 값을 바꾸지 않아 SetGauge가 다시 불리지 않는다. 진행은 Tick(매 프레임)이 해야 한다.
+            var s = NewStair();
+            var so = new SerializedObject(s);
+            so.FindProperty("gaugeStepSec").floatValue = 0.1f;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            s.SetGauge(T, 2, 0.2f);
+            s.OrbsLaunched(1);
+            s.SetGauge(T, 2, 0.6f);
+            Assert.AreEqual(0.2f, s.GaugeValue, 1e-3f, "도착 전 그대로");
+
+            s.OrbArrived(); // SetGauge 없음
+            s.Tick(0.05f);
+            Assert.AreEqual(0.4f, s.GaugeValue, 1e-3f, "도착 뒤 따라 오르는 중(0.1초 중 절반)");
+            s.Tick(0.05f);
+            Assert.AreEqual(0.6f, s.GaugeValue, 1e-3f, "따라 오르는 시간 뒤 시뮬 값");
+            s.Tick(1f);
+            Assert.AreEqual(0.6f, s.GaugeValue, 1e-3f, "넘지 않는다");
+        }
+
+        [Test]
         public void ResetRun_SnapsToSimWithoutFx()
         {
             var s = NewStair();
