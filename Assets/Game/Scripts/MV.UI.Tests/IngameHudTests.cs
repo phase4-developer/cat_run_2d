@@ -335,8 +335,8 @@ namespace MV.UI.Tests
             rl.Cards.Add(k0); rl.Cards.Add(k1);
             s.Roulette = rl;
             view.TickRun(0);
-            var roll = view.SkillRoll.RollCards;
-            Assert.AreEqual(2, roll.Count, "룰렛 카드마다 자리 하나");
+            var roll = view.SkillRoll.RollCards.ToArray();   // RollCards는 부를 때마다 다시 채우는 목록
+            Assert.AreEqual(2, roll.Length, "룰렛 카드마다 자리 하나");
             Assert.AreSame(view.SkillCard, roll[0], "첫 자리 = 디자이너 Holder_CardSkill의 카드");
             Assert.AreNotSame(roll[0].transform.parent, roll[1].transform.parent, "카드마다 Holder");
             Assert.AreSame(roll[0].transform.parent.parent, roll[1].transform.parent.parent, "Holder는 같은 Skill Section(HorizontalLayout) 아래");
