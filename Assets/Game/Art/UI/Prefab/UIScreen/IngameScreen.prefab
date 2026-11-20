@@ -13452,6 +13452,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1113799352779224565}
   - {fileID: 8966301338131577295}
   - {fileID: 8222690628720172432}
   - {fileID: 3918561212436417470}
@@ -13491,6 +13492,8 @@ MonoBehaviour:
   gaugeLevel: {fileID: 9177991876545755957}
   gaugeNextGrade: {fileID: 6765914837132262739}
   gaugeNextLevel: {fileID: 7429469731756045783}
+  orbTarget: {fileID: 1113799352779224565}
+  gradeUpFx: {fileID: 2369259965948453381}
 --- !u!222 &6147875061767125895
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13575,6 +13578,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8966301338131577295}
   - component: {fileID: 1838118069889956770}
+  - component: {fileID: 2369259965948453381}
   m_Layer: 5
   m_Name: Slot_Stair
   m_TagString: Untagged
@@ -16160,3 +16164,54 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3213548148916666514, guid: 8b73d39f4f30c4081bdfb10e5bea741b, type: 3}
   m_PrefabInstance: {fileID: 9127698400619733338}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3581610484340962868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1113799352779224565}
+  m_Layer: 5
+  m_Name: OrbPos Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1113799352779224565
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3581610484340962868}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2481385601466386050}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 60}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2369259965948453381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478171798691807837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a47f1ac4b534f25a2ea67882ce03bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleTarget: {fileID: 0}
+  flash: {fileID: 8812349525834722167}
+  flashShapeFrom: {fileID: 2830996914003023605}
+  sparkle: {fileID: 7385651094815603637}
