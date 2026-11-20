@@ -1617,6 +1617,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5202467135730675504}
   - component: {fileID: 7431286054410923871}
+  - component: {fileID: 6782107347795541418}
   m_Layer: 5
   m_Name: Weapon
   m_TagString: Untagged
@@ -1667,10 +1668,24 @@ MonoBehaviour:
   onDestory:
     m_PersistentCalls:
       m_Calls: []
+  view: {fileID: 6782107347795541418}
+  flyParent: {fileID: 5202467135730675504}
+--- !u!114 &6782107347795541418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739442880085033039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d082e0dfa01b493aab3a7fc686f1a7ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   equipRoot: {fileID: 1335044354545861129}
   stack: {fileID: 920744721794198965}
   stackPrefab: {fileID: 8887057033844321035, guid: 2b1bb52fa6daa9c4ebb7e8355b8d495a, type: 3}
-  flyParent: {fileID: 5202467135730675504}
+  cardsTakeInput: 1
   timing:
     budget: 0.8
     leftMin: 0.4
@@ -1698,6 +1713,7 @@ MonoBehaviour:
   launchGapSec: 0.07
   launchArc: 0.25
   queueHoldSec: 2
+  discardFadeSec: 0.15
 --- !u!1 &3804369872954125828
 GameObject:
   m_ObjectHideFlags: 0

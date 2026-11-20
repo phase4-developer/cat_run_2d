@@ -47,12 +47,12 @@ namespace MV.UI.Tests
             for (float t = 0; t < limit; t += dt)
             {
                 w.Tick(dt);
-                if (!w.Busy) return;
+                if (!w.View.Busy) return;
             }
             Assert.Fail("손패가 끝나지 않음");
         }
 
-        static Transform Stack(WeaponSection w) => w.StackPrefab ? w.transform.Find("Stack") : null;
+        static Transform Stack(WeaponSection w) => w.View.StackPrefab ? w.transform.Find("Stack") : null;
 
         [Test]
         public void Start_ShowsOneSlotPerCard_DesignerExamplesHidden()
@@ -60,14 +60,14 @@ namespace MV.UI.Tests
             var w = NewSection(out var s);
             s.W[1] = 1;
             w.Tick(0);
-            Assert.That(w.StackSlots.Select(x => x.Tier), Is.EqualTo(new[] { 1 }), "시작 = 시작 무기 1장");
+            Assert.That(w.View.StackSlots.Select(x => x.Tier), Is.EqualTo(new[] { 1 }), "시작 = 시작 무기 1장");
             var stack = Stack(w);
             Assert.That(stack, Is.Not.Null, "Mid/Weapon/Stack");
             int shown = 0;
             foreach (Transform c in stack) if (c.gameObject.activeSelf) shown++;
             // 맨 위 카드 = 장착 카드(사용자 2026-11-19 「장착한것도 카드야 별개가 아니라」): 스택에 다시 그리지 않는다.
             Assert.AreEqual(0, shown, "디자이너 예시 칸은 숨기고, 맨 위 카드는 장착 칸이 그린다");
-            Assert.AreEqual(1, w.Equip.Tier);
+            Assert.AreEqual(1, w.View.Equip.Tier);
         }
 
         [Test]
@@ -79,15 +79,15 @@ namespace MV.UI.Tests
             s.W[2] = 1;
             s.W[1] = 1;
             w.Tick(0);
-            var slots = w.StackSlots.ToList();   // 위 → 아래
+            var slots = w.View.StackSlots.ToList();   // 위 → 아래
             Assert.That(slots.Select(x => x.Tier), Is.EqualTo(new[] { 3, 2, 1 }));
-            Assert.That(w.SlotsBackToFront(), Is.EqualTo(new[] { slots[2], slots[1], slots[0] }), "맨 아래 칸이 맨 뒤, 맨 위 칸이 맨 앞");
+            Assert.That(w.View.SlotsBackToFront(), Is.EqualTo(new[] { slots[2], slots[1], slots[0] }), "맨 아래 칸이 맨 뒤, 맨 위 칸이 맨 앞");
 
             // 맨 아래 칸이 가운데 칸보다 높이 올라간 순간(올라가는 중): 가운데 칸 앞으로 한 칸 나온다.
             float mid = slots[1].rectTransform.anchoredPosition.y, top = slots[0].rectTransform.anchoredPosition.y;
             slots[2].rectTransform.anchoredPosition = new Vector2(0, (mid + top) * 0.5f);
             w.Tick(0);
-            Assert.That(w.SlotsBackToFront(), Is.EqualTo(new[] { slots[1], slots[2], slots[0] }), "가운데 칸을 지나면 그 앞, 아직 맨 위 칸 뒤");
+            Assert.That(w.View.SlotsBackToFront(), Is.EqualTo(new[] { slots[1], slots[2], slots[0] }), "가운데 칸을 지나면 그 앞, 아직 맨 위 칸 뒤");
         }
 
         [Test]
@@ -97,14 +97,14 @@ namespace MV.UI.Tests
             var w = NewSection(out var s);
             for (int t = 1; t <= 5; t++) s.W[t] = 1;
             w.Tick(0);
-            var slots = w.StackSlots.ToList();   // 위 → 아래
+            var slots = w.View.StackSlots.ToList();   // 위 → 아래
             var stack = Stack(w);
             slots[1].transform.SetAsLastSibling();
             slots[3].transform.SetAsFirstSibling();
             slots[4].transform.SetSiblingIndex(stack.childCount / 2);
             w.Tick(0);
             var expect = Enumerable.Reverse(slots).ToList();
-            Assert.That(w.SlotsBackToFront(), Is.EqualTo(expect), "밑 칸이 뒤, 위 칸이 앞");
+            Assert.That(w.View.SlotsBackToFront(), Is.EqualTo(expect), "밑 칸이 뒤, 위 칸이 앞");
         }
 
         [Test]
@@ -121,10 +121,10 @@ namespace MV.UI.Tests
             RunUntilIdle(w);
             var expect = new List<int>();
             for (int t = s.W.Length - 1; t >= 1; t--) for (int k = 0; k < s.W[t]; k++) expect.Add(t);
-            Assert.That(w.Hand.Select(c => c.Tier), Is.EqualTo(expect), "모델 머지 결과 = 시뮬 손패");
-            Assert.That(w.StackSlots.Select(x => x.Tier), Is.EqualTo(expect), "칸 = 손패");
-            Assert.AreEqual(expect[0], w.Equip.Tier, "장착 = 최고 단계");
-            var shownTiers = w.StackSlots.Where(x => x.gameObject.activeSelf).Select(x => x.Tier);
+            Assert.That(w.View.Hand.Select(c => c.Tier), Is.EqualTo(expect), "모델 머지 결과 = 시뮬 손패");
+            Assert.That(w.View.StackSlots.Select(x => x.Tier), Is.EqualTo(expect), "칸 = 손패");
+            Assert.AreEqual(expect[0], w.View.Equip.Tier, "장착 = 최고 단계");
+            var shownTiers = w.View.StackSlots.Where(x => x.gameObject.activeSelf).Select(x => x.Tier);
             Assert.That(shownTiers, Is.EqualTo(expect.Skip(1)), "스택에는 맨 위(장착) 카드를 빼고 보인다");
         }
 
@@ -141,20 +141,20 @@ namespace MV.UI.Tests
             HudWeaponHand.Add(s.W, 1, mergeN, null);
             w.OnRunEvent(new RunEvent(RunEventType.WeaponDeliver, a: 2, b: 1));
             w.Tick(0.01f);
-            Assert.AreEqual(2, w.PendingUnits, "날고 있는 동안은 손패에 넣지 않는다");
+            Assert.AreEqual(2, w.View.PendingUnits, "날고 있는 동안은 손패에 넣지 않는다");
 
             inFlight = 1;
             w.OnFlyArrived(HudFlyTarget.Hand, 1);
             w.Tick(0.01f);
-            Assert.AreEqual(1, w.PendingUnits, "도착 1번 = 1장");
+            Assert.AreEqual(1, w.View.PendingUnits, "도착 1번 = 1장");
             w.OnFlyArrived(HudFlyTarget.Gold, 1);
             w.Tick(0.01f);
-            Assert.AreEqual(1, w.PendingUnits, "다른 대상 도착은 세지 않는다");
+            Assert.AreEqual(1, w.View.PendingUnits, "다른 대상 도착은 세지 않는다");
 
             inFlight = 0;
             w.OnFlyArrived(HudFlyTarget.Hand, 1);
             w.Tick(0.01f);
-            Assert.AreEqual(0, w.PendingUnits);
+            Assert.AreEqual(0, w.View.PendingUnits);
         }
 
         /// <summary>
@@ -169,15 +169,15 @@ namespace MV.UI.Tests
             w.Tick(0);
             var rects = new List<Rect> { new Rect(100, 900, 60, 50), new Rect(170, 900, 60, 50), new Rect(240, 900, 60, 50) };
             w.OnLaunched(HudFlyTarget.Gold, rects);
-            Assert.AreEqual(0, w.QueuedCards, "다른 대상은 받지 않는다");
+            Assert.AreEqual(0, w.View.QueuedCards, "다른 대상은 받지 않는다");
             w.OnLaunched(HudFlyTarget.Hand, rects);
-            Assert.AreEqual(3, w.QueuedCards);
-            var queued = w.QueueSlots.ToList();
-            var last = w.StackSlots.Last().rectTransform;
+            Assert.AreEqual(3, w.View.QueuedCards);
+            var queued = w.View.QueueSlots.ToList();
+            var last = w.View.StackSlots.Last().rectTransform;
             var bottom = last.anchoredPosition.y;
             // 사용자 2026-11-19 「제일 마지막 무기에서 겹치지 않게」: 줄 첫 카드 위 끝(피벗 위)이 맨 밑 칸 아래 끝보다 아래.
             Assert.LessOrEqual(queued[0].rectTransform.anchoredPosition.y, bottom - last.rect.height + 1e-3f, "줄 첫 카드는 맨 밑 칸과 겹치지 않는다");
-            int backmost = w.StackSlots.Min(x => x.transform.GetSiblingIndex());
+            int backmost = w.View.StackSlots.Min(x => x.transform.GetSiblingIndex());
             foreach (var q in queued) Assert.Less(q.transform.GetSiblingIndex(), backmost, "줄 카드 깊이 = 스택 카드보다 뒤(등장은 맨 뒤)");
             float prev = bottom;
             foreach (var q in queued)
@@ -194,14 +194,14 @@ namespace MV.UI.Tests
             HudWeaponHand.Add(s.W, 1, mergeN, null);   // 시뮬은 2장만 받았다(1장은 거절)
             HudWeaponHand.Add(s.W, 1, mergeN, null);
             w.OnRunEvent(new RunEvent(RunEventType.WeaponDeliver, a: 2, b: 1));
-            for (int i = 0; i < 2000 && w.StackSlots.Count() < 2; i++) w.Tick(0.005f);
-            Assert.That(w.StackSlots.ToList(), Does.Contain(queued[0]), "줄 맨 앞 카드가 그대로 스택으로 들어간다(새 칸을 꺼내지 않는다)");
+            for (int i = 0; i < 2000 && w.View.StackSlots.Count() < 2; i++) w.Tick(0.005f);
+            Assert.That(w.View.StackSlots.ToList(), Does.Contain(queued[0]), "줄 맨 앞 카드가 그대로 스택으로 들어간다(새 칸을 꺼내지 않는다)");
             Assert.AreEqual(1f, queued[0].transform.localScale.x, 1e-4f);
             RunUntilIdle(w);
-            Assert.AreEqual(0, w.QueuedCards, "받지 못한 카드는 치운다");
+            Assert.AreEqual(0, w.View.QueuedCards, "받지 못한 카드는 치운다");
             var expect = new List<int>();
             for (int t = s.W.Length - 1; t >= 1; t--) for (int k = 0; k < s.W[t]; k++) expect.Add(t);
-            Assert.That(w.Hand.Select(c => c.Tier), Is.EqualTo(expect), "손패 = 시뮬");
+            Assert.That(w.View.Hand.Select(c => c.Tier), Is.EqualTo(expect), "손패 = 시뮬");
         }
 
         [Test]
@@ -218,7 +218,7 @@ namespace MV.UI.Tests
             w.Place(99, Vector2.zero, 1, 1);   // 남의 id는 무시
             w.Hide(7);
             Assert.AreEqual(0, w.ActiveFlies);
-            Assert.That(w.StackSlots.Count(), Is.EqualTo(1), "비행 칸 반환은 손패를 바꾸지 않는다");
+            Assert.That(w.View.StackSlots.Count(), Is.EqualTo(1), "비행 칸 반환은 손패를 바꾸지 않는다");
         }
 
         [Test]
@@ -231,8 +231,8 @@ namespace MV.UI.Tests
             ids[2] = 2;
             s.W[1] = 0; s.W[2] = 2;
             w.OnRunEvent(new RunEvent(RunEventType.WeaponHandReset, ids: ids));
-            Assert.That(w.StackSlots.Select(x => x.Tier), Is.EqualTo(new[] { 2, 2 }));
-            Assert.AreEqual(2, w.Equip.Tier);
+            Assert.That(w.View.StackSlots.Select(x => x.Tier), Is.EqualTo(new[] { 2, 2 }));
+            Assert.AreEqual(2, w.View.Equip.Tier);
         }
     }
 }

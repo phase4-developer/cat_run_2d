@@ -95,8 +95,7 @@ MonoBehaviour:
     slot: {fileID: 7898285066616250659}
   - wealthType: dia
     slot: {fileID: 331560770775667334}
-  equipSlot: {fileID: 4061869031817155475}
-  stack: {fileID: 6307608403524073821}
+  weaponStack: {fileID: 8823633733725730244}
   stairGrade: {fileID: 10547949895669787}
   stairValue: {fileID: 6167972936462888572}
   stairCount: {fileID: 6034405168532781461}
@@ -730,6 +729,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1204}
   m_SourcePrefab: {fileID: 100100000, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+--- !u!114 &8823633733725730244 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8823633733725729160, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19421baf77d44fdba6d4f3bce1866adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &10547949895669787 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 10547949895670871, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
@@ -924,17 +934,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
---- !u!114 &4061869031817155475 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4061869031817156575, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b48f0d69db81494d921db655cab2a95d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4285351187316377632 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4285351187316378732, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
@@ -1075,11 +1074,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!224 &6307608403524073821 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6307608403524074769, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
-  m_PrefabInstance: {fileID: 1100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6806453975986136139 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6806453975986135047, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
