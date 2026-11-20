@@ -1,113 +1,74 @@
 using System.Collections.Generic;
 using MV.Run;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace MV.View
 {
     /// <summary>
     /// 마법서 탑 오브(<c>Obj_Tower_Orb</c>)의 계단 경험치 오브 내보내기(MV-UI3-STAIRFX 노션 「World Object Attraction」).
     /// 모은 피해가 비워질 때(<see cref="RunEventType.WellFlush"/>, 시뮬이 게이지 수령을 예약하는 순간) 구슬 수(e.A, 시뮬 flushBricks 규칙)만큼
-    /// <c>Obj_Stair_Orb</c>(<see cref="StairOrb"/>)를 빌려 탑 오브에서 <c>Orb Spawn Area</c> 범위 안 무작위 자리로 내보낸다. 이동·멈춤·HUD 비행은 오브 부품이 맡는다.
-    /// 오브는 탑 뷰 밖(뷰 관리자 뿌리 아래)에 둬서 탑이 회수돼도 끝까지 난다. 풀(<see cref="ObjectPool{T}"/>)과 대여·반환은 이 모듈이 갖는다.
+    /// 탑 오브에서 <c>Orb Spawn Area</c> 범위 안 무작위 자리로 오브 출발을 요청한다(<see cref="StairOrbFlight.TryLaunch"/>).
+    /// 오브(<c>Obj_Stair_Orb</c>)는 MV.Fx가 Framework EffectManager로 UI Effect 루트 아래에 재생하고 풀도 EffectManager가 갖는다(MV-UI3-STAIRFX2: HUD 앞에 보이게).
+    /// 이 모듈은 출발 간격 대기와 퍼질 자리만 정한다. 탑이 회수돼도 이미 나간 오브는 UI 쪽에서 끝까지 난다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class StairOrbEmitter : RunObjectModule
     {
         const string PrefabPath = "Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_Stair_Orb.prefab";
 
-        [Tooltip("계단 경험치 오브 원본(Obj_Stair_Orb 뿌리의 StairOrb). 비면 오브 없이 게이지만 오른다(경고 1회).")]
-        [SerializeField] StairOrb orbPrefab;
+        [Tooltip("계단 경험치 오브 프리팹 Addressables 주소(" + PrefabPath + ", EffectManager 키)")]
+        [SerializeField] string orbKey = "Obj_Stair_Orb";
+        [Tooltip("오브를 놓는 UI 캔버스(Effect 루트) 정렬 순서에 더할 값. 그 캔버스 위에 그려지게 1 이상.")]
+        [SerializeField] int sortingOffset = 1;
         [Tooltip("오브가 나오는 자리(탑 오브 그림)")]
         [SerializeField] Transform origin;
         [Tooltip("오브가 퍼질 범위(BoxCollider의 center·size만 읽는다, 판정에 쓰지 않음)")]
         [SerializeField] BoxCollider spawnArea;
         [Tooltip("오브 사이 출발 간격 초(임시)")]
         [SerializeField] float launchGapSec = 0.04f;
-        [Tooltip("풀에 남겨 둘 꺼진 오브 수(동시 표시 수 상한이 아니다)")]
-        [SerializeField] int poolKeep = 16;
 
-        ObjectPool<StairOrb> _pool;
-        readonly List<StairOrb> _all = new List<StairOrb>(16);
-        readonly List<StairOrb> _aborted = new List<StairOrb>(4);
-        /// 출발 대기(남은 초, 퍼질 자리). 오브는 출발할 때 빌린다(대기 중 엉뚱한 자리에 보이지 않게).
+        /// 출발 대기(남은 초, 퍼질 자리).
         readonly List<(float wait, Vector3 spread)> _queue = new List<(float, Vector3)>(16);
-        Transform _parent;
         Camera _cam;
         System.Random _rng;
-        static bool s_missingLogged;
-
-        /// <summary>지금 날고 있는 오브 수(빌려 준 수). 시험·QA.</summary>
-        public int ActiveCount => _pool != null ? _pool.CountActive : 0;
+        bool _bound;
+        static bool s_noPlayerLogged;
 
         /// <summary>출발 대기 중인 오브 수. 시험·QA.</summary>
         public int QueuedCount => _queue.Count;
 
-        ObjectPool<StairOrb> Pool => _pool ??= new ObjectPool<StairOrb>(Create, o => o.gameObject.SetActive(true), OnRelease, OnDestroyOrb,
-            collectionCheck: false, defaultCapacity: 8, maxSize: Mathf.Max(1, poolKeep));
-
-        StairOrb Create()
-        {
-            var o = Instantiate(orbPrefab, _parent != null ? _parent : transform.root);
-            o.name = orbPrefab.name;
-            _all.Add(o);
-            return o;
-        }
-
-        static void OnRelease(StairOrb o)
-        {
-            if (o == null) return;
-            o.ResetLook();
-            o.gameObject.SetActive(false);
-        }
-
-        void OnDestroyOrb(StairOrb o)
-        {
-            _all.Remove(o);
-            if (o != null) Kill(o.gameObject);
-        }
-
-        static void Kill(GameObject go)
-        {
-            if (Application.isPlaying) Destroy(go);
-            else DestroyImmediate(go);
-        }
+        public string OrbKey => orbKey;
 
         public override void OnBind(RunObjectView view)
         {
-            _parent = view.transform.parent != null ? view.transform.parent : view.transform;
+            _bound = true;
             _rng = view.Ctx?.FxRng;
             var camT = view.Ctx?.Cam;
             _cam = camT != null ? camT.GetComponent<Camera>() : null;
-            CollectAborted();
         }
 
-        public override void OnTick(RunObjectView view, in ObjectFrame f)
-        {
-            CollectAborted();
-            StepQueue(Time.unscaledDeltaTime);
-        }
+        public override void OnTick(RunObjectView view, in ObjectFrame f) => StepQueue(Time.unscaledDeltaTime);
 
         public override void OnUnbind(RunObjectView view)
         {
             // 출발 대기 중인 오브는 지금 보낸다(탑이 회수돼도 경험치 오브는 끝까지 간다).
             StepQueue(float.PositiveInfinity);
+            _bound = false;
         }
 
         public override void OnRunEvent(RunObjectView view, in RunEvent e)
         {
             if (e.Type != RunEventType.WellFlush) return;
-            if (orbPrefab == null)
+            if (StairOrbFlight.Launcher == null || string.IsNullOrEmpty(orbKey))
             {
-                if (!s_missingLogged)
+                if (!s_noPlayerLogged)
                 {
-                    s_missingLogged = true;
-                    Debug.LogWarning($"[StairOrbEmitter] 계단 경험치 오브 원본 없음: {name}의 orbPrefab에 {PrefabPath}(StairOrb)를 연결하세요. 오브 없이 게이지만 오릅니다.", this);
+                    s_noPlayerLogged = true;
+                    Debug.LogWarning($"[StairOrbEmitter] 계단 경험치 오브를 재생할 수 없음: 재생기(MV.Fx StairOrbFx) 미설치이거나 {name}의 orbKey가 비었습니다({PrefabPath}). 오브 없이 게이지만 오릅니다.", this);
                 }
                 return;
             }
-            if (_parent == null) OnBind(view);
-            CollectAborted();
+            if (!_bound) OnBind(view);
             int n = System.Math.Max(1, e.A);
             for (int i = 0; i < n; i++) _queue.Add((Mathf.Max(0, launchGapSec) * i, SpreadPoint()));
             StairOrbFlight.RaiseLaunched(n);
@@ -132,26 +93,9 @@ namespace MV.View
         {
             var q = _queue[index];
             _queue.RemoveAt(index);
-            Pool.Get().Launch(from, q.spread, _cam, OnOrbDone);
-        }
-
-        void OnOrbDone(StairOrb o, bool aborted)
-        {
-            StairOrbFlight.RaiseArrived();
-            // 꺼지는 중(OnDisable)에는 다시 끌 수 없어 다음 프레임에 돌려받는다.
-            if (aborted) { if (o != null && !_aborted.Contains(o)) _aborted.Add(o); }
-            else if (_pool != null) _pool.Release(o);
-        }
-
-        void CollectAborted()
-        {
-            if (_aborted.Count == 0 || _pool == null) return;
-            foreach (var o in _aborted)
-            {
-                if (o == null) { _all.Remove(o); continue; }
-                _pool.Release(o);
-            }
-            _aborted.Clear();
+            var req = new StairOrbFlight.OrbLaunch { From = from, Spread = q.spread, WorldCam = _cam, Key = orbKey, SortingOffset = sortingOffset };
+            // 재생기가 받지 못하면(UI 판 없음 등) 오브 없이 도착으로 친다. 게이지가 기다리지 않게.
+            if (!StairOrbFlight.TryLaunch(req)) StairOrbFlight.RaiseArrived();
         }
 
         /// <summary>Orb Spawn Area 상자 안 무작위 월드 점(상자가 없으면 나오는 자리).</summary>
@@ -168,21 +112,11 @@ namespace MV.View
 
         void OnDestroy() => ReleaseAll();
 
-        /// <summary>모든 오브를 치운다(지워질 때). 대기·비행 중인 오브도 도착으로 친다(게이지가 기다리지 않게).</summary>
+        /// <summary>지워질 때: 아직 출발하지 않은 오브는 도착으로 친다(게이지가 기다리지 않게). 날고 있는 오브는 UI 쪽에서 끝까지 난다.</summary>
         public void ReleaseAll()
         {
             foreach (var q in _queue) StairOrbFlight.RaiseArrived();
             _queue.Clear();
-            for (int i = _all.Count - 1; i >= 0; i--)
-            {
-                var o = _all[i];
-                if (o == null) continue;
-                o.Abort();
-                Kill(o.gameObject);
-            }
-            _all.Clear();
-            _aborted.Clear();
-            _pool = null;
         }
     }
 }

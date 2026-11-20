@@ -50,6 +50,7 @@ namespace MV.Fx
             // (종이 막 drawWipes는 새 HTML에서 호출되지 않는 죽은 코드라 옮기지 않는다, 2026-11-17).
             if (cam != null) MvFxDriver.ViewCamera = cam;
             Install(p);
+            StairOrbFx.Install(EffectManager.Instance); // 계단 경험치 오브: UI Effect 루트에 재생(MV-UI3-STAIRFX2)
             MvFxRunner.Ensure();
             return p;
         }

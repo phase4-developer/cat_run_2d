@@ -122,6 +122,7 @@ namespace MV.UI
                 if (topBar && s?.Tables != null) topBar.BindTables(s.Tables);
             }
             if (weapon) weapon.Tick(dt);
+            if (stair) stair.Tick(dt);
             if (s == null) return;
             float speed = s.Setup != null ? Math.Max(1, s.Setup.TimeScale) : 1;
             if (gradeStep) gradeStep.Tick(s, speed);

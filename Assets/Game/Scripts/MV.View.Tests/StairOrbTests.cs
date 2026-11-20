@@ -7,13 +7,12 @@ using UnityEngine;
 namespace MV.View.Tests
 {
     /// <summary>
-    /// MV-UI3-STAIRFX 노션 「World Object Attraction」: 탑 오브(Obj_Tower_Orb)가 우물 비움(WellFlush)마다 계단 경험치 오브(Obj_Stair_Orb)를
-    /// 구슬 수만큼 빌려 내보내고, 오브는 끝나면 도착을 알리고 풀로 돌아간다. 화면 모양(이동 곡선·도착 자리)은 사람 확인(NOT_RUN 별도).
+    /// MV-UI3-STAIRFX 노션 「World Object Attraction」: 탑 오브(Obj_Tower_Orb)가 우물 비움(WellFlush)마다 구슬 수만큼 계단 경험치 오브 출발을 요청한다.
+    /// MV-UI3-STAIRFX2: 오브 재생·풀은 EffectManager(MV.Fx StairOrbFx)가 UI Effect 루트에서 맡고, 탑은 출발 요청만 한다. 화면 모양은 사람 확인(NOT_RUN 별도).
     /// </summary>
     public sealed class StairOrbTests
     {
         const string TowerPath = "Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_Tower_Orb.prefab";
-        const string OrbPath = "Assets/Game/Addressables/Local/BG/Prefab/Object/Obj_Stair_Orb.prefab";
 
         readonly List<GameObject> _made = new List<GameObject>();
 
@@ -25,80 +24,90 @@ namespace MV.View.Tests
             StairOrbFlight.ClearForTests();
         }
 
-        [Test]
-        public void TowerOrbPrefab_WiresEmitterToStairOrbAndSpawnArea()
-        {
-            var tower = AssetDatabase.LoadAssetAtPath<GameObject>(TowerPath);
-            Assert.That(tower, Is.Not.Null, TowerPath);
-            var em = tower.GetComponentInChildren<StairOrbEmitter>(true);
-            Assert.That(em, Is.Not.Null, "Obj_Tower_Orb에 StairOrbEmitter");
-            var so = new SerializedObject(em);
-            var orb = so.FindProperty("orbPrefab").objectReferenceValue as StairOrb;
-            Assert.That(orb, Is.Not.Null, "orbPrefab");
-            Assert.AreEqual(OrbPath, AssetDatabase.GetAssetPath(orb), "디자이너 Obj_Stair_Orb 원본");
-            var area = so.FindProperty("spawnArea").objectReferenceValue as BoxCollider;
-            Assert.That(area, Is.Not.Null, "spawnArea");
-            Assert.AreEqual("Orb Spawn Area", area.name);
-            Assert.That(so.FindProperty("origin").objectReferenceValue, Is.Not.Null, "origin");
-            Assert.That(new SerializedObject(orb).FindProperty("particle").objectReferenceValue, Is.Not.Null, "Obj_Stair_Orb 파티클");
-        }
-
-        [Test]
-        public void WellFlush_LaunchesOneOrbPerBrick_AndReturnsThemOnArrival()
-        {
-            var tower = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(TowerPath));
-            _made.Add(tower);
-            var root = new GameObject("ViewsRoot");
-            _made.Add(root);
-            var viewGo = new GameObject("View");
-            viewGo.transform.SetParent(root.transform, false);
-            var view = viewGo.AddComponent<RunObjectView>();
-            tower.transform.SetParent(viewGo.transform, false);
-            var em = tower.GetComponentInChildren<StairOrbEmitter>(true);
-
-            int launched = 0, arrived = 0;
-            StairOrbFlight.Launched += n => launched += n;
-            StairOrbFlight.Arrived += () => arrived++;
-            var target = new Vector2(10, 20);
-            StairOrbFlight.Target = (out Vector2 s) => { s = target; return true; };
-
-            em.OnBind(view);
-            em.OnRunEvent(view, new RunEvent(RunEventType.WellFlush, objId: 1, amount: 5, a: 3));
-            Assert.AreEqual(3, launched, "구슬 수(e.A)만큼 출발 신호");
-            Assert.AreEqual(3, StairOrbFlight.InFlight);
-            Assert.AreEqual(1, em.ActiveCount, "첫 오브는 바로, 나머지는 간격 뒤");
-            em.StepQueue(10f);
-            Assert.AreEqual(0, em.QueuedCount);
-            Assert.AreEqual(3, em.ActiveCount);
-
-            var orbs = root.GetComponentsInChildren<StairOrb>(false);
-            Assert.AreEqual(3, orbs.Length, "오브는 탑 뷰 밖(뷰 관리자 뿌리 아래)");
-            foreach (var o in orbs) o.Step(o.TotalSec + 0.01f);
-            Assert.AreEqual(3, arrived, "오브마다 도착");
-            Assert.AreEqual(0, StairOrbFlight.InFlight);
-            Assert.AreEqual(0, em.ActiveCount, "끝난 오브는 풀로");
-            Assert.That(root.GetComponentsInChildren<StairOrb>(false).Length, Is.Zero, "돌아간 오브는 꺼진다");
-
-            // 다시 비우면 풀에서 다시 쓴다(새로 만들지 않는다).
-            em.OnRunEvent(view, new RunEvent(RunEventType.WellFlush, objId: 1, amount: 5, a: 2));
-            em.StepQueue(10f);
-            Assert.AreEqual(3, root.GetComponentsInChildren<StairOrb>(true).Length, "재사용");
-        }
-
-        [Test]
-        public void Orb_DestroyedMidFlight_StillCountsAsArrived()
+        (StairOrbEmitter em, RunObjectView view) NewTower()
         {
             var tower = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(TowerPath));
             _made.Add(tower);
             var viewGo = new GameObject("View");
             _made.Add(viewGo);
             var view = viewGo.AddComponent<RunObjectView>();
+            tower.transform.SetParent(viewGo.transform, false);
+            return (tower.GetComponentInChildren<StairOrbEmitter>(true), view);
+        }
+
+        [Test]
+        public void TowerOrbPrefab_WiresEmitterToOrbKeyAndSpawnArea()
+        {
+            var tower = AssetDatabase.LoadAssetAtPath<GameObject>(TowerPath);
+            Assert.That(tower, Is.Not.Null, TowerPath);
             var em = tower.GetComponentInChildren<StairOrbEmitter>(true);
+            Assert.That(em, Is.Not.Null, "Obj_Tower_Orb에 StairOrbEmitter");
+            Assert.AreEqual("Obj_Stair_Orb", em.OrbKey, "EffectManager 키 = 디자이너 Obj_Stair_Orb Addressables 주소");
+            var so = new SerializedObject(em);
+            var area = so.FindProperty("spawnArea").objectReferenceValue as BoxCollider;
+            Assert.That(area, Is.Not.Null, "spawnArea");
+            Assert.AreEqual("Orb Spawn Area", area.name);
+            Assert.That(so.FindProperty("origin").objectReferenceValue, Is.Not.Null, "origin");
+            Assert.That(so.FindProperty("sortingOffset").intValue, Is.GreaterThanOrEqualTo(1), "UI 캔버스 위에 그려지게");
+        }
+
+        [Test]
+        public void WellFlush_RequestsOneOrbPerBrick_WithGap()
+        {
+            var (em, view) = NewTower();
+            var reqs = new List<StairOrbFlight.OrbLaunch>();
+            StairOrbFlight.Launcher = (in StairOrbFlight.OrbLaunch r) => { reqs.Add(r); return true; };
+            int launched = 0;
+            StairOrbFlight.Launched += n => launched += n;
+
+            em.OnBind(view);
+            em.OnRunEvent(view, new RunEvent(RunEventType.WellFlush, objId: 1, amount: 5, a: 3));
+            Assert.AreEqual(3, launched, "구슬 수(e.A)만큼 출발 신호");
+            Assert.AreEqual(3, StairOrbFlight.InFlight);
+            Assert.AreEqual(1, reqs.Count, "첫 오브는 바로, 나머지는 간격 뒤");
+            em.StepQueue(10f);
+            Assert.AreEqual(0, em.QueuedCount);
+            Assert.AreEqual(3, reqs.Count);
+            foreach (var r in reqs)
+            {
+                Assert.AreEqual("Obj_Stair_Orb", r.Key);
+                Assert.That(r.SortingOffset, Is.GreaterThanOrEqualTo(1));
+            }
+            Assert.AreEqual(3, StairOrbFlight.InFlight, "도착은 재생기가 알린다");
+        }
+
+        [Test]
+        public void NoUiRoot_OrbCountsAsArrivedImmediately()
+        {
+            var (em, view) = NewTower();
+            StairOrbFlight.Launcher = (in StairOrbFlight.OrbLaunch r) => false; // UI 판 없음
             em.OnBind(view);
             em.OnRunEvent(view, new RunEvent(RunEventType.WellFlush, objId: 1, amount: 5, a: 2));
-            Assert.AreEqual(2, StairOrbFlight.InFlight);
+            em.StepQueue(10f);
+            Assert.AreEqual(0, StairOrbFlight.InFlight, "재생 못 한 오브는 바로 도착(게이지가 기다리지 않게)");
+        }
+
+        [Test]
+        public void NoLauncher_GaugeFollowsSimWithoutOrbs()
+        {
+            var (em, view) = NewTower();
+            int launched = 0;
+            StairOrbFlight.Launched += n => launched += n;
+            em.OnBind(view);
+            em.OnRunEvent(view, new RunEvent(RunEventType.WellFlush, objId: 1, amount: 5, a: 2));
+            Assert.AreEqual(0, launched, "재생기가 없으면 출발 신호 없이 게이지가 시뮬 값을 바로 따른다");
+        }
+
+        [Test]
+        public void TowerRemoved_QueuedOrbsStillCountAsArrived()
+        {
+            var (em, view) = NewTower();
+            StairOrbFlight.Launcher = (in StairOrbFlight.OrbLaunch r) => true;
+            em.OnBind(view);
+            em.OnRunEvent(view, new RunEvent(RunEventType.WellFlush, objId: 1, amount: 5, a: 3));
+            Assert.AreEqual(2, em.QueuedCount);
             em.ReleaseAll(); // 실행 중에는 OnDestroy가 부른다(EditMode는 깨우지 않은 스크립트의 OnDestroy를 부르지 않는다)
-            Assert.AreEqual(0, StairOrbFlight.InFlight, "탑이 지워지면 대기·비행 오브도 도착으로 친다(게이지가 멈추지 않게)");
+            Assert.AreEqual(1, StairOrbFlight.InFlight, "대기 오브는 도착으로 치고, 이미 나간 오브는 재생기 몫");
         }
     }
 }
