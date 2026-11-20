@@ -1378,6 +1378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3413885746798388592}
   - component: {fileID: 849106886642657882}
+  - component: {fileID: 5713920468102394471}
   m_Layer: 5
   m_Name: Progress_Level
   m_TagString: Untagged
@@ -1457,6 +1458,41 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5713920468102394471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3169754621027241169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57832a8bf4ac4b88a50e5f0b39a39cce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: JJEvol.UI.Widgets.Runtime::jjevol.UI.Widgets.AnimatedGauge
+  fill: {fileID: 0}
+  trail: {fileID: 0}
+  lead: {fileID: 0}
+  fillSlider: {fileID: 849106886642657882}
+  trailSlider: {fileID: 0}
+  leadSlider: {fileID: 0}
+  valueText: {fileID: 0}
+  maxText: {fileID: 0}
+  timing:
+    decreaseDelay: 0.15
+    decreaseDuration: 0.35
+    scaleByAmount: 1
+    minDecreaseDelay: 0.08
+    maxDecreaseDelay: 0.35
+    minDecreaseDuration: 0.18
+    maxDecreaseDuration: 0.5
+    heavyThreshold: 0.18
+    animateIncrease: 1
+    increaseDuration: 0.15
+    lapDuration: 0.15
+    ghostFadeDuration: 0.18
+  useUnscaledTime: 1
+  impactTarget: {fileID: 0}
 --- !u!1 &3368823992463078922
 GameObject:
   m_ObjectHideFlags: 0
@@ -13487,7 +13523,7 @@ MonoBehaviour:
   stairGrade: {fileID: 2830996914003023605}
   stairValue: {fileID: 2836234995055786518}
   stairCount: {fileID: 7518927449556166699}
-  gauge: {fileID: 849106886642657882}
+  gaugeBar: {fileID: 5713920468102394471}
   gaugeGrade: {fileID: 80675868278005785}
   gaugeLevel: {fileID: 9177991876545755957}
   gaugeNextGrade: {fileID: 6765914837132262739}
