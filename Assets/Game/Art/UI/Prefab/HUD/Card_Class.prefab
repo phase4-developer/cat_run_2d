@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 888c8d3d6b59b5f4c8fd87657db0a65e, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
   m_AtlasKey: 
-  m_SpriteName: 
+  m_SpriteName: Grade_4
   m_LoadOnEnable: 1
   m_ReleaseOnDisable: 0
   m_ClearSpriteOnDisable: 0
@@ -120,7 +120,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 35.985107}
+  m_AnchoredPosition: {x: 0, y: 52.3}
   m_SizeDelta: {x: 224.72, y: 80}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &6167658253816645434
@@ -981,7 +981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -337.3}
+  m_AnchoredPosition: {x: 0, y: -300.8}
   m_SizeDelta: {x: -44.0076, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1319292479317617223
@@ -1467,6 +1467,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7494e06ef2934145a4d663e1c42b508a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
   grade: {fileID: 1328184121686713390}
   floorCount: {fileID: 4912485568718485470}
   progress: {fileID: 1319292479317617223}
