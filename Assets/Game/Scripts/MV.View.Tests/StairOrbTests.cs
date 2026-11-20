@@ -97,7 +97,7 @@ namespace MV.View.Tests
             em.OnBind(view);
             em.OnRunEvent(view, new RunEvent(RunEventType.WellFlush, objId: 1, amount: 5, a: 2));
             Assert.AreEqual(2, StairOrbFlight.InFlight);
-            Object.DestroyImmediate(tower);
+            em.ReleaseAll(); // 실행 중에는 OnDestroy가 부른다(EditMode는 깨우지 않은 스크립트의 OnDestroy를 부르지 않는다)
             Assert.AreEqual(0, StairOrbFlight.InFlight, "탑이 지워지면 대기·비행 오브도 도착으로 친다(게이지가 멈추지 않게)");
         }
     }

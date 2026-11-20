@@ -128,6 +128,9 @@ namespace MV.View
 
         void LateUpdate() => Step(Time.unscaledDeltaTime);
 
+        /// <summary>날던 중이면 중단으로 끝낸다(치우기 전).</summary>
+        public void Abort() { if (_phase != Phase.Idle) Finish(true); }
+
         void Finish(bool aborted)
         {
             var done = _done;

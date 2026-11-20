@@ -166,12 +166,20 @@ namespace MV.View
 
         float Rnd() => _rng != null ? (float)_rng.NextDouble() : Random.value;
 
-        void OnDestroy()
+        void OnDestroy() => ReleaseAll();
+
+        /// <summary>모든 오브를 치운다(지워질 때). 대기·비행 중인 오브도 도착으로 친다(게이지가 기다리지 않게).</summary>
+        public void ReleaseAll()
         {
-            // 대기 중인 오브도 도착으로 친다(게이지가 기다리지 않게).
             foreach (var q in _queue) StairOrbFlight.RaiseArrived();
             _queue.Clear();
-            for (int i = _all.Count - 1; i >= 0; i--) if (_all[i] != null) Kill(_all[i].gameObject);
+            for (int i = _all.Count - 1; i >= 0; i--)
+            {
+                var o = _all[i];
+                if (o == null) continue;
+                o.Abort();
+                Kill(o.gameObject);
+            }
             _all.Clear();
             _aborted.Clear();
             _pool = null;
