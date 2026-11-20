@@ -306,5 +306,62 @@ namespace MV.UI.Tests
             Canvas.ForceUpdateCanvases();
             Assert.That(view.PosCards[0].FaceVisible, Is.True, "Card Pos 자리 카드에 그림이 보인다(원본에서 꺼진 Mask를 켠다)");
         }
+
+        [Test]
+        public void IngameHud_ClimbFx_ProgressOnlyOnCurrent_AndRouletteCardsRollTogether()
+        {
+            var (_, view) = NewHud();
+            var s = NewState();
+            view.BindRun(() => s);
+            var tiers = Tiers();
+
+            // Grade Step: Progress_Level은 Current 자리 카드에만(노션 ClimbStair 연출 보강 1).
+            s.Phase = RunPhase.Climb;
+            s.Climb = new ClimbState { N = 30, Tier = tiers[0].tierIndex, Rem = tiers[0].need };
+            view.TickRun(0);
+            int cur = view.GradeStep.Current;
+            Assert.That(view.ClimbCards.Count, Is.GreaterThanOrEqualTo(2));
+            foreach (var c in view.ClimbCards)
+                Assert.AreEqual(c.Tier == cur, c.ProgressShown, "등급 " + c.Tier + " 게이지 표시");
+
+            // Skill Section: 룰렛 카드 2장 → Holder 2개(같은 HorizontalLayout 아래)에서 동시에 롤링.
+            s.Phase = RunPhase.Run;
+            s.Climb = null;
+            var a = s.CardPool.First(c => c.tier == tiers[0].tierIndex);
+            var b = s.CardPool.First(c => c.tier == tiers[1].tierIndex);
+            var k0 = new RouletteCard { Tier = a.tier, Pick = a };
+            var k1 = new RouletteCard { Tier = b.tier, Pick = b };
+            var rl = new RouletteState();
+            rl.Cards.Add(k0); rl.Cards.Add(k1);
+            s.Roulette = rl;
+            view.TickRun(0);
+            var roll = view.SkillRoll.RollCards;
+            Assert.AreEqual(2, roll.Count, "룰렛 카드마다 자리 하나");
+            Assert.AreSame(view.SkillCard, roll[0], "첫 자리 = 디자이너 Holder_CardSkill의 카드");
+            Assert.AreNotSame(roll[0].transform.parent, roll[1].transform.parent, "카드마다 Holder");
+            Assert.AreSame(roll[0].transform.parent.parent, roll[1].transform.parent.parent, "Holder는 같은 Skill Section(HorizontalLayout) 아래");
+            Assert.That(roll.All(c => c.Rolling && c.gameObject.activeSelf && c.transform.parent.gameObject.activeSelf), Is.True, "두 장 동시에 롤링");
+
+            k0.Chosen = true;
+            view.TickRun(0);
+            Assert.AreEqual(a.id, roll[0].CardId, "첫 장 확정 = 시뮬 결과");
+            Assert.That(roll[1].Rolling, Is.True, "둘째 장은 계속 롤링");
+            Assert.That(roll[0].HasFlash && roll[0].HasSparkle, Is.True, "완료 연출 리소스(Flash·Effect_Sparkle) 연결");
+
+            k0.Flying = true; k0.FlyLeft = .62;
+            var holder0 = roll[0].transform.parent;
+            view.TickRun(0);
+            Assert.That(roll[0].gameObject.activeSelf, Is.False, "날아간 카드는 자리에서 숨김");
+            Assert.That(holder0.gameObject.activeSelf, Is.True, "자리(Holder)는 남아 다른 카드가 밀리지 않음");
+            Assert.That(view.SkillRoll.Active, Is.True, "둘째 장이 남음");
+
+            k1.Chosen = true; k1.Flying = true; k1.FlyLeft = .62;
+            view.TickRun(0);
+            Assert.That(view.SkillRoll.Active, Is.False);
+            s.Roulette = null;
+            view.TickRun(0);
+            Assert.AreEqual(0, view.SkillRoll.RollCards.Count, "룰렛이 끝나면 자리를 비움");
+            Assert.That(roll[1].transform.parent.gameObject.activeSelf, Is.False, "복제 Holder는 풀로 반환(꺼짐)");
+        }
     }
 }

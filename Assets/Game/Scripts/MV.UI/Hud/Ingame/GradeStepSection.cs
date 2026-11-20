@@ -101,7 +101,10 @@ namespace MV.UI
                 CurrentChanged?.Invoke(cur);
             }
             foreach (var card in _cards)
+            {
                 card.SetFill(card.Tier < cur ? 1 : card.Tier > cur ? 0 : fill);
+                card.ShowProgress(card.Tier == cur);
+            }
         }
 
         RectTransform HolderFor(int slot) => slot switch
