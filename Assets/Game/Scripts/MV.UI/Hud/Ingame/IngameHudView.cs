@@ -142,6 +142,7 @@ namespace MV.UI
 
         void ResetRun()
         {
+            if (stair) stair.ResetRun();
             if (gradeStep) gradeStep.ResetRun();
             if (skillRoll) skillRoll.ResetRun();
             if (cardPos) cardPos.ResetRun();

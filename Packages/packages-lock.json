@@ -520,7 +520,7 @@
       }
     },
     "com.jjevol.ui.economy": {
-      "version": "file:Frozen/com.jjevol.ui.economy-0.1.0-pre.7.tgz",
+      "version": "file:Frozen/com.jjevol.ui.economy-0.1.0-pre.8.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {

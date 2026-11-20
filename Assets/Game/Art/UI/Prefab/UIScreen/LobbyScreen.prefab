@@ -8142,6 +8142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 924585934686115778}
   - component: {fileID: 1186497481595466758}
+  - component: {fileID: 8046647382971050618}
   m_Layer: 5
   m_Name: Slot_Stair
   m_TagString: Untagged
@@ -18643,3 +18644,19 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1123283559421318625, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
   m_PrefabInstance: {fileID: 9038231347639589597}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8046647382971050618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5738369564389855517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a47f1ac4b534f25a2ea67882ce03bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleTarget: {fileID: 0}
+  flash: {fileID: 4772715413880941124}
+  flashShapeFrom: {fileID: 10547949895670871}
+  sparkle: {fileID: 394813775755758068}
