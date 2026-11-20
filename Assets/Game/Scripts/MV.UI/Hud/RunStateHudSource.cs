@@ -90,7 +90,8 @@ namespace MV.UI
             return e > ClimbTextFrom ? (float)Math.Min(1, (e - ClimbTextFrom) * ClimbTextRate) : 0f;
         }
 
-        static float GaugeFill(RunState s)
+        /// <summary>런 상태의 계단 게이지 채움(0~1). 계단 섹션이 새 런 시작 값(유저 정보로 만든 RunState)으로 기준을 잡을 때도 쓴다.</summary>
+        internal static float GaugeFill(RunState s)
         {
             // 게이지 최대 Lv = 107_chargeGate[Well].cap(옛 코드 상수 8).
             var g = s.Tables != null ? RunFormulas.GaugeRow(s.Tables) : null;

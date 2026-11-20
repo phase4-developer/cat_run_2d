@@ -119,6 +119,9 @@ namespace MV.UI
             {
                 _run = s;
                 ResetRun();
+                // 계단 게이지 기준은 런 시작 값(유저 정보로 만든 RunState, RunLevelBuilder kegStart)으로 바로 잡는다(MV-UI3-STAIRFX5).
+                // 안 그러면 런 첫 값 변경(첫 타격 레벨 업)이 「첫 그리기」로 바로 맞춰져 바퀴·등급 업 연출이 빠진다.
+                if (stair && s != null) stair.SetGauge(s.Tables, s.GaugeLv, RunStateHudSource.GaugeFill(s));
                 if (topBar && s?.Tables != null) topBar.BindTables(s.Tables);
             }
             if (weapon) weapon.Tick(dt);

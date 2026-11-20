@@ -206,6 +206,42 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void HudFrames_FirstChangeIsLevelUp_StillLapsAndPlaysFx()
+        {
+            // MV-UI3-STAIRFX5(사용자 2026-11-21 로그: 「최초에는 OnLap가 호출이 안되었어 … 한대 치면 바로 레벨업인 상태일때 안오른 느낌」):
+            // 런 첫 프레임은 SetState(Presenter.Tick)가 TickRun의 새 런 정리(ResetRun)보다 먼저다. 정리 뒤 기준을 런 시작 값(유저 정보로 만든 RunState)으로 잡아,
+            // 런의 첫 값 변경이 레벨 업이면 바로 맞추지 않고 바퀴 → OnLap → 등급 업 연출로 가야 한다.
+            var go = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(RunHudPath));
+            _made.Add(go);
+            var view = go.GetComponentInChildren<IngameHudView>(true);
+            var stair = view.Stair;
+            var run = new MV.Run.RunState(null, T, new MV.Run.Pcg32Rng(1));
+            run.GaugeLv = 2; // 런 시작 값(유저 정보 → RunLevelBuilder kegStart)
+            run.GaugeFill = 0;
+            view.BindRun(() => run);
+            var fx = stair.GradeUpFx;
+            int laps = 0;
+            stair.Gauge.OnLapCompleted.AddListener(() => laps++);
+
+            const float dt = 1f / 60f;
+            view.SetState(new RunHudState { GaugeLv = 2, GaugeFill = 0f, TimeScale = 1 }); // 런 첫 그리기
+            view.TickRun(dt); // 새 런 정리
+            Assert.AreEqual(2, stair.ShownLevel, "새 런 정리 뒤 기준은 런 시작 값");
+            Assert.AreEqual(0f, stair.GaugeValue, 1e-3f);
+
+            view.SetState(new RunHudState { GaugeLv = 3, GaugeFill = 0.1f, TimeScale = 1 }); // 첫 타격 = 레벨 업
+            Assert.AreEqual(2, stair.ShownLevel, "바로 맞추지 않고 바퀴로 따라 오른다");
+            for (int i = 0; i < 120 && stair.ShownLevel < 3; i++)
+            {
+                stair.Gauge.Tick(dt);
+                view.TickRun(dt);
+            }
+            Assert.AreEqual(3, stair.ShownLevel);
+            Assert.AreEqual(1, laps, "OnLap 1번");
+            Assert.AreEqual(1, fx.PlayCount, "첫 타격 레벨 업에도 등급 업 연출");
+        }
+
+        [Test]
         public void ResetRun_SnapsToSimWithoutFx()
         {
             var s = NewStair();
