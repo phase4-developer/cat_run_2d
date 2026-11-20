@@ -9,3 +9,8 @@ id	name	stageMap	kind	reward	prefab
 305001008	2스테이지 종이 결계 블록(골드)	Stage2	wall	Gold	Stage2_Block_Gold
 305001009	2스테이지 종이 결계 블록(블루 마법석)	Stage2	wall	Dia	Stage2_Block_Blue
 305001010	2스테이지 종이 결계 블록(구출 고양이)	Stage2	wall	Soul	Stage2_Block_Cat
+305001011	3스테이지 결계문	Stage3	arch		Stage3_Arch
+305001012	3스테이지 마법진 포털	Stage3	archGoal		Stage3_Portal
+305001013	3스테이지 종이 결계 블록(골드)	Stage3	wall	Gold	Stage3_Block_Gold
+305001014	3스테이지 종이 결계 블록(블루 마법석)	Stage3	wall	Dia	Stage3_Block_Blue
+305001015	3스테이지 종이 결계 블록(구출 고양이)	Stage3	wall	Soul	Stage3_Block_Cat

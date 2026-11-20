@@ -1,7 +1,7 @@
 ﻿id	name	areaNo	zoneId	sort	active	themeId	hp	needSouls	sgateM	startGold	floorGroup	fieldSeedArea	bgm	mapIcon	mapColor	bg	stageMap	clearRewardType	clearRewardId	clearRewardValue	firstClearRewardType	firstClearRewardId	firstClearRewardValue
 302001001	Area 1	1	301001001	1	1	304001001	100	50	1.9/3.5/5.2/7/8.7/10.6/12.6/15	0	1				#F19292		Stage1						
 302001002	Area 2	2	301001001	2	1	304001002	200	100	4.4/8/12/16.1/20/24.4/29/34.5	150	2				#C392F1		Stage2						
-302001003	Area 3	3	301001001	3	1	304001003	500	160	13.1/24.2/35.9/48.3/60.1/73.2/87/103.6	150	3				#92CAF1		Stage1						
+302001003	Area 3	3	301001001	3	1	304001003	500	160	13.1/24.2/35.9/48.3/60.1/73.2/87/103.6	150	3				#92CAF1		Stage3						
 302001004	Area 4	4	301001001	4	1	304001004	700	220	19.6/36.2/53.8/72.4/90/109.6/130.3/155.1	150	4				#92F1C1		Stage1						
 302001005	Area 5	5	301001001	5	1	304001005	950	280	28.3/52.2/77.6/104.4/129.8/158.1/188/223.8	150	5				#F1F192		Stage1						
 302001006	Area 6	6	301001002	6	1	304001006	1100	340	33.8/62.5/92.9/125/155.3/190/225.8/268.8	150	6				#9B92F1		Stage1						
