@@ -132,6 +132,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slot_Weapon_Stack
       objectReference: {fileID: 0}
+    - target: {fileID: 4420235511000300001, guid: d37af5d586b16164e9a50211ba74e1bb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6012772226379244075, guid: d37af5d586b16164e9a50211ba74e1bb, type: 3}
+      propertyPath: useUnscaledTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6417868995045932211, guid: d37af5d586b16164e9a50211ba74e1bb, type: 3}
+      propertyPath: useUnscaledTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9083545926852191865, guid: d37af5d586b16164e9a50211ba74e1bb, type: 3}
       propertyPath: m_IsActive
       value: 0
