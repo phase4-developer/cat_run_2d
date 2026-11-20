@@ -62,6 +62,17 @@ namespace MV.Run
         public ChargeGateData Charge;
         public int ObjId;
         public bool Done;
+        /// <summary>
+        /// 도착으로 받기(MV-UI3-STAIRFX3, <see cref="RunSim.WellGaugeOnArrival"/>): 시간 없이 화면의 오브 도착(<see cref="RunSim.ReceiveArrived"/>)마다
+        /// <see cref="Amount"/>/<see cref="Parts"/>씩(마지막은 나머지) 받는다. 이때 <see cref="PreLeft"/>·<see cref="Left"/> 타이머는 쓰지 않는다.
+        /// </summary>
+        public bool AwaitArrival;
+        /// <summary>수령 번호(런 안에서 1부터, 도착으로 받기만). WellFlush 이벤트 B로 화면에 건넨다.</summary>
+        public int Id;
+        /// <summary>나눠 받을 몫 수(= 오브 수 = WellFlush A), 받은 몫 수.</summary>
+        public int Parts, PartsDone;
+        /// <summary>받은 양(도착으로 받기).</summary>
+        public double Delivered;
     }
 
     /// <summary>동행 1개의 진행(04 §4.20.5). T = Seconds 타이머(초기값 Every), Armed = Hits·Chance 예약.</summary>
@@ -241,6 +252,10 @@ namespace MV.Run
         public readonly List<int> Climbs = new List<int>();
         public readonly List<PendingWeapon> PendingW = new List<PendingWeapon>();
         public readonly List<PendingReceive> PendingReceives = new List<PendingReceive>();
+        /// <summary>마지막 수령 번호(도착으로 받기). 0은 번호 없음.</summary>
+        public int NextReceiveId;
+        /// <summary>화면이 알린 도착(수령 번호). 다음 Tick 처음에 받는다(MV-UI3-STAIRFX3).</summary>
+        public readonly List<int> ReceiveArrivals = new List<int>();
 
         // ---- 재화(런 안, 실수 누적) ----
         public double Gold;

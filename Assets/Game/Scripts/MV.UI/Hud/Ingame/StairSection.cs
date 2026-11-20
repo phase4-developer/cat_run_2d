@@ -12,8 +12,9 @@ namespace MV.UI
     /// <summary>
     /// 계단 섹션(<c>IngameScreen/Mid/Stair</c>, MV-UI3-HUD5, HUD_구조_설계안 3.3 StairSection): 계단 수·칸당 계단·계단 레벨 게이지.
     /// 값은 스냅샷(<see cref="RunHudState"/>)에서 읽고, 등급 그림은 표(<see cref="HudGrade.Frame"/>).
-    /// 게이지 연출(MV-UI3-STAIRFX): 탑에서 나온 계단 경험치 오브(<see cref="StairOrbFlight"/>)가 날고 있으면 게이지는 시뮬 값까지 오브가 도착하는 만큼 나눠 오른다.
-    /// 날고 있는 오브가 없으면 시뮬 값 그대로다. 값은 시뮬만 갖고, 여기에는 보여 주는 진행(레벨 + 채움)만 있다. 레벨이 오르면 계단 칸 등급 업 연출(<see cref="HudGradeUpFx"/>).
+    /// 게이지 연출(MV-UI3-STAIRFX3): 탑에서 나온 계단 경험치 오브(<see cref="StairOrbFlight"/>)가 도착하는 순간 시뮬이 실제 게이지를 그 몫만큼 올리고,
+    /// 여기서는 시뮬 값까지 짧게(<see cref="gaugeStepSec"/>) 따라 오른다. 오브 도착 자리(OrbPos Anchor)와 오브를 놓을 UI 판을 입구에 꽂는다.
+    /// 값은 시뮬만 갖고, 여기에는 보여 주는 진행(레벨 + 채움)만 있다. 레벨이 오르면 계단 칸 등급 업 연출(<see cref="HudGradeUpFx"/>).
     /// </summary>
     public sealed class StairSection : UIBase
     {
@@ -37,7 +38,7 @@ namespace MV.UI
         [SerializeField] RectTransform orbTarget;
         [Tooltip("레벨이 오를 때 계단 칸(Slot_Stair) 크기·Flash·Sparkle 연출")]
         [SerializeField] HudGradeUpFx gradeUpFx;
-        [Tooltip("오브 하나 도착 때 게이지가 따라 오르는 초(임시)")]
+        [Tooltip("시뮬 게이지 값이 오를 때(오브 하나 도착) 보이는 게이지가 따라 오르는 초(임시)")]
         [SerializeField] float gaugeStepSec = 0.15f;
 
         public string StairValueText => stairValue ? stairValue.text : null;
@@ -50,10 +51,9 @@ namespace MV.UI
         /// <summary>지금 보여 주는 레벨(시뮬보다 늦을 수 있다). 처음 그리기 전 −1.</summary>
         public int ShownLevel => _drawnLv;
 
-        // 보여 주는 진행 = 레벨 + 채움(0~1). 시뮬 진행까지 오브 도착 비율만큼 따라간다.
-        double _sim = -1, _shown = -1, _goal = -1, _batchFrom;
+        // 보여 주는 진행 = 레벨 + 채움(0~1). 시뮬 진행까지 따라간다.
+        double _sim = -1, _shown = -1;
         double _stepSpeed;
-        int _batchTotal, _batchArrived;
         int _drawnLv = -1;
         MvTables _t;
 
@@ -65,19 +65,13 @@ namespace MV.UI
             if (!base.SetSubscribe(subscribe)) return false;
             if (subscribe)
             {
-                StairOrbFlight.Launched += OrbsLaunched;
-                StairOrbFlight.Arrived += OrbArrived;
                 StairOrbFlight.Target = TryOrbTarget;
                 StairOrbFlight.UiRoot = OrbUiRoot;
             }
             else
             {
-                StairOrbFlight.Launched -= OrbsLaunched;
-                StairOrbFlight.Arrived -= OrbArrived;
                 if (StairOrbFlight.Target == (StairOrbFlight.TargetFn)TryOrbTarget) StairOrbFlight.Target = null;
                 if (StairOrbFlight.UiRoot == (Func<Transform>)OrbUiRoot) StairOrbFlight.UiRoot = null;
-                // 듣지 않는 동안 도착을 놓치므로 묶음을 비운다(다음 그리기에서 시뮬 값을 따른다).
-                _batchTotal = _batchArrived = 0;
             }
             return true;
         }
@@ -107,26 +101,10 @@ namespace MV.UI
             return root != null ? root : ui.EffectRoot;
         }
 
-        /// <summary>오브 묶음 출발(구독은 SetSubscribe, 시험은 직접 부른다).</summary>
-        public void OrbsLaunched(int n)
-        {
-            if (_batchTotal == 0) _batchFrom = _shown;
-            _batchTotal += n;
-        }
-
-        /// <summary>오브 하나 도착(구독은 SetSubscribe, 시험은 직접 부른다).</summary>
-        public void OrbArrived()
-        {
-            if (_batchTotal == 0) return;
-            _batchArrived++;
-            Retarget();
-        }
-
         /// <summary>새 런: 연출 진행을 비우고 다음 그리기에서 시뮬 값으로 바로 맞춘다.</summary>
         public void ResetRun()
         {
-            _batchTotal = _batchArrived = 0;
-            _sim = _shown = _goal = -1;
+            _sim = _shown = -1;
             _drawnLv = -1;
             if (gradeUpFx) gradeUpFx.ResetLook();
         }
@@ -136,35 +114,19 @@ namespace MV.UI
         public void SetGauge(MvTables t, int lv, float fill01)
         {
             _t = t;
-            _sim = lv + Mathf.Clamp01(fill01) * 0.999999;
-            if (_shown < 0 || _sim < _shown) _shown = _goal = _sim; // 첫 그리기·새 런·되감김은 바로
-            Retarget();
+            double sim = lv + Mathf.Clamp01(fill01) * 0.999999;
+            if (_shown < 0 || sim < _shown || gaugeStepSec <= 0) _shown = sim; // 첫 그리기·새 런·되감김은 바로
+            else if (sim > _sim) _stepSpeed = (sim - _shown) / gaugeStepSec;
+            _sim = sim;
             Draw();
         }
 
-        /// <summary>매 프레임(<see cref="IngameHudView.TickRun"/>): 보이는 진행을 목표까지 따라 올린다. 오브 도착은 시뮬 값이 바뀌지 않으므로 여기서 진행한다.</summary>
+        /// <summary>매 프레임(<see cref="IngameHudView.TickRun"/>): 보이는 진행을 시뮬 값까지 따라 올린다.</summary>
         public void Tick(float dt)
         {
-            if (_sim < 0 || _shown >= _goal) return;
-            _shown = Math.Min(_goal, _shown + Math.Max(_stepSpeed, 1e-6) * Math.Max(0, dt));
+            if (_sim < 0 || _shown >= _sim) return;
+            _shown = Math.Min(_sim, _shown + Math.Max(_stepSpeed, 1e-6) * Math.Max(0, dt));
             Draw();
-        }
-
-        /// <summary>목표 진행: 오브가 없거나 다 도착했으면 시뮬 값, 날고 있으면 도착 비율만큼.</summary>
-        void Retarget()
-        {
-            if (_sim < 0) return;
-            double goal;
-            if (_batchTotal == 0 || _batchArrived >= _batchTotal)
-            {
-                _batchTotal = _batchArrived = 0;
-                goal = _sim;
-            }
-            else goal = _batchFrom + (_sim - _batchFrom) * _batchArrived / _batchTotal;
-            goal = Math.Max(goal, _shown);
-            if (goal > _goal || _goal < _shown) _stepSpeed = (goal - _shown) / Math.Max(1e-3, gaugeStepSec);
-            _goal = goal;
-            if (gaugeStepSec <= 0) _shown = _goal;
         }
 
         void Draw()

@@ -45,6 +45,7 @@ namespace MV.Run
             double dt = Math.Min(_p.DtCap, realDt);
             s.RealTime += dt;
             if (input.DragTargetX.HasValue) s.P.Tx = Clamp(input.DragTargetX.Value, -_p.LaneXMax, _p.LaneXMax);
+            ApplyReceiveArrivals(); // 화면이 알린 오브 도착(MV-UI3-STAIRFX3)
             // 실시간 타이머(정본 setTimeout)는 프레임 처리 전에 만기를 본다: 시작한 프레임 다음 프레임부터 dt를 뺀다.
             StepRealTimers(dt);
 
@@ -708,7 +709,7 @@ namespace MV.Run
                 if (r.PreLeft <= 0 && s.Fin) r.Done = true; // 비행 시작 때 R.fin이면 중단(§4.5.1 ⑤)
             }
             foreach (var r in s.PendingReceives)
-                if (!r.Done && r.PreLeft <= 0 && r.Cond.clock == ClockKind.Game) { r.Left -= dt; if (r.Left <= 0) Deliver(r); }
+                if (!r.Done && !r.AwaitArrival && r.PreLeft <= 0 && r.Cond.clock == ClockKind.Game) { r.Left -= dt; if (r.Left <= 0) Deliver(r); }
             s.PendingReceives.RemoveAll(r => r.Done);
         }
 
@@ -726,6 +727,18 @@ namespace MV.Run
                 double amt = o.Pend; o.Pend = 0;
                 int lv = s.GaugeLv;
                 int bricks = (int)Math.Min(_p.WellBrickMax, 1 + Math.Floor(amt / (Threshold(o.Charge, lv - 1, s.Bal, s.ZoneHp) * _p.WellBrickDiv)));
+                if (WellGaugeOnArrival)
+                {
+                    // 도착으로 받기(MV-UI3-STAIRFX3): 시간 없이 오브(구슬 수 = bricks) 도착마다 한 몫씩.
+                    int id = ++s.NextReceiveId;
+                    s.Emit(new RunEvent(RunEventType.WellFlush, objId: o.Id, amount: amt, a: bricks, b: id));
+                    s.PendingReceives.Add(new PendingReceive
+                    {
+                        Cond = o.Receive, AwaitArrival = true, Id = id, Parts = bricks,
+                        Type = ConsumeType.GaugeFill, Amount = amt, ObjId = o.Id, Charge = o.Charge,
+                    });
+                    continue;
+                }
                 s.Emit(new RunEvent(RunEventType.WellFlush, objId: o.Id, amount: amt, a: bricks));
                 s.PendingReceives.Add(new PendingReceive
                 {
@@ -741,7 +754,7 @@ namespace MV.Run
         {
             var s = S;
             foreach (var r in s.PendingReceives)
-                if (!r.Done && r.PreLeft <= 0 && r.Cond.clock == ClockKind.Real) { r.Left -= dt; if (r.Left <= 0) Deliver(r); }
+                if (!r.Done && !r.AwaitArrival && r.PreLeft <= 0 && r.Cond.clock == ClockKind.Real) { r.Left -= dt; if (r.Left <= 0) Deliver(r); }
             s.PendingReceives.RemoveAll(r => r.Done);
             var rl = s.Roulette;
             if (rl == null) return;
@@ -752,6 +765,34 @@ namespace MV.Run
                 c.FlyLeft -= dt;
                 if (c.FlyLeft <= 0) ApplyCard(c);
             }
+        }
+
+        /// <summary>
+        /// 화면이 알린 오브 도착(<see cref="RunSim.ReceiveArrived"/>)을 받는다(MV-UI3-STAIRFX3). 도착 하나 = 그 수령의 한 몫(Amount/Parts, 마지막은 나머지).
+        /// 런이 끝났으면(R.fin) 받지 않고 그 수령을 닫는다.
+        /// </summary>
+        void ApplyReceiveArrivals()
+        {
+            var s = S;
+            if (s.ReceiveArrivals.Count == 0) return;
+            foreach (int id in s.ReceiveArrivals)
+            {
+                PendingReceive r = null;
+                foreach (var p in s.PendingReceives)
+                    if (p.AwaitArrival && !p.Done && p.Id == id) { r = p; break; }
+                if (r == null) continue;
+                if (s.Fin) { r.Done = true; continue; }
+                int parts = Math.Max(1, r.Parts);
+                r.PartsDone++;
+                bool last = r.PartsDone >= parts;
+                double part = last ? r.Amount - r.Delivered : r.Amount / parts;
+                r.Delivered += part;
+                if (last) r.Done = true;
+                GaugeAdd(part, r.Charge ?? GaugeRow(T));
+                s.Emit(new RunEvent(RunEventType.GaugeReceive, amount: part, a: s.GaugeLv, amount2: s.GaugeFill));
+            }
+            s.ReceiveArrivals.Clear();
+            s.PendingReceives.RemoveAll(r => r.Done);
         }
 
         void Deliver(PendingReceive r)

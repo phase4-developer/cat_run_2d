@@ -19,6 +19,22 @@ namespace MV.Run
         /// </summary>
         public IProjectileHitQuery HitQuery { get; set; }
 
+        /// <summary>
+        /// 우물 게이지 수령(108 wellGauge)을 화면의 오브 도착으로 받는다(MV-UI3-STAIRFX3, 사용자 2026-11-20 「이펙트가 도착해서 종료되는 시점에 처리해」).
+        /// 켜면 WellFlush가 시간 없이 수령 번호(이벤트 B)를 내고, 오브 하나가 도착하거나 도착하지 못하고 끝날 때마다 <see cref="ReceiveArrived"/>로 한 몫씩 받는다.
+        /// 끄면(기본: 시험·HTML 대조·화면 없는 런) 108 행 지연(preDelayMs·delayMs) 그대로다. 실제 게임 런은 Boot가 켠다.
+        /// </summary>
+        public bool WellGaugeOnArrival { get; set; }
+
+        /// <summary>
+        /// 화면이 알리는 오브 하나 도착(<paramref name="receiveId"/> = WellFlush 이벤트 B). 다음 <see cref="Tick"/> 처음에 그 수령의 한 몫을 게이지에 더한다.
+        /// 모르는 번호·끝난 수령·0 이하는 무시한다. 런이 끝난 뒤(R.fin)의 도착은 버린다.
+        /// </summary>
+        public void ReceiveArrived(int receiveId)
+        {
+            if (receiveId > 0) State.ReceiveArrivals.Add(receiveId);
+        }
+
         RunSim(RunState s, IRunRule rule)
         {
             State = s;
