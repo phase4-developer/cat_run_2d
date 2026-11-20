@@ -542,7 +542,7 @@
       }
     },
     "com.jjevol.ui.widgets": {
-      "version": "file:Frozen/com.jjevol.ui.widgets-0.1.0-pre.2.tgz",
+      "version": "file:Frozen/com.jjevol.ui.widgets-0.1.0-pre.3.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
