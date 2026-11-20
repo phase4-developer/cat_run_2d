@@ -37,16 +37,30 @@ namespace MV.UI
         public static void Move(RectTransform card, RectTransform target, float sec, TweenCallback done)
             => Move(card, target, sec, done, HudEase.OutCubic, HudEase.OutCubic);
 
-        /// <summary>위치·크기 보간 곡선을 따로 받는다(곡선은 연출을 맡는 섹션 프리팹 필드).</summary>
+        /// <summary>
+        /// 위치·크기 보간 곡선을 따로 받는다(곡선은 연출을 맡는 섹션 프리팹 필드).
+        /// 도착 자리는 매 프레임 target에서 다시 읽는다: 막 복제한 Holder는 레이아웃이 다음 갱신 때 자리를 잡고,
+        /// 비행 중 Holder가 늘어 레이아웃이 움직여도 카드가 실제 배치될 자리로 간다(MV-UI3-CLIMBFX2).
+        /// </summary>
         public static void Move(RectTransform card, RectTransform target, float sec, TweenCallback done, HudEase moveEase, HudEase scaleEase)
         {
             if (!target) { done?.Invoke(); return; }
             Kill(card);
             Fit(card, target, out var pos, out float scale);
             if (sec <= 0 || !Animate) { card.localPosition = pos; card.localScale = Vector3.one * scale; done?.Invoke(); return; }
+            Vector3 fromPos = card.localPosition;
+            float fromScale = card.localScale.x;
+            float pm = 0, sm = 0;
             DOTween.Sequence().SetUpdate(true).SetTarget(card)
-                .Join(moveEase.Apply(card.DOLocalMove(pos, sec)))
-                .Join(scaleEase.Apply(card.DOScale(scale, sec)))
+                .Join(moveEase.Apply(DOTween.To(() => pm, v => pm = v, 1f, sec)))
+                .Join(scaleEase.Apply(DOTween.To(() => sm, v => sm = v, 1f, sec)))
+                .OnUpdate(() =>
+                {
+                    if (!card) return;
+                    if (target) Fit(card, target, out pos, out scale);
+                    card.localPosition = Vector3.LerpUnclamped(fromPos, pos, pm);
+                    card.localScale = Vector3.one * Mathf.LerpUnclamped(fromScale, scale, sm);
+                })
                 .OnComplete(done);
         }
     }

@@ -5,6 +5,7 @@ using MV.Data;
 using MV.Run;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 
 namespace MV.UI
 {
@@ -29,6 +30,8 @@ namespace MV.UI
         RectTransform _holderTemplate;
         readonly List<HudSkillCard> _posCards = new List<HudSkillCard>();
         readonly List<HudSkillCard> _flying = new List<HudSkillCard>();
+        /// <summary>날고 있는 카드 id(아직 <see cref="RunState.CardOrder"/>에 없는 새 카드의 자리 예약, 도착하면 뺀다).</summary>
+        readonly List<int> _flyingIds = new List<int>();
         ObjectPool<HudSkillCard> _pool;
         int _stamp = -1;
         bool _ready;
@@ -77,6 +80,7 @@ namespace MV.UI
             Init();
             foreach (var c in _flying) _pool.Release(c);
             _flying.Clear();
+            _flyingIds.Clear();
             _stamp = -1;
             foreach (var c in _posCards) c.gameObject.SetActive(false);
         }
@@ -106,25 +110,50 @@ namespace MV.UI
         {
             Init();
             if (s == null || k?.Pick == null || !flyPrefab) return;
-            int index = s.CardOrder.IndexOf(k.Pick.id);
-            if (index < 0) index = s.CardOrder.Count;
-            var target = PosCard(index);
+            int id = k.Pick.id;
+            var target = PosCard(SlotFor(s.CardOrder, _flyingIds, id));
             if (!target) return;
             var clone = _pool.Get();
             clone.transform.SetAsLastSibling();
             clone.ShowCard(s.Tables, k.Pick);
             if (from) HudRectMotion.Place(clone.Rect, from.Rect);
             _flying.Add(clone);
+            _flyingIds.Add(id);
             HudRectMotion.Move(clone.Rect, target.Rect, (float)Math.Max(0, k.FlyLeft), () =>
             {
                 if (!clone || !_flying.Remove(clone)) return;
+                _flyingIds.Remove(id);
                 _pool.Release(clone);
             }, flyMoveEase, flyScaleEase);
+        }
+
+        /// <summary>
+        /// 카드 id가 놓일 Holder 번호. 시뮬은 도착(적용) 때 <see cref="RunState.CardOrder"/>에 넣으므로, 이미 얻은 카드는 그 자리,
+        /// 새 카드는 「얻은 카드 수 + 먼저 날고 있는 다른 새 카드 수」번째 자리다(앞 카드가 도착 전이어도 같은 자리로 겹치지 않게, MV-UI3-CLIMBFX2).
+        /// 같은 새 카드가 이미 날고 있으면 그 카드와 같은 자리.
+        /// </summary>
+        public static int SlotFor(IReadOnlyList<int> order, IReadOnlyList<int> flyingIds, int id)
+        {
+            for (int i = 0; i < order.Count; i++) if (order[i] == id) return i;
+            int slot = order.Count;
+            var seen = new List<int>();
+            foreach (int f in flyingIds)
+            {
+                if (seen.Contains(f)) continue;
+                bool owned = false;
+                for (int i = 0; i < order.Count; i++) if (order[i] == f) { owned = true; break; }
+                if (owned) continue;
+                if (f == id) return slot;
+                seen.Add(f);
+                slot++;
+            }
+            return slot;
         }
 
         /// <summary>index번째 Holder 카드(Holder_Card가 모자라면 첫 Holder를 복제).</summary>
         HudSkillCard PosCard(int index)
         {
+            bool added = false;
             while (_posCards.Count <= index && _holderTemplate)
             {
                 var h = Instantiate(_holderTemplate, transform, false);
@@ -132,7 +161,10 @@ namespace MV.UI
                 if (!card) break;
                 card.gameObject.SetActive(false);
                 _posCards.Add(card);
+                added = true;
             }
+            // 새 Holder는 레이아웃(Card Pos의 LayoutGroup)이 다음 갱신 때 자리를 잡는다. 지금 자리를 잡아야 비행 출발 때 첫 Holder 자리로 가지 않는다.
+            if (added) LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
             return index < _posCards.Count ? _posCards[index] : null;
         }
     }

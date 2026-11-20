@@ -308,6 +308,36 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void CardPos_FlyTarget_IsTheSlotTheCardWillTake_EvenWhileEarlierCardsAreStillFlying()
+        {
+            // MV-UI3-CLIMBFX2: 시뮬은 도착 때 CardOrder에 넣는다(330 rlEndStep < rlFlyMs라 비행이 겹친다).
+            var order = new List<int> { 10 };
+            var none = new List<int>();
+            Assert.AreEqual(0, CardPosSection.SlotFor(order, none, 10), "이미 얻은 카드는 그 자리");
+            Assert.AreEqual(1, CardPosSection.SlotFor(order, none, 20), "새 카드는 다음 자리");
+            Assert.AreEqual(2, CardPosSection.SlotFor(order, new List<int> { 20 }, 30), "앞 새 카드가 날고 있으면 그다음 자리");
+            Assert.AreEqual(1, CardPosSection.SlotFor(order, new List<int> { 20, 30 }, 20), "같은 새 카드는 먼저 날고 있는 카드와 같은 자리");
+            Assert.AreEqual(1, CardPosSection.SlotFor(order, new List<int> { 10 }, 30), "이미 얻은 카드의 비행은 새 자리를 차지하지 않는다");
+            Assert.AreEqual(2, CardPosSection.SlotFor(order, new List<int> { 20, 20 }, 30), "같은 새 카드 두 장은 자리 하나");
+        }
+
+        [Test]
+        public void CardPos_NewHolders_AreLaidOutApartRightAway()
+        {
+            var (_, view) = NewHud();
+            var pos = view.CardPos;
+            var s = NewState();
+            var picks = s.CardPool.Take(3).ToList();
+            Assert.That(picks.Count, Is.EqualTo(3));
+            foreach (var c in picks) { s.Cards[c.id] = 1; s.CardOrder.Add(c.id); }
+            pos.Tick(s);   // Holder_Card는 디자이너 1개, 나머지는 복제
+            Assert.That(pos.PosCards.Count, Is.GreaterThanOrEqualTo(3));
+            var p = pos.PosCards.Take(3).Select(c => ((RectTransform)c.Rect.parent).position).ToArray();
+            Assert.That(Vector3.Distance(p[0], p[1]), Is.GreaterThan(1f), "복제한 Holder가 바로 레이아웃 자리를 잡아 첫 Holder와 겹치지 않는다");
+            Assert.That(Vector3.Distance(p[1], p[2]), Is.GreaterThan(1f));
+        }
+
+        [Test]
         public void IngameHud_ClimbFx_ProgressOnlyOnCurrent_AndRouletteCardsRollTogether()
         {
             var (_, view) = NewHud();
