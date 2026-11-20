@@ -6186,7 +6186,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a8b66f316749c4437b1d342c2b94e34a, type: 2}
+  - {fileID: 2100000, guid: a436ae248312e4bb18dfc2b9154c23bf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6299,6 +6299,7 @@ MonoBehaviour:
   DecoSpacing: 12.6
   DecoX: {x: 6.5, y: 12.5}
   DecoRange: {x: -10, y: 110}
+  DecoGroundOffset: -0.07
 --- !u!1 &4127818535923531683
 GameObject:
   m_ObjectHideFlags: 0
