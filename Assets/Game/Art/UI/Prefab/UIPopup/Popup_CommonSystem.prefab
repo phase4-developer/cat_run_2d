@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7163556562666445873}
   - component: {fileID: 7339580356244185465}
   - component: {fileID: 5585230959158305570}
+  - component: {fileID: 5376059209528101678}
+  - component: {fileID: 7667779126717394287}
   m_Layer: 5
   m_Name: Button_Cancel
   m_TagString: Untagged
@@ -121,6 +123,43 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &5376059209528101678
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018911621595232600}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7667779126717394287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018911621595232600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out
 --- !u!1 &1417344196694857068
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,6 +782,8 @@ GameObject:
   - component: {fileID: 6084145636322204451}
   - component: {fileID: 6197387916202502224}
   - component: {fileID: 3251383993235933504}
+  - component: {fileID: 631200296251630153}
+  - component: {fileID: 8719002318425058013}
   m_Layer: 5
   m_Name: Button_OK
   m_TagString: Untagged
@@ -852,6 +893,43 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &631200296251630153
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3813348347665722602}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8719002318425058013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3813348347665722602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out
 --- !u!1 &5071842800055310638
 GameObject:
   m_ObjectHideFlags: 0
@@ -1266,6 +1344,8 @@ GameObject:
   - component: {fileID: 2200017218182137936}
   - component: {fileID: 1987781114963262019}
   - component: {fileID: 3353972640538383889}
+  - component: {fileID: 2750261724361190369}
+  - component: {fileID: 5367867001353679711}
   m_Layer: 5
   m_Name: Button Close
   m_TagString: Untagged
@@ -1374,6 +1454,43 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &2750261724361190369
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7078717152277343564}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5367867001353679711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7078717152277343564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out
 --- !u!1 &7699749022938939094
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 659435253032441704}
   - component: {fileID: 8874910646098129271}
   - component: {fileID: 2692495970052299781}
+  - component: {fileID: 8056915945128634066}
+  - component: {fileID: 476024171340655041}
   m_Layer: 5
   m_Name: Support
   m_TagString: Untagged
@@ -121,6 +123,43 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &8056915945128634066
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 43938074340107796}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &476024171340655041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 43938074340107796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out
 --- !u!1 &109635051975527247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1100,7 +1139,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -40, y: 0}
+  m_SizeDelta: {x: -40, y: -40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9117663255389049390
 CanvasRenderer:
@@ -2818,6 +2857,8 @@ GameObject:
   - component: {fileID: 8970991429055436528}
   - component: {fileID: 7610753052691753159}
   - component: {fileID: 8392982970555911714}
+  - component: {fileID: 1482729052593283138}
+  - component: {fileID: 9078279845883167717}
   m_Layer: 5
   m_Name: Language
   m_TagString: Untagged
@@ -2897,6 +2938,43 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &1482729052593283138
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5057983523910955581}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &9078279845883167717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5057983523910955581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out
 --- !u!1 &5111860707347558749
 GameObject:
   m_ObjectHideFlags: 0
@@ -3688,6 +3766,8 @@ GameObject:
   - component: {fileID: 6396699281333946541}
   - component: {fileID: 5003369076645119628}
   - component: {fileID: 8686254361108022413}
+  - component: {fileID: 4638556925766854091}
+  - component: {fileID: 4547766630764838602}
   m_Layer: 5
   m_Name: Policy
   m_TagString: Untagged
@@ -3797,6 +3877,43 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &4638556925766854091
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5967050561378038787}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4547766630764838602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5967050561378038787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out
 --- !u!1 &6309373439393919406
 GameObject:
   m_ObjectHideFlags: 0
@@ -4349,7 +4466,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -40, y: 0}
+  m_SizeDelta: {x: -40, y: -40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7855417540564101559
 CanvasRenderer:
@@ -4633,7 +4750,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -40, y: 0}
+  m_SizeDelta: {x: -40, y: -40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8648148173309035087
 CanvasRenderer:
@@ -4690,7 +4807,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40.6
+  m_fontSize: 40
   m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4923,6 +5040,8 @@ GameObject:
   - component: {fileID: 2924875103701559205}
   - component: {fileID: 3084973590677203869}
   - component: {fileID: 6103399193904335558}
+  - component: {fileID: 2688631619129996923}
+  - component: {fileID: 3535068785078005205}
   m_Layer: 5
   m_Name: RestorePurchase
   m_TagString: Untagged
@@ -5032,6 +5151,43 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &2688631619129996923
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8911343931438465198}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3535068785078005205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8911343931438465198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out
 --- !u!1 &9096968779794193673
 GameObject:
   m_ObjectHideFlags: 0
@@ -5044,6 +5200,8 @@ GameObject:
   - component: {fileID: 290248101662061888}
   - component: {fileID: 2366104926876951634}
   - component: {fileID: 7396648790435959283}
+  - component: {fileID: 5562492302574732596}
+  - component: {fileID: 7618906186465434088}
   m_Layer: 5
   m_Name: Button Close
   m_TagString: Untagged
@@ -5152,3 +5310,40 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &5562492302574732596
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9096968779794193673}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7618906186465434088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9096968779794193673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c536550c0b4478b093912cd89a0529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.ButtonClickAnim
+  controller: {fileID: 9100000, guid: 63d88dc988dedad439a6fbd4e7f3b7f7, type: 2}
+  inTrigger: In
+  outTrigger: Out

@@ -286,7 +286,7 @@ MonoBehaviour:
   stackPrefab: {fileID: 8887057033844321035, guid: 2b1bb52fa6daa9c4ebb7e8355b8d495a, type: 3}
   cardsTakeInput: 0
   timing:
-    budget: 0.8
+    budget: 1
     leftMin: 0.4
     dealCost: 0.1
     unitMin: 0.07
@@ -295,8 +295,8 @@ MonoBehaviour:
     dealGapMul: 0.12
     mergeMul: 0.25
     moveMul: 0.25
-    afterMax: 0.04
-    afterMul: 0.08
+    afterMax: 0.15
+    afterMul: 0.15
   moveSec: 0.2
   dealFadeSec: 0.25
   dealUpSec: 0.15
@@ -304,13 +304,13 @@ MonoBehaviour:
   mergedScale: 1.35
   mergedMinSec: 0.1
   equipPopScale: 1.35
-  equipPopSec: 0.2
+  equipPopSec: 0.25
   queueAnchor: {fileID: 4021747605669964844}
   queueGapRatio: 0.38
   queueStepRatio: 0.6
   launchSec: 0.25
   launchGapSec: 0.07
-  launchArc: 0.25
+  launchArc: 0
   queueHoldSec: 2
   discardFadeSec: 0.15
 --- !u!114 &8823633733725729160
@@ -16630,7 +16630,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4294469099561495669, guid: 5259ad5385100ca44a3e2b7232381c4e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 275
+      value: 860
       objectReference: {fileID: 0}
     - target: {fileID: 4702299862968759617, guid: 5259ad5385100ca44a3e2b7232381c4e, type: 3}
       propertyPath: m_Pivot.x
