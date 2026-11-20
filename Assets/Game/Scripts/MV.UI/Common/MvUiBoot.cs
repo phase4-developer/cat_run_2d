@@ -18,7 +18,7 @@ namespace MV.UI
             // 뒤로 가기 종료 확인: 종료 확인 팝업은 2차. 지금은 확인 없이 종료를 허용한다(Framework는 이 값이 없으면 오류).
             if (UINavigationOptions.ConfirmExitAsync == null) UINavigationOptions.ConfirmExitAsync = _ => UniTask.FromResult(true);
             // 숫자 표기: Framework 라벨(PriceLabel·PriceBtn 등)도 05 §5.1.12 fmt(10,000↑ x.xK, 1,000,000↑ x.xM)로 쓴다.
-            if (UIRuntimeOptions.NumberFormat == null) UIRuntimeOptions.NumberFormat = new NumberFormatSettings(MvUiFormat.Profile);
+            if (UIDisplayOptions.NumberFormat == null) UIDisplayOptions.NumberFormat = new NumberFormatSettings(MvUiFormat.Profile);
             // 잔액 없는 비용(광고·인앱, 07 §7.1.6 ConsumeType): PriceLabel·PriceBtn이 부족 색 없이 늘 충분으로 그린다(ui.economy pre.8).
             if (LocalEconomyUIOptions.UnmeteredCost == null) LocalEconomyUIOptions.UnmeteredCost = IsUnmeteredCost;
         }

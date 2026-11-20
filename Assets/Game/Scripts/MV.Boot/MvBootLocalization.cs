@@ -44,8 +44,8 @@ namespace MV.Boot
 
             // 8단계 UI 옵션: 없는 키는 빈 값 → MvUiText가 대체 문구를 쓴다. 언어가 바뀌면 화면에 알린다.
             UIRuntimeOptions.Localize = (collection, key) => LocalizationManager.GetLoc(collection, key, false);
-            UIRuntimeOptions.Language = LocalizationManager.GetCurrentLanguageCode;
-            UIRuntimeOptions.Culture = () => LocalizationSettings.SelectedLocale?.Identifier.CultureInfo ?? System.Globalization.CultureInfo.InvariantCulture;
+            UIDisplayOptions.Language = LocalizationManager.GetCurrentLanguageCode;
+            UIDisplayOptions.Culture = () => LocalizationSettings.SelectedLocale?.Identifier.CultureInfo ?? System.Globalization.CultureInfo.InvariantCulture;
             LocalizationEvent.Published -= OnLocalizationEvent;
             LocalizationEvent.Published += OnLocalizationEvent;
 
@@ -80,7 +80,7 @@ namespace MV.Boot
             public UniTask SetAsync(string code) => LocalizationManager.Instance.SetLanguage(code, true);
         }
 
-        static void OnLocalizationEvent(LocalizationEvent e) => UIRuntimeOptions.NotifyLocaleChanged();
+        static void OnLocalizationEvent(LocalizationEvent e) => UIDisplayOptions.NotifyLocaleChanged();
 
         /// <summary>ITableLocalization: 없는 항목은 null, 있는 빈 번역은 빈 문자열(README 「Table 소비자」).</summary>
         sealed class MvTableLocalization : ITableLocalization
