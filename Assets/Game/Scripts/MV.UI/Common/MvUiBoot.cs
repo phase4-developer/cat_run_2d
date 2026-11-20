@@ -1,6 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using jjevol;
+using MV.Data;
 
 namespace MV.UI
 {
@@ -18,7 +19,13 @@ namespace MV.UI
             if (UINavigationOptions.ConfirmExitAsync == null) UINavigationOptions.ConfirmExitAsync = _ => UniTask.FromResult(true);
             // 숫자 표기: Framework 라벨(PriceLabel·PriceBtn 등)도 05 §5.1.12 fmt(10,000↑ x.xK, 1,000,000↑ x.xM)로 쓴다.
             if (UIRuntimeOptions.NumberFormat == null) UIRuntimeOptions.NumberFormat = new NumberFormatSettings(MvUiFormat.Profile);
+            // 잔액 없는 비용(광고·인앱, 07 §7.1.6 ConsumeType): PriceLabel·PriceBtn이 부족 색 없이 늘 충분으로 그린다(ui.economy pre.8).
+            if (LocalEconomyUIOptions.UnmeteredCost == null) LocalEconomyUIOptions.UnmeteredCost = IsUnmeteredCost;
         }
+
+        /// <summary>보유량이 없는 비용 종류(광고 시청·인앱 결제).</summary>
+        public static bool IsUnmeteredCost(ConsumeTypeId type) =>
+            type.Value == (int)ConsumeType.AD || type.Value == (int)ConsumeType.Inapp;
 
         public static async UniTask InitAsync(UIManagerCreater creator, CancellationToken token = default)
         {
