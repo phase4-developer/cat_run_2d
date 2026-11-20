@@ -25,11 +25,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0bbaa008e61a148478433cd306d1a59b
-    m_Address: Stage2_Block_Blue
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0bf3fb706e8fb424fa11e4a6d0ef5c96
     m_Address: Obj_Tower_Orb
     m_ReadOnly: 0
@@ -42,6 +37,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 28b3601d9fb7f4bc8b9a09b6a650ea69
     m_Address: Stage1_Block_Cat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2d13512c515034d68b3f74280564d322
+    m_Address: Stage2_Arch
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -60,8 +60,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4f83b91d4e3f3472982e1074a6de5efc
+    m_Address: Stage2_Block_Blue
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 50add1b2d87ae4d87b17e45fc2bf289d
     m_Address: Stage1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6059caed2348449dca41dbe7d2a50732
+    m_Address: Stage2_Block_Gold
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -72,6 +82,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6323877bc368d499896a14215f147f8a
     m_Address: Obj_ClimbStep_L
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7f35383f01d5f4a5b86350d3bd4cbfdd
+    m_Address: Stage2_Portal
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -95,23 +110,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 909a9bde9d9824585903c79e102ed604
-    m_Address: Stage2_Block_Cat
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9156da3ec9abf40c083b197281e5756e
     m_Address: Obj_CraftGate
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a0d05c7243b234891bf2cd753e6c1563
-    m_Address: Stage2_Arch
+  - m_GUID: a6e529cc742c645bb9a201758a85d9f5
+    m_Address: Stage1_Portal
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a6e529cc742c645bb9a201758a85d9f5
-    m_Address: Stage1_Portal
+  - m_GUID: bc5cacc0888dc49e3896845da8235c0b
+    m_Address: Stage2_Block_Cat
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -142,16 +152,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: eedfd2c4624f14f1883e5b2dedc08e21
     m_Address: Stage1_Block_Gold
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f56573908d09f4a6faca1e7ab625fe5d
-    m_Address: Stage2_Block_Gold
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fc903c6685ddb44b694d8cc9d9206624
-    m_Address: Stage2_Portal
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

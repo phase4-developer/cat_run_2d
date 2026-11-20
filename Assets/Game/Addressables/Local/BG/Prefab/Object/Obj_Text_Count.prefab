@@ -336,7 +336,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8890522067525861984, guid: b9f9b27bdc4f92949a07f64b73f7fd0e, type: 2}
+  - {fileID: 2100000, guid: f8e2235b3cc9bcb41b5a22af6e2c7592, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -522,6 +522,22 @@ Transform:
   - {fileID: 3619776204198998604}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7300200000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6392658425363057222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7387361f988e4dd098839331512fbf74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.View::MV.View.CountLabel
+  _title: {fileID: 7059969738496119866}
+  _number: {fileID: 2267972883595004547}
+  _gauge: {fileID: 8526265881284180830}
+  _pivot: {fileID: 3236871238491511533}
 --- !u!1 &8526265881284180830
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,19 +630,3 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &7300200000000000001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6392658425363057222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7387361f988e4dd098839331512fbf74, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: MV.View::MV.View.CountLabel
-  _title: {fileID: 7059969738496119866}
-  _number: {fileID: 2267972883595004547}
-  _gauge: {fileID: 8526265881284180830}
-  _pivot: {fileID: 3236871238491511533}
