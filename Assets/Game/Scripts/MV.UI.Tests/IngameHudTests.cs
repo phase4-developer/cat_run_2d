@@ -168,6 +168,7 @@ namespace MV.UI.Tests
             AssertRefs(view.Weapon);
             AssertRefs(view.Weapon.View);
             Assert.That(view.Weapon.View.Equip, Is.Not.Null, "Equip/Slot_Weapon");
+            Assert.That(view.Weapon.View.Equip.HasFlash && view.Weapon.View.Equip.HasSparkle, Is.True, "장착 칸 Flash·Effect_Sparkle 연결(머지 결과가 장착 칸에 놓일 때 쓴다, MV-UI3-FXFIX)");
             Assert.That(PrefabUtility.IsPartOfPrefabAsset(view.Weapon.View.StackPrefab), Is.True, "스택 복제 원본 = Slot_Weapon_Stack.prefab 에셋");
             Assert.That(view.SkillCard, Is.Not.Null, "Skill Section/Card_Skill");
             // flash·sparkle은 디자이너 리소스가 아직 없는 선택 항목(없으면 크기 연출만, 경고 로그).

@@ -173,6 +173,13 @@ namespace MV.UI.Tests
             RunUntilIdle(stack);
             Assert.That(stack.Hand.Select(c => c.Tier), Is.EqualTo(new[] { lo + 1 }), "같은 등급 MERGE_N장 → 다음 등급 1장");
             Assert.AreEqual(lo + 1, stack.Equip.Tier, "머지 결과가 장착 칸");
+            // MV-UI3-FXFIX: 맨 위 카드 칸은 장착 칸 자리에 숨어 있어 결과 연출을 장착 칸이 한다(편집기 정지 중이라 트윈은 멈춘 시작 모습).
+            Assert.AreEqual(1, stack.EquipMergedCount, "머지 결과 연출을 장착 칸이 시작");
+            Assert.That(stack.Equip.HasFlash && stack.Equip.HasSparkle, Is.True, "장착 칸 Flash·Effect_Sparkle 연결");
+            Assert.That(stack.Equip.FlashVisibleAlpha, Is.GreaterThan(0.5f), "덮개가 보인다(디자이너 색 알파 0이어도 flashPeak로 밝힌다)");
+            Assert.That(stack.Equip.SparkleOn, Is.True, "반짝임 켜짐");
+            stack.Equip.ResetLook();
+            Assert.That(stack.Equip.FlashVisibleAlpha, Is.EqualTo(0f), "끝나면 덮개 꺼짐");
         }
 
         static void RunUntilIdle(WeaponStackView v, float dt = 0.01f, float limit = 20)

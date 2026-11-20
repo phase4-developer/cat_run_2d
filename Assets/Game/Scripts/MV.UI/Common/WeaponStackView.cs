@@ -360,6 +360,7 @@ namespace MV.UI
 
         void Play(in HandAction a)
         {
+            float equipMergedSec = -1;   // 머지 결과가 맨 위(장착 칸)에 놓이면 장착 칸이 결과 연출을 한다(MV-UI3-FXFIX)
             switch (a.Kind)
             {
                 case HandActionKind.Dealt:
@@ -425,12 +426,16 @@ namespace MV.UI
                     var s = Rent(a.Card);
                     if (has) s.rectTransform.anchoredPosition = at;
                     Layout(snap: false, placed: has ? s : null);
-                    if (Animate) s.PlayMerged(Math.Max(mergedMinSec, a.Unit), mergedScale);
+                    float sec = Math.Max(mergedMinSec, a.Unit);
+                    // 맨 위 카드 칸은 장착 칸 자리에 숨어 있어(TopIsEquip) 그 칸 연출은 보이지 않는다 → 장착 칸이 크기·Flash·Sparkle을 한다.
+                    // 사용자 2026-11-20 「무기가 합쳐질때 연출이 제일위에꺼 실제 장착 무기가 나올때는 안나오는거 같은데」.
+                    if (TopIsEquip && _model.Cards.Count > 0 && _model.Cards[0].Id == a.Card.Id) equipMergedSec = sec;
+                    else if (Animate) s.PlayMerged(sec, mergedScale);
                     MvSound.PlayUi(MvUiSound.HandMerge);
                     break;
                 }
             }
-            if (a.TopTierUp) DrawEquip(pop: true);
+            if (a.TopTierUp || equipMergedSec >= 0) DrawEquip(pop: a.TopTierUp, mergedSec: equipMergedSec);
             LayoutQueue();
         }
 
@@ -633,7 +638,11 @@ namespace MV.UI
             return list;
         }
 
-        void DrawEquip(bool pop)
+        /// <summary>시험·QA: 장착 칸이 머지 결과 연출을 시작한 횟수.</summary>
+        public int EquipMergedCount { get; private set; }
+
+        /// <param name="mergedSec">0 이상이면 머지 결과가 장착 칸에 놓였다: 튐 대신 머지 결과 연출(<see cref="HudWeaponSlot.PlayMerged"/>: 크기·Flash·Sparkle).</param>
+        void DrawEquip(bool pop, float mergedSec = -1)
         {
             if (!_equip || _model == null) return;
             int tier = _model.TopTier;
@@ -641,9 +650,15 @@ namespace MV.UI
             _equip.Set(_t, tier, Mul());
             bool up = pop && tier > _equipTier;
             _equipTier = tier;
-            if (!up) return;
-            MvSound.PlayUi(MvUiSound.HandTierUp);
-            if (!Animate) return;
+            if (up) MvSound.PlayUi(MvUiSound.HandTierUp);
+            if (mergedSec >= 0)
+            {
+                EquipMergedCount++;
+                _equip.ResetLook();
+                _equip.PlayMerged(mergedSec, mergedScale);   // EditMode 시험도 시작 모습(덮개·반짝임 켜짐)을 볼 수 있게 Animate와 무관하게 건다(트윈은 재생 중에만 돈다)
+                return;
+            }
+            if (!up || !Animate) return;
             var t = _equip.transform;
             DOTween.Kill(t);
             t.localScale = Vector3.one;
