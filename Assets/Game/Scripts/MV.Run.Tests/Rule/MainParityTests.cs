@@ -17,7 +17,7 @@ namespace MV.Run.Tests.Rule
     /// </summary>
     public sealed class MainParityTests
     {
-        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음). MV-PARITY-GOLDEN-sgatem(2026-11-19): 302_area.sgateM(계단 게이트 체력 배율)이 Area 2~5에서 바뀐 표 커밋 429bb7e4 뒤로 A2~A5 12개 다시 기록. MV-PC-ANS1·ANS2(2026-11-19, 기획자확인 반영): 지팡이 피해 2^(단계−1)·탑 기준 15로 A1~A5 프레임·이벤트 값 일부, 레벨당 획득 % 지급·황금 생선 5 × Area^1.5로 결과 해시가 바뀌어 15개 모두 다시 기록(잡 MV-PC-ANS2-t2의 실제 값, 종료 사유는 모두 Wall).</summary>
+        /// <summary>확장 지점 전 코드로 만든 값. 키 A{area}L{level}(area 1기반). MV-FIX-CLIMB5(2026-11-17): 정산마다 ClimbTop 이벤트 1개 추가로 A1L15·A2L1·A3L1·A3L15의 이벤트 수·해시만 다시 기록(프레임·RNG·종료 같음). MV-PARITY-GOLDEN-sgatem(2026-11-19): 302_area.sgateM(계단 게이트 체력 배율)이 Area 2~5에서 바뀐 표 커밋 429bb7e4 뒤로 A2~A5 12개 다시 기록. MV-PC-ANS1·ANS2(2026-11-19, 기획자확인 반영): 지팡이 피해 2^(단계−1)·탑 기준 15로 A1~A5 프레임·이벤트 값 일부, 레벨당 획득 % 지급·황금 생선 5 × Area^1.5로 결과 해시가 바뀌어 15개 모두 다시 기록(잡 MV-PC-ANS2-t2의 실제 값, 종료 사유는 모두 Wall). MV-PARITY-GOLDEN-hud16(2026-11-20): MV-UI3-HUD16 d16a01c9 「런 시작 때 무기 단계 Bt보다 낮은 카드 버림」(04 §4.12, 사용자 2026-11-19)이 ANS2 골든 기록 뒤 dev에 들어와, UpWeapon 8로 Bt 2가 되는 Area 5만 시작 덱 1단계 카드가 버려져 A5 3개 해시만 다시 기록(잡 MV-PARITY-GOLDEN-hud16-t0의 실제 값, 프레임·이벤트·RNG·종료 사유 같음).</summary>
         static readonly Dictionary<string, string> Golden = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["A1L1"] = "f3126 e424 r235 Wall 0f26c5bfc1577bed",
@@ -32,9 +32,9 @@ namespace MV.Run.Tests.Rule
             ["A4L1"] = "f3155 e808 r469 Wall 439b7d969d0d096b",
             ["A4L8"] = "f3864 e952 r573 Wall bc7a8fb93d287d8c",
             ["A4L15"] = "f3680 e952 r545 Wall 604acdce0d453dd0",
-            ["A5L1"] = "f3131 e840 r465 Wall b807117c84bf10de",
-            ["A5L8"] = "f3891 e1008 r577 Wall ccd3829a571f3c36",
-            ["A5L15"] = "f3710 e883 r549 Wall 6f7e92aec9d04248",
+            ["A5L1"] = "f3131 e840 r465 Wall e911ca6ca11322d8",
+            ["A5L8"] = "f3891 e1008 r577 Wall 7b14079bcbfcc5c0",
+            ["A5L15"] = "f3710 e883 r549 Wall d629d0b208ae4af4",
         };
 
         [Test] public void Area1() => Check(0);
