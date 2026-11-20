@@ -40,6 +40,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 22ed09c952337d74eabf4e339c66e767
+    m_Address: Obj_Stair_Orb
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2520e46afe92341b5881aeb9081d5ebf
     m_Address: Stage3_Portal
     m_ReadOnly: 0
