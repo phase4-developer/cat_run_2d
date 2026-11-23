@@ -34,41 +34,6 @@ namespace MV.Editor.Tests.Import
         }
 
         [Test]
-        public void CharacterPngImport_IsUncompressedSpriteWithResourcePivot()
-        {
-            var failures = new List<string>();
-            foreach (var path in MvCharacterArt.FindAtlasSets().Values.SelectMany(v => v))
-            {
-                var ti = AssetImporter.GetAtPath(path) as TextureImporter;
-                if (ti == null) { failures.Add(path + ": 임포터 없음"); continue; }
-                if (ti.textureType != TextureImporterType.Sprite) failures.Add(path + ": Sprite 아님");
-                if (ti.textureCompression != TextureImporterCompression.Uncompressed) failures.Add(path + ": 원본 압축됨(아틀라스가 압축)");
-                var s = new TextureImporterSettings();
-                ti.ReadTextureSettings(s);
-                if (s.spriteAlignment != (int)SpriteAlignment.Custom) failures.Add(path + ": 피벗이 리소스 기준(Custom)이 아님");
-            }
-            Assert.That(failures, Is.Empty, string.Join("\n", failures));
-        }
-
-        [Test]
-        public void CharacterAtlases_Exist()
-        {
-            // 패킹 대상·설정은 아틀라스 에셋이 정본(MV-UI2-ATLAS). 규칙과 다른 값은 보고만 한다.
-            var failures = new List<string>();
-            foreach (var pair in MvCharacterArt.FindAtlasSets())
-            {
-                var spec = MvArtRules.CharacterSpecFor(pair.Key);
-                var importer = AssetImporter.GetAtPath(spec.AssetPath) as SpriteAtlasImporter;
-                if (importer == null) { failures.Add(pair.Key + ": 아틀라스 없음"); continue; }
-                var diff = MvArtSetup.AtlasDifferences(importer, spec);
-                var have = MvArtSetup.ReadPackableGuids(spec.AssetPath);
-                int missing = pair.Value.Count(p => !have.Contains(AssetDatabase.AssetPathToGUID(p)));
-                if (diff.Count > 0 || missing > 0) TestContext.WriteLine($"[보고] {pair.Key}: 빠진 PNG {missing}, 규칙과 다른 값 {string.Join(", ", diff)}");
-            }
-            Assert.That(failures, Is.Empty, string.Join("\n", failures));
-        }
-
-        [Test]
         public void CharacterAtlasesAndPrefabs_AreAddressedInCharacterGroup()
         {
             var settings = AddressableAssetSettingsDefaultObject.Settings;

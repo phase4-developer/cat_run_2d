@@ -1,14 +1,9 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using MV.Editor.Import;
 using NUnit.Framework;
-using UnityEditor;
-using UnityEngine;
 
 namespace MV.Editor.Tests
 {
-    /// <summary>추출 PNG 임포트 설정(기획서 03 §3.2.8, §3.8.2) — MV-ART-ATLAS 티켓 01.</summary>
+    /// <summary>아트 폴더 규칙 읽기(MvArtRules.TryParse). Import 설정 자동 적용·검사는 MV-ART-IMPORTOWN(2026-11-23 사용자 「자동화는 하지마」)으로 뺐다.</summary>
     public sealed class MvArtImportTests
     {
         [Test]
@@ -34,137 +29,6 @@ namespace MV.Editor.Tests
 
             Assert.That(MvArtRules.TryParse("Assets/Game/Art/Source/manifest.json", out _), Is.False);
             Assert.That(MvArtRules.TryParse("Assets/Game/UI/Some.png", out _), Is.False);
-        }
-
-        [Test]
-        public void AllArtPngs_MatchImportRules()
-        {
-            var assets = MvArtSetup.FindArtAssets();
-            Assert.That(assets.Count, Is.GreaterThan(1000), "추출 PNG 수");
-            var failures = new List<string>();
-            int noManifest = 0;
-            foreach (var asset in assets)
-            {
-                var importer = AssetImporter.GetAtPath(asset.AssetPath) as TextureImporter;
-                if (importer == null)
-                {
-                    failures.Add(asset.AssetPath + ": TextureImporter 없음");
-                    continue;
-                }
-                var desired = MvArtImport.Desired(asset);
-                // manifest 밖 PNG(디자이너 그림)는 사람이 Import 설정의 정본이라 규칙 검사에서 뺀다(MV-ART-IMPORTOWN).
-                if (desired.FromDefaults) { noManifest++; continue; }
-                var diff = MvArtImport.Differences(importer, desired);
-                if (diff.Count > 0) failures.Add(asset.AssetPath + ": " + string.Join(", ", diff));
-            }
-            TestContext.WriteLine($"PNG {assets.Count}, manifest 없음(사람 설정 유지) {noManifest}");
-            Assert.That(failures, Is.Empty, string.Join("\n", failures.Take(30)));
-        }
-
-        [Test]
-        public void ImportSettings_FollowSpecTable()
-        {
-            // 월드: Sprite Single, Tight, PPU 128, Mipmap·Read/Write·물리 모양 끔, 개별 압축 없음
-            var world = Importer("Assets/Game/Art/Source/Sprite/Atlas_World_Theme_market", out var worldSettings);
-            Assert.That(world.textureType, Is.EqualTo(TextureImporterType.Sprite));
-            Assert.That(world.spriteImportMode, Is.EqualTo(SpriteImportMode.Single));
-            Assert.That(worldSettings.spriteMeshType, Is.EqualTo(SpriteMeshType.Tight));
-            Assert.That(world.spritePixelsPerUnit, Is.EqualTo(128f));
-            Assert.That(world.mipmapEnabled, Is.False);
-            Assert.That(world.isReadable, Is.False);
-            Assert.That(worldSettings.spriteGenerateFallbackPhysicsShape, Is.False);
-            Assert.That(world.textureCompression, Is.EqualTo(TextureImporterCompression.Uncompressed));
-            Assert.That(world.wrapMode, Is.EqualTo(TextureWrapMode.Clamp));
-            Assert.That(world.filterMode, Is.EqualTo(FilterMode.Bilinear));
-
-            // UI: 처음 Import 기본값은 Full Rect(그 뒤 디자이너 설정은 유지, DesignerPng_KeepsInspectorImportSettings)
-            Assert.That(MvArtRules.TryParse("Assets/Game/Art/Source/Sprite/Atlas_UI_Icon/New_Icon.png", out var uiAsset), Is.True);
-            Assert.That(MvArtImport.Desired(uiAsset).MeshType, Is.EqualTo(SpriteMeshType.FullRect));
-
-            // 로비: PPU 160(03 §3.3.2)
-            var lobby = Importer("Assets/Game/Art/Source/Sprite/Atlas_World_Lobby", out _);
-            Assert.That(lobby.spritePixelsPerUnit, Is.EqualTo(160f));
-            var lobby2 = Importer("Assets/Game/Art/Source/Sprite/Atlas_World_Lobby_2", out _);
-            Assert.That(lobby2.spritePixelsPerUnit, Is.EqualTo(160f), "`_2` 나눔도 로비 PPU");
-
-            // 단독 텍스처: Full Rect, Android·iOS ASTC 4x4(신 초상), Mipmap 끔
-            var tex = (TextureImporter)AssetImporter.GetAtPath("Assets/Game/Art/Source/Texture/Tex_God_Flame.png");
-            Assert.That(tex, Is.Not.Null);
-            Assert.That(tex.mipmapEnabled, Is.False);
-            foreach (var platform in new[] { "Android", "iPhone" })
-            {
-                var p = tex.GetPlatformTextureSettings(platform);
-                Assert.That(p.overridden, Is.True, platform);
-                Assert.That(p.format, Is.EqualTo(TextureImporterFormat.ASTC_4x4), platform);
-            }
-        }
-
-        /// <summary>
-        /// 디자이너가 Inspector에서 정한 Import 설정(9-slice·PPU)은 자동화가 다시 쓰지 않는다(MV-ART-IMPORTOWN).
-        /// 2026-11-23 Art/UI → Art/Source/Sprite/Atlas_UI_* 이동 때 자동화가 PPU 128·border 0·Full Rect로 덮어 9-slice가 찌그러졌다.
-        /// </summary>
-        [TestCase("Assets/Game/Art/Source/Sprite/Atlas_UI_GUI/Panel_Common.png", 80f, 80f, 80f, 80f)]
-        [TestCase("Assets/Game/Art/Source/Sprite/Atlas_UI_GUI/Panel_Default.png", 50f, 120f, 50f, 120f)]
-        [TestCase("Assets/Game/Art/Source/Sprite/Atlas_UI_Card/Grade/Grade_1.png", 50f, 50f, 50f, 50f)]
-        public void DesignerPng_KeepsInspectorImportSettings(string path, float l, float b, float r, float t)
-        {
-            Assert.That(MvArtRules.TryParse(path, out var asset), Is.True, path);
-            Assert.That(MvArtImport.Desired(asset).FromDefaults, Is.True, "manifest 밖(디자이너 그림)");
-            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
-            Assert.That(importer, Is.Not.Null, path);
-            Assert.That(importer.spriteBorder, Is.EqualTo(new Vector4(l, b, r, t)), "9-slice");
-            Assert.That(importer.spritePixelsPerUnit, Is.EqualTo(100f), "디자이너 PPU");
-
-            var result = MvArtSetup.EnsureAll();
-            importer = (TextureImporter)AssetImporter.GetAtPath(path);
-            Assert.That(importer.spriteBorder, Is.EqualTo(new Vector4(l, b, r, t)), "EnsureAll 뒤에도 9-slice 유지: " + result);
-            Assert.That(importer.spritePixelsPerUnit, Is.EqualTo(100f), "EnsureAll 뒤에도 PPU 유지");
-        }
-
-        [Test]
-        public void ManifestPivot_IsAppliedToFrames()
-        {
-            const string path = "Assets/Game/Art/Source/Sprite/Atlas_World_Cat_T1/World_Cat_P0_T1_Climb_00.png";
-            var entry = MvArtManifest.Find("Source", "Sprite/Atlas_World_Cat_T1/World_Cat_P0_T1_Climb_00.png");
-            Assert.That(entry, Is.Not.Null, "manifest 프레임 항목");
-            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
-            var s = new TextureImporterSettings();
-            importer.ReadTextureSettings(s);
-            Assert.That(s.spriteAlignment, Is.EqualTo((int)SpriteAlignment.Custom));
-            Assert.That(s.spritePivot.x, Is.EqualTo(entry.Pivot.x).Within(1e-4f));
-            Assert.That(s.spritePivot.y, Is.EqualTo(entry.Pivot.y).Within(1e-4f));
-            Assert.That(entry.Pivot.y, Is.LessThan(0.5f), "Feet 피벗은 아래쪽");
-        }
-
-        [Test]
-        public void SpriteCatalog_MatchesPngFiles()
-        {
-            var files = new HashSet<string>();
-            foreach (var pair in MvArtSetup.FindAtlasFolders())
-            foreach (var folder in pair.Value)
-            foreach (var f in Directory.GetFiles(folder, "*.png", SearchOption.AllDirectories))
-                files.Add(pair.Key + "/" + Path.GetFileNameWithoutExtension(f));
-            foreach (var root in MvArtRules.ArtRoots)
-            {
-                var dir = root + "/" + MvArtRules.TextureFolderName;
-                if (Directory.Exists(dir))
-                    foreach (var f in Directory.GetFiles(dir, "*.png", SearchOption.AllDirectories))
-                        files.Add("Texture/" + Path.GetFileNameWithoutExtension(f));
-            }
-
-            var catalog = new HashSet<string>(MvArtManifest.ReadCatalog().Select(r => r.atlas + "/" + r.name));
-            Assert.That(catalog.Except(files).ToList(), Is.Empty, "카탈로그에만 있는 이름(PNG 없음)");
-            Assert.That(files.Except(catalog).ToList(), Is.Empty, "PNG만 있고 카탈로그에 없는 이름");
-        }
-
-        static TextureImporter Importer(string folder, out TextureImporterSettings settings)
-        {
-            var file = Directory.GetFiles(folder, "*.png").OrderBy(f => f).First().Replace('\\', '/');
-            var importer = (TextureImporter)AssetImporter.GetAtPath(file);
-            Assert.That(importer, Is.Not.Null, file);
-            settings = new TextureImporterSettings();
-            importer.ReadTextureSettings(settings);
-            return importer;
         }
     }
 }
