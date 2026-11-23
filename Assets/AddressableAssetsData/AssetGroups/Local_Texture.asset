@@ -15,6 +15,24 @@ MonoBehaviour:
   m_GroupName: Local_Texture
   m_GUID: 0b71b386cf59fe24db9706e12e529245
   m_SerializeEntries:
+  - m_GUID: 35b1458655a53bd4b9437459cd1f6832
+    m_Address: Texture_Background_Zone2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e5f7da35cd37304aa5f300a1c661be9
+    m_Address: Texture_Background_Zone1_Area4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 94612807b9f825646bd19df32d0efeac
+    m_Address: Texture_Background_Zone1_Area1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9f88cafed6ab5864c83380eb7b6435c2
     m_Address: Tex_God_Flame
     m_ReadOnly: 0
@@ -23,6 +41,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a80e5553ab7cf96499b18430f76b8d28
     m_Address: Tex_Lobby_Vignette
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b77f7892f43d5b744b6789b2855e2c1d
+    m_Address: Texture_Background_Zone1_Area5
     m_ReadOnly: 0
     m_SerializedLabels:
     - lobby
@@ -41,6 +65,24 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cf5b0d3f2d60d104ca75774118fe7666
     m_Address: Tex_Lobby_Room
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e2f424a4581fa9146a7ec13328bef29a
+    m_Address: Texture_Background_Zone1_Area3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e6f17574fc2d25a41a5f7a3b2ea67283
+    m_Address: Texture_Background_Zone1_Area2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - lobby
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7b5562fb71a3b3488c5c1b4809a6834
+    m_Address: Texture_Background_Zone1
     m_ReadOnly: 0
     m_SerializedLabels:
     - lobby

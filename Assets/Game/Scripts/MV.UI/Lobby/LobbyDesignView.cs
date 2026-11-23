@@ -314,8 +314,9 @@ namespace MV.UI
             _tables = t;
             string area = s.AreaName;
             if (string.IsNullOrEmpty(area)) area = "Area " + s.AreaNo;
-            if (areaLabel) areaLabel.ShowUI(new AreaLabelData(s.ZoneNo, area));
-            if (areaUpgradeLabel) areaUpgradeLabel.ShowUI(new AreaLabelData(s.ZoneNo, area));
+            string areaIcon = HudAreaLabel.AreaIconOf(t, s.AreaNo);
+            if (areaLabel) areaLabel.ShowUI(new AreaLabelData(s.ZoneNo, area, areaIcon));
+            if (areaUpgradeLabel) areaUpgradeLabel.ShowUI(new AreaLabelData(s.ZoneNo, area, areaIcon));
             DrawCurrencies(t);
             DrawWeapons(t, s.Deck);
         }

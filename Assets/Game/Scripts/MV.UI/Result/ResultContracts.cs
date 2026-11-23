@@ -28,6 +28,8 @@ namespace MV.UI
         public int SoulsNeed;
         /// <summary>현재 Area 이름(<c>302_area</c>, 언어팩 <c>name:&lt;id&gt;</c> → 표 name 열). Slot_AreaLabel에 쓴다.</summary>
         public string AreaName;
+        /// <summary>현재 Area <c>302_area.mapIcon</c>(Local_Texture 주소). Slot_AreaLabel 그림.</summary>
+        public string AreaIcon;
         /// <summary>보상 칸 아이콘·등급을 찾을 표(없으면 칸은 글자만).</summary>
         public MvTables Tables;
         public double Gold;
@@ -92,6 +94,7 @@ namespace MV.UI
                         d.SoulsNeed = a.needSouls;
                         d.ZoneNo = tables.Zone.Get(a.zoneId)?.sort ?? 1;
                         d.AreaName = MvUiText.Name(a.id, MvUiText.RawName(tables.Area.RawRows, a.id) ?? "");
+                        d.AreaIcon = string.IsNullOrEmpty(a.mapIcon) ? null : a.mapIcon;
                         break;
                     }
             return d;
@@ -191,12 +194,14 @@ namespace MV.UI
         public readonly int Percent;
         public readonly int ZoneNo;
         public readonly string AreaName;
+        /// <summary><c>302_area.mapIcon</c>(Local_Texture 주소).</summary>
+        public readonly string AreaIcon;
         /// <summary>기획서 05 §5.6 진행 글(왼쪽·오른쪽). 시안에 자리가 없어 디자이너 겉은 그리지 않는다.</summary>
         public readonly string Left, Right;
 
-        public ResultProgress(float from01, float to01, int percent, int zoneNo, string areaName, string left, string right)
+        public ResultProgress(float from01, float to01, int percent, int zoneNo, string areaName, string left, string right, string areaIcon = null)
         {
-            From01 = from01; To01 = to01; Percent = percent; ZoneNo = zoneNo; AreaName = areaName; Left = left; Right = right;
+            From01 = from01; To01 = to01; Percent = percent; ZoneNo = zoneNo; AreaName = areaName; Left = left; Right = right; AreaIcon = areaIcon;
         }
     }
 
