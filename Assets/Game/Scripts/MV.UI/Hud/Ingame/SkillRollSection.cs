@@ -11,7 +11,9 @@ namespace MV.UI
 {
     /// <summary>
     /// 스킬 롤링 섹션(<c>ClimbStair/Skill Section</c>, MV-UI3-HUD7 → MV-UI3-CLIMBFX, HUD_구조_설계안 3.3 SkillRollSection).
-    /// 계단 중에는 Current 등급 「?」 카드 1장. 룰렛이 시작되면 룰렛 카드마다 <c>Holder_CardSkill</c>(Skill Section의 HorizontalLayout이 정렬)과
+    /// 계단 중에는 얻은 바퀴 카드(시뮬 <see cref="ClimbState.Cards"/>, 최대 330 maxCards − 1장)마다 그 등급 「?」 카드를 남기고 맨 뒤에 Current 등급 「?」 카드를 둔다
+    /// (노션 ClimbStair 연출 보강 1-a, 2026-11-23 「Legendary 카드 이후에 새로운 Common 등급이 나올 시 기존 Legendary가 보여지고 2번째 카드가 새로 나옴 (최대 3개)」, MV-UI3-CLIMBFX4).
+    /// 룰렛이 시작되면 룰렛 카드마다 <c>Holder_CardSkill</c>(Skill Section의 HorizontalLayout이 정렬)과
     /// 그 안의 <c>Card_Skill</c>을 하나씩 두고, 모든 카드가 동시에 그림을 넘기다(넘김 = 시뮬 Flips) 시뮬이 정한 카드에서 멈춘다.
     /// 멈추면 완료 연출(크기·플래시·반짝임), 시뮬이 비행을 시작하면(<see cref="RouletteCard.Flying"/>) <see cref="FlyStarted"/>로 알리고 그 칸 카드를 숨긴다.
     /// 결과·시각은 시뮬이 이미 정했고(<see cref="RouletteState"/>, 330 rlEndBase·rlEndStep·rlFlyDelay), 이 섹션은 보이는 것만 한다.
@@ -160,19 +162,26 @@ namespace MV.UI
             _rl = null;
             _qTables = null;
             _qTier = -1;
+            _qLaps.Clear();
             if (_first == null) return;
             ClearSlots();
         }
 
         MvTables _qTables;
         int _qTier = -1;
+        readonly List<int> _qLaps = new List<int>();
 
-        /// <summary>계단 Current 등급 「?」(첫 카드 1장). 앞 룰렛 카드가 아직 남아 있으면 룰렛이 끝난 뒤 그린다.</summary>
-        public void ShowQuestion(MvTables t, int tier)
+        /// <summary>
+        /// 계단 「?」 카드: 얻은 바퀴 카드 등급(<paramref name="lapTiers"/> = <see cref="ClimbState.Cards"/>)마다 한 장, 맨 뒤에 Current 등급(<paramref name="tier"/>) 한 장.
+        /// 앞 룰렛 카드가 아직 남아 있으면 룰렛이 끝난 뒤 그린다.
+        /// </summary>
+        public void ShowQuestion(MvTables t, IReadOnlyList<int> lapTiers, int tier)
         {
             Init();
             _qTables = t;
             _qTier = tier;
+            _qLaps.Clear();
+            if (lapTiers != null) _qLaps.AddRange(lapTiers);
             if (_first == null || _rl != null) return;
             DrawQuestion();
         }
@@ -181,10 +190,18 @@ namespace MV.UI
         {
             if (_qTier < 0) return;
             ClearSlots();
-            Clear(_first);
-            _first.Holder.gameObject.SetActive(true);
-            card.ShowQuestion(_qTables, _qTier);
+            for (int i = 0; i <= _qLaps.Count; i++)
+            {
+                Slot slot;
+                if (i == 0) { slot = _first; Clear(slot); slot.Holder.gameObject.SetActive(true); }
+                else slot = _pool.Get();
+                _slots.Add(slot);
+                if (slot.Card) slot.Card.ShowQuestion(_qTables, i < _qLaps.Count ? _qLaps[i] : _qTier);
+            }
         }
+
+        /// <summary>계단 「?」 카드 수(얻은 바퀴 카드 + Current, 룰렛 중이면 룰렛 카드 수). 시험·QA.</summary>
+        public int SlotCount => _slots.Count;
 
         public void Tick(RunState s, float speed)
         {
@@ -197,6 +214,13 @@ namespace MV.UI
                 ClearSlots();
                 if (rl != null) Begin(s, rl);
                 else if (s != null && s.Phase == RunPhase.Climb) DrawQuestion();   // 룰렛이 끝났는데 다음 계단 중이면 「?」
+            }
+            // 계단 중 바퀴를 다 돌면(얻은 카드가 늘면) 그 카드를 남기고 새 Current 「?」를 옆에 둔다.
+            if (rl == null && s != null && s.Phase == RunPhase.Climb && s.Climb != null && _qTier >= 0 && !SameLaps(s.Climb.Cards))
+            {
+                _qLaps.Clear();
+                _qLaps.AddRange(s.Climb.Cards);
+                DrawQuestion();
             }
             if (rl == null) return;
             var t = s.Tables;
@@ -228,6 +252,13 @@ namespace MV.UI
                     slot.Card.gameObject.SetActive(false);   // 자리(Holder)는 남겨 다른 카드가 밀리지 않게
                 }
             }
+        }
+
+        bool SameLaps(List<int> laps)
+        {
+            if (laps.Count != _qLaps.Count) return false;
+            for (int i = 0; i < laps.Count; i++) if (laps[i] != _qLaps[i]) return false;
+            return true;
         }
 
         /// <summary>룰렛 카드 수만큼 자리를 만들고(첫 자리 = 디자이너 Holder) 그 상태로 그린다(중간에 붙어도 시뮬 상태 그대로).</summary>
