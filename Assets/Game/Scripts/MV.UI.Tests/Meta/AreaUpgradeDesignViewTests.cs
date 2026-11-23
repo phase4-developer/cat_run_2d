@@ -93,6 +93,13 @@ namespace MV.UI.Tests
             Assert.That(view.Elements[0].UpgradeText, Is.EqualTo(MetaPanelPresenter.GrowthValue(first.valueFormat, first.valueBase, first.valueStep, 1)));
             Assert.That(view.Elements[0].PriceLabel, Is.EqualTo("40"), "가격은 숫자만(아이콘은 프리팹)");
             Assert.That(view.AreaLabel.AreaText, Is.Not.Empty);
+            // 강화 아이콘 = 13_areaUpgrade.icon(노션 「테이블 연결 텍스쳐 정리」 Upgrade Element, MV-UI3-UPICON). 전 행이 채워져 있다.
+            var rows = T.AreaUpgrade.Sorted.Where(r => r.active).ToList();
+            for (int i = 0; i < rows.Count; i++)
+            {
+                Assert.That(rows[i].icon, Is.Not.Empty, rows[i].key + " icon");
+                Assert.That(view.Elements[i].IconShown, Is.EqualTo(rows[i].icon), rows[i].key + " 아이콘 칸");
+            }
             Assert.That(view.AdGainText, Does.StartWith("x"));
 
             p.Draw(); // 다시 그려도 칸이 늘지 않는다(풀 재사용)
