@@ -279,7 +279,7 @@ namespace MV.Data.Tests
 
         [Test]
         public void Semantics_UiResourceBothFilled_IsError() =>
-            AssertError(TsvFixture.Validate(("09_uiResource", TsvFixture.Set(TsvFixture.Read("09_uiResource"), "9001001", "address", "Tex_X"))),
+            AssertError(TsvFixture.Validate(("09_uiResource", TsvFixture.Set(TsvFixture.Read("09_uiResource"), "9002001", "address", "Tex_X"))),
                 "09_uiResource", "하나만");
 
         [Test]
