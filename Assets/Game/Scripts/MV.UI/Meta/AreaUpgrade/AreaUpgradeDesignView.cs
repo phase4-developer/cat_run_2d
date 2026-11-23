@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using jjevol;
 using MV.Data;
 using TMPro;
 using UnityEngine;
@@ -27,6 +28,8 @@ namespace MV.UI
         public readonly List<AreaUpgradeCurrency> Currencies = new List<AreaUpgradeCurrency>();
         /// <summary>배너 보상 글자(시안 「x100」).</summary>
         public string AdGainText;
+        /// <summary>광고 보상 첫 항목(08_adPlacement.adReward) 종류·id. 배너 아이콘은 그 07_consumeType 아이콘(MV-UI-ICONSRC).</summary>
+        public int AdRewardType, AdRewardId;
         /// <summary>배너 버튼 행동 id(사용 가능 여부는 그 행동의 Enabled).</summary>
         public string AdActionId;
     }
@@ -51,6 +54,8 @@ namespace MV.UI
         [SerializeField] Button adButton;
         /// <summary><c>Banner/Current Value Text (TMP)</c>.</summary>
         [SerializeField] TMP_Text adGain;
+        /// <summary><c>Banner_AdsReward</c> 보상 재화 아이콘(AddressableImage, 프리팹에 그림 없음).</summary>
+        [SerializeField] AddressableImage adRewardIcon;
 
         [Header("Upgrade List Scroll View")]
         [SerializeField] RectTransform listContent;
@@ -74,6 +79,7 @@ namespace MV.UI
         public IReadOnlyList<LobbyCurrencyParts> Currencies => currencies;
         public Button AdButton => adButton;
         public string AdGainText => adGain ? adGain.text : null;
+        public string AdRewardIconShown => adRewardIcon && adRewardIcon.enabled ? adRewardIcon.spriteName : null;
 
         /// <summary>프리팹 연결 확인(시험·검사용): 빠진 참조 이름 목록.</summary>
         public string MissingRefs()
@@ -86,6 +92,7 @@ namespace MV.UI
             if (!areaLabel) miss.Add(nameof(areaLabel));
             if (!adButton) miss.Add(nameof(adButton));
             if (!adGain) miss.Add(nameof(adGain));
+            if (!adRewardIcon) miss.Add(nameof(adRewardIcon));
             if (!listContent) miss.Add(nameof(listContent));
             if (!elementTemplate) miss.Add(nameof(elementTemplate));
             else
@@ -140,6 +147,8 @@ namespace MV.UI
 
             _adActionId = d.AdActionId;
             if (adGain) adGain.text = d.AdGainText ?? "";
+            MvConsumeIcon.TryGet(d.Tables, d.AdRewardType, d.AdRewardId, out var adAtlas, out var adSprite);
+            HudImage.SetOrHide(adRewardIcon, adAtlas, adSprite);
             if (adButton) adButton.interactable = model.FindAction(d.AdActionId)?.Enabled == true;
 
             int n = 0;

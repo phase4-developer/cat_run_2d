@@ -408,5 +408,23 @@ namespace MV.Data.Tests
             AssertWarning(TsvFixture.Validate((GodLevelData.Table, Set(GodLevelData.Table, "495001003", "dmgPct", "5"))),
                 GodLevelData.Table, "dmgPct가 레벨 순으로 줄어듭니다");
         }
+
+        /// <summary>소모 종류 → 아이콘은 07_consumeType이 정본(재화 행 → 01_wealth.icon, 고정 `=이름`, 카드 → 110_card.icon). MV-UI-ICONSRC.</summary>
+        [Test]
+        public void ConsumeIcon_ReadsConsumeTypeTable()
+        {
+            Assert.That(MvConsumeIcon.TryWealth(T, "gold", out var a, out var s), Is.True);
+            Assert.That(a, Is.EqualTo(T.ConsumeType.Get(ConsumeType.Wealth).iconAtlas));
+            Assert.That(s, Is.EqualTo(T.Wealth.RawRows.First(r => r.Get("type") == "gold").Get("icon")));
+            Assert.That(MvConsumeIcon.TryGet(T, 100, 0, out a, out s), Is.True, "광고 = 고정 그림");
+            Assert.That(s, Is.EqualTo(T.ConsumeType.Get(100).FixedIcon));
+            var card = T.Card.Datas.First(c => !string.IsNullOrEmpty(c.icon));
+            Assert.That(MvConsumeIcon.TryGet(T, 601, card.id, out a, out s), Is.True, "카드 = 110_card.icon");
+            Assert.That(s, Is.EqualTo(card.icon));
+            Assert.That(a, Is.EqualTo(T.ConsumeType.Get(601).iconAtlas));
+            var noIcon = T.Wealth.RawRows.FirstOrDefault(r => string.IsNullOrEmpty(r.Get("icon")));
+            if (noIcon != null) Assert.That(MvConsumeIcon.TryWealth(T, noIcon.Get("type"), out _, out _), Is.False, "그림 없는 재화");
+            Assert.That(MvConsumeIcon.TryGet(T, 607, 0, out _, out _), Is.False, "아이콘 없는 종류");
+        }
     }
 }

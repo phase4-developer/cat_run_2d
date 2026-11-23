@@ -22,7 +22,7 @@ namespace MV.UI
 
     /// <summary>
     /// 디자이너 <c>Slot_Currency</c>(공용 재화 칸)의 값 연결(공용 부품 MV-UI3-HUD2). 겉(배경·배치)은 프리팹이 정하고,
-    /// 아이콘 = 01_wealth.icon(Atlas_UI_Icon), 글자 = 받은 문자열(숫자 모양은 부르는 쪽이 정한다).
+    /// 아이콘 = <see cref="MvConsumeIcon"/>(07_consumeType 재화 행 → 01_wealth.icon, MV-UI-ICONSRC), 글자 = 받은 문자열(숫자 모양은 부르는 쪽이 정한다).
     /// 인게임 상단 줄과 로비가 같은 프리팹·같은 컴포넌트를 쓴다.
     /// </summary>
     public sealed class HudCurrencySlot : UIBase
@@ -51,17 +51,14 @@ namespace MV.UI
             if (value) value.text = text;
         }
 
-        /// <summary>01_wealth에서 type 행의 icon. 행이 없으면 null.</summary>
-        public static string IconOf(MvTables t, string wealthType)
-        {
-            if (t == null || string.IsNullOrEmpty(wealthType)) return null;
-            return t.Wealth.Get(wealthType)?.icon;
-        }
+        /// <summary>재화 아이콘 그림 이름(<see cref="MvConsumeIcon.TryWealth"/>). 없으면 null.</summary>
+        public static string IconOf(MvTables t, string wealthType) =>
+            MvConsumeIcon.TryWealth(t, wealthType, out _, out var sprite) ? sprite : null;
 
         protected override void _DrawContents()
         {
-            var sprite = IconOf(_data.Tables, _data.WealthType);
-            if (sprite != null) HudImage.Set(icon, MvAtlas.UiIcon, sprite);
+            MvConsumeIcon.TryWealth(_data.Tables, _data.WealthType, out var atlas, out var sprite);
+            HudImage.SetOrHide(icon, atlas, sprite);
             if (value) value.text = _data.Text ?? "";
         }
     }

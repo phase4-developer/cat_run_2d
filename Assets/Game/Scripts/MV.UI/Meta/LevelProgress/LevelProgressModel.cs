@@ -24,6 +24,8 @@ namespace MV.UI
         public long[] Milestones;
         public bool Locked;
         public bool Current;
+        /// <summary>Milestone 재화(영혼 = <c>rescueCat</c>) 아이콘(07_consumeType, MV-UI-ICONSRC). 없으면 null.</summary>
+        public string SoulsAtlas, SoulsIcon;
     }
 
     /// <summary>
@@ -36,6 +38,10 @@ namespace MV.UI
     {
         readonly List<LevelProgressAreaInfo> _areas = new List<LevelProgressAreaInfo>();
 
+        /// <summary>Milestone·팝업 머리 영혼 아이콘(07_consumeType 재화 rescueCat). 없으면 null.</summary>
+        public string SoulsAtlas { get; private set; }
+        public string SoulsIcon { get; private set; }
+
         /// <summary>아래(첫 Area)부터 위로.</summary>
         public IReadOnlyList<LevelProgressAreaInfo> Areas => _areas;
 
@@ -44,6 +50,8 @@ namespace MV.UI
             if (tables == null) throw new ArgumentNullException(nameof(tables));
             var m = new LevelProgressModel();
             long prevNeed = 0;
+            MvConsumeIcon.TryWealth(tables, MV.Save.MvWealthIds.TypeOf(MV.Save.MvWealthIds.Souls), out var soulsAtlas, out var soulsIcon);
+            m.SoulsAtlas = soulsAtlas; m.SoulsIcon = soulsIcon;
             foreach (var z in tables.Zone.Sorted)
             {
                 bool first = true;
@@ -72,6 +80,8 @@ namespace MV.UI
                         Milestones = ms,
                         Locked = a.areaNo > currentAreaNo,
                         Current = a.areaNo == currentAreaNo,
+                        SoulsAtlas = soulsAtlas,
+                        SoulsIcon = soulsIcon,
                     });
                     first = false;
                     prevNeed = a.needSouls;

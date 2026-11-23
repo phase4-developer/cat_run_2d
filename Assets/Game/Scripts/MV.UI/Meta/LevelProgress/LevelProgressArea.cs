@@ -52,7 +52,7 @@ namespace MV.UI
             {
                 var it = items[i];
                 if (!it) continue;
-                if (i < need) it.ShowUI(new LevelProgressItemData(_info.Milestones[i], i == 0, label));
+                if (i < need) it.ShowUI(new LevelProgressItemData(_info.Milestones[i], i == 0, label, _info.SoulsAtlas, _info.SoulsIcon));
                 else it.HideUI();
             }
         }

@@ -80,6 +80,13 @@ namespace MV.UI.Tests
         [Test]
         public void Render_OneElementPerActiveTableRow_FromPool()
         {
+            var prevTables = MvTables.Current;
+            MvTables.Current = T; // 가격 아이콘은 현재 표에서(MV-UI-ICONSRC)
+            try { RenderBody(); } finally { MvTables.Current = prevTables; }
+        }
+
+        void RenderBody()
+        {
             var (_, view) = NewPopup();
             var (p, port) = NewPresenter(view);
             p.Open();
@@ -101,6 +108,11 @@ namespace MV.UI.Tests
                 Assert.That(view.Elements[i].IconShown, Is.EqualTo(rows[i].icon), rows[i].key + " 아이콘 칸");
             }
             Assert.That(view.AdGainText, Does.StartWith("x"));
+            // 아이콘은 프리팹이 아니라 표(07_consumeType)에서: 가격 = 16_levelPrice 재화, 광고 배너 = 08_adPlacement.adReward.
+            Assert.That(view.Elements[0].PriceIconShown, Is.Not.Null.And.Not.Empty, "가격 재화 아이콘");
+            var ad = T.AdPlacement.ByKey(AreaUpgradePresenter.AdKey).adReward[0];
+            MvConsumeIcon.TryGet(T, ad.TypeId, ad.Id, out _, out var adIcon);
+            Assert.That(view.AdRewardIconShown, Is.EqualTo(adIcon), "광고 보상 아이콘");
 
             p.Draw(); // 다시 그려도 칸이 늘지 않는다(풀 재사용)
             Assert.That(view.Elements.Count, Is.EqualTo(ActiveRows));

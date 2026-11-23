@@ -103,6 +103,7 @@ MonoBehaviour:
   rebirthDisable: {fileID: 5611367844055885502}
   rebirthLabel: {fileID: 7568540522860035645}
   rebirthGain: {fileID: 3479075362621712604}
+  rebirthGainIcon: {fileID: 5340076990077413087}
 --- !u!1001 &1100
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -351,7 +352,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   context: {fileID: 0}
-  icon: {fileID: 0}
+  icon: {fileID: 1897323612863918682}
   priceText: {fileID: 7970086395535013924}
   showOwnedCount: 0
   ownedCountFirst: 0
@@ -616,3 +617,25 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8716627978708297596, guid: bbf4ae2a76efe534da65c257a357506e, type: 3}
   m_PrefabInstance: {fileID: 1100}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5340076990077413087 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5340076990077411987, guid: bbf4ae2a76efe534da65c257a357506e, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
+--- !u!114 &1897323612863918682 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1897323612863919638, guid: bbf4ae2a76efe534da65c257a357506e, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage

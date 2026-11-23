@@ -108,6 +108,7 @@ namespace MV.UI
 
             d.GoLabel = MvUiText.Ui(GoLabelKey);
             d.GainText = "+" + MvUiFormat.Fmt(Port.RebirthPending); // 숫자 표기라 언어팩 키 없음
+            d.GainWealth = MvWealthIds.TypeOf(MvWealthIds.RbToken); // 환생 지급 재화(MvLocalMetaBackend: wealth.Gain(RbToken))
             d.GoActionId = GoId;
             m.Confirm = new MetaAction(GoId, d.GoLabel, d.State == RebirthHeaderState.Ready && !_asking);
             m.Data = d;

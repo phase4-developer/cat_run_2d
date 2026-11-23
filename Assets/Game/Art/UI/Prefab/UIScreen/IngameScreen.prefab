@@ -15435,10 +15435,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4947984736092305906}
     m_Modifications:
-    - target: {fileID: 536204970081797695, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 57c5b2ebc7042f94db66e117241a2f15, type: 3}
     - target: {fileID: 3833396815359111810, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -15523,10 +15519,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7006887062925239614, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 57c5b2ebc7042f94db66e117241a2f15, type: 3}
     - target: {fileID: 8397856689403497890, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
       propertyPath: m_Name
       value: Slot_Currency (1)
