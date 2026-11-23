@@ -35,6 +35,13 @@ namespace MV.UI
             ShowUI();
         }
 
+        /// <summary>보이는 영혼 수를 관문 칸에 넘긴다(Area Lock). <paramref name="animate"/>면 풀릴 때 Lock 연출.</summary>
+        public void SetSouls(long souls, bool animate)
+        {
+            for (int i = 0; i < ItemCount; i++)
+                if (items[i] && items[i].gameObject.activeSelf) items[i].SetSouls(souls, animate);
+        }
+
         protected override void _DrawContents()
         {
             if (_info == null) return;
@@ -52,7 +59,7 @@ namespace MV.UI
             {
                 var it = items[i];
                 if (!it) continue;
-                if (i < need) it.ShowUI(new LevelProgressItemData(_info.Milestones[i], i == 0, label, _info.SoulsAtlas, _info.SoulsIcon));
+                if (i < need) it.ShowUI(new LevelProgressItemData(_info.Milestones[i], i == 0, label, _info.SoulsAtlas, _info.SoulsIcon, _info.UnlockSouls));
                 else it.HideUI();
             }
         }

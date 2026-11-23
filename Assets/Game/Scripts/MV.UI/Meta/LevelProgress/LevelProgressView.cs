@@ -124,7 +124,7 @@ namespace MV.UI
             Canvas.ForceUpdateCanvases();
             LayoutRebuilder.ForceRebuildLayoutImmediate(content);
             BuildStepValues(model);
-            SetSouls(_data.FromSouls);
+            SetSouls(_data.FromSouls, false);
 
             if (_data.ToSouls != _data.FromSouls || _data.AutoClose)
                 _rise = StartCoroutine(Rise(_data.FromSouls, _data.ToSouls, _data.AutoClose));
@@ -135,7 +135,7 @@ namespace MV.UI
         {
             if (_data == null) return;
             StopRise();
-            SetSouls(_data.ToSouls);
+            SetSouls(_data.ToSouls, false);
         }
 
         IEnumerator Rise(long from, long to, bool autoClose)
@@ -146,10 +146,10 @@ namespace MV.UI
             {
                 t += Time.unscaledDeltaTime;
                 float k = riseCurve != null ? riseCurve.Evaluate(Mathf.Clamp01(t / riseDuration)) : Mathf.Clamp01(t / riseDuration);
-                SetSouls(from + (long)Math.Round((to - from) * (double)k));
+                SetSouls(from + (long)Math.Round((to - from) * (double)k), true);
                 yield return null;
             }
-            SetSouls(to);
+            SetSouls(to, true);
             if (autoClose)
             {
                 if (autoCloseHold > 0f) yield return new WaitForSecondsRealtime(autoCloseHold);
@@ -169,9 +169,11 @@ namespace MV.UI
 
         void OnClosePressed() => CloseRequested?.Invoke();
 
-        void SetSouls(long souls)
+        void SetSouls(long souls, bool animate)
         {
             _shownSouls = souls;
+            for (int i = 0; i < _areas.Count; i++)
+                if (_areas[i].gameObject.activeSelf) _areas[i].SetSouls(souls, animate);
             soulsText.text = MvUiFormat.Fmt(souls);
             HudImage.SetOrHide(soulsIcon, _data.Model.SoulsAtlas, _data.Model.SoulsIcon);
             progressBar.SetValueWithoutNotify(ValueAt(_data.Model.StepPosition(souls)));
