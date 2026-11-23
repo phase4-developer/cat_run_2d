@@ -23,12 +23,16 @@ namespace MV.Boot
         public bool LastSettleOk { get; private set; }
 
         public bool MapOpen => IsActive && _map != null;
-        public bool ResultOpen => IsActive && _result != null;
+        /// <summary>결과 팝업이 받기를 기다린다(받기 뒤 닫히는 중이면 false: 로비는 닫힘 완료 뒤).</summary>
+        public bool ResultOpen => IsActive && _result != null && !_result.Closing;
         bool IsActive => _active != null && _active();
 
-        /// <summary>로비로 돌아가면 팝업 참조를 버린다.</summary>
+        /// <summary>로비로 돌아가면 팝업 참조를 버린다. 결과 팝업이 아직 열려 있으면(받기 없이 로비로 온 경로) 남지 않게 닫는다.</summary>
         public void Clear()
         {
+            var result = _result;
+            _active = null; // 아래 강제 닫기가 부르는 늦은 콜백은 무시된다
+            if (result && result.IsOpen) result.ForceClosePopup(false);
             _result = null;
             _map = null;
             _active = null;
