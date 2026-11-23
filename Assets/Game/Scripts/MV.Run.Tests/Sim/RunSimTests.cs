@@ -452,6 +452,30 @@ namespace MV.Run.Tests
             Assert.AreEqual(new[] { 4, 0 }, Ev(sim, RunEventType.RouletteStart)[0].Ids);
         }
 
+        /// <summary>MV-UI3-CLIMBFX3: 도착으로 받기면 날기 시작한 카드는 화면 도착(CardArrived) 때만 적용하고, 그 전에는 룰렛이 끝나지 않는다.</summary>
+        [Test]
+        public void Climb_RouletteCards_ApplyOnScreenArrival()
+        {
+            var sim = Sim(new HandLevel().Add("stair", 0, 3));
+            sim.CardApplyOnArrival = true;
+            sim.State.Stairs = 80;
+            Run(sim, 60 * 20);
+            var s = sim.State;
+            var fly = Ev(sim, RunEventType.RouletteFly);
+            Assert.AreEqual(2, fly.Count, "두 장 모두 날기 시작");
+            Assert.AreEqual(0, Ev(sim, RunEventType.CardApplied).Count, "도착 전에는 적용하지 않음");
+            Assert.IsNotNull(s.Roulette, "적용 전에는 룰렛이 끝나지 않음");
+            sim.CardArrived(fly[0].A);
+            sim.CardArrived(fly[0].A);   // 같은 카드 도착을 두 번 알려도 한 번만
+            sim.CardArrived(99);         // 범위 밖은 무시
+            Run(sim, 1);
+            Assert.AreEqual(1, Ev(sim, RunEventType.CardApplied).Count, "알린 카드만 적용");
+            sim.CardArrived(fly[1].A);
+            Run(sim, 60 * 2);
+            Assert.AreEqual(2, Ev(sim, RunEventType.CardApplied).Count);
+            Assert.IsNull(s.Roulette, "모두 적용되면 룰렛 종료");
+        }
+
         [Test]
         public void Climb_NoStairsToastAndContinue()
         {

@@ -471,7 +471,7 @@ namespace MV.Data
 
         static void CheckPairValues(MvTables t, MvValidationReport r)
         {
-            // 카드 비행 시간은 330 rlFlyMs 하나만 둔다(300 flyCard.* 삭제, MV-UI3-HUD3). HUD 카드 비행은 시뮬 FlyLeft를 읽는다.
+            // 카드 비행 시간은 HUD Card Pos 프리팹 flySec 하나만 둔다(300 flyCard.*·330 rlFlyMs 삭제, MV-UI3-HUD3·CLIMBFX3). 시뮬은 화면 도착 때 적용한다.
             var gate = t.ReceiveCondition.ByKey("sgatePass");
             if (gate != null && TryConfig(t, RunConfigKeys.Fly_RemoveMs, out double fly) && Math.Abs(gate.delayMs - fly) > 1e-9)
                 r.Warn(ReceiveConditionData.Table, gate.id, "delayMs", $"sgatePass delayMs {gate.delayMs} ≠ 300_runConfig fly.removeMs {fly}");

@@ -574,7 +574,8 @@ namespace MV.Data
         static readonly string[] s_configColumns =
         {
             "lap", "maxCards", "lapTier", "stepH", "stepD", "stepW", "catLift", "z0Gap", "shiftFrom",
-            "shiftExtra", "landGap", "popSec", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay", "rlFlyMs",
+            "shiftExtra", "landGap", "popSec", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay",
+            // 카드 비행 시간(rlFlyMs)은 HUD Card Pos 프리팹 flySec으로 옮겼다(MV-UI3-CLIMBFX3). 시뮬은 화면 도착 때 카드를 적용한다.
             "rlEndPad",
             // 기획서 계단 압축·연출 시간(MV-SPEC-02 6-5, 노션 「계단연출 상세설명」 2절, 사용자 2026-11-16 「수치만 적용」):
             // K = N ≤ cmpFrom면 N, 아니면 cmpFrom + ceil((N − cmpFrom)/C), T = min(riseCap, riseBase + risePerStep·(K − 1)),
@@ -638,7 +639,7 @@ namespace MV.Data
             enterSound = S(r, "enterSound");
         }
 
-        /// <summary>설정 행 값(`lap`, `rlFlyMs` …).</summary>
+        /// <summary>설정 행 값(`lap`, `rlFlyDelay` …).</summary>
         public double this[string column] => _config.TryGetValue(column, out var v) ? v : throw new KeyNotFoundException($"330_climb {id}: {column}");
     }
 

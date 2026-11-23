@@ -540,7 +540,7 @@ function startRoulette(tiers, m){
 |---|---|---|
 | 확정 1.0 + 0.45i | 1.0 / 0.45 | `330_climb[default].rlEndBase / rlEndStep` |
 | 넘김 0.06, 감속 구간 0.4, 계수 0.35 | | `330_climb[default].rlFlipSec`, `rlSlowWin`, `rlSlowK` |
-| 비행 대기 1.5, 비행 620ms, 종료 여유 0.3 | | `330_climb[default].rlFlyDelay`, `rlFlyMs`, `rlEndPad` |
+| 비행 대기 1.5, 비행 620ms, 종료 여유 0.3 | | `330_climb[default].rlFlyDelay`, `rlEndPad`. 비행 620ms는 HUD Card Pos 프리팹 `flySec`(0.62)이고 시뮬은 화면 도착 때 카드를 적용한다(MV-UI3-CLIMBFX3, 사용자 2026-11-23) |
 | 카드 등급·풀 | | `110_card.tier`, `.group`, `.active`; 뽑기 풀은 `111_cardPool` |
 
 ### 4.8.5 applyCard `L2311~2316`

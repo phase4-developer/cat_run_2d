@@ -297,7 +297,7 @@ namespace MV.UI.Tests
             Canvas.ForceUpdateCanvases();   // 띠(Vertical Layout) 칸 자리를 실제 배치로
             Assert.That(view.SkillCard.FaceVisible, Is.True, "확정 카드 그림 칸(첫 칸)이 Mask 창 안");
             Assert.AreEqual(HudGrade.CardName(T, pick), view.SkillCard.Title);
-            k.Flying = true; k.FlyLeft = .62;
+            k.Flying = true;
             view.TickRun(0);
             k.Applied = true; s.Cards[pick.id] = 1; s.CardOrder.Add(pick.id);
             s.Roulette = null;
@@ -309,9 +309,65 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void CardPos_Fly_ClaimsFlight_ReportsArrival_AndKeepsCardUntilApplied()
+        {
+            // MV-UI3-CLIMBFX3: 비행 시간 = Card Pos 프리팹 flySec. 날기 시작하면 맡고, 도착하면 카드 번호를 알린다. 시뮬이 적용해 Holder가 그려질 때 비행 카드를 반납한다.
+            MV.View.RouletteCardFlight.ClearForTests();
+            MV.View.RouletteCardFlight.BeginRun();
+            var arrived = new List<int>();
+            MV.View.RouletteCardFlight.Arrived += arrived.Add;
+            try
+            {
+                var (_, view) = NewHud();
+                var pos = view.CardPos;
+                Assert.That(pos.FlySec, Is.GreaterThan(0f), "비행 시간은 프리팹 값");
+                var s = NewState();
+                var pick = s.CardPool.First();
+                var k0 = new RouletteCard { Tier = pick.tier, Pick = pick };
+                var k1 = new RouletteCard { Tier = pick.tier, Pick = s.CardPool.Last() };
+                var rl = new RouletteState();
+                rl.Cards.Add(k0); rl.Cards.Add(k1);
+                s.Roulette = rl;
+                k1.Chosen = k1.Flying = true;
+                pos.Tick(s);
+                pos.Fly(s, k1, null);   // 에디터 시험은 연출 없이 바로 도착
+                Assert.That(MV.View.RouletteCardFlight.TakeClaim(1), Is.True, "날기 시작한 카드(번호 1)를 맡음");
+                CollectionAssert.AreEqual(new[] { 1 }, arrived, "도착하면 그 카드 번호를 알림");
+                var drained = new List<int>();
+                MV.View.RouletteCardFlight.DrainArrivals(drained.Add);
+                CollectionAssert.AreEqual(new[] { 1 }, drained, "런 프레임이 시뮬로 넘길 도착");
+                Assert.AreEqual(1, pos.FlyingCount, "시뮬이 적용하기 전에는 도착 자리에 남음(빈 프레임 없음)");
+                s.Cards[k1.Pick.id] = 1; s.CardOrder.Add(k1.Pick.id);
+                pos.Tick(s);
+                Assert.AreEqual(0, pos.FlyingCount, "적용되어 Holder가 그려지면 반납");
+            }
+            finally { MV.View.RouletteCardFlight.ClearForTests(); }
+        }
+
+        [Test]
+        public void RectMotion_Fit_UsesTargetScale_EvenWhenWorldUnitsAreTiny()
+        {
+            // MV-UI3-CLIMBFX3: 캔버스 lossyScale ≈ 0.005면 world 크기가 1보다 작다. 예전 `> 1` 보호 조건이 배율을 1로 바꿔 Card Pos(0.45)로 줄지 않았다.
+            var root = new GameObject("root", typeof(RectTransform));
+            _made.Add(root);
+            root.transform.localScale = Vector3.one * 0.0052f;
+            var card = new GameObject("card", typeof(RectTransform)).GetComponent<RectTransform>();
+            card.SetParent(root.transform, false);
+            card.sizeDelta = new Vector2(310, 450);
+            var pos = new GameObject("pos", typeof(RectTransform)).GetComponent<RectTransform>();
+            pos.SetParent(root.transform, false);
+            pos.localScale = Vector3.one * 0.45f;
+            var target = new GameObject("target", typeof(RectTransform)).GetComponent<RectTransform>();
+            target.SetParent(pos, false);
+            target.sizeDelta = new Vector2(310, 450);
+            HudRectMotion.Fit(card, target, out _, out float scale);
+            Assert.AreEqual(0.45f, scale, 1e-4f, "도착 배율 = Card Pos 배율");
+        }
+
+        [Test]
         public void CardPos_FlyTarget_IsTheSlotTheCardWillTake_EvenWhileEarlierCardsAreStillFlying()
         {
-            // MV-UI3-CLIMBFX2: 시뮬은 도착 때 CardOrder에 넣는다(330 rlEndStep < rlFlyMs라 비행이 겹친다).
+            // MV-UI3-CLIMBFX2: 시뮬은 도착 때 CardOrder에 넣는다(룰렛 카드 간격이 비행 시간보다 짧으면 비행이 겹친다).
             var order = new List<int> { 10 };
             var none = new List<int>();
             Assert.AreEqual(0, CardPosSection.SlotFor(order, none, 10), "이미 얻은 카드는 그 자리");
@@ -379,14 +435,14 @@ namespace MV.UI.Tests
             Assert.That(roll[1].Rolling, Is.True, "둘째 장은 계속 롤링");
             Assert.That(roll[0].HasFlash && roll[0].HasSparkle, Is.True, "완료 연출 리소스(Flash·Effect_Sparkle) 연결");
 
-            k0.Flying = true; k0.FlyLeft = .62;
+            k0.Flying = true;
             var holder0 = roll[0].transform.parent;
             view.TickRun(0);
             Assert.That(roll[0].gameObject.activeSelf, Is.False, "날아간 카드는 자리에서 숨김");
             Assert.That(holder0.gameObject.activeSelf, Is.True, "자리(Holder)는 남아 다른 카드가 밀리지 않음");
             Assert.That(view.SkillRoll.Active, Is.True, "둘째 장이 남음");
 
-            k1.Chosen = true; k1.Flying = true; k1.FlyLeft = .62;
+            k1.Chosen = true; k1.Flying = true;
             view.TickRun(0);
             Assert.That(view.SkillRoll.Active, Is.False);
             s.Roulette = null;

@@ -136,8 +136,6 @@ namespace MV.Run
         public bool Chosen;
         public double FlyAt = -1;
         public bool Flying;
-        /// <summary>비행 남은 시간(실시간, 330 rlFlyMs). HUD 카드 비행이 이 값을 읽는다.</summary>
-        public double FlyLeft;
         public bool Applied;
         public int Flips;
     }
@@ -256,6 +254,8 @@ namespace MV.Run
         public int NextReceiveId;
         /// <summary>화면이 알린 도착(수령 번호). 다음 Tick 처음에 받는다(MV-UI3-STAIRFX3).</summary>
         public readonly List<int> ReceiveArrivals = new List<int>();
+        /// <summary>화면이 알린 룰렛 카드 도착(카드 번호, <see cref="RunSim.CardArrived"/>). 다음 Tick 처음에 적용하고 비운다.</summary>
+        public readonly List<int> CardArrivals = new List<int>();
 
         // ---- 재화(런 안, 실수 누적) ----
         public double Gold;

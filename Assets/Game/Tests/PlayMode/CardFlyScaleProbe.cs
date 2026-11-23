@@ -1,0 +1,184 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using MV.Boot;
+using MV.Save;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
+
+namespace MV.Tests
+{
+    /// <summary>
+    /// 룰렛 카드 비행 크기 보간 점검(MV-UI3-CLIMBFX3): 실제 Game 씬에서 계단·룰렛을 일으키고, Card Pos로 나는 카드의
+    /// 크기(localScale)를 프레임마다 적어 `Logs/CardFlyProbe/fly_log.txt`(git 제외)에 남긴다.
+    /// 디자이너 보고 「1 → 0.45가 서서히가 아니라 한 번에 바뀌어 보인다」(2026-11-23)를 숫자로 본다. 이름으로 골라 돌린다(Explicit).
+    /// 이 시험 어셈블리는 MV.UI·MV.Run을 참조하지 않으므로(asmdef는 통합 Writer) 형식 이름·반사로 읽는다.
+    /// </summary>
+    [Explicit("진단: 이름으로 골라 돌린다")]
+    public sealed class CardFlyScaleProbe
+    {
+        const float TimeoutSeconds = 240f;
+        const int StairsTopUp = 90;
+
+        static string LogDir => Path.Combine(Path.GetDirectoryName(Application.dataPath), "Logs", "CardFlyProbe");
+
+        MvMemorySavePrefs _prefs;
+        readonly StringBuilder _log = new StringBuilder();
+
+        [SetUp]
+        public void Setup()
+        {
+            _prefs = MvSave.UseMemoryPreferences();
+            Directory.CreateDirectory(LogDir);
+        }
+
+        [UnityTearDown]
+        public IEnumerator EndGame() => PlayModeIsolation.EndGame();
+
+        [TearDown]
+        public void TearDown()
+        {
+            var loop = MvGameLoop.Current;
+            if (loop != null) { loop.ScriptedDrag = null; loop.FixedDt = null; loop.TicksPerFrame = 1; }
+            File.WriteAllText(Path.Combine(LogDir, "fly_log.txt"), _log.ToString());
+            MvBootMeta.Detach();
+            MvSave.Shutdown();
+            MvSave.PreferencesOverride = null;
+        }
+
+        static object Sim(MvGameLoop loop) => typeof(MvGameLoop).GetField("_sim", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(loop);
+        static object State(MvGameLoop loop) { var s = Sim(loop); return s?.GetType().GetProperty("State")?.GetValue(s); }
+        static object Get(object o, string name)
+        {
+            if (o == null) return null;
+            var t = o.GetType();
+            var f = t.GetField(name, BindingFlags.Instance | BindingFlags.Public);
+            if (f != null) return f.GetValue(o);
+            return t.GetProperty(name, BindingFlags.Instance | BindingFlags.Public)?.GetValue(o);
+        }
+        static void Set(object o, string name, object v)
+        {
+            var t = o.GetType();
+            var f = t.GetField(name, BindingFlags.Instance | BindingFlags.Public);
+            if (f != null) { f.SetValue(o, Convert.ChangeType(v, f.FieldType)); return; }
+            var p = t.GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
+            p.SetValue(o, Convert.ChangeType(v, p.PropertyType));
+        }
+
+        static Type FindType(string fullName) =>
+            AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(fullName)).FirstOrDefault(t => t != null);
+
+        sealed class Flight
+        {
+            public Component Card;
+            public readonly List<(float t, float scale, Vector3 pos, bool holderShown)> Samples = new List<(float, float, Vector3, bool)>();
+        }
+
+        [UnityTest]
+        public IEnumerator RouletteCardFly_ScaleChangesOverManyFrames()
+        {
+            SceneManager.LoadScene(GameBootstrap.BootSceneName, LoadSceneMode.Single);
+            yield return null;
+            float elapsed = 0f;
+            while ((GameBootstrap.State == BootState.NotStarted || GameBootstrap.State == BootState.Running) && elapsed < TimeoutSeconds)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            Assert.AreEqual(BootState.Succeeded, GameBootstrap.State, GameBootstrap.LastError?.ToString());
+            var loop = MvGameLoop.Current;
+            Assert.IsNotNull(loop);
+
+            var posType = FindType("MV.UI.CardPosSection");
+            Assert.IsNotNull(posType, "MV.UI.CardPosSection 형식");
+            var flyingField = posType.GetField("_flying", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(flyingField, "CardPosSection._flying");
+
+            loop.ScriptedDrag = f => 0;
+            loop.FixedDt = 1 / 60.0;
+            loop.TicksPerFrame = 8;
+            Assert.IsTrue(loop.PressStart(), "출발이 런을 시작하지 않았다");
+
+            var flights = new List<Flight>();
+            var seen = new HashSet<Component>();
+            bool climbed = false;
+            float rouletteEnd = -1;
+            elapsed = 0f;
+            float t0 = Time.realtimeSinceStartup;
+            Component pos = null;
+            while (loop.Phase == MvLoopPhase.Run && elapsed < TimeoutSeconds)
+            {
+                var s = State(loop);
+                bool inClimb = s != null && Get(s, "Phase")?.ToString() == "Climb";
+                bool roulette = s != null && Get(s, "Roulette") != null;
+                if (!climbed && s != null && !inClimb && !roulette && Convert.ToInt32(Get(s, "Stairs")) < StairsTopUp) Set(s, "Stairs", StairsTopUp);
+                if (inClimb || roulette)
+                {
+                    climbed = true;
+                    // 정산·룰렛은 실시간으로 돌려 HUD 비행(실시간)과 같은 시계로 본다.
+                    loop.TicksPerFrame = 1;
+                    loop.FixedDt = null;
+                }
+                if (!pos) pos = UnityEngine.Object.FindFirstObjectByType(posType, FindObjectsInactive.Include) as Component;
+                if (pos && flyingField.GetValue(pos) is IList list)
+                {
+                    float now = Time.realtimeSinceStartup - t0;
+                    var cur = new HashSet<Component>();
+                    foreach (Component c in list)
+                    {
+                        if (!c) continue;
+                        cur.Add(c);
+                        if (!seen.Contains(c))
+                        {
+                            flights.Add(new Flight { Card = c });   // 지난 프레임에 없던 카드 = 새 비행(풀 재사용 포함)
+                            var crt = (RectTransform)c.transform;
+                            var prt = (RectTransform)pos.transform;
+                            _log.AppendLine($"[fit] card rect {crt.rect.size} parent {crt.parent.name} parentLossy {crt.parent.lossyScale.x:0.####} | CardPos local {prt.localScale.x:0.####} lossy {prt.lossyScale.x:0.####} active {prt.gameObject.activeInHierarchy}");
+                            if (posType.GetProperty("PosCards")?.GetValue(pos) is IList holders)
+                                foreach (Component h in holders)
+                                {
+                                    var hr = (RectTransform)h.transform;
+                                    _log.AppendLine($"[fit]   holder card {hr.name} rect {hr.rect.size} local {hr.localScale.x:0.####} lossy {hr.lossyScale.x:0.####} parent {hr.parent.name} parentLocal {hr.parent.localScale.x:0.####} active {h.gameObject.activeSelf}");
+                                }
+                        }
+                        var fl = flights.Last(f => f.Card == c);
+                        fl.Samples.Add((now, c.transform.localScale.x, c.transform.localPosition, false));
+                    }
+                    seen = cur;
+                }
+                if (climbed && !inClimb && !roulette)
+                {
+                    if (rouletteEnd < 0) rouletteEnd = elapsed;
+                    if (elapsed - rouletteEnd > 1f) break;
+                }
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            float flySec = pos ? Convert.ToSingle(posType.GetProperty("FlySec")?.GetValue(pos) ?? -1f) : -1f;
+            _log.AppendLine($"graphics {SystemInfo.graphicsDeviceType} flySec {flySec} flights {flights.Count}");
+            foreach (var f in flights)
+            {
+                _log.AppendLine($"-- flight {flights.IndexOf(f)} samples {f.Samples.Count}");
+                foreach (var x in f.Samples) _log.AppendLine($"t {x.t:0.0000} scale {x.scale:0.0000} pos {x.pos.x:0.0},{x.pos.y:0.0}");
+            }
+            Debug.Log("[CardFlyScaleProbe]\n" + _log);
+
+            Assert.That(climbed, Is.True, "계단 정산이 일어나지 않았다");
+            Assert.That(flights.Count, Is.GreaterThan(0), "날아간 카드를 보지 못했다");
+            foreach (var f in flights)
+            {
+                float a = f.Samples.First().scale, b = f.Samples.Min(x => x.scale);
+                int mid = f.Samples.Count(x => x.scale < a - 0.02f && x.scale > b + 0.02f);
+                Assert.That(a - b, Is.GreaterThan(0.1f), $"비행 {flights.IndexOf(f)}: 크기가 줄지 않았다({a:0.###} → {b:0.###})");
+                Assert.That(mid, Is.GreaterThanOrEqualTo(3), $"비행 {flights.IndexOf(f)}: 중간 크기 프레임이 {mid}개뿐(한 번에 바뀜)");
+            }
+        }
+    }
+}

@@ -22,7 +22,9 @@ namespace MV.UI
             var size = card.rect.size;
             Vector2 world = Vector2.Scale(target.rect.size, target.lossyScale);
             Vector2 unit = Vector2.Scale(size, space.lossyScale);
-            scale = size.x > 1 && size.y > 1 && world.x > 1 && world.y > 1 ? Mathf.Min(world.x / unit.x, world.y / unit.y) : 1f;
+            // world·unit은 월드 단위라 캔버스 배율(lossyScale ≈ 0.005)이면 1보다 훨씬 작다. 크기 없음(0)만 막는다(MV-UI3-CLIMBFX3: `> 1`로 막아 도착 배율이 늘 1이 되던 원인).
+            scale = size.x > 0 && size.y > 0 && unit.x > 1e-6f && unit.y > 1e-6f && world.x > 1e-6f && world.y > 1e-6f
+                ? Mathf.Min(world.x / unit.x, world.y / unit.y) : 1f;
         }
 
         public static void Place(RectTransform card, RectTransform target)

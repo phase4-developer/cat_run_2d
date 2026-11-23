@@ -38,7 +38,7 @@
 5. **값의 위치는 성격으로 나눈다(7절 결정으로 갱신).**
    - 연출 값(이동·모임·비행 시간, 곡선, 배율)은 섹션·부품 프리팹의 직렬화 필드에 둔다. 기획서 값이 있으면 그것을 기본값으로 쓴다.
    - 게임 결과에 영향을 주는 값(`MERGE_N`, `maxCards`, `330_climb.rl*`처럼 시뮬이 쓰는 것)은 표에 둔다.
-   - 연출이 시뮬 시간과 맞아야 하면 UI가 시뮬 상태(예: `RouletteCard.FlyLeft`)를 읽는다. 같은 값을 두 곳에 두지 않는다.
+   - 연출이 시뮬 시간과 맞아야 하면 UI가 시뮬 상태를 읽는다(룰렛 카드 비행은 반대로 HUD 프리팹 `flySec`이 정본이고 시뮬이 화면 도착을 받는다, MV-UI3-CLIMBFX3). 같은 값을 두 곳에 두지 않는다.
 6. **연출은 부품·섹션 컴포넌트가 맡는다.** 화면은 연출을 하지 않는다.
 
 ---
@@ -77,7 +77,7 @@
 | `StairSection` (`Mid/Stair`) | 계단 수·계단 레벨 게이지 | 없음 | `Mid/Stair` | 스냅샷 `Stairs`·`GaugeLv`·`GaugeFill` | SRC §12-2, 05 §5.2.5 | 스냅샷 → 섹션 | 계단 수와 게이지가 런 값과 같다(지금 빈 함수) |
 | `GradeStepSection` (`ClimbStair/Grade Step Section`) | Out/Prev/Current/Next/In 다섯 자리의 카드 이동 | `ObjectPool<HudClimbCard>`(보이는 5장 + 이동 중) | 다섯 Holder 위치는 프리팹, 원본은 `Card_Class.prefab` 에셋 | 이벤트 `ClimbTierUp`·계단 진행 → 한 칸씩 이동 | 노션 시퀀스 2·3, SRC §6-5·8-1, 330 `lap`·`riseBase`·`risePerStep` | 이벤트 → 섹션 → 카드 | Current 등급이 오를 때 카드가 한 칸씩 이동하고, 끝나면 등급이 확정된다 |
 | `SkillRollSection` (`ClimbStair/Skill Section`) | 확정된 등급의 스킬 카드 롤링 → 확정 → 제목 표시 | 롤 상태(결과는 시뮬이 이미 확정) | `Skill Section`, 카드는 `Card_Skill` | 이벤트 `Roulette*`, 시간은 330 `rl*` | §4.8.4, 05 §5.2.9, 노션 4·5 | 이벤트 → 섹션 → 카드 | 시뮬이 확정한 카드와 같은 카드에서 멈춘다 |
-| `CardPosSection` (`Mid/Card Pos`) | 확정 카드가 날아와 Holder에 쌓임 | Holder 수는 330 `maxCards`(=3). 카드는 `ObjectPool<HudSkillCard>` | `Card Pos`·Holder 위치 | 이벤트 `CardApplied`. 비행 시간은 시뮬 `FlyLeft`, 곡선은 프리팹 직렬화 필드 | §4.8.4, 노션 6, 300 `flyCard.*` | 이벤트 → 섹션 → 카드 | 최대 3장이 순서대로 쌓이고, 재시작하면 비워진다 |
+| `CardPosSection` (`Mid/Card Pos`) | 확정 카드가 날아와 Holder에 쌓임 | Holder 수는 330 `maxCards`(=3). 카드는 `ObjectPool<HudSkillCard>` | `Card Pos`·Holder 위치 | 이벤트 `CardApplied`. 비행 시간(`flySec`)·곡선은 프리팹 직렬화 필드, 도착하면 시뮬이 적용(MV-UI3-CLIMBFX3) | §4.8.4, 노션 6, 300 `flyCard.*` | 이벤트 → 섹션 → 카드 | 최대 3장이 순서대로 쌓이고, 재시작하면 비워진다 |
 | `ClimbNoticeView` (기존, dev `18bcf772`) | 계단 정산 글자·토스트 | 기존 | `HUD_ClimbNotice.prefab` | 기존 | — | 기존 | 변경 없음 |
 
 ---
@@ -123,7 +123,7 @@
 |---|---|---|
 | 손패 | 300 `ui.hand.budget / leftMin / dealCost / unitMin / unitMax / dealGapMax / dealGapMul / mergeMul / moveMul / afterMax / afterMul` | 3 / 0.4 / 0.12 / 0.07 / 0.54 / 0.05 / 0.12 / 0.92 / 0.9 / 0.04 / 0.08 |
 | 머지·스택 | 300 `MERGE_N`, `WEAPON_STACK_MAX` | 3, 0(제한 없음) |
-| 룰렛 | 330 `rlEndBase / rlEndStep / rlFlipSec / rlSlowWin / rlSlowK / rlFlyDelay / rlFlyMs / rlEndPad / maxCards` | 1.0 / 0.45 / 0.06 / 0.4 / 0.35 / 1.5 / 620 / 0.3 / 3 |
+| 룰렛 | 330 `rlEndBase / rlEndStep / rlFlipSec / rlSlowWin / rlSlowK / rlFlyDelay / rlEndPad / maxCards` | 1.0 / 0.45 / 0.06 / 0.4 / 0.35 / 1.5 / 0.3 / 3 (비행 시간은 Card Pos 프리팹 `flySec` 0.62, MV-UI3-CLIMBFX3) |
 | 카드 비행 | 300 `flyCard.time / removeMs / bezier` | 0.6 / 620 / .55,0,.75,.4 |
 | 계단 | 330 `lap / lapTier / riseBase / risePerStep / riseCap / popSec / stepPop` | 75 / 4 / 0.5 / 0.1 / 1.5 / 0.2 / 1.1 |
 | 등급 문턱 | 115_cardTier `need` | 5/10/20/40/75 |
@@ -149,7 +149,7 @@ dev에서 실제로 읽는 코드를 확인했습니다.
 |---|---|---|---|
 | `ui.hand.*` 11개 | 키 선언(`RunConfigKeys`)뿐, 소비 코드 없음 | 손패 UI 연출(실시간) | 표에서 제거. `WeaponSection` 프리팹의 직렬화 필드로 옮기고 기획서 값을 기본값으로 둔다 |
 | `flyCard.time`, `flyCard.bezier` | `MV.Fx/MvFlyLayer` | 카드 비행 모양 | 표에서 제거. 카드 비행을 맡는 컴포넌트의 직렬화 필드로 옮긴다 |
-| `flyCard.removeMs` | `MvFlyLayer`, 검증기가 `330.rlFlyMs`와 같은지 검사 | 시뮬 적용 시점(`rlFlyMs`)과 같아야 하는 값 | 표에서 제거. UI는 시뮬의 `FlyLeft`를 읽고, 같은 값을 두 곳에 두지 않는다. 검증기 규칙도 함께 지운다 |
+| `flyCard.removeMs` | `MvFlyLayer`, 검증기가 `330.rlFlyMs`와 같은지 검사 | 시뮬 적용 시점(`rlFlyMs`)과 같아야 하는 값 | 표에서 제거. 이후 `330.rlFlyMs`도 삭제하고 Card Pos 프리팹 `flySec`을 정본으로 둔다(MV-UI3-CLIMBFX3). 같은 값을 두 곳에 두지 않는다. 검증기 규칙도 함께 지운다 |
 | `fly.*`(재화 비행) | `MvFlyLayer`, 검증기가 `fly.removeMs`와 `108.cgatePass.delayMs`를 대조 | 재화가 상단 줄로 날아가는 연출. `removeMs`는 시뮬 지급 지연과 같아야 함 | 같은 원칙으로 제거(모양 → 직렬화 필드, `removeMs` → 시뮬 값). 범위에 넣을지 선택 |
 
 함께 바뀌는 것:

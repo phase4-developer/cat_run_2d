@@ -25,6 +25,8 @@ namespace MV.Boot
             sim.HitQuery = world.Hits != null ? world.Hits : throw new InvalidOperationException("WorldView에 RunHitWorld가 없습니다(오브젝트 뷰 필요).");
             // 우물 게이지는 계단 경험치 오브가 도착하는 순간 받는다(MV-UI3-STAIRFX3, 사용자 2026-11-20). 화면 없는 시험은 108 지연 그대로.
             sim.WellGaugeOnArrival = true;
+            // 룰렛 카드는 HUD Card Pos 비행이 도착하는 순간 적용한다(MV-UI3-CLIMBFX3, 비행 시간 = Card Pos 프리팹 flySec). 화면 없는 시험은 비행 시작 때 적용.
+            sim.CardApplyOnArrival = true;
             return sim;
         }
 
