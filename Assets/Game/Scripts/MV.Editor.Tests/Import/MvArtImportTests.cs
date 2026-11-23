@@ -52,13 +52,13 @@ namespace MV.Editor.Tests
                     continue;
                 }
                 var desired = MvArtImport.Desired(asset);
-                if (desired.FromDefaults) noManifest++;
+                // manifest 밖 PNG(디자이너 그림)는 사람이 Import 설정의 정본이라 규칙 검사에서 뺀다(MV-ART-IMPORTOWN).
+                if (desired.FromDefaults) { noManifest++; continue; }
                 var diff = MvArtImport.Differences(importer, desired);
                 if (diff.Count > 0) failures.Add(asset.AssetPath + ": " + string.Join(", ", diff));
             }
-            TestContext.WriteLine($"PNG {assets.Count}, manifest 없음 {noManifest}");
+            TestContext.WriteLine($"PNG {assets.Count}, manifest 없음(사람 설정 유지) {noManifest}");
             Assert.That(failures, Is.Empty, string.Join("\n", failures.Take(30)));
-            Assert.That(noManifest, Is.Zero, "manifest에 없는 PNG(기본값 적용)");
         }
 
         [Test]
@@ -77,11 +77,9 @@ namespace MV.Editor.Tests
             Assert.That(world.wrapMode, Is.EqualTo(TextureWrapMode.Clamp));
             Assert.That(world.filterMode, Is.EqualTo(FilterMode.Bilinear));
 
-            // UI: Full Rect
-            var ui = Importer("Assets/Game/Art/Source/Sprite/Atlas_UI_Icon", out var uiSettings);
-            Assert.That(uiSettings.spriteMeshType, Is.EqualTo(SpriteMeshType.FullRect));
-            Assert.That(ui.alphaIsTransparency, Is.True);
-            Assert.That(ui.sRGBTexture, Is.True);
+            // UI: 처음 Import 기본값은 Full Rect(그 뒤 디자이너 설정은 유지, DesignerPng_KeepsInspectorImportSettings)
+            Assert.That(MvArtRules.TryParse("Assets/Game/Art/Source/Sprite/Atlas_UI_Icon/New_Icon.png", out var uiAsset), Is.True);
+            Assert.That(MvArtImport.Desired(uiAsset).MeshType, Is.EqualTo(SpriteMeshType.FullRect));
 
             // 로비: PPU 160(03 §3.3.2)
             var lobby = Importer("Assets/Game/Art/Source/Sprite/Atlas_World_Lobby", out _);
@@ -99,6 +97,28 @@ namespace MV.Editor.Tests
                 Assert.That(p.overridden, Is.True, platform);
                 Assert.That(p.format, Is.EqualTo(TextureImporterFormat.ASTC_4x4), platform);
             }
+        }
+
+        /// <summary>
+        /// 디자이너가 Inspector에서 정한 Import 설정(9-slice·PPU)은 자동화가 다시 쓰지 않는다(MV-ART-IMPORTOWN).
+        /// 2026-11-23 Art/UI → Art/Source/Sprite/Atlas_UI_* 이동 때 자동화가 PPU 128·border 0·Full Rect로 덮어 9-slice가 찌그러졌다.
+        /// </summary>
+        [TestCase("Assets/Game/Art/Source/Sprite/Atlas_UI_GUI/Panel_Common.png", 80f, 80f, 80f, 80f)]
+        [TestCase("Assets/Game/Art/Source/Sprite/Atlas_UI_GUI/Panel_Default.png", 50f, 120f, 50f, 120f)]
+        [TestCase("Assets/Game/Art/Source/Sprite/Atlas_UI_Card/Grade/Grade_1.png", 50f, 50f, 50f, 50f)]
+        public void DesignerPng_KeepsInspectorImportSettings(string path, float l, float b, float r, float t)
+        {
+            Assert.That(MvArtRules.TryParse(path, out var asset), Is.True, path);
+            Assert.That(MvArtImport.Desired(asset).FromDefaults, Is.True, "manifest 밖(디자이너 그림)");
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            Assert.That(importer, Is.Not.Null, path);
+            Assert.That(importer.spriteBorder, Is.EqualTo(new Vector4(l, b, r, t)), "9-slice");
+            Assert.That(importer.spritePixelsPerUnit, Is.EqualTo(100f), "디자이너 PPU");
+
+            var result = MvArtSetup.EnsureAll();
+            importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            Assert.That(importer.spriteBorder, Is.EqualTo(new Vector4(l, b, r, t)), "EnsureAll 뒤에도 9-slice 유지: " + result);
+            Assert.That(importer.spritePixelsPerUnit, Is.EqualTo(100f), "EnsureAll 뒤에도 PPU 유지");
         }
 
         [Test]

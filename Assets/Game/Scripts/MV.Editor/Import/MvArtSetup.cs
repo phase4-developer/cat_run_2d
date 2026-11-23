@@ -146,13 +146,14 @@ namespace MV.Editor.Import
             {
                 if (!(AssetImporter.GetAtPath(asset.AssetPath) is TextureImporter importer)) continue; // 아직 임포트 전: 전처리가 붙인다
                 var desired = MvArtImport.Desired(asset);
-                if (desired.FromDefaults) noManifest++;
+                // manifest 밖 PNG(디자이너 그림)는 사람이 Import 설정의 정본이다. 다시 쓰지 않는다(MV-ART-IMPORTOWN, 설정 소유권).
+                if (desired.FromDefaults) { noManifest++; continue; }
                 if (MvArtImport.Differences(importer, desired).Count == 0) continue;
                 MvArtImport.Apply(importer, desired);
                 importer.SaveAndReimport();
                 r.ReimportedTextures++;
             }
-            if (noManifest > 0) r.Notes.Add($"manifest에 없는 PNG {noManifest}장(기본값 적용)");
+            if (noManifest > 0) r.Notes.Add($"manifest에 없는 PNG {noManifest}장(사람이 정한 Import 설정 유지, 검사 안 함)");
         }
 
         // ---------------- 2. SpriteAtlas v2 ----------------
