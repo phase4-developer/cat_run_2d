@@ -127,12 +127,14 @@ namespace MV.UI.Tests
         [Test]
         public void ItemSlot_Reuse_GradeZeroBackToDesignerFrame_EmptyIconHidden()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(Dir + "Common/Slot_Item.prefab");
-            var designerFrame = prefab.transform.Find("Backboard_Grade").GetComponent<UnityEngine.UI.Image>().sprite.name;
+            var slot = NewHidden<ItemSlot>("Common/Slot_Item.prefab");
+            // 에디터에서는 AddressableImage가 프리팹 그림을 이름(spriteName)으로 옮겨 둔다. 실기에서는 sprite가 남아 ItemSlot이 그 이름을 읽는다.
+            var frameImage = slot.transform.Find("Backboard_Grade").GetComponent<UnityEngine.UI.Image>();
+            var designerFrame = !string.IsNullOrEmpty(slot.GradeSprite) ? slot.GradeSprite : frameImage.sprite ? frameImage.sprite.name : null;
+            Assert.That(designerFrame, Is.Not.Null.And.Not.Empty, "Slot_Item Backboard_Grade 디자이너 틀");
             int designerGrade = ItemSlot.GradeOfFrame(T, designerFrame);
             Assert.That(designerGrade, Is.GreaterThan(0), "디자이너 틀 " + designerFrame + "이 09_uiResource 등급 틀 중 하나");
 
-            var slot = NewHidden<ItemSlot>("Common/Slot_Item.prefab");
             string graded = null, zero = null, noIcon = null;
             foreach (var r in T.Wealth.RawRows)
             {
