@@ -71,7 +71,7 @@ namespace MV.UI.Tests
             {
                 var r = HudGrade.Frame(T, tier);
                 Assert.That(r, Is.Not.Null, "단계 " + tier + " 등급 틀 행");
-                Assert.That(r.sort, Is.EqualTo(tier), "등급 틀 sort = 등급 번호");
+                Assert.That(r.grade, Is.EqualTo(tier), "15_grade 등급 번호 = 무기 단계");
                 Assert.That(HudArtTestKit.AtlasHas(r.atlas, r.sprite), r.sprite + "가 " + r.atlas + "에 없음");
             }
             int rows = T.Grade.Datas.Count;
