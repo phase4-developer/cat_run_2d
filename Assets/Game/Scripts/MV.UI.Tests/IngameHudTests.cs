@@ -74,7 +74,7 @@ namespace MV.UI.Tests
                 Assert.That(r.sort, Is.EqualTo(tier), "등급 틀 sort = 등급 번호");
                 Assert.That(HudArtTestKit.AtlasHas(r.atlas, r.sprite), r.sprite + "가 " + r.atlas + "에 없음");
             }
-            int rows = T.UiResource.GetGroup(HudGrade.FrameGroup).Count;
+            int rows = T.Grade.Datas.Count;
             Assert.That(HudGrade.Frame(T, rows + 3).sprite, Is.EqualTo(HudGrade.Frame(T, rows).sprite), "모자란 등급은 마지막 그림을 다시 쓴다");
         }
 

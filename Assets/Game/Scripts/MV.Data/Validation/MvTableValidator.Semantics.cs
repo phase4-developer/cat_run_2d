@@ -24,7 +24,6 @@ namespace MV.Data
             CheckLevelPrices(t, r);
             CheckAdPlacement(t, r);
             CheckContentOpen(t, r);
-            CheckUiResource(t, r);
             CheckValueFormats(t, r);
             CheckPairValues(t, r);
             CheckContentData(t, r);
@@ -438,18 +437,6 @@ namespace MV.Data
                     r.Error(table, id, prefix + "Type", $"조건 종류 {type}는 UnlockConditionType 값이 아닙니다");
             foreach (int value in values)
                 if (value < 0) r.Error(table, id, prefix + "Value", $"조건 값 {value}는 0 이상이어야 합니다");
-        }
-
-        static void CheckUiResource(MvTables t, MvValidationReport r)
-        {
-            foreach (var u in t.UiResource.Datas)
-            {
-                bool sprite = !string.IsNullOrEmpty(u.atlas) && !string.IsNullOrEmpty(u.sprite);
-                bool partial = string.IsNullOrEmpty(u.atlas) != string.IsNullOrEmpty(u.sprite);
-                bool address = !string.IsNullOrEmpty(u.address);
-                if (partial) r.Error(UiResourceData.Table, u.id, "sprite", "atlas와 sprite는 함께 채워야 합니다");
-                else if (sprite == address) r.Error(UiResourceData.Table, u.id, "address", "`atlas+sprite`와 `address` 중 하나만 채워야 합니다");
-            }
         }
 
         // ---------------- 13·14 valueFormat ----------------

@@ -24,7 +24,7 @@ namespace MV.UI
     /// <summary>
     /// 디자이너 공용 프리팹 <c>Slot_Item</c>(등급 틀·아이콘·수량)의 루트 부품(MV-UI3-RESULT, 노션 [팝업] 인게임 결과).
     /// 겉(배치·장식)은 프리팹이 정하고 값만 넣는다:
-    /// <c>Backboard_Grade</c> = 재화 등급(<c>01_wealth.gradeId</c> → <c>15_grade.grade</c> → 09_uiResource 등급 틀, D-GRADE-TABLE),
+    /// <c>Backboard_Grade</c> = 재화 등급(<c>01_wealth.gradeId</c> → <c>15_grade</c> 등급 틀(frameSprite), D-GRADE-TABLE),
     /// <c>Holder_Icon/Icon</c> = <c>01_wealth.icon</c>, <c>Slot_Count/Count Text (TMP)</c> = 「x{0}」(노션 텍스트 포맷).
     /// 등급이 없는 재화(gradeId 0)는 디자이너 틀 그림(프리팹 <c>Backboard_Grade</c>)과 같은 등급의 틀을 다시 넣는다. 다시 쓰는 칸에 앞 보상 틀이 남지 않게 한다(MV-UI3-RESAUDIT).
     /// 아이콘이 빈 재화는 아이콘을 숨긴다(디자이너 예시 그림이 남지 않게).
@@ -78,7 +78,7 @@ namespace MV.UI
             return gradeId != 0 ? t.Grade.Get(gradeId)?.grade ?? 0 : 0;
         }
 
-        /// <summary>디자이너 틀 그림과 같은 그림을 쓰는 등급(<c>15_grade</c> → 09_uiResource 등급 틀). 없으면 0.</summary>
+        /// <summary>디자이너 틀 그림과 같은 그림을 쓰는 등급(<c>15_grade.frameSprite</c>). 없으면 0.</summary>
         public static int GradeOfFrame(MvTables t, string frameSprite)
         {
             if (t == null || string.IsNullOrEmpty(frameSprite)) return 0;

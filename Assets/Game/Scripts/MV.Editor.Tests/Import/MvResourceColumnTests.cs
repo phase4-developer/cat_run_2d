@@ -46,7 +46,7 @@ namespace MV.Editor.Tests
                 .Replace("\tweapon_2\t", "\tUI_Icon_Only_In_Card\t");
             var theme = Read("304_theme").Replace("World_Prop_Snowman", "World_Prop_Fake");
             var kind = Read("105_objectKind").Replace("World_Obj_Arch_Post_Gold", "World_Obj_Only_Somewhere");
-            var ui = Read("09_uiResource").Replace("Atlas_UI_Icon\tUI_Icon_Stair\t", "Atlas_UI_Nope\tUI_Emoji_NotYet\t");
+            var ui = Read("07_consumeType").Replace("Atlas_UI_Icon\t=Icon_Ads", "Atlas_UI_Nope\t=UI_Emoji_NotYet");
             var god = Read("113_god").Replace("Tex_God_Pisces", "Tex_Only_File").Replace("Tex_God_Aries", "weapon_1").Replace("Tex_God_Thunder", "Tex_God_thunder");
             var pet = Read("430_pet").Replace("\tPet_sparrow\t", "\tPet_NotYetMade\t");
             Assume.That(item, Does.Contain("UI_Icon_Weapon_Nope").And.Contain("UI_Icon_Only_In_Card"));
@@ -57,7 +57,7 @@ namespace MV.Editor.Tests
             Assume.That(pet, Does.Contain("Pet_NotYetMade"));
 
             var source = new MvMemoryTableSource(new MvTsvDirectorySource(dir)).Set("103_item", item).Set("304_theme", theme).Set("105_objectKind", kind)
-                .Set("09_uiResource", ui).Set("113_god", god).Set("430_pet", pet);
+                .Set("07_consumeType", ui).Set("113_god", god).Set("430_pet", pet);
             var tables = new MvTables();
             tables.LoadAll(source);
 
@@ -85,7 +85,7 @@ namespace MV.Editor.Tests
             var wrongAtlas = errors.FirstOrDefault(e => e.Table == "103_item" && e.Value == "UI_Icon_Only_In_Card");
             Assert.That(wrongAtlas, Is.Not.Null, "다른 아틀라스에만 있는 이름");
             Assert.That(wrongAtlas.Message, Does.Contain(MvAtlas.UiCard));
-            Assert.That(errors.Any(e => e.Table == "09_uiResource" && e.Value == "UI_Emoji_NotYet" && e.Atlas == "Atlas_UI_Nope"), Is.True,
+            Assert.That(errors.Any(e => e.Table == "07_consumeType" && e.Value == "UI_Emoji_NotYet" && e.Atlas == "Atlas_UI_Nope"), Is.True,
                 "규칙에 없는 아틀라스는 그림이 없어도 오류");
             var godCase = errors.FirstOrDefault(e => e.Table == "113_god" && e.Value == "Tex_God_thunder");
             Assert.That(godCase, Is.Not.Null, "주소 대소문자");
@@ -106,14 +106,14 @@ namespace MV.Editor.Tests
         {
             var report = new MvResourceCheckReport();
             report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.Unextracted, Table = "430_pet", RowId = "430001002", Column = "icon", Value = "UI_Icon_Pet_b", Atlas = MvAtlas.UiIcon });
-            report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.Pending, Table = "09_uiResource", RowId = "9002002", Column = "sprite", Value = "UI_Icon_Brick", Atlas = MvAtlas.UiIcon });
+            report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.Pending, Table = "07_consumeType", RowId = "100", Column = "iconColumn", Value = "UI_Icon_Brick", Atlas = MvAtlas.UiIcon });
             report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.Error, Table = "103_item", RowId = "1", Column = "icon", Value = "x", Atlas = MvAtlas.UiIcon });
             report.Issues.Add(new MvResIssue { Kind = MvResIssueKind.OtherOwner, Table = "03_sound", RowId = "1", Column = "soundName", Value = "Sfx_A", Atlas = MvAtlas.Address });
 
             var text = MvResourceColumnChecker.FormatUnextractedList(report);
             var lines = text.Split('\n').Where(l => l.Length > 0).ToList();
             Assert.That(lines.Count, Is.EqualTo(3), "머리 줄 + 미추출 2(오류·다른 계약은 빠짐)");
-            Assert.That(lines[1], Does.StartWith("Pending\t09_uiResource"), "표 이름 순 정렬");
+            Assert.That(lines[1], Does.StartWith("Pending\t07_consumeType"), "표 이름 순 정렬");
 
             var tmp = Path.Combine(Path.GetTempPath(), "mv_res_unextracted_" + Guid.NewGuid().ToString("N") + ".tsv");
             try
