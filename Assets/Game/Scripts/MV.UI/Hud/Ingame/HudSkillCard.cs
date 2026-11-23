@@ -100,7 +100,7 @@ namespace MV.UI
             CardId = 0;
             Rolling = false;
             SetGrade(t, tierIndex);
-            if (title) title.text = ""; // 카드가 정해지기 전(「?」·롤링)에는 제목 없음(사용자 2026-11-23 「차라리 공백으로」). 정해지면 ShowCard가 카드 이름을 넣는다.
+            if (title) title.text = HudGrade.CardTierName(t, HudGrade.CardTier(t, tierIndex));
             if (question) question.SetActive(true);
             if (strip) { strip.gameObject.SetActive(false); strip.anchoredPosition = _stripHome; }
             if (maskBack) maskBack.SetActive(false);
@@ -113,7 +113,7 @@ namespace MV.UI
             CardId = 0;
             Rolling = true;
             SetGrade(t, tierIndex);
-            if (title) title.text = ""; // 카드가 정해지기 전(「?」·롤링)에는 제목 없음(사용자 2026-11-23 「차라리 공백으로」). 정해지면 ShowCard가 카드 이름을 넣는다.
+            if (title) title.text = HudGrade.CardTierName(t, HudGrade.CardTier(t, tierIndex));
             if (question) question.SetActive(false);
             if (maskBack) maskBack.SetActive(false);
             if (mask) mask.SetActive(true);
