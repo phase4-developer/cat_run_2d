@@ -491,6 +491,26 @@ MonoBehaviour:
     m_Localized: "\uC8FC\uAC04 \uD018\uC2A4\uD2B8 \uD3EC\uC778\uD2B8"
     m_Metadata:
       m_Items: []
+  - m_Id: 1595208903782400
+    m_Localized: COMMON
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1595208954114048
+    m_Localized: UNCOMMON
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1595208954114049
+    m_Localized: RARE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1595208954114050
+    m_Localized: EPIC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1595208954114051
+    m_Localized: LEGENDARY
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
