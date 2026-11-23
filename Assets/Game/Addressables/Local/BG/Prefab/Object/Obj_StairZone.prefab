@@ -12630,6 +12630,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7162318336533136970}
     m_Modifications:
+    - target: {fileID: 1789952794372512408, guid: e6d82339a5ded5f47a43942ad7729e0c, type: 3}
+      propertyPath: onEnableBehaviour
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2878253843842417220, guid: e6d82339a5ded5f47a43942ad7729e0c, type: 3}
       propertyPath: m_Name
       value: Obj_Card_StairZone
@@ -12692,6 +12696,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7162318336533136970}
     m_Modifications:
+    - target: {fileID: 5400147186843092764, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -8890522067525861984, guid: b9f9b27bdc4f92949a07f64b73f7fd0e, type: 2}
     - target: {fileID: 6392658425363057222, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
       propertyPath: m_Name
       value: Obj_Count
