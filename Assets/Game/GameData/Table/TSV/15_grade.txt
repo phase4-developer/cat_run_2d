@@ -1,13 +1,13 @@
-id	name	grade
-15001001	Common	1
-15001002	Uncommon	2
-15001003	Rare	3
-15001004	Epic	4
-15001005	Legendary	5
-15001006	Mythic	6
-15001007	Ancient	7
-15001008	Divine	8
-15001009	Celestial	9
-15001010	Immortal	10
-15001011	Eternal	11
-15001012	Transcendent	12
+id	name	grade	frameSprite
+15001001	Common	1	Grade_1
+15001002	Uncommon	2	Grade_2
+15001003	Rare	3	Grade_3
+15001004	Epic	4	Grade_4
+15001005	Legendary	5	Grade_5
+15001006	Mythic	6	Grade_6
+15001007	Ancient	7	Grade_7
+15001008	Divine	8	Grade_8
+15001009	Celestial	9	Grade_9
+15001010	Immortal	10	Grade_10
+15001011	Eternal	11	Grade_11
+15001012	Transcendent	12	Grade_12

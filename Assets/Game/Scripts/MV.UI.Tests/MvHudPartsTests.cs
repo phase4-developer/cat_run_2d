@@ -59,7 +59,7 @@ namespace MV.UI.Tests
             Assert.That(slot.gameObject.activeSelf, Is.True, "ShowUI가 켠다");
             Assert.That(slot.Tier, Is.EqualTo(2));
             Assert.That(slot.IconSprite, Is.EqualTo(item.icon), "103_item.icon");
-            Assert.That(slot.GradeSprite, Is.EqualTo(HudGrade.Frame(T, 2).sprite), "09 등급 틀");
+            Assert.That(slot.GradeSprite, Is.EqualTo(HudGrade.Frame(T, 2).sprite), "15_grade 등급 틀");
             Assert.That(slot.AttackText, Is.EqualTo(MvUiFormat.Fmt(item.dmg * 1.0)), "공격력");
         }
 

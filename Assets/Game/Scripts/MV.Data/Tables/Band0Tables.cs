@@ -340,29 +340,4 @@ namespace MV.Data
             icon = S(r, "icon");
         }
     }
-
-    // ---------------- 09_uiResource ----------------
-
-    public sealed class UiResourceData : MvRow
-    {
-        public const string Table = "09_uiResource";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Key().Group().Int("sort").Bool("active")
-            .Str("atlas").Res("sprite", MvAtlas.AtlasName).Res("address", MvAtlas.Address);
-
-        public int group { get; private set; }
-        public string atlas { get; private set; }
-        public string sprite { get; private set; }
-        public string address { get; private set; }
-
-        public UiResourceData(TSVRow r) : base(r) { }
-
-        public override void Init(TSVRow r)
-        {
-            base.Init(r);
-            group = I(r, "group");
-            atlas = S(r, "atlas");
-            sprite = S(r, "sprite");
-            address = S(r, "address");
-        }
-    }
 }
