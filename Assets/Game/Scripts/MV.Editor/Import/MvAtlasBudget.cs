@@ -49,7 +49,7 @@ namespace MV.Editor.Import
         public static List<MvAtlasEstimate> EstimateProject()
         {
             var list = new List<MvAtlasEstimate>();
-            foreach (var pair in MvArtSetup.FindAtlasFolders())
+            foreach (var pair in MvArtCatalog.FindAtlasFolders())
             {
                 var files = pair.Value.SelectMany(f => Directory.GetFiles(f, "*.png", SearchOption.AllDirectories)).ToList();
                 list.Add(Estimate(MvArtRules.SpecFor(pair.Key), files));
