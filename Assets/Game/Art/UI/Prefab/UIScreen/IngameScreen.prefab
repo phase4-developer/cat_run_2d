@@ -14004,6 +14004,7 @@ GameObject:
   - component: {fileID: 801601705282087716}
   - component: {fileID: 5406006503387730233}
   - component: {fileID: 3670062721486542187}
+  - component: {fileID: 1846203957714066301}
   m_Layer: 5
   m_Name: Badge_Override
   m_TagString: Untagged
@@ -14011,6 +14012,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &1846203957714066301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7974633557903567446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52d16b3d451948be9cb444639795351a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.HudCountBadge
+  valueText: {fileID: 6173677920568792046}
 --- !u!224 &3445418878473769972
 RectTransform:
   m_ObjectHideFlags: 0
