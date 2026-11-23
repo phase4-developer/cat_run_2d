@@ -82,23 +82,15 @@ namespace MV.Tests
             var hit = TopHit(es, center, out _);
             Debug.Log($"[LobbyStartProbe] center top={Path(hit)}");
             Assert.IsNotNull(hit, "화면 가운데에 UI가 없다");
-            var exec = Type.GetType("UnityEngine.EventSystems.ExecuteEvents, UnityEngine.UI");
             var pedType2 = Type.GetType("UnityEngine.EventSystems.PointerEventData, UnityEngine.UI");
             var ped2 = Activator.CreateInstance(pedType2, new object[] { es });
             pedType2.GetProperty("position").SetValue(ped2, center);
-            string Send(string handler, string field)
-            {
-                var hType = Type.GetType("UnityEngine.EventSystems." + handler + ", UnityEngine.UI");
-                var getHandler = exec.GetMethod("GetEventHandler").MakeGenericMethod(hType);
-                var target = (GameObject)getHandler.Invoke(null, new object[] { hit });
-                if (target == null) return handler + "=(none)";
-                var fn = exec.GetProperty(field, BindingFlags.Public | BindingFlags.Static).GetValue(null);
-                exec.GetMethods(BindingFlags.Public | BindingFlags.Static)
-                    .First(m => m.Name == "Execute" && m.IsGenericMethod).MakeGenericMethod(hType)
-                    .Invoke(null, new object[] { target, ped2, fn });
-                return handler + "=" + Path(target);
-            }
-            Debug.Log("[LobbyStartProbe] send " + Send("IPointerDownHandler", "pointerDownHandler") + " ; " + Send("IInitializePotentialDragHandler", "initializePotentialDragHandler"));
+            var areaType = Type.GetType("MV.UI.LobbyStartArea, MV.UI");
+            Assert.IsNotNull(areaType, "MV.UI.LobbyStartArea 형식 없음");
+            var area = hit.GetComponent(areaType);
+            Assert.IsNotNull(area, "가운데 맨 위 객체에 LobbyStartArea가 없다: " + Path(hit));
+            areaType.GetMethod("OnInitializePotentialDrag").Invoke(area, new[] { ped2 });
+            Debug.Log("[LobbyStartProbe] sent OnInitializePotentialDrag to " + Path(hit));
             elapsed = 0f;
             while (loop.Phase == MvLoopPhase.Lobby && elapsed < 3f) { elapsed += Time.unscaledDeltaTime; yield return null; }
             Debug.Log($"[LobbyStartProbe] phase after press={loop.Phase}");
