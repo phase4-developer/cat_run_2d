@@ -82,7 +82,7 @@ namespace MV.Fx.Tests
             Assert.AreSame(plane, req.parent, "UI Effect 루트 아래(UI 카메라가 그린다)");
             Assert.AreEqual(151, req.sortingOrder, "판 캔버스 순서 + offset → HUD 위");
             Assert.That(req.loop, Is.True, "비행이 도착에서 끝낸다(Framework 권장 loop)");
-            Assert.That(req.unscaledTime, Is.True);
+            Assert.That(req.unscaledTime, Is.False, "게임 시간(배속·일시정지 = Time.timeScale, MV-CLOCK-3)");
             Assert.AreEqual(new[] { 9 }, arrived.ToArray(), "재생하지 못해도 수령 번호를 한 번 알린다(게이지가 멈추지 않게)");
 
             req.onEnded?.Invoke(EffectEndReason.Despawned);
