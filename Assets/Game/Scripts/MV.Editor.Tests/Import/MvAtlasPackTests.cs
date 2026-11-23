@@ -12,18 +12,21 @@ namespace MV.Editor.Tests
     /// UI 아틀라스를 실제로 패킹해, 그림마다 화면에 그려지는 영역(원본 크기 그대로, FullRect·9-slice)이 아틀라스 안에서
     /// 다른 그림과 겹치지 않는지 본다(MV-UI3-LVGHOST: 지도 게이지 옆 잔상 = 이웃 그림이 비쳐 늘어난 모습으로 의심, 사용자 2026-11-23
     /// 「아틀라스 패킹할때 그림 간격 너무 타이트하게 한거아니야?」「여백을 제대로 확보 안하면 저렇게 될거같은데」).
-    /// 설정은 바꾸지 않고 사실만 확인한다.
+    /// 확인된 원인: 아틀라스 패킹은 border가 없는 축의 투명 여백을 잘라 낸다. 9-slice(Sliced·Tiled)로 그리면 원래 크기 영역을 통째로 읽어
+    /// 잘린 자리에 붙은 이웃 그림이 늘어나 보인다(Progress_Level_Fill 왼쪽 30px → Slot_Dia_Solid). Simple 그림은 잘린 만큼 덜 그려 괜찮다.
+    /// 그래서 border가 있는 그림(9-slice로 쓰는 그림)은 잘리면 안 된다. 막는 방법 = 투명 여백이 있는 축에도 border를 준다.
     /// </summary>
     public sealed class MvAtlasPackTests
     {
         const string AtlasDir = "Assets/Game/Addressables/Local/UIAtlas";
 
         [Test]
-        public void UiAtlases_PackedSprites_DrawAreaDoesNotOverlapOtherSprites()
+        public void UiAtlases_SlicedSprites_AreNotTrimmedByPacking()
         {
             var report = new List<string>();
             var problems = new List<string>();
             bool anyPacked = false;
+            var sliced = new List<(string name, Rect draw, int texId, string atlas)>();
             foreach (var path in Directory.GetFiles(AtlasDir, "*.spriteatlasv2"))
             {
                 var atlas = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(path.Replace('\\', '/'));
@@ -32,6 +35,7 @@ namespace MV.Editor.Tests
                 var sprites = new Sprite[atlas.spriteCount];
                 atlas.GetSprites(sprites);
                 var items = new List<(string name, Rect tex, Rect draw, int texId)>();
+                sliced.Clear();
                 foreach (var s in sprites)
                 {
                     if (!s) continue;
@@ -45,14 +49,15 @@ namespace MV.Editor.Tests
                     if (name.StartsWith("Progress_Level") || trimmed)
                         report.Add($"{Path.GetFileName(path)} {name} packed={s.packed} atlasTex={(s.texture ? s.texture.width + "x" + s.texture.height : "-")} rect={s.rect.width}x{s.rect.height} texRect={tex} offset={off}{(trimmed ? " 잘림(TRIM)" : "")}");
                     items.Add((name, tex, draw, texId));
+                    if (trimmed && s.border != Vector4.zero) sliced.Add((name, draw, texId, Path.GetFileName(path)));
                 }
-                foreach (var a in items)
+                foreach (var a in sliced)
+                {
+                    var hits = new List<string>();
                     foreach (var b in items)
-                    {
-                        if (a.name == b.name || a.texId != b.texId) continue;
-                        if (a.draw.Overlaps(b.tex))
-                            problems.Add($"{Path.GetFileName(path)}: {a.name} 그리는 영역 {a.draw}에 {b.name}({b.tex})이 들어옴");
-                    }
+                        if (b.name != a.name && b.texId == a.texId && a.draw.Overlaps(b.tex)) hits.Add(b.name);
+                    problems.Add($"{a.atlas}: 9-slice 그림 {a.name}의 투명 여백이 패킹에서 잘림 → 그리는 영역에 {(hits.Count > 0 ? string.Join(", ", hits) : "빈 자리")}이(가) 비침. 여백이 있는 축에도 border를 준다");
+                }
             }
             foreach (var line in report) Debug.Log("[MvAtlasPackTests] " + line);
             foreach (var line in problems) Debug.Log("[MvAtlasPackTests] 겹침 " + line);
