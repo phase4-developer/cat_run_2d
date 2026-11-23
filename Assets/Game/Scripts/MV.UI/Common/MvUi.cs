@@ -13,8 +13,6 @@ namespace MV.UI
         public const float U = 10.8f;
 
         public const string AtlasIcon = "Atlas_UI_Icon";
-        public const string AtlasHud = "Atlas_UI_Hud";
-        public const string AtlasCommon = "Atlas_UI_Common";
 
         public static readonly Color Ink = Hex("#fbf6ec");
         public static readonly Color InkDim = Hex("#c9c1b2");

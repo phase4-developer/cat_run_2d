@@ -115,17 +115,9 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4026984725779385251, guid: bbf4ae2a76efe534da65c257a357506e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6265888503966501364, guid: bbf4ae2a76efe534da65c257a357506e, type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4930795380671352987, guid: bbf4ae2a76efe534da65c257a357506e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1315357509981390721, guid: bbf4ae2a76efe534da65c257a357506e, type: 3}
       propertyPath: m_RaycastTarget
