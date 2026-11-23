@@ -204,9 +204,9 @@ namespace MV.UI.Tests
             {
                 Assert.That(c.slot, Is.Not.Null, c.wealthType + ": 공용 재화 칸 HudCurrencySlot(인게임과 같은 컴포넌트)");
                 Assert.That(c.slot.gameObject.name, Does.StartWith("Slot_Currency"), c.wealthType);
+                // Icon_Dummy는 디자이너가 Slot_Currency에서 지웠다(2026-11-23 8cc83d5d). 남아 있으면 꺼져 있어야 한다.
                 var dummy = c.slot.transform.Find("Icon_Dummy");
-                Assert.That(dummy, Is.Not.Null, c.wealthType);
-                Assert.That(dummy.gameObject.activeSelf, Is.False, c.wealthType + ": 로비 래퍼 프리팹이 Icon_Dummy를 꺼 둠(코드 제어 없음, 사용자 2026-11-19)");
+                if (dummy) Assert.That(dummy.gameObject.activeSelf, Is.False, c.wealthType + ": Icon_Dummy 끔");
                 var icon = c.slot.transform.Find("Icon");
                 Assert.That(icon, Is.Not.Null, c.wealthType);
                 Assert.That(icon.gameObject.activeSelf, Is.True, c.wealthType + ": 디자이너 원본이 꺼 둔 표 아이콘 칸 Icon을 래퍼 프리팹이 켬(둘 다 꺼지면 아이콘이 안 보임)");
