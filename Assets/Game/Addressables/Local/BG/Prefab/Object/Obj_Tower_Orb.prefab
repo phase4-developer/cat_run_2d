@@ -112192,10 +112192,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1074366628018871359}
     m_Modifications:
-    - target: {fileID: 5400147186843092764, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: -8890522067525861984, guid: b9f9b27bdc4f92949a07f64b73f7fd0e, type: 2}
     - target: {fileID: 6392658425363057222, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
       propertyPath: m_Name
       value: Obj_Count
@@ -112203,6 +112199,10 @@ PrefabInstance:
     - target: {fileID: 6392658425363057222, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7059969738496119866, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 8996763789592010812, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
       propertyPath: m_LocalScale.x
