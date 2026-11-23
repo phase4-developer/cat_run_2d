@@ -204,6 +204,18 @@ namespace MV.UI
             if (img.spriteName != sprite || img.atlasKey != atlas) img.SetAtlasSprite(atlas, sprite);
         }
 
+        /// <summary>
+        /// 표 그림을 넣되, 이름이 비면 칸을 숨긴다(MV-UI3-RESAUDIT). 다시 쓰는 칸에 앞 그림·디자이너 예시 그림이 남지 않게 한다.
+        /// 표 값이 채워지면 다시 켜진다.
+        /// </summary>
+        public static void SetOrHide(AddressableImage img, string atlas, string sprite)
+        {
+            if (!img) return;
+            bool has = !string.IsNullOrEmpty(atlas) && !string.IsNullOrEmpty(sprite);
+            img.enabled = has;
+            if (has) Set(img, atlas, sprite);
+        }
+
         /// <summary>단독 텍스처(표 주소 열, <c>Local_Texture</c>)를 넣는다. 키가 비면 프리팹 값을 그대로 둔다.</summary>
         public static void Set(AddressableTexture img, string address)
         {

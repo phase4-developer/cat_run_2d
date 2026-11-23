@@ -43,6 +43,7 @@ namespace MV.UI
         public string Title => title ? title.text : null;
         public string GradeSprite => grade ? grade.spriteName : null;
         public string FaceSprite => cells != null && cells.Length > 0 && cells[0] ? cells[0].spriteName : null;
+        public bool FaceShown => cells != null && cells.Length > 0 && cells[0] && cells[0].enabled;
         public bool QuestionShown => question && question.activeSelf;
         /// <summary>카드 그림이 실제로 보이는가(Mask·띠가 둘 다 켜지고 첫 칸이 Mask 창 안, 시험·QA).</summary>
         public bool FaceVisible => strip && strip.gameObject.activeSelf && (!mask || mask.activeSelf) && FaceInsideMask;
@@ -118,7 +119,7 @@ namespace MV.UI
             if (mask) mask.SetActive(true);
             if (strip) { strip.gameObject.SetActive(true); strip.anchoredPosition = _stripHome; }
             if (cells == null || faces == null || faces.Count == 0) return;
-            for (int i = 0; i < cells.Length; i++) HudImage.Set(cells[i], MvAtlas.UiCard, faces[i % faces.Count]);
+            for (int i = 0; i < cells.Length; i++) HudImage.SetOrHide(cells[i], MvAtlas.UiCard, faces[i % faces.Count]);
         }
 
         /// <summary>한 칸 거리(Slot_Skill 첫 두 칸 사이, 레이아웃이 정한 값). 띠를 이만큼 옮기면 둘째 칸이 첫 칸 자리에 온다.</summary>
@@ -141,8 +142,9 @@ namespace MV.UI
         {
             if (cells == null || cells.Length == 0) return;
             for (int i = 0; i < cells.Length - 1; i++)
-                if (cells[i] && cells[i + 1]) HudImage.Set(cells[i], cells[i + 1].atlasKey, cells[i + 1].spriteName);
-            HudImage.Set(cells[cells.Length - 1], MvAtlas.UiCard, next);
+                if (cells[i] && cells[i + 1])
+                    HudImage.SetOrHide(cells[i], cells[i + 1].enabled ? cells[i + 1].atlasKey : null, cells[i + 1].spriteName);
+            HudImage.SetOrHide(cells[cells.Length - 1], MvAtlas.UiCard, next);
             if (strip) strip.anchoredPosition = _stripHome;
         }
 
@@ -157,7 +159,7 @@ namespace MV.UI
             if (maskBack) maskBack.SetActive(false);
             if (mask) mask.SetActive(true);   // 원본은 Mask가 꺼져 있어, 켜지 않으면 Card Pos 자리 카드에 그림이 안 보인다
             if (strip) { strip.gameObject.SetActive(true); strip.anchoredPosition = _stripHome; }
-            if (card != null && cells != null && cells.Length > 0) HudImage.Set(cells[0], MvAtlas.UiCard, card.icon);
+            if (card != null && cells != null && cells.Length > 0) HudImage.SetOrHide(cells[0], MvAtlas.UiCard, card.icon);
             if (title) title.text = HudGrade.CardName(t, card);
         }
 
