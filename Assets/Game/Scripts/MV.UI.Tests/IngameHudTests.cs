@@ -345,6 +345,26 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void RectMotion_Fit_UsesTargetScale_EvenWhenWorldUnitsAreTiny()
+        {
+            // MV-UI3-CLIMBFX3: 캔버스 lossyScale ≈ 0.005면 world 크기가 1보다 작다. 예전 `> 1` 보호 조건이 배율을 1로 바꿔 Card Pos(0.45)로 줄지 않았다.
+            var root = new GameObject("root", typeof(RectTransform));
+            _made.Add(root);
+            root.transform.localScale = Vector3.one * 0.0052f;
+            var card = new GameObject("card", typeof(RectTransform)).GetComponent<RectTransform>();
+            card.SetParent(root.transform, false);
+            card.sizeDelta = new Vector2(310, 450);
+            var pos = new GameObject("pos", typeof(RectTransform)).GetComponent<RectTransform>();
+            pos.SetParent(root.transform, false);
+            pos.localScale = Vector3.one * 0.45f;
+            var target = new GameObject("target", typeof(RectTransform)).GetComponent<RectTransform>();
+            target.SetParent(pos, false);
+            target.sizeDelta = new Vector2(310, 450);
+            HudRectMotion.Fit(card, target, out _, out float scale);
+            Assert.AreEqual(0.45f, scale, 1e-4f, "도착 배율 = Card Pos 배율");
+        }
+
+        [Test]
         public void CardPos_FlyTarget_IsTheSlotTheCardWillTake_EvenWhileEarlierCardsAreStillFlying()
         {
             // MV-UI3-CLIMBFX2: 시뮬은 도착 때 CardOrder에 넣는다(룰렛 카드 간격이 비행 시간보다 짧으면 비행이 겹친다).
