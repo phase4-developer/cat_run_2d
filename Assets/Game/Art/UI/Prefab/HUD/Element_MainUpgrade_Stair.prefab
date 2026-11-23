@@ -1318,9 +1318,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5920684436580281456}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
   m_RaycastTarget: 1
@@ -1329,7 +1329,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 36c546bd24c23ab438f7e0a48d3fba73, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1339,6 +1339,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Card
+  m_SpriteName: Grade_1
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &5986488921530451713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1526,9 +1534,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6430198434892366142}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -1537,7 +1545,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4125c48540e3dba42a01a7ad9ad6f19c, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1547,6 +1555,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Card
+  m_SpriteName: Grade_5
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &6737883358158767194
 GameObject:
   m_ObjectHideFlags: 0
@@ -1638,9 +1654,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6839046723798648933}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -1649,7 +1665,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e28c845a715e85a42aca97f0ce4ce432, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1659,6 +1675,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Floor
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &6903277572191482570
 GameObject:
   m_ObjectHideFlags: 0

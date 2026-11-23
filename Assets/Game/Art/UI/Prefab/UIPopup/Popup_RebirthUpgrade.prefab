@@ -1787,9 +1787,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2237110697222649460}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -1798,7 +1798,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b89008f7fe142134096d3285877593dd, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1808,6 +1808,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Rebirth
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &2416780049693622184
 GameObject:
   m_ObjectHideFlags: 0
@@ -2460,9 +2468,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2924508025155794829}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -2471,7 +2479,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 445af83b4e17bec49810d7cee76e0421, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2481,6 +2489,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Ads
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!114 &1629994042351363603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2666,9 +2682,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3190144131066810242}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -2677,7 +2693,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d6ed05b1a4cb8c544a33b134b016ffee, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2687,6 +2703,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Clock
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &3262950078657733967
 GameObject:
   m_ObjectHideFlags: 0
@@ -3479,9 +3503,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4222151556962023461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -3490,7 +3514,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b89008f7fe142134096d3285877593dd, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3500,6 +3524,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Rebirth
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &4491426137934811958
 GameObject:
   m_ObjectHideFlags: 0
