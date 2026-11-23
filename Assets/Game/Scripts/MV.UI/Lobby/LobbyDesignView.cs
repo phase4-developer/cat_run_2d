@@ -471,6 +471,8 @@ namespace MV.UI
         {
             if (!img || string.IsNullOrEmpty(atlas) || string.IsNullOrEmpty(sprite)) return;
             _wanted[img] = (atlas, sprite);
+            // 그림 칸이 AddressableImage(프리팹은 키만, MV-UI-ICONSRC)면 키로 넣는다. 직접 sprite를 넣으면 칸이 켜질 때 자기 키 그림으로 되돌아간다.
+            if (img is AddressableImage addressable) { HudImage.Set(addressable, atlas, sprite); return; }
             if (!Application.isPlaying) return;
             if (_sprites.IsLoaded(atlas)) { Apply(img); return; }
             LoadThenApply(img, atlas).Forget();
