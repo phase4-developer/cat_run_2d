@@ -75,7 +75,7 @@ namespace MV.UI
         /// <summary>×1 받기: 디자이너 겉은 Backboard 터치(노션 [팝업] 인게임 결과), 기획서 「괜찮아요」(MV-SPEC-02 01 §12-3).</summary>
         public void PressCollect()
         {
-            if (!Presenter.TryCollect(1)) return;
+            if (!AcceptsInput || !Presenter.TryCollect(1)) return;
             MvSound.PlayUi(MvUiSound.ButtonClick);
             Finish();
         }
@@ -83,7 +83,7 @@ namespace MV.UI
         /// <summary>「×N 보상」(정본 L2445): 소리 click → 광고(§5.12 collect3) → 끝까지 봤으면 ×mul 정산 1번.</summary>
         public void PressX3()
         {
-            if (!Presenter.CanX3) return;
+            if (!AcceptsInput || !Presenter.CanX3) return;
             MvSound.PlayUi(MvUiSound.ButtonClick);
             var data = _presenter.Data;
             _presenter.TryCollectX3(ok =>
@@ -113,6 +113,13 @@ namespace MV.UI
 
         /// <summary>받기 뒤 닫기를 시작했다(로비 이동은 닫힘 완료 뒤).</summary>
         public bool Closing => _close != null && _close.Started && !_close.Done;
+
+        /// <summary>
+        /// 받기 입력을 받는가: 열려 있고 열림·닫힘 연출 중이 아니며 닫는 중이 아니다(사용자 2026-11-23 「연출중에는 안눌리게」).
+        /// Framework는 연출 중 전환 대상 CanvasGroup만 막아, 그 밖의 래퍼 Backboard(전체 화면 ×1 받기)는 연출 중에도 눌린다
+        /// (Framework 개선 검토 중앙 요청 9e88b3504b38). 그때 누른 입력은 버린다.
+        /// </summary>
+        public bool AcceptsInput => IsOpen && !IsTransitioning && !Closing;
 
         void Update() => _close?.Tick();
 
