@@ -134,7 +134,19 @@ namespace MV.Tests
                     {
                         if (!c) continue;
                         cur.Add(c);
-                        if (!seen.Contains(c)) flights.Add(new Flight { Card = c });   // 지난 프레임에 없던 카드 = 새 비행(풀 재사용 포함)
+                        if (!seen.Contains(c))
+                        {
+                            flights.Add(new Flight { Card = c });   // 지난 프레임에 없던 카드 = 새 비행(풀 재사용 포함)
+                            var crt = (RectTransform)c.transform;
+                            var prt = (RectTransform)pos.transform;
+                            _log.AppendLine($"[fit] card rect {crt.rect.size} parent {crt.parent.name} parentLossy {crt.parent.lossyScale.x:0.####} | CardPos local {prt.localScale.x:0.####} lossy {prt.lossyScale.x:0.####} active {prt.gameObject.activeInHierarchy}");
+                            if (posType.GetProperty("PosCards")?.GetValue(pos) is IList holders)
+                                foreach (Component h in holders)
+                                {
+                                    var hr = (RectTransform)h.transform;
+                                    _log.AppendLine($"[fit]   holder card {hr.name} rect {hr.rect.size} local {hr.localScale.x:0.####} lossy {hr.lossyScale.x:0.####} parent {hr.parent.name} parentLocal {hr.parent.localScale.x:0.####} active {h.gameObject.activeSelf}");
+                                }
+                        }
                         var fl = flights.Last(f => f.Card == c);
                         fl.Samples.Add((now, c.transform.localScale.x, c.transform.localPosition, false));
                     }
