@@ -33,6 +33,8 @@ namespace MV.View.Tests
             Factory.Init(ViewTestTables.Config(), camGo.transform, new WorldSpriteCache(), WorldView.FxAtlas);
             Factory.SetTheme(ViewTestTables.Theme("market"));
             Factory.HideLabels = true;   // TMP 글꼴 없이
+            // EditMode는 게임 시간(Time.time)이 흐르지 않는다: 기본은 실제 경과 시간(시험의 Sleep), 정확한 시간이 필요한 시험은 Clock을 바꾼다(MV-CLOCK-3).
+            Factory.Clock = () => Time.realtimeSinceStartupAsDouble;
             Factory.PrefabLoader = (a, ct) => UniTask.FromResult(new PrefabHandle(assetOf(a), null));
             Factory.SetStage(t, StageMap);
             World = go.AddComponent<RunHitWorld>();
