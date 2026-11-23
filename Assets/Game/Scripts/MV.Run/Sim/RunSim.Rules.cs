@@ -942,10 +942,10 @@ namespace MV.Run
 
         bool ValidCard(CardData c, Dictionary<int, int> picked)
         {
-            // 같은 카드는 CARD_MAX장까지만 받는다. 도달한 카드는 후보에서 뺀다(구글독스 기획서 §7-1).
+            // 같은 카드는 카드 표 maxCount장까지만 받는다(0 = 상한 없음). 도달한 카드는 후보에서 뺀다(구글독스 기획서 §7-1).
             S.Cards.TryGetValue(c.id, out int have);
             if (picked != null && picked.TryGetValue(c.id, out int soon)) have += soon;   // 같은 룰렛에서 먼저 뽑힌 장수도 센다(결과를 룰렛 시작 때 확정하므로)
-            if (have >= _p.CardMax) return false;
+            if (c.maxCount > 0 && have >= c.maxCount) return false;
             var e = T.CardEffect.Get(c.effectId);
             return !(e != null && e.type == CardEffectType.CloneAdd && S.Clones >= _p.MaxClones);
         }

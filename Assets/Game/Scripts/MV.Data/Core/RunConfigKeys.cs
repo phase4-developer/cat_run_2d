@@ -132,8 +132,6 @@ namespace MV.Data
         public const string WEAPON_STACK_MAX = "WEAPON_STACK_MAX";
         /// <summary>결계에 막힌 뒤 종료까지 초(MV-SPEC-02 6-8, Q-13). 더미 값, 적용은 MV-RUN-SPEC2.</summary>
         public const string STUCK_END_SEC = "STUCK_END_SEC";
-        /// <summary>같은 카드를 한 런에서 받을 수 있는 장수 상한. 도달한 카드는 룰렛 후보에서 뺀다(구글독스 기획서 §7-1 「상한 도달 카드는 풀에서 제외」, 사용자 2026-11-23 「상한 5」). 분신 카드는 MAX_CLONES 규칙도 따른다.</summary>
-        public const string CARD_MAX = "CARD_MAX";
         public const string ORB_COUNT = "ORB_COUNT";
         public const string ORB_RADIUS = "ORB_RADIUS";
         public const string ORB_ANG_SPEED = "ORB_ANG_SPEED";
@@ -311,7 +309,6 @@ namespace MV.Data
             MERGE_N,
             WEAPON_STACK_MAX,
             STUCK_END_SEC,
-            CARD_MAX,
             ORB_COUNT,
             ORB_RADIUS,
             ORB_ANG_SPEED,

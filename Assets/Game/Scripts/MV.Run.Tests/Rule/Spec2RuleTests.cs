@@ -217,19 +217,20 @@ namespace MV.Run.Tests
             Assert.AreEqual(take.A, Ev(sim, RunEventType.WeaponRejected).Sum(e => e.A));
         }
 
-        // ---------------- 카드 중복 상한 CARD_MAX (구글독스 기획서 §7-1 「상한 도달 카드는 풀에서 제외」) ----------------
+        // ---------------- 카드 중복 상한 110_card.maxCount (카드마다 다른 값, 구글독스 기획서 §7-1 「상한 도달 카드는 풀에서 제외」) ----------------
 
         [Test]
-        public void CardMax_TableValueIsFive()
+        public void CardMax_EveryCardRowHasCapColumn()
         {
-            Assert.AreEqual(5, RunTestTables.Load().RunConfig.I(RunConfigKeys.CARD_MAX), "사용자 2026-11-23 「상한 5」");
+            // 값은 기획자가 카드별로 고친다(지금은 더미 5). 비어 있어 0(= 상한 없음)이 되지 않았는지만 본다.
+            foreach (var c in RunTestTables.Load().Card.Sorted) Assert.Greater(c.maxCount, 0, $"카드 {c.id} {c.key}");
         }
 
         [Test]
         public void CardMax_CapReachedCardIsExcludedFromRoulette()
         {
             // 상수 난수(0.5)라 같은 등급 풀에서 항상 같은 카드가 뽑힌다. 상한 1이면 한 룰렛(3장) 안에서도 같은 카드가 두 번 나오지 않아야 한다.
-            var t = WithConfig(RunConfigKeys.CARD_MAX, "1");
+            var t = RunTestTables.Load(new Dictionary<string, string> { ["110_card"] = SetCell(RunTestTables.ReadTsv("110_card"), "id", null, "maxCount", "1") });
             var sim = Sim(new HandLevel().Add("stair", 0, 3), t: t);
             sim.State.Stairs = 155;   // 레전더리 2장 + 나머지 1장
             Run(sim, 60 * 30);
@@ -243,13 +244,12 @@ namespace MV.Run.Tests
         public void CardMax_AlreadyAtCapIsNeverDrawnAgain()
         {
             var t = RunTestTables.Load();
-            int cap = t.RunConfig.I(RunConfigKeys.CARD_MAX);
             var sim = Sim(new HandLevel().Add("stair", 0, 3), t: t);
-            foreach (var c in sim.State.CardPool) sim.State.Cards[c.id] = cap;   // 풀 전부 상한 → 뽑을 카드 없음
+            foreach (var c in sim.State.CardPool) sim.State.Cards[c.id] = c.maxCount;   // 풀 전부 상한 → 뽑을 카드 없음
             sim.State.Stairs = 80;
             Run(sim, 60 * 20);
             Assert.AreEqual(0, Ev(sim, RunEventType.CardApplied).Count);
-            foreach (var kv in sim.State.Cards) Assert.LessOrEqual(kv.Value, cap, $"카드 {kv.Key}");
+            foreach (var kv in sim.State.Cards) Assert.LessOrEqual(kv.Value, t.Card.Get(kv.Key).maxCount, $"카드 {kv.Key}");
         }
         // ---------------- Q-09 분신 상한 ----------------
 
