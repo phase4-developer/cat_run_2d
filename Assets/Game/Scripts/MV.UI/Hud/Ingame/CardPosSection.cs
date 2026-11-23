@@ -34,6 +34,8 @@ namespace MV.UI
 
         RectTransform _holderTemplate;
         readonly List<HudSkillCard> _posCards = new List<HudSkillCard>();
+        /// <summary>Holder마다 중복 배지(<c>Holder_Card/Badge_Override</c>, 없으면 null). <see cref="_posCards"/>와 같은 순서.</summary>
+        readonly List<HudCountBadge> _badges = new List<HudCountBadge>();
         readonly List<HudSkillCard> _flying = new List<HudSkillCard>();
         /// <summary>날고 있는 카드 id(아직 <see cref="RunState.CardOrder"/>에 없는 새 카드의 자리 예약, 도착하면 뺀다).</summary>
         readonly List<int> _flyingIds = new List<int>();
@@ -44,6 +46,7 @@ namespace MV.UI
         bool _ready;
 
         public IReadOnlyList<HudSkillCard> PosCards { get { Init(); return _posCards; } }
+        public IReadOnlyList<HudCountBadge> Badges { get { Init(); return _badges; } }
         public HudSkillCard FlyPrefab => flyPrefab;
         public int FlyingCount => _flying.Count;
         public float FlySec => flySec;
@@ -61,6 +64,7 @@ namespace MV.UI
                 if (!_holderTemplate) _holderTemplate = (RectTransform)h;
                 card.gameObject.SetActive(false);
                 _posCards.Add(card);
+                _badges.Add(BadgeOf(h));
             }
             if (!flyPrefab) Debug.LogError("[CardPosSection] flyPrefab(Card_Skill.prefab 에셋)이 비어 있습니다.", this);
             _pool = new ObjectPool<HudSkillCard>(
@@ -92,6 +96,7 @@ namespace MV.UI
             _landed.Clear();
             _stamp = -1;
             foreach (var c in _posCards) c.gameObject.SetActive(false);
+            foreach (var b in _badges) if (b) b.Show(0);
         }
 
         /// <summary>얻은 카드가 바뀌면 Holder 카드를 다시 그린다.</summary>
@@ -111,8 +116,14 @@ namespace MV.UI
                 if (!card) break;
                 card.gameObject.SetActive(true);
                 card.ShowCard(t, t?.Card.Get(s.CardOrder[i]));
+                var badge = _badges[i];
+                if (badge) badge.Show(s.Cards.TryGetValue(s.CardOrder[i], out int n) ? n : 1);
             }
-            for (int i = s.CardOrder.Count; i < _posCards.Count; i++) _posCards[i].gameObject.SetActive(false);
+            for (int i = s.CardOrder.Count; i < _posCards.Count; i++)
+            {
+                _posCards[i].gameObject.SetActive(false);
+                if (_badges[i]) _badges[i].Show(0);
+            }
         }
 
         /// <summary>도착한 뒤 Holder 그림이 바뀐(시뮬이 카드를 적용한) 비행 카드를 반납한다.</summary>
@@ -181,6 +192,14 @@ namespace MV.UI
             return slot;
         }
 
+        /// <summary>Holder의 중복 배지. 디자이너 Holder_Card에 없으면 경고하고 null(배지 없이 카드만 보인다).</summary>
+        HudCountBadge BadgeOf(Transform holder)
+        {
+            var b = holder.GetComponentInChildren<HudCountBadge>(true);
+            if (!b) Debug.LogWarning($"[CardPosSection] {holder.name}에 Badge_Override(HudCountBadge)가 없습니다: Assets/Game/Art/UI/Prefab/UIScreen/IngameScreen.prefab", this);
+            return b;
+        }
+
         /// <summary>index번째 Holder 카드(Holder_Card가 모자라면 첫 Holder를 복제).</summary>
         HudSkillCard PosCard(int index)
         {
@@ -192,6 +211,9 @@ namespace MV.UI
                 if (!card) break;
                 card.gameObject.SetActive(false);
                 _posCards.Add(card);
+                var badge = BadgeOf(h);
+                if (badge) badge.Show(0);
+                _badges.Add(badge);
                 added = true;
             }
             // 새 Holder는 레이아웃(Card Pos의 LayoutGroup)이 다음 갱신 때 자리를 잡는다. 지금 자리를 잡아야 비행 출발 때 첫 Holder 자리로 가지 않는다.

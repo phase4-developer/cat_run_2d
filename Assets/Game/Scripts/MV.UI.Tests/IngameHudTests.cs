@@ -438,6 +438,35 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void CardPos_DuplicateCard_ShowsCountBadge_OnlyFromTwo()
+        {
+            var (_, view) = NewHud();
+            var pos = view.CardPos;
+            var s = NewState();
+            var picks = s.CardPool.Take(2).ToList();
+            Assert.That(picks.Count, Is.EqualTo(2));
+            foreach (var c in picks) { s.Cards[c.id] = 1; s.CardOrder.Add(c.id); }
+            pos.Tick(s);
+            Assert.That(pos.Badges.Count, Is.EqualTo(pos.PosCards.Count), "Holder마다 배지(복제 Holder 포함)");
+            Assert.That(pos.Badges.Take(2).All(b => b && b.HasRefs), "디자이너 Holder_Card/Badge_Override에 HudCountBadge·Value Text 연결");
+            Assert.That(pos.Badges.Take(2).Any(b => b.Visible), Is.False, "1장이면 배지 없음(노션: 최초 비활성)");
+
+            s.Cards[picks[1].id] = 2;
+            pos.Tick(s);
+            Assert.That(pos.Badges[0].Visible, Is.False);
+            Assert.That(pos.Badges[1].Visible, Is.True, "중복 획득 = Badge_Override 켬");
+            Assert.That(pos.Badges[1].Text, Is.EqualTo("x2"), "중복된 수(최초 x2)");
+
+            s.Cards[picks[1].id] = 3;
+            pos.Tick(s);
+            Assert.That(pos.Badges[1].Text, Is.EqualTo("x3"));
+            Assert.That(pos.Badges[1].Shown, Is.EqualTo(3));
+
+            pos.ResetRun();
+            Assert.That(pos.Badges.Any(b => b && b.Visible), Is.False, "런을 새로 시작하면 배지 끔");
+        }
+
+        [Test]
         public void IngameHud_ClimbFx_ProgressOnlyOnCurrent_AndRouletteCardsRollTogether()
         {
             var (_, view) = NewHud();
