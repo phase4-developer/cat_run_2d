@@ -54,8 +54,7 @@ namespace MV.Editor.Tests
                 foreach (var prefab in Directory.GetFiles(dir, "*.prefab", SearchOption.AllDirectories))
                     foreach (Match m in Regex.Matches(File.ReadAllText(prefab), @"\{fileID: 21300000, guid: (\w+)"))
                         if (guids.TryGetValue(m.Groups[1].Value, out var name)) hits.Add(prefab.Replace('\\', '/') + " → " + name);
-            Assert.That(hits, Is.Empty, string.Join("
-", hits.Distinct()));
+            Assert.That(hits, Is.Empty, string.Join("\n", hits.Distinct()));
         }
     }
 }
