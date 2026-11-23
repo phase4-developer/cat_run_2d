@@ -203,5 +203,12 @@ namespace MV.UI
             if (!img || string.IsNullOrEmpty(atlas) || string.IsNullOrEmpty(sprite)) return;
             if (img.spriteName != sprite || img.atlasKey != atlas) img.SetAtlasSprite(atlas, sprite);
         }
+
+        /// <summary>단독 텍스처(표 주소 열, <c>Local_Texture</c>)를 넣는다. 키가 비면 프리팹 값을 그대로 둔다.</summary>
+        public static void Set(AddressableTexture img, string address)
+        {
+            if (!img || string.IsNullOrEmpty(address)) return;
+            if (img.spriteKey != address) img.spriteKey = address;
+        }
     }
 }

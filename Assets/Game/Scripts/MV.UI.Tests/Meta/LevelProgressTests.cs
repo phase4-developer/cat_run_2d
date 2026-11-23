@@ -134,6 +134,19 @@ namespace MV.UI.Tests
                 Assert.That(area.Item(i).transform.GetSiblingIndex(), Is.GreaterThan(area.Item(i - 1).transform.GetSiblingIndex()));
         }
 
+        /// <summary>301_zone·302_area mapIcon은 모든 행이 채워져 있고, 디자이너 Zone·Area 텍스처 파일 이름이다(모자란 그림은 이전 그림, MV-UI3-ZONETEX).</summary>
+        [Test]
+        public void MapIcons_AllRowsPointToZoneAreaTextures()
+        {
+            const string dir = "Assets/Game/Art/UI/Texture/Background_ZoneArea";
+            var names = new HashSet<string>(AssetDatabase.FindAssets("t:Texture2D", new[] { dir })
+                .Select(g => System.IO.Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(g))));
+            Assert.That(names, Is.Not.Empty, dir);
+            var t = MetaUiTestKit.Base();
+            foreach (var z in t.Zone.Datas) Assert.That(names, Does.Contain(z.mapIcon), "301_zone " + z.id);
+            foreach (var a in t.Area.Datas) Assert.That(names, Does.Contain(a.mapIcon), "302_area " + a.id);
+        }
+
         // MapPopup은 UIPopup(JJEvol.UI.Addressables) 파생이라 이 시험 어셈블리에서 형식으로 쓰지 않고 이름·직렬화 필드로 본다(AreaUpgradeDesignViewTests와 같은 방식).
         (Component popup, LevelProgressView view) NewMap()
         {
@@ -178,6 +191,10 @@ namespace MV.UI.Tests
             Assert.That(first.Item(1).AreaLabel.gameObject.activeSelf, Is.False);
             Assert.That(first.Item(2).MilestoneText, Is.EqualTo(MvUiFormat.Fmt(50)));
             Assert.That(view.AreaViews[1].ZoneBanner.gameObject.activeSelf, Is.False, "Zone 중간 Area는 배너 끔");
+            // 그림은 표 주소(MV-UI3-ZONETEX): Zone 배너 = 301_zone.mapIcon, Area 이름표 = 302_area.mapIcon.
+            Assert.That(model.Areas[0].ZoneIcon, Is.Not.Empty);
+            Assert.That(first.ZoneBanner.ZoneTextureKey, Is.EqualTo(model.Areas[0].ZoneIcon));
+            Assert.That(first.Item(0).AreaLabel.AreaTextureKey, Is.EqualTo(model.Areas[0].AreaIcon));
             Assert.That(view.BackgroundViews[0].BannerSlot.gameObject.activeSelf, Is.True);
             Assert.That(view.BackgroundViews[1].BannerSlot.gameObject.activeSelf, Is.False);
 
