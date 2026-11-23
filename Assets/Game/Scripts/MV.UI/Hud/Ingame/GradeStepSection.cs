@@ -84,8 +84,8 @@ namespace MV.UI
             _cur = int.MinValue;
         }
 
-        /// <summary>계단 중이면 등급 카드를 맞춘다. speed = 런 배속(이동이 그만큼 빨라진다).</summary>
-        public void Tick(RunState s, float speed)
+        /// <summary>계단 중이면 등급 카드를 맞춘다. 이동 시간은 게임 시간(배속 = Time.timeScale, MV-CLOCK-2)이라 따로 나누지 않는다.</summary>
+        public void Tick(RunState s)
         {
             Init();
             var t = s?.Tables;
@@ -96,7 +96,7 @@ namespace MV.UI
             if (cur < 0) return;
             if (cur != _cur)
             {
-                Shift(t, cur, _cur == int.MinValue || cur < _cur, shiftSec / Math.Max(1, speed));
+                Shift(t, cur, _cur == int.MinValue || cur < _cur, shiftSec);
                 _cur = cur;
                 CurrentChanged?.Invoke(cur);
             }

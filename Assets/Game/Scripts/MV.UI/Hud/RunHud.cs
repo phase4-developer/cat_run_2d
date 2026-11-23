@@ -71,8 +71,9 @@ namespace MV.UI
         void LateUpdate()
         {
             Presenter.Tick();
-            StateView?.TickRun(Time.unscaledDeltaTime);
-            if (notice) notice.Tick(Time.unscaledDeltaTime);
+            // 게임 시간(배속·일시정지 = Time.timeScale, MV-CLOCK-2): 시뮬과 같은 시계로 따라간다.
+            StateView?.TickRun(Time.deltaTime);
+            if (notice) notice.Tick(Time.deltaTime);
         }
     }
 }

@@ -197,7 +197,7 @@ namespace MV.UI
             if (sec <= 0 || !Application.isPlaying) return null;
             if (sparkle) sparkle.SetActive(true);
             float up = sec * Mathf.Clamp01(upRatio);
-            var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
+            var seq = DOTween.Sequence().SetTarget(this);
             seq.Append(transform.DOScale(peakScale, up).SetEase(Ease.OutQuad));
             seq.Append(transform.DOScale(1f, sec - up).SetEase(Ease.OutBack));
             if (flash)

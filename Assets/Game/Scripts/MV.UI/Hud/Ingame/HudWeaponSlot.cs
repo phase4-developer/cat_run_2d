@@ -143,14 +143,14 @@ namespace MV.UI
         {
             SetAlpha(0);
             float a = 0;
-            return DOTween.To(() => a, v => { a = v; SetAlpha(v); }, 1f, sec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(this);
+            return DOTween.To(() => a, v => { a = v; SetAlpha(v); }, 1f, sec).SetEase(Ease.OutQuad).SetTarget(this);
         }
 
         /// <summary>모으기: md 동안 밝아지며 scale 1.06(05 §5.3.3 wmg, ease-in, 끝 유지).</summary>
         public Tween PlayGather(float md, float scale)
         {
             LogMissingOnce();
-            var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
+            var seq = DOTween.Sequence().SetTarget(this);
             seq.Join(transform.DOScale(scale, md).SetEase(Ease.InQuad));
             if (flash)
             {
@@ -167,7 +167,7 @@ namespace MV.UI
             LogMissingOnce();
             transform.localScale = Vector3.one * fromScale;
             if (sparkle) { sparkle.SetActive(false); sparkle.SetActive(true); }
-            var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
+            var seq = DOTween.Sequence().SetTarget(this);
             seq.Join(transform.DOScale(1f, sec).SetEase(Ease.OutQuad));
             if (flash)
             {

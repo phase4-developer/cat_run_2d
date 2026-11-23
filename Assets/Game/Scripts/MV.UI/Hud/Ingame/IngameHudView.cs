@@ -127,9 +127,9 @@ namespace MV.UI
             if (weapon) weapon.Tick(dt);
             if (stair) stair.Tick(dt);
             if (s == null) return;
-            float speed = s.Setup != null ? Math.Max(1, s.Setup.TimeScale) : 1;
-            if (gradeStep) gradeStep.Tick(s, speed);
-            if (skillRoll) skillRoll.Tick(s, speed);
+            // 배속은 게임 시간(Time.timeScale)이 건다(MV-CLOCK-2). 섹션이 연출 시간을 따로 나누지 않는다.
+            if (gradeStep) gradeStep.Tick(s);
+            if (skillRoll) skillRoll.Tick(s);
             if (cardPos) cardPos.Tick(s);
 
             bool rolling = s.Roulette != null && skillRoll && skillRoll.Active;

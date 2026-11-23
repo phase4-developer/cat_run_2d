@@ -68,7 +68,7 @@ namespace MV.UI
             Vector3 fromPos = card.localPosition;
             float fromScale = card.localScale.x;
             float pm = 0, sm = 0;
-            DOTween.Sequence().SetUpdate(true).SetTarget(card)
+            DOTween.Sequence().SetTarget(card)
                 .Join(moveEase.Apply(DOTween.To(() => pm, v => pm = v, 1f, sec)))
                 .Join(scaleEase.Apply(DOTween.To(() => sm, v => sm = v, 1f, sec)))
                 .OnUpdate(() =>

@@ -203,7 +203,7 @@ namespace MV.UI
         /// <summary>계단 「?」 카드 수(얻은 바퀴 카드 + Current, 룰렛 중이면 룰렛 카드 수). 시험·QA.</summary>
         public int SlotCount => _slots.Count;
 
-        public void Tick(RunState s, float speed)
+        public void Tick(RunState s)
         {
             Init();
             if (_first == null) return;
@@ -236,12 +236,12 @@ namespace MV.UI
                         slot.Chosen = true;
                         slot.Roll?.Kill();
                         slot.Card.ShowCard(t, k.Pick);
-                        slot.Card.PlayComplete(completeSec / Math.Max(1, speed), completeScale, completeUpRatio, completeFlash);
+                        slot.Card.PlayComplete(completeSec, completeScale, completeUpRatio, completeFlash);
                     }
                     else if (k.Flips != slot.Flips)
                     {
                         slot.Flips = k.Flips;
-                        RollStep(s, slot, k.Tier, speed);
+                        RollStep(s, slot, k.Tier);
                     }
                 }
                 if (k.Flying)
@@ -291,16 +291,16 @@ namespace MV.UI
             return _faces;
         }
 
-        void RollStep(RunState s, Slot slot, int tier, float speed)
+        void RollStep(RunState s, Slot slot, int tier)
         {
             if (slot.Roll != null && slot.Roll.IsActive()) slot.Roll.Complete(true);
             var faces = Faces(s, tier);
             string next = faces.Count > 0 ? faces[0] : null;
-            float sec = rollStepSec / Math.Max(1, speed);
+            float sec = rollStepSec;
             var c = slot.Card;
             if (!HudRectMotion.Animate) { c.Advance(next); return; }
             float k = 0;
-            slot.Roll = DOTween.To(() => k, v => { k = v; c.SetStripOffset(v); }, 1f, sec).SetUpdate(true).SetTarget(c.transform)
+            slot.Roll = DOTween.To(() => k, v => { k = v; c.SetStripOffset(v); }, 1f, sec).SetTarget(c.transform)
                 .OnComplete(() => c.Advance(next));
         }
     }
