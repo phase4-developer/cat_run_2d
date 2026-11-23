@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using MV.Boot;
@@ -70,11 +71,38 @@ namespace MV.Tests
                 else if (top.name == "StartArea") tag = "ok  ";
                 else if (top.GetComponentInParent(selectable, true) != null) tag = "btn ";
                 else tag = "BLK ";
-                if (tag == "BLK " || tag == "NONE") blocked++;
+                if (tag == "BLK ") blocked++; // NONE는 배치 모드 가로 화면에서 세로 캔버스 밖
                 report.AppendLine($"{tag} ({x},{y}) {pos} top={Path(top)} | {all}");
             }
             Debug.Log("[LobbyStartProbe] raycast\n" + report);
             LogCanvases();
+
+            // 화면 가운데 맨 위 객체에 EventSystem 누름 이벤트(누름 → 드래그 준비)를 모듈과 같은 순서로 보내고 런으로 넘어가는지 본다.
+            var center = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+            var hit = TopHit(es, center, out _);
+            Debug.Log($"[LobbyStartProbe] center top={Path(hit)}");
+            Assert.IsNotNull(hit, "화면 가운데에 UI가 없다");
+            var exec = Type.GetType("UnityEngine.EventSystems.ExecuteEvents, UnityEngine.UI");
+            var pedType2 = Type.GetType("UnityEngine.EventSystems.PointerEventData, UnityEngine.UI");
+            var ped2 = Activator.CreateInstance(pedType2, new object[] { es });
+            pedType2.GetProperty("position").SetValue(ped2, center);
+            string Send(string handler, string field)
+            {
+                var hType = Type.GetType("UnityEngine.EventSystems." + handler + ", UnityEngine.UI");
+                var getHandler = exec.GetMethod("GetEventHandler").MakeGenericMethod(hType);
+                var target = (GameObject)getHandler.Invoke(null, new object[] { hit });
+                if (target == null) return handler + "=(none)";
+                var fn = exec.GetProperty(field, BindingFlags.Public | BindingFlags.Static).GetValue(null);
+                exec.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                    .First(m => m.Name == "Execute" && m.IsGenericMethod).MakeGenericMethod(hType)
+                    .Invoke(null, new object[] { target, ped2, fn });
+                return handler + "=" + Path(target);
+            }
+            Debug.Log("[LobbyStartProbe] send " + Send("IPointerDownHandler", "pointerDownHandler") + " ; " + Send("IInitializePotentialDragHandler", "initializePotentialDragHandler"));
+            elapsed = 0f;
+            while (loop.Phase == MvLoopPhase.Lobby && elapsed < 3f) { elapsed += Time.unscaledDeltaTime; yield return null; }
+            Debug.Log($"[LobbyStartProbe] phase after press={loop.Phase}");
+            Assert.AreEqual(MvLoopPhase.Run, loop.Phase, "출발 누름 뒤 런으로 넘어가지 않았다");
             Assert.AreEqual(0, blocked, "출발 영역을 가리는 점이 있다:\n" + report);
         }
 
