@@ -727,6 +727,8 @@ namespace MV.View.Tests
             var t = ViewTestTables.Load();
             var rig = PrefabRig(t);
             var f = rig.Factory;
+            double now = 0;
+            f.Clock = () => now;   // 게임 시간을 시험이 넣는다(EditMode는 Time.time이 흐르지 않는다, MV-CLOCK-3)
             var wall = Obj(t, "wall", 1, 15);
             var objs = new List<RunObject> { wall };
             rig.Frame(0, objs);
@@ -736,10 +738,10 @@ namespace MV.View.Tests
             Assert.That(f.ViewOf(1), Is.Not.Null, "죽어도 0.6초는 쓰러지는 그림이 남는다(paperDie)");
             Assert.That(Mod<ObjectMotion>(f, 1).Die, Is.GreaterThanOrEqualTo(0));
             Assert.That(ViewComp(f, 1).Dying, Is.True);
-            // Sync의 dt는 실시간(한 번에 최대 0.1초)이라 0.6초가 지나도록 여러 번 부른다.
+            // Sync의 dt는 게임 시간(한 번에 최대 0.1초)이라 0.6초가 지나도록 여러 번 부른다.
             for (int i = 0; i < 12 && f.ViewOf(1) != null; i++)
             {
-                System.Threading.Thread.Sleep(110);
+                now += 0.11;
                 rig.Frame(0, objs);
             }
             Assert.That(f.ViewOf(1), Is.Null, "다 쓰러지면 뷰를 돌려준다");
