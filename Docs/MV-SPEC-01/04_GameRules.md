@@ -530,7 +530,7 @@ function startRoulette(tiers, m){
 //              RL.t >= flyAt → flyCard → 620ms(실시간) 뒤 applyCard + buy 소리
 //              모두 도착 + 0.3초 → endRoulette
 ```
-- 결과는 **startRoulette 때 확정**(tier 순서대로 drawCard). 같은 등급 풀에서 균등, 비면 한 단계씩 아래로. 분신 4명이면 clone 카드 제외. 중복 획득 가능.
+- 결과는 **startRoulette 때 확정**(tier 순서대로 drawCard). 같은 등급 풀에서 균등, 비면 한 단계씩 아래로. 분신이 상한(`MAX_CLONES` 5, 본체 포함 6명)이면 clone 카드 제외. 중복 획득 가능하고 효과는 장수만큼 중첩한다. **카드 한 장당 상한 `CARD_MAX`(5장)에 닿은 카드는 후보에서 제외**한다(구글독스 기획서 01 탭 §7-1 「같은 카드 중첩 가능, 상한 도달 카드는 풀에서 제외」, 사용자 2026-11-23 「분신은 기획대로, 나머지도 상한 5로 일치」). 같은 룰렛에서 먼저 뽑힌 장수도 센다. 후보가 하나도 없으면 그 칸은 카드 없음.
 - 풀(신 1명): t0 atk/rate/clone1/gold, t1 orb, t2 proc/chain, t3 storm, t4 blast/frate/spear.
 - 카드 i 확정 = 1.0 + 0.45i초(게임 시간 sdt, run에선 히트스톱 영향), 적용 ≈ 확정 + 1.5 + 0.62(실시간).
 - 룰렛 중에도 mode='run'(계속 달리고 싸움). `RL`은 run/cannon/result에서 갱신(`mode !== 'lobby'`).

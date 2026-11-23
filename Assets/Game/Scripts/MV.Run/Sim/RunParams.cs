@@ -13,6 +13,8 @@ namespace MV.Run
         public double RunSpeedMid, StuckEndSec;
         /// <summary>지팡이 스택 칸 수(6-3, Q-17). 0 = 상한 없음.</summary>
         public int WeaponStackMax;
+        /// <summary>같은 카드 한 런 중복 상한(CARD_MAX). 도달한 카드는 룰렛 후보에서 뺀다.</summary>
+        public int CardMax;
         public double[] FirePhase;
         public int MaxClones;
         public double CloneXMax, DblShotDx, ProjSpawnDz, ThrowT, ProjSpeed, DmgMin, DmgMax;
@@ -46,7 +48,7 @@ namespace MV.Run
                 PlayerHalfW = c.D(RunConfigKeys.PLAYER_HALF_W), WallFaceGap = c.D(RunConfigKeys.WALL_FACE_GAP),
                 WallFaceEps = c.D(RunConfigKeys.WALL_FACE_EPS), WarnDist = c.D(RunConfigKeys.WARN_DIST),
                 StuckEndSec = c.D(RunConfigKeys.STUCK_END_SEC),
-                WeaponStackMax = c.I(RunConfigKeys.WEAPON_STACK_MAX),
+                WeaponStackMax = c.I(RunConfigKeys.WEAPON_STACK_MAX), CardMax = c.I(RunConfigKeys.CARD_MAX),
                 MaxClones = RunFormulas.CloneCap(t), CloneXMax = c.D(RunConfigKeys.CLONE_X_MAX),
                 DblShotDx = c.D(RunConfigKeys.DBL_SHOT_DX), ProjSpawnDz = c.D(RunConfigKeys.PROJ_SPAWN_DZ),
                 ThrowT = c.D(RunConfigKeys.THROW_T),
