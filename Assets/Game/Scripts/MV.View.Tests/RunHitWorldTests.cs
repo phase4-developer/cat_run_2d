@@ -411,6 +411,8 @@ namespace MV.View.Tests
         {
             var rig = new HitWorldRig(_t);
             _rigs.Add(rig);
+            double now = 0;
+            rig.Factory.Clock = () => now;   // 게임 시간을 시험이 넣는다(EditMode는 Time.time이 흐르지 않는다, MV-CLOCK-3)
             var s = NewState();
             var a = Wall(s, 1, 0, 10);
             rig.Frame(0, s.Objs);
@@ -427,7 +429,7 @@ namespace MV.View.Tests
             Assert.That(Cast(rig.World, s, 0, 0, 30), Is.Empty);
             for (int i = 0; i < 12 && rig.Factory.ViewOf(1) != null; i++)
             {
-                System.Threading.Thread.Sleep(110);   // Sync dt는 실시간(한 번에 최대 0.1초)
+                now += 0.11;   // Sync dt는 게임 시간(한 번에 최대 0.1초)
                 rig.Frame(0, s.Objs);
             }
             Assert.That(rig.Factory.ViewOf(1), Is.Null, "다 쓰러지면 회수");

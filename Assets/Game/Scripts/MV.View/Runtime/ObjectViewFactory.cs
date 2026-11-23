@@ -76,6 +76,9 @@ namespace MV.View
         string _stageMap;
         int _stamp;
         double _lastMs = -1;
+
+        /// <summary>게임 시계(초). 비면 Unity 게임 시간(<c>Time.timeAsDouble</c>, 배속·일시정지 = <c>Time.timeScale</c>, MV-CLOCK-3). EditMode 시험이 시간을 넣는다.</summary>
+        public Func<double> Clock { get; set; }
         /// <summary>마지막 <see cref="Sync"/>의 카메라 기준 z(PZ). 그 전에는 NaN.</summary>
         double _lastPz = double.NaN;
 
@@ -224,7 +227,7 @@ namespace MV.View
             if (_ctx.Cfg == null || objs == null) return;
             _stamp++;
             _lastPz = pz;
-            double nowMs = Time.realtimeSinceStartupAsDouble * 1000.0;
+            double nowMs = (Clock != null ? Clock() : Time.timeAsDouble) * 1000.0;   // 게임 시간(MV-CLOCK-3)
             double dt = _lastMs < 0 ? 0 : Math.Max(0, Math.Min(0.1, (nowMs - _lastMs) / 1000.0));
             _lastMs = nowMs;
             var frame = new ObjectFrame(nowMs / 1000.0, dt, playerZ);

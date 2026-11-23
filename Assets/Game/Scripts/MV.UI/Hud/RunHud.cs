@@ -71,9 +71,10 @@ namespace MV.UI
         void LateUpdate()
         {
             Presenter.Tick();
-            // 게임 시간(배속·일시정지 = Time.timeScale, MV-CLOCK-2): 시뮬과 같은 시계로 따라간다.
+            // 인게임 연출(획득 비행·룰렛·계단 카드·무기 머지·게이지)은 게임 시간(배속·일시정지 = Time.timeScale, MV-CLOCK-2).
             StateView?.TickRun(Time.deltaTime);
-            if (notice) notice.Tick(Time.deltaTime);
+            // 안내·알림 UI는 실제 시간(사용자 2026-11-23 「UI는 언스케일 타임으로 해야지 … 인게임내 연출이야기였어」).
+            if (notice) notice.Tick(Time.unscaledDeltaTime);
         }
     }
 }

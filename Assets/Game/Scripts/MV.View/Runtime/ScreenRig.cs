@@ -69,7 +69,7 @@ namespace MV.View
         void LateUpdate()
         {
             if (!_snowOn || _cam == null || _cfg == null) return;
-            double t = Time.realtimeSinceStartupAsDouble;   // 정본 performance.now()/1000 — 실시간
+            double t = Time.timeAsDouble;   // 정본 performance.now()/1000 — Unity에서는 게임 시간(MV-CLOCK-3)
             float aspect = Mathf.Max(0.01f, _cam.aspect);
             double w = _cfg.RefWidthPx, h = w / aspect;
             float hh = Mathf.Tan(_cam.fieldOfView * 0.5f * Mathf.Deg2Rad), hw = hh * aspect;
