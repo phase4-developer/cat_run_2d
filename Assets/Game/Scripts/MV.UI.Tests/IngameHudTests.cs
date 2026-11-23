@@ -360,8 +360,17 @@ namespace MV.UI.Tests
             var target = new GameObject("target", typeof(RectTransform)).GetComponent<RectTransform>();
             target.SetParent(pos, false);
             target.sizeDelta = new Vector2(310, 450);
-            HudRectMotion.Fit(card, target, out _, out float scale);
+            Assert.That(HudRectMotion.Fit(card, target, out _, out float scale), Is.True);
             Assert.AreEqual(0.45f, scale, 1e-4f, "도착 배율 = Card Pos 배율");
+
+            // 크기를 못 구하면 대체 값(1)으로 바꾸지 않고 지금 배율을 두고 경로를 경고로 남긴다.
+            card.localScale = Vector3.one * 0.7f;
+            target.sizeDelta = Vector2.zero;
+            Assert.That(HudRectMotion.Fit(card, target, out _, out scale), Is.False);
+            Assert.AreEqual(0.7f, scale, 1e-6f, "지금 배율 그대로");
+            UnityEngine.TestTools.LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(@"\[HudRectMotion\].*root/pos/target"));
+            HudRectMotion.Place(card, target);
+            Assert.AreEqual(0.7f, card.localScale.x, 1e-6f);
         }
 
         [Test]
