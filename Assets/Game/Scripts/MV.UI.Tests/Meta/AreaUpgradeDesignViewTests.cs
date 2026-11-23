@@ -80,6 +80,13 @@ namespace MV.UI.Tests
         [Test]
         public void Render_OneElementPerActiveTableRow_FromPool()
         {
+            var prevTables = MvTables.Current;
+            MvTables.Current = T; // 가격 아이콘은 현재 표에서(MV-UI-ICONSRC)
+            try { RenderBody(); } finally { MvTables.Current = prevTables; }
+        }
+
+        void RenderBody()
+        {
             var (_, view) = NewPopup();
             var (p, port) = NewPresenter(view);
             p.Open();
@@ -93,7 +100,19 @@ namespace MV.UI.Tests
             Assert.That(view.Elements[0].UpgradeText, Is.EqualTo(MetaPanelPresenter.GrowthValue(first.valueFormat, first.valueBase, first.valueStep, 1)));
             Assert.That(view.Elements[0].PriceLabel, Is.EqualTo("40"), "가격은 숫자만(아이콘은 프리팹)");
             Assert.That(view.AreaLabel.AreaText, Is.Not.Empty);
+            // 강화 아이콘 = 13_areaUpgrade.icon(노션 「테이블 연결 텍스쳐 정리」 Upgrade Element, MV-UI3-UPICON). 전 행이 채워져 있다.
+            var rows = T.AreaUpgrade.Sorted.Where(r => r.active).ToList();
+            for (int i = 0; i < rows.Count; i++)
+            {
+                Assert.That(rows[i].icon, Is.Not.Empty, rows[i].key + " icon");
+                Assert.That(view.Elements[i].IconShown, Is.EqualTo(rows[i].icon), rows[i].key + " 아이콘 칸");
+            }
             Assert.That(view.AdGainText, Does.StartWith("x"));
+            // 아이콘은 프리팹이 아니라 표(07_consumeType)에서: 가격 = 16_levelPrice 재화, 광고 배너 = 08_adPlacement.adReward.
+            Assert.That(view.Elements[0].PriceIconShown, Is.Not.Null.And.Not.Empty, "가격 재화 아이콘");
+            var ad = T.AdPlacement.ByKey(AreaUpgradePresenter.AdKey).adReward[0];
+            MvConsumeIcon.TryGet(T, ad.TypeId, ad.Id, out _, out var adIcon);
+            Assert.That(view.AdRewardIconShown, Is.EqualTo(adIcon), "광고 보상 아이콘");
 
             p.Draw(); // 다시 그려도 칸이 늘지 않는다(풀 재사용)
             Assert.That(view.Elements.Count, Is.EqualTo(ActiveRows));

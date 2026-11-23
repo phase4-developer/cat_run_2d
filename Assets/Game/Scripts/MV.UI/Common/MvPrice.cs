@@ -40,7 +40,7 @@ namespace MV.UI
             var costs = ToFramework(price, resources);
             if (costs == null) return false;
             button.SetInputAllowed(inputAllowed);
-            button.ShowCosts(resources, costs);
+            button.ShowCosts(resources, costs, MvConsumePresentation.Current);
             return true;
         }
     }

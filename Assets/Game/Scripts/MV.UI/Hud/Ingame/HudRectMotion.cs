@@ -14,22 +14,39 @@ namespace MV.UI
             if (Animate) DOTween.Kill(target);
         }
 
-        /// <summary>card를 target 자리·크기로(같은 부모 공간에서 target 중심, 크기는 target에 맞춘 배율).</summary>
-        public static void Fit(RectTransform card, RectTransform target, out Vector3 localPos, out float scale)
+        /// <summary>
+        /// card를 target 자리·크기로(같은 부모 공간에서 target 중심, 크기는 target에 맞춘 배율).
+        /// 크기를 구할 수 없으면(card·target rect 또는 배율이 0) false이고 <paramref name="scale"/>은 card의 지금 배율이다.
+        /// 다른 값(예: 1)으로 바꾸지 않는다: 대체 값이 원인을 숨겨 도착 배율이 늘 1이던 문제가 사흘 동안 드러나지 않았다(MV-UI3-CLIMBFX3).
+        /// world·unit은 월드 단위라 캔버스 배율(lossyScale ≈ 0.005)이면 1보다 훨씬 작다. 0만 막는다.
+        /// </summary>
+        public static bool Fit(RectTransform card, RectTransform target, out Vector3 localPos, out float scale)
         {
             var space = card.parent;
             localPos = space.InverseTransformPoint(target.TransformPoint(target.rect.center));
-            var size = card.rect.size;
             Vector2 world = Vector2.Scale(target.rect.size, target.lossyScale);
-            Vector2 unit = Vector2.Scale(size, space.lossyScale);
-            scale = size.x > 1 && size.y > 1 && world.x > 1 && world.y > 1 ? Mathf.Min(world.x / unit.x, world.y / unit.y) : 1f;
+            Vector2 unit = Vector2.Scale(card.rect.size, space.lossyScale);
+            bool ok = Mathf.Abs(unit.x) > 0 && Mathf.Abs(unit.y) > 0 && Mathf.Abs(world.x) > 0 && Mathf.Abs(world.y) > 0;
+            scale = ok ? Mathf.Min(world.x / unit.x, world.y / unit.y) : card.localScale.x;
+            return ok;
+        }
+
+        /// <summary>크기를 구하지 못한 자리를 경로로 알린다(배율은 그대로 두고 위치만 옮긴다).</summary>
+        static void WarnNoSize(RectTransform card, RectTransform target) =>
+            Debug.LogWarning($"[HudRectMotion] 크기를 구할 수 없어 배율을 그대로 둡니다(rect 또는 배율 0): 카드 {PathOf(card)} {card.rect.size}, 자리 {PathOf(target)} {target.rect.size} lossy {target.lossyScale}", card);
+
+        static string PathOf(Transform t)
+        {
+            var path = t.name;
+            for (var p = t.parent; p; p = p.parent) path = p.name + "/" + path;
+            return path;
         }
 
         public static void Place(RectTransform card, RectTransform target)
         {
             if (!target) return;
             Kill(card);
-            Fit(card, target, out var pos, out float scale);
+            if (!Fit(card, target, out var pos, out float scale)) WarnNoSize(card, target);
             card.localPosition = pos;
             card.localScale = Vector3.one * scale;
         }
@@ -46,7 +63,7 @@ namespace MV.UI
         {
             if (!target) { done?.Invoke(); return; }
             Kill(card);
-            Fit(card, target, out var pos, out float scale);
+            if (!Fit(card, target, out var pos, out float scale)) WarnNoSize(card, target);
             if (sec <= 0 || !Animate) { card.localPosition = pos; card.localScale = Vector3.one * scale; done?.Invoke(); return; }
             Vector3 fromPos = card.localPosition;
             float fromScale = card.localScale.x;
@@ -57,7 +74,12 @@ namespace MV.UI
                 .OnUpdate(() =>
                 {
                     if (!card) return;
-                    if (target) Fit(card, target, out pos, out scale);
+                    if (target)
+                    {
+                        // 비행 중 크기를 못 구한 프레임은 마지막으로 구한 도착 배율을 그대로 쓴다(위치는 계속 따라간다).
+                        bool ok = Fit(card, target, out pos, out float s2);
+                        if (ok) scale = s2;
+                    }
                     card.localPosition = Vector3.LerpUnclamped(fromPos, pos, pm);
                     card.localScale = Vector3.one * Mathf.LerpUnclamped(fromScale, scale, sm);
                 })

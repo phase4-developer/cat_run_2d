@@ -11,12 +11,16 @@ namespace MV.UI
         /// <summary>Area 첫 관문이면 Area 이름표(<c>Slot_AreaLabel</c>)를 켠다(노션: 「Area 첫번째 단계에서 동적으로 Active」).</summary>
         public readonly bool ShowLabel;
         public readonly AreaLabelData Label;
+        /// <summary>Milestone 재화 아이콘(07_consumeType). 비면 숨긴다.</summary>
+        public readonly string IconAtlas, Icon;
 
-        public LevelProgressItemData(long milestone, bool showLabel, in AreaLabelData label)
+        public LevelProgressItemData(long milestone, bool showLabel, in AreaLabelData label, string iconAtlas = null, string icon = null)
         {
             Milestone = milestone;
             ShowLabel = showLabel;
             Label = label;
+            IconAtlas = iconAtlas;
+            Icon = icon;
         }
     }
 
@@ -30,6 +34,8 @@ namespace MV.UI
         [SerializeField] RectTransform milestone;
         /// <summary><c>Milestone/Value Text (TMP)</c>.</summary>
         [SerializeField] TMP_Text milestoneText;
+        /// <summary><c>Milestone/Icon (2)</c> 재화 아이콘(AddressableImage, 프리팹에 그림 없음).</summary>
+        [SerializeField] AddressableImage milestoneIcon;
         /// <summary>중첩 <c>Slot_AreaLabel</c>의 <see cref="HudAreaLabel"/>.</summary>
         [SerializeField] HudAreaLabel areaLabel;
 
@@ -38,7 +44,8 @@ namespace MV.UI
         public RectTransform MilestoneAnchor => milestone;
         public string MilestoneText => milestoneText ? milestoneText.text : null;
         public HudAreaLabel AreaLabel => areaLabel;
-        public bool HasRefs => milestone && milestoneText && areaLabel;
+        public string MilestoneIconShown => milestoneIcon && milestoneIcon.enabled ? milestoneIcon.spriteName : null;
+        public bool HasRefs => milestone && milestoneText && areaLabel && milestoneIcon;
 
         public void ShowUI(in LevelProgressItemData data)
         {
@@ -49,6 +56,7 @@ namespace MV.UI
         protected override void _DrawContents()
         {
             if (milestoneText) milestoneText.text = MvUiFormat.Fmt(_data.Milestone);
+            HudImage.SetOrHide(milestoneIcon, _data.IconAtlas, _data.Icon);
             if (!areaLabel) return;
             if (_data.ShowLabel) areaLabel.ShowUI(_data.Label);
             else areaLabel.HideUI();

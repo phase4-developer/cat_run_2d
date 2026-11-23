@@ -35,6 +35,22 @@ namespace MV.Run
             if (receiveId > 0) State.ReceiveArrivals.Add(receiveId);
         }
 
+        /// <summary>
+        /// 룰렛 카드 적용을 화면의 카드 비행 도착으로 받는다(MV-UI3-CLIMBFX3, 사용자 2026-11-23 「비행 시간도 프리팹 인스펙터로 조절하고 싶다고 하니 표가 아니라 프리팹값으로 교체」).
+        /// 켜면 비행을 시작한 카드는 <see cref="CardArrived"/>를 받을 때 적용한다(비행 시간 = HUD Card Pos 프리팹 값).
+        /// 끄면(기본: 화면 없이 시뮬만 도는 시험) 비행을 시작하는 순간 적용한다. 실제 게임 런은 Boot가 켜고, 화면이 맡지 않은 비행은 Boot가 바로 도착으로 친다.
+        /// </summary>
+        public bool CardApplyOnArrival { get; set; }
+
+        /// <summary>
+        /// 화면이 알리는 룰렛 카드 도착(<paramref name="cardIndex"/> = RouletteFly 이벤트 A, 지금 룰렛의 카드 번호). 다음 <see cref="Tick"/> 처음에 그 카드를 적용한다.
+        /// 룰렛이 없거나 날지 않는 카드·이미 적용한 카드·범위 밖 번호는 무시한다.
+        /// </summary>
+        public void CardArrived(int cardIndex)
+        {
+            if (cardIndex >= 0) State.CardArrivals.Add(cardIndex);
+        }
+
         RunSim(RunState s, IRunRule rule)
         {
             State = s;
@@ -99,10 +115,14 @@ namespace MV.Run
             return list;
         }
 
-        /// <summary>한 프레임. realDt = 기기 프레임 간격(초). 안에서 dt = min(dtCap, realDt), gdt, sdt를 만든다(§4.13.2).</summary>
-        public void Tick(double realDt, RunInput input) => TickCore(realDt, input);
+        /// <summary>
+        /// 한 프레임. <paramref name="frameDt"/> = 이 프레임의 게임 시간(초, 배속 포함 — Unity <c>Time.deltaTime</c>, 배속·일시정지 = <c>Time.timeScale</c>).
+        /// 안에서 한 걸음 dt = min(dtCap, frameDt / 배속)으로 나눠 배속 수만큼 돌고(§4.13.2 gdt·sdt), 「실시간」 타이머도 같은 게임 시간을 따른다(MV-CLOCK-1).
+        /// 배속 1이면 예전(dt = min(dtCap, realDt))과 같다. 화면 없는 시험은 dt를 직접 넣는다.
+        /// </summary>
+        public void Tick(double frameDt, RunInput input) => TickCore(frameDt, input);
 
         partial void OnCreated();
-        partial void TickCore(double realDt, RunInput input);
+        partial void TickCore(double frameDt, RunInput input);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MV.Data;
 using MV.Fx;
 using MV.Run;
@@ -12,11 +13,14 @@ namespace MV.Boot
     /// <summary>
     /// 런 한 프레임: 입력 → <see cref="RunSim.Tick"/>(×틱 수) → <see cref="RunSim.DrainEvents"/> 한 번 → 같은 목록을 소리·이펙트·월드 뷰·HUD(<see cref="MvHudEvents"/>)에 넘긴다.
     /// 계단 경험치 오브 도착(<see cref="StairOrbFlight"/>)은 Tick 앞에 시뮬로 넘겨 실제 게이지를 그 순간 올린다(MV-UI3-STAIRFX3).
+    /// 룰렛 카드 비행 도착(<see cref="RouletteCardFlight"/>)도 Tick 앞에 시뮬로 넘겨 카드를 그 순간 적용한다(MV-UI3-CLIMBFX3).
     /// HUD의 계속 보이는 값은 상태 스냅샷(<see cref="IRunHudSource"/>)으로 읽는다.
     /// </summary>
     sealed class MvRunFrame : IDisposable
     {
         readonly MvRunInputReader _input;
+        /// <summary>지난 프레임에 비행을 시작한 룰렛 카드 번호. 다음 프레임 Tick 앞까지 화면이 맡지 않았으면 바로 도착으로 친다.</summary>
+        readonly List<int> _cardFlyPending = new List<int>();
 
         public MvRunFrame(MvTables tables)
         {
@@ -28,6 +32,8 @@ namespace MV.Boot
         {
             _input.Reset();
             StairOrbFlight.BeginRun();
+            RouletteCardFlight.BeginRun();
+            _cardFlyPending.Clear();
         }
 
         /// <summary>로비 출발 키를 이번 프레임에 눌렀는가(Input System 액션).</summary>
@@ -38,7 +44,7 @@ namespace MV.Boot
         /// <param name="playing">런 단계(결과 단계에서는 입력 없이 시뮬만 끝까지 돈다).</param>
         /// <param name="scriptedDrag">시험 훅: 런 프레임 → 목표 tx(null = 드래그 없음). null이면 포인터를 읽는다.</param>
         /// <param name="frame">이번 런의 프레임 번호(<paramref name="scriptedDrag"/>에 넘긴다).</param>
-        /// <param name="fixedDt">시험 훅: 실시간 dt 대신 쓸 dt.</param>
+        /// <param name="fixedDt">시험 훅: 실제 프레임 간격 대신 쓸 1배속 프레임 간격(배속은 <c>Time.timeScale</c>로 곱한다).</param>
         public void Step(RunSim sim, WorldView world, bool playing, Func<int, double?> scriptedDrag, int frame, double? fixedDt, int ticks)
         {
             var s = sim.State;
@@ -51,10 +57,13 @@ namespace MV.Boot
             }
             else input = _input.Read(s);
 
-            double dt = fixedDt ?? Time.unscaledDeltaTime;
+            // 게임 시간(배속·일시정지 = Time.timeScale, MV-CLOCK-1). 시험 훅 fixedDt는 1배속 프레임 간격이라 배속을 곱한다.
+            double dt = fixedDt.HasValue ? fixedDt.Value * Time.timeScale : Time.deltaTime;
             int n = Math.Max(1, ticks);
             // 오브가 도착한(또는 도착 못 하고 끝난) 수령 몫을 이번 Tick 처음에 받는다(MV-UI3-STAIRFX3, 시간을 재지 않는다).
             StairOrbFlight.DrainArrivals(sim.ReceiveArrived);
+            SettleUnclaimedCardFly(sim);
+            RouletteCardFlight.DrainArrivals(sim.CardArrived);
             for (int i = 0; i < n; i++)
             {
                 sim.Tick(dt, input);
@@ -66,6 +75,8 @@ namespace MV.Boot
             MvFx.OnRunEvents(events);
             world.OnRunEvents(events);   // 오브젝트 맞음·우물 벽돌 빠짐(06 §6.13)
             SettleUnclaimedWellGauge(sim, events);
+            foreach (var e in events)
+                if (e.Type == RunEventType.RouletteFly) _cardFlyPending.Add(e.A);
             MvHudEvents.OnRunEvents(events);   // HUD 섹션(무기 지급·계단 등급·룰렛·카드 적용 연출, MV-UI3-HUD1)
             foreach (var e in events)
                 if (e.Type == RunEventType.Toast) MvUiToast.Show(RunToastText.Of(e));   // 모은 마나 없음·5 미만 냥파워 없음 등(런 HUD가 띄움)
@@ -77,6 +88,18 @@ namespace MV.Boot
         /// 오브로 맡지 못한 우물 게이지 수령(탑 뷰 없음·재생기 없음)은 바로 도착으로 친다. 게이지가 멈추지 않게(MV-UI3-STAIRFX3).
         /// 맡은 수령은 오브마다 도착을 알린다(<see cref="StairOrbEmitter"/>).
         /// </summary>
+        /// <summary>
+        /// 화면(HUD Card Pos)이 맡지 않은 룰렛 카드 비행(HUD 없음·프리팹 없음·도착 자리 없음)은 바로 도착으로 친다. 룰렛이 멈추지 않게(MV-UI3-CLIMBFX3).
+        /// HUD는 비행을 시작한 프레임의 상태를 읽어 맡으므로 한 프레임 뒤(다음 Tick 앞)에 본다.
+        /// </summary>
+        void SettleUnclaimedCardFly(RunSim sim)
+        {
+            if (_cardFlyPending.Count == 0) return;
+            foreach (int i in _cardFlyPending)
+                if (!RouletteCardFlight.TakeClaim(i)) sim.CardArrived(i);
+            _cardFlyPending.Clear();
+        }
+
         static void SettleUnclaimedWellGauge(RunSim sim, System.Collections.Generic.List<RunEvent> events)
         {
             foreach (var e in events)

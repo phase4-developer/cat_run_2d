@@ -8,10 +8,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 198548914720915188, guid: 62228b6ad5d7827459b2e264f3ff23b0, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 5854e23fe29d1a249a4a51d2e8f0a11f, type: 3}
     - target: {fileID: 1438404548808568777, guid: 62228b6ad5d7827459b2e264f3ff23b0, type: 3}
       propertyPath: m_Color.b
       value: 0.14901961
@@ -161,9 +157,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7114305031713559803, guid: 62228b6ad5d7827459b2e264f3ff23b0, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 5854e23fe29d1a249a4a51d2e8f0a11f, type: 3}
+      propertyPath: m_SpriteName
+      value: Grade_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7114305031713559803, guid: 62228b6ad5d7827459b2e264f3ff23b0, type: 3}
+      propertyPath: m_AtlasKey
+      value: Atlas_UI_Card
+      objectReference: {fileID: 0}
     - target: {fileID: 7751277944831556249, guid: 62228b6ad5d7827459b2e264f3ff23b0, type: 3}
       propertyPath: m_Color.a
       value: 0.8235294
@@ -181,9 +181,13 @@ PrefabInstance:
       value: 0.80784315
       objectReference: {fileID: 0}
     - target: {fileID: 9205368531711958971, guid: 62228b6ad5d7827459b2e264f3ff23b0, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 7c58b4b010b146b47a79a72ffb842908, type: 3}
+      propertyPath: m_SpriteName
+      value: Icon_Income
+      objectReference: {fileID: 0}
+    - target: {fileID: 9205368531711958971, guid: 62228b6ad5d7827459b2e264f3ff23b0, type: 3}
+      propertyPath: m_AtlasKey
+      value: Atlas_UI_Icon
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

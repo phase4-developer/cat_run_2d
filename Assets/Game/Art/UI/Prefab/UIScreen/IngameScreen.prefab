@@ -310,9 +310,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 580166391836240511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -321,7 +321,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 514299bcd194a5247ada5b0e4ebabbeb, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -331,6 +331,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Setting
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!114 &6373653172927565270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1621,9 +1629,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3368823992463078922}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -1632,7 +1640,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e28c845a715e85a42aca97f0ce4ce432, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1642,6 +1650,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Floor
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &3485901389300023395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1696,9 +1712,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3485901389300023395}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -1707,7 +1723,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9b7ef32e53ec4884d8ddb749b51bfac5, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1717,6 +1733,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Play_2x
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &3581610484340962868
 GameObject:
   m_ObjectHideFlags: 0
@@ -7888,9 +7912,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6199926080703061018}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -7899,7 +7923,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e607402c31d450a4980616f3a1524188, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7909,6 +7933,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: Atlas_UI_Icon
+  m_SpriteName: Icon_Play_1x
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &6267465989125351156
 GameObject:
   m_ObjectHideFlags: 0
@@ -15435,10 +15467,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4947984736092305906}
     m_Modifications:
-    - target: {fileID: 536204970081797695, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 57c5b2ebc7042f94db66e117241a2f15, type: 3}
     - target: {fileID: 3833396815359111810, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -15523,10 +15551,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7006887062925239614, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 57c5b2ebc7042f94db66e117241a2f15, type: 3}
     - target: {fileID: 8397856689403497890, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
       propertyPath: m_Name
       value: Slot_Currency (1)
@@ -15688,10 +15712,6 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 38.7
       objectReference: {fileID: 0}
-    - target: {fileID: 4282235728081854901, guid: af6b90b1f9287b140a115aa8c6e167dc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 36c546bd24c23ab438f7e0a48d3fba73, type: 3}
     - target: {fileID: 4813294843747944721, guid: af6b90b1f9287b140a115aa8c6e167dc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.517
@@ -15874,10 +15894,6 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 29.9
       objectReference: {fileID: 0}
-    - target: {fileID: 4282235728081854901, guid: af6b90b1f9287b140a115aa8c6e167dc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 5854e23fe29d1a249a4a51d2e8f0a11f, type: 3}
     - target: {fileID: 4813294843747944721, guid: af6b90b1f9287b140a115aa8c6e167dc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -16056,10 +16072,6 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 29.9
       objectReference: {fileID: 0}
-    - target: {fileID: 4282235728081854901, guid: af6b90b1f9287b140a115aa8c6e167dc, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 5854e23fe29d1a249a4a51d2e8f0a11f, type: 3}
     - target: {fileID: 4813294843747944721, guid: af6b90b1f9287b140a115aa8c6e167dc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.517

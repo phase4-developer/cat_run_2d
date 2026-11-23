@@ -41,11 +41,6 @@ namespace MV.View
         }
 
         public const double JunkFrontZ = -0.45, JunkLiftY = 0.05;
-        /// <summary>보상 배지: 장애물 그림 기준 (0.7, 0.25) 크기 단위(q). dia는 캣닢 잎, 그 외 츄르.</summary>
-        public const double BadgeX = 0.7, BadgeY = 0.25;
-
-        public static string BadgeSprite(FieldReward rew) => rew == FieldReward.Dia ? "World_Item_Badge_Dia" : "World_Item_Badge_Gold";
-
         public const int BrickLayers = 4, BricksPerLayer = 11, WellJunkCount = 9;
         public const double BrickRadius = 1.0, BrickY0 = 0.17, BrickDy = 0.32;
 

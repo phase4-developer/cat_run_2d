@@ -73,7 +73,6 @@ namespace MV.Data
         public MvTable<BalancePresetData> BalancePreset { get; } = new MvTable<BalancePresetData>(BalancePresetData.Schema, r => new BalancePresetData(r));
         public ConsumeTypeTable ConsumeType { get; } = new ConsumeTypeTable();
         public MvTable<AdPlacementData> AdPlacement { get; } = new MvTable<AdPlacementData>(AdPlacementData.Schema, r => new AdPlacementData(r));
-        public MvTable<UiResourceData> UiResource { get; } = new MvTable<UiResourceData>(UiResourceData.Schema, r => new UiResourceData(r), d => d.group);
 
         // 1
         public MvTable<LobbyUpgradeData> LobbyUpgrade { get; } = new MvTable<LobbyUpgradeData>(LobbyUpgradeData.Schema, r => new LobbyUpgradeData(r));
@@ -157,7 +156,7 @@ namespace MV.Data
         {
             _all = new List<IMvTable>
             {
-                Config, Wealth, PlayResource, Sound, Effect, ContentOpen, BalancePreset, ConsumeType, AdPlacement, UiResource,
+                Config, Wealth, PlayResource, Sound, Effect, ContentOpen, BalancePreset, ConsumeType, AdPlacement,
                 LobbyUpgrade, StairLevel, WeaponLevel, AreaUpgrade, RebirthPerk, LevelPrice, Grade,
                 Cat, Enemy, Item, ObjectKind, HitReaction, ChargeGate, ReceiveCondition, MoveAi, Card, CardPool, CardEffect,
                 God, HpRule, CardTier, CharLook,

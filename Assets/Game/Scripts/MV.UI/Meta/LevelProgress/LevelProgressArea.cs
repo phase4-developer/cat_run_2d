@@ -40,19 +40,19 @@ namespace MV.UI
             if (_info == null) return;
             if (zoneBanner)
             {
-                if (_info.ZoneStart) zoneBanner.ShowUI(new LevelProgressZoneData(_info.ZoneNo, _info.ZoneName));
+                if (_info.ZoneStart) zoneBanner.ShowUI(new LevelProgressZoneData(_info.ZoneNo, _info.ZoneName, _info.ZoneIcon));
                 else zoneBanner.HideUI();
             }
 
             int need = _info.Milestones.Length;
             if (need > ItemCount)
                 Debug.LogWarning($"[LevelProgressArea] Area {_info.AreaNo} 관문 {need}개인데 Element_LevelProgress 프리팹 칸은 {ItemCount}개입니다. 프리팹에 Element_Progress_Item을 더하세요(Assets/Game/Art/UI/Prefab/LevelProgress/Element_LevelProgress.prefab).");
-            var label = new AreaLabelData(_info.ZoneNo, _info.AreaName);
+            var label = new AreaLabelData(_info.ZoneNo, _info.AreaName, _info.AreaIcon);
             for (int i = 0; i < ItemCount; i++)
             {
                 var it = items[i];
                 if (!it) continue;
-                if (i < need) it.ShowUI(new LevelProgressItemData(_info.Milestones[i], i == 0, label));
+                if (i < need) it.ShowUI(new LevelProgressItemData(_info.Milestones[i], i == 0, label, _info.SoulsAtlas, _info.SoulsIcon));
                 else it.HideUI();
             }
         }

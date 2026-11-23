@@ -30,14 +30,14 @@ namespace MV.UI
     {
         /// <summary>누르면 넘길 행동 id(화면 코드의 <see cref="MetaAction.Id"/>).</summary>
         public readonly string ActionId;
-        /// <summary>표 icon 열(<c>Atlas_UI_Icon</c>). 비면 디자이너 그림을 그대로 둔다.</summary>
+        /// <summary>표 icon 열(<c>Atlas_UI_Icon</c>, 노션 「테이블 연결 텍스쳐 정리」). 비면 아이콘 칸을 숨긴다.</summary>
         public readonly string IconSprite;
         public readonly string Name;
         public readonly int Level;
         public readonly string CurrentValue;
         /// <summary>다음 단계 값. 최대면 null.</summary>
         public readonly string NextValue;
-        /// <summary>가격 글자(숫자만, 아이콘은 프리팹). 최대면 「MAX」.</summary>
+        /// <summary>가격 글자. 최대면 「MAX」. 가격 아이콘은 <see cref="Price"/> 첫 비용의 07_consumeType 아이콘(MV-UI-ICONSRC).</summary>
         public readonly string PriceText;
         public readonly UpgradeElementState State;
         /// <summary>잠김일 때 필요한 환생 수.</summary>
@@ -89,6 +89,8 @@ namespace MV.UI
         [SerializeField] GameObject okDisable;
         /// <summary><c>Button_Ok/Icon</c>(가격 재화 아이콘). 최대면 끈다.</summary>
         [SerializeField] GameObject priceIcon;
+        /// <summary>가격 재화 아이콘(<c>Button_Ok/Icon</c>, AddressableImage). 그림은 비용 종류의 표 아이콘(프리팹에 그림을 두지 않음).</summary>
+        [SerializeField] AddressableImage priceIconImage;
         [SerializeField] TMP_Text priceText;
         /// <summary>가격 글자에 붙은 Framework <c>PriceLabel</c>(아이콘은 비워 프리팹 그림 유지).</summary>
         [SerializeField] jjevol.PriceLabel priceLabel;
@@ -124,9 +126,14 @@ namespace MV.UI
         public Button OkButton => okButton;
 
         /// <summary>프리팹 연결 확인(시험·검사용): 빠진 참조 이름 목록.</summary>
+        /// <summary>아이콘 칸에 넣은 그림 이름(숨겼으면 null). 시험·QA.</summary>
+        public string IconShown => icon && icon.enabled ? icon.spriteName : null;
+
         public string MissingRefs()
         {
             var miss = new System.Collections.Generic.List<string>();
+            if (!icon) miss.Add(nameof(icon));
+            if (!priceIconImage) miss.Add(nameof(priceIconImage));
             if (!label) miss.Add(nameof(label));
             if (!level) miss.Add(nameof(level));
             if (!currentValue) miss.Add(nameof(currentValue));
@@ -169,7 +176,8 @@ namespace MV.UI
         protected override void _DrawContents()
         {
             var d = _data;
-            if (!string.IsNullOrEmpty(d.IconSprite)) HudImage.Set(icon, MvAtlas.UiIcon, d.IconSprite);
+            // 표 icon이 비면(그림 제작 예정) 칸을 숨긴다. 다시 쓰는 칸에 앞 행 아이콘이 남지 않게(MV-UI3-UPICON).
+            HudImage.SetOrHide(icon, MvAtlas.UiIcon, d.IconSprite);
             if (label) label.text = d.Name ?? "";
             if (level) level.text = string.Format(MvUiText.Get("ui", LevelKey, LevelFallback), d.Level);
             if (currentValue) currentValue.text = d.CurrentValue ?? "";
@@ -193,6 +201,7 @@ namespace MV.UI
             if (okButton) okButton.interactable = d.State == UpgradeElementState.Ready;
             if (priceIcon) priceIcon.SetActive(d.State != UpgradeElementState.Max);
             DrawPrice(d);
+            DrawPriceIcon(d);
             if (lockRoot) lockRoot.SetActive(locked);
             if (locked && lockBadge) lockBadge.ShowUI(d.NeedRebirth);
         }
@@ -211,13 +220,26 @@ namespace MV.UI
                 var costs = ToFramework(d.Price);
                 if (costs.Count > 0 && d.State != UpgradeElementState.Locked && d.State != UpgradeElementState.LockedAll)
                 {
-                    priceLabel.ShowCosts(d.Wallet, costs);
+                    priceLabel.ShowCosts(d.Wallet, costs, MvConsumePresentation.Current);
                     return;
                 }
                 priceLabel.enabled = false;
             }
             if (priceText) priceText.text = d.PriceText ?? "";
         }
+
+        /// <summary>가격 아이콘: 첫 비용(종류·id)의 07_consumeType 아이콘. 비용이 없거나 표에 그림이 없으면 숨긴다.</summary>
+        void DrawPriceIcon(in UpgradeElementData d)
+        {
+            if (!priceIconImage) return;
+            string atlas = null, sprite = null;
+            if (d.Price != null && d.Price.Count > 0)
+                MvConsumeIcon.TryGet(MvTables.Current, d.Price[0].TypeId, d.Price[0].Id, out atlas, out sprite);
+            HudImage.SetOrHide(priceIconImage, atlas, sprite);
+        }
+
+        /// <summary>가격 아이콘 그림 이름(숨겼으면 null). 시험·QA.</summary>
+        public string PriceIconShown => priceIconImage && priceIconImage.enabled ? priceIconImage.spriteName : null;
 
         static List<FwConsume> ToFramework(IReadOnlyList<MvConsume> price)
         {

@@ -24,7 +24,6 @@ namespace MV.Data
             CheckLevelPrices(t, r);
             CheckAdPlacement(t, r);
             CheckContentOpen(t, r);
-            CheckUiResource(t, r);
             CheckValueFormats(t, r);
             CheckPairValues(t, r);
             CheckContentData(t, r);
@@ -440,18 +439,6 @@ namespace MV.Data
                 if (value < 0) r.Error(table, id, prefix + "Value", $"조건 값 {value}는 0 이상이어야 합니다");
         }
 
-        static void CheckUiResource(MvTables t, MvValidationReport r)
-        {
-            foreach (var u in t.UiResource.Datas)
-            {
-                bool sprite = !string.IsNullOrEmpty(u.atlas) && !string.IsNullOrEmpty(u.sprite);
-                bool partial = string.IsNullOrEmpty(u.atlas) != string.IsNullOrEmpty(u.sprite);
-                bool address = !string.IsNullOrEmpty(u.address);
-                if (partial) r.Error(UiResourceData.Table, u.id, "sprite", "atlas와 sprite는 함께 채워야 합니다");
-                else if (sprite == address) r.Error(UiResourceData.Table, u.id, "address", "`atlas+sprite`와 `address` 중 하나만 채워야 합니다");
-            }
-        }
-
         // ---------------- 13·14 valueFormat ----------------
 
         static void CheckValueFormats(MvTables t, MvValidationReport r)
@@ -471,7 +458,7 @@ namespace MV.Data
 
         static void CheckPairValues(MvTables t, MvValidationReport r)
         {
-            // 카드 비행 시간은 330 rlFlyMs 하나만 둔다(300 flyCard.* 삭제, MV-UI3-HUD3). HUD 카드 비행은 시뮬 FlyLeft를 읽는다.
+            // 카드 비행 시간은 HUD Card Pos 프리팹 flySec 하나만 둔다(300 flyCard.*·330 rlFlyMs 삭제, MV-UI3-HUD3·CLIMBFX3). 시뮬은 화면 도착 때 적용한다.
             var gate = t.ReceiveCondition.ByKey("sgatePass");
             if (gate != null && TryConfig(t, RunConfigKeys.Fly_RemoveMs, out double fly) && Math.Abs(gate.delayMs - fly) > 1e-9)
                 r.Warn(ReceiveConditionData.Table, gate.id, "delayMs", $"sgatePass delayMs {gate.delayMs} ≠ 300_runConfig fly.removeMs {fly}");

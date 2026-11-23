@@ -192,7 +192,7 @@ namespace MV.UI.Tests
             Assert.That(T.Grade.Datas.Count, Is.EqualTo(12), "노션 등급 표 1~12");
             Assert.That(T.Grade.Datas.Select(g => g.grade), Is.EqualTo(Enumerable.Range(1, 12)));
             foreach (var g in T.Grade.Datas)
-                Assert.That(MvUiGrade.Frame(T, g.grade).sort, Is.EqualTo(g.grade), "09_uiResource 등급 틀 = 같은 번호");
+                Assert.That(MvUiGrade.Frame(T, g.grade).grade, Is.EqualTo(g.grade), "15_grade 등급 틀 = 같은 번호");
             Assert.That(ItemSlot.GradeOf(T, "gold"), Is.GreaterThan(0), "골드 등급(임시값)");
             Assert.That(ItemSlot.GradeOf(T, "medal"), Is.EqualTo(0), "등급 없음 = 0");
         }

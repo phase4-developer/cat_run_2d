@@ -84,6 +84,7 @@ MonoBehaviour:
   areaLabel: {fileID: 1672400299449498533}
   adButton: {fileID: 4721442730617718994}
   adGain: {fileID: 1204939082531322377}
+  adRewardIcon: {fileID: 806627301718381846}
   listContent: {fileID: 5455111463994876311}
   elementTemplate: {fileID: 608442788746756224}
 --- !u!1001 &1100
@@ -94,6 +95,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002}
     m_Modifications:
+    - target: {fileID: 3760974809925481491, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6858202782240279511, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1160949530822721052, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -305,3 +314,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e82c7575b4495a346af214f86a481f99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: JJEvol.UI.DOTweenPro.Runtime::UITransition
+--- !u!114 &806627301718381846 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 806627301718380890, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage

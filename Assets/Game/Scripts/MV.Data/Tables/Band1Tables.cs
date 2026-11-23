@@ -239,16 +239,19 @@ namespace MV.Data
 
     /// <summary>
     /// 15_grade — 보상·아이템 칸 등급(1 Common ~ 12 Transcendent, 노션 「[참고] 프로젝트 내 등급 관련 리소스 표」, 결정 D-GRADE-TABLE).
-    /// 이름은 언어팩 <c>name:&lt;id&gt;</c>(없으면 <c>name</c> 열). 틀 그림은 <c>09_uiResource</c> 「등급 틀」 묶음의 sort = <see cref="grade"/> 행(<see cref="MvUiGrade.Frame"/>)이라 이 표에 그림 열을 다시 두지 않는다.
+    /// 이름은 언어팩 <c>name:&lt;id&gt;</c>(없으면 <c>name</c> 열). 틀 그림은 이 표 <see cref="frameSprite"/>(Atlas_UI_Card)가 정본이다
+    /// (MV-UI-ICONSRC 2026-11-23: 옛 09_uiResource 「등급 틀」 묶음에서 옮김, 사용자 「이 안으로 진행」).
     /// 등급을 가진 표는 이 표 id를 가리킨다(첫 적용 <c>01_wealth.gradeId</c>).
     /// </summary>
     public sealed class GradeData : MvRow
     {
         public const string Table = "15_grade";
-        public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("grade", true);
+        public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("grade", true).Res("frameSprite", MvAtlas.UiCard, true);
 
-        /// <summary>등급 번호(1부터). 틀 그림 = 09_uiResource 「등급 틀」 sort.</summary>
+        /// <summary>등급 번호(1부터).</summary>
         public int grade { get; private set; }
+        /// <summary>등급 틀 그림 이름(<see cref="MvAtlas.UiCard"/>, 디자이너 Grade_N).</summary>
+        public string frameSprite { get; private set; }
 
         public GradeData(TSVRow r) : base(r) { }
 
@@ -256,6 +259,7 @@ namespace MV.Data
         {
             base.Init(r);
             grade = I(r, "grade");
+            frameSprite = S(r, "frameSprite");
         }
     }
 }

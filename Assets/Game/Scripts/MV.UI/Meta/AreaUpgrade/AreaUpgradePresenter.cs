@@ -70,12 +70,15 @@ namespace MV.UI
             d.AreaName = "Area " + areaNo;
             foreach (var a in tables.Area.Datas)
                 if (a.areaNo == areaNo) { d.AreaName = MvUiText.Name(a.id, d.AreaName); break; }
+            d.AreaIcon = HudAreaLabel.AreaIconOf(tables, areaNo);
             d.ZoneNo = MvMetaRules.ZoneIndex(tables, Port.AreaIndex) + 1;
             foreach (var type in CurrencyTypes)
             {
                 int id = tables.Wealth.GetId(type);
                 d.Currencies.Add(new AreaUpgradeCurrency(type, MvUiFormat.Fmt(id == 0 ? 0 : Port.Wealth(id))));
             }
+            var adRow = tables.AdPlacement.ByKey(AdKey);
+            if (adRow != null && adRow.adReward.Count > 0) { d.AdRewardType = adRow.adReward[0].TypeId; d.AdRewardId = adRow.adReward[0].Id; }
             d.AdGainText = string.Format(MvUiText.Get("ui", AreaUpgradeDesignView.AdGainKey, AreaUpgradeDesignView.AdGainFallback), MvUiFormat.Fmt(adGain));
             return d;
         }

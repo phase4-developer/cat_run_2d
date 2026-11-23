@@ -9,11 +9,9 @@ namespace MV.UI
     /// </summary>
     public static class HudGrade
     {
-        /// <summary>09_uiResource 「등급 틀」 묶음(<see cref="MvUiGrade.FrameGroup"/>).</summary>
-        public const int FrameGroup = MvUiGrade.FrameGroup;
 
         /// <summary>등급 번호 grade(1부터)의 틀 그림 행(<see cref="MvUiGrade.Frame"/>, 무기문 위 카드 묶음과 같은 규칙).</summary>
-        public static UiResourceData Frame(MvTables t, int grade) => MvUiGrade.Frame(t, grade);
+        public static GradeFrame Frame(MvTables t, int grade) => MvUiGrade.Frame(t, grade);
 
         /// <summary>115 행(tierIndex). 없으면 null.</summary>
         public static CardTierData CardTier(MvTables t, int tierIndex)

@@ -25,7 +25,7 @@ namespace MV.UI
 
     /// <summary>
     /// 디자이너 <c>Slot_Weapon</c>(·변형 <c>Slot_Weapon_Stack</c>)의 값 연결(MV-UI2-HUD, 공용 부품 MV-UI3-HUD2). 겉(배치·그림)은 프리팹이 정하고, 등급 틀·무기 그림·공격력만 넣는다.
-    /// 등급 틀 = 09_uiResource 등급 틀(103_item.tier 번호), 무기 그림 = 103_item.icon(Atlas_UI_Icon).
+    /// 등급 틀 = 15_grade.frameSprite(103_item.tier 번호), 무기 그림 = 103_item.icon(Atlas_UI_Icon).
     /// 섹션은 <see cref="ShowUI(in WeaponSlotData)"/>로 켜고 그린다. 연출(등장·모임·튐)은 무기 섹션 단계에서 이 부품에 붙인다.
     /// </summary>
     public sealed class HudWeaponSlot : UIBase
@@ -193,15 +193,34 @@ namespace MV.UI
     /// <summary>AddressableImage에 표 그림을 넣는 공통 도우미(같은 그림이면 다시 읽지 않는다).</summary>
     public static class HudImage
     {
-        public static void Set(AddressableImage img, UiResourceData row)
+        public static void Set(AddressableImage img, GradeFrame frame)
         {
-            if (row != null) Set(img, row.atlas, row.sprite);
+            if (frame != null) Set(img, frame.atlas, frame.sprite);
         }
 
         public static void Set(AddressableImage img, string atlas, string sprite)
         {
             if (!img || string.IsNullOrEmpty(atlas) || string.IsNullOrEmpty(sprite)) return;
             if (img.spriteName != sprite || img.atlasKey != atlas) img.SetAtlasSprite(atlas, sprite);
+        }
+
+        /// <summary>
+        /// 표 그림을 넣되, 이름이 비면 칸을 숨긴다(MV-UI3-RESAUDIT). 다시 쓰는 칸에 앞 그림·디자이너 예시 그림이 남지 않게 한다.
+        /// 표 값이 채워지면 다시 켜진다.
+        /// </summary>
+        public static void SetOrHide(AddressableImage img, string atlas, string sprite)
+        {
+            if (!img) return;
+            bool has = !string.IsNullOrEmpty(atlas) && !string.IsNullOrEmpty(sprite);
+            img.enabled = has;
+            if (has) Set(img, atlas, sprite);
+        }
+
+        /// <summary>단독 텍스처(표 주소 열, <c>Local_Texture</c>)를 넣는다. 키가 비면 프리팹 값을 그대로 둔다.</summary>
+        public static void Set(AddressableTexture img, string address)
+        {
+            if (!img || string.IsNullOrEmpty(address)) return;
+            if (img.spriteKey != address) img.spriteKey = address;
         }
     }
 }

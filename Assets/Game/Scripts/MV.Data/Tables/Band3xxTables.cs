@@ -61,10 +61,11 @@ namespace MV.Data
     {
         public const string Table = "301_zone";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("sort").Bool("active")
-            .Res("mapIcon", MvAtlas.UiLobby).Color("mapCol1").Color("mapCol2")
+            .Res("mapIcon", MvAtlas.Address).Color("mapCol1").Color("mapCol2")
             .Sound("bgm").Str("weaponLookSet");
 
         // Zone의 Area 범위는 302_area.zoneId로 계산한다(MvTables.ZoneFirstArea·ZoneLastArea, 옛 areaFrom·areaTo 열 삭제).
+        /// <summary>지도 Zone 배너 그림(Local_Texture 주소, 예 `Texture_Background_Zone1`). 사용자 결정 2026-11-23 MV-UI3-ZONETEX: 기획서 07 §7.10의 Atlas_UI_Lobby 아이콘 대신 디자이너 배너 텍스처.</summary>
         public string mapIcon { get; private set; }
         public string mapCol1 { get; private set; }
         public string mapCol2 { get; private set; }
@@ -93,7 +94,7 @@ namespace MV.Data
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Int("areaNo", true).Fk("zoneId", ZoneData.Table, true)
             .Int("sort").Bool("active").Fk("themeId", ThemeData.Table, true).Int("hp", true).Int("needSouls", true)
             .Floats("sgateM").Int("startGold")
-            .FkGroup("floorGroup", AreaFloorData.Table).Int("fieldSeedArea").Sound("bgm").Res("mapIcon", MvAtlas.UiLobby)
+            .FkGroup("floorGroup", AreaFloorData.Table).Int("fieldSeedArea").Sound("bgm").Res("mapIcon", MvAtlas.Address)
             .Color("mapColor").Res("bg", MvAtlas.Address).Res("stageMap", MvAtlas.Address, true).Consume("clearReward").Consume("firstClearReward");
 
         public int areaNo { get; private set; }
@@ -110,6 +111,7 @@ namespace MV.Data
         /// <summary>빈칸 = areaNo − 1(클램프 전 A).</summary>
         public int fieldSeedArea { get; private set; }
         public string bgm { get; private set; }
+        /// <summary>Area 이름표(Slot_AreaLabel) 그림(Local_Texture 주소, 예 `Texture_Background_Zone1_Area1`). MV-UI3-ZONETEX, 그림이 없는 Area는 이전 그림을 다시 쓴다.</summary>
         public string mapIcon { get; private set; }
         /// <summary>LevelProgress(지도) Area 배경색 hex(MV-UI3-LVPROG, 사용자 2026-11-19 「302_area에 색 열 추가」). Area 1~6은 노션 견본 색, 7부터는 더미(견본 6색 반복).</summary>
         public string mapColor { get; private set; }
@@ -574,7 +576,8 @@ namespace MV.Data
         static readonly string[] s_configColumns =
         {
             "lap", "maxCards", "lapTier", "stepH", "stepD", "stepW", "catLift", "z0Gap", "shiftFrom",
-            "shiftExtra", "landGap", "popSec", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay", "rlFlyMs",
+            "shiftExtra", "landGap", "popSec", "tickEvery", "rlEndBase", "rlEndStep", "rlFlipSec", "rlSlowWin", "rlSlowK", "rlFlyDelay",
+            // 카드 비행 시간(rlFlyMs)은 HUD Card Pos 프리팹 flySec으로 옮겼다(MV-UI3-CLIMBFX3). 시뮬은 화면 도착 때 카드를 적용한다.
             "rlEndPad",
             // 기획서 계단 압축·연출 시간(MV-SPEC-02 6-5, 노션 「계단연출 상세설명」 2절, 사용자 2026-11-16 「수치만 적용」):
             // K = N ≤ cmpFrom면 N, 아니면 cmpFrom + ceil((N − cmpFrom)/C), T = min(riseCap, riseBase + risePerStep·(K − 1)),
@@ -638,7 +641,7 @@ namespace MV.Data
             enterSound = S(r, "enterSound");
         }
 
-        /// <summary>설정 행 값(`lap`, `rlFlyMs` …).</summary>
+        /// <summary>설정 행 값(`lap`, `rlFlyDelay` …).</summary>
         public double this[string column] => _config.TryGetValue(column, out var v) ? v : throw new KeyNotFoundException($"330_climb {id}: {column}");
     }
 

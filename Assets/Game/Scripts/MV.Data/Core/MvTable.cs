@@ -279,8 +279,6 @@ namespace MV.Data
         public const string Theme = "@theme";
         public const string UiIcon = "Atlas_UI_Icon";
         public const string UiCard = "Atlas_UI_Card";
-        public const string UiLobby = "Atlas_UI_Lobby";
-        public const string UiHud = "Atlas_UI_Hud";
         public const string WorldLobby = "Atlas_World_Lobby";
         /// <summary>펫 월드 그림(430_pet.sprite, D-MVDATA-PET 권장안 — 03 §3.8.1에 행 추가 필요).</summary>
         public const string WorldPet = "Atlas_World_Pet";

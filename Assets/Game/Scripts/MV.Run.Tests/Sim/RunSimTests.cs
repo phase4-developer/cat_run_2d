@@ -154,6 +154,32 @@ namespace MV.Run.Tests
         static void Run(RunSim sim, int frames, RunInput input = default) { for (int i = 0; i < frames; i++) sim.Tick(1 / 60.0, input); }
         static List<RunEvent> Ev(RunSim sim, RunEventType t) => sim.State.Events.Where(e => e.Type == t).ToList();
 
+        /// <summary>
+        /// MV-CLOCK-1: Tick이 받는 dt = 게임 시간(배속 포함, Unity Time.deltaTime). 2배속 한 프레임(2/60) = 1배속 두 프레임(1/60 × 2)과 같은 진행,
+        /// 게임 시간 0(일시정지)이면 아무것도 진행하지 않는다. 「실시간」 타이머(히트스톱 등)도 배속을 따른다.
+        /// </summary>
+        [Test]
+        public void Tick_GameTime_SpeedSplitsSteps_AndZeroPauses()
+        {
+            var one = Sim(new HandLevel());
+            var two = Sim(new HandLevel(), new RunSetup { Deck = new[] { 0, 1, 0, 0, 0, 0, 0, 0, 0 }, TimeScale = 2 });
+            for (int i = 0; i < 60; i++) { one.Tick(1 / 60.0, RunInput.Drag(1)); one.Tick(1 / 60.0, RunInput.Drag(1)); }
+            for (int i = 0; i < 60; i++) two.Tick(2 / 60.0, RunInput.Drag(1));
+            Assert.AreEqual(one.State.Time, two.State.Time, 1e-9, "같은 게임 시간 = 같은 런 시간");
+            Assert.AreEqual(one.State.P.Z, two.State.P.Z, 1e-9, "같은 전진");
+            Assert.AreEqual(one.State.RealTime, two.State.RealTime, 1e-9, "「실시간」 시계도 배속을 따른다");
+
+            double z = two.State.P.Z, time = two.State.Time, real = two.State.RealTime;
+            for (int i = 0; i < 30; i++) two.Tick(0, RunInput.Drag(1));
+            Assert.AreEqual(z, two.State.P.Z, "일시정지(게임 시간 0)는 멈춤");
+            Assert.AreEqual(time, two.State.Time);
+            Assert.AreEqual(real, two.State.RealTime);
+
+            two.State.HitStop = 0.1;
+            two.Tick(2 / 60.0, default);
+            Assert.AreEqual(0.1 - 2 / 60.0, two.State.HitStop, 1e-9, "히트스톱도 게임 시간으로 줄어든다");
+        }
+
         [Test]
         public void Move_FollowAndClamp()
         {
@@ -450,6 +476,30 @@ namespace MV.Run.Tests
             Assert.IsNull(s.Roulette);
             Assert.AreEqual(2, Ev(sim, RunEventType.CardApplied).Count);
             Assert.AreEqual(new[] { 4, 0 }, Ev(sim, RunEventType.RouletteStart)[0].Ids);
+        }
+
+        /// <summary>MV-UI3-CLIMBFX3: 도착으로 받기면 날기 시작한 카드는 화면 도착(CardArrived) 때만 적용하고, 그 전에는 룰렛이 끝나지 않는다.</summary>
+        [Test]
+        public void Climb_RouletteCards_ApplyOnScreenArrival()
+        {
+            var sim = Sim(new HandLevel().Add("stair", 0, 3));
+            sim.CardApplyOnArrival = true;
+            sim.State.Stairs = 80;
+            Run(sim, 60 * 20);
+            var s = sim.State;
+            var fly = Ev(sim, RunEventType.RouletteFly);
+            Assert.AreEqual(2, fly.Count, "두 장 모두 날기 시작");
+            Assert.AreEqual(0, Ev(sim, RunEventType.CardApplied).Count, "도착 전에는 적용하지 않음");
+            Assert.IsNotNull(s.Roulette, "적용 전에는 룰렛이 끝나지 않음");
+            sim.CardArrived(fly[0].A);
+            sim.CardArrived(fly[0].A);   // 같은 카드 도착을 두 번 알려도 한 번만
+            sim.CardArrived(99);         // 범위 밖은 무시
+            Run(sim, 1);
+            Assert.AreEqual(1, Ev(sim, RunEventType.CardApplied).Count, "알린 카드만 적용");
+            sim.CardArrived(fly[1].A);
+            Run(sim, 60 * 2);
+            Assert.AreEqual(2, Ev(sim, RunEventType.CardApplied).Count);
+            Assert.IsNull(s.Roulette, "모두 적용되면 룰렛 종료");
         }
 
         [Test]

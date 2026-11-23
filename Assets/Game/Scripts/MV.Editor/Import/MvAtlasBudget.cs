@@ -49,7 +49,7 @@ namespace MV.Editor.Import
         public static List<MvAtlasEstimate> EstimateProject()
         {
             var list = new List<MvAtlasEstimate>();
-            foreach (var pair in MvArtSetup.FindAtlasFolders())
+            foreach (var pair in MvArtCatalog.FindAtlasFolders())
             {
                 var files = pair.Value.SelectMany(f => Directory.GetFiles(f, "*.png", SearchOption.AllDirectories)).ToList();
                 list.Add(Estimate(MvArtRules.SpecFor(pair.Key), files));
@@ -64,12 +64,15 @@ namespace MV.Editor.Import
             foreach (var file in pngFiles)
             {
                 Vector2Int size;
+                // 아틀라스는 Import Max Size로 줄인 크기를 묶는다(MV-ART-CARD256: 원본 1254 → Max Size 256).
+                double scale = ImportScale(file);
                 if (spec.Tight)
                 {
                     size = TrimmedSize(file, out var count);
-                    opaque += count;
+                    opaque += (long)(count * scale * scale);
                 }
                 else size = PngSize(file);
+                if (scale < 1) size = new Vector2Int(Math.Max(1, (int)Math.Round(size.x * scale)), Math.Max(1, (int)Math.Round(size.y * scale)));
                 rects.Add(new Vector2Int(size.x + spec.Padding, size.y + spec.Padding));
             }
             var e = Estimate(spec, rects);
@@ -161,6 +164,16 @@ namespace MV.Editor.Import
             sb.Append($"글꼴 {FontMb:F1} MB; 합 {mb:F2} MB");
             breakdown = sb.ToString();
             return mb;
+        }
+
+        /// <summary>Import 설정 Max Size가 원본 긴 변보다 작으면 그 비율(Unity가 줄여 가져온다), 아니면 1. 설정은 읽기만 한다.</summary>
+        public static double ImportScale(string file)
+        {
+            var path = file.Replace('\\', '/');
+            if (!(AssetImporter.GetAtPath(path) is TextureImporter importer)) return 1;
+            var full = PngSize(file);
+            int longest = Math.Max(full.x, full.y);
+            return longest > importer.maxTextureSize ? importer.maxTextureSize / (double)longest : 1;
         }
 
         /// <summary>PNG 머리의 가로·세로(IHDR).</summary>

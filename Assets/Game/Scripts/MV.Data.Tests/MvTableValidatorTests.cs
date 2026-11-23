@@ -278,11 +278,6 @@ namespace MV.Data.Tests
                 "08_adPlacement", "`skip`");
 
         [Test]
-        public void Semantics_UiResourceBothFilled_IsError() =>
-            AssertError(TsvFixture.Validate(("09_uiResource", TsvFixture.Set(TsvFixture.Read("09_uiResource"), "9001001", "address", "Tex_X"))),
-                "09_uiResource", "하나만");
-
-        [Test]
         public void Semantics_ValueFormatTwoHoles_IsError() =>
             AssertError(TsvFixture.Validate(("13_areaUpgrade", TsvFixture.Set(TsvFixture.Read("13_areaUpgrade"), "13001001", "valueFormat", "{0}/{0}"))),
                 "13_areaUpgrade", "정확히 1개");

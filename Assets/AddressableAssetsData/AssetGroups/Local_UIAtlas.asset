@@ -15,18 +15,6 @@ MonoBehaviour:
   m_GroupName: Local_UIAtlas
   m_GUID: dc6b77afb964a0942b6b39dfaab84d79
   m_SerializeEntries:
-  - m_GUID: 27e12e892c8064b46861bc91988ee057
-    m_Address: Atlas_UI_Hud
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - ui.core
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4b4da452858eb8a49ab819bf40d251b6
-    m_Address: Atlas_UI_Lobby
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - ui.lobby
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 78f97436f1fe69d41b95081d659893d4
     m_Address: Atlas_UI_Card
     m_ReadOnly: 0
@@ -39,8 +27,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - ui.core
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cfa48997e5df4c898573633fb42740a5
-    m_Address: Atlas_UI_Common
+  - m_GUID: 8688d3c12e6bcb440af5f70f4ebc9b20
+    m_Address: Atlas_UI_GUI
     m_ReadOnly: 0
     m_SerializedLabels:
     - ui.core

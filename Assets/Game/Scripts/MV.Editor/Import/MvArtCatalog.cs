@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using UnityEditor;
 using MV.Data;
 using UnityEditor.AddressableAssets;
 
@@ -24,10 +27,75 @@ namespace MV.Editor.Import
         /// <summary>`@theme` 확인 대상. 표를 아는 호출자가 <see cref="SetThemeAtlases"/>로 304_theme 값을 넣는다. 기본은 테마 폴더 전부.</summary>
         public IReadOnlyList<string> ThemeAtlases => _themeAtlases;
 
+        static readonly Regex s_guid = new Regex(@"guid: ([0-9a-f]{32})", RegexOptions.CultureInvariant);
+
+        // 읽기 전용 찾기 도우미(옛 MvArtSetup에서 옮김, MV-ART-IMPORTOWN 2026-11-23 자동화 제거). 아무 에셋도 쓰지 않는다.
+
+        /// <summary>아틀라스 이름 → 묶을 폴더(정식 먼저, 임시 다음). 빈 폴더는 뺀다.</summary>
+        public static SortedDictionary<string, List<string>> FindAtlasFolders()
+        {
+            var map = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
+            foreach (var root in MvArtRules.ArtRoots)
+            {
+                var spriteRoot = root + "/" + MvArtRules.SpriteFolderName;
+                if (!Directory.Exists(spriteRoot)) continue;
+                foreach (var dir in Directory.GetDirectories(spriteRoot))
+                {
+                    var name = Path.GetFileName(dir);
+                    if (!name.StartsWith("Atlas_", StringComparison.Ordinal)) continue;
+                    if (Directory.GetFiles(dir, "*.png", SearchOption.AllDirectories).Length == 0) continue;
+                    if (!map.TryGetValue(name, out var folders)) map[name] = folders = new List<string>();
+                    folders.Add(spriteRoot + "/" + name);
+                }
+            }
+            return map;
+        }
+
+        /// <summary>.spriteatlasv2 파일이 가리키는 packable GUID(텍스트 직렬화에서 읽음).</summary>
+        public static HashSet<string> ReadPackableGuids(string atlasPath)
+        {
+            var set = new HashSet<string>(StringComparer.Ordinal);
+            if (!File.Exists(atlasPath)) return set;
+            foreach (Match m in s_guid.Matches(File.ReadAllText(atlasPath, Encoding.UTF8))) set.Add(m.Groups[1].Value);
+            return set;
+        }
+
+        /// <summary>
+        /// 아틀라스 에셋이 실제로 묶는 PNG 경로(패킹 대상이 폴더면 그 아래 PNG 전부, 파일이면 그 파일). 에셋이 정본이므로
+        /// 규칙 폴더 밖(예: `Art/UI/...`)을 Inspector에서 넣은 것도 포함한다.
+        /// </summary>
+        public static List<string> PackedPngPaths(string atlasPath)
+        {
+            var list = new List<string>();
+            if (!File.Exists(atlasPath)) return list;
+            foreach (var guid in ReadPackableGuids(atlasPath))
+            {
+                string p = AssetDatabase.GUIDToAssetPath(guid);
+                if (string.IsNullOrEmpty(p)) continue;
+                if (Directory.Exists(p))
+                    list.AddRange(Directory.GetFiles(p, "*.png", SearchOption.AllDirectories).Select(f => f.Replace('\\', '/')));
+                else if (p.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) list.Add(p);
+            }
+            return list;
+        }
+
+        /// <summary>프로젝트의 모든 아틀라스 에셋(UI·월드·캐릭터 폴더): 이름(확장자 제외) → 경로.</summary>
+        public static SortedDictionary<string, string> FindAtlasAssets()
+        {
+            var map = new SortedDictionary<string, string>(StringComparer.Ordinal);
+            foreach (var folder in new[] { MvArtRules.UiAtlasFolder, MvArtRules.WorldAtlasFolder, MvArtRules.CharacterAtlasFolder })
+            {
+                if (!Directory.Exists(folder)) continue;
+                foreach (var file in Directory.GetFiles(folder, "*" + MvArtRules.AtlasExtension))
+                    map[Path.GetFileNameWithoutExtension(file)] = file.Replace('\\', '/');
+            }
+            return map;
+        }
+
         public static MvArtCatalog FromProject()
         {
             var c = new MvArtCatalog();
-            foreach (var pair in MvArtSetup.FindAtlasFolders())
+            foreach (var pair in FindAtlasFolders())
             {
                 var names = new HashSet<string>(StringComparer.Ordinal);
                 foreach (var folder in pair.Value)
@@ -37,11 +105,11 @@ namespace MV.Editor.Import
                 if (File.Exists(MvArtRules.SpecFor(pair.Key).AssetPath)) c._atlasAssets.Add(pair.Key);
             }
             // 아틀라스 에셋이 정본(MV-UI2-ATLAS): Inspector에서 넣은 규칙 폴더 밖 그림(예: Art/UI)도 그 아틀라스의 스프라이트다.
-            foreach (var pair in MvArtSetup.FindAtlasAssets())
+            foreach (var pair in FindAtlasAssets())
             {
                 if (!c._sprites.TryGetValue(pair.Key, out var names))
                     c._sprites[pair.Key] = names = new HashSet<string>(StringComparer.Ordinal);
-                foreach (var png in MvArtSetup.PackedPngPaths(pair.Value)) names.Add(Path.GetFileNameWithoutExtension(png));
+                foreach (var png in PackedPngPaths(pair.Value)) names.Add(Path.GetFileNameWithoutExtension(png));
                 c._atlasAssets.Add(pair.Key);
             }
 
