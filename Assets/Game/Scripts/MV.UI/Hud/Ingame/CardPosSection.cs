@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using jjevol;
 using MV.Data;
 using MV.Run;
+using MV.View;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UI;
@@ -12,7 +13,8 @@ namespace MV.UI
     /// <summary>
     /// 얻은 카드 섹션(<c>Mid/Card Pos</c>, MV-UI3-HUD7, HUD_구조_설계안 3.3 CardPosSection).
     /// 런에서 얻은 카드(<see cref="RunState.CardOrder"/>)를 Holder 자리에 순서대로 보인다(Holder = 디자이너 <c>Holder_Card</c>, 모자라면 첫 Holder 복제).
-    /// 룰렛에서 확정된 카드는 출발 카드 자리에서 그 Holder로 난다. 비행 시간 = 시뮬 남은 비행 시간(<see cref="RouletteCard.FlyLeft"/>, 330 rlFlyMs)으로 같은 값을 두 곳에 두지 않는다.
+    /// 룰렛에서 확정된 카드는 출발 카드 자리에서 그 Holder로 난다. 비행 시간은 이 섹션 프리팹 값(<see cref="FlySec"/>)이 정본이고,
+    /// 도착하면 <see cref="RouletteCardFlight"/>로 시뮬에 알려 카드가 그 순간 적용된다(MV-UI3-CLIMBFX3, 같은 값을 표에 두지 않는다).
     /// 나는 카드는 <c>Card_Skill.prefab</c> 에셋을 원본으로 <see cref="ObjectPool{T}"/>에서 꺼낸다.
     /// </summary>
     public sealed class CardPosSection : UIBase
@@ -21,7 +23,10 @@ namespace MV.UI
         [SerializeField] HudSkillCard flyPrefab;
         [Tooltip("나는 카드를 둘 부모(화면 루트, 다른 섹션 위)")]
         [SerializeField] RectTransform flyParent;
-        [Header("비행 보간(MV-UI3-CLIMBFX). 시간은 시뮬 330 rlFlyMs")]
+        [Header("비행(MV-UI3-CLIMBFX3). 도착하는 순간 시뮬이 카드를 적용한다")]
+        [Tooltip("비행 시간(초, 실시간·배속과 무관). 기본값 = 기획서 04 비행 620ms")]
+        [Min(0)]
+        [SerializeField] float flySec = 0.62f;
         [Tooltip("위치 보간 곡선")]
         [SerializeField] HudEase flyMoveEase = HudEase.OutCubic;
         [Tooltip("크기 보간 곡선")]
@@ -32,6 +37,8 @@ namespace MV.UI
         readonly List<HudSkillCard> _flying = new List<HudSkillCard>();
         /// <summary>날고 있는 카드 id(아직 <see cref="RunState.CardOrder"/>에 없는 새 카드의 자리 예약, 도착하면 뺀다).</summary>
         readonly List<int> _flyingIds = new List<int>();
+        /// <summary>도착한 카드와 도착 때의 Holder 그림 표시(<see cref="_stamp"/>). 시뮬이 적용해 Holder가 다시 그려지면 반납한다(한 프레임 빈자리 방지).</summary>
+        readonly List<(HudSkillCard card, int id, int stamp)> _landed = new List<(HudSkillCard, int, int)>();
         ObjectPool<HudSkillCard> _pool;
         int _stamp = -1;
         bool _ready;
@@ -39,6 +46,7 @@ namespace MV.UI
         public IReadOnlyList<HudSkillCard> PosCards { get { Init(); return _posCards; } }
         public HudSkillCard FlyPrefab => flyPrefab;
         public int FlyingCount => _flying.Count;
+        public float FlySec => flySec;
 
         void Awake() => Init();
 
@@ -81,6 +89,7 @@ namespace MV.UI
             foreach (var c in _flying) _pool.Release(c);
             _flying.Clear();
             _flyingIds.Clear();
+            _landed.Clear();
             _stamp = -1;
             foreach (var c in _posCards) c.gameObject.SetActive(false);
         }
@@ -94,6 +103,7 @@ namespace MV.UI
             foreach (var n in s.Cards.Values) stamp = stamp * 31 + n;
             if (stamp == _stamp) return;
             _stamp = stamp;
+            ReleaseLanded();
             var t = s.Tables;
             for (int i = 0; i < s.CardOrder.Count; i++)
             {
@@ -105,25 +115,46 @@ namespace MV.UI
             for (int i = s.CardOrder.Count; i < _posCards.Count; i++) _posCards[i].gameObject.SetActive(false);
         }
 
-        /// <summary>확정 카드가 from 자리에서 Holder로 난다(시퀀스 6). 시간 = 시뮬 남은 비행 시간(실시간).</summary>
+        /// <summary>도착한 뒤 Holder 그림이 바뀐(시뮬이 카드를 적용한) 비행 카드를 반납한다.</summary>
+        void ReleaseLanded()
+        {
+            for (int i = _landed.Count - 1; i >= 0; i--)
+            {
+                var (card, id, stamp) = _landed[i];
+                if (stamp == _stamp) continue;
+                _landed.RemoveAt(i);
+                if (!card || !_flying.Remove(card)) continue;
+                _flyingIds.Remove(id);
+                _pool.Release(card);
+            }
+        }
+
+        /// <summary>
+        /// 확정 카드가 from 자리에서 Holder로 난다(시퀀스 6). 시간 = <see cref="FlySec"/>(실시간).
+        /// 날기 시작하면 그 비행을 맡고(<see cref="RouletteCardFlight.Claim"/>), 도착하면 시뮬에 알린다. 날지 못하면 맡지 않아 런 프레임이 바로 적용한다.
+        /// </summary>
         public void Fly(RunState s, RouletteCard k, HudSkillCard from)
         {
             Init();
             if (s == null || k?.Pick == null || !flyPrefab) return;
+            int index = s.Roulette != null ? s.Roulette.Cards.IndexOf(k) : -1;
+            if (index < 0) return;
             int id = k.Pick.id;
             var target = PosCard(SlotFor(s.CardOrder, _flyingIds, id));
             if (!target) return;
+            int run = RouletteCardFlight.Run;
+            RouletteCardFlight.Claim(index);
             var clone = _pool.Get();
             clone.transform.SetAsLastSibling();
             clone.ShowCard(s.Tables, k.Pick);
             if (from) HudRectMotion.Place(clone.Rect, from.Rect);
             _flying.Add(clone);
             _flyingIds.Add(id);
-            HudRectMotion.Move(clone.Rect, target.Rect, (float)Math.Max(0, k.FlyLeft), () =>
+            HudRectMotion.Move(clone.Rect, target.Rect, Math.Max(0f, flySec), () =>
             {
-                if (!clone || !_flying.Remove(clone)) return;
-                _flyingIds.Remove(id);
-                _pool.Release(clone);
+                // 도착 자리에서 기다리다 시뮬이 적용해 Holder가 다시 그려지면 반납한다(ReleaseLanded).
+                if (clone && _flying.Contains(clone)) _landed.Add((clone, id, _stamp));
+                RouletteCardFlight.RaiseArrived(run, index);
             }, flyMoveEase, flyScaleEase);
         }
 

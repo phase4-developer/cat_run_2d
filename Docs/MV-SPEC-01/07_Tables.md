@@ -499,7 +499,6 @@ MV-UI3-HUD3: 연출 값 그룹 106 `ui.hand.*` 11개와 007 `flyCard.*` 3개를 
 | rlFlipSec | 0.06 | [프로토] L2367 | 얼굴 넘김 간격 |
 | rlSlowWin / rlSlowK | 0.4 / 0.35 | [프로토] L2367 | 마지막 0.4초 감속 |
 | rlFlyDelay | 1.5 | [프로토] L2371 | 확정 → 비행(게임 초) |
-| rlFlyMs | 620 | [프로토] L2375 | 비행 → 적용(실시간 ms). HUD 카드 비행도 이 시뮬 값(FlyLeft)을 읽는다(300 `flyCard.*` 삭제, MV-UI3-HUD3) |
 | rlEndPad | 0.3 | [프로토] L2391 | 전부 도착 후 종료 여유 |
 | cmpFrom | 30 | MV-SPEC-02 6-5(Q-07) | 압축 시작 N |
 | riseCap / riseBase / risePerStep / riseLead | 1.5 / 0.5 / 0.1 / 0.4 | MV-SPEC-02 6-5 | 오르기 연출 시간 상한·기본·칸당·앞당김 |

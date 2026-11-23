@@ -35,6 +35,22 @@ namespace MV.Run
             if (receiveId > 0) State.ReceiveArrivals.Add(receiveId);
         }
 
+        /// <summary>
+        /// 룰렛 카드 적용을 화면의 카드 비행 도착으로 받는다(MV-UI3-CLIMBFX3, 사용자 2026-11-23 「비행 시간도 프리팹 인스펙터로 조절하고 싶다고 하니 표가 아니라 프리팹값으로 교체」).
+        /// 켜면 비행을 시작한 카드는 <see cref="CardArrived"/>를 받을 때 적용한다(비행 시간 = HUD Card Pos 프리팹 값).
+        /// 끄면(기본: 화면 없이 시뮬만 도는 시험) 비행을 시작하는 순간 적용한다. 실제 게임 런은 Boot가 켜고, 화면이 맡지 않은 비행은 Boot가 바로 도착으로 친다.
+        /// </summary>
+        public bool CardApplyOnArrival { get; set; }
+
+        /// <summary>
+        /// 화면이 알리는 룰렛 카드 도착(<paramref name="cardIndex"/> = RouletteFly 이벤트 A, 지금 룰렛의 카드 번호). 다음 <see cref="Tick"/> 처음에 그 카드를 적용한다.
+        /// 룰렛이 없거나 날지 않는 카드·이미 적용한 카드·범위 밖 번호는 무시한다.
+        /// </summary>
+        public void CardArrived(int cardIndex)
+        {
+            if (cardIndex >= 0) State.CardArrivals.Add(cardIndex);
+        }
+
         RunSim(RunState s, IRunRule rule)
         {
             State = s;
