@@ -58,7 +58,7 @@ namespace MV.Data.Tests
             Assert.That(p.skillEveryMs, Is.EqualTo(1200));
             Assert.That(p.SkillPctAt(2), Is.EqualTo(103));
             Assert.That(p.levelPriceGroup, Is.EqualTo(301));
-            Assert.That(p.icon, Is.EqualTo("UI_Icon_Pet_moonRabbit"));
+            Assert.That(p.icon, Is.Empty, "펫 아이콘 그림 없음(2026-11-23 디자이너 정리, MV-DATA-UIRES)");
             Assert.That(T.Pet.Get(430001001).skillDmgPct, Is.EqualTo(20));
 
             var b = T.PetBuild.Get(431004003);
@@ -75,7 +75,7 @@ namespace MV.Data.Tests
             Assert.That(T.Research.Datas.Count(), Is.EqualTo(25));
             var first = T.Research.Get(1, 1);
             Assert.That(first.id, Is.EqualTo(440001001));
-            Assert.That(first.icon, Is.EqualTo("UI_Icon_Research_claw"));
+            Assert.That(first.icon, Is.Empty, "연구 아이콘 그림 없음(2026-11-23 디자이너 정리, MV-DATA-UIRES)");
             Assert.That(first.statType, Is.EqualTo(MetaStat.Dmg));
             Assert.That(first.statValue, Is.EqualTo(2));
             Assert.That(first.price.Count, Is.EqualTo(1));

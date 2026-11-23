@@ -46,14 +46,14 @@ namespace MV.Editor.Tests
                 .Replace("\tweapon_2\t", "\tUI_Icon_Only_In_Card\t");
             var theme = Read("304_theme").Replace("World_Prop_Snowman", "World_Prop_Fake");
             var kind = Read("105_objectKind").Replace("World_Obj_Arch_Post_Gold", "World_Obj_Only_Somewhere");
-            var ui = Read("09_uiResource").Replace("Atlas_UI_Icon\tUI_Emoji_Close\t", "Atlas_UI_Nope\tUI_Emoji_NotYet\t");
-            var god = Read("113_god").Replace("Tex_God_Pisces", "Tex_Only_File").Replace("Tex_God_Aries", "UI_Icon_Weapon_1").Replace("Tex_God_Thunder", "Tex_God_thunder");
+            var ui = Read("09_uiResource").Replace("Atlas_UI_Icon\tUI_Icon_Stair\t", "Atlas_UI_Nope\tUI_Emoji_NotYet\t");
+            var god = Read("113_god").Replace("Tex_God_Pisces", "Tex_Only_File").Replace("Tex_God_Aries", "weapon_1").Replace("Tex_God_Thunder", "Tex_God_thunder");
             var pet = Read("430_pet").Replace("\tPet_sparrow\t", "\tPet_NotYetMade\t");
             Assume.That(item, Does.Contain("UI_Icon_Weapon_Nope").And.Contain("UI_Icon_Only_In_Card"));
             Assume.That(theme, Does.Contain("World_Prop_Fake"));
             Assume.That(kind, Does.Contain("World_Obj_Only_Somewhere"));
             Assume.That(ui, Does.Contain("UI_Emoji_NotYet"));
-            Assume.That(god, Does.Contain("Tex_Only_File").And.Contain("UI_Icon_Weapon_1").And.Contain("Tex_God_thunder"));
+            Assume.That(god, Does.Contain("Tex_Only_File").And.Contain("weapon_1").And.Contain("Tex_God_thunder"));
             Assume.That(pet, Does.Contain("Pet_NotYetMade"));
 
             var source = new MvMemoryTableSource(new MvTsvDirectorySource(dir)).Set("103_item", item).Set("304_theme", theme).Set("105_objectKind", kind)
@@ -91,7 +91,7 @@ namespace MV.Editor.Tests
             Assert.That(godCase, Is.Not.Null, "주소 대소문자");
             Assert.That(godCase.Message, Does.Contain("Tex_God_Thunder"));
             Assert.That(errors.Any(e => e.Table == "113_god" && e.Value == "Tex_Only_File"), Is.True, "그림 파일은 있으나 주소 없음");
-            Assert.That(errors.Any(e => e.Table == "113_god" && e.Value == "UI_Icon_Weapon_1"), Is.True, "주소 열에 아틀라스 스프라이트 이름");
+            Assert.That(errors.Any(e => e.Table == "113_god" && e.Value == "weapon_1"), Is.True, "주소 열에 아틀라스 스프라이트 이름");
 
             var themed = errors.Where(e => e.Table == "105_objectKind" && e.Value == "World_Obj_Only_Somewhere").Select(e => e.Atlas).ToList();
             Assert.That(themed, Does.Not.Contain("Atlas_World_Theme_market"), "@theme: 있는 테마는 통과");
@@ -129,7 +129,7 @@ namespace MV.Editor.Tests
         public void Catalog_ImplementsDataValidatorContract()
         {
             var catalog = MvArtCatalog.FromProject();
-            Assert.That(catalog.Has(MvAtlas.UiIcon, "UI_Icon_Weapon_1"), Is.True);
+            Assert.That(catalog.Has(MvAtlas.UiIcon, "weapon_1"), Is.True, "디자이너 Atlas_UI_Icon/Weapon(2026-11-23 정리 뒤 이름)");
             Assert.That(catalog.Has(MvAtlas.UiIcon, "UI_Icon_Weapon_Nope"), Is.False);
             Assert.That(catalog.Has(MvAtlas.AtlasName, "Atlas_World_Theme_market"), Is.True, "아틀라스 주소");
             Assert.That(catalog.Has(MvAtlas.Address, "Tex_God_Flame"), Is.True, "단독 텍스처 주소");

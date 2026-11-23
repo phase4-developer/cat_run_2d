@@ -1,9 +1,9 @@
 id	name	group	level	icon	statType	statValue	priceType	priceId	priceValue	seconds	active
-440001001	발톱 다듬기 Lv1	1	1	UI_Icon_Research_claw	Dmg	2	1	1001002	10	50	1
-440001002	발톱 다듬기 Lv2	1	2	UI_Icon_Research_claw	Dmg	4	1	1001002	20	120	1
-440001003	발톱 다듬기 Lv3	1	3	UI_Icon_Research_claw	Dmg	6	1	1001002	30	900	1
-440001004	발톱 다듬기 Lv4	1	4	UI_Icon_Research_claw	Dmg	8	1	1001002	40	2400	1
-440001005	발톱 다듬기 Lv5	1	5	UI_Icon_Research_claw	Dmg	10	1	1001002	50	4800	1
+440001001	발톱 다듬기 Lv1	1	1		Dmg	2	1	1001002	10	50	1
+440001002	발톱 다듬기 Lv2	1	2		Dmg	4	1	1001002	20	120	1
+440001003	발톱 다듬기 Lv3	1	3		Dmg	6	1	1001002	30	900	1
+440001004	발톱 다듬기 Lv4	1	4		Dmg	8	1	1001002	40	2400	1
+440001005	발톱 다듬기 Lv5	1	5		Dmg	10	1	1001002	50	4800	1
 440002001	냥펀치 연습 Lv1	2	1		FireRate	2	1	1001002	10	50	1
 440002002	냥펀치 연습 Lv2	2	2		FireRate	4	1	1001002	20	120	1
 440002003	냥펀치 연습 Lv3	2	3		FireRate	6	1	1001002	30	900	1
