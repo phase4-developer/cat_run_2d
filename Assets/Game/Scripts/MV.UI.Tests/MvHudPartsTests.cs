@@ -156,6 +156,30 @@ namespace MV.UI.Tests
             }
         }
 
+        /// <summary>
+        /// 재화 칸은 어느 화면이든 표 아이콘(Icon, 01_wealth.icon)을 보이고 디자이너 고정 그림 Icon_Dummy는 끈다.
+        /// 래퍼 프리팹이 정한다(로비 2026-11-19, 인게임·Area 강화·환생 사용자 2026-11-23 「지금 표 아이콘으로 전환」, MV-UI3-RESAUDIT).
+        /// </summary>
+        [TestCase("Assets/Game/Addressables/Local/UI/Hud/UIHud_Run.prefab")]
+        [TestCase("Assets/Game/Addressables/Local/UI/Lobby/UIScreen_Lobby.prefab")]
+        [TestCase("Assets/Game/Addressables/Local/UI/Meta/UIPopup_AreaUpgrade.prefab")]
+        [TestCase("Assets/Game/Addressables/Local/UI/Meta/UIPopup_Rebirth.prefab")]
+        public void CurrencySlots_InWrappers_ShowTableIcon_NotDummy(string path)
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            Assert.That(prefab, Is.Not.Null, path);
+            var slots = prefab.GetComponentsInChildren<HudCurrencySlot>(true);
+            Assert.That(slots, Is.Not.Empty, path);
+            foreach (var slot in slots)
+            {
+                var icon = slot.transform.Find("Icon");
+                var dummy = slot.transform.Find("Icon_Dummy");
+                Assert.That(icon, Is.Not.Null, slot.name);
+                Assert.That(icon.gameObject.activeSelf, Is.True, path + " " + slot.name + ": 표 아이콘 Icon 켬");
+                if (dummy) Assert.That(dummy.gameObject.activeSelf, Is.False, path + " " + slot.name + ": Icon_Dummy 끔");
+            }
+        }
+
         [Test]
         public void CurrencySlot_OnPrefab_ShowUI_DrawsWealthIconAndText()
         {

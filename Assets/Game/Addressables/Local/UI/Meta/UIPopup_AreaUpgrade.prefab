@@ -94,6 +94,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002}
     m_Modifications:
+    - target: {fileID: 3760974809925481491, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2785747444357524860, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6858202782240279511, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5599213741392138936, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1160949530822721052, guid: 06da20bac072fda4685fa4d78a69842d, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
