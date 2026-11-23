@@ -36,24 +36,27 @@ namespace MV.Run
 
         // ================= 프레임 (§4.13.2) =================
 
-        partial void TickCore(double realDt, RunInput input)
+        partial void TickCore(double frameDt, RunInput input)
         {
             var s = S;
             s.Frame++;
             if (_characterVersion != T.CharacterVersion) ApplyCharacter();
             if (s.Phase == RunPhase.Lobby) return;
-            double dt = Math.Min(_p.DtCap, realDt);
-            s.RealTime += dt;
+            // 시계 하나(MV-CLOCK-1, 사용자 2026-11-23 「타임라인을 맞춰야 배속도 같이 적용되고 따로 놀지 않으니까」·결정 「전부 배속 적용」):
+            // frameDt = 게임 시간(배속 포함). 한 걸음 dt = 1배속 기준 프레임(상한 dtCap), fdt = 이 프레임 게임 시간(= dt × 배속).
+            int ts = Math.Max(1, s.Setup.TimeScale);
+            double dt = Math.Min(_p.DtCap, Math.Max(0, frameDt) / ts);
+            double fdt = dt * ts;
+            s.RealTime += fdt;
             if (input.DragTargetX.HasValue) s.P.Tx = Clamp(input.DragTargetX.Value, -_p.LaneXMax, _p.LaneXMax);
             ApplyReceiveArrivals(); // 화면이 알린 오브 도착(MV-UI3-STAIRFX3)
             ApplyCardArrivals();    // 화면이 알린 룰렛 카드 도착(MV-UI3-CLIMBFX3)
             // 실시간 타이머(정본 setTimeout)는 프레임 처리 전에 만기를 본다: 시작한 프레임 다음 프레임부터 dt를 뺀다.
-            StepRealTimers(dt);
+            StepRealTimers(fdt);   // 「실시간」 타이머도 배속을 따른다(결정 「전부 배속 적용」)
 
             bool hs = s.HitStop > 0 && s.Phase == RunPhase.Run;
-            if (s.HitStop > 0) s.HitStop -= dt;
+            if (s.HitStop > 0) s.HitStop -= fdt;
             double gdt = hs ? dt * _p.HitStopScale : dt;
-            int ts = Math.Max(1, s.Setup.TimeScale);
             double sdt = gdt * ts;
 
             if (s.Phase == RunPhase.Run) { for (int k = 0; k < ts; k++) if (s.Phase == RunPhase.Run) UpdRun(gdt); }
@@ -61,7 +64,7 @@ namespace MV.Run
             if (s.Roulette != null) UpdRoulette(sdt);
             if (input.KeyAxis != 0) s.P.Tx = Clamp(s.P.Tx + input.KeyAxis * dt * _p.KeyMoveSpeed, -_p.LaneXMax, _p.LaneXMax);
             StepFx(sdt);
-            SyncWells(dt);
+            SyncWells(fdt);
         }
 
         // ================= updRun (§4.13.3) =================
