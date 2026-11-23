@@ -940,23 +940,27 @@ namespace MV.Run
 
         // ================= 카드 룰렛 (§4.8.4~§4.8.5) =================
 
-        bool ValidCard(CardData c)
+        bool ValidCard(CardData c, Dictionary<int, int> picked)
         {
+            // 같은 카드는 CARD_MAX장까지만 받는다. 도달한 카드는 후보에서 뺀다(구글독스 기획서 §7-1).
+            S.Cards.TryGetValue(c.id, out int have);
+            if (picked != null && picked.TryGetValue(c.id, out int soon)) have += soon;   // 같은 룰렛에서 먼저 뽑힌 장수도 센다(결과를 룰렛 시작 때 확정하므로)
+            if (have >= _p.CardMax) return false;
             var e = T.CardEffect.Get(c.effectId);
             return !(e != null && e.type == CardEffectType.CloneAdd && S.Clones >= _p.MaxClones);
         }
 
-        CardData DrawCard(int tier)
+        CardData DrawCard(int tier, Dictionary<int, int> picked)
         {
             var pool = new List<CardData>();
             for (int k = tier; k >= 0; k--)
             {
                 pool.Clear();
-                foreach (var c in S.CardPool) if (c.tier == k && ValidCard(c)) pool.Add(c);
+                foreach (var c in S.CardPool) if (c.tier == k && ValidCard(c, picked)) pool.Add(c);
                 if (pool.Count > 0) return pool[(int)Math.Floor(S.Draw(RngUse.CardDraw) * pool.Count)];
             }
             pool.Clear();
-            foreach (var c in S.CardPool) if (ValidCard(c)) pool.Add(c);
+            foreach (var c in S.CardPool) if (ValidCard(c, picked)) pool.Add(c);
             return pool.Count > 0 ? pool[(int)Math.Floor(S.Draw(RngUse.CardDraw) * pool.Count)] : null;
         }
 
@@ -973,9 +977,11 @@ namespace MV.Run
             var rl = new RouletteState { M = m };
             rl.Tiers.AddRange(tiers);
             var picks = new int[tiers.Count];
+            var picked = new Dictionary<int, int>();
             for (int i = 0; i < tiers.Count; i++)
             {
-                var pick = DrawCard(tiers[i]);
+                var pick = DrawCard(tiers[i], picked);
+                if (pick != null) picked[pick.id] = (picked.TryGetValue(pick.id, out int n0) ? n0 : 0) + 1;
                 picks[i] = pick?.id ?? 0;
                 rl.Cards.Add(new RouletteCard { Tier = tiers[i], Pick = pick, Step = i, EndAt = c["rlEndBase"] + i * c["rlEndStep"] });
             }
