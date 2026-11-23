@@ -48,6 +48,8 @@ namespace MV.UI
 
         public string GoLabel;
         public string GainText;
+        /// <summary>환생 보상 재화(01_wealth.type). 보상 아이콘은 그 재화의 07_consumeType 아이콘(MV-UI-ICONSRC).</summary>
+        public string GainWealth;
         public string GoActionId;
     }
 
@@ -100,6 +102,8 @@ namespace MV.UI
         [SerializeField] TMP_Text rebirthLabel;
         /// <summary><c>Slot_RebirthCurrency/Count Text</c>: 받을 황금 생선.</summary>
         [SerializeField] TMP_Text rebirthGain;
+        /// <summary>환생 보상 재화 아이콘(<c>Image (2)</c>, AddressableImage, 프리팹에 그림 없음).</summary>
+        [SerializeField] AddressableImage rebirthGainIcon;
 
         public event Action ClosePressed;
         public event Action<string> ActionPressed;
@@ -130,6 +134,7 @@ namespace MV.UI
         public bool RebirthShown => rebirthButton && rebirthButton.gameObject.activeSelf;
         public bool RebirthDisableShown => rebirthDisable && rebirthDisable.gameObject.activeSelf;
         public string GainText => rebirthGain ? rebirthGain.text : null;
+        public string GainIconShown => rebirthGainIcon && rebirthGainIcon.enabled ? rebirthGainIcon.spriteName : null;
 
         /// <summary>프리팹 연결 확인(시험·검사용): 빠진 참조 이름 목록.</summary>
         public string MissingRefs()
@@ -167,6 +172,7 @@ namespace MV.UI
             Need(rebirthDisable, nameof(rebirthDisable));
             Need(rebirthLabel, nameof(rebirthLabel));
             Need(rebirthGain, nameof(rebirthGain));
+            Need(rebirthGainIcon, nameof(rebirthGainIcon));
             return string.Join(", ", miss);
         }
 
@@ -303,6 +309,8 @@ namespace MV.UI
             SetActive(rebirthDisable, d.State == RebirthHeaderState.Cooldown); // 쿨타임: Disable 켬·작동 X(노션 2)
             if (rebirthLabel) rebirthLabel.text = d.GoLabel ?? "";
             if (rebirthGain) rebirthGain.text = d.GainText ?? "";
+            MvConsumeIcon.TryWealth(d.Tables, d.GainWealth, out var gainAtlas, out var gainSprite);
+            HudImage.SetOrHide(rebirthGainIcon, gainAtlas, gainSprite);
         }
 
         static void SetActive(Component c, bool on)

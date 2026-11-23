@@ -50,6 +50,8 @@ namespace MV.UI
         [SerializeField] RectTransform indicator;
         /// <summary><c>Indicator/Tip_Level Count/Value Text (TMP)</c>: 보유 영혼 수.</summary>
         [SerializeField] TMP_Text soulsText;
+        /// <summary>영혼 수 옆 재화 아이콘(<c>Icon (2)</c>, AddressableImage, 프리팹에 그림 없음). 그림은 모델의 영혼 아이콘.</summary>
+        [SerializeField] AddressableImage soulsIcon;
 
         /// <summary><c>Close</c> 묶음. 자동 연출 동안 끈다.</summary>
         [Header("닫기")]
@@ -171,6 +173,7 @@ namespace MV.UI
         {
             _shownSouls = souls;
             soulsText.text = MvUiFormat.Fmt(souls);
+            HudImage.SetOrHide(soulsIcon, _data.Model.SoulsAtlas, _data.Model.SoulsIcon);
             progressBar.SetValueWithoutNotify(ValueAt(_data.Model.StepPosition(souls)));
             indicator.position = indicatorHolder.position;
             FocusIndicator();

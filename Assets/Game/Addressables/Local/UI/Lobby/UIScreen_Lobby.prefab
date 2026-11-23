@@ -155,6 +155,7 @@ MonoBehaviour:
   rebirthCoolCount: {fileID: 7615194844462269075}
   rebirthCoolComplete: {fileID: 412979637524199047}
   rebirthReward: {fileID: 877167893268347648}
+  rebirthRewardIcon: {fileID: 4447989744480119230}
   areaUpgradeButton: {fileID: 7460267210951366006}
   areaUpgradeLabel: {fileID: 3090792222379839846}
   areaUpgradeDot: {fileID: 4285351187316377632}
@@ -1421,3 +1422,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a47f1ac4b534f25a2ea67882ce03bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4447989744480119230 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4447989744480120306, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage

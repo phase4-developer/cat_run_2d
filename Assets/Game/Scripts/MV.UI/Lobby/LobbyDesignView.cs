@@ -110,6 +110,8 @@ namespace MV.UI
         [SerializeField] TMP_Text rebirthCoolCount;
         [SerializeField] GameObject rebirthCoolComplete;
         [SerializeField] TMP_Text rebirthReward;
+        /// <summary>환생 버튼 보상 재화 아이콘(<c>Image (2)</c>). 그림은 환생 지급 재화의 07_consumeType 아이콘(MV-UI-ICONSRC).</summary>
+        [SerializeField] Image rebirthRewardIcon;
         [SerializeField] Button areaUpgradeButton;
         [SerializeField] HudAreaLabel areaUpgradeLabel;
         [SerializeField] GameObject areaUpgradeDot;
@@ -210,6 +212,7 @@ namespace MV.UI
             Need(rebirthCoolCount, nameof(rebirthCoolCount));
             Need(rebirthCoolComplete, nameof(rebirthCoolComplete));
             Need(rebirthReward, nameof(rebirthReward));
+            Need(rebirthRewardIcon, nameof(rebirthRewardIcon));
             Need(areaLabelButton, nameof(areaLabelButton));
             Need(areaUpgradeButton, nameof(areaUpgradeButton));
             Need(areaUpgradeLabel, nameof(areaUpgradeLabel));
@@ -402,7 +405,7 @@ namespace MV.UI
                 if (p.nextValue && u.NextValue.Length > 0) p.nextValue.text = u.NextValue;
                 if (p.maxText) p.maxText.SetActive(u.Max);
                 DrawPrice(p, u);
-                if (u.PriceIcon.Length > 0) SetSprite(p.priceIcon, MvAtlas.UiIcon, u.PriceIcon);
+                if (u.PriceIcon.Length > 0) SetSprite(p.priceIcon, u.PriceIconAtlas, u.PriceIcon);
                 if (u.IconIsItem && u.Icon.Length > 0) SetSprite(p.icon, MvAtlas.UiIcon, u.Icon);
             }
             foreach (var u in m.Upgrades)
@@ -454,6 +457,8 @@ namespace MV.UI
                 if (rebirthCoolComplete) rebirthCoolComplete.SetActive(ready);
             }
             if (rebirthReward) rebirthReward.text = string.Format(RebirthRewardFormat, r.Pending);
+            if (MvConsumeIcon.TryWealth(_tables ?? MvTables.Current, MvWealthIds.TypeOf(MvWealthIds.RbToken), out var rbAtlas, out var rbSprite))
+                SetSprite(rebirthRewardIcon, rbAtlas, rbSprite);
         }
 
         // ---------------- 일반 Image에 표 그림 넣기 ----------------

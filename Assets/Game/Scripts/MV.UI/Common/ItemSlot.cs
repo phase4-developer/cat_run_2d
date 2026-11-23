@@ -95,7 +95,8 @@ namespace MV.UI
                 _designerFrameRead = true;
                 if (gradeFrame) _designerFrame = !string.IsNullOrEmpty(gradeFrame.spriteName) ? gradeFrame.spriteName : gradeFrame.sprite ? gradeFrame.sprite.name : null;
             }
-            HudImage.SetOrHide(icon, MvAtlas.UiIcon, HudCurrencySlot.IconOf(t, _data.WealthType));
+            MvConsumeIcon.TryWealth(t, _data.WealthType, out var iconAtlas, out var iconSprite);
+            HudImage.SetOrHide(icon, iconAtlas, iconSprite);
             int grade = GradeOf(t, _data.WealthType);
             if (grade <= 0) grade = GradeOfFrame(t, _designerFrame);
             if (grade > 0) HudImage.Set(gradeFrame, MvUiGrade.Frame(t, grade));

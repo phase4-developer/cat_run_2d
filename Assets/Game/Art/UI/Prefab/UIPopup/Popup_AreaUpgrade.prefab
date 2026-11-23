@@ -1464,9 +1464,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5332660861532631649}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: fc488977c6222314ba46941f1d914949, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_EditorClassIdentifier: JJEvol.UI.Addressables.Runtime::jjevol.AddressableImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -1475,7 +1475,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 57c5b2ebc7042f94db66e117241a2f15, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1485,6 +1485,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  m_AtlasKey: 
+  m_SpriteName: 
+  m_LoadOnEnable: 1
+  m_ReleaseOnDisable: 0
+  m_ClearSpriteOnDisable: 0
+  m_ReleaseDelay: 0
+  m_ShowLoading: 0
+  m_LoadingView: {fileID: 0}
 --- !u!1 &5918135456499122347
 GameObject:
   m_ObjectHideFlags: 0
@@ -2652,10 +2660,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Element_Upgrade
       objectReference: {fileID: 0}
-    - target: {fileID: 5800581430907212806, guid: 8f0df2f29fce77e4c9c177b4ddac2ba9, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 01aa04878f0655343b6f6fd9b79dddad, type: 3}
     - target: {fileID: 7383164078891219678, guid: 8f0df2f29fce77e4c9c177b4ddac2ba9, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2912,10 +2916,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7006887062925239614, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 57c5b2ebc7042f94db66e117241a2f15, type: 3}
     - target: {fileID: 8397856689403497890, guid: 9025f0940c900da41a3e2b848f18a88e, type: 3}
       propertyPath: m_Name
       value: Slot_Currency (1)

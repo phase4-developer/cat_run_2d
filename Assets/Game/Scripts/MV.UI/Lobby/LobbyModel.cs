@@ -81,6 +81,8 @@ namespace MV.UI
         public IReadOnlyList<ConsumeData> Cost;
         /// <summary>가격 재화 아이콘(<c>01_wealth.icon</c>, Atlas_UI_Icon). 최대면 빈 문자열.</summary>
         public string PriceIcon = "";
+        /// <summary>가격 아이콘 아틀라스(07_consumeType.iconAtlas, MV-UI-ICONSRC).</summary>
+        public string PriceIconAtlas = "";
         /// <summary>
         /// <see cref="Icon"/>이 103_item 그림(Atlas_UI_Icon)인지. 무기 강화만 true(노션: 레벨업하면 다음 등급 무기 그림).
         /// 나머지는 옛 아지트 시설 그림 키라 디자이너 칸에 넣지 않는다.

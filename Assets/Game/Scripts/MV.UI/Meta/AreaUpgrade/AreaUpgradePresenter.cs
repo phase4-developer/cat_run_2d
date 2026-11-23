@@ -77,6 +77,8 @@ namespace MV.UI
                 int id = tables.Wealth.GetId(type);
                 d.Currencies.Add(new AreaUpgradeCurrency(type, MvUiFormat.Fmt(id == 0 ? 0 : Port.Wealth(id))));
             }
+            var adRow = tables.AdPlacement.ByKey(AdKey);
+            if (adRow != null && adRow.adReward.Count > 0) { d.AdRewardType = adRow.adReward[0].TypeId; d.AdRewardId = adRow.adReward[0].Id; }
             d.AdGainText = string.Format(MvUiText.Get("ui", AreaUpgradeDesignView.AdGainKey, AreaUpgradeDesignView.AdGainFallback), MvUiFormat.Fmt(adGain));
             return d;
         }

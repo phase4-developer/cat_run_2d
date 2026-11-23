@@ -269,7 +269,7 @@ namespace MV.UI
             if (price == null || price.Count == 0) return;
             u.Cost = price;
             var c = price[0];
-            if (c.Type == ConsumeType.Wealth) u.PriceIcon = t.Wealth.Get(c.Id)?.icon ?? "";
+            if (MvConsumeIcon.TryGet(t, (int)c.Type, c.Id, out var atlas, out var sprite)) { u.PriceIconAtlas = atlas; u.PriceIcon = sprite; }
         }
 
         static string FallbackName(string key)
