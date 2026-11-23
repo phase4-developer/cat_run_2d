@@ -100,6 +100,10 @@ namespace MV.Tests
             Assert.AreEqual(p0, RunTime(loop), 1e-12, "timeScale 0이면 시뮬 정지");
             loop.SetTimeScale(2);
             Assert.AreEqual(2f, Time.timeScale);
+
+            // 멈춘 동안 미뤄진 UI 전환(게임 시간)을 끝내고 내린다: 다음 시험이 남은 전환 상태를 물려받지 않게.
+            loop.SetTimeScale(1);
+            for (float w = 0; w < 1.5f; w += Time.unscaledDeltaTime) yield return null;
         }
     }
 }
