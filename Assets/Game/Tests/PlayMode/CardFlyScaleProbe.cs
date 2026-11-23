@@ -45,8 +45,9 @@ namespace MV.Tests
         public void TearDown()
         {
             var loop = MvGameLoop.Current;
-            if (loop != null) { loop.ScriptedDrag = null; loop.FixedDt = null; loop.TicksPerFrame = 1; }
-            File.WriteAllText(Path.Combine(LogDir, "fly_log.txt"), _log.ToString());
+            if (loop != null) { loop.ScriptedDrag = null; loop.FixedDt = null; loop.TicksPerFrame = 1; loop.SetTimeScale(1); }
+            Time.timeScale = 1f;
+            File.WriteAllText(Path.Combine(LogDir, $"fly_log_{TestContext.CurrentContext.Test.Name}.txt"), _log.ToString());
             MvBootMeta.Detach();
             MvSave.Shutdown();
             MvSave.PreferencesOverride = null;
@@ -81,7 +82,13 @@ namespace MV.Tests
         }
 
         [UnityTest]
-        public IEnumerator RouletteCardFly_ScaleChangesOverManyFrames()
+        public IEnumerator RouletteCardFly_ScaleChangesOverManyFrames() => Fly(1);
+
+        /// <summary>MV-CLOCK-2: 2배속(Time.timeScale 2)이면 HUD 카드 비행도 게임 시간을 따라 실제 시간 약 절반(flySec/2)에 끝난다.</summary>
+        [UnityTest]
+        public IEnumerator RouletteCardFly_At2x_FollowsGameTime() => Fly(2);
+
+        IEnumerator Fly(int speed)
         {
             SceneManager.LoadScene(GameBootstrap.BootSceneName, LoadSceneMode.Single);
             yield return null;
@@ -103,7 +110,9 @@ namespace MV.Tests
             loop.ScriptedDrag = f => 0;
             loop.FixedDt = 1 / 60.0;
             loop.TicksPerFrame = 8;
+            loop.SetTimeScale(speed);
             Assert.IsTrue(loop.PressStart(), "출발이 런을 시작하지 않았다");
+            Assert.AreEqual((float)speed, Time.timeScale, "런 배속 = Time.timeScale");
 
             var flights = new List<Flight>();
             var seen = new HashSet<Component>();
@@ -121,7 +130,7 @@ namespace MV.Tests
                 if (inClimb || roulette)
                 {
                     climbed = true;
-                    // 정산·룰렛은 실시간으로 돌려 HUD 비행(실시간)과 같은 시계로 본다.
+                    // 정산·룰렛은 실제 프레임 간격으로 돌려 사람이 보는 속도로 본다(배속은 Time.timeScale).
                     loop.TicksPerFrame = 1;
                     loop.FixedDt = null;
                 }
@@ -162,7 +171,7 @@ namespace MV.Tests
             }
 
             float flySec = pos ? Convert.ToSingle(posType.GetProperty("FlySec")?.GetValue(pos) ?? -1f) : -1f;
-            _log.AppendLine($"graphics {SystemInfo.graphicsDeviceType} flySec {flySec} flights {flights.Count}");
+            _log.AppendLine($"graphics {SystemInfo.graphicsDeviceType} speed {speed} flySec {flySec} flights {flights.Count}");
             foreach (var f in flights)
             {
                 _log.AppendLine($"-- flight {flights.IndexOf(f)} samples {f.Samples.Count}");
@@ -178,7 +187,13 @@ namespace MV.Tests
                 int mid = f.Samples.Count(x => x.scale < a - 0.02f && x.scale > b + 0.02f);
                 Assert.That(a - b, Is.GreaterThan(0.1f), $"비행 {flights.IndexOf(f)}: 크기가 줄지 않았다({a:0.###} → {b:0.###})");
                 Assert.That(mid, Is.GreaterThanOrEqualTo(3), $"비행 {flights.IndexOf(f)}: 중간 크기 프레임이 {mid}개뿐(한 번에 바뀜)");
+                // 비행 실제 시간 = 첫 표본 → 도착 크기(최솟값)에 처음 닿은 표본. 게임 시간 flySec ÷ 배속.
+                float start = f.Samples.First().t, land = f.Samples.First(x => x.scale <= b + 0.003f).t;
+                float real = land - start, want = flySec / speed;
+                _log.AppendLine($"flight {flights.IndexOf(f)} real {real:0.###} want {want:0.###}");
+                Assert.That(real, Is.InRange(want * 0.6f, want * 1.3f + 0.05f), $"비행 {flights.IndexOf(f)}: 실제 {real:0.###}초, 기대 {want:0.###}초(flySec {flySec} ÷ 배속 {speed})");
             }
+            Debug.Log("[CardFlyScaleProbe] " + string.Join(" / ", flights.Select(f => $"{f.Samples.Count} samples")));
         }
     }
 }

@@ -64,7 +64,7 @@ namespace MV.UI
             var t = Target;
             t.localScale = _scaleRest * fromScale;
             if (sparkle) { sparkle.SetActive(false); sparkle.SetActive(true); }
-            var seq = DOTween.Sequence().SetUpdate(true).SetTarget(this);
+            var seq = DOTween.Sequence().SetTarget(this);
             seq.Join(t.DOScale(_scaleRest, sec).SetEase(ease));
             if (flash)
             {

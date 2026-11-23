@@ -1559,7 +1559,7 @@ MonoBehaviour:
     increaseEase: 5
     lapDuration: 0.15
     ghostFadeDuration: 0.18
-  useUnscaledTime: 1
+  useUnscaledTime: 0
   impactTarget: {fileID: 0}
   lightPunch: 0.04
   heavyPunch: 0.09

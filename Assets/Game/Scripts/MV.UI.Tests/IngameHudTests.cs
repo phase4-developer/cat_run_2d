@@ -356,13 +356,13 @@ namespace MV.UI.Tests
             s.Phase = RunPhase.Climb;
             s.Climb = new ClimbState { N = 80, Tier = -1, Rem = 0 };
             roll.ShowQuestion(T, s.Climb.Cards, top);
-            roll.Tick(s, 1);
+            roll.Tick(s);
             Assert.AreEqual(1, roll.SlotCount, "바퀴 전: Current 1장");
             Assert.AreEqual(top, roll.Card.Tier);
 
             s.Climb.Lap = 1; s.Climb.Cards.Add(top);   // 시뮬: 바퀴 완료 → 얻은 카드 + 새 바퀴 첫 등급
             roll.ShowQuestion(T, s.Climb.Cards, first);
-            roll.Tick(s, 1);
+            roll.Tick(s);
             var cards = roll.RollCards.ToArray();
             Assert.AreEqual(2, cards.Length, "얻은 카드 + Current");
             Assert.That(cards.Select(c => c.Tier), Is.EqualTo(new[] { top, first }), "Legendary를 남기고 새 등급이 옆에");
@@ -370,11 +370,11 @@ namespace MV.UI.Tests
             Assert.AreNotSame(cards[0].transform.parent, cards[1].transform.parent, "카드마다 Holder(HorizontalLayout 정렬)");
 
             s.Climb.Cards.Add(top);   // 이벤트 없이 바퀴만 늘어도 Tick이 맞춘다
-            roll.Tick(s, 1);
+            roll.Tick(s);
             Assert.AreEqual(3, roll.SlotCount);
 
             s.Climb = new ClimbState { N = 10, Tier = -1, Rem = 0 };   // 다음 계단: 얻은 카드 없음
-            roll.Tick(s, 1);
+            roll.Tick(s);
             Assert.AreEqual(1, roll.SlotCount, "새 계단은 Current 1장부터");
         }
 

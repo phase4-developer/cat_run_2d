@@ -263,7 +263,7 @@ namespace MV.UI
             DOTween.Kill(s);
             _fading.Add(s);
             float a = 1f;
-            DOTween.To(() => a, v => { a = v; s.SetAlpha(v); }, 0f, discardFadeSec).SetEase(Ease.OutQuad).SetUpdate(true).SetTarget(s)
+            DOTween.To(() => a, v => { a = v; s.SetAlpha(v); }, 0f, discardFadeSec).SetEase(Ease.OutQuad).SetTarget(s)
                 .OnComplete(() =>
                 {
                     if (!_fading.Remove(s)) return;
@@ -443,7 +443,7 @@ namespace MV.UI
 
         /// <summary>anchoredPosition 보간(DOTween UI 모듈 없이 코어만 쓴다). 실시간.</summary>
         static Tween AnchorTo(RectTransform rt, Vector2 to, float sec) =>
-            DOTween.To(() => rt.anchoredPosition, v => rt.anchoredPosition = v, to, sec).SetUpdate(true);
+            DOTween.To(() => rt.anchoredPosition, v => rt.anchoredPosition = v, to, sec);
 
         /// <summary>
         /// 손패 순서대로 자리를 정한다(디자이너 Stack 세로 배치 값: 위 여백·간격, 반대 순서 = 위 칸이 앞).
@@ -662,7 +662,7 @@ namespace MV.UI
             var t = _equip.transform;
             DOTween.Kill(t);
             t.localScale = Vector3.one;
-            DOTween.Sequence().SetUpdate(true).SetTarget(t)
+            DOTween.Sequence().SetTarget(t)
                 .Append(t.DOScale(equipPopScale, equipPopSec * .6f).SetEase(Ease.OutQuad))
                 .Append(t.DOScale(1f, equipPopSec * .4f).SetEase(Ease.InQuad));
         }
@@ -782,7 +782,7 @@ namespace MV.UI
                 return;
             }
             var from = rt.anchoredPosition;
-            DOTween.Sequence().SetUpdate(true).SetTarget(rt)
+            DOTween.Sequence().SetTarget(rt)
                 .Insert(delay, Arc(from, to, v => rt.anchoredPosition = v))
                 .Insert(delay, s.transform.DOScale(1f, launchSec).SetEase(Ease.InOutQuad))
                 .OnComplete(() => { q.Arrived = true; LayoutQueue(); });
@@ -795,7 +795,7 @@ namespace MV.UI
         public Tween FlyTo(Transform t, Vector3 to, float delay = 0)
         {
             var from = t.position;
-            return DOTween.Sequence().SetUpdate(true).SetTarget(t)
+            return DOTween.Sequence().SetTarget(t)
                 .Insert(delay, ArcWorld(from, to, v => t.position = v));
         }
 
@@ -810,7 +810,7 @@ namespace MV.UI
             {
                 float a = 1f - u;
                 set(a * a * from + 2f * a * u * ctrl + u * u * to);
-            }, 1f, launchSec).SetEase(Ease.InOutQuad).SetUpdate(true);
+            }, 1f, launchSec).SetEase(Ease.InOutQuad);
         }
 
         Tween ArcWorld(Vector3 from, Vector3 to, Action<Vector3> set)
