@@ -49,7 +49,7 @@ namespace MV.View
             _cam = camT != null ? camT.GetComponent<Camera>() : null;
         }
 
-        public override void OnTick(RunObjectView view, in ObjectFrame f) => StepQueue(Time.unscaledDeltaTime);
+        public override void OnTick(RunObjectView view, in ObjectFrame f) => StepQueue(Time.deltaTime);   // 게임 시간(MV-CLOCK-3)
 
         public override void OnUnbind(RunObjectView view)
         {

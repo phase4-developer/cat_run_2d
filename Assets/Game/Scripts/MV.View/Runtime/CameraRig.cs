@@ -86,7 +86,8 @@ namespace MV.View
         void LateUpdate()
         {
             if (!Ready) return;
-            double dt = System.Math.Min(_dtCap, Time.unscaledDeltaTime);
+            // 게임 시간(배속·일시정지 = Time.timeScale, MV-CLOCK-3). 상한 dtCap은 1배속 기준 프레임이라 배속만큼 늘린다.
+            double dt = System.Math.Min(_dtCap * System.Math.Max(1f, Time.timeScale), Time.deltaTime);
             // 표시 전용 난수(UnityEngine.Random). MV.Run 결정적 난수와 섞지 않는다.
             var shake = _shake.Step(dt, UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f));
             _model.Step(_source.Camera, dt, shake);

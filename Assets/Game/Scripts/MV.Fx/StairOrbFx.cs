@@ -54,7 +54,7 @@ namespace MV.Fx
                 loop: true, // 비행이 도착에서 요청을 끝낸다(Framework 권장)
                 sortingLayer: canvas != null ? canvas.sortingLayerName : "",
                 sortingOrder: (canvas != null ? canvas.sortingOrder : 0) + r.SortingOffset,
-                unscaledTime: true,
+                unscaledTime: false,   // 게임 시간(배속·일시정지 = Time.timeScale, MV-CLOCK-3)
                 parent: root,
                 localScale: Vector3.one * fit);
             s_effects.PlayFlight(req, route);

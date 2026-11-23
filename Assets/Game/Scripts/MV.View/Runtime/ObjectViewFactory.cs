@@ -224,7 +224,7 @@ namespace MV.View
             if (_ctx.Cfg == null || objs == null) return;
             _stamp++;
             _lastPz = pz;
-            double nowMs = Time.realtimeSinceStartupAsDouble * 1000.0;
+            double nowMs = Time.timeAsDouble * 1000.0;   // 게임 시간(MV-CLOCK-3)
             double dt = _lastMs < 0 ? 0 : Math.Max(0, Math.Min(0.1, (nowMs - _lastMs) / 1000.0));
             _lastMs = nowMs;
             var frame = new ObjectFrame(nowMs / 1000.0, dt, playerZ);

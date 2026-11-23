@@ -90,7 +90,7 @@ namespace MV.Fx
         void LateUpdate()
         {
             if (_cam == null || _model == null) return;
-            _now += Time.unscaledDeltaTime;
+            _now += MvFxClock.RealDt;   // 게임 시간(MV-CLOCK-3)
             if (_on) _t += MvFxClock.SimDt;
             float H = Mathf.Max(1, _cam.pixelHeight), W = H * _cam.aspect;
             float scale = 2f * Mathf.Tan(_cam.fieldOfView * 0.5f * Mathf.Deg2Rad) / H;

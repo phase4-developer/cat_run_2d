@@ -112,7 +112,7 @@ namespace MV.View
         public void SyncCats(RunState state)
         {
             bool off = state == null || _rig == null || !_rig.Ready;
-            double now = Time.realtimeSinceStartupAsDouble;
+            double now = Time.timeAsDouble;   // 게임 시간(MV-CLOCK-3)
             if (_objects != null && !off) _objects.GoldMul = RunFormulas.GoldMul(state);   // 결계 블록 글자판 「+골드」(정본 L1492)
             if (_objects != null && !off) _objects.GaugeLv = state.GaugeLv;   // 오브 탑 단계 연출
             if (_objects != null && !off)
@@ -151,7 +151,7 @@ namespace MV.View
         public void OnRunEvents(System.Collections.Generic.IReadOnlyList<RunEvent> events)
         {
             if (_objects != null) _objects.OnRunEvents(events);
-            if (_cats != null) _cats.OnRunEvents(events, Time.realtimeSinceStartupAsDouble);
+            if (_cats != null) _cats.OnRunEvents(events, Time.timeAsDouble);
         }
 
         /// <summary>정본 `shake(a, t)`.</summary>
