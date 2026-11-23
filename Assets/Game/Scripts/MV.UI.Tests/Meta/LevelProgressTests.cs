@@ -170,6 +170,11 @@ namespace MV.UI.Tests
             var (popup, view) = NewMap();
             Assert.That(view.gameObject, Is.SameAs(popup.gameObject), "디자이너 팝업 루트에 MapPopup이 붙는다(변형)");
             Assert.That(PrefabUtility.GetCorrespondingObjectFromSource(AssetDatabase.LoadAssetAtPath<GameObject>(MapPath)), Is.Not.Null, "Popup_LevelProgress 변형");
+            // 왼쪽 진척 게이지는 표시 전용(사용자 2026-11-23 「표시 용도라 입력 안되야해」): 슬라이더 입력 끔, 게이지 그림은 입력을 받지 않아 드래그가 스크롤로 간다.
+            var bar = view.GetComponentsInChildren<UnityEngine.UI.Slider>(true).FirstOrDefault(sl => sl.name == "ProgressBar");
+            Assert.That(bar, Is.Not.Null, "ProgressBar");
+            Assert.That(bar.interactable, Is.False, "게이지 입력 끔");
+            Assert.That(bar.GetComponentsInChildren<UnityEngine.UI.Graphic>(true).Where(g => g.raycastTarget).Select(g => g.name), Is.Empty, "게이지 그림 raycast 끔");
         }
 
         [Test]
