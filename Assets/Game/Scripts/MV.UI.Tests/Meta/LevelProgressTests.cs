@@ -213,6 +213,34 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void Model_UnlockSouls_IsPreviousAreaNeedSouls()
+        {
+            var m = Model(MetaUiTestKit.Base());
+            Assert.That(m.Areas[0].UnlockSouls, Is.EqualTo(0), "첫 Area는 처음부터 풀림");
+            for (int i = 1; i < m.Areas.Count; i++)
+                Assert.That(m.Areas[i].UnlockSouls, Is.EqualTo(m.Areas[i - 1].Milestones[^1]), "앞 Area needSouls(= 앞 Area 마지막 관문)");
+        }
+
+        [Test]
+        public void View_AreaLock_OnLabelOfAreasNotYetReached_OffWhenSoulsReach()
+        {
+            var (_, view) = NewMap();
+            var model = Model(MetaUiTestKit.Base(), 1);
+            long unlock2 = model.Areas[1].UnlockSouls;
+            Assert.That(unlock2, Is.GreaterThan(0));
+            view.ShowUI(new LevelProgressViewData { Model = model, FromSouls = unlock2 - 1, ToSouls = unlock2 });
+            Assert.That(view.AreaViews[0].Item(0).LockShown, Is.False, "닿은 Area는 Lock 없음");
+            Assert.That(view.AreaViews[1].Item(0).LockShown, Is.True, "영혼 < Area 값이면 이름표에 Lock(노션 Area Lock 표기)");
+            Assert.That(view.AreaViews[1].Item(1).LockShown, Is.False, "이름표가 없는 관문 칸은 Lock 없음");
+            view.Complete();
+            Assert.That(view.AreaViews[1].Item(0).LockShown, Is.False, "영혼 ≥ Area 값이면 Lock 끔");
+            Assert.That(view.AreaViews[2].Item(0).LockShown, Is.True);
+
+            view.ShowUI(new LevelProgressViewData { Model = model, FromSouls = 0, ToSouls = 0 });
+            Assert.That(view.AreaViews[1].Item(0).LockShown, Is.True, "영혼이 줄면(환생) 다시 잠김");
+        }
+
+        [Test]
         public void View_RunEnd_HidesClose()
         {
             var (_, view) = NewMap();

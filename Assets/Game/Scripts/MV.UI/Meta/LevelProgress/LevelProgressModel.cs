@@ -22,6 +22,11 @@ namespace MV.UI
         public string Color;
         /// <summary>관문(<c>303_areaFloor</c> floor 순)마다 Milestone 영혼 수. 마지막 = 이 Area의 <c>needSouls</c>.</summary>
         public long[] Milestones;
+        /// <summary>
+        /// 이 Area가 풀리는 영혼 수 = 앞 Area <c>needSouls</c>(첫 Area는 0). 보이는 영혼이 이보다 적으면 Area 이름표에 Lock을 씌운다
+        /// (노션 「Popup_LevelProgress : Area Lock 표기」: 「Soul이 해당 Area 값보다 같거나 커지면 Lock의 Animation 연출 후 비활성화」).
+        /// </summary>
+        public long UnlockSouls;
         public bool Locked;
         public bool Current;
         /// <summary>Milestone 재화(영혼 = <c>rescueCat</c>) 아이콘(07_consumeType, MV-UI-ICONSRC). 없으면 null.</summary>
@@ -78,6 +83,7 @@ namespace MV.UI
                         ZoneStart = first,
                         Color = string.IsNullOrEmpty(a.mapColor) ? null : a.mapColor,
                         Milestones = ms,
+                        UnlockSouls = prevNeed,
                         Locked = a.areaNo > currentAreaNo,
                         Current = a.areaNo == currentAreaNo,
                         SoulsAtlas = soulsAtlas,
