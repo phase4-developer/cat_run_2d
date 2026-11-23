@@ -205,13 +205,10 @@ namespace MV.Editor.Import
                 spec.ExpectedWidth = spec.ExpectedHeight = 1024;
                 switch (baseName)
                 {
-                    case "Atlas_UI_Common":
-                    case "Atlas_UI_Hud":
+                    // 노션 「UI Atlas 관리」(2026-11-23): Card·Icon·GUI만 쓴다. Common·Hud·Lobby는 제거.
+                    case "Atlas_UI_GUI":
                     case "Atlas_UI_Icon":
                         spec.Label = "ui.core";
-                        break;
-                    case "Atlas_UI_Lobby":
-                        spec.Label = "ui.lobby";
                         break;
                     case "Atlas_UI_Card":
                         spec.Label = "ui.card";

@@ -84,7 +84,7 @@ namespace MV.Editor.Import
 
         /// <summary>03 §3.8.1 아틀라스(+ `_2` 나눔) 와 D-MVDATA-PET `Atlas_World_Pet`. 이 밖의 아틀라스 이름은 오류.</summary>
         static readonly Regex s_ruleAtlas = new Regex(
-            @"^Atlas_(UI_(Common|Hud|Lobby|Icon|Card)|World_(Theme_[A-Za-z0-9]+|Cat_T\d+|Friend_T\d+|Lobby|Pet)|Fx_Common)(_\d+)?$",
+            @"^Atlas_(UI_(GUI|Icon|Card)|World_(Theme_[A-Za-z0-9]+|Cat_T\d+|Friend_T\d+|Lobby|Pet)|Fx_Common)(_\d+)?$",
             RegexOptions.CultureInvariant);
 
         public static bool IsRuleAtlas(string atlas) => atlas != null && s_ruleAtlas.IsMatch(atlas);
