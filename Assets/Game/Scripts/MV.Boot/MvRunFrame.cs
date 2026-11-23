@@ -44,7 +44,7 @@ namespace MV.Boot
         /// <param name="playing">런 단계(결과 단계에서는 입력 없이 시뮬만 끝까지 돈다).</param>
         /// <param name="scriptedDrag">시험 훅: 런 프레임 → 목표 tx(null = 드래그 없음). null이면 포인터를 읽는다.</param>
         /// <param name="frame">이번 런의 프레임 번호(<paramref name="scriptedDrag"/>에 넘긴다).</param>
-        /// <param name="fixedDt">시험 훅: 실시간 dt 대신 쓸 dt.</param>
+        /// <param name="fixedDt">시험 훅: 실제 프레임 간격 대신 쓸 1배속 프레임 간격(배속은 <c>Time.timeScale</c>로 곱한다).</param>
         public void Step(RunSim sim, WorldView world, bool playing, Func<int, double?> scriptedDrag, int frame, double? fixedDt, int ticks)
         {
             var s = sim.State;
@@ -57,7 +57,8 @@ namespace MV.Boot
             }
             else input = _input.Read(s);
 
-            double dt = fixedDt ?? Time.unscaledDeltaTime;
+            // 게임 시간(배속·일시정지 = Time.timeScale, MV-CLOCK-1). 시험 훅 fixedDt는 1배속 프레임 간격이라 배속을 곱한다.
+            double dt = fixedDt.HasValue ? fixedDt.Value * Time.timeScale : Time.deltaTime;
             int n = Math.Max(1, ticks);
             // 오브가 도착한(또는 도착 못 하고 끝난) 수령 몫을 이번 Tick 처음에 받는다(MV-UI3-STAIRFX3, 시간을 재지 않는다).
             StairOrbFlight.DrainArrivals(sim.ReceiveArrived);

@@ -103,13 +103,20 @@ namespace MV.Boot
             MvDebugHooks.SetTimeScale = v => SetTimeScale((int)Math.Round(v));
         }
 
-        /// <summary>런 배속을 바꾼다. 시뮬이 매 틱 <c>Setup.TimeScale</c>을 읽으므로 다음 틱부터 진행 속도가 바뀌고, HUD는 같은 값을 읽어 표시한다.</summary>
+        /// <summary>
+        /// 런 배속을 바꾼다. 배속은 Unity 게임 시간 하나(<c>Time.timeScale</c>)로 건다(MV-CLOCK-1): 런 중에는 <c>Time.timeScale</c> = 배속,
+        /// 시뮬은 그 게임 시간(<c>Time.deltaTime</c>)을 받아 <c>Setup.TimeScale</c> 걸음으로 나눠 돈다. HUD는 같은 값을 읽어 표시한다.
+        /// </summary>
         public void SetTimeScale(int timeScale)
         {
             _timeScale = Math.Max(1, timeScale);
             var setup = _sim?.State?.Setup;
             if (setup != null) setup.TimeScale = _timeScale;
+            if (Phase == MvLoopPhase.Run) ApplyClock(_timeScale);
         }
+
+        /// <summary>게임 시간 배율. 런 중 = 배속, 런 밖(로비·결과·종료) = 1.</summary>
+        static void ApplyClock(int timeScale) => Time.timeScale = Math.Max(1, timeScale);
 
         void OnDestroy()
         {
@@ -119,6 +126,7 @@ namespace MV.Boot
                 MvRunSpeed.Set = null;
                 MvRunSpeed.Get = null;
                 MvDebugHooks.SetTimeScale = null;
+                ApplyClock(1);
             }
             _fx.Dispose();
             _stage?.Dispose();
@@ -190,6 +198,7 @@ namespace MV.Boot
         async UniTask EnterLobbyAsync()
         {
             Phase = MvLoopPhase.Loading;
+            ApplyClock(1);
             _sim = null;
             _viewSource.Run = null;
             _end.Clear();
@@ -251,6 +260,7 @@ namespace MV.Boot
 
             _viewSource.Run = new RunStateViewSource(_sim.State, _tables);   // 카메라가 로비 자세에서 런 자세로 쓸어 간다(02 §2.2.2)
             Phase = MvLoopPhase.Run;
+            ApplyClock(_timeScale);
 
             MvUiNav.EnterRunAsync(new RunStateHudSource(() => _sim?.State, () => _savedSouls, _world.Rig.Model.SideRow?.turnSec ?? 0)).Forget(Debug.LogException);
         }
@@ -278,6 +288,9 @@ namespace MV.Boot
         void FinishRun()
         {
             Phase = MvLoopPhase.Result;
+            // 결과·지도는 런 밖: 게임 시간 1배. 결과 단계에서 마저 도는 시뮬도 1배속 걸음으로 맞춘다.
+            ApplyClock(1);
+            _sim.State.Setup.TimeScale = 1;
             RunsFinished++;
             var r = _sim.State.Result;
             LastFinishReason = r != null ? r.Reason.ToString() : "None";

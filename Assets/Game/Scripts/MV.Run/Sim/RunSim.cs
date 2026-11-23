@@ -115,10 +115,14 @@ namespace MV.Run
             return list;
         }
 
-        /// <summary>한 프레임. realDt = 기기 프레임 간격(초). 안에서 dt = min(dtCap, realDt), gdt, sdt를 만든다(§4.13.2).</summary>
-        public void Tick(double realDt, RunInput input) => TickCore(realDt, input);
+        /// <summary>
+        /// 한 프레임. <paramref name="frameDt"/> = 이 프레임의 게임 시간(초, 배속 포함 — Unity <c>Time.deltaTime</c>, 배속·일시정지 = <c>Time.timeScale</c>).
+        /// 안에서 한 걸음 dt = min(dtCap, frameDt / 배속)으로 나눠 배속 수만큼 돌고(§4.13.2 gdt·sdt), 「실시간」 타이머도 같은 게임 시간을 따른다(MV-CLOCK-1).
+        /// 배속 1이면 예전(dt = min(dtCap, realDt))과 같다. 화면 없는 시험은 dt를 직접 넣는다.
+        /// </summary>
+        public void Tick(double frameDt, RunInput input) => TickCore(frameDt, input);
 
         partial void OnCreated();
-        partial void TickCore(double realDt, RunInput input);
+        partial void TickCore(double frameDt, RunInput input);
     }
 }
