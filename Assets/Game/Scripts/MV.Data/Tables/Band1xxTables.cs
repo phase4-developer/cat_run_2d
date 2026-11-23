@@ -401,7 +401,7 @@ namespace MV.Data
         public const string Table = "110_card";
         public static readonly MvSchema Schema = new MvSchema(Table).Id().Group().Key().Int("tier", true)
             .Fk("effectId", CardEffectData.Table, true).Int("sort").Bool("active").Res("icon", MvAtlas.UiCard)
-            .Res("projSprite", MvAtlas.Theme).KeyUniqueInGroup();
+            .Res("projSprite", MvAtlas.Theme).Int("maxCount", true).KeyUniqueInGroup();
 
         /// <summary>0 = 공용, n = 113_god.cardGroup.</summary>
         public int group { get; private set; }
@@ -409,6 +409,8 @@ namespace MV.Data
         public int effectId { get; private set; }
         public string icon { get; private set; }
         public string projSprite { get; private set; }
+        /// <summary>한 런에서 이 카드를 받을 수 있는 장수 상한. 도달하면 룰렛 후보에서 뺀다. 0 = 상한 없음(구글독스 기획서 §7-1, 사용자 2026-11-23 「카드마다 다른 값」).</summary>
+        public int maxCount { get; private set; }
 
         public CardData(TSVRow r) : base(r) { }
 
@@ -420,6 +422,7 @@ namespace MV.Data
             effectId = I(r, "effectId");
             icon = S(r, "icon");
             projSprite = S(r, "projSprite");
+            maxCount = I(r, "maxCount");
         }
     }
 
