@@ -116,7 +116,8 @@ namespace MV.UI
                 if (!on) { _areas[i].HideUI(); _backgrounds[i].HideUI(); continue; }
                 var info = model.Areas[i];
                 _areas[i].ShowUI(info);
-                _backgrounds[i].ShowUI(new LevelProgressAreaBgData(ParseColor(info), info.ZoneStart));
+                _backgrounds[i].ShowUI(new LevelProgressAreaBgData(ParseColor(info), info.ZoneStart,
+                    new LevelProgressZoneData(info.ZoneNo, info.ZoneName, info.ZoneIcon)));
             }
             if (indicator) indicator.SetAsLastSibling();
             closeRoot.SetActive(!_data.AutoClose);

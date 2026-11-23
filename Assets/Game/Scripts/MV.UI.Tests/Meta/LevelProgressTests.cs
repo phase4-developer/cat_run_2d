@@ -4,6 +4,7 @@ using MV.Data;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MV.UI.Tests
 {
@@ -127,7 +128,11 @@ namespace MV.UI.Tests
 
             var area = AssetDatabase.LoadAssetAtPath<GameObject>(ArtDir + "Element_LevelProgress.prefab").GetComponent<LevelProgressArea>();
             Assert.That(area, Is.Not.Null);
-            Assert.That(area.HasRefs, Is.True, "관문 칸 3개·Zone 배너");
+            Assert.That(area.HasRefs, Is.True, "관문 칸 3개·배너 빈 자리");
+            Assert.That(area.GetComponentInChildren<LevelProgressZoneBanner>(true), Is.Null, "Zone 배너는 Area 칸(게이지 위 층)에 없다");
+            Assert.That(bg.ZoneBanner.transform.IsChildOf(bg.BannerSlot.transform), Is.True, "Zone 배너는 배경 층 배너 칸 안(게이지 뒤)");
+            Assert.That(LayoutUtility.GetPreferredHeight((RectTransform)area.BannerSpace.transform),
+                Is.EqualTo(LayoutUtility.GetPreferredHeight((RectTransform)bg.BannerSlot.transform)), "빈 자리 높이 = 배경 배너 칸 높이(관문 눈금 맞춤)");
             Assert.That(area.ItemCount, Is.EqualTo(3));
             // 아래(형제 순서 앞)부터: 관문 칸 순서가 배치 순서와 같다.
             for (int i = 1; i < area.ItemCount; i++)
@@ -190,15 +195,18 @@ namespace MV.UI.Tests
 
             // 첫 Area: Zone 배너 켬, 첫 관문만 Area 이름표.
             var first = view.AreaViews[0];
-            Assert.That(first.ZoneBanner.gameObject.activeSelf, Is.True);
-            Assert.That(first.ZoneBanner.ZoneNumberText, Is.EqualTo("Zone 1"));
+            var firstBg = view.BackgroundViews[0];
+            Assert.That(first.BannerSpace.activeSelf, Is.True);
+            Assert.That(firstBg.ZoneBanner.gameObject.activeSelf, Is.True);
+            Assert.That(firstBg.ZoneBanner.ZoneNumberText, Is.EqualTo("Zone 1"));
             Assert.That(first.Item(0).AreaLabel.gameObject.activeSelf, Is.True);
             Assert.That(first.Item(1).AreaLabel.gameObject.activeSelf, Is.False);
             Assert.That(first.Item(2).MilestoneText, Is.EqualTo(MvUiFormat.Fmt(50)));
-            Assert.That(view.AreaViews[1].ZoneBanner.gameObject.activeSelf, Is.False, "Zone 중간 Area는 배너 끔");
+            Assert.That(view.AreaViews[1].BannerSpace.activeSelf, Is.False, "Zone 중간 Area는 배너 자리 끔");
+            Assert.That(view.BackgroundViews[1].ZoneBanner.gameObject.activeSelf, Is.False, "Zone 중간 Area는 배너 끔");
             // 그림은 표 주소(MV-UI3-ZONETEX): Zone 배너 = 301_zone.mapIcon, Area 이름표 = 302_area.mapIcon.
             Assert.That(model.Areas[0].ZoneIcon, Is.Not.Empty);
-            Assert.That(first.ZoneBanner.ZoneTextureKey, Is.EqualTo(model.Areas[0].ZoneIcon));
+            Assert.That(firstBg.ZoneBanner.ZoneTextureKey, Is.EqualTo(model.Areas[0].ZoneIcon));
             Assert.That(first.Item(0).AreaLabel.AreaTextureKey, Is.EqualTo(model.Areas[0].AreaIcon));
             Assert.That(view.BackgroundViews[0].BannerSlot.gameObject.activeSelf, Is.True);
             Assert.That(view.BackgroundViews[1].BannerSlot.gameObject.activeSelf, Is.False);
