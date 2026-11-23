@@ -153,10 +153,10 @@ namespace MV.UI
             if (climbStair) climbStair.SetActive(false);
         }
 
-        /// <summary>계단 Current 등급이 바뀌면 스킬 카드를 그 등급 「?」로.</summary>
+        /// <summary>계단 Current 등급이 바뀌면 스킬 카드를 얻은 바퀴 카드 + 그 등급 「?」로.</summary>
         void OnClimbCurrent(int cur)
         {
-            if (skillRoll) skillRoll.ShowQuestion(T, cur);
+            if (skillRoll) skillRoll.ShowQuestion(T, _run?.Climb?.Cards, cur);
         }
 
         /// <summary>확정 카드가 날기 시작하면 Card Pos가 그 자리로 날린다.</summary>
