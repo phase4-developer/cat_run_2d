@@ -30,7 +30,7 @@ namespace MV.UI
     {
         /// <summary>누르면 넘길 행동 id(화면 코드의 <see cref="MetaAction.Id"/>).</summary>
         public readonly string ActionId;
-        /// <summary>표 icon 열(<c>Atlas_UI_Icon</c>). 비면 디자이너 그림을 그대로 둔다.</summary>
+        /// <summary>표 icon 열(<c>Atlas_UI_Icon</c>, 노션 「테이블 연결 텍스쳐 정리」). 비면 아이콘 칸을 숨긴다.</summary>
         public readonly string IconSprite;
         public readonly string Name;
         public readonly int Level;
@@ -124,9 +124,13 @@ namespace MV.UI
         public Button OkButton => okButton;
 
         /// <summary>프리팹 연결 확인(시험·검사용): 빠진 참조 이름 목록.</summary>
+        /// <summary>아이콘 칸에 넣은 그림 이름(숨겼으면 null). 시험·QA.</summary>
+        public string IconShown => icon && icon.enabled ? icon.spriteName : null;
+
         public string MissingRefs()
         {
             var miss = new System.Collections.Generic.List<string>();
+            if (!icon) miss.Add(nameof(icon));
             if (!label) miss.Add(nameof(label));
             if (!level) miss.Add(nameof(level));
             if (!currentValue) miss.Add(nameof(currentValue));
@@ -169,7 +173,8 @@ namespace MV.UI
         protected override void _DrawContents()
         {
             var d = _data;
-            if (!string.IsNullOrEmpty(d.IconSprite)) HudImage.Set(icon, MvAtlas.UiIcon, d.IconSprite);
+            // 표 icon이 비면(그림 제작 예정) 칸을 숨긴다. 다시 쓰는 칸에 앞 행 아이콘이 남지 않게(MV-UI3-UPICON).
+            HudImage.SetOrHide(icon, MvAtlas.UiIcon, d.IconSprite);
             if (label) label.text = d.Name ?? "";
             if (level) level.text = string.Format(MvUiText.Get("ui", LevelKey, LevelFallback), d.Level);
             if (currentValue) currentValue.text = d.CurrentValue ?? "";
