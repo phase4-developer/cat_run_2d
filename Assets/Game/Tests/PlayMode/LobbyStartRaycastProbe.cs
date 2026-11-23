@@ -93,7 +93,7 @@ namespace MV.Tests
             var esType = es.GetType();
             var pedType = Type.GetType("UnityEngine.EventSystems.PointerEventData, UnityEngine.UI");
             var rrType = Type.GetType("UnityEngine.EventSystems.RaycastResult, UnityEngine.UI");
-            var ped = Activator.CreateInstance(pedType, es);
+            var ped = Activator.CreateInstance(pedType, new object[] { es });
             pedType.GetProperty("position").SetValue(ped, pos);
             var list = (IList)Activator.CreateInstance(typeof(System.Collections.Generic.List<>).MakeGenericType(rrType));
             esType.GetMethod("RaycastAll").Invoke(es, new[] { ped, list });
