@@ -90,6 +90,7 @@ namespace MV.UI.Tests
             Assert.That(card.gameObject.activeSelf, Is.True);
             Assert.That(card.QuestionShown, Is.True, "카드 없음 = 「?」");
             Assert.That(card.CardId, Is.EqualTo(0));
+            Assert.That(card.Title, Is.Empty, "카드가 정해지기 전에는 제목 없음");
 
             CardData chosen = null;
             foreach (var c in T.Card.Datas) if (c.active) { chosen = c; break; }
