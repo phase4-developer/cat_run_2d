@@ -12,6 +12,10 @@ namespace MV.UI
         /// <summary>Zone 번호(<c>301_zone.sort</c>).</summary>
         public int ZoneNo;
         public string ZoneName;
+        /// <summary><c>302_area.mapIcon</c>(Area 이름표 그림, Local_Texture 주소). 비면 null.</summary>
+        public string AreaIcon;
+        /// <summary><c>301_zone.mapIcon</c>(Zone 배너 그림, Local_Texture 주소). 비면 null.</summary>
+        public string ZoneIcon;
         /// <summary>그 Zone의 첫 Area면 Zone 배너를 켠다.</summary>
         public bool ZoneStart;
         /// <summary><c>302_area.mapColor</c>. 비었거나 읽지 못하면 null(디자이너 색 유지).</summary>
@@ -61,6 +65,8 @@ namespace MV.UI
                         AreaName = MvUiText.Name(a.id, ""),
                         ZoneNo = z.sort,
                         ZoneName = MvUiText.Name(z.id, ""),
+                        AreaIcon = string.IsNullOrEmpty(a.mapIcon) ? null : a.mapIcon,
+                        ZoneIcon = string.IsNullOrEmpty(z.mapIcon) ? null : z.mapIcon,
                         ZoneStart = first,
                         Color = string.IsNullOrEmpty(a.mapColor) ? null : a.mapColor,
                         Milestones = ms,

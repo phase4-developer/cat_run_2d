@@ -96,6 +96,8 @@ namespace MV.Editor.Import
         public const string UiAtlasFolder = AddressablesLocal + "/UIAtlas";
         public const string WorldAtlasFolder = AddressablesLocal + "/WorldAtlas";
         public const string TextureFolder = AddressablesLocal + "/Texture";
+        /// <summary>디자이너 Zone·Area 배경 텍스처(`Texture_Background_Zone{n}[_Area{m}]`). 파일은 디자이너 폴더에 두고 Local_Texture 주소만 단다(MV-UI3-ZONETEX, 사용자 2026-11-23).</summary>
+        public const string ZoneAreaTextureFolder = "Assets/Game/Art/UI/Texture/Background_ZoneArea";
         public const string AtlasExtension = ".spriteatlasv2";
 
         /// <summary>Managed Addressables 폴더 규칙의 그룹 이름(`Local/&lt;Category&gt;` → `Local_&lt;Category&gt;`).</summary>
@@ -293,6 +295,8 @@ namespace MV.Editor.Import
             if (name.StartsWith("Tex_Lobby_", StringComparison.Ordinal)) return "lobby";
             // 화면 비네트 #vig는 런·로비 무대에 늘 깔리므로 상주 UI 묶음과 같이 둔다(03 §3.8.5 표에 없음 — 결정 후보).
             if (name.StartsWith("Tex_UI_", StringComparison.Ordinal)) return "ui.core";
+            // Zone·Area 배경(지도·로비 이름표·결과). 로비 화면에서 쓰는 Tex_Lobby_*와 같이 둔다.
+            if (name.StartsWith("Texture_Background_Zone", StringComparison.Ordinal)) return "lobby";
             return null;
         }
 

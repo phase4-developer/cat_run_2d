@@ -70,6 +70,7 @@ namespace MV.UI
             d.AreaName = "Area " + areaNo;
             foreach (var a in tables.Area.Datas)
                 if (a.areaNo == areaNo) { d.AreaName = MvUiText.Name(a.id, d.AreaName); break; }
+            d.AreaIcon = HudAreaLabel.AreaIconOf(tables, areaNo);
             d.ZoneNo = MvMetaRules.ZoneIndex(tables, Port.AreaIndex) + 1;
             foreach (var type in CurrencyTypes)
             {

@@ -382,6 +382,7 @@ namespace MV.Editor.Import
             }
             Scan(MvArtRules.TempRoot + "/" + MvArtRules.TextureFolderName, true);
             Scan(MvArtRules.SourceRoot + "/" + MvArtRules.TextureFolderName, true);
+            Scan(MvArtRules.ZoneAreaTextureFolder, true);
             Scan(MvArtRules.TextureFolder, true);
             return map;
         }

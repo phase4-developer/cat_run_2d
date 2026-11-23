@@ -22,6 +22,8 @@ namespace MV.UI
         public MvTables Tables;
         public int ZoneNo;
         public string AreaName;
+        /// <summary><c>302_area.mapIcon</c>(Local_Texture 주소).</summary>
+        public string AreaIcon;
         public readonly List<AreaUpgradeCurrency> Currencies = new List<AreaUpgradeCurrency>();
         /// <summary>배너 보상 글자(시안 「x100」).</summary>
         public string AdGainText;
@@ -125,7 +127,7 @@ namespace MV.UI
             var d = model?.Data as AreaUpgradeViewData;
             if (d == null) return;
 
-            if (areaLabel) areaLabel.ShowUI(new AreaLabelData(d.ZoneNo, d.AreaName));
+            if (areaLabel) areaLabel.ShowUI(new AreaLabelData(d.ZoneNo, d.AreaName, d.AreaIcon));
             if (currencies != null)
                 foreach (var c in currencies)
                 {

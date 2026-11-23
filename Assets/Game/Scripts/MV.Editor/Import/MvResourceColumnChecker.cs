@@ -93,7 +93,7 @@ namespace MV.Editor.Import
         {
             ["icon"] = MvAtlas.UiIcon,
             ["largeIcon"] = MvAtlas.UiIcon,
-            ["mapIcon"] = MvAtlas.UiLobby,
+            ["mapIcon"] = MvAtlas.Address,
             ["frameSprite"] = MvAtlas.UiCard,
             ["illust"] = MvAtlas.Address,
             ["bg"] = MvAtlas.Address,
