@@ -6,3 +6,4 @@ toastMessage.researchNotEnough	캣닢이 부족해요	Not enough Catnip	キャ�
 toastMessage.researchBusy	다른 연구가 진행 중이에요	Another research is in progress	他の研究が進行中です
 toastMessage.researchNotDone	아직 연구 중이에요	Still researching	まだ研究中です
 toastMessage.researchMax	최고 단계예요	Max level reached	最高段階です
+toastMessage.lockedAt	{0} 달성 시 열려요	Unlocks at {0}	{0}達成で解放

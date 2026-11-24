@@ -62,7 +62,7 @@ namespace MV.UI
         public void Draw()
         {
             if (View == null || Data == null) return;
-            View.SetTexts(Data.Title, "프로토 시뮬레이션 · 광고 대신 이 화면"); // ui.ad.sub
+            View.SetTexts(Data.Title, MvUiText.Ui("ui.ad.sub"));
         }
 
         /// <summary>「광고 보기(가짜)」. 이번에 보상 콜백을 불렀으면 true.</summary>
@@ -188,15 +188,16 @@ namespace MV.UI
         /// </summary>
         public static string TitleOf(AdPlacementData row, MvTables tables)
         {
-            if (row == null) return "보상 광고";
+            string ad = MvUiText.Ui("ui.ad.title");
+            if (row == null) return ad;
             string gold = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.Gold));
             string dia = MvUiText.WealthName(tables, MvWealthIds.TypeOf(MvWealthIds.Dia));
             switch (row.key)
             {
-                case MvMetaResultAd.Key: return "보상 광고 · " + gold + "·" + dia + " ×" + row.mul;
-                case "dia": return "보상 광고 · " + dia;
-                case "skip": return "보상 광고 · 부활 쿨타임 줄이기";
-                default: return "보상 광고";
+                case MvMetaResultAd.Key: return ad + " · " + gold + "·" + dia + " ×" + row.mul;
+                case "dia": return ad + " · " + dia;
+                case "skip": return ad + " · " + MvUiText.Ui("ui.ad.skip");
+                default: return ad;
             }
         }
     }

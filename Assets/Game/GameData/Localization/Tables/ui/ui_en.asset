@@ -400,6 +400,130 @@ MonoBehaviour:
     m_Localized: 'Unlock {0}: Reach the Area portal + total {1}'
     m_Metadata:
       m_Items: []
+  - m_Id: 1922585663991808
+    m_Localized: Map
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351936
+    m_Localized: Zodiac Cat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351937
+    m_Localized: Choose Zodiac Cat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351938
+    m_Localized: Area Upgrade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351939
+    m_Localized: Rebirth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351940
+    m_Localized: '{0} +{1} pending'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351941
+    m_Localized: '{0} open'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351942
+    m_Localized: Locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351943
+    m_Localized: Unlocks at {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351944
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351945
+    m_Localized: Test
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351946
+    m_Localized: Stairs Lv {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351947
+    m_Localized: "Lobby max \xB7 Continue at the Spellbook Tower"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351948
+    m_Localized: "When full: Lv {0} \xB7 Stair gate +{0} per tile"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351949
+    m_Localized: Level {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351950
+    m_Localized: "{0} card +1 \xB7 When full, becomes {1} card"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351951
+    m_Localized: Add 1 {0} card
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351952
+    m_Localized: Weapon {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351953
+    m_Localized: Lv {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351954
+    m_Localized: "{0} \xD7{1} \u2192 \xD7{2}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351955
+    m_Localized: '{0} Lv {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351956
+    m_Localized: '{0} Level {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351957
+    m_Localized: "Prototype simulation \xB7 Shown instead of an ad"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351958
+    m_Localized: Rewarded Ad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351959
+    m_Localized: Reduce Rebirth cooldown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351960
+    m_Localized: Watch Ad (Fake)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351961
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351962
+    m_Localized: '{0} runs'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351963
+    m_Localized: Level {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351964
+    m_Localized: Area {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351965
+    m_Localized: Zone {0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
