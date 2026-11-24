@@ -102,7 +102,10 @@ namespace MV.UI
         void BuildRoad(bool has, LobbyState s)
         {
             if (!has) return;
-            Model.RoadLeft = (MvTables.Current?.AreaName(s.AreaNo + 1) ?? "") + " 개방: Area 포털 도달 + 누적 생선"; // ui.lobby.roadNext
+            var t = Port.Tables ?? MvTables.Current;
+            // {0} = 다음 Area 이름(언어팩 name:<302 id>), {1} = 생선 재화 이름(언어팩 name:<01_wealth id>)
+            Model.RoadLeft = MvUiText.Ui("ui.lobby.roadNext", t?.AreaName(s.AreaNo + 1) ?? "",
+                MvUiText.WealthName(t, MvWealthIds.TypeOf(MvWealthIds.Souls)));
             Model.RoadRight = MvUiFormat.Fmt(s.Souls) + " / " + MvUiFormat.Fmt(s.NeedSouls);
             Model.RoadFill = s.NeedSouls > 0 ? (float)Math.Min(s.Souls, s.NeedSouls) / s.NeedSouls : 1f;
         }

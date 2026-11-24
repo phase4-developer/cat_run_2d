@@ -510,6 +510,126 @@ MonoBehaviour:
     m_Localized: LEGENDARY
     m_Metadata:
       m_Items: []
+  - m_Id: 1907395279024128
+    m_Localized: Area 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550080
+    m_Localized: Area 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550081
+    m_Localized: Area 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550082
+    m_Localized: Area 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550083
+    m_Localized: Area 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550084
+    m_Localized: Area 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550085
+    m_Localized: Area 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550086
+    m_Localized: Area 8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550087
+    m_Localized: Area 9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550088
+    m_Localized: Area 10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550089
+    m_Localized: Area 11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550090
+    m_Localized: Area 12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550091
+    m_Localized: Area 13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550092
+    m_Localized: Area 14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550093
+    m_Localized: Area 15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550094
+    m_Localized: Area 16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550095
+    m_Localized: Area 17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550096
+    m_Localized: Area 18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550097
+    m_Localized: Area 19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550098
+    m_Localized: Area 20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550099
+    m_Localized: Area 21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550100
+    m_Localized: Area 22
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550101
+    m_Localized: Area 23
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550102
+    m_Localized: Area 24
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550103
+    m_Localized: Area 25
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550104
+    m_Localized: Area 26
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550105
+    m_Localized: Area 27
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550106
+    m_Localized: Area 28
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550107
+    m_Localized: Area 29
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907395333550108
+    m_Localized: Area 30
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

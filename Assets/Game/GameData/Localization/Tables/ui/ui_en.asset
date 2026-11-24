@@ -284,7 +284,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 163383488638976
-    m_Localized: Area {0} Unlocked!
+    m_Localized: '{0} Unlocked!'
     m_Metadata:
       m_Items: []
   - m_Id: 163383488638977
@@ -300,7 +300,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 163383488638980
-    m_Localized: '{1} to unlock Area {0}'
+    m_Localized: '{1} to unlock {0}'
     m_Metadata:
       m_Items: []
   - m_Id: 163383488638981
@@ -344,7 +344,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 183528944660484
-    m_Localized: Area {0} Clear
+    m_Localized: '{0} Clear'
     m_Metadata:
       m_Items: []
   - m_Id: 207629583216640
@@ -394,6 +394,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 207629633548298
     m_Localized: "Rebirth Lv {0} \xB7 Golden Fish +{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1914044404297728
+    m_Localized: 'Unlock {0}: Reach the Area portal + total {1}'
     m_Metadata:
       m_Items: []
   references:
