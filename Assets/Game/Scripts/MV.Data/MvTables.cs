@@ -104,6 +104,19 @@ namespace MV.Data
         public RunConfigTable RunConfig { get; } = new RunConfigTable();
         public MvTable<ZoneData> Zone { get; } = new MvTable<ZoneData>(ZoneData.Schema, r => new ZoneData(r));
         public MvTable<AreaData> Area { get; } = new MvTable<AreaData>(AreaData.Schema, r => new AreaData(r));
+
+        /// <summary><c>302_area</c>에서 <paramref name="areaNo"/>(1기반) 행. 없으면 null.</summary>
+        public AreaData AreaByNo(int areaNo)
+        {
+            foreach (var a in Area.Datas) if (a.areaNo == areaNo) return a;
+            return null;
+        }
+
+        /// <summary>
+        /// Area 이름 = 언어팩 <c>name:&lt;302 행 id&gt;</c>(Framework <c>TableData.name</c>). 코드·표 <c>name</c> 열로 대신 채우지 않는다.
+        /// 행이 없으면 빈 값, 번역이 없으면 Framework 규칙대로 키(행 id)가 보인다.
+        /// </summary>
+        public string AreaName(int areaNo) => AreaByNo(areaNo)?.name ?? "";
         public MvTable<AreaFloorData> AreaFloor { get; } = new MvTable<AreaFloorData>(AreaFloorData.Schema, r => new AreaFloorData(r), d => d.group);
         public MvTable<ThemeData> Theme { get; } = new MvTable<ThemeData>(ThemeData.Schema, r => new ThemeData(r));
         public MvTable<StageObjectData> StageObject { get; } = new MvTable<StageObjectData>(StageObjectData.Schema, r => new StageObjectData(r));

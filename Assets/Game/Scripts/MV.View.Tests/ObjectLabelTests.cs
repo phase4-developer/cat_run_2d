@@ -101,7 +101,7 @@ namespace MV.View.Tests
             Assert.That(far.Title, Is.EqualTo("골목 2"));
             Assert.That(ObjectLabel.Of(o, o.Z - 2, 3, 0, 1).Visible, Is.False, "관문 3 m 앞을 지나면 숨김");
             o.LabelKey = ObjectLabel.AreaGateKey;
-            Assert.That(ObjectLabel.ArchText(o), Is.EqualTo("Area 2 돌파"));
+            Assert.That(ObjectLabel.ArchText(o), Is.EqualTo((MvTables.Current?.AreaName(2) ?? "") + " 돌파"), "Area 이름 = 언어팩 name:<302 id>");
         }
 
         [Test]

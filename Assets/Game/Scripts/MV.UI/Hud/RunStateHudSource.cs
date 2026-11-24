@@ -44,7 +44,7 @@ namespace MV.UI
             AreaData area = null;
             if (t != null) foreach (var a in t.Area.Datas) if (a.areaNo == h.AreaNo) { area = a; break; }
             h.NeedSouls = area?.needSouls ?? 0;
-            h.AreaName = area != null ? MvUiText.Name(area.id, "") : "";
+            h.AreaName = area?.name ?? ""; // 언어팩 name:<302 id>
 
             var climb = s.Climb;
             if (climb != null)

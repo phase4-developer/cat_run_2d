@@ -54,7 +54,7 @@ namespace MV.View
         public const string TowerText = "마법서 탑 · 맞히면 계단 Lv UP";          // ui.run.label.tower
         public const string StairText = "우다다 계단 · 모은 계단만큼 돌파";       // ui.run.label.stair
         public const string FloorNKey = "ui.run.floorN", AreaGateKey = "ui.run.areaGate";
-        public const string FloorNFallback = "골목 {0}", AreaGateFallback = "Area {0} 돌파";
+        public const string FloorNFallback = "골목 {0}", AreaGateFallback = "{0} 돌파";
 
         static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
@@ -113,7 +113,7 @@ namespace MV.View
         {
             string key = !string.IsNullOrEmpty(o.LabelKey) ? o.LabelKey : o.Kind?.labelKey;
             if (key == FloorNKey) return string.Format(Inv, Loc(key, FloorNFallback), o.LabelArg);
-            if (key == AreaGateKey) return string.Format(Inv, Loc(key, AreaGateFallback), o.LabelArg);
+            if (key == AreaGateKey) return string.Format(Inv, Loc(key, AreaGateFallback), MvTables.Current?.AreaName(o.LabelArg) ?? ""); // Area 이름 = 언어팩 name:<302 id>
             return Loc(key, key);
         }
 

@@ -19,7 +19,7 @@ namespace MV.UI
             string v = c.value.ToString(Inv);
             switch (c.type)
             {
-                case UnlockConditionType.Area: return "Area " + v;
+                case UnlockConditionType.Area: return MvTables.Current?.AreaName(c.value) ?? ""; // 언어팩 name:<302 id>
                 case UnlockConditionType.Runs: return "런 " + v + "번";
                 case UnlockConditionType.Level: return "Level " + v;
                 default: return "";

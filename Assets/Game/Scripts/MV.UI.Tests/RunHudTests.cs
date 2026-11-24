@@ -73,7 +73,7 @@ namespace MV.UI.Tests
             var (p, _, v) = Make();
             Assert.IsTrue(p.Tick());
             Assert.AreEqual("Level 3", v.Text["level"]);
-            Assert.AreEqual("Alley · Area 2\n골목 1", v.Text["floor"]);
+            Assert.AreEqual("Alley\n골목 1", v.Text["floor"], "Area 이름은 언어팩 값만(「· Area N」 중복 없음)");
             Assert.AreEqual("12.3K", v.Text["gold"]);
             Assert.AreEqual("40/100", v.Text["souls"]);
             Assert.AreEqual("7", v.Text["dia"]);
@@ -95,7 +95,7 @@ namespace MV.UI.Tests
             src.State.Floor = 0;
             src.State.AreaName = "";
             p.Tick();
-            Assert.AreEqual("Area 2\n플레이 구간", v.Text["floor"]);
+            Assert.AreEqual("\n플레이 구간", v.Text["floor"], "이름이 없으면 코드가 「Area N」을 채우지 않는다");
         }
 
         [Test]

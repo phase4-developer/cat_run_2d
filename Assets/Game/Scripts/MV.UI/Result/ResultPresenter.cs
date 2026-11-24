@@ -137,7 +137,7 @@ namespace MV.UI
             switch (d.Kind)
             {
                 case ResultKind.ZoneClear: return string.Format(MvUiText.Get("ui", "ui.result.zoneClear", "Zone {0} 클리어!"), d.ZoneNo);
-                case ResultKind.AreaOpen: return string.Format(MvUiText.Get("ui", "ui.result.areaOpen", "Area {0} 개방!"), d.AreaNo + 1);
+                case ResultKind.AreaOpen: return string.Format(MvUiText.Get("ui", "ui.result.areaOpen", "{0} 개방!"), NextAreaName(d));
                 case ResultKind.LevelDone: return MvUiText.Get("ui", "ui.result.levelDone", LevelDoneFallback);
                 default: return MvUiText.Get("ui", "ui.result.fail", "아지트로 귀환");
             }
@@ -149,6 +149,9 @@ namespace MV.UI
         public static string ProgressLeft(ResultViewData d) =>
             d.Kind == ResultKind.ZoneClear
                 ? string.Format(MvUiText.Get("ui", "ui.result.progZone", "Zone {0} · 업데이트 예정"), d.ZoneNo)
-                : string.Format(MvUiText.Get("ui", "ui.result.progNext", "Area {0} 개방까지 {1}"), d.AreaNo + 1, d.SoulsName);
+                : string.Format(MvUiText.Get("ui", "ui.result.progNext", "{0} 개방까지 {1}"), NextAreaName(d), d.SoulsName);
+
+        /// <summary>다음에 열리는 Area(AreaNo + 1) 이름. 언어팩 <c>name:&lt;302 id&gt;</c>만 쓴다.</summary>
+        public static string NextAreaName(ResultViewData d) => (d.Tables ?? MvTables.Current)?.AreaName(d.AreaNo + 1) ?? "";
     }
 }
