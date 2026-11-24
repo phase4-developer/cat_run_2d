@@ -1,4 +1,4 @@
-Key	ko	en	ja
+﻿Key	ko	en	ja
 ui.common.max	MAX	MAX	MAX
 ui.aup.lv	Lv.{0}	Lv.{0}	Lv.{0}
 ui.aup.adGain	x{0}	x{0}	x{0}
@@ -65,11 +65,11 @@ ui.setting.language	언어	Language	言語
 ui.setting.mailSubject	[{0}] 게임 문의	[{0}] Game Inquiry	[{0}] ゲームのお問い合わせ
 ui.setting.mailBody	문의 내용을 입력해 주세요.\n\n\n[기기 정보]\n앱 버전: {0}\n기기: {1}\nOS: {2}\n언어: {3}	Please describe your inquiry.\n\n\n[Device Info]\nApp version: {0}\nDevice: {1}\nOS: {2}\nLanguage: {3}	お問い合わせ内容をご記入ください。\n\n\n[端末情報]\nアプリバージョン: {0}\n端末: {1}\nOS: {2}\n言語: {3}
 ui.result.zoneClear	Zone {0} 클리어!	Zone {0} Clear!	Zone {0} クリア！
-ui.result.areaOpen	Area {0} 개방!	Area {0} Unlocked!	Area {0} 開放！
+ui.result.areaOpen	{0} 개방!	{0} Unlocked!	{0} 開放！
 ui.result.levelDone	<size=65>Level</size>\nComplete !	<size=65>Level</size>\nComplete !	<size=65>Level</size>\nComplete !
 ui.result.fail	아지트로 귀환	Back to Hideout	アジトへ帰還
 ui.result.progZone	Zone {0} · 업데이트 예정	Zone {0} · Coming Soon	Zone {0} · 近日公開
-ui.result.progNext	Area {0} 개방까지 {1}	{1} to unlock Area {0}	Area {0} 開放まで {1}
+ui.result.progNext	{0} 개방까지 {1}	{1} to unlock {0}	{0} 開放まで {1}
 ui.result.adReward	보상	Reward	報酬
 ui.result.next	괜찮아요	No Thanks	結構です
 ui.common.countX	x{0}	x{0}	x{0}
@@ -80,7 +80,7 @@ ui.run.label.stair	우다다 계단 · 모은 계단만큼 돌파	Dash Stairs ·
 ui.run.label.sgate	계단	Stairs	階段
 ui.run.label.cgate	무기	Weapon	武器
 ui.run.floorN	골목 {0}	Alley {0}	路地 {0}
-ui.run.areaGate	Area {0} 돌파	Area {0} Clear	Area {0} 突破
+ui.run.areaGate	{0} 돌파	{0} Clear	{0} 突破
 ui.common.ok	확인	OK	OK
 ui.common.cancel	취소	Cancel	キャンセル
 ui.popup.notice	알림	Notice	お知らせ
@@ -93,3 +93,4 @@ ui.rb.unlockAfter	{0} 달성 시 해금	Unlocks at {0}	{0}達成で解放
 ui.rb.go	환생	Rebirth	転生
 ui.rb.confirm	환생하면 Area 진척도·츄르·생선·로비 강화·Area 강화가 초기화되고 황금 생선 {0}개를 받습니다. 환생할까요?	Rebirth resets Area progress, Churu, Fish, Lobby and Area upgrades, and grants {0} Golden Fish. Rebirth now?	転生するとArea進行度・チュール・魚・ロビー強化・Area強化がリセットされ、金の魚を{0}個獲得します。転生しますか？
 ui.rb.done	환생 Lv {0} · 황금 생선 +{1}	Rebirth Lv {0} · Golden Fish +{1}	転生 Lv {0} · 金の魚 +{1}
+ui.lobby.roadNext	{0} 개방: Area 포털 도달 + 누적 {1}	Unlock {0}: Reach the Area portal + total {1}	{0} 開放：Areaポータル到達 ＋ 累計{1}
