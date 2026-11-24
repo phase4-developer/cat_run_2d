@@ -130,10 +130,9 @@ namespace MV.Fx.Tests
                 bool done = false;
                 d = Spawn("Impact", FxSpawn.Of("fx.impact", Vector3.zero)); made.Add(d.gameObject);
                 d.Play(0, false, () => done = true);
-                d.Step(0.05f);
-                Assert.IsFalse(done);
-                d.Step(0.05f);
-                Assert.IsTrue(done, "impact 0.08 s 뒤 완료");
+                // 완료 시각은 디자이너 파티클 길이에 따른다(고정하지 않음): 시간이 지나면 끝나는지만 본다.
+                for (int i = 0; i < 600 && !done; i++) d.Step(0.05f);
+                Assert.IsTrue(done, "수명이 지나면 완료");
             }
             finally
             {

@@ -809,9 +809,6 @@ namespace MV.View.Tests
             "Obj_StairZone:Billboard/Lantern_R/Shadow",
             "Obj_StairZone:Billboard/Glow (1)",
             "Obj_StairZone:Billboard/Glow (2)",
-            "Stage1_Block_Blue:Billboard/Chest_1",
-            "Stage1_Block_Cat:Billboard/Body (2)",
-            "Stage1_Block_Gold:Billboard/Chest_2",
         };
 
         [Test]
