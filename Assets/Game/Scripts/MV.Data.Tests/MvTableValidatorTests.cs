@@ -111,7 +111,8 @@ namespace MV.Data.Tests
             Assert.That(StageObjectData.Find(rows, "Stage1", "wall", StageObjectReward.Dia), Is.EqualTo("Stage1_Block_Blue"));
             Assert.That(StageObjectData.Find(rows, "Stage1", "arch", StageObjectReward.Gold), Is.EqualTo("Stage1_Arch"));
             Assert.That(StageObjectData.Find(rows, "Stage1", "tower", StageObjectReward.Any), Is.Null);
-            Assert.That(StageObjectData.Find(rows, "Stage2", "arch", StageObjectReward.Any), Is.Null);
+            Assert.That(StageObjectData.Find(rows, "Stage2", "arch", StageObjectReward.Any), Is.EqualTo("Stage2_Arch"), "zone2·3 리소스 행(305001006~015)");
+            Assert.That(StageObjectData.Find(rows, "StageNone", "arch", StageObjectReward.Any), Is.Null, "없는 맵은 null");
         }
 
         // ---------------- 형식·참조 ----------------
