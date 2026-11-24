@@ -12631,6 +12631,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 7162318336533136970}
     m_Modifications:
     - target: {fileID: 1789952794372512408, guid: e6d82339a5ded5f47a43942ad7729e0c, type: 3}
+      propertyPath: preset
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789952794372512408, guid: e6d82339a5ded5f47a43942ad7729e0c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789952794372512408, guid: e6d82339a5ded5f47a43942ad7729e0c, type: 3}
       propertyPath: onEnableBehaviour
       value: 3
       objectReference: {fileID: 0}
@@ -12678,7 +12686,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8680602696262560949, guid: e6d82339a5ded5f47a43942ad7729e0c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8680602696262560949, guid: e6d82339a5ded5f47a43942ad7729e0c, type: 3}
+    - {fileID: 1789952794372512408, guid: e6d82339a5ded5f47a43942ad7729e0c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -12699,7 +12713,7 @@ PrefabInstance:
     - target: {fileID: 5400147186843092764, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: -8890522067525861984, guid: b9f9b27bdc4f92949a07f64b73f7fd0e, type: 2}
+      objectReference: {fileID: 2100000, guid: f8e2235b3cc9bcb41b5a22af6e2c7592, type: 2}
     - target: {fileID: 6392658425363057222, guid: 21f4135c99f2c4f88932d081464afc3c, type: 3}
       propertyPath: m_Name
       value: Obj_Count
