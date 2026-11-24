@@ -114,36 +114,37 @@ namespace MV.UI
 
         void BuildSide(MvTables t, bool ready, int areaNo)
         {
-            Add(LobbySideIds.Map, "지도", t?.AreaName(areaNo) ?? "", ready); // ui.lobby.map / ui.lobby.mapSub
+            Add(LobbySideIds.Map, MvUiText.Ui("ui.lobby.map"), t?.AreaName(areaNo) ?? "", ready);
 
             string godKey = Port.SelectedGod;
             var god = t != null && godKey != null ? t.God.ByKey(godKey) : null;
-            Add(LobbySideIds.God, god != null ? MvUiText.Name(god.id, god.key) : "야옹신", "야옹신 선택", ready); // name:<113_god id> / ui.lobby.godSub
+            Add(LobbySideIds.God, god != null ? god.name : MvUiText.Ui("ui.lobby.godDefault"), MvUiText.Ui("ui.lobby.godSub"), ready); // name:<113_god id>
 
-            Add(LobbySideIds.AreaUpgrade, "장난감 바구니", "캣닢 " + MvUiFormat.Fmt(Port.Wealth(MvWealthIds.Dia)), ready); // ui.lobby.aup
+            Add(LobbySideIds.AreaUpgrade, MvUiText.Ui("ui.lobby.aup"),
+                MvUiText.WealthName(t, MvWealthIds.TypeOf(MvWealthIds.Dia)) + " " + MvUiFormat.Fmt(Port.Wealth(MvWealthIds.Dia)), ready);
 
-            var rb = Add(LobbySideIds.Rebirth, "아홉 목숨", "", ready); // ui.lobby.rb
+            var rb = Add(LobbySideIds.Rebirth, MvUiText.Ui("ui.lobby.rb"), "", ready);
             rb.UnlockKey = RebirthUnlockKey;
             rb.OpensWhenLocked = true; // 노션 [팝업] 환생 업그레이드: 미해금이면 팝업에서 Lock·해금 진행
             ApplyLock(rb, t);
             long cool = Port.RebirthCooldownLeftMs;
-            rb.Sub = rb.Locked ? LockSub(t, rb.UnlockKey)                                      // ui.lobby.rbLocked
+            rb.Sub = rb.Locked ? LockSub(t, rb.UnlockKey)
                 : cool > 0 ? MetaPanelPresenter.Hms(cool)
-                : "조각 +" + Port.RebirthPending + " 대기";                                      // ui.lobby.rbPending
+                : MvUiText.Ui("ui.lobby.rbPending", MvUiText.WealthName(t, MvWealthIds.TypeOf(MvWealthIds.RbToken)), Port.RebirthPending);
 
-            var content = Add(LobbySideIds.Content, "컨텐츠", "", ready); // ui.lobby.content
+            var content = Add(LobbySideIds.Content, MvUiText.Ui("ui.content.title"), "", ready);
             content.UnlockKey = ContentUnlockKey;
             ApplyLock(content, t);
-            content.Sub = content.Locked ? LockSub(t, content.UnlockKey) : OpenModes(t) + "개 열림"; // ui.lobby.contentSub
+            content.Sub = content.Locked ? LockSub(t, content.UnlockKey) : MvUiText.Ui("ui.lobby.contentSub", OpenModes(t));
 
-            var quest = Add(QuestSideId, "퀘스트", "", ready); // name:<05_contentOpen 5001005>
+            var quest = Add(QuestSideId, MvUiText.Ui("ui.quest.title"), "", ready);
             quest.UnlockKey = QuestUnlockKey;
             ApplyLock(quest, t);
-            if (quest.Locked) quest.Sub = "잠김"; // 해금 조건은 05_contentOpen[quest]
+            if (quest.Locked) quest.Sub = MvUiText.Ui("ui.lobby.locked"); // 해금 조건은 05_contentOpen[quest]
             quest.Dot = !quest.Locked && QuestClaimable();
 
-            Add(LobbySideIds.Sound, "♪", Muted ? "꺼짐" : "", true);
-            Add(LobbySideIds.Debug, "테스트", "", true).Visible = DevBuild; // ui.debug.btn
+            Add(LobbySideIds.Sound, "♪", Muted ? MvUiText.Ui("ui.lobby.soundOff") : "", true);
+            Add(LobbySideIds.Debug, MvUiText.Ui("ui.debug.btn"), "", true).Visible = DevBuild;
         }
 
         /// <summary>부활 버튼 값(디자이너 Button Rebirth). 잠김·숨김은 사이드 버튼 판정(<see cref="ApplyLock"/>)과 같다.</summary>
@@ -208,7 +209,7 @@ namespace MV.UI
         string LockSub(MvTables t, string key)
         {
             string need = MvUnlockText.Need(t?.ContentOpen.ByKey(key), Port.UnlockState(key));
-            return need.Length > 0 ? need + " 해금" : "잠김";
+            return need.Length > 0 ? MvUiText.Ui("ui.lobby.unlockAt", need) : MvUiText.Ui("ui.lobby.locked");
         }
 
         int OpenModes(MvTables t)
@@ -237,8 +238,8 @@ namespace MV.UI
         string LockedToast(MvTables t, LobbySideButton b)
         {
             string need = MvUnlockText.Need(t?.ContentOpen.ByKey(b.UnlockKey), Port.UnlockState(b.UnlockKey));
-            if (need.Length == 0) return "아직 열리지 않았어요";
-            return need + " 달성 시 열려요";                                                   // toastMessage:contentLocked·questLocked
+            if (need.Length == 0) return MvUiText.Toast("toastMessage.locked");
+            return MvUiText.Toast("toastMessage.lockedAt", need);
         }
 
         // ───────── 강화 버튼 3종(05 §5.5.1) ─────────
@@ -254,7 +255,7 @@ namespace MV.UI
                 var u = new LobbyUpgradeItem
                 {
                     Key = row.key,
-                    Title = MvUiText.Name(row.id, FallbackName(row.key)),
+                    Title = row.name, // 언어팩 name:<10_lobbyUpgrade id>
                     Max = max,
                     Price = max ? "MAX" : MetaPanelPresenter.PriceText(Port.NextPrice(MvGrowth.Lobby, row.key), t), // ui.common.max
                     Enabled = canBuy,
@@ -275,17 +276,6 @@ namespace MV.UI
             if (MvConsumeIcon.TryGet(t, (int)c.Type, c.Id, out var atlas, out var sprite)) { u.PriceIconAtlas = atlas; u.PriceIcon = sprite; }
         }
 
-        static string FallbackName(string key)
-        {
-            switch (key)
-            {
-                case MvMetaRules.LobbyStair: return "캣타워";
-                case MvMetaRules.LobbyWeapon: return "스크래쳐";
-                case MvMetaRules.LobbyIncome: return "생선 건조대";
-                default: return key;
-            }
-        }
-
         /// <summary>레벨·설명·진행바(05 §5.5.1 두 번째 표, 정본 UPS.info L823~828). 효과 종류로 나눈다.</summary>
         static void Describe(LobbyUpgradeItem u, LobbyUpgradeData row, MvTables t, int p)
         {
@@ -301,15 +291,15 @@ namespace MV.UI
                     u.NextValue = Math.Min(u.LevelNo + 1, maxLv).ToString(Inv); // 계단 게이트 1칸 +N(ui.up.stairDesc)
                     if (k.Lv >= maxLv)
                     {
-                        u.LevelText = "계단 Lv " + maxLv;          // ui.up.stairLv
-                        u.Desc = "로비 최대 · 이후는 벽돌 우물로";   // ui.up.stairMax
+                        u.LevelText = MvUiText.Ui("ui.up.stairLv", maxLv);
+                        u.Desc = MvUiText.Ui("ui.up.stairMax");
                         u.Progress = 1f;
                         u.ProgressText = "MAX";
                     }
                     else
                     {
-                        u.LevelText = "계단 Lv " + k.Lv;
-                        u.Desc = "다 차면 Lv " + (k.Lv + 1) + " · 계단 게이트 1칸 +" + (k.Lv + 1); // ui.up.stairDesc
+                        u.LevelText = MvUiText.Ui("ui.up.stairLv", k.Lv);
+                        u.Desc = MvUiText.Ui("ui.up.stairDesc", k.Lv + 1);
                         u.Progress = k.Need > 0 ? (float)k.Step / k.Need : 0f;
                         u.ProgressText = k.Step + "/" + k.Need;
                     }
@@ -324,9 +314,9 @@ namespace MV.UI
                     u.Icon = WeaponIcon(t, tier);
                     u.IconIsItem = true;
                     u.LevelNo = tier;
-                    u.LevelText = "Level " + tier; // ui.up.weaponLv
-                    u.Desc = last ? WeaponName(t, tier) + " 카드 +1 · 다 차면 " + WeaponName(t, tier + 1) + " 카드로" // ui.up.weaponDescLast
-                                  : WeaponName(t, tier) + " 카드 1장 추가";                                          // ui.up.weaponDesc
+                    u.LevelText = MvUiText.Ui("ui.up.weaponLv", tier);
+                    u.Desc = last ? MvUiText.Ui("ui.up.weaponDescLast", WeaponName(t, tier), WeaponName(t, tier + 1))
+                                  : MvUiText.Ui("ui.up.weaponDesc", WeaponName(t, tier));
                     u.Progress = tier >= top ? 1f : w.Need > 0 ? (float)w.Step / w.Need : 0f;
                     u.ProgressText = tier >= top ? w.Step.ToString(Inv) : w.Step + "/" + w.Need;
                     // 디자이너 칸 Slot_Count_Weapon(현재값 / 다음값) = 이번 Level에서 산 수 / 12_weaponLevel.need(사용자 2026-11-19 「8 9 11 10 10 10 일텐데 어떻게 1/3 2/3 이라는 수치가」).
@@ -340,8 +330,9 @@ namespace MV.UI
                     u.LevelNo = p + 1;
                     u.CurValue = MvMetaRules.GoldMul(t, p).ToString("0.##", Inv);
                     u.NextValue = MvMetaRules.GoldMul(t, p + 1).ToString("0.##", Inv);
-                    u.LevelText = "Lv " + (p + 1); // ui.up.incomeLv
-                    u.Desc = "츄르 ×" + MvMetaRules.GoldMul(t, p).ToString("0.00", Inv) + " → ×" + MvMetaRules.GoldMul(t, p + 1).ToString("0.00", Inv); // ui.up.incomeDesc
+                    u.LevelText = MvUiText.Ui("ui.up.incomeLv", p + 1);
+                    u.Desc = MvUiText.Ui("ui.up.incomeDesc", MvUiText.WealthName(t, MvWealthIds.TypeOf(MvWealthIds.Gold)),
+                        MvMetaRules.GoldMul(t, p).ToString("0.00", Inv), MvMetaRules.GoldMul(t, p + 1).ToString("0.00", Inv));
                     u.Progress = -1f; // 진행바 없음
                     break;
                 }
@@ -366,7 +357,7 @@ namespace MV.UI
         static string WeaponName(MvTables t, int tier)
         {
             var item = WeaponItem(t, tier);
-            return item != null ? MvUiText.Name(item.id, "무기 " + tier) : "무기 " + tier;
+            return item != null ? item.name : MvUiText.Ui("ui.up.weaponFallback", tier); // 언어팩 name:<item id>
         }
 
         static string WeaponIcon(MvTables t, int tier) => WeaponItem(t, tier)?.icon ?? "";
@@ -397,8 +388,7 @@ namespace MV.UI
                 DeckCardAdded?.Invoke(r.HasLobbyBuy && r.AddedTier > 0 ? r.AddedTier : before);
             // 배너 자리(OverlayHud.ShowBanner는 2차 연출). 1차는 토스트로 알린다.
             if (after > before)
-                Say(row.effectType == LobbyEffectType.StartStairLv ? "캣타워 Lv " + after   // ui.banner.stairUp
-                                                                   : "무기 Level " + after); // ui.banner.weaponUp
+                Say(MvUiText.Ui(row.effectType == LobbyEffectType.StartStairLv ? "ui.banner.stairUp" : "ui.banner.weaponUp", row.name, after));
             Draw();
             return true;
         }

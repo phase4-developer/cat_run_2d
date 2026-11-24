@@ -58,9 +58,9 @@ namespace MV.UI
             subText = MvUi.Label(root, "Sub", 3 * U, MvUi.InkDim, TextAnchor.MiddleCenter, FontStyle.Normal);
             MvUi.Place(subText.rectTransform, new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(0, 6 * U), new Vector2(90 * U, 5 * U));
 
-            watchButton = MvUi.Button(root, "Watch", "광고 보기(가짜)", MvUi.Hex("#ffd84a"), MvUi.Hex("#2a1608"), 5 * U); // ui.ad.watchFake [창작]
+            watchButton = MvUi.Button(root, "Watch", MvUiText.Ui("ui.ad.watchFake"), MvUi.Hex("#ffd84a"), MvUi.Hex("#2a1608"), 5 * U); // ui.ad.watchFake [창작]
             MvUi.Place((RectTransform)watchButton.transform, new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(0, -8 * U), new Vector2(56 * U, 11 * U));
-            closeButton = MvUi.Button(root, "Close", "닫기", new Color(1, 1, 1, .08f), MvUi.Ink, 3.6f * U); // ui.common.close
+            closeButton = MvUi.Button(root, "Close", MvUiText.Ui("ui.common.close"), new Color(1, 1, 1, .08f), MvUi.Ink, 3.6f * U); // ui.common.close
             MvUi.Place((RectTransform)closeButton.transform, new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(0, -22 * U), new Vector2(30 * U, 8 * U));
         }
     }
