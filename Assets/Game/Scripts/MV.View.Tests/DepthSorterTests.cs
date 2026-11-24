@@ -83,5 +83,36 @@ namespace MV.View.Tests
             DepthSorter.SortAll(list, cam, fwd, cfg);
             Assert.That(sr.enabled, Is.True, "풀에서 다시 꺼내 화면 안에 들어왔는데 렌더러가 꺼져 있다");
         }
+
+        /// <summary>프리팹에서 일부러 끈 렌더러(계단문 Glow 파티클 등)는 근평면 숨김 → 다시 보임·풀 재사용 뒤에도 꺼진 채다.</summary>
+        [Test]
+        public void NearHide_ThenShow_KeepsPrefabDisabledRenderersOff()
+        {
+            var cfg = ViewTestTables.Config();
+            var cam = new Vector3(0, 13, -9);
+            var fwd = (new Vector3(0, 0.5f, 5.5f) - cam).normalized;
+            var s = Make(new Vector3(0, 0, 30), DepthMath.RankObject, 0, (float)cfg.ObjProbeY, true);
+            var on = s.GetComponentInChildren<SpriteRenderer>();
+            var offGo = new GameObject("Off");
+            offGo.transform.SetParent(s.transform, false);
+            var off = offGo.AddComponent<SpriteRenderer>();
+            off.enabled = false;
+            s.Refresh();
+            var list = new List<DepthSortable> { s };
+
+            s.transform.position = new Vector3(0, 13, -20);
+            DepthSorter.SortAll(list, cam, fwd, cfg);
+            Assert.That(on.enabled, Is.False, "숨김");
+            s.transform.position = new Vector3(0, 0, 30);
+            DepthSorter.SortAll(list, cam, fwd, cfg);
+            Assert.That(on.enabled, Is.True, "다시 보임");
+            Assert.That(off.enabled, Is.False, "일부러 끈 렌더러는 다시 보일 때도 꺼진 채");
+
+            s.transform.position = new Vector3(0, 13, -20);
+            DepthSorter.SortAll(list, cam, fwd, cfg);
+            s.Refresh();   // 숨긴 채 풀 재사용
+            Assert.That(on.enabled, Is.True, "풀 재사용 때 원래 상태로 되돌림");
+            Assert.That(off.enabled, Is.False, "풀 재사용 뒤에도 일부러 끈 렌더러는 꺼진 채");
+        }
     }
 }
