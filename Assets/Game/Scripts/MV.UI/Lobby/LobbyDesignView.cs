@@ -315,8 +315,7 @@ namespace MV.UI
         {
             Init();
             _tables = t;
-            string area = s.AreaName;
-            if (string.IsNullOrEmpty(area)) area = "Area " + s.AreaNo;
+            string area = s.AreaName ?? ""; // 언어팩 name:<302 id>만
             string areaIcon = HudAreaLabel.AreaIconOf(t, s.AreaNo);
             if (areaLabel) areaLabel.ShowUI(new AreaLabelData(s.ZoneNo, area, areaIcon));
             if (areaUpgradeLabel) areaUpgradeLabel.ShowUI(new AreaLabelData(s.ZoneNo, area, areaIcon));

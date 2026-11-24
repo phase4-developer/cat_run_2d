@@ -95,7 +95,7 @@ namespace MV.UI
             {
                 s.Deck = MV.Meta.MvMetaRules.CleanDeck(tables, deck, store.Lobby.GetUp(MV.Meta.MvMetaRules.LobbyWeapon));
                 foreach (var a in tables.Area.Datas)
-                    if (a.areaNo == s.AreaNo) { s.NeedSouls = a.needSouls; s.AreaId = a.id; s.AreaName = MvUiText.Name(a.id, ""); break; }
+                    if (a.areaNo == s.AreaNo) { s.NeedSouls = a.needSouls; s.AreaId = a.id; s.AreaName = a.name; break; }
                 s.ZoneNo = MV.Meta.MvMetaRules.ZoneIndex(tables, store.Progress.Area) + 1;
             }
             return true;

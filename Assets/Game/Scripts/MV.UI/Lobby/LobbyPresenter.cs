@@ -102,7 +102,7 @@ namespace MV.UI
         void BuildRoad(bool has, LobbyState s)
         {
             if (!has) return;
-            Model.RoadLeft = "Area " + (s.AreaNo + 1) + " 개방: Area 포털 도달 + 누적 생선"; // ui.lobby.roadNext
+            Model.RoadLeft = (MvTables.Current?.AreaName(s.AreaNo + 1) ?? "") + " 개방: Area 포털 도달 + 누적 생선"; // ui.lobby.roadNext
             Model.RoadRight = MvUiFormat.Fmt(s.Souls) + " / " + MvUiFormat.Fmt(s.NeedSouls);
             Model.RoadFill = s.NeedSouls > 0 ? (float)Math.Min(s.Souls, s.NeedSouls) / s.NeedSouls : 1f;
         }
@@ -111,7 +111,7 @@ namespace MV.UI
 
         void BuildSide(MvTables t, bool ready, int areaNo)
         {
-            Add(LobbySideIds.Map, "지도", "Area " + areaNo, ready); // ui.lobby.map / ui.lobby.mapSub
+            Add(LobbySideIds.Map, "지도", t?.AreaName(areaNo) ?? "", ready); // ui.lobby.map / ui.lobby.mapSub
 
             string godKey = Port.SelectedGod;
             var god = t != null && godKey != null ? t.God.ByKey(godKey) : null;

@@ -93,7 +93,7 @@ namespace MV.UI
                     {
                         d.SoulsNeed = a.needSouls;
                         d.ZoneNo = tables.Zone.Get(a.zoneId)?.sort ?? 1;
-                        d.AreaName = MvUiText.Name(a.id, MvUiText.RawName(tables.Area.RawRows, a.id) ?? "");
+                        d.AreaName = a.name;
                         d.AreaIcon = string.IsNullOrEmpty(a.mapIcon) ? null : a.mapIcon;
                         break;
                     }

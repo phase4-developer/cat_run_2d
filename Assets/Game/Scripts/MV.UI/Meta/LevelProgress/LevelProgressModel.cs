@@ -75,7 +75,7 @@ namespace MV.UI
                     m._areas.Add(new LevelProgressAreaInfo
                     {
                         AreaNo = a.areaNo,
-                        AreaName = MvUiText.Name(a.id, ""),
+                        AreaName = a.name,
                         ZoneNo = z.sort,
                         ZoneName = MvUiText.Name(z.id, ""),
                         AreaIcon = string.IsNullOrEmpty(a.mapIcon) ? null : a.mapIcon,

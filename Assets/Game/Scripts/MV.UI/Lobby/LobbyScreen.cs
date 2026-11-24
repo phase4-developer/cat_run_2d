@@ -138,7 +138,7 @@ namespace MV.UI
             if (all || s.Level != _last.Level)
                 v.SetLevel(string.Format(LevelFormat, s.Level)); // ui.lobby.level, Level = 실패 횟수
             if (all || s.AreaNo != _last.AreaNo || s.AreaName != _last.AreaName)
-                v.SetArea(string.IsNullOrEmpty(s.AreaName) ? "Area " + s.AreaNo : s.AreaName + " · Area " + s.AreaNo); // ui.lobby.zoneNo
+                v.SetArea(s.AreaName ?? ""); // Area 이름은 언어팩 name:<302 id>만
             if (all || s.Gold != _last.Gold || s.Souls != _last.Souls || s.Dia != _last.Dia || s.NeedSouls != _last.NeedSouls)
                 v.SetWealth(MvUiFormat.Fmt(s.Gold), MvUiFormat.Fmt(s.Souls), MvUiFormat.Fmt(s.Dia));
             if (v is ILobbyStateView raw && (all || !Same(s, _last) || !SameDeck(s.Deck, _last.Deck)))

@@ -105,8 +105,9 @@ namespace MV.UI.Tests
             p.SetView(view);
             var d = Data(new CountingSettler());
             p.Open(d);
-            Assert.AreEqual("Area 2 개방!", view.Title);
-            Assert.AreEqual("Area 2 개방까지 " + d.SoulsName, view.Progress.Left);
+            string next = ResultPresenter.NextAreaName(d); // 언어팩 name:<302 id>, 코드가 「Area N」을 만들지 않는다
+            Assert.AreEqual(next + " 개방!", view.Title);
+            Assert.AreEqual(next + " 개방까지 " + d.SoulsName, view.Progress.Left);
             Assert.AreEqual("80 / 100", view.Progress.Right);
             Assert.AreEqual(0.5f, view.Progress.From01, 1e-5f, "정산 전 50/100에서 출발");
             Assert.AreEqual(0.8f, view.Progress.To01, 1e-5f);

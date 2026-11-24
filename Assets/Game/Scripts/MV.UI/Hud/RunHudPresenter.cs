@@ -81,7 +81,7 @@ namespace MV.UI
 
         public static string FloorText(RunHudState s)
         {
-            string head = string.IsNullOrEmpty(s.AreaName) ? "Area " + s.AreaNo : s.AreaName + " · Area " + s.AreaNo; // ui.hud.floor
+            string head = s.AreaName ?? ""; // Area 이름은 언어팩 name:<302 id>만
             string tail = s.Floor > 0 ? "골목 " + s.Floor : "플레이 구간";                                         // ui.hud.floorN / floorPlay
             return head + "\n" + tail;
         }
