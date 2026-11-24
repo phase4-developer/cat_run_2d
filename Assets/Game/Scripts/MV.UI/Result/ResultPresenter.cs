@@ -67,7 +67,7 @@ namespace MV.UI
         {
             float to = Fill01(d.SoulsHave, d.SoulsNeed);
             int pct = d.SoulsNeed > 0 ? (int)Math.Min(100L, (long)Math.Max(0, d.SoulsHave) * 100 / d.SoulsNeed) : 100;
-            return new ResultProgress(Mathf.Min(Fill01(d.SoulsBefore, d.SoulsNeed), to), to, pct, d.ZoneNo, d.AreaName ?? "",
+            return new ResultProgress(Mathf.Min(Fill01(d.SoulsBefore, d.SoulsNeed), to), to, pct, d.ZoneNo, d.AreaNo, d.AreaName ?? "",
                 ProgressLeft(d), d.SoulsHave + " / " + d.SoulsNeed, d.AreaIcon);
         }
 

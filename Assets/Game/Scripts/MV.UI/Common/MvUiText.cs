@@ -46,6 +46,12 @@ namespace MV.UI
             return Name(id, raw ?? id.ToString(CultureInfo.InvariantCulture));
         }
 
+        /// <summary>Area 번호 글자 「Area {0}」(언어팩 <c>ui.area.number</c>). 번호는 <c>302_area.areaNo</c>(1기반). 번호 글자는 여기서만 만든다.</summary>
+        public static string AreaNumber(int areaNo) => Ui("ui.area.number", areaNo);
+
+        /// <summary>Zone 번호 글자 「Zone {0}」(언어팩 <c>ui.zone.number</c>). 번호는 <c>301_zone.sort</c>(1기반).</summary>
+        public static string ZoneNumber(int zoneNo) => Ui("ui.zone.number", zoneNo);
+
         /// <summary>표 행 이름 <c>name:&lt;행 id&gt;</c>.</summary>
         public static string Name(int rowId, string fallback) => Get("name", rowId.ToString(), fallback);
 

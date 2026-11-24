@@ -141,7 +141,8 @@ namespace MV.UI.Tests
             view.CompleteFill();
             Assert.That(view.ProgressValue, Is.EqualTo(p.To01).Within(1e-4f));
             Assert.That(view.ProgressText, Is.EqualTo(p.Percent + "%"));
-            Assert.That(view.AreaLabel.ZoneText, Does.Contain(d.ZoneNo.ToString()));
+            Assert.That(view.AreaLabel.ZoneText, Is.EqualTo(MvUiText.ZoneNumber(d.ZoneNo)));
+            Assert.That(view.AreaLabel.AreaCountText, Is.EqualTo(MvUiText.AreaNumber(d.AreaNo)));
             Assert.That(view.AreaLabel.AreaText, Is.EqualTo(d.AreaName));
             Assert.That(view.FillDuration, Is.GreaterThan(0f), "연출 시간은 프리팹 직렬화 값");
         }

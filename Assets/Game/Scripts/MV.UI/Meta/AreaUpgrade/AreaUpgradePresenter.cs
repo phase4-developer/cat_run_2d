@@ -67,6 +67,7 @@ namespace MV.UI
         {
             var d = new AreaUpgradeViewData { Tables = tables, AdActionId = FreeId };
             int areaNo = Port.AreaIndex + 1;
+            d.AreaNo = areaNo;
             d.AreaName = tables.AreaName(areaNo);
             d.AreaIcon = HudAreaLabel.AreaIconOf(tables, areaNo);
             d.ZoneNo = MvMetaRules.ZoneIndex(tables, Port.AreaIndex) + 1;

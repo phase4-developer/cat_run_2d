@@ -52,7 +52,7 @@ namespace MV.UI
             int need = _info.Milestones.Length;
             if (need > ItemCount)
                 Debug.LogWarning($"[LevelProgressArea] Area {_info.AreaNo} 관문 {need}개인데 Element_LevelProgress 프리팹 칸은 {ItemCount}개입니다. 프리팹에 Element_Progress_Item을 더하세요(Assets/Game/Art/UI/Prefab/LevelProgress/Element_LevelProgress.prefab).");
-            var label = new AreaLabelData(_info.ZoneNo, _info.AreaName, _info.AreaIcon);
+            var label = new AreaLabelData(_info.ZoneNo, _info.AreaNo, _info.AreaName, _info.AreaIcon);
             for (int i = 0; i < ItemCount; i++)
             {
                 var it = items[i];

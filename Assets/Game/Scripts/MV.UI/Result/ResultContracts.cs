@@ -193,15 +193,17 @@ namespace MV.UI
         /// <summary>「{0}%」에 넣을 정수(소수점 버림).</summary>
         public readonly int Percent;
         public readonly int ZoneNo;
+        /// <summary>이름표의 Area 번호(<c>302_area.areaNo</c>, 1기반) = <see cref="AreaName"/>의 Area.</summary>
+        public readonly int AreaNo;
         public readonly string AreaName;
         /// <summary><c>302_area.mapIcon</c>(Local_Texture 주소).</summary>
         public readonly string AreaIcon;
         /// <summary>기획서 05 §5.6 진행 글(왼쪽·오른쪽). 시안에 자리가 없어 디자이너 겉은 그리지 않는다.</summary>
         public readonly string Left, Right;
 
-        public ResultProgress(float from01, float to01, int percent, int zoneNo, string areaName, string left, string right, string areaIcon = null)
+        public ResultProgress(float from01, float to01, int percent, int zoneNo, int areaNo, string areaName, string left, string right, string areaIcon = null)
         {
-            From01 = from01; To01 = to01; Percent = percent; ZoneNo = zoneNo; AreaName = areaName; Left = left; Right = right; AreaIcon = areaIcon;
+            From01 = from01; To01 = to01; Percent = percent; ZoneNo = zoneNo; AreaNo = areaNo; AreaName = areaName; Left = left; Right = right; AreaIcon = areaIcon;
         }
     }
 
