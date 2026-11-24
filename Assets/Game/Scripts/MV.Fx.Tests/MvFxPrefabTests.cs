@@ -128,7 +128,12 @@ namespace MV.Fx.Tests
 
                 // 수명이 지나면 끝난다(simDt 진행)
                 bool done = false;
-                d = Spawn("Impact", FxSpawn.Of("fx.impact", Vector3.zero)); made.Add(d.gameObject);
+                // 프리팹은 디자이너 파티클과 함께 끝나므로 코드 드라이버만으로 수명 완료를 본다.
+                var ig = new GameObject("ImpactCanon"); made.Add(ig);
+                d = ig.AddComponent<MvFxDriver>();
+                d.kind = FxKind.Impact;
+                var imp = FxSpawn.Of("fx.impact", Vector3.zero); imp.Life = 0.08f;
+                d.SetSkin(MvFxParamBank.Put(imp));
                 d.Play(0, false, () => done = true);
                 // 완료 시각은 디자이너 파티클 길이에 따른다(고정하지 않음): 시간이 지나면 끝나는지만 본다.
                 for (int i = 0; i < 600 && !done; i++) d.Step(0.05f);
