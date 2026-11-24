@@ -395,6 +395,130 @@ MonoBehaviour:
     m_Key: ui.lobby.roadNext
     m_Metadata:
       m_Items: []
+  - m_Id: 1922585663991808
+    m_Key: ui.lobby.map
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351936
+    m_Key: ui.lobby.godDefault
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351937
+    m_Key: ui.lobby.godSub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351938
+    m_Key: ui.lobby.aup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351939
+    m_Key: ui.lobby.rb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351940
+    m_Key: ui.lobby.rbPending
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351941
+    m_Key: ui.lobby.contentSub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351942
+    m_Key: ui.lobby.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351943
+    m_Key: ui.lobby.unlockAt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351944
+    m_Key: ui.lobby.soundOff
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351945
+    m_Key: ui.debug.btn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351946
+    m_Key: ui.up.stairLv
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351947
+    m_Key: ui.up.stairMax
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351948
+    m_Key: ui.up.stairDesc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351949
+    m_Key: ui.up.weaponLv
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351950
+    m_Key: ui.up.weaponDescLast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351951
+    m_Key: ui.up.weaponDesc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351952
+    m_Key: ui.up.weaponFallback
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351953
+    m_Key: ui.up.incomeLv
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351954
+    m_Key: ui.up.incomeDesc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351955
+    m_Key: ui.banner.stairUp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351956
+    m_Key: ui.banner.weaponUp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351957
+    m_Key: ui.ad.sub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351958
+    m_Key: ui.ad.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351959
+    m_Key: ui.ad.skip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351960
+    m_Key: ui.ad.watchFake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351961
+    m_Key: ui.common.close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351962
+    m_Key: ui.unlock.runs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351963
+    m_Key: ui.unlock.level
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351964
+    m_Key: ui.area.number
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922585693351965
+    m_Key: ui.zone.number
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

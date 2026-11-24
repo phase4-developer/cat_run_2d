@@ -20,8 +20,8 @@ namespace MV.UI
             switch (c.type)
             {
                 case UnlockConditionType.Area: return MvTables.Current?.AreaName(c.value) ?? ""; // 언어팩 name:<302 id>
-                case UnlockConditionType.Runs: return "런 " + v + "번";
-                case UnlockConditionType.Level: return "Level " + v;
+                case UnlockConditionType.Runs: return MvUiText.Ui("ui.unlock.runs", v);
+                case UnlockConditionType.Level: return MvUiText.Ui("ui.unlock.level", v);
                 default: return "";
             }
         }

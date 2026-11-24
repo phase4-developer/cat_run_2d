@@ -43,6 +43,10 @@ MonoBehaviour:
     m_Key: toastMessage.researchMax
     m_Metadata:
       m_Items: []
+  - m_Id: 1922586070839296
+    m_Key: toastMessage.lockedAt
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

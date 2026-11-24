@@ -630,6 +630,18 @@ MonoBehaviour:
     m_Localized: Area 30
     m_Metadata:
       m_Items: []
+  - m_Id: 1922586548989952
+    m_Localized: Stair Count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922586658041856
+    m_Localized: Add Weapon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922586658041857
+    m_Localized: Income
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

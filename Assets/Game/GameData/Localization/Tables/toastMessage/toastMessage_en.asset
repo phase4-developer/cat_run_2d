@@ -46,6 +46,10 @@ MonoBehaviour:
     m_Localized: Max level reached
     m_Metadata:
       m_Items: []
+  - m_Id: 1922586070839296
+    m_Localized: Unlocks at {0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -94,3 +94,34 @@ ui.rb.go	환생	Rebirth	転生
 ui.rb.confirm	환생하면 Area 진척도·츄르·생선·로비 강화·Area 강화가 초기화되고 황금 생선 {0}개를 받습니다. 환생할까요?	Rebirth resets Area progress, Churu, Fish, Lobby and Area upgrades, and grants {0} Golden Fish. Rebirth now?	転生するとArea進行度・チュール・魚・ロビー強化・Area強化がリセットされ、金の魚を{0}個獲得します。転生しますか？
 ui.rb.done	환생 Lv {0} · 황금 생선 +{1}	Rebirth Lv {0} · Golden Fish +{1}	転生 Lv {0} · 金の魚 +{1}
 ui.lobby.roadNext	{0} 개방: Area 포털 도달 + 누적 {1}	Unlock {0}: Reach the Area portal + total {1}	{0} 開放：Areaポータル到達 ＋ 累計{1}
+ui.lobby.map	지도	Map	マップ
+ui.lobby.godDefault	별자리냥	Zodiac Cat	星座ニャン
+ui.lobby.godSub	별자리냥 선택	Choose Zodiac Cat	星座ニャンを選択
+ui.lobby.aup	Area 강화	Area Upgrade	Area強化
+ui.lobby.rb	냥환생	Rebirth	ニャン転生
+ui.lobby.rbPending	{0} +{1} 대기	{0} +{1} pending	{0} +{1} 待機
+ui.lobby.contentSub	{0}개 열림	{0} open	{0}個解放
+ui.lobby.locked	잠김	Locked	ロック中
+ui.lobby.unlockAt	{0} 해금	Unlocks at {0}	{0}で解放
+ui.lobby.soundOff	꺼짐	Off	オフ
+ui.debug.btn	테스트	Test	テスト
+ui.up.stairLv	계단 Lv {0}	Stairs Lv {0}	階段 Lv {0}
+ui.up.stairMax	로비 최대 · 이후는 마법서 탑으로	Lobby max · Continue at the Spellbook Tower	ロビー最大 · 以降は魔法書の塔で
+ui.up.stairDesc	다 차면 Lv {0} · 계단 게이트 1칸 +{0}	When full: Lv {0} · Stair gate +{0} per tile	満タンで Lv {0} · 階段ゲート1マス +{0}
+ui.up.weaponLv	Level {0}	Level {0}	Level {0}
+ui.up.weaponDescLast	{0} 카드 +1 · 다 차면 {1} 카드로	{0} card +1 · When full, becomes {1} card	{0}カード +1 · 満タンで{1}カードに
+ui.up.weaponDesc	{0} 카드 1장 추가	Add 1 {0} card	{0}カードを1枚追加
+ui.up.weaponFallback	무기 {0}	Weapon {0}	武器 {0}
+ui.up.incomeLv	Lv {0}	Lv {0}	Lv {0}
+ui.up.incomeDesc	{0} ×{1} → ×{2}	{0} ×{1} → ×{2}	{0} ×{1} → ×{2}
+ui.banner.stairUp	{0} Lv {1}	{0} Lv {1}	{0} Lv {1}
+ui.banner.weaponUp	{0} Level {1}	{0} Level {1}	{0} Level {1}
+ui.ad.sub	프로토 시뮬레이션 · 광고 대신 이 화면	Prototype simulation · Shown instead of an ad	プロトタイプ · 広告の代わりの画面
+ui.ad.title	보상 광고	Rewarded Ad	リワード広告
+ui.ad.skip	냥환생 쿨타임 줄이기	Reduce Rebirth cooldown	ニャン転生クールタイム短縮
+ui.ad.watchFake	광고 보기(가짜)	Watch Ad (Fake)	広告を見る(仮)
+ui.common.close	닫기	Close	閉じる
+ui.unlock.runs	런 {0}번	{0} runs	ラン{0}回
+ui.unlock.level	Level {0}	Level {0}	Level {0}
+ui.area.number	Area {0}	Area {0}	Area {0}
+ui.zone.number	Zone {0}	Zone {0}	Zone {0}
