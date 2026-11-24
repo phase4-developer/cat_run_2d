@@ -354,10 +354,10 @@
         },
         {
             "name": "14_rebirthPerk",
-            "hash": "2206ca3516d0878fe93c9c6d66c1c5a46c331356b85b63a61b9aa7169aa8b0e9",
+            "hash": "8c1bdbe63d83c56dc6a5088ac506cc56aa5fe334c97ad3f76fc7d1f4996c43af",
             "metaHash": "c89d45dfd23182dd0dc6cb51714ca9ac7eb0e17e077931e90f3f23697b1e186f",
             "guid": "3ba9dff729694b4cab3acc3b88bbdd5c",
-            "plainHash": "41781d8bcf94b03242996ba8e9c3b25b22cdcd2a0de33ba17a489ab8b08deb21",
+            "plainHash": "be8bfa734bab67df40ab85ac8c274e0f65235fea5fa822bb6c23876c5e7880b0",
             "sourceHash": "41781d8bcf94b03242996ba8e9c3b25b22cdcd2a0de33ba17a489ab8b08deb21",
             "source": "Assets/Game/GameData/Table/TSV/14_rebirthPerk.txt",
             "sourceKind": "LocalFile",
