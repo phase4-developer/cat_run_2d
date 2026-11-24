@@ -178,6 +178,7 @@ namespace MV.UI.Tests
             var stair = view.Stair;
             Assert.That(stair.Gauge, Is.Not.Null, "UIHud_Run 안 계단 AnimatedGauge");
             var run = new MV.Run.RunState(null, T, new MV.Run.Pcg32Rng(1)) { Bal = MV.Run.RunLevelBuilder.Preset(T, null) }; // 실제 런은 항상 프리셋이 있다
+            run.GaugeLv = 2; // 런 시작 값 = 첫 프레임 레벨(f1c3c335 이후 게이지 기준은 런 시작 값)
             view.BindRun(() => run);
             var fx = stair.GradeUpFx;
             var scaleRest = fx.transform.localScale;

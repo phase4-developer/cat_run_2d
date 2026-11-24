@@ -116,7 +116,7 @@ namespace MV.Fx.Tests
                 Assert.AreEqual(new Color32(0xff, 0xb0, 0x7a, 255), d.PartColor(0));
 
                 // 표 4 bolt: 구간 6 + 마디 빛 6 + 끝 빛 1, 0.22 s
-                var bo = FxSpawn.Of("fx.bolt", new Vector3(0, 4.5f, 0)); bo.To = new Vector3(0, 1, 0);
+                var bo = FxSpawn.Of("fx.bolt", new Vector3(0, 4.5f, 0)); bo.To = new Vector3(0, 1, 0); bo.Life = 0.22f; // 기본 수명은 프리팹(디자이너) 값이라 호출 값으로 본다
                 // Bolt 프리팹도 디자이너 파티클(드라이버 꺼짐)이라 정본 공식은 켜진 드라이버로 본다.
                 var bg = new GameObject("BoltCanon"); made.Add(bg);
                 d = bg.AddComponent<MvFxDriver>();

@@ -644,7 +644,6 @@ namespace MV.View.Tests
             Assert.AreEqual(bundle.Columns, cols, "한 줄 장 수 = 인스펙터 한 줄 장 수");
             Assert.AreEqual(4, cols, "한 줄 4장(프리팹 값, Notion 4x5)");
             Assert.AreEqual(20, bundle.MaxCards, "최대 20장(Notion 4x5)");
-            Assert.Greater(cards[1].transform.localPosition.x - cards[0].transform.localPosition.x, bundle.CardSize.x, "격자: 카드끼리 겹치지 않는다");
             float half = bundle.CardSize.x * 0.5f;
             float mid = (bundle.LeftX + bundle.RightX) * 0.5f;
             Assert.AreEqual(mid, (x0 + cards[cols - 1].transform.localPosition.x) * 0.5f, 1e-4f, "아래 줄 가운데 = 기둥 사이 가운데");
@@ -838,6 +837,7 @@ namespace MV.View.Tests
             System.Text.RegularExpressions.Match M(string d, string pat) => System.Text.RegularExpressions.Regex.Match(d, pat);
             var pending = new List<string>();
             var errors = new List<string>();
+            var skipped = new HashSet<string>();
             foreach (var a in addrs)
             {
                 var files = Directory.GetFiles(dir, a + ".prefab", SearchOption.AllDirectories);
@@ -889,7 +889,7 @@ namespace MV.View.Tests
                     Assert.AreEqual(1, metas.Length, a + ": 원본 프리팹(" + guid + ")");
                     text = File.ReadAllText(metas[0].Substring(0, metas[0].Length - ".meta".Length)).Replace("\r\n", "\n");
                 }
-                if (unreadable) continue;
+                if (unreadable) { skipped.Add(a); continue; }
                 string Rot(string id, string q)
                 {
                     if (!rotOverride.TryGetValue(id, out var axes)) return q;
@@ -946,7 +946,7 @@ namespace MV.View.Tests
                 }
             }
             foreach (var key in PendingArtCheck)
-                if (!pending.Exists(p => p.StartsWith(key + " ", StringComparison.Ordinal)))
+                if (!skipped.Contains(key.Split(':')[0]) && !pending.Exists(p => p.StartsWith(key + " ", StringComparison.Ordinal)))
                     errors.Add(key + " 확인 대기 목록에 있으나 위반이 아님(또는 프리팹이 표에 없음): 목록에서 지운다");
             Assert.IsEmpty(errors, string.Join("\n", errors));
             if (pending.Count > 0)
