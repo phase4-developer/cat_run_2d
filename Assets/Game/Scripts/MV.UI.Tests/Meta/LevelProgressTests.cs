@@ -198,7 +198,7 @@ namespace MV.UI.Tests
             var firstBg = view.BackgroundViews[0];
             Assert.That(first.BannerSpace.activeSelf, Is.True);
             Assert.That(firstBg.ZoneBanner.gameObject.activeSelf, Is.True);
-            Assert.That(firstBg.ZoneBanner.ZoneNumberText, Is.EqualTo("Zone 1"));
+            Assert.That(firstBg.ZoneBanner.ZoneNumberText, Is.EqualTo(MvUiText.ZoneNumber(1)));
             Assert.That(first.Item(0).AreaLabel.gameObject.activeSelf, Is.True);
             Assert.That(first.Item(1).AreaLabel.gameObject.activeSelf, Is.False);
             Assert.That(first.Item(2).MilestoneText, Is.EqualTo(MvUiFormat.Fmt(50)));

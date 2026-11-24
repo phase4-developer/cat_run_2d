@@ -26,7 +26,7 @@ namespace MV.UI
     /// </summary>
     public sealed class LevelProgressZoneBanner : UIBase
     {
-        /// <summary><c>Zone Number Text (TMP)</c>, 「Zone {0}」(<see cref="HudAreaLabel.ZoneFormat"/>).</summary>
+        /// <summary><c>Zone Number Text (TMP)</c>, 「Zone {0}」(<see cref="MvUiText.ZoneNumber"/>).</summary>
         [SerializeField] TMP_Text zoneNumberText;
         /// <summary><c>Zone Title Text (TMP)</c>, <c>name:&lt;301_zone id&gt;</c>.</summary>
         [SerializeField] TMP_Text zoneTitleText;
@@ -48,7 +48,7 @@ namespace MV.UI
 
         protected override void _DrawContents()
         {
-            if (zoneNumberText) zoneNumberText.text = string.Format(HudAreaLabel.ZoneFormat, _data.ZoneNo);
+            if (zoneNumberText) zoneNumberText.text = MvUiText.ZoneNumber(_data.ZoneNo);
             if (zoneTitleText) zoneTitleText.text = _data.ZoneName ?? "";
             HudImage.Set(zoneTexture, _data.ZoneIcon);
         }

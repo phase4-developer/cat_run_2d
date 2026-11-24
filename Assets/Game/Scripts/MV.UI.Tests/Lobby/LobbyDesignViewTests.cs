@@ -236,7 +236,8 @@ namespace MV.UI.Tests
             view.SetState(new LobbyState { AreaNo = 2, ZoneNo = 3, AreaName = "테스트", Deck = System.Array.Empty<int>() }, T);
             foreach (var label in new[] { view.AreaLabel, view.AreaUpgradeLabel })
             {
-                Assert.That(label.ZoneText, Is.EqualTo(string.Format(HudAreaLabel.ZoneFormat, 3)));
+                Assert.That(label.ZoneText, Is.EqualTo(MvUiText.ZoneNumber(3)));
+                Assert.That(label.AreaCountText, Is.EqualTo(MvUiText.AreaNumber(2)), "Area 번호는 Area Count Text 따로");
                 Assert.That(label.AreaText, Is.EqualTo("테스트"));
             }
         }

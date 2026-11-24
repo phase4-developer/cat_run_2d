@@ -455,6 +455,7 @@ MonoBehaviour:
       m_Calls: []
   areaTexture: {fileID: 8589459274311380975}
   zoneText: {fileID: 6567657151608775017}
+  areaCountText: {fileID: 1792569626602176382}
   areaText: {fileID: 161280438341526577}
 --- !u!1 &5241298396030676751
 GameObject:

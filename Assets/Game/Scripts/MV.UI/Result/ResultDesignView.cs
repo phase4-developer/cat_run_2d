@@ -158,7 +158,7 @@ namespace MV.UI
         {
             Init();
             _progress = p;
-            if (areaLabel) areaLabel.ShowUI(new AreaLabelData(p.ZoneNo, p.AreaName, p.AreaIcon));
+            if (areaLabel) areaLabel.ShowUI(new AreaLabelData(p.ZoneNo, p.AreaNo, p.AreaName, p.AreaIcon));
             if (_fill != null) { StopCoroutine(_fill); _fill = null; }
             if (p.To01 > p.From01 && fillDuration > 0f)
             {
