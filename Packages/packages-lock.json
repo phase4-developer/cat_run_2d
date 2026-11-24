@@ -225,12 +225,12 @@
       }
     },
     "com.jjevol.localization.authoring": {
-      "version": "file:Frozen/com.jjevol.localization.authoring-0.1.0-pre.14.tgz",
+      "version": "file:Frozen/com.jjevol.localization.authoring-0.1.0-pre.15.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
         "com.jjevol.localization": "0.1.0-pre.4",
-        "com.jjevol.tables.authoring": "0.1.0-pre.10",
+        "com.jjevol.tables.authoring": "0.1.0-pre.14",
         "com.unity.localization": "1.5.12",
         "com.unity.addressables": "4.0.1",
         "com.unity.nuget.newtonsoft-json": "3.2.2"
@@ -471,7 +471,7 @@
       "dependencies": {}
     },
     "com.jjevol.tables.authoring": {
-      "version": "file:Frozen/com.jjevol.tables.authoring-0.1.0-pre.13.tgz",
+      "version": "file:Frozen/com.jjevol.tables.authoring-0.1.0-pre.14.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
