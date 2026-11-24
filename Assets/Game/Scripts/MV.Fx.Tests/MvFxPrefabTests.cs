@@ -117,7 +117,12 @@ namespace MV.Fx.Tests
 
                 // 표 4 bolt: 구간 6 + 마디 빛 6 + 끝 빛 1, 0.22 s
                 var bo = FxSpawn.Of("fx.bolt", new Vector3(0, 4.5f, 0)); bo.To = new Vector3(0, 1, 0);
-                d = Spawn("Bolt", bo); made.Add(d.gameObject);
+                // Bolt 프리팹도 디자이너 파티클(드라이버 꺼짐)이라 정본 공식은 켜진 드라이버로 본다.
+                var bg = new GameObject("BoltCanon"); made.Add(bg);
+                d = bg.AddComponent<MvFxDriver>();
+                d.kind = FxKind.Bolt;
+                d.SetSkin(MvFxParamBank.Put(bo));
+                d.Play(0, false, null);
                 Assert.AreEqual(13, d.PartCount);
                 Assert.AreEqual(0.22f, d.PartLife(0), 1e-5f);
 

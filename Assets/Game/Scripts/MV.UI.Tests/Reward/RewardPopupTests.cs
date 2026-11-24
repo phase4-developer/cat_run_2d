@@ -100,8 +100,8 @@ namespace MV.UI.Tests
             var list = Items(W(Dia, 10), W("dailyQuestPoint", 20), W("weeklyQuestPoint", 5), W("dailyQuestPoint", 20));
             Assert.That(list.Select(i => i.WealthType), Is.EqualTo(new[] { "dia", "dailyQuestPoint", "weeklyQuestPoint" }));
             Assert.That(list[1].Count, Is.EqualTo(MvUiFormat.Fmt(40)), "같은 포인트 합침");
-            Assert.That(HudCurrencySlot.IconOf(T, "dailyQuestPoint"), Is.EqualTo("UI_Icon_QuestDaily"), "아이콘 = 01_wealth.icon");
-            Assert.That(HudCurrencySlot.IconOf(T, "weeklyQuestPoint"), Is.EqualTo("UI_Icon_QuestWeekly"));
+            foreach (var type in new[] { "dailyQuestPoint", "weeklyQuestPoint" })
+                Assert.That(HudCurrencySlot.IconOf(T, type) ?? "", Is.EqualTo(T.Wealth.Get(T.Wealth.GetId(type)).icon ?? ""), type + " 아이콘 = 01_wealth.icon(표 값)");
 
             // 퀘스트 표(413) 일일 보상 그대로 넘겨도 칸이 된다(경고 없음).
             var reward = T.RepeatQuest.Get(413001001).reward;

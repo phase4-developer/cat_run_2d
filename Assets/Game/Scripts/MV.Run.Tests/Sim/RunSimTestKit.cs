@@ -173,7 +173,7 @@ namespace MV.Run.Tests
             pool.Sort((a, b) => a.group != b.group ? (a.group == 0 ? -1 : b.group == 0 ? 1 : a.group.CompareTo(b.group)) : a.sort.CompareTo(b.sort));
             s.CardPool.AddRange(pool);
             s.Bt = 1;
-            for (int i = 0; i < 9; i++) s.W[i] = setup.Deck[i];
+            for (int i = 0; i < s.W.Length && i < setup.Deck.Length; i++) s.W[i] = setup.Deck[i]; // 덱 길이는 표(103 상한 + 1), 기본 빈 배열
             s.Clones = Math.Min(4, setup.AupClone);
             var ph = t.RunConfig.List(RunConfigKeys.FIRE_PHASE);
             for (int i = 0; i < s.FireT.Length && i < ph.Count; i++) s.FireT[i] = ph[i];

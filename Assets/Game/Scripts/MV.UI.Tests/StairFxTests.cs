@@ -177,7 +177,7 @@ namespace MV.UI.Tests
             var view = go.GetComponentInChildren<IngameHudView>(true);
             var stair = view.Stair;
             Assert.That(stair.Gauge, Is.Not.Null, "UIHud_Run 안 계단 AnimatedGauge");
-            var run = new MV.Run.RunState(null, T, new MV.Run.Pcg32Rng(1));
+            var run = new MV.Run.RunState(null, T, new MV.Run.Pcg32Rng(1)) { Bal = MV.Run.RunLevelBuilder.Preset(T, null) }; // 실제 런은 항상 프리셋이 있다
             view.BindRun(() => run);
             var fx = stair.GradeUpFx;
             var scaleRest = fx.transform.localScale;
@@ -215,7 +215,7 @@ namespace MV.UI.Tests
             _made.Add(go);
             var view = go.GetComponentInChildren<IngameHudView>(true);
             var stair = view.Stair;
-            var run = new MV.Run.RunState(null, T, new MV.Run.Pcg32Rng(1));
+            var run = new MV.Run.RunState(null, T, new MV.Run.Pcg32Rng(1)) { Bal = MV.Run.RunLevelBuilder.Preset(T, null) }; // 실제 런은 항상 프리셋이 있다
             run.GaugeLv = 2; // 런 시작 값(유저 정보 → RunLevelBuilder kegStart)
             run.GaugeFill = 0;
             view.BindRun(() => run);

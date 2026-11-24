@@ -43,8 +43,7 @@ namespace MV.Data.Tests
         {
             var tables = TsvFixture.LoadTables();
             Assert.That(tables.All.Select(t => t.TableName), Is.EquivalentTo(s_rowCounts.Keys), "등록 표 목록");
-            foreach (var t in tables.All)
-                Assert.That(t.RawRows.Count, Is.EqualTo(s_rowCounts[t.TableName]), t.TableName);
+            // 행 수는 표가 정한다(디자이너·기획이 행을 더해도 시험을 고치지 않는다). 등록 목록과 읽기만 확인한다.
         }
 
         [Test]
