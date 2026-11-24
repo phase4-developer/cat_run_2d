@@ -118,6 +118,18 @@ PrefabInstance:
       propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6748343935817090525, guid: cbf8e1c529ab3d64d89cc4e9e565d15f, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6582868564935278627, guid: cbf8e1c529ab3d64d89cc4e9e565d15f, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374514598242131201, guid: cbf8e1c529ab3d64d89cc4e9e565d15f, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6590815508595347324, guid: cbf8e1c529ab3d64d89cc4e9e565d15f, type: 3}
       propertyPath: m_Name
       value: Popup_Setting

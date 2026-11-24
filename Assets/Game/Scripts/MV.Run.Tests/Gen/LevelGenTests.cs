@@ -63,7 +63,9 @@ namespace MV.Run.Tests.Gen
             for (int i = 0; i < s.FireT.Length; i++) Assert.AreEqual(i < phase.Count ? phase[i] : 0, s.FireT[i], 1e-12, "FireT " + i);
             // MV-SPEC-02 Q-08: W 길이 = 103 active 상한 등급 + 1(12등급 → 13)
             Assert.AreEqual(RunFormulas.WeaponTierMax(t) + 1, s.W.Length);
-            CollectionAssert.AreEqual(new[] { 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, s.W);
+            Assert.AreEqual(0, s.W[1], "무기 Level(Bt 2) 아래 카드는 버린다(사용자 2026-11-19 「낮은 무기 버림」)");
+            Assert.AreEqual(1, s.W[3], "Bt 이상 카드는 남는다");
+            Assert.AreEqual(1, s.W.Sum(), "버린 뒤 덱 장수");
             Assert.AreNotSame(setup.Deck, s.W);
             Assert.AreEqual(0, s.P.X);
             Assert.AreEqual(0, s.P.Z);

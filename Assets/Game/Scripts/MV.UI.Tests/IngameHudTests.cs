@@ -54,7 +54,7 @@ namespace MV.UI.Tests
 
         static RunState NewState()
         {
-            var s = new RunState(null, T, new Pcg32Rng(1));
+            var s = new RunState(null, T, new Pcg32Rng(1)) { Bal = RunLevelBuilder.Preset(T, null) }; // 실제 런은 항상 프리셋이 있다
             foreach (var c in T.Card.Datas) if (c.active && c.group <= 1) s.CardPool.Add(c);
             return s;
         }

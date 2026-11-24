@@ -34,6 +34,7 @@ namespace MV.UI.Tests
             button.interactable = interactable;
             var anim = go.AddComponent<ButtonClickAnim>();
             Assert.That(go.GetComponent<Animator>(), Is.Not.Null, "RequireComponent로 Animator가 함께 붙는다");
+            if (!withController) go.GetComponent<Animator>().runtimeAnimatorController = null; // 스크립트 기본 참조(공용 Controller)가 Reset으로 들어간 것을 비운다
             if (withController)
             {
                 var ctrl = new AnimatorController();

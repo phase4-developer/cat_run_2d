@@ -127,7 +127,10 @@ namespace MV.Run.Tests
             var t = RunTestTables.Load(); var c = t.Climb.Config();
             // 기획서 압축(2026-11-16): K = N ≤ 30이면 N, 아니면 30 + ceil((N − 30)/C), T = min(1.5, 0.5 + 0.1(K − 1)).
             Assert.AreEqual(30, ClimbK(c, 30)); Assert.AreEqual(102, ClimbK(c, 600)); Assert.AreEqual(152, ClimbK(c, 1000));
-            Assert.AreEqual(0.5, ClimbT(c, 1), 1e-12); Assert.AreEqual(1.4, ClimbT(c, 10), 1e-12); Assert.AreEqual(1.5, ClimbT(c, 102), 1e-12);
+            // T 값은 330 표(riseBase·risePerStep·riseCap)에서 읽는다(시험은 표 값을 고정하지 않는다).
+            double Want(int k) => System.Math.Min(c["riseCap"], c["riseBase"] + c["risePerStep"] * (k - 1));
+            Assert.AreEqual(c["riseBase"], ClimbT(c, 1), 1e-12); Assert.AreEqual(Want(10), ClimbT(c, 10), 1e-12); Assert.AreEqual(Want(102), ClimbT(c, 102), 1e-12);
+            Assert.That(ClimbT(c, 100000), Is.EqualTo(c["riseCap"]).Within(1e-12), "상한 riseCap");
             void Tiers(int n, params int[] e) => Assert.AreEqual(e, ClimbTiers(t, n).ToArray(), $"n={n}");
             Tiers(4); Tiers(5, 0); Tiers(74, 3); Tiers(75, 4); Tiers(80, 4, 0); Tiers(150, 4, 4); Tiers(200, 4, 4, 3); Tiers(225, 4, 4, 4); Tiers(400, 4, 4, 4);
         }
