@@ -7952,8 +7952,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -14012,19 +14012,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1846203957714066301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7974633557903567446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52d16b3d451948be9cb444639795351a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MV.UI::MV.UI.HudCountBadge
-  valueText: {fileID: 6173677920568792046}
 --- !u!224 &3445418878473769972
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14043,7 +14030,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 110, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1401988795398981507
 CanvasRenderer:
@@ -14196,7 +14183,7 @@ MonoBehaviour:
   autoPlay: 1
   useTargetAsV3: 0
   endValueFloat: 0
-  endValueV3: {x: 0.5, y: 0.5, z: 0.5}
+  endValueV3: {x: 1.1, y: 1.1, z: 1.1}
   endValueV2: {x: 0, y: 0}
   endValueColor: {r: 1, g: 1, b: 1, a: 1}
   endValueString: 
@@ -14209,12 +14196,25 @@ MonoBehaviour:
   endValueTransform: {fileID: 0}
   optionalBool0: 0
   optionalBool1: 0
-  optionalFloat0: 0.332
+  optionalFloat0: 0.492
   optionalInt0: 3
   optionalRotationMode: 0
   optionalScrambleMode: 0
   optionalShakeRandomnessMode: 0
   optionalString: 
+--- !u!114 &1846203957714066301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7974633557903567446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52d16b3d451948be9cb444639795351a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MV.UI::MV.UI.HudCountBadge
+  valueText: {fileID: 299533754022319728}
 --- !u!1 &8032430310997250833
 GameObject:
   m_ObjectHideFlags: 0
