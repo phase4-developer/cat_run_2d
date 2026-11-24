@@ -16,6 +16,11 @@ namespace MV.Editor.Build
         public const string LocalizationSheetDir = "Assets/Game/GameData/Localization/Sheet";
         /// <summary>String Table 컬렉션. 기존 컬렉션은 창이 제자리(<c>Tables/&lt;컬렉션&gt;/</c>)에서 갱신한다.</summary>
         public const string LocalizationTablesDir = "Assets/Game/GameData/Localization/Tables";
+        /// <summary>
+        /// 시트 탭 목록 <c>이름=gid</c>(창 Manual Sheets 기본값·무인 가져오기 기본 목록). 키 0개 탭(msg·description)은 Framework가 건너뛴다.
+        /// 탭을 새로 만들면 여기에 이름=gid를 더한다.
+        /// </summary>
+        public const string LocalizationSheets = "ui=0,msg=1,toastMessage=2,name=3,description=4,appInfo=5";
 
         static MvDataToolSettings() => jjevol.CommonDataToolSettings.Current = new Settings();
 
@@ -26,6 +31,7 @@ namespace MV.Editor.Build
             public string LocalizationInputDirectory => LocalizationSheetDir;
             public string LocalizationOutputDirectory => LocalizationTablesDir;
             public string LocalizationSpreadsheet => MvDataToolSettings.LocalizationSpreadsheet;
+            public string LocalizationSheets => MvDataToolSettings.LocalizationSheets;
         }
     }
 }
