@@ -631,6 +631,18 @@ MonoBehaviour:
     m_Localized: Area 30
     m_Metadata:
       m_Items: []
+  - m_Id: 1922586548989952
+    m_Localized: "\uACC4\uB2E8 \uCE74\uC6B4\uD2B8"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922586658041856
+    m_Localized: "\uC9C0\uD321\uC774 \uB354\uD558\uAE30"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1922586658041857
+    m_Localized: "\uC218\uC785 \uC99D\uAC00"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
