@@ -11,7 +11,7 @@ namespace MV.Boot
     /// <summary>
     /// 시작 7단계(10 §10.7, MV-LOC): 언어 저장 연결 → <c>LocalizationManager.InitLocalization()</c> → UI·표 문구 연결.
     /// 문구 원본은 Google Sheet 「MoonVillage Localization」, 저장소 사본 <c>Assets/Game/GameData/Localization/Sheet</c>,
-    /// String Table은 setup 잡 <c>MV.Editor.Build.MvLocBuild.BuildStringTablesJob</c>이 만든다(D-LOC-PLAN).
+    /// String Table은 Framework 「Localization Sheet Import」 창(JJEvol/Localization/Sheet Import)의 Apply로 만든다(D-LOC-FWUNIFY).
     /// 원격 덧씌우기 교체 지점: 원격 카탈로그가 생기면 Init 전에 카탈로그를 받고, 갱신 때 PrepareForContentUpdateAsync → 갱신 → ReloadLocalization.
     /// </summary>
     public static class MvBootLocalization
