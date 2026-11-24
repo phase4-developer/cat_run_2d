@@ -113,18 +113,6 @@
             "encrypted": false
         },
         {
-            "name": "09_uiResource",
-            "hash": "fa2acfd05de2798e7b38c10024f54de989208fa820117ba193b3ea05fb7ce8ff",
-            "metaHash": "47f42b12015a978327f837b337df85145d62ad865546dc6393224632f3cf6399",
-            "guid": "93a53c4a542f47ed869243aefe0505de",
-            "plainHash": "d02934a88760574d7661aed0b80c5c02f6ad51040df916446bce432b02372dda",
-            "sourceHash": "d02934a88760574d7661aed0b80c5c02f6ad51040df916446bce432b02372dda",
-            "source": "Assets/Game/GameData/Table/TSV/09_uiResource.txt",
-            "sourceKind": "LocalFile",
-            "codec": "",
-            "encrypted": false
-        },
-        {
             "name": "101_cat",
             "hash": "8a7f9c53a61d84d56e096cf96518e2769c94357b8601eed9e12396bb8049c24c",
             "metaHash": "44abf6f276cd8b8889bad059087a08ee411582294fe595e7816e3a35dc81cb60",
