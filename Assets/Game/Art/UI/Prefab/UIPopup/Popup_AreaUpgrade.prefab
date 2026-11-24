@@ -2810,9 +2810,37 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2641392452715931492, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5226946139909140744, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
       propertyPath: m_Name
       value: Slot_AreaLabel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6822413372057420331, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6822413372057420331, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6822413372057420331, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 138.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 6822413372057420331, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 274.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 6822413372057420331, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -98.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011902600740451703, guid: 71558de5815861249b249e7b7b54c29b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
