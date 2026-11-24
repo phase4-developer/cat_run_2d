@@ -41,6 +41,8 @@ namespace MV.View
         Color[] _baseColors;
         IFogAlphaTarget[] _fogTargets;
         Renderer[] _renderers;
+        /// <summary><see cref="_renderers"/>의 원래 켜짐 상태(근평면 숨김에서 다시 보일 때 이 값으로 되돌린다).</summary>
+        bool[] _baseEnabled;
         bool _fixed;
         Vector3 _fixedAnchor;
         bool _shown = true;
@@ -109,9 +111,22 @@ namespace MV.View
                 _baseColors[i] = k >= 0 && oldBase != null && k < oldBase.Length ? oldBase[k] : _sprites[i].color;
             }
             _fogTargets = GetComponentsInChildren<IFogAlphaTarget>(true);
+            // 근평면 숨김(렌더러 끔) 상태로 풀에 돌아왔다 다시 꺼낸 뷰: 먼저 원래 켜짐 상태로 되돌린 뒤 다시 읽는다.
+            // 꺼진 상태를 그대로 원래 상태로 읽거나 「보이는 중」 표시만 바꾸면 그 뒤 다시 켜지지 않는다(MV-OBJ-POOLVISIBLE).
+            if (!_shown) RestoreEnabled();
             _renderers = GetComponentsInChildren<Renderer>(true);
+            _baseEnabled = new bool[_renderers.Length];
+            for (int i = 0; i < _renderers.Length; i++) _baseEnabled[i] = _renderers[i].enabled;
             _lastAlpha = -1f;
             _shown = true;
+        }
+
+        /// <summary>렌더러를 <see cref="Refresh"/> 때 읽은 켜짐 상태로 되돌린다(프리팹에서 일부러 끈 렌더러는 꺼진 채).</summary>
+        void RestoreEnabled()
+        {
+            if (_renderers == null || _baseEnabled == null) return;
+            for (int i = 0; i < _renderers.Length && i < _baseEnabled.Length; i++)
+                if (_renderers[i] != null) _renderers[i].enabled = _baseEnabled[i];
         }
 
         /// <summary>바꾼 기본 색(테마·불 켬)을 알린다. 안개 알파는 이 색의 알파에 곱한다.</summary>
@@ -150,8 +165,9 @@ namespace MV.View
         {
             if (shown == _shown) return;
             _shown = shown;
+            if (shown) { RestoreEnabled(); return; }
             for (int i = 0; i < _renderers.Length; i++)
-                if (_renderers[i] != null) _renderers[i].enabled = shown;
+                if (_renderers[i] != null) _renderers[i].enabled = false;
         }
 
         internal void ApplyOrder(int order)

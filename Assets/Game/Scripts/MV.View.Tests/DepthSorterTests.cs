@@ -60,5 +60,59 @@ namespace MV.View.Tests
             Assert.That(cat.GetComponentInChildren<SpriteRenderer>().color.a, Is.EqualTo(0.8f).Within(1e-6f), "고양이는 안개 없음");
             Assert.That(near.GetComponentInChildren<SpriteRenderer>().color.a, Is.EqualTo(0.8f).Within(1e-6f), "안개 시작 전");
         }
+
+        /// <summary>
+        /// 풀 재사용(MV-OBJ-POOLVISIBLE): 카메라를 지나 근평면 숨김(렌더러 끔) 상태로 풀에 돌아간 뷰를 다시 꺼내면
+        /// 관리자가 <see cref="DepthSortable.Refresh"/>를 부른다. 그 뒤 화면 안으로 들어오면 렌더러가 다시 켜져야 한다.
+        /// </summary>
+        [Test]
+        public void Refresh_AfterNearHide_ShowsAgainWhenInView()
+        {
+            var cfg = ViewTestTables.Config();
+            var cam = new Vector3(0, 13, -9);
+            var fwd = (new Vector3(0, 0.5f, 5.5f) - cam).normalized;
+            var s = Make(new Vector3(0, 13, -20), DepthMath.RankObject, 0, (float)cfg.ObjProbeY, true);
+            var sr = s.GetComponentInChildren<SpriteRenderer>();
+            var list = new List<DepthSortable> { s };
+
+            DepthSorter.SortAll(list, cam, fwd, cfg);
+            Assert.That(sr.enabled, Is.False, "카메라 뒤는 숨김");
+
+            s.Refresh();   // 풀에서 다시 꺼냄(ObjectViewFactory.Show)
+            s.transform.position = new Vector3(0, 0, 30);
+            DepthSorter.SortAll(list, cam, fwd, cfg);
+            Assert.That(sr.enabled, Is.True, "풀에서 다시 꺼내 화면 안에 들어왔는데 렌더러가 꺼져 있다");
+        }
+
+        /// <summary>프리팹에서 일부러 끈 렌더러(계단문 Glow 파티클 등)는 근평면 숨김 → 다시 보임·풀 재사용 뒤에도 꺼진 채다.</summary>
+        [Test]
+        public void NearHide_ThenShow_KeepsPrefabDisabledRenderersOff()
+        {
+            var cfg = ViewTestTables.Config();
+            var cam = new Vector3(0, 13, -9);
+            var fwd = (new Vector3(0, 0.5f, 5.5f) - cam).normalized;
+            var s = Make(new Vector3(0, 0, 30), DepthMath.RankObject, 0, (float)cfg.ObjProbeY, true);
+            var on = s.GetComponentInChildren<SpriteRenderer>();
+            var offGo = new GameObject("Off");
+            offGo.transform.SetParent(s.transform, false);
+            var off = offGo.AddComponent<SpriteRenderer>();
+            off.enabled = false;
+            s.Refresh();
+            var list = new List<DepthSortable> { s };
+
+            s.transform.position = new Vector3(0, 13, -20);
+            DepthSorter.SortAll(list, cam, fwd, cfg);
+            Assert.That(on.enabled, Is.False, "숨김");
+            s.transform.position = new Vector3(0, 0, 30);
+            DepthSorter.SortAll(list, cam, fwd, cfg);
+            Assert.That(on.enabled, Is.True, "다시 보임");
+            Assert.That(off.enabled, Is.False, "일부러 끈 렌더러는 다시 보일 때도 꺼진 채");
+
+            s.transform.position = new Vector3(0, 13, -20);
+            DepthSorter.SortAll(list, cam, fwd, cfg);
+            s.Refresh();   // 숨긴 채 풀 재사용
+            Assert.That(on.enabled, Is.True, "풀 재사용 때 원래 상태로 되돌림");
+            Assert.That(off.enabled, Is.False, "풀 재사용 뒤에도 일부러 끈 렌더러는 꺼진 채");
+        }
     }
 }
