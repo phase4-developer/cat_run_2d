@@ -6,6 +6,7 @@
 
 | 계약 | 상태 | 결과(dev) | 남은 것 |
 |---|---|---|---|
+| MV-FW-REUSE-ECONOMY 보유 재화 라벨 | 완료·dev 병합(2026-11-25) | `ai/MV-FW-REUSE-ECONOMY-resource-label`, 검증 후보 `03e8317e` | 환생·Area 강화·로비의 확정 잔액은 `com.jjevol.ui.economy`의 `ResourceLabel.ShowUI`로 표시. 프리팹의 `01_wealth.id` 드롭다운으로 선택. 런 재화는 런 스냅샷 값을 표시. `MV-FW-REUSE-ECONOMY-01` compile·EditMode 17/17 PASS. 실제 플레이 화면 확인 NOT_RUN. [원인과 중앙 요청](FrameworkReuseReview.md) |
 | MV-UI-REBIRTH-HUD 환생 팝업 재화 표시 | 완료·dev 병합(2026-11-25) | `ai/MV-UI-REBIRTH-HUD-currencies` `4d8e7d0e`, 검증 후보 `51b2f1a4` | `RebirthDesignView.Currencies`의 타입으로 `01_wealth` ID와 보유량을 찾아 기존 Framework `UIBase.ShowUI`를 쓰는 `HudCurrencySlot`에 전달. 첫 슬롯 `goldenFish`. `MV-UI-REBIRTH-HUD-01`은 시험의 어셈블리 참조 오류로 compile FAIL. 기존 표 조회 API를 사용한 `MV-UI-REBIRTH-HUD-02` compile PASS, EditMode 8/8 PASS. 실제 플레이 화면 확인 NOT_RUN |
 | MV-00 기반 | 완료 | — | 보관 「MV-00 남김」 |
 | MV-DATA 표 | 3차 완료 | 2차 `6d946c8`, 3차 `a2be0d6` | 자료 빈칸(정본 값 없음, 보관 참조). VIEW 요청: `view.groundFar` 92→120, `330_climb` 출렁임 열, `304_theme` 6~15행 |
