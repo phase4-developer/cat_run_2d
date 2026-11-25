@@ -6,7 +6,7 @@
 
 | 계약 | 상태 | 결과(dev) | 남은 것 |
 |---|---|---|---|
-| MV-UI-REBIRTH-DOT 로비·퀘스트 빨간콩 | 구현·검증 중(현재 대화, 2026-11-25) | `ai/MV-UI-REBIRTH-DOT-badge`, 환생 후보 `b3344a30` | 환생·지역·기본 강화의 디자이너 빨간콩은 `com.jjevol.badge`의 `BadgeView`·`BadgeTree.Set`과 연결. 퀘스트 탭과 로비용 수령 가능 합산은 같은 패키지의 키 트리를 사용한다. 환생 영구 강화는 `14_rebirthPerk` 활성 행의 메타 `CanBuy`로 판정한다. [누락 원인과 중앙 개선안](FrameworkReuseReview.md#mv-ui-rebirth-dot). compile·로비/퀘스트 EditMode 검증 예정. |
+| MV-UI-REBIRTH-DOT 로비·퀘스트 빨간콩 | 계약 검증 PASS(2026-11-25) | `ai/MV-UI-REBIRTH-DOT-badge`, 검증 후보 `4326db74` | 환생·지역·기본 강화 빨간콩은 `com.jjevol.badge`의 `BadgeView`·`BadgeTree.Set`에 연결. 퀘스트 탭과 로비용 수령 가능 합산에는 같은 패키지의 키 트리를 사용한다. 환생 영구 강화는 `14_rebirthPerk` 활성 행의 메타 `CanBuy`로 판정한다. `MV-UI-FRAMEWORK-BADGES-01` compile·EditMode(로비·퀘스트) 14/14 PASS. 화면 확인 NOT_RUN. [누락 원인과 중앙 개선안](FrameworkReuseReview.md#mv-ui-rebirth-dot). |
 | MV-FW-REUSE-ECONOMY 보유 재화 라벨 | 완료·dev 병합(2026-11-25) | `ai/MV-FW-REUSE-ECONOMY-resource-label` `2aecd95d`, dev `aa430c38`, 검증 후보 `03e8317e` | 환생·Area 강화·로비의 확정 잔액은 `com.jjevol.ui.economy`의 `ResourceLabel.ShowUI`로 표시. 프리팹의 `01_wealth.id` 드롭다운으로 선택. 런 재화는 런 스냅샷 값을 표시. `MV-FW-REUSE-ECONOMY-01` compile·EditMode 17/17 PASS. 실제 플레이 화면 확인 NOT_RUN. [원인과 중앙 요청](FrameworkReuseReview.md) |
 | MV-FW-REUSE-DROP D-85 추첨 엔진 전환 | 호환성 확인 필요(2026-11-25) | — | `economy.drop` 연결 뒤에도 `MvDropRoller` 사용. 어댑터에서 런의 0 수량 지급식·중첩 행 출처·난수 재현을 검증해야 한다. [확인 근거](FrameworkReuseReview.md) |
 | MV-FW-REUSE-PROGRESS 결과·지도 진행률 보간 | 완료·dev 병합(2026-11-25) | `ai/MV-FW-REUSE-PROGRESS-float-tween`, 검증 후보 `d4f4edfa` | `com.jjevol.ui.contracts`의 `FloatTween.Play/Tick`으로 진행률 계산. 프리팹 곡선, 표시 계산, 자동 닫기와 결과 팝업 재표시는 기존 동작을 따른다. `MV-FW-REUSE-PROGRESS-01` compile·EditMode 9/9 PASS. 실제 연출 화면 확인 NOT_RUN. 중앙 요청 `1b6e83150ac3` |
