@@ -107,6 +107,8 @@ namespace MV.UI
         public long CoolTotalMs;
         /// <summary>부활하면 받을 조각(<c>save.rb.pending</c>).</summary>
         public int Pending;
+        /// <summary>지금 살 수 있는 환생 영구 강화가 있다.</summary>
+        public bool UpgradeAvailable;
     }
 
     /// <summary>로비 화면 코드(<see cref="LobbyPresenter"/>)가 만들고 겉이 그리는 값(재화·Level·Area 외).</summary>
@@ -135,7 +137,7 @@ namespace MV.UI
             Side.Clear();
             Upgrades.Clear();
             var r = Rebirth;
-            r.Visible = r.Locked = false;
+            r.Visible = r.Locked = r.UpgradeAvailable = false;
             r.UnlockNow = r.UnlockNeed = r.Pending = 0;
             r.CoolLeftMs = r.CoolTotalMs = 0;
             AreaUpgradeDot = false;

@@ -12,6 +12,8 @@
         "JJEvol.UI.URP.Runtime",
         "JJEvol.UI.Economy.Runtime",
         "JJEvol.UI.Widgets.Runtime",
+        "JJEvol.Badge.Runtime",
+        "JJEvol.Badge.UGUI",
         "Unity.TextMeshPro",
         "UnityEngine.UI",
         "UniTask",

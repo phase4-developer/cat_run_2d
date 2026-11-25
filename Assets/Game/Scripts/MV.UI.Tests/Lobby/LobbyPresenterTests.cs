@@ -34,6 +34,7 @@ namespace MV.UI.Tests
             public readonly HashSet<string> Opened = new HashSet<string>();
             public readonly Dictionary<string, int> Levels = new Dictionary<string, int>();
             public bool CanBuyResult = true;
+            public bool CanBuyPerkResult = true;
             public int BuyCalls;
             public (MvGrowth growth, string key) LastBuy;
             public bool RbOpen;
@@ -43,7 +44,7 @@ namespace MV.UI.Tests
             public int Level(MvGrowth growth, string key) => Levels.TryGetValue(key, out int v) ? v : 0;
             public bool IsMax(MvGrowth growth, string key) => false;
             public IReadOnlyList<ConsumeData> NextPrice(MvGrowth growth, string key) => new[] { new ConsumeData(ConsumeType.Wealth, 1001001, 25) };
-            public bool CanBuy(MvGrowth growth, string key) => CanBuyResult;
+            public bool CanBuy(MvGrowth growth, string key) => CanBuyResult && (growth != MvGrowth.Perk || CanBuyPerkResult);
             public MetaResult Buy(MvGrowth growth, string key) { BuyCalls++; LastBuy = (growth, key); return MetaResult.Success(); }
 
             public string SelectedGod => "thunder";
@@ -53,7 +54,7 @@ namespace MV.UI.Tests
             public int RebirthLevel => 0;
             public int RebirthPending => 0;
             public bool RebirthOpen => RbOpen;
-            public long RebirthCooldownLeftMs => 0;
+            public long RebirthCooldownLeftMs { get; set; }
             public bool RebirthArmed => false;
             public MetaResult? PressRebirth() => null;
 
@@ -109,6 +110,25 @@ namespace MV.UI.Tests
             Assert.AreEqual(opens, p.PressSide(side));
             Assert.AreEqual(opens ? 1 : 0, requested.Count);
             Assert.AreEqual(opens ? 0 : 1, toasts.Count);
+        }
+
+        [Test]
+        public void RebirthDot_FollowsPerkPurchaseAvailabilityDuringCooldown()
+        {
+            var port = new Port(MetaUiTestKit.Base()) { RebirthCooldownLeftMs = 1000, RbOpen = true };
+            port.Opened.Add(LobbyPresenter.RebirthUnlockKey);
+            var presenter = Make(port);
+            Assert.That(presenter.Model.Rebirth.UpgradeAvailable, Is.True);
+
+            port.CanBuyPerkResult = false;
+            presenter.Draw();
+            Assert.That(presenter.Model.AreaUpgradeDot, Is.True);
+            Assert.That(presenter.Model.Rebirth.UpgradeAvailable, Is.False);
+
+            port.CanBuyPerkResult = true;
+            port.Ready = false;
+            presenter.Draw();
+            Assert.That(presenter.Model.Rebirth.UpgradeAvailable, Is.False);
         }
 
         [Test]

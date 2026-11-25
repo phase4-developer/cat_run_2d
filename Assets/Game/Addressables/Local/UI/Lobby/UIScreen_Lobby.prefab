@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1002}
   - component: {fileID: 1003}
   - component: {fileID: 1004}
+  - component: {fileID: 1005}
   m_Layer: 5
   m_Name: UIScreen_Lobby
   m_TagString: Untagged
@@ -149,6 +150,7 @@ MonoBehaviour:
     priceButton: {fileID: 4030093247504047592}
     redDot: {fileID: 2414152277500448533}
   rebirthButton: {fileID: 3109931699492379199}
+  rebirthUpgradeBadge: {fileID: 1005}
   rebirthUnlock: {fileID: 856544028955081873}
   rebirthUnlockCount: {fileID: 6806453975986136139}
   rebirthCool: {fileID: 6913523166263064092}
@@ -159,6 +161,24 @@ MonoBehaviour:
   areaUpgradeButton: {fileID: 7460267210951366006}
   areaUpgradeLabel: {fileID: 3090792222379839846}
   areaUpgradeDot: {fileID: 4285351187316377632}
+--- !u!114 &1005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d153fafbaf4cbc8c089e40981efc03, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: JJEvol.Badge.UGUI::jjevol.Badge.BadgeView
+  key:
+  mode: 0
+  dot: {fileID: 6011715102769928612}
+  countRoot: {fileID: 0}
+  countText: {fileID: 0}
+  maxCount: 99
 --- !u!1 &1011
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +735,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6011715102769928612, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -931,6 +955,11 @@ MonoBehaviour:
 --- !u!1 &4285351187316377632 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4285351187316378732, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6011715102769928612 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6011715102769928612, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
   m_PrefabInstance: {fileID: 1100}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &4332353042049251534 stripped

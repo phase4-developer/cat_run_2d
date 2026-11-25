@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using jjevol;
+using jjevol.Badge;
 using MV.Data;
 using MV.Run;
 using MV.Save;
@@ -115,6 +116,7 @@ namespace MV.UI
         [Header("Bottom")]
         [SerializeField] LobbyUpgradeParts[] upgrades;
         [SerializeField] Button rebirthButton;
+        [SerializeField] BadgeView rebirthUpgradeBadge;
         [SerializeField] Slider rebirthUnlock;
         [SerializeField] TMP_Text rebirthUnlockCount;
         [SerializeField] Slider rebirthCool;
@@ -133,6 +135,8 @@ namespace MV.UI
         public const string UpgradeLevelFormat = "Level {0}";
         public const string RebirthUnlockFormat = "{0}/{1}";
         public const string RebirthRewardFormat = "+{0}";
+        const string RebirthUpgradeBadgeKey = "lobby/rebirth/upgrade";
+        BadgeTree _badges;
 
         public event Action StartPressed;
         public event Action<string> SidePressed;
@@ -218,6 +222,7 @@ namespace MV.UI
                 Need(u?.nextValue, n + ".nextValue");
             }
             Need(rebirthButton, nameof(rebirthButton));
+            Need(rebirthUpgradeBadge, nameof(rebirthUpgradeBadge));
             Need(rebirthUnlock, nameof(rebirthUnlock));
             Need(rebirthUnlockCount, nameof(rebirthUnlockCount));
             Need(rebirthCool, nameof(rebirthCool));
@@ -248,6 +253,11 @@ namespace MV.UI
             if (speedButton) speedButton.onClick.AddListener(OnSpeedClick);
             if (settingButton) settingButton.onClick.AddListener(() => SidePressed?.Invoke(LobbySideIds.Sound));
             if (rebirthButton) rebirthButton.onClick.AddListener(() => SidePressed?.Invoke(LobbySideIds.Rebirth));
+            if (rebirthUpgradeBadge)
+            {
+                _badges = new BadgeTree(new ImmediateBadgeScheduler());
+                rebirthUpgradeBadge.Bind(RebirthUpgradeBadgeKey, _badges);
+            }
             if (areaUpgradeButton) areaUpgradeButton.onClick.AddListener(() => SidePressed?.Invoke(LobbySideIds.AreaUpgrade));
             if (upgrades != null)
                 foreach (var u in upgrades)
@@ -259,7 +269,10 @@ namespace MV.UI
                 }
 
             SetSpeedShown(MvRunSpeed.Current);
-            if (MissingRefs() is { Count: > 0 } miss)
+            var miss = MissingRefs();
+            if (miss.Remove(nameof(rebirthUpgradeBadge)))
+                Debug.LogWarning("LobbyDesignView: Assets/Game/Addressables/Local/UI/Lobby/UIScreen_Lobby.prefab — rebirthUpgradeBadge 참조가 비었습니다.", this);
+            if (miss.Count > 0)
                 Debug.LogError("LobbyDesignView: UIScreen_Lobby 참조가 비었습니다 — " + string.Join(", ", miss), this);
         }
 
@@ -421,6 +434,9 @@ namespace MV.UI
 
         void DrawRebirth(LobbyRebirthInfo r)
         {
+            var upgradeBadge = BadgeValue.Flag(r.Visible && r.UpgradeAvailable);
+            if (_badges != null && _badges.Get(RebirthUpgradeBadgeKey) != upgradeBadge)
+                _badges.Set(RebirthUpgradeBadgeKey, upgradeBadge);
             if (rebirthButton) rebirthButton.gameObject.SetActive(r.Visible);
             if (!r.Visible) return;
             if (rebirthUnlock) rebirthUnlock.gameObject.SetActive(r.Locked);

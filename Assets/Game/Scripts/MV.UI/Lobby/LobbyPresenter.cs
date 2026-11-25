@@ -160,6 +160,8 @@ namespace MV.UI
             var cfg = t?.Config.Value;
             r.CoolTotalMs = cfg != null ? Math.Max(0, (long)cfg.rebirthCooldownSec * 1000L) : 0;
             r.Pending = Port.RebirthPending;
+            r.UpgradeAvailable = r.Visible && Port.Ready && t != null &&
+                t.RebirthPerk.Sorted.Any(row => row.active && Port.CanBuy(MvGrowth.Perk, row.key));
         }
 
         /// <summary>사용 조건 중 Level 값(07 §7.8.9 조건 3). 없으면 0.</summary>

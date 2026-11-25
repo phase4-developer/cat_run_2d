@@ -47,6 +47,12 @@ namespace MV.UI.Tests
             Assert.That(ctrl, Is.Not.Null, "LobbyScreen 컨트롤러");
             Assert.That(new SerializedObject(ctrl).FindProperty("view").objectReferenceValue, Is.SameAs(view), "LobbyScreen.view = LobbyDesignView");
             Assert.That(go.transform.Find("LobbyScreen"), Is.Not.Null, "중첩 디자이너 LobbyScreen");
+            var bindings = new SerializedObject(view);
+            var badge = bindings.FindProperty("rebirthUpgradeBadge").objectReferenceValue;
+            var dot = (GameObject)new SerializedObject(badge).FindProperty("dot").objectReferenceValue;
+            var rebirth = (Component)bindings.FindProperty("rebirthButton").objectReferenceValue;
+            Assert.That(dot.transform.parent, Is.EqualTo(rebirth.transform));
+            Assert.That(dot.activeSelf, Is.False);
             Assert.That(view.StartArea.transform.GetSiblingIndex(), Is.EqualTo(0), "출발 영역은 디자이너 화면 뒤(첫 자식)");
             Assert.That(view.SpeedStateCount, Is.GreaterThan(1), "1x/2x 상태 자식");
             // 무기 스택 = 인게임과 같은 공용 부품(MV-UI3-LOBBY-WEAPONFX). 인게임 런 연결(WeaponSection)은 로비에 없다.
