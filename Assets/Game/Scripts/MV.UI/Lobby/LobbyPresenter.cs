@@ -26,21 +26,10 @@ namespace MV.UI
         public const string QuestUnlockKey = "quest";
 
         IQuestUiPort _questPort;
+        QuestNotifications _questNotifications;
         /// <summary>퀘스트 빨간 점 입구. null이면 <see cref="MvQuestUiPort.Instance"/>(저장소 컨테이너 읽기).</summary>
         public IQuestUiPort QuestPort => _questPort ?? MvQuestUiPort.Instance;
         public void SetQuestPort(IQuestUiPort port) => _questPort = port;
-
-        /// <summary>열린 분류에 받을 칸이 있는지(로비 퀘스트 빨간 점).</summary>
-        bool QuestClaimable()
-        {
-            var q = QuestPort;
-            if (q == null || !q.Ready) return false;
-            foreach (var g in q.Groups())
-                if (g.Open)
-                    foreach (var i in g.Items)
-                        if (i.State == QuestItemState.Claimable) return true;
-            return false;
-        }
 
         IMetaUiPort _port;
         ILobbySource _source;
@@ -141,7 +130,12 @@ namespace MV.UI
             quest.UnlockKey = QuestUnlockKey;
             ApplyLock(quest, t);
             if (quest.Locked) quest.Sub = MvUiText.Ui("ui.lobby.locked"); // 해금 조건은 05_contentOpen[quest]
-            quest.Dot = !quest.Locked && QuestClaimable();
+            if (!quest.Locked && QuestPort.Ready)
+            {
+                _questNotifications ??= new QuestNotifications();
+                _questNotifications.Refresh(QuestPort.Groups());
+                quest.Dot = _questNotifications.Any;
+            }
 
             Add(LobbySideIds.Sound, "♪", Muted ? MvUiText.Ui("ui.lobby.soundOff") : "", true);
             Add(LobbySideIds.Debug, MvUiText.Ui("ui.debug.btn"), "", true).Visible = DevBuild;
@@ -160,6 +154,8 @@ namespace MV.UI
             var cfg = t?.Config.Value;
             r.CoolTotalMs = cfg != null ? Math.Max(0, (long)cfg.rebirthCooldownSec * 1000L) : 0;
             r.Pending = Port.RebirthPending;
+            r.UpgradeAvailable = r.Visible && Port.Ready && t != null &&
+                t.RebirthPerk.Sorted.Any(row => row.active && Port.CanBuy(MvGrowth.Perk, row.key));
         }
 
         /// <summary>사용 조건 중 Level 값(07 §7.8.9 조건 3). 없으면 0.</summary>

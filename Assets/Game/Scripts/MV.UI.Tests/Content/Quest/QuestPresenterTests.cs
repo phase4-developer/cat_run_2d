@@ -77,6 +77,27 @@ namespace MV.UI.Tests
         }
 
         [Test]
+        public void TabNotifications_ExcludeLockedGroups_AndClearAfterClaimOrRemoval()
+        {
+            var (p, q, _) = Make();
+            q.Group(QuestCategory.Daily, 1, QuestItemState.Claimable);
+            var monthly = q.Group(QuestCategory.Monthly, 2, QuestItemState.Claimable);
+            var locked = q.Group(QuestCategory.Achievement, 3, QuestItemState.Claimable);
+            locked.Open = false;
+            p.Open();
+
+            Assert.That(p.Model.Tabs.Where(t => t.HasNotification).Select(t => t.Id), Is.EquivalentTo(
+                new[] { QuestPresenter.TabId(QuestCategory.Daily), QuestPresenter.TabId(QuestCategory.Monthly) }));
+
+            Assert.That(p.Press(QuestPresenter.ClaimId(q.List[0].Items[0].Id)), Is.True);
+            Assert.That(p.Model.Tabs.Single(t => t.HasNotification).Id, Is.EqualTo(QuestPresenter.TabId(QuestCategory.Monthly)));
+
+            q.List.Remove(monthly);
+            p.Draw();
+            Assert.That(p.Model.Tabs.Any(t => t.HasNotification), Is.False);
+        }
+
+        [Test]
         public void ClaimAll_ClaimsEveryClaimableInTab_AndNothingWhenMetaMissing()
         {
             var (p, q, m) = Make();

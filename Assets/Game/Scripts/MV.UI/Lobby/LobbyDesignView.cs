@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using jjevol;
+using jjevol.Badge;
 using MV.Data;
 using MV.Run;
 using MV.Save;
@@ -62,7 +63,7 @@ namespace MV.UI
         /// (사용자 2026-11-19 「Framework PriceBtn 사용」). 아이콘은 디자이너 Image(<see cref="priceIcon"/>)에 둔다.
         /// </summary>
         public PriceBtn priceButton;
-        public GameObject redDot;
+        public BadgeView upgradeBadge;
     }
 
     /// <summary>
@@ -115,6 +116,7 @@ namespace MV.UI
         [Header("Bottom")]
         [SerializeField] LobbyUpgradeParts[] upgrades;
         [SerializeField] Button rebirthButton;
+        [SerializeField] BadgeView rebirthUpgradeBadge;
         [SerializeField] Slider rebirthUnlock;
         [SerializeField] TMP_Text rebirthUnlockCount;
         [SerializeField] Slider rebirthCool;
@@ -125,7 +127,7 @@ namespace MV.UI
         [SerializeField] Image rebirthRewardIcon;
         [SerializeField] Button areaUpgradeButton;
         [SerializeField] HudAreaLabel areaUpgradeLabel;
-        [SerializeField] GameObject areaUpgradeDot;
+        [SerializeField] BadgeView areaUpgradeBadge;
 
         // 문구: 노션 [HUD] 로비스크린 서식(키 자리 ui.lobby.*)
         public const string StairValueFormat = "+{0}";
@@ -133,6 +135,10 @@ namespace MV.UI
         public const string UpgradeLevelFormat = "Level {0}";
         public const string RebirthUnlockFormat = "{0}/{1}";
         public const string RebirthRewardFormat = "+{0}";
+        const string RebirthUpgradeBadgeKey = "lobby/rebirth/upgrade";
+        const string AreaUpgradeBadgeKey = "lobby/area-upgrade";
+        const string MainUpgradeBadgeRoot = "lobby/main-upgrade";
+        BadgeTree _badges;
 
         public event Action StartPressed;
         public event Action<string> SidePressed;
@@ -162,7 +168,7 @@ namespace MV.UI
         public string RebirthRewardText => rebirthReward ? rebirthReward.text : null;
         public bool RebirthShown => rebirthButton && rebirthButton.gameObject.activeSelf;
         public bool RebirthUnlockShown => rebirthUnlock && rebirthUnlock.gameObject.activeSelf;
-        public bool AreaUpgradeDotShown => areaUpgradeDot && areaUpgradeDot.activeSelf;
+        public bool AreaUpgradeDotShown => _badges?.Get(AreaUpgradeBadgeKey).On == true;
         public string AreaNameText => areaLabel ? areaLabel.AreaText : null;
         public HudAreaLabel AreaLabel => areaLabel;
         public HudAreaLabel AreaUpgradeLabel => areaUpgradeLabel;
@@ -213,11 +219,12 @@ namespace MV.UI
                 Need(u?.priceIcon, n + ".priceIcon");
                 Need(u?.priceText, n + ".priceText");
                 Need(u?.priceButton, n + ".priceButton");
-                Need(u?.redDot, n + ".redDot");
+                Need(u?.upgradeBadge, n + ".upgradeBadge");
                 Need(u?.currentValue, n + ".currentValue");
                 Need(u?.nextValue, n + ".nextValue");
             }
             Need(rebirthButton, nameof(rebirthButton));
+            Need(rebirthUpgradeBadge, nameof(rebirthUpgradeBadge));
             Need(rebirthUnlock, nameof(rebirthUnlock));
             Need(rebirthUnlockCount, nameof(rebirthUnlockCount));
             Need(rebirthCool, nameof(rebirthCool));
@@ -229,7 +236,7 @@ namespace MV.UI
             Need(areaUpgradeButton, nameof(areaUpgradeButton));
             Need(areaUpgradeLabel, nameof(areaUpgradeLabel));
             if (areaUpgradeLabel && !areaUpgradeLabel.HasRefs) miss.Add("areaUpgradeLabel(HudAreaLabel 참조)");
-            Need(areaUpgradeDot, nameof(areaUpgradeDot));
+            Need(areaUpgradeBadge, nameof(areaUpgradeBadge));
             return miss;
         }
 
@@ -239,6 +246,7 @@ namespace MV.UI
         {
             if (_ready) return;
             _ready = true;
+            _badges = new BadgeTree(new ImmediateBadgeScheduler());
             // 버튼(Selectable) 아래 그림과 출발 영역만 누를 수 있다(상단 Area 이름표도 래퍼가 붙인 Button 아래). 나머지 글·패널은 누름을 받지 않아 출발 영역으로 지나간다(05 §5.4.1).
             foreach (var g in GetComponentsInChildren<Graphic>(true))
                 g.raycastTarget = g.GetComponentInParent<Selectable>(true) != null || (startArea && g.gameObject == startArea.gameObject);
@@ -248,10 +256,14 @@ namespace MV.UI
             if (speedButton) speedButton.onClick.AddListener(OnSpeedClick);
             if (settingButton) settingButton.onClick.AddListener(() => SidePressed?.Invoke(LobbySideIds.Sound));
             if (rebirthButton) rebirthButton.onClick.AddListener(() => SidePressed?.Invoke(LobbySideIds.Rebirth));
+            if (rebirthUpgradeBadge) rebirthUpgradeBadge.Bind(RebirthUpgradeBadgeKey, _badges);
+            if (areaUpgradeBadge) areaUpgradeBadge.Bind(AreaUpgradeBadgeKey, _badges);
             if (areaUpgradeButton) areaUpgradeButton.onClick.AddListener(() => SidePressed?.Invoke(LobbySideIds.AreaUpgrade));
             if (upgrades != null)
                 foreach (var u in upgrades)
                 {
+                    if (u?.upgradeBadge && !string.IsNullOrEmpty(u.key))
+                        u.upgradeBadge.Bind(BadgeKey.Child(MainUpgradeBadgeRoot, u.key), _badges);
                     if (u?.button == null) continue;
                     string key = u.key;
                     u.button.transition = Selectable.Transition.None; // 정본은 누름 효과가 없다(05 §5.1.8)
@@ -259,7 +271,14 @@ namespace MV.UI
                 }
 
             SetSpeedShown(MvRunSpeed.Current);
-            if (MissingRefs() is { Count: > 0 } miss)
+            var miss = MissingRefs();
+            foreach (var missingBadge in miss.FindAll(field => field.EndsWith("UpgradeBadge", StringComparison.Ordinal) ||
+                         field.EndsWith(".upgradeBadge", StringComparison.Ordinal)))
+            {
+                miss.Remove(missingBadge);
+                Debug.LogWarning("LobbyDesignView: Assets/Game/Addressables/Local/UI/Lobby/UIScreen_Lobby.prefab — " + missingBadge + " 참조가 비었습니다.", this);
+            }
+            if (miss.Count > 0)
                 Debug.LogError("LobbyDesignView: UIScreen_Lobby 참조가 비었습니다 — " + string.Join(", ", miss), this);
         }
 
@@ -343,7 +362,7 @@ namespace MV.UI
             DrawStair(t, model);
             DrawUpgrades(t, model);
             DrawRebirth(model.Rebirth);
-            if (areaUpgradeDot) areaUpgradeDot.SetActive(model.AreaUpgradeDot);
+            SetBadge(areaUpgradeBadge, model.AreaUpgradeDot);
             if (areaUpgradeButton)
             {
                 var side = model.FindSide(LobbySideIds.AreaUpgrade);
@@ -383,9 +402,9 @@ namespace MV.UI
                 if (p == null) continue;
                 var u = m.FindUpgrade(p.key);
                 if (p.root) p.root.SetActive(u != null);
+                SetBadge(p.upgradeBadge, u?.Enabled == true);
                 if (u == null) continue;
                 if (p.disable) p.disable.SetActive(!u.Enabled);
-                if (p.redDot) p.redDot.SetActive(u.Enabled);
                 if (p.level) p.level.text = string.Format(UpgradeLevelFormat, u.LevelNo);
                 if (p.currentValue && u.CurValue.Length > 0) p.currentValue.text = u.CurValue;
                 if (p.nextValue && u.NextValue.Length > 0) p.nextValue.text = u.NextValue;
@@ -421,6 +440,7 @@ namespace MV.UI
 
         void DrawRebirth(LobbyRebirthInfo r)
         {
+            SetBadge(rebirthUpgradeBadge, r.Visible && r.UpgradeAvailable);
             if (rebirthButton) rebirthButton.gameObject.SetActive(r.Visible);
             if (!r.Visible) return;
             if (rebirthUnlock) rebirthUnlock.gameObject.SetActive(r.Locked);
@@ -445,6 +465,13 @@ namespace MV.UI
             if (rebirthReward) rebirthReward.text = string.Format(RebirthRewardFormat, r.Pending);
             if (MvConsumeIcon.TryWealth(_tables ?? MvTables.Current, MvWealthIds.TypeOf(MvWealthIds.RbToken), out var rbAtlas, out var rbSprite))
                 SetSprite(rebirthRewardIcon, rbAtlas, rbSprite);
+        }
+
+        void SetBadge(BadgeView badge, bool visible)
+        {
+            if (!badge || string.IsNullOrEmpty(badge.Key)) return;
+            var value = BadgeValue.Flag(visible);
+            if (_badges.Get(badge.Key) != value) _badges.Set(badge.Key, value);
         }
 
         // ---------------- 일반 Image에 표 그림 넣기 ----------------

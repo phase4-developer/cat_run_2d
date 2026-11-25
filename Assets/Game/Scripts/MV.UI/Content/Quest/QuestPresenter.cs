@@ -19,6 +19,7 @@ namespace MV.UI
         static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
         IQuestUiPort _quest;
+        readonly QuestNotifications _notifications = new QuestNotifications();
         QuestCategory? _tab;
         float _tick;
 
@@ -40,13 +41,14 @@ namespace MV.UI
             m.Currencies = MvUiText.WealthNameById(tables, MV.Save.MvWealthIds.Dia) + " " + MvUiFormat.Fmt(Port.Wealth(MV.Save.MvWealthIds.Dia));
 
             var groups = Quest.Groups();
+            _notifications.Refresh(groups);
             var categories = groups.Select(g => g.Category).Distinct().OrderBy(c => (int)c).ToList();
             if (_tab == null || !categories.Contains(_tab.Value)) _tab = categories.Count > 0 ? categories[0] : (QuestCategory?)null;
             foreach (var c in categories)
                 m.Tabs.Add(new MetaTab
                 {
                     Id = TabId(c), Text = TabName(c), Selected = c == _tab,
-                    Sub = groups.Any(g => g.Category == c && g.Open && g.Items.Any(i => i.State == QuestItemState.Claimable)) ? "●" : "",
+                    HasNotification = _notifications.Has(c),
                     Locked = groups.Where(g => g.Category == c).All(g => !g.Open),
                 });
             if (_tab == null) return;

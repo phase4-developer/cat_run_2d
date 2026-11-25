@@ -107,7 +107,8 @@ namespace MV.UI
 
         GameObject Tab(MetaTab t)
         {
-            var b = MvUi.Button(tabBar, "Tab_" + t.Id, t.Text + (string.IsNullOrEmpty(t.Sub) ? "" : "\n" + t.Sub),
+            var subtitle = t.HasNotification ? "●" : t.Sub;
+            var b = MvUi.Button(tabBar, "Tab_" + t.Id, t.Text + (string.IsNullOrEmpty(subtitle) ? "" : "\n" + subtitle),
                 t.Selected ? MvUi.Gold : new Color(1, 1, 1, t.Locked ? .08f : .16f), t.Selected ? MvUi.Hex("#15131c") : MvUi.Ink, 2.3f * U);
             string id = t.Id;
             b.onClick.AddListener(() => TabPressed?.Invoke(id));

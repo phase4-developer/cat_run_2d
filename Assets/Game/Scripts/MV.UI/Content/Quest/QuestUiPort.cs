@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using jjevol.Badge;
 using MV.Content;
 using MV.Data;
 using MV.Meta;
@@ -47,6 +49,40 @@ namespace MV.UI
         long NowMs { get; }
         IReadOnlyList<QuestGroupItem> Groups();
         MetaResult Claim(int id);
+    }
+
+    /// <summary>열린 분류의 수령 가능 상태를 Framework 배지 키로 모은다.</summary>
+    internal sealed class QuestNotifications
+    {
+        const string RootKey = "lobby/quest";
+
+        readonly ManualBadgeScheduler _scheduler = new ManualBadgeScheduler();
+        readonly BadgeTree _tree;
+        HashSet<QuestCategory> _shown = new HashSet<QuestCategory>();
+        HashSet<QuestCategory> _next = new HashSet<QuestCategory>();
+
+        public QuestNotifications() => _tree = new BadgeTree(_scheduler);
+
+        public bool Any => _tree.Get(RootKey).On;
+        public bool Has(QuestCategory category) => _tree.Get(CategoryKey(category)).On;
+
+        public void Refresh(IReadOnlyList<QuestGroupItem> groups)
+        {
+            _next.Clear();
+            foreach (var group in groups)
+                if (group.Open && group.Items.Any(item => item.State == QuestItemState.Claimable))
+                    _next.Add(group.Category);
+
+            foreach (var category in _shown)
+                if (!_next.Contains(category)) _tree.Remove(CategoryKey(category));
+            foreach (var category in _next)
+                if (!_shown.Contains(category)) _tree.Set(CategoryKey(category), BadgeValue.Dot);
+
+            (_shown, _next) = (_next, _shown);
+            _scheduler.Run();
+        }
+
+        static string CategoryKey(QuestCategory category) => BadgeKey.Child(RootKey, (int)category);
     }
 
     /// <summary><see cref="MvQuest.Current"/>를 매번 읽는 기본 입구.</summary>
