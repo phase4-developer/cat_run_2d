@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1002}
   - component: {fileID: 1003}
   - component: {fileID: 1004}
-  - component: {fileID: 1005}
   m_Layer: 5
   m_Name: UIScreen_Lobby
   m_TagString: Untagged
@@ -120,7 +119,7 @@ MonoBehaviour:
     priceIcon: {fileID: 3441455809282638270}
     priceText: {fileID: 1353474541212705281}
     priceButton: {fileID: 2924480033034029759}
-    redDot: {fileID: 4537616146757048386}
+    upgradeBadge: {fileID: 1006}
   - key: weapon
     root: {fileID: 9128501672058603948}
     button: {fileID: 394288873980869371}
@@ -134,7 +133,7 @@ MonoBehaviour:
     priceIcon: {fileID: 8057196623458734090}
     priceText: {fileID: 5970341113687946165}
     priceButton: {fileID: 7532199358376467211}
-    redDot: {fileID: 9145317332036667894}
+    upgradeBadge: {fileID: 1007}
   - key: income
     root: {fileID: 2433220312834592591}
     button: {fileID: 6490444317866146840}
@@ -148,7 +147,7 @@ MonoBehaviour:
     priceIcon: {fileID: 3511280210989651689}
     priceText: {fileID: 986449397470344534}
     priceButton: {fileID: 4030093247504047592}
-    redDot: {fileID: 2414152277500448533}
+    upgradeBadge: {fileID: 1008}
   rebirthButton: {fileID: 3109931699492379199}
   rebirthUpgradeBadge: {fileID: 1005}
   rebirthUnlock: {fileID: 856544028955081873}
@@ -160,14 +159,14 @@ MonoBehaviour:
   rebirthRewardIcon: {fileID: 4447989744480119230}
   areaUpgradeButton: {fileID: 7460267210951366006}
   areaUpgradeLabel: {fileID: 3090792222379839846}
-  areaUpgradeDot: {fileID: 4285351187316377632}
+  areaUpgradeBadge: {fileID: 1009}
 --- !u!114 &1005
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1001}
+  m_GameObject: {fileID: 1016}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04d153fafbaf4cbc8c089e40981efc03, type: 3}
@@ -176,6 +175,78 @@ MonoBehaviour:
   key:
   mode: 0
   dot: {fileID: 6011715102769928612}
+  countRoot: {fileID: 0}
+  countText: {fileID: 0}
+  maxCount: 99
+--- !u!114 &1006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4520659199526426648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d153fafbaf4cbc8c089e40981efc03, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: JJEvol.Badge.UGUI::jjevol.Badge.BadgeView
+  key:
+  mode: 0
+  dot: {fileID: 4537616146757048386}
+  countRoot: {fileID: 0}
+  countText: {fileID: 0}
+  maxCount: 99
+--- !u!114 &1007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9128501672058603948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d153fafbaf4cbc8c089e40981efc03, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: JJEvol.Badge.UGUI::jjevol.Badge.BadgeView
+  key:
+  mode: 0
+  dot: {fileID: 9145317332036667894}
+  countRoot: {fileID: 0}
+  countText: {fileID: 0}
+  maxCount: 99
+--- !u!114 &1008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2433220312834592591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d153fafbaf4cbc8c089e40981efc03, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: JJEvol.Badge.UGUI::jjevol.Badge.BadgeView
+  key:
+  mode: 0
+  dot: {fileID: 2414152277500448533}
+  countRoot: {fileID: 0}
+  countText: {fileID: 0}
+  maxCount: 99
+--- !u!114 &1009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d153fafbaf4cbc8c089e40981efc03, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: JJEvol.Badge.UGUI::jjevol.Badge.BadgeView
+  key:
+  mode: 0
+  dot: {fileID: 4285351187316377632}
   countRoot: {fileID: 0}
   countText: {fileID: 0}
   maxCount: 99
@@ -746,7 +817,32 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3884328651922713557, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1204}
+    - targetCorrespondingSourceObject: {fileID: 1885394173005257566, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1005}
+    - targetCorrespondingSourceObject: {fileID: 4520659199526427732, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1006}
+    - targetCorrespondingSourceObject: {fileID: 9128501672058605024, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1007}
+    - targetCorrespondingSourceObject: {fileID: 2433220312834591491, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1008}
+    - targetCorrespondingSourceObject: {fileID: 8963409152096785675, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1009}
   m_SourcePrefab: {fileID: 100100000, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+--- !u!1 &1016 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1885394173005257566, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1017 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8963409152096785675, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}
+  m_PrefabInstance: {fileID: 1100}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8823633733725730244 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8823633733725729160, guid: dc8c7cb7bd84b1f499053d13bda00316, type: 3}

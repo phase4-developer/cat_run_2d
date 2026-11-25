@@ -48,11 +48,18 @@ namespace MV.UI.Tests
             Assert.That(new SerializedObject(ctrl).FindProperty("view").objectReferenceValue, Is.SameAs(view), "LobbyScreen.view = LobbyDesignView");
             Assert.That(go.transform.Find("LobbyScreen"), Is.Not.Null, "중첩 디자이너 LobbyScreen");
             var bindings = new SerializedObject(view);
-            var badge = bindings.FindProperty("rebirthUpgradeBadge").objectReferenceValue;
-            var dot = (GameObject)new SerializedObject(badge).FindProperty("dot").objectReferenceValue;
             var rebirth = (Component)bindings.FindProperty("rebirthButton").objectReferenceValue;
-            Assert.That(dot.transform.parent, Is.EqualTo(rebirth.transform));
-            Assert.That(dot.activeSelf, Is.False);
+            var rebirthDot = BadgeDot(bindings.FindProperty("rebirthUpgradeBadge"), rebirth.transform);
+            Assert.That(rebirthDot.activeSelf, Is.False);
+            var area = (Component)bindings.FindProperty("areaUpgradeButton").objectReferenceValue;
+            BadgeDot(bindings.FindProperty("areaUpgradeBadge"), area.transform);
+            var upgrades = bindings.FindProperty("upgrades");
+            for (int i = 0; i < upgrades.arraySize; i++)
+            {
+                var upgrade = upgrades.GetArrayElementAtIndex(i);
+                var root = (GameObject)upgrade.FindPropertyRelative("root").objectReferenceValue;
+                BadgeDot(upgrade.FindPropertyRelative("upgradeBadge"), root.transform);
+            }
             Assert.That(view.StartArea.transform.GetSiblingIndex(), Is.EqualTo(0), "출발 영역은 디자이너 화면 뒤(첫 자식)");
             Assert.That(view.SpeedStateCount, Is.GreaterThan(1), "1x/2x 상태 자식");
             // 무기 스택 = 인게임과 같은 공용 부품(MV-UI3-LOBBY-WEAPONFX). 인게임 런 연결(WeaponSection)은 로비에 없다.
@@ -69,6 +76,18 @@ namespace MV.UI.Tests
             Assert.That(ws.Spawn.IsChildOf(view.Upgrades.Single(u => u.key == "weapon").root.transform), Is.True, "Spwan은 무기 강화 칸 안");
             foreach (var u in view.Upgrades)
                 Assert.That(u.button.gameObject, Is.SameAs(u.root), u.key + ": 버튼은 칸 루트에 덧붙인다");
+        }
+
+        static GameObject BadgeDot(SerializedProperty binding, Transform button)
+        {
+            var badge = binding.objectReferenceValue;
+            Assert.That(badge, Is.Not.Null, binding.propertyPath);
+            Assert.That(badge.GetType().FullName, Is.EqualTo("jjevol.Badge.BadgeView"));
+            Assert.That(((Component)badge).transform, Is.EqualTo(button), binding.propertyPath);
+            var dot = (GameObject)new SerializedObject(badge).FindProperty("dot").objectReferenceValue;
+            Assert.That(dot, Is.Not.Null, binding.propertyPath);
+            Assert.That(dot.transform.IsChildOf(button), Is.True, binding.propertyPath);
+            return dot;
         }
 
         [Test]

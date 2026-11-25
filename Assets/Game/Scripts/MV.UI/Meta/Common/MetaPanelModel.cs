@@ -60,6 +60,7 @@ namespace MV.UI
         public string Id;
         public string Text;
         public string Sub;
+        public bool HasNotification;
         public bool Selected;
         public bool Locked;
     }
