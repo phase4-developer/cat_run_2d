@@ -78,7 +78,7 @@ MonoBehaviour:
   closeButton: {fileID: 7158668988375673844}
   title: {fileID: 3467678234209580132}
   currencies:
-  - wealthType: gold
+  - wealthType: goldenFish
     slot: {fileID: 5902045460913385825}
   - wealthType: dia
     slot: {fileID: 2479031552688679513}
