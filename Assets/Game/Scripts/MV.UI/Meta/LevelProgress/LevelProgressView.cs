@@ -71,6 +71,7 @@ namespace MV.UI
         readonly List<LevelProgressArea> _areas = new List<LevelProgressArea>();
         readonly List<LevelProgressAreaBg> _backgrounds = new List<LevelProgressAreaBg>();
         readonly List<float> _stepValues = new List<float>();
+        readonly FloatTween _riseProgress = new FloatTween();
         LevelProgressViewData _data;
         Coroutine _rise;
         bool _samplesTaken;
@@ -142,11 +143,12 @@ namespace MV.UI
         IEnumerator Rise(long from, long to, bool autoClose)
         {
             if (riseDelay > 0f) yield return new WaitForSecondsRealtime(riseDelay);
-            float t = 0f;
-            while (riseDuration > 0f && t < riseDuration && from != to)
+            _riseProgress.Play(0f, 1f, from == to ? 0f : riseDuration, Ease.Linear);
+            while (_riseProgress.IsPlaying)
             {
-                t += Time.unscaledDeltaTime;
-                float k = riseCurve != null ? riseCurve.Evaluate(Mathf.Clamp01(t / riseDuration)) : Mathf.Clamp01(t / riseDuration);
+                _riseProgress.Tick(Time.unscaledDeltaTime);
+                float progress01 = _riseProgress.Value;
+                float k = riseCurve != null ? riseCurve.Evaluate(progress01) : progress01;
                 SetSouls(from + (long)Math.Round((to - from) * (double)k), true);
                 yield return null;
             }
