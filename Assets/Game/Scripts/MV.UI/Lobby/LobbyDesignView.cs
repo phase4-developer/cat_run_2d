@@ -13,16 +13,27 @@ using UnityEngine.UI;
 namespace MV.UI
 {
     /// <summary>
-    /// 디자이너 공용 모듈 <c>Slot_Currency</c> 1칸. 그리기는 인게임과 같은 공용 부품 <see cref="HudCurrencySlot"/>가 맡고,
-    /// 로비는 보일 재화(<see cref="wealthType"/>, <c>01_wealth.type</c>)만 Inspector에서 정한다.
+    /// 확정 보유량 칸의 프리팹 참조와 <c>01_wealth.id</c>.
     /// </summary>
     [Serializable]
     public sealed class LobbyCurrencyParts
     {
-        /// <summary><c>01_wealth.type</c>(gold·dia·rescueCat …). 비우면 칸을 끈다.</summary>
-        public string wealthType;
+        [MvWealthId] public int resourceId;
         /// <summary><c>Slot_Currency</c> 루트의 공용 재화 칸.</summary>
         public HudCurrencySlot slot;
+
+        public static void BindBalances(LobbyCurrencyParts[] currencies, MvTables tables, ResourceService wallet)
+        {
+            if (currencies == null) return;
+            var presentation = MvConsumePresentation.ForTables(tables);
+            var wealth = tables?.Find("01_wealth");
+            foreach (var currency in currencies)
+            {
+                if (currency == null || !currency.slot) continue;
+                int id = wealth?.HasId(currency.resourceId) == true ? currency.resourceId : 0;
+                currency.slot.ShowBalance(wallet, id, presentation);
+            }
+        }
     }
 
     /// <summary>디자이너 <c>Element_MainUpgrade_*</c> 1칸. 표 행과는 <see cref="key"/>(<c>10_lobbyUpgrade.key</c>)로 짝짓는다.</summary>
@@ -174,6 +185,7 @@ namespace MV.UI
             {
                 var c = currencies[i];
                 Need(c?.slot, "currencies[" + i + "].slot");
+                if (c != null && c.slot && !c.slot.HasBalanceLabel) miss.Add("currencies[" + i + "].resourceLabel");
             }
             Need(weaponStack, nameof(weaponStack));
             if (weaponStack) foreach (var m in weaponStack.MissingRefs()) miss.Add("weaponStack." + m);
@@ -293,21 +305,7 @@ namespace MV.UI
         /// <summary>Area 줄은 원값(<see cref="SetState"/>)으로 그린다.</summary>
         public void SetArea(string text) { }
 
-        public void SetWealth(string gold, string souls, string dia)
-        {
-            Init();
-            if (currencies == null) return;
-            foreach (var c in currencies)
-            {
-                if (c == null || !c.slot) continue;
-                switch (c.wealthType)
-                {
-                    case "gold": c.slot.SetText(gold); break;           // 01_wealth.type
-                    case "rescueCat": c.slot.SetText(souls); break;
-                    case "dia": c.slot.SetText(dia); break;
-                }
-            }
-        }
+        void ILobbyView.SetWealth(string gold, string souls, string dia) { }
 
         // ---------------- ILobbyStateView(원값) ----------------
 
@@ -319,19 +317,8 @@ namespace MV.UI
             string areaIcon = HudAreaLabel.AreaIconOf(t, s.AreaNo);
             if (areaLabel) areaLabel.ShowUI(new AreaLabelData(s.ZoneNo, s.AreaNo, area, areaIcon));
             if (areaUpgradeLabel) areaUpgradeLabel.ShowUI(new AreaLabelData(s.ZoneNo, s.AreaNo, area, areaIcon));
-            DrawCurrencies(t);
+            LobbyCurrencyParts.BindBalances(currencies, t, Wallet);
             DrawWeapons(t, s.Deck);
-        }
-
-        void DrawCurrencies(MvTables t)
-        {
-            if (currencies == null) return;
-            foreach (var c in currencies)
-            {
-                if (c == null || !c.slot) continue;
-                if (string.IsNullOrEmpty(c.wealthType)) { c.slot.HideUI(); continue; }
-                c.slot.ShowUI(new CurrencySlotData(t, c.wealthType, c.slot.ValueText)); // 글자는 SetWealth가 먼저 넣은 값
-            }
         }
 
         /// <summary>시작 덱(등급별 장수)을 장착 칸 + 스택으로. 그리기·버림·머지는 공용 부품(<see cref="LobbyWeaponStack"/> → <see cref="WeaponStackView"/>, 인게임 손패와 같은 규칙).</summary>

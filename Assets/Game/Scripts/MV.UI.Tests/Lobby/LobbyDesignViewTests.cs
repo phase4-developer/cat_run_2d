@@ -193,28 +193,18 @@ namespace MV.UI.Tests
         }
 
         [Test]
-        public void SetWealth_PutsValueInConfiguredCurrencySlots()
+        public void CurrencySlots_ReferenceFrameworkLabelsAndWealthIds()
         {
             var (_, view) = NewLobby();
-            view.SetWealth("10", "20", "30");
             var s = new LobbyState { Level = 0, AreaNo = 1, ZoneNo = 1, Deck = System.Array.Empty<int>() };
             view.SetState(s, T);
-            var expect = new Dictionary<string, string> { ["gold"] = "10", ["rescueCat"] = "20", ["dia"] = "30" };
+            var wealth = T.Find("01_wealth");
             foreach (var c in view.Currencies)
             {
-                Assert.That(c.slot, Is.Not.Null, c.wealthType + ": 공용 재화 칸 HudCurrencySlot(인게임과 같은 컴포넌트)");
-                Assert.That(c.slot.gameObject.name, Does.StartWith("Slot_Currency"), c.wealthType);
-                // Icon_Dummy는 디자이너가 Slot_Currency에서 지웠다(2026-11-23 8cc83d5d). 남아 있으면 꺼져 있어야 한다.
-                var dummy = c.slot.transform.Find("Icon_Dummy");
-                if (dummy) Assert.That(dummy.gameObject.activeSelf, Is.False, c.wealthType + ": Icon_Dummy 끔");
-                var icon = c.slot.transform.Find("Icon");
-                Assert.That(icon, Is.Not.Null, c.wealthType);
-                Assert.That(icon.gameObject.activeSelf, Is.True, c.wealthType + ": 디자이너 원본이 꺼 둔 표 아이콘 칸 Icon을 래퍼 프리팹이 켬(둘 다 꺼지면 아이콘이 안 보임)");
-                Assert.That(c.slot.IconSprite, Is.EqualTo(HudCurrencySlot.IconOf(T, c.wealthType)), c.wealthType + ": 01_wealth.icon");
-                Assert.That(c.slot.WealthType, Is.EqualTo(c.wealthType), "SetState가 공용 칸에 재화 종류를 넣음");
-                if (expect.TryGetValue(c.wealthType, out var v)) Assert.That(c.slot.ValueText, Is.EqualTo(v), c.wealthType + ": SetWealth 글자가 SetState 뒤에도 남음");
+                Assert.That(wealth.HasId(c.resourceId), Is.True);
+                Assert.That(c.slot.HasBalanceLabel, Is.True);
+                Assert.That(c.slot.gameObject.activeSelf, Is.False, "재화 서비스가 없으면 칸을 끈다");
             }
-            Assert.That(view.Currencies.Count(c => expect.ContainsKey(c.wealthType)), Is.EqualTo(view.Currencies.Count), "칸의 재화는 로비가 읽는 01_wealth.type");
         }
 
         /// <summary>프리팹 단위 관리: 공용 Slot_AreaLabel은 루트 HudAreaLabel 하나가 그리고, 로비는 그 컴포넌트에 데이터만 넘긴다.</summary>

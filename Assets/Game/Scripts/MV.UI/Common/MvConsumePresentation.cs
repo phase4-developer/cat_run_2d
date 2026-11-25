@@ -17,15 +17,13 @@ namespace MV.UI
         static MvConsumePresentation s_current;
 
         /// <summary>현재 표(<see cref="MvTables.Current"/>)의 Provider. 표가 없으면 null(Framework가 WealthTable 기본을 쓴다).</summary>
-        public static MvConsumePresentation Current
+        public static MvConsumePresentation Current => ForTables(MvTables.Current);
+
+        public static MvConsumePresentation ForTables(MvTables tables)
         {
-            get
-            {
-                var t = MvTables.Current;
-                if (t == null) return null;
-                if (s_current == null || s_current._tables != t) s_current = new MvConsumePresentation(t);
-                return s_current;
-            }
+            if (tables == null) return null;
+            if (s_current == null || s_current._tables != tables) s_current = new MvConsumePresentation(tables);
+            return s_current;
         }
 
         public bool TryResolve(ConsumeTypeId typeId, int itemId, out ConsumePresentation presentation)

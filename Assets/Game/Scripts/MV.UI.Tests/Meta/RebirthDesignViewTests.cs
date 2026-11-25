@@ -65,33 +65,27 @@ namespace MV.UI.Tests
             Assert.That(go.transform.Find("Popup_RebirthUpgrade"), Is.Not.Null, "중첩 디자이너 Popup_RebirthUpgrade");
             Assert.That(go.GetComponent("MetaPanelView"), Is.Null, "코드 생성 패널은 뗐다");
             var wealth = T.Find(WealthTable);
-            Assert.That(view.Currencies.All(c => wealth.HasKey(c.wealthType)), Is.True, "재화 칸은 01_wealth.type 참조");
+            Assert.That(view.Currencies.All(c => wealth.HasId(c.resourceId) && c.slot.HasBalanceLabel), Is.True,
+                "재화 칸은 01_wealth.id와 Framework ResourceLabel 참조");
             Assert.That(view.AdButton, Is.Not.SameAs(view.SkipDiaButton));
         }
 
         [Test]
-        public void CurrencySlot_UsesInspectorWealthType_WhenRedrawn()
+        public void CurrencySlot_SerializesWealthIdAndHidesWithoutWallet()
         {
             var (_, view) = NewPopup();
-            var slot = view.Currencies.First().slot;
+            var slot = view.Currencies.First();
             var settings = new SerializedObject(view);
-            var type = settings.FindProperty("currencies").GetArrayElementAtIndex(0).FindPropertyRelative("wealthType");
-            type.stringValue = "gold";
+            var id = settings.FindProperty("currencies").GetArrayElementAtIndex(0).FindPropertyRelative("resourceId");
+            int anotherId = T.Find(WealthTable).RawRows.Select(row => row.GetInt("id")).First(value => value != slot.resourceId);
+            id.intValue = anotherId;
             settings.ApplyModifiedPropertiesWithoutUndo();
-            var (p, port, _) = NewPresenter(view);
-            Assert.That(slot.WealthType, Is.EqualTo("gold"));
+            var (p, _, _) = NewPresenter(view);
+            p.Open();
 
-            const string goldenFish = "goldenFish";
-            type.stringValue = goldenFish;
-            settings.ApplyModifiedPropertiesWithoutUndo();
-            int wealthId = T.Find(WealthTable).RawRows.Single(row => row.Get("type") == goldenFish).GetInt("id");
-            p.Draw();
-
-            Assert.That(slot.gameObject.activeSelf, Is.True);
-            Assert.That(slot.WealthType, Is.EqualTo(goldenFish));
-            Assert.That(slot.ValueText, Is.EqualTo(MvUiFormat.Fmt(port.Wealth(wealthId))));
-            Assert.That(MvConsumeIcon.TryWealth(T, goldenFish, out _, out var sprite), Is.True);
-            Assert.That(slot.IconSprite, Is.EqualTo(sprite));
+            Assert.That(view.Currencies.First().resourceId, Is.EqualTo(anotherId));
+            Assert.That(slot.slot.HasBalanceLabel, Is.True);
+            Assert.That(slot.slot.gameObject.activeSelf, Is.False, "재화 서비스가 없으면 오래된 보유량을 표시하지 않는다");
         }
 
         [Test]

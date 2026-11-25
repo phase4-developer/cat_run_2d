@@ -21,25 +21,46 @@ namespace MV.UI
     }
 
     /// <summary>
-    /// 디자이너 <c>Slot_Currency</c>(공용 재화 칸)의 값 연결(공용 부품 MV-UI3-HUD2). 겉(배경·배치)은 프리팹이 정하고,
-    /// 아이콘 = <see cref="MvConsumeIcon"/>(07_consumeType 재화 행 → 01_wealth.icon, MV-UI-ICONSRC), 글자 = 받은 문자열(숫자 모양은 부르는 쪽이 정한다).
-    /// 인게임 상단 줄과 로비가 같은 프리팹·같은 컴포넌트를 쓴다.
+    /// 공용 <c>Slot_Currency</c>의 데이터 연결. 런 스냅샷은 화면에서 받은 값을 표시하고,
+    /// 확정 보유량은 같은 칸에 연결된 Framework <see cref="ResourceLabel"/>이 표시한다.
     /// </summary>
     public sealed class HudCurrencySlot : UIBase
     {
         [SerializeField] AddressableImage icon;
         /// <summary>수량 글자(<c>Value Text (TMP)</c>).</summary>
         [SerializeField] TMP_Text value;
+        [SerializeField] ResourceLabel resourceLabel;
 
         CurrencySlotData _data;
+        int _boundResourceId;
+        MvConsumePresentation _boundPresentation;
 
         public string WealthType => _data.WealthType;
         public string IconSprite => icon ? icon.spriteName : null;
         public string ValueText => value ? value.text : null;
+        public bool HasBalanceLabel => resourceLabel != null;
+
+        public void ShowBalance(ResourceService wallet, int resourceId, MvConsumePresentation presentation)
+        {
+            if (!resourceLabel || wallet == null || resourceId == 0)
+            {
+                if (resourceLabel) resourceLabel.enabled = false;
+                HideUI();
+                return;
+            }
+            if (resourceLabel.enabled && gameObject.activeSelf && ReferenceEquals(resourceLabel.Resources, wallet)
+                && _boundResourceId == resourceId && ReferenceEquals(_boundPresentation, presentation)) return;
+
+            _boundResourceId = resourceId;
+            _boundPresentation = presentation;
+            resourceLabel.enabled = true;
+            resourceLabel.ShowUI(wallet, wallet.WealthTypeId, resourceId, ResourceQuantityView.Confirmed, presentation);
+        }
 
         /// <summary>데이터를 넣고 켜서 그린다.</summary>
         public void ShowUI(in CurrencySlotData data)
         {
+            if (resourceLabel) resourceLabel.enabled = false;
             _data = data;
             ShowUI();
         }
@@ -57,6 +78,7 @@ namespace MV.UI
 
         protected override void _DrawContents()
         {
+            if (resourceLabel && resourceLabel.enabled) return;
             MvConsumeIcon.TryWealth(_data.Tables, _data.WealthType, out var atlas, out var sprite);
             HudImage.SetOrHide(icon, atlas, sprite);
             if (value) value.text = _data.Text ?? "";

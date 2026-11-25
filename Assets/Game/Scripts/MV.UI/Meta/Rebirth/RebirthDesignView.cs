@@ -27,7 +27,6 @@ namespace MV.UI
         public MvTables Tables;
         public ResourceService Wallet;
         public string Title;
-        public readonly List<AreaUpgradeCurrency> Currencies = new List<AreaUpgradeCurrency>();
         public int Level;
         public RebirthHeaderState State;
 
@@ -145,7 +144,7 @@ namespace MV.UI
             Need(title, nameof(title));
             if (currencies == null || currencies.Length == 0) miss.Add(nameof(currencies));
             else for (int i = 0; i < currencies.Length; i++)
-                    if (currencies[i] == null || !currencies[i].slot || string.IsNullOrEmpty(currencies[i].wealthType)) miss.Add("currencies[" + i + "]");
+                    if (currencies[i] == null || !currencies[i].slot || !currencies[i].slot.HasBalanceLabel || currencies[i].resourceId == 0) miss.Add("currencies[" + i + "]");
             Need(levelCount, nameof(levelCount));
             Need(lockRoot, nameof(lockRoot));
             Need(lockBar, nameof(lockBar));
@@ -219,15 +218,7 @@ namespace MV.UI
             if (d == null) return;
 
             if (title) title.text = d.Title ?? "";
-            if (currencies != null)
-                foreach (var c in currencies)
-                {
-                    if (c == null || !c.slot) continue;
-                    string text = null;
-                    foreach (var v in d.Currencies) if (v.WealthType == c.wealthType) { text = v.Text; break; }
-                    if (text == null) { c.slot.gameObject.SetActive(false); continue; }
-                    c.slot.ShowUI(new CurrencySlotData(d.Tables, c.wealthType, text));
-                }
+            LobbyCurrencyParts.BindBalances(currencies, d.Tables, d.Wallet);
             if (levelCount) levelCount.text = MvUiFormat.Fmt(d.Level);
 
             RenderHeader(model, d);

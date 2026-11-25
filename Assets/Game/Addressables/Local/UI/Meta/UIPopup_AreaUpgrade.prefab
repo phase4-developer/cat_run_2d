@@ -77,9 +77,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: MV.UI::MV.UI.AreaUpgradeDesignView
   closeButton: {fileID: 521524171239282}
   currencies:
-  - wealthType: gold
+  - resourceId: 1001001
     slot: {fileID: 4657294708845975486}
-  - wealthType: dia
+  - resourceId: 1001002
     slot: {fileID: 3152125484328413306}
   areaLabel: {fileID: 1672400299449498533}
   adButton: {fileID: 4721442730617718994}

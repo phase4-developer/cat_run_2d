@@ -46,17 +46,6 @@ namespace MV.UI
         {
             m.Title = MvUiText.Ui(TitleKey);
             var d = new RebirthViewData { Tables = tables, Wallet = Port.Wallet, Level = Port.RebirthLevel, Title = m.Title };
-            if (View is RebirthDesignView view && view.Currencies != null)
-            {
-                foreach (var currency in view.Currencies)
-                {
-                    if (currency == null || !currency.slot || string.IsNullOrEmpty(currency.wealthType)) continue;
-                    int id = tables.Wealth.GetId(currency.wealthType);
-                    if (id == 0) continue;
-                    d.Currencies.Add(new AreaUpgradeCurrency(currency.wealthType, MvUiFormat.Fmt(Port.Wealth(id))));
-                }
-            }
-
             long cd = Port.RebirthCooldownLeftMs;
             d.State = !Port.RebirthOpen ? RebirthHeaderState.Locked : cd > 0 ? RebirthHeaderState.Cooldown : RebirthHeaderState.Ready;
             if (d.State == RebirthHeaderState.Locked) FillUnlock(d, tables);
