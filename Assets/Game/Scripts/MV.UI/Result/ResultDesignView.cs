@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using jjevol;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -73,6 +74,7 @@ namespace MV.UI
         public event Action X3Pressed;
 
         readonly List<ItemSlot> _slots = new List<ItemSlot>();
+        readonly FloatTween _fillProgress = new FloatTween();
         ObjectPool<ItemSlot> _pool;
         bool _templateTaken;
         bool _ready;
@@ -191,11 +193,12 @@ namespace MV.UI
         IEnumerator Fill(ResultProgress p)
         {
             if (fillDelay > 0f) yield return new WaitForSecondsRealtime(fillDelay);
-            float t = 0f;
-            while (t < fillDuration)
+            _fillProgress.Play(0f, 1f, fillDuration, Ease.Linear);
+            while (_fillProgress.IsPlaying)
             {
-                t += Time.unscaledDeltaTime;
-                float k = fillCurve != null ? fillCurve.Evaluate(Mathf.Clamp01(t / fillDuration)) : Mathf.Clamp01(t / fillDuration);
+                _fillProgress.Tick(Time.unscaledDeltaTime);
+                float progress01 = _fillProgress.Value;
+                float k = fillCurve != null ? fillCurve.Evaluate(progress01) : progress01;
                 float v = Mathf.LerpUnclamped(p.From01, p.To01, k);
                 ShowFill(v, Math.Min(p.Percent, PercentAt(v)));
                 yield return null;
