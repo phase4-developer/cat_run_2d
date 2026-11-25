@@ -91,9 +91,9 @@ MonoBehaviour:
   - {fileID: 439519704141645263}
   - {fileID: 2123773868477989506}
   currencies:
-  - wealthType: gold
+  - resourceId: 1001001
     slot: {fileID: 7898285066616250659}
-  - wealthType: dia
+  - resourceId: 1001002
     slot: {fileID: 331560770775667334}
   weaponStack: {fileID: 8823633733725730244}
   stairGrade: {fileID: 10547949895669787}

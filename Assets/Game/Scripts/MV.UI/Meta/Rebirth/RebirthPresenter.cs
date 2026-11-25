@@ -21,9 +21,6 @@ namespace MV.UI
         public const string SkipDiaId = "skipDia";
         public const string GoId = "go";
         public const string BuyPrefix = "perk:";
-        /// <summary>시안 재화 칸(골드·다이아). 값은 <c>01_wealth.type</c>.</summary>
-        public static readonly string[] CurrencyTypes = { "gold", "dia" };
-
         public const string TitleKey = "ui.rb.title";
         public const string CooldownKey = "ui.rb.cooldown";
         public const string ReadyKey = "ui.rb.ready";
@@ -49,12 +46,6 @@ namespace MV.UI
         {
             m.Title = MvUiText.Ui(TitleKey);
             var d = new RebirthViewData { Tables = tables, Wallet = Port.Wallet, Level = Port.RebirthLevel, Title = m.Title };
-            foreach (var type in CurrencyTypes)
-            {
-                int id = tables.Wealth.GetId(type);
-                d.Currencies.Add(new AreaUpgradeCurrency(type, MvUiFormat.Fmt(id == 0 ? 0 : Port.Wealth(id))));
-            }
-
             long cd = Port.RebirthCooldownLeftMs;
             d.State = !Port.RebirthOpen ? RebirthHeaderState.Locked : cd > 0 ? RebirthHeaderState.Cooldown : RebirthHeaderState.Ready;
             if (d.State == RebirthHeaderState.Locked) FillUnlock(d, tables);

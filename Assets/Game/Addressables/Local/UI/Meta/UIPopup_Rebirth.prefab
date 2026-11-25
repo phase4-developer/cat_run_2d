@@ -78,9 +78,9 @@ MonoBehaviour:
   closeButton: {fileID: 7158668988375673844}
   title: {fileID: 3467678234209580132}
   currencies:
-  - wealthType: gold
+  - resourceId: 1001004
     slot: {fileID: 5902045460913385825}
-  - wealthType: dia
+  - resourceId: 1001002
     slot: {fileID: 2479031552688679513}
   levelCount: {fileID: 4361082263334200119}
   lockRoot: {fileID: 8716627978708296496}

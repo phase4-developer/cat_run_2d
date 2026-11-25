@@ -14,8 +14,6 @@ namespace MV.UI
         public const string AdKey = "dia";
         public const string FreeId = "free";
         public const string BuyPrefix = "buy:";
-        /// <summary>시안 재화 칸(노션: 골드와 다이아). 값은 <c>01_wealth.type</c>.</summary>
-        public static readonly string[] CurrencyTypes = { "gold", "dia" };
         public const string MaxKey = "ui.common.max";
 
         protected override void Build(MetaPanelModel m, MvTables tables)
@@ -65,17 +63,12 @@ namespace MV.UI
 
         AreaUpgradeViewData BuildViewData(MvTables tables, double adGain)
         {
-            var d = new AreaUpgradeViewData { Tables = tables, AdActionId = FreeId };
+            var d = new AreaUpgradeViewData { Tables = tables, Wallet = Port.Wallet, AdActionId = FreeId };
             int areaNo = Port.AreaIndex + 1;
             d.AreaNo = areaNo;
             d.AreaName = tables.AreaName(areaNo);
             d.AreaIcon = HudAreaLabel.AreaIconOf(tables, areaNo);
             d.ZoneNo = MvMetaRules.ZoneIndex(tables, Port.AreaIndex) + 1;
-            foreach (var type in CurrencyTypes)
-            {
-                int id = tables.Wealth.GetId(type);
-                d.Currencies.Add(new AreaUpgradeCurrency(type, MvUiFormat.Fmt(id == 0 ? 0 : Port.Wealth(id))));
-            }
             var adRow = tables.AdPlacement.ByKey(AdKey);
             if (adRow != null && adRow.adReward.Count > 0) { d.AdRewardType = adRow.adReward[0].TypeId; d.AdRewardId = adRow.adReward[0].Id; }
             d.AdGainText = string.Format(MvUiText.Get("ui", AreaUpgradeDesignView.AdGainKey, AreaUpgradeDesignView.AdGainFallback), MvUiFormat.Fmt(adGain));

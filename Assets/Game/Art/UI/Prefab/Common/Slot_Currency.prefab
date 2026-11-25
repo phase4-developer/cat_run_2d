@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 8933799188967476295}
   - component: {fileID: 2594167902960862437}
   - component: {fileID: 4729153866204517731}
+  - component: {fileID: 7651418641153906412}
   m_Layer: 5
   m_Name: Slot_Currency
   m_TagString: Untagged
@@ -321,3 +322,33 @@ MonoBehaviour:
       m_Calls: []
   icon: {fileID: 2888869978366451881}
   value: {fileID: 566282074503570271}
+  resourceLabel: {fileID: 7651418641153906412}
+--- !u!114 &7651418641153906412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8397856689403497890}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0264c4a086b3ccb4bad465973552dff2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: JJEvol.UI.Economy.Runtime::jjevol.ResourceLabel
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onHide:
+    m_PersistentCalls:
+      m_Calls: []
+  onDestory:
+    m_PersistentCalls:
+      m_Calls: []
+  context: {fileID: 0}
+  resourceId: 0
+  icon: {fileID: 2888869978366451881}
+  number: {fileID: 0}
+  quantityText: {fileID: 566282074503570271}
+  numberFormat: N0
+  overrideNumberFormat: 0
+  animateChanges: 0

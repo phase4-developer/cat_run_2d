@@ -9,14 +9,6 @@ using UnityEngine.UI;
 
 namespace MV.UI
 {
-    /// <summary>재화 칸 1개 값(<c>01_wealth.type</c> + 글자).</summary>
-    public readonly struct AreaUpgradeCurrency
-    {
-        public readonly string WealthType;
-        public readonly string Text;
-        public AreaUpgradeCurrency(string wealthType, string text) { WealthType = wealthType; Text = text; }
-    }
-
     /// <summary>Area 업그레이드 디자이너 겉이 읽는 값(<see cref="MetaPanelModel.Data"/>). 칸 값은 각 행의 <see cref="MetaRow.Data"/>.</summary>
     public sealed class AreaUpgradeViewData
     {
@@ -27,7 +19,7 @@ namespace MV.UI
         public string AreaName;
         /// <summary><c>302_area.mapIcon</c>(Local_Texture 주소).</summary>
         public string AreaIcon;
-        public readonly List<AreaUpgradeCurrency> Currencies = new List<AreaUpgradeCurrency>();
+        public ResourceService Wallet;
         /// <summary>배너 보상 글자(시안 「x100」).</summary>
         public string AdGainText;
         /// <summary>광고 보상 첫 항목(08_adPlacement.adReward) 종류·id. 배너 아이콘은 그 07_consumeType 아이콘(MV-UI-ICONSRC).</summary>
@@ -90,7 +82,7 @@ namespace MV.UI
             if (!closeButton) miss.Add(nameof(closeButton));
             if (currencies == null || currencies.Length == 0) miss.Add(nameof(currencies));
             else for (int i = 0; i < currencies.Length; i++)
-                    if (currencies[i] == null || !currencies[i].slot || string.IsNullOrEmpty(currencies[i].wealthType)) miss.Add("currencies[" + i + "]");
+                    if (currencies[i] == null || !currencies[i].slot || !currencies[i].slot.HasBalanceLabel || currencies[i].resourceId == 0) miss.Add("currencies[" + i + "]");
             if (!areaLabel) miss.Add(nameof(areaLabel));
             if (!adButton) miss.Add(nameof(adButton));
             if (!adGain) miss.Add(nameof(adGain));
@@ -137,15 +129,7 @@ namespace MV.UI
             if (d == null) return;
 
             if (areaLabel) areaLabel.ShowUI(new AreaLabelData(d.ZoneNo, d.AreaNo, d.AreaName, d.AreaIcon));
-            if (currencies != null)
-                foreach (var c in currencies)
-                {
-                    if (c == null || !c.slot) continue;
-                    string text = null;
-                    foreach (var v in d.Currencies) if (v.WealthType == c.wealthType) { text = v.Text; break; }
-                    if (text == null) { c.slot.gameObject.SetActive(false); continue; }
-                    c.slot.ShowUI(new CurrencySlotData(d.Tables, c.wealthType, text));
-                }
+            LobbyCurrencyParts.BindBalances(currencies, d.Tables, d.Wallet);
 
             _adActionId = d.AdActionId;
             if (adGain) adGain.text = d.AdGainText ?? "";

@@ -6,6 +6,10 @@
 
 | 계약 | 상태 | 결과(dev) | 남은 것 |
 |---|---|---|---|
+| MV-FW-REUSE-ECONOMY 보유 재화 라벨 | 완료·dev 병합(2026-11-25) | `ai/MV-FW-REUSE-ECONOMY-resource-label` `2aecd95d`, dev `aa430c38`, 검증 후보 `03e8317e` | 환생·Area 강화·로비의 확정 잔액은 `com.jjevol.ui.economy`의 `ResourceLabel.ShowUI`로 표시. 프리팹의 `01_wealth.id` 드롭다운으로 선택. 런 재화는 런 스냅샷 값을 표시. `MV-FW-REUSE-ECONOMY-01` compile·EditMode 17/17 PASS. 실제 플레이 화면 확인 NOT_RUN. [원인과 중앙 요청](FrameworkReuseReview.md) |
+| MV-FW-REUSE-DROP D-85 추첨 엔진 전환 | 호환성 확인 필요(2026-11-25) | — | `economy.drop` 연결 뒤에도 `MvDropRoller` 사용. 어댑터에서 런의 0 수량 지급식·중첩 행 출처·난수 재현을 검증해야 한다. [확인 근거](FrameworkReuseReview.md) |
+| MV-FW-REUSE-PROGRESS 결과·지도 진행률 보간 | 완료·dev 병합(2026-11-25) | `ai/MV-FW-REUSE-PROGRESS-float-tween`, 검증 후보 `d4f4edfa` | `com.jjevol.ui.contracts`의 `FloatTween.Play/Tick`으로 진행률 계산. 프리팹 곡선, 표시 계산, 자동 닫기와 결과 팝업 재표시는 기존 동작을 따른다. `MV-FW-REUSE-PROGRESS-01` compile·EditMode 9/9 PASS. 실제 연출 화면 확인 NOT_RUN. 중앙 요청 `1b6e83150ac3` |
+| MV-UI-REBIRTH-HUD 환생 팝업 재화 표시 | 완료·dev 병합(2026-11-25) | `ai/MV-UI-REBIRTH-HUD-currencies` `4d8e7d0e`, 검증 후보 `51b2f1a4` | `RebirthDesignView.Currencies`의 타입으로 `01_wealth` ID와 보유량을 찾아 기존 Framework `UIBase.ShowUI`를 쓰는 `HudCurrencySlot`에 전달. 첫 슬롯 `goldenFish`. `MV-UI-REBIRTH-HUD-01`은 시험의 어셈블리 참조 오류로 compile FAIL. 기존 표 조회 API를 사용한 `MV-UI-REBIRTH-HUD-02` compile PASS, EditMode 8/8 PASS. 실제 플레이 화면 확인 NOT_RUN |
 | MV-00 기반 | 완료 | — | 보관 「MV-00 남김」 |
 | MV-DATA 표 | 3차 완료 | 2차 `6d946c8`, 3차 `a2be0d6` | 자료 빈칸(정본 값 없음, 보관 참조). VIEW 요청: `view.groundFar` 92→120, `330_climb` 출렁임 열, `304_theme` 6~15행 |
 | MV-SAVE 저장 | 완료(G1) | `bf2921c` | D-68 출시 저장 키 |
